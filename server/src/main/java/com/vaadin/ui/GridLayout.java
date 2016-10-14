@@ -36,8 +36,6 @@ import org.jsoup.select.Elements;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -447,6 +445,7 @@ public class GridLayout extends AbstractLayout
         return components.size();
     }
 
+    @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
@@ -748,7 +747,7 @@ public class GridLayout extends AbstractLayout
 
         // Forget expands for removed columns
         if (columns < getColumns()) {
-            for (int i = columns - 1; i < getColumns(); i++) {
+            for (int i = columns; i < getColumns(); i++) {
                 columnExpandRatio.remove(i);
                 getState().explicitColRatios.remove(i);
             }
@@ -798,7 +797,7 @@ public class GridLayout extends AbstractLayout
         }
         // Forget expands for removed rows
         if (rows < getRows()) {
-            for (int i = rows - 1; i < getRows(); i++) {
+            for (int i = rows; i < getRows(); i++) {
                 rowExpandRatio.remove(i);
                 getState().explicitRowRatios.remove(i);
             }
