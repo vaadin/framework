@@ -60,6 +60,21 @@ public class DesignAttributeHandler implements Serializable {
     // translates string <-> object
     private static DesignFormatter FORMATTER = new DesignFormatter();
 
+    private static boolean writeDefaultValues = false;
+
+    /**
+     * Set whether default attribute values should be written by the
+     * {@code DesignAttributeHandler#writeAttribute(String, Attributes, Object, Object, Class)}
+     * method. Default is {@code false}.
+     *
+     * @param value
+     *            {@code true} to write default values of attributes,
+     *            {@code false} to disable writing of default values
+     */
+    public static void setWriteDefaultValues(boolean value) {
+        writeDefaultValues = value;
+    }
+
     /**
      * Returns the currently used formatter. All primitive types and all types
      * needed by Vaadin components are handled by that formatter.
@@ -238,7 +253,7 @@ public class DesignAttributeHandler implements Serializable {
             throw new IllegalArgumentException(
                     "input type: " + inputType.getName() + " not supported");
         }
-        if (!SharedUtil.equals(value, defaultValue)) {
+        if (writeDefaultValues || !SharedUtil.equals(value, defaultValue)) {
             String attributeValue = toAttributeValue(inputType, value);
             if ("".equals(attributeValue) && (inputType == boolean.class
                     || inputType == Boolean.class)) {

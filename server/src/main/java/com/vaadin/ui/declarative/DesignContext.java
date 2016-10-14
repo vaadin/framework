@@ -827,8 +827,7 @@ public class DesignContext implements Serializable {
             String value) {
         Map<String, String> map = customAttributes.get(component);
         if (map == null) {
-            customAttributes.put(component,
-                    map = new HashMap<>());
+            customAttributes.put(component, map = new HashMap<>());
         }
         map.put(attribute, value);
     }
