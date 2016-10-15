@@ -5560,7 +5560,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Takes a new {@link SelectionModel} into use.
      * <p>
      * The SelectionModel that is previously in use will have all its items
-     * deselected.
+     * deselected. If any items were selected, this will fire a
+     * {@link SelectionEvent}.
      * <p>
      * If the given SelectionModel is already in use, this method does nothing.
      *
@@ -5577,13 +5578,23 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         if (this.selectionModel != selectionModel) {
+            Collection<Object> oldSelection;
             // this.selectionModel is null on init
             if (this.selectionModel != null) {
+                oldSelection = this.selectionModel.getSelectedRows();
                 this.selectionModel.remove();
+            } else {
+                oldSelection = Collections.emptyList();
             }
 
             this.selectionModel = selectionModel;
             selectionModel.setGrid(this);
+            Collection<Object> newSelection = this.selectionModel
+                    .getSelectedRows();
+
+            if (!SharedUtil.equals(oldSelection, newSelection)) {
+                fireSelectionEvent(oldSelection, newSelection);
+            }
         }
     }
 
