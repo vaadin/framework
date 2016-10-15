@@ -269,5 +269,4 @@ public class GridSelectionTest extends GridBasicsTest {
     private GridRowElement getRow(int i) {
         return getGridElement().getRow(i);
     }
-
 }
