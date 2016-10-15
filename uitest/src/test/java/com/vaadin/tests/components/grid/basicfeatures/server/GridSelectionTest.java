@@ -426,4 +426,44 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
     private GridRowElement getRow(int i) {
         return getGridElement().getRow(i);
     }
+
+    @Test
+    public void changeSelectionModelSingleToNone() throws Exception {
+        openTestURL();
+
+        setSelectionModelSingle();
+        getGridElement().getCell(0, 0).click();
+        assertTrue("row should become selected", getRow(0).isSelected());
+        setSelectionModelNone();
+        assertFalse("row should become deselected", getRow(0).isSelected());
+        setSelectionModelSingle();
+        assertFalse("row should still be deselected", getRow(0).isSelected());
+        getGridElement().getCell(0, 0).click();
+        assertTrue("row should become selected", getRow(0).isSelected());
+    }
+
+    @Test
+    public void changeSelectionModelMultiToNone() throws Exception {
+        openTestURL();
+
+        setSelectionModelMulti();
+        getGridElement().getCell(0, 0).click();
+        getGridElement().getCell(1, 0).click();
+        getGridElement().getCell(2, 0).click();
+        assertTrue("row should become selected", getRow(0).isSelected());
+        assertTrue("row should become selected", getRow(1).isSelected());
+        assertTrue("row should become selected", getRow(2).isSelected());
+
+        setSelectionModelNone();
+        assertFalse("row should become deselected", getRow(0).isSelected());
+        assertFalse("row should become deselected", getRow(1).isSelected());
+        assertFalse("row should become deselected", getRow(2).isSelected());
+        setSelectionModelMulti();
+        assertFalse("row should still be deselected", getRow(0).isSelected());
+        assertFalse("row should still be deselected", getRow(1).isSelected());
+        assertFalse("row should still be deselected", getRow(2).isSelected());
+
+        getGridElement().getCell(0, 0).click();
+        assertTrue("row should become selected", getRow(0).isSelected());
+    }
 }

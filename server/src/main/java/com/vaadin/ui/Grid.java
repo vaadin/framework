@@ -5595,6 +5595,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             if (!SharedUtil.equals(oldSelection, newSelection)) {
                 fireSelectionEvent(oldSelection, newSelection);
             }
+
+            // selection is included in the row data, so the client needs to be
+            // updated
+            datasourceExtension.refreshCache();
         }
     }
 
