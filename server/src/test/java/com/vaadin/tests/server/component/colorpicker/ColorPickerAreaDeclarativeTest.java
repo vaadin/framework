@@ -13,28 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.server.component.passwordfield;
+package com.vaadin.tests.server.component.colorpicker;
 
-import com.vaadin.tests.server.component.textfield.TextFieldDeclarativeTest;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.ColorPickerArea;
 
 /**
- * Declarative test for PasswordField. Provides only information about
+ * Declarative test for ColorPickerArea. Provides only information about
  * ColorPickerArea class. All tests are in the superclass.
  * 
  * @author Vaadin Ltd
  *
  */
-public class PasswordFieldDeclarativeTest extends TextFieldDeclarativeTest {
-
-    @Override
-    protected Class<? extends TextField> getComponentClass() {
-        return PasswordField.class;
-    }
+public class ColorPickerAreaDeclarativeTest
+        extends AbstractColorPickerDeclarativeTest<ColorPickerArea> {
 
     @Override
     protected String getComponentTag() {
-        return "vaadin-password-field";
+        return "vaadin-color-picker-area";
     }
+
+    @Override
+    protected Class<ColorPickerArea> getComponentClass() {
+        return ColorPickerArea.class;
+    }
+
 }

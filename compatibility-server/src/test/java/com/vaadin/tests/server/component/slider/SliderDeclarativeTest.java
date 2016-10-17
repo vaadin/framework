@@ -18,7 +18,7 @@ package com.vaadin.tests.server.component.slider;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.slider.SliderOrientation;
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstractfield.AbstractFieldDeclarativeTest;
 import com.vaadin.ui.Slider;
 
 /**
@@ -27,30 +27,24 @@ import com.vaadin.ui.Slider;
  * @since
  * @author Vaadin Ltd
  */
-public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {
+public class SliderDeclarativeTest
+        extends AbstractFieldDeclarativeTest<Slider, Double> {
 
+    @Override
     @Test
-    public void testDefault() {
-        String design = "<vaadin-slider>";
+    public void valueDeserialization()
+            throws InstantiationException, IllegalAccessException {
+        Double value = 12.3;
+        int resolution = 1;
+        String design = String.format("<%s resolution=%d value='%s'/>",
+                getComponentTag(), resolution, value);
 
-        Slider expected = new Slider();
+        Slider component = new Slider();
+        component.setResolution(resolution);
+        component.setValue(value);
 
-        testRead(design, expected);
-        testWrite(design, expected);
-    }
-
-    @Test
-    public void testHorizontal() {
-        String design = "<vaadin-slider min=10 max=20 resolution=1 value=12.3>";
-
-        Slider expected = new Slider();
-        expected.setMin(10.0);
-        expected.setMax(20.0);
-        expected.setResolution(1);
-        expected.setValue(12.3);
-
-        testRead(design, expected);
-        testWrite(design, expected);
+        testRead(design, component);
+        testWrite(design, component);
     }
 
     @Test
@@ -64,18 +58,47 @@ public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {
         testWrite(design, expected);
     }
 
-    @Test
-    public void testReadOnlyValue() {
-        String design = "<vaadin-slider readonly min=10 max=20 resolution=1 value=12.3>";
+    @Override
+    public void readOnlyValue()
+            throws InstantiationException, IllegalAccessException {
+        Double value = 12.3;
+        int resolution = 1;
+        String design = String.format("<%s resolution=%d readonly value='%s'/>",
+                getComponentTag(), resolution, value);
 
-        Slider expected = new Slider();
-        expected.setMin(10.0);
-        expected.setMax(20.0);
-        expected.setResolution(1);
-        expected.setValue(12.3);
-        expected.setReadOnly(true);
+        Slider component = new Slider();
+        component.setResolution(resolution);
+        component.setValue(value);
 
-        testRead(design, expected);
-        testWrite(design, expected);
+        component.setReadOnly(true);
+        testRead(design, component);
+        testWrite(design, component);
     }
+
+    @Test
+    public void remainingAttributeDeserialization() {
+        int min = 3;
+        int max = 47;
+        String design = String.format("<%s min=%d value=%d max='%d'/>",
+                getComponentTag(), min, min, max);
+
+        Slider component = new Slider();
+        component.setMin(min);
+        component.setMax(max);
+        component.setOrientation(SliderOrientation.HORIZONTAL);
+
+        testRead(design, component);
+        testWrite(design, component);
+    }
+
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-slider";
+    }
+
+    @Override
+    protected Class<Slider> getComponentClass() {
+        return Slider.class;
+    }
+
 }

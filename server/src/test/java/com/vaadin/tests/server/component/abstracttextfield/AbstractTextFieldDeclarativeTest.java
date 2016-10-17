@@ -15,12 +15,13 @@
  */
 package com.vaadin.tests.server.component.abstracttextfield;
 
+import java.util.Locale;
+
 import org.junit.Test;
 
 import com.vaadin.shared.ui.ValueChangeMode;
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstractfield.AbstractFieldDeclarativeTest;
 import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.TextField;
 
 /**
  * Tests declarative support for AbstractTextField.
@@ -28,26 +29,31 @@ import com.vaadin.ui.TextField;
  * @since
  * @author Vaadin Ltd
  */
-public class AbstractTextFieldDeclarativeTest
-        extends DeclarativeTestBase<AbstractTextField> {
+public abstract class AbstractTextFieldDeclarativeTest<T extends AbstractTextField>
+        extends AbstractFieldDeclarativeTest<T, String> {
 
     @Test
-    public void testAttributes() {
-        String design = "<vaadin-text-field "
-                // + "null-representation=this-is-null "
-                // + "null-setting-allowed "
-                + "maxlength=5 " + "placeholder=input value-change-mode=eager "
-                + "value-change-timeout=100 />";
-        AbstractTextField tf = new TextField();
-        // FIXME
-        // tf.setNullRepresentation("this-is-null");
-        // tf.setNullSettingAllowed(true);
-        tf.setMaxLength(5);
-        tf.setPlaceholder("input");
-        tf.setValueChangeMode(ValueChangeMode.EAGER);
-        tf.setValueChangeTimeout(100);
-        testRead(design, tf);
-        testWrite(design, tf);
+    public void abstractTextFieldAttributes()
+            throws InstantiationException, IllegalAccessException {
+        int maxLength = 5;
+        String placeholder = "foo";
+        ValueChangeMode mode = ValueChangeMode.EAGER;
+        int timeout = 100;
+        String design = String.format(
+                "<%s maxlength='%d' placeholder='%s' "
+                        + "value-change-mode='%s' value-change-timeout='%d'/>",
+                getComponentTag(), maxLength, placeholder,
+                mode.name().toLowerCase(Locale.ENGLISH), timeout);
+
+        T component = getComponentClass().newInstance();
+
+        component.setMaxLength(maxLength);
+        component.setPlaceholder(placeholder);
+        component.setValueChangeMode(mode);
+        component.setValueChangeTimeout(timeout);
+
+        testRead(design, component);
+        testWrite(design, component);
     }
 
 }

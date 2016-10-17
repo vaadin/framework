@@ -15,46 +15,49 @@
  */
 package com.vaadin.tests.server.component.datefield;
 
-import java.time.LocalDate;
-
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.tests.server.component.abstractdatefield.AbstarctDateFieldDeclarativeTest;
 import com.vaadin.ui.DateField;
 
 /**
- * Tests the declarative support for implementations of
- * {@link AbstractDateField}.
+ * Tests the declarative support for implementations of {@link DateField}.
  *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DateFieldDeclarativeTest extends DeclarativeTestBase<DateField> {
-
-    private String getBasicDesign() {
-        return "<vaadin-date-field assistive-text='at' text-field-enabled='false' show-iso-week-numbers range-end=\"2019-01-15\" placeholder=\"Pick a day\" value=\"2003-02-27\"></vaadin-date-field>";
-    }
-
-    private DateField getBasicExpected() {
-        DateField pdf = new DateField();
-        pdf.setShowISOWeekNumbers(true);
-        pdf.setRangeEnd(LocalDate.of(2019, 01, 15));
-        pdf.setPlaceholder("Pick a day");
-        pdf.setValue(LocalDate.of(2003, 2, 27));
-        pdf.setTextFieldEnabled(false);
-        pdf.setAssistiveText("at");
-        return pdf;
-    }
+public class DateFieldDeclarativeTest
+        extends AbstarctDateFieldDeclarativeTest<DateField> {
 
     @Test
-    public void readBasic() throws Exception {
-        testRead(getBasicDesign(), getBasicExpected());
+    public void remainingAttributes()
+            throws InstantiationException, IllegalAccessException {
+        String placeholder = "foo";
+        String assistiveText = "at";
+        boolean textFieldEnabled = false;
+        String design = String.format(
+                "<%s placeholder='%s' "
+                        + "assistive-text='%s' text-field-enabled='%s'/>",
+                getComponentTag(), placeholder, assistiveText,
+                textFieldEnabled);
+
+        DateField component = getComponentClass().newInstance();
+        component.setPlaceholder(placeholder);
+        component.setTextFieldEnabled(textFieldEnabled);
+        component.setAssistiveText(assistiveText);
+
+        testRead(design, component);
+        testWrite(design, component);
     }
 
-    @Test
-    public void writeBasic() throws Exception {
-        testRead(getBasicDesign(), getBasicExpected());
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-date-field";
+    }
+
+    @Override
+    protected Class<? extends DateField> getComponentClass() {
+        return DateField.class;
     }
 
 }

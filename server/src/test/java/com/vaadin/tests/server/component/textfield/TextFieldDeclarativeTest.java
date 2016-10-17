@@ -17,7 +17,7 @@ package com.vaadin.tests.server.component.textfield;
 
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstracttextfield.AbstractTextFieldDeclarativeTest;
 import com.vaadin.ui.TextField;
 
 /**
@@ -26,32 +26,47 @@ import com.vaadin.ui.TextField;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextFieldDeclarativeTest extends DeclarativeTestBase<TextField> {
+public class TextFieldDeclarativeTest
+        extends AbstractTextFieldDeclarativeTest<TextField> {
 
+    @Override
     @Test
-    public void testEmpty() {
-        String design = "<vaadin-text-field/>";
-        TextField tf = new TextField();
-        testRead(design, tf);
-        testWrite(design, tf);
+    public void valueDeserialization()
+            throws InstantiationException, IllegalAccessException {
+        String value = "foo";
+        String design = String.format("<%s value='%s'/>", getComponentTag(),
+                value);
+
+        TextField component = getComponentClass().newInstance();
+        component.setValue(value);
+        testRead(design, component);
+        testWrite(design, component);
     }
 
+    @Override
     @Test
-    public void testValue() {
-        String design = "<vaadin-text-field value=\"test value\"/>";
-        TextField tf = new TextField();
-        tf.setValue("test value");
-        testRead(design, tf);
-        testWrite(design, tf);
+    public void readOnlyValue()
+            throws InstantiationException, IllegalAccessException {
+        String value = "foo";
+        String design = String.format("<%s readonly value='%s'/>",
+                getComponentTag(), value);
+
+        TextField component = getComponentClass().newInstance();
+        component.setValue(value);
+
+        component.setReadOnly(true);
+        testRead(design, component);
+        testWrite(design, component);
     }
 
-    @Test
-    public void testReadOnlyValue() {
-        String design = "<vaadin-text-field readonly value=\"test value\"/>";
-        TextField tf = new TextField();
-        tf.setValue("test value");
-        tf.setReadOnly(true);
-        testRead(design, tf);
-        testWrite(design, tf);
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-text-field";
     }
+
+    @Override
+    protected Class<? extends TextField> getComponentClass() {
+        return TextField.class;
+    }
+
 }

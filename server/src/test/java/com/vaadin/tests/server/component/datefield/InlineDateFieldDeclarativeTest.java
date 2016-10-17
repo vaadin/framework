@@ -21,7 +21,7 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstractdatefield.AbstarctDateFieldDeclarativeTest;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.declarative.Design;
@@ -34,7 +34,7 @@ import com.vaadin.ui.declarative.Design;
  * @author Vaadin Ltd
  */
 public class InlineDateFieldDeclarativeTest
-        extends DeclarativeTestBase<InlineDateField> {
+        extends AbstarctDateFieldDeclarativeTest<InlineDateField> {
 
     @Test
     public void testInlineDateFieldToFromDesign() throws Exception {
@@ -54,6 +54,16 @@ public class InlineDateFieldDeclarativeTest
         assertEquals(field.getValue(), result.getValue());
         assertEquals(field.getRangeStart(), result.getRangeStart());
         assertEquals(field.getRangeEnd(), result.getRangeEnd());
+    }
+
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-inline-date-field";
+    }
+
+    @Override
+    protected Class<? extends InlineDateField> getComponentClass() {
+        return InlineDateField.class;
     }
 
 }
