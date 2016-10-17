@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.Connector;
+
 /**
  * Shared state for Grid headers and footers.
  *
@@ -45,8 +47,22 @@ public class SectionState implements Serializable {
     /** The state of a header or footer cell. */
     public static class CellState implements Serializable {
 
+        public GridStaticCellType type = GridStaticCellType.TEXT;
+
+        /** The style name for this cell. Null if none. */
+        public String styleName = null;
+
         /** The textual caption of this cell. */
         public String text;
+
+        /** The html content of this cell. */
+        public String html;
+
+        /**
+         * The connector for the component that is set to be displayed in this
+         * cell. Null if none.
+         */
+        public Connector connector = null;
 
         /** The id of the column that this cell belongs to. */
         public String columnId;

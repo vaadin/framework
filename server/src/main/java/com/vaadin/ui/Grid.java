@@ -54,6 +54,7 @@ import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
@@ -1573,6 +1574,44 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          *            the header caption to set, not null
          */
         public void setText(String text);
+
+        /**
+         * Returns the HTML content displayed in this cell.
+         *
+         * @return the html
+         *
+         */
+        public String getHtml();
+
+        /**
+         * Sets the HTML content displayed in this cell.
+         *
+         * @param html
+         *            the html to set
+         */
+        public void setHtml(String html);
+
+        /**
+         * Returns the component displayed in this cell.
+         *
+         * @return the component
+         */
+        public Component getComponent();
+
+        /**
+         * Sets the component displayed in this cell.
+         *
+         * @param component
+         *            the component to set
+         */
+        public void setComponent(Component component);
+
+        /**
+         * Returns the type of content stored in this cell.
+         *
+         * @return cell content type
+         */
+        public GridStaticCellType getCellType();
     }
 
     /**
@@ -1629,6 +1668,11 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     private class HeaderImpl extends Header {
 
         @Override
+        protected Grid<T> getGrid() {
+            return Grid.this;
+        }
+
+        @Override
         protected SectionState getState(boolean markAsDirty) {
             return Grid.this.getState(markAsDirty).header;
         }
@@ -1640,6 +1684,11 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     };
 
     private class FooterImpl extends Footer {
+
+        @Override
+        protected Grid<T> getGrid() {
+            return Grid.this;
+        }
 
         @Override
         protected SectionState getState(boolean markAsDirty) {
@@ -1885,7 +1934,18 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
     @Override
     public Iterator<Component> iterator() {
-        return Collections.unmodifiableSet(extensionComponents).iterator();
+        Set<Component> componentSet = new LinkedHashSet<>(extensionComponents);
+        Header header = getHeader();
+        for (int i = 0; i < header.getRowCount(); ++i) {
+            HeaderRow row = header.getRow(i);
+            getColumns().forEach(column -> {
+                HeaderCell cell = row.getCell(column);
+                if (cell.getCellType() == GridStaticCellType.WIDGET) {
+                    componentSet.add(cell.getComponent());
+                }
+            });
+        }
+        return Collections.unmodifiableSet(componentSet).iterator();
     }
 
     /**

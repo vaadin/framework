@@ -54,6 +54,7 @@ import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
+import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -66,6 +67,7 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.SectionState;
+import com.vaadin.shared.ui.grid.SectionState.CellState;
 import com.vaadin.shared.ui.grid.SectionState.RowState;
 
 import elemental.json.JsonObject;
@@ -255,14 +257,41 @@ public class GridConnector
         for (RowState rowState : state.rows) {
             HeaderRow row = grid.appendHeaderRow();
 
-            rowState.cells.forEach((columnId, cellState) -> {
-                row.getCell(getColumn(columnId)).setText(cellState.text);
-            });
-
             if (rowState.defaultHeader) {
                 grid.setDefaultHeaderRow(row);
             }
+
+            rowState.cells.forEach((columnId, cellState) -> {
+                updateHeaderCellFromState(row.getCell(getColumn(columnId)),
+                        cellState);
+            });
         }
+    }
+
+    private void updateHeaderCellFromState(HeaderCell cell,
+            CellState cellState) {
+        switch (cellState.type) {
+        case TEXT:
+            cell.setText(cellState.text);
+            break;
+        case HTML:
+            cell.setHtml(cellState.html);
+            break;
+        case WIDGET:
+            ComponentConnector connector = (ComponentConnector) cellState.connector;
+            if (connector != null) {
+                cell.setWidget(connector.getWidget());
+            } else {
+                // This happens if you do setVisible(false) on the component on
+                // the server side
+                cell.setWidget(null);
+            }
+            break;
+        default:
+            throw new IllegalStateException(
+                    "unexpected cell type: " + cellState.type);
+        }
+        cell.setStyleName(cellState.styleName);
     }
 
     /**

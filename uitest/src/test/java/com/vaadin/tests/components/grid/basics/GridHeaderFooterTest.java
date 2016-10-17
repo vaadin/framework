@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.NotificationElement;
 
 public class GridHeaderFooterTest extends GridBasicsTest {
 
@@ -80,7 +81,7 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         selectMenuPath("Component", "Header", "Prepend header row");
         selectMenuPath("Component", "Header", "Set first row as default");
 
-        assertHeaderTexts(0, GridBasics.COLUMN_CAPTIONS);
+        assertHeaderTexts(0, HEADER_TEXTS);
     }
 
     @Test
@@ -135,6 +136,75 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         assertEquals(2, getGridElement().getFooterCount());
         assertFooterTexts(0, FOOTER_TEXTS);
         assertFooterTexts(1, GridBasics.COLUMN_CAPTIONS);
+    }
+
+    public void testDynamicallyChangingCellType() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 0", "Header Type",
+                "Widget Header");
+        GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
+        assertTrue(widgetCell.isElementPresent(By.className("v-button")));
+
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "HTML Header");
+        GridCellElement htmlCell = getGridElement().getHeaderCell(0, 1);
+        assertEquals("<b>HTML Header</b>",
+                htmlCell.findElement(
+                        By.className("v-grid-column-header-content"))
+                        .getAttribute("innerHTML"));
+
+        selectMenuPath("Component", "Columns", "Column 2", "Header Type",
+                "Text Header");
+        GridCellElement textCell = getGridElement().getHeaderCell(0, 2);
+
+        assertEquals("text header", textCell.getText().toLowerCase());
+    }
+
+    @Test
+    public void testButtonInHeader() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "Widget Header");
+
+        getGridElement().findElements(By.className("v-button")).get(0).click();
+
+        assertTrue("Button click should be logged",
+                logContainsText("Button clicked!"));
+    }
+
+    @Test
+    public void testRemoveComponentFromHeader() throws Exception {
+        openTestURL();
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "Widget Header");
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "Text Header");
+        assertTrue("No notifications should've been shown",
+                !$(NotificationElement.class).exists());
+        assertEquals("Header should've been reverted back to text header",
+                "text header",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
+    }
+
+    @Test
+    public void testColumnHidingToggleCaption_settingWidgetToHeader_toggleCaptionStays() {
+        toggleColumnHidable(1);
+        getSidebarOpenButton().click();
+        assertEquals("column 1",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
+        assertEquals("Column 1", getColumnHidingToggle(1).getText());
+
+        selectMenuPath("Component", "Columns", "Column 1", "Header Type",
+                "Widget Header");
+
+        getSidebarOpenButton().click();
+        assertEquals("Column 1", getColumnHidingToggle(1).getText());
+    }
+
+    private void toggleColumnHidable(int index) {
+        selectMenuPath("Component", "Columns", "Column " + index, "Hidable");
     }
 
     protected static void assertText(String expected, GridCellElement e) {

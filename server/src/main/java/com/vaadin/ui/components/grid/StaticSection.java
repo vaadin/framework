@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,16 +24,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
 import com.vaadin.shared.ui.grid.SectionState.RowState;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 
 /**
  * Represents the header or footer section of a Grid.
  *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <ROW>
  *            the type of the rows in the section
  *
@@ -57,7 +60,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         /**
          * Creates a new row belonging to the given section.
-         * 
+         *
          * @param section
          *            the section of the row
          */
@@ -74,14 +77,14 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         /**
          * Returns the declarative tag name used for the cells in this row.
-         * 
+         *
          * @return the cell tag name
          */
         protected abstract String getCellTagName();
 
         /**
          * Adds a cell to this section, corresponding to the given column id.
-         * 
+         *
          * @param columnId
          *            the id of the column for which to add a cell
          */
@@ -95,7 +98,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         /**
          * Removes the cell from this section that corresponds to the given
          * column id. If there is no such cell, does nothing.
-         * 
+         *
          * @param columnId
          *            the id of the column from which to remove the cell
          */
@@ -108,7 +111,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         /**
          * Returns the shared state of this row.
-         * 
+         *
          * @return the row state
          */
         protected RowState getRowState() {
@@ -122,7 +125,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * @param columnId
          *            the id of the column
          * @return the cell for the given column
-         * 
+         *
          * @throws IllegalArgumentException
          *             if no cell was found for the column id
          */
@@ -133,6 +136,12 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                         "No cell found for column id " + columnId);
             }
             return cell;
+        }
+
+        void detach() {
+            for (CELL cell : cells.values()) {
+                cell.detach();
+            }
         }
     }
 
@@ -167,7 +176,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         /**
          * Returns the shared state of this cell.
-         * 
+         *
          * @return the cell state
          */
         protected CellState getCellState() {
@@ -182,7 +191,9 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          */
         public void setText(String text) {
             Objects.requireNonNull(text, "text cannot be null");
+            removeComponentIfPresent();
             cellState.text = text;
+            cellState.type = GridStaticCellType.TEXT;
             row.section.markAsDirty();
         }
 
@@ -194,26 +205,107 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         public String getText() {
             return cellState.text;
         }
+
+        /**
+         * Returns the HTML content displayed in this cell.
+         *
+         * @return the html
+         *
+         */
+        public String getHtml() {
+            if (cellState.type != GridStaticCellType.HTML) {
+                throw new IllegalStateException(
+                        "Cannot fetch HTML from a cell with type "
+                                + cellState.type);
+            }
+            return cellState.html;
+        }
+
+        /**
+         * Sets the HTML content displayed in this cell.
+         *
+         * @param html
+         *            the html to set, not null
+         */
+        public void setHtml(String html) {
+            Objects.requireNonNull(html, "html cannot be null");
+            removeComponentIfPresent();
+            cellState.html = html;
+            cellState.type = GridStaticCellType.HTML;
+            row.section.markAsDirty();
+        }
+
+        /**
+         * Returns the component displayed in this cell.
+         *
+         * @return the component
+         */
+        public Component getComponent() {
+            if (cellState.type != GridStaticCellType.WIDGET) {
+                throw new IllegalStateException(
+                        "Cannot fetch Component from a cell with type "
+                                + cellState.type);
+            }
+            return (Component) cellState.connector;
+        }
+
+        /**
+         * Sets the component displayed in this cell.
+         *
+         * @param component
+         *            the component to set, not null
+         */
+        public void setComponent(Component component) {
+            Objects.requireNonNull(component, "component cannot be null");
+            removeComponentIfPresent();
+            component.setParent(row.section.getGrid());
+            cellState.connector = component;
+            cellState.type = GridStaticCellType.WIDGET;
+            row.section.markAsDirty();
+        }
+
+        /**
+         * Returns the type of content stored in this cell.
+         *
+         * @return cell content type
+         */
+        public GridStaticCellType getCellType() {
+            return cellState.type;
+        }
+
+        private void removeComponentIfPresent() {
+            Component component = (Component) cellState.connector;
+            if (component != null) {
+                component.setParent(null);
+                cellState.connector = null;
+            }
+        }
+
+        void detach() {
+            removeComponentIfPresent();
+        }
     }
 
     private final List<ROW> rows = new ArrayList<>();
 
     /**
      * Creates a new row instance.
-     * 
+     *
      * @return the new row
      */
     protected abstract ROW createRow();
 
     /**
      * Returns the shared state of this section.
-     * 
+     *
      * @param markAsDirty
      *            {@code true} to mark the state as modified, {@code false}
      *            otherwise
      * @return the section state
      */
     protected abstract SectionState getState(boolean markAsDirty);
+
+    protected abstract Grid<?> getGrid();
 
     protected abstract Collection<? extends Column<?, ?>> getColumns();
 
@@ -226,7 +318,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
     /**
      * Adds a new row at the given index.
-     * 
+     *
      * @param index
      *            the index of the new row
      * @return the added row
@@ -245,20 +337,21 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
     /**
      * Removes the row at the given index.
-     * 
+     *
      * @param index
      *            the index of the row to remove
      * @throws IndexOutOfBoundsException
      *             if {@code index < 0 || index >= getRowCount()}
      */
     public void removeRow(int index) {
-        rows.remove(index);
+        ROW row = rows.remove(index);
+        row.detach();
         getState(true).rows.remove(index);
     }
 
     /**
      * Removes the given row from this section.
-     * 
+     *
      * @param row
      *            the row to remove, not null
      * @throws IllegalArgumentException
@@ -276,7 +369,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
     /**
      * Returns the row at the given index.
-     * 
+     *
      * @param index
      *            the index of the row
      * @return the row at the index
@@ -322,7 +415,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
     /**
      * Returns an unmodifiable list of the rows in this section.
-     * 
+     *
      * @return the rows in this section
      */
     protected List<ROW> getRows() {

@@ -14,7 +14,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -36,7 +36,7 @@ import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.ProgressBarRenderer;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridBasics extends AbstractReindeerTestUIWithLog {
+public class GridBasics extends AbstractTestUIWithLog {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
@@ -229,6 +229,21 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
                             .toArray(new Column[columnOrder.size()]));
                 }
             });
+
+            MenuItem headerTypeMenu = columnMenu.addItem("Header Type", null);
+            headerTypeMenu.addItem("Text Header", selectedItem -> grid
+                    .getDefaultHeaderRow().getCell(col).setText("Text Header"));
+            headerTypeMenu
+                    .addItem("HTML Header",
+                            selectedItem -> grid.getDefaultHeaderRow()
+                                    .getCell(col)
+                                    .setHtml("<b>HTML Header</b>"));
+            headerTypeMenu.addItem("Widget Header", selectedItem -> {
+                final Button button = new Button("Button Header");
+                button.addClickListener(clickEvent -> log("Button clicked!"));
+                grid.getDefaultHeaderRow().getCell(col).setComponent(button);
+            });
+
             columnMenu
                     .addItem("Sortable",
                             selectedItem -> col
@@ -278,12 +293,15 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
                         : null))
                 .setCheckable(true);
         stateMenu
-                .addItem("Cell description generator", item -> grid.getColumns()
-                        .stream().findFirst()
-                        .ifPresent(c -> c.setDescriptionGenerator(
-                                item.isChecked() ? t -> "Cell tooltip for row "
-                                        + t.getRowNumber() + ", Column 0"
-                                        : null)))
+                .addItem("Cell description generator",
+                        item -> grid.getColumns().stream().findFirst()
+                                .ifPresent(
+                                        c -> c.setDescriptionGenerator(
+                                                item.isChecked()
+                                                        ? t -> "Cell tooltip for row "
+                                                                + t.getRowNumber()
+                                                                + ", Column 0"
+                                                        : null)))
                 .setCheckable(true);
         stateMenu.addItem("Item click listener", new Command() {
 
@@ -414,9 +432,10 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
     private void createFooterMenu(MenuItem footerMenu) {
         footerMenu.addItem("Add default footer row", menuItem -> {
             FooterRow defaultFooter = grid.appendFooterRow();
-            grid.getColumns().forEach(
-                    column -> defaultFooter.getCell(column).setText(grid
-                            .getDefaultHeaderRow().getCell(column).getText()));
+            grid.getColumns()
+                    .forEach(column -> defaultFooter.getCell(column)
+                            .setText(grid.getDefaultHeaderRow().getCell(column)
+                                    .getText()));
             footerMenu.removeChild(menuItem);
         });
         footerMenu.addItem("Append footer row", menuItem -> {
