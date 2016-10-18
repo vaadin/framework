@@ -104,7 +104,6 @@ import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Grid.SelectionModel;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -547,6 +546,36 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 field.setCaption(null);
             }
             return field;
+        }
+
+        @Override
+        protected void bindFields() {
+            List<Field<?>> fields = new ArrayList<Field<?>>(getFields());
+            Item itemDataSource = getItemDataSource();
+
+            if (itemDataSource == null) {
+                unbindFields(fields);
+            } else {
+                bindFields(fields, itemDataSource);
+            }
+        }
+
+        private void unbindFields(List<Field<?>> fields) {
+            for (Field<?> field : fields) {
+                clearField(field);
+                unbind(field);
+                field.setParent(null);
+            }
+        }
+
+        private void bindFields(List<Field<?>> fields,
+                Item itemDataSource) {
+            for (Field<?> field : fields) {
+                if (itemDataSource.getItemProperty(getPropertyId(field))
+                        != null) {
+                    bind(field, getPropertyId(field));
+                }
+            }
         }
     }
 
@@ -2197,8 +2226,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             Renderer<?> renderer = column.getRenderer();
 
             Item item = cell.getItem();
-            Object modelValue = item.getItemProperty(cell.getPropertyId())
-                    .getValue();
+            Property itemProperty = item.getItemProperty(cell.getPropertyId());
+            Object modelValue =
+                    itemProperty == null ? null : itemProperty.getValue();
 
             data.put(columnKeys.key(cell.getPropertyId()), AbstractRenderer
                     .encodeValue(modelValue, renderer, converter, getLocale()));
@@ -4521,6 +4551,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     private boolean editorSaving = false;
     private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
+    /**
+     * Poperty ID to Field mapping that stores editor fields set by {@link
+     * #setEditorField(Object, Field)}.
+     */
+    private Map<Object, Field<?>> editorFields = new HashMap<Object, Field<?>>();
+
     private CellStyleGenerator cellStyleGenerator;
     private RowStyleGenerator rowStyleGenerator;
 
@@ -6805,6 +6841,15 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
 
+        // If field group has no field for this property, see if we have it stored
+        if (editor == null) {
+            editor = editorFields.get(propertyId);
+            if (editor != null) {
+                editorFieldGroup.bind(editor, propertyId);
+            }
+        }
+
+        // Otherwise try to build one
         try {
             if (editor == null) {
                 editor = editorFieldGroup.buildAndBind(propertyId);
@@ -6860,8 +6905,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         editorFieldGroup.setItemDataSource(item);
 
         for (Column column : getColumns()) {
-            column.getState().editorConnector = getEditorField(
-                    column.getPropertyId());
+            column.getState().editorConnector =
+                    item.getItemProperty(column.getPropertyId()) == null
+                            ? null : getEditorField(column.getPropertyId());
         }
 
         editorActive = true;
@@ -6890,6 +6936,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             field.setParent(this);
             editorFieldGroup.bind(field, propertyId);
         }
+
+        // Store field for this property for future reference
+        editorFields.put(propertyId, field);
     }
 
     /**

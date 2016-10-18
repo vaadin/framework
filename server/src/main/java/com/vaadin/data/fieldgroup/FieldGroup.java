@@ -101,6 +101,13 @@ public class FieldGroup implements Serializable {
     public void setItemDataSource(Item itemDataSource) {
         this.itemDataSource = itemDataSource;
 
+        bindFields();
+    }
+
+    /**
+     * Binds all fields to the properties in the item in use.
+     */
+    protected void bindFields() {
         for (Field<?> f : fieldToPropertyId.keySet()) {
             bind(f, fieldToPropertyId.get(f));
         }
@@ -256,20 +263,7 @@ public class FieldGroup implements Serializable {
         fieldToPropertyId.put(field, propertyId);
         propertyIdToField.put(propertyId, field);
         if (itemDataSource == null) {
-            // Clear any possible existing binding to clear the field
-            field.setPropertyDataSource(null);
-            boolean fieldReadOnly = field.isReadOnly();
-            if (!fieldReadOnly) {
-                field.clear();
-            } else {
-                // Temporarily make the field read-write so we can clear the
-                // value. Needed because setPropertyDataSource(null) does not
-                // currently clear the field
-                // (https://dev.vaadin.com/ticket/14733)
-                field.setReadOnly(false);
-                field.clear();
-                field.setReadOnly(true);
-            }
+            clearField(field);
 
             // Will be bound when data source is set
             return;
@@ -278,6 +272,29 @@ public class FieldGroup implements Serializable {
         field.setPropertyDataSource(
                 wrapInTransactionalProperty(getItemProperty(propertyId)));
         configureField(field);
+    }
+
+    /**
+     * Clears field and any possible existing binding.
+     *
+     * @param field
+     *         The field to be cleared
+     */
+    protected void clearField(Field<?> field) {
+        // Clear any possible existing binding to clear the field
+        field.setPropertyDataSource(null);
+        boolean fieldReadOnly = field.isReadOnly();
+        if (!fieldReadOnly) {
+            field.clear();
+        } else {
+            // Temporarily make the field read-write so we can clear the
+            // value. Needed because setPropertyDataSource(null) does not
+            // currently clear the field
+            // (https://dev.vaadin.com/ticket/14733)
+            field.setReadOnly(false);
+            field.clear();
+            field.setReadOnly(true);
+        }
     }
 
     /**
