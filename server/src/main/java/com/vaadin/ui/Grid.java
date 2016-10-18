@@ -54,6 +54,8 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.renderers.AbstractRenderer;
@@ -1562,11 +1564,75 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         public void setText(String text);
     }
 
+    /**
+     * A footer row in a Grid.
+     */
+    public interface FooterRow extends Serializable {
+
+        /**
+         * Returns the cell on this row corresponding to the given column id.
+         *
+         * @param columnId
+         *            the id of the column whose footer cell to get, not null
+         * @return the footer cell
+         * @throws IllegalArgumentException
+         *             if there is no such column in the grid
+         */
+        public FooterCell getCell(String columnId);
+
+        /**
+         * Returns the cell on this row corresponding to the given column.
+         *
+         * @param column
+         *            the column whose footer cell to get, not null
+         * @return the footer cell
+         * @throws IllegalArgumentException
+         *             if there is no such column in the grid
+         */
+        public default FooterCell getCell(Column<?, ?> column) {
+            return getCell(column.getId());
+        }
+    }
+
+    /**
+     * An individual cell on a Grid footer row.
+     */
+    public interface FooterCell extends Serializable {
+
+        /**
+         * Returns the textual caption of this cell.
+         *
+         * @return the footer caption
+         */
+        public String getText();
+
+        /**
+         * Sets the textual caption of this cell.
+         *
+         * @param text
+         *            the footer caption to set, not null
+         */
+        public void setText(String text);
+    }
+
     private class HeaderImpl extends Header {
 
         @Override
         protected SectionState getState(boolean markAsDirty) {
             return Grid.this.getState(markAsDirty).header;
+        }
+
+        @Override
+        protected Collection<Column<T, ?>> getColumns() {
+            return Grid.this.getColumns();
+        }
+    };
+
+    private class FooterImpl extends Footer {
+
+        @Override
+        protected SectionState getState(boolean markAsDirty) {
+            return Grid.this.getState(markAsDirty).footer;
         }
 
         @Override
@@ -1585,6 +1651,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
     private DescriptionGenerator<T> descriptionGenerator;
 
     private Header header = new HeaderImpl();
+    private Footer footer = new FooterImpl();
 
     private int counter = 0;
 
@@ -2153,6 +2220,128 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     protected Header getHeader() {
         return header;
+    }
+
+    /**
+     * Returns the footer row at the given index.
+     *
+     * @param index
+     *            the index of the row, where the topmost row has index zero
+     * @return the footer row at the index
+     * @throws IndexOutOfBoundsException
+     *             if {@code rowIndex < 0 || rowIndex >= getFooterRowCount()}
+     */
+    public FooterRow getFooterRow(int index) {
+        return getFooter().getRow(index);
+    }
+
+    /**
+     * Gets the number of rows in the footer section.
+     *
+     * @return the number of footer rows
+     */
+    public int getFooterRowCount() {
+        return getFooter().getRowCount();
+    }
+
+    /**
+     * Inserts a new row at the given position to the footer section. Shifts the
+     * row currently at that position and any subsequent rows down (adds one to
+     * their indices). Inserting at {@link #getFooterRowCount()} appends the row
+     * at the bottom of the footer.
+     *
+     * @param index
+     *            the index at which to insert the row, where the topmost row
+     *            has index zero
+     * @return the inserted footer row
+     *
+     * @throws IndexOutOfBoundsException
+     *             if {@code rowIndex < 0 || rowIndex > getFooterRowCount()}
+     *
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow addFooterRowAt(int index) {
+        return getFooter().addRowAt(index);
+    }
+
+    /**
+     * Adds a new row at the bottom of the footer section.
+     *
+     * @return the appended footer row
+     *
+     * @see #prependFooterRow()
+     * @see #addFooterRowAt(int)
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow appendFooterRow() {
+        return addFooterRowAt(getFooterRowCount());
+    }
+
+    /**
+     * Adds a new row at the top of the footer section.
+     *
+     * @return the prepended footer row
+     *
+     * @see #appendFooterRow()
+     * @see #addFooterRowAt(int)
+     * @see #removeFooterRow(FooterRow)
+     * @see #removeFooterRow(int)
+     */
+    public FooterRow prependFooterRow() {
+        return addFooterRowAt(0);
+    }
+
+    /**
+     * Removes the given row from the footer section. Removing a default row
+     * sets the Grid to have no default row.
+     *
+     * @param row
+     *            the footer row to be removed, not null
+     *
+     * @throws IllegalArgumentException
+     *             if the footer does not contain the row
+     *
+     * @see #removeFooterRow(int)
+     * @see #addFooterRowAt(int)
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     */
+    public void removeFooterRow(FooterRow row) {
+        getFooter().removeRow(row);
+    }
+
+    /**
+     * Removes the row at the given position from the footer section.
+     *
+     * @param index
+     *            the index of the row to remove, where the topmost row has
+     *            index zero
+     *
+     * @throws IndexOutOfBoundsException
+     *             if {@code index < 0 || index >= getFooterRowCount()}
+     *
+     * @see #removeFooterRow(FooterRow)
+     * @see #addFooterRowAt(int)
+     * @see #appendFooterRow()
+     * @see #prependFooterRow()
+     */
+    public void removeFooterRow(int index) {
+        getFooter().removeRow(index);
+    }
+
+    /**
+     * Returns the footer section of this grid. The default footer contains a
+     * single row, set as the {@linkplain #setDefaultFooterRow(FooterRow)
+     * default row}.
+     *
+     * @return the footer section
+     */
+    protected Footer getFooter() {
+        return footer;
     }
 
     /**

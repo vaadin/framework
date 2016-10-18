@@ -53,6 +53,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -261,6 +262,27 @@ public class GridConnector
             if (rowState.defaultHeader) {
                 grid.setDefaultHeaderRow(row);
             }
+        }
+    }
+
+    /**
+     * Updates the grid footer section on state change.
+     */
+    @OnStateChange("footer")
+    void updateFooter() {
+        final Grid<JsonObject> grid = getWidget();
+        final SectionState state = getState().footer;
+
+        while (grid.getFooterRowCount() > 0) {
+            grid.removeFooterRow(0);
+        }
+
+        for (RowState rowState : state.rows) {
+            FooterRow row = grid.appendFooterRow();
+
+            rowState.cells.forEach((columnId, cellState) -> {
+                row.getCell(getColumn(columnId)).setText(cellState.text);
+            });
         }
     }
 

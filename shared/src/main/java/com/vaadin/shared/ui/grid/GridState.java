@@ -102,6 +102,9 @@ public class GridState extends AbstractSingleSelectState {
     /** The state of the header section. */
     public SectionState header = new SectionState();
 
+    /** The state of the footer section. */
+    public SectionState footer = new SectionState();
+
     /**
      * Column order in grid.
      */

@@ -20,6 +20,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.DetailsGenerator;
+import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -199,6 +200,7 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
         createDetailsMenu(componentMenu.addItem("Details", null));
         createBodyMenu(componentMenu.addItem("Body rows", null));
         createHeaderMenu(componentMenu.addItem("Header", null));
+        createFooterMenu(componentMenu.addItem("Footer", null));
         createColumnsMenu(componentMenu.addItem("Columns", null));
         return menu;
     }
@@ -406,6 +408,35 @@ public class GridBasics extends AbstractReindeerTestUIWithLog {
         });
         headerMenu.addItem("Set no default row", menuItem -> {
             grid.setDefaultHeaderRow(null);
+        });
+    }
+
+    private void createFooterMenu(MenuItem footerMenu) {
+        footerMenu.addItem("Add default footer row", menuItem -> {
+            FooterRow defaultFooter = grid.appendFooterRow();
+            grid.getColumns().forEach(
+                    column -> defaultFooter.getCell(column).setText(grid
+                            .getDefaultHeaderRow().getCell(column).getText()));
+            footerMenu.removeChild(menuItem);
+        });
+        footerMenu.addItem("Append footer row", menuItem -> {
+            FooterRow row = grid.appendFooterRow();
+
+            int i = 0;
+            for (Column<?, ?> column : grid.getColumns()) {
+                row.getCell(column).setText("Footer cell " + i++);
+            }
+        });
+        footerMenu.addItem("Prepend footer row", menuItem -> {
+            FooterRow row = grid.prependFooterRow();
+
+            int i = 0;
+            for (Column<?, ?> column : grid.getColumns()) {
+                row.getCell(column).setText("Footer cell " + i++);
+            }
+        });
+        footerMenu.addItem("Remove first footer row", menuItem -> {
+            grid.removeFooterRow(0);
         });
     }
 

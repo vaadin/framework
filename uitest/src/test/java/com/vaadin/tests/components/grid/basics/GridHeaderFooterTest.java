@@ -31,8 +31,18 @@ public class GridHeaderFooterTest extends GridBasicsTest {
 
     protected static final String[] HEADER_TEXTS = IntStream
             .range(0, GridBasics.COLUMN_CAPTIONS.length)
-            .mapToObj(i -> "Header cell " + i)
-            .toArray(String[]::new);
+            .mapToObj(i -> "Header cell " + i).toArray(String[]::new);
+
+    protected static final String[] FOOTER_TEXTS = IntStream
+            .range(0, GridBasics.COLUMN_CAPTIONS.length)
+            .mapToObj(i -> "Footer cell " + i).toArray(String[]::new);
+
+    @Override
+    public void setUp() {
+        super.setUp();
+
+        selectMenuPath("Component", "Footer", "Add default footer row");
+    }
 
     @Test
     public void initialState_defaultHeaderPresent() {
@@ -103,16 +113,40 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         assertNoSortIndicator(headerCell, "sort-desc");
     }
 
+    @Test
+    public void initialState_defaultFooterPresent() {
+        assertEquals(1, getGridElement().getFooterCount());
+        assertFooterTexts(0, GridBasics.COLUMN_CAPTIONS);
+    }
+
+    @Test
+    public void appendFooterRow_addedToBottom() {
+        selectMenuPath("Component", "Footer", "Append footer row");
+
+        assertEquals(2, getGridElement().getFooterCount());
+        assertFooterTexts(0, GridBasics.COLUMN_CAPTIONS);
+        assertFooterTexts(1, FOOTER_TEXTS);
+    }
+
+    @Test
+    public void prependFooterRow_addedToTop() {
+        selectMenuPath("Component", "Footer", "Prepend footer row");
+
+        assertEquals(2, getGridElement().getFooterCount());
+        assertFooterTexts(0, FOOTER_TEXTS);
+        assertFooterTexts(1, GridBasics.COLUMN_CAPTIONS);
+    }
+
     protected static void assertText(String expected, GridCellElement e) {
         // TBE.getText returns "" if the element is scrolled out of view
-        String actual = e.findElement(By.tagName("div")).getAttribute(
-                "innerHTML");
+        String actual = e.findElement(By.tagName("div"))
+                .getAttribute("innerHTML");
         assertEquals(expected, actual);
     }
 
     protected void assertHeaderTexts(int rowIndex, String[] texts) {
-        List<GridCellElement> headerCells = getGridElement().getHeaderCells(
-                rowIndex);
+        List<GridCellElement> headerCells = getGridElement()
+                .getHeaderCells(rowIndex);
 
         assertEquals(texts.length, headerCells.size());
         for (int i = 0; i < headerCells.size(); i++) {
@@ -120,9 +154,19 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         }
     }
 
+    protected void assertFooterTexts(int rowIndex, String[] texts) {
+        List<GridCellElement> footerCells = getGridElement()
+                .getFooterCells(rowIndex);
+
+        assertEquals(texts.length, footerCells.size());
+        for (int i = 0; i < footerCells.size(); i++) {
+            assertText(texts[i], footerCells.get(i));
+        }
+    }
+
     protected void assertSortIndicator(GridCellElement cell, String classname) {
-        assertTrue("Header cell should have sort indicator " + classname, cell
-                .getAttribute("class").contains(classname));
+        assertTrue("Header cell should have sort indicator " + classname,
+                cell.getAttribute("class").contains(classname));
     }
 
     protected void assertNoSortIndicator(GridCellElement cell,
