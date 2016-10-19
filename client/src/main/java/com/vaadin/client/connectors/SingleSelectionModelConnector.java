@@ -15,11 +15,14 @@
  */
 package com.vaadin.client.connectors;
 
+import java.util.logging.Logger;
+
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
+import com.vaadin.client.widget.grid.selection.HasUserSelectionAllowed;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Single;
 import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
@@ -77,14 +80,28 @@ public class SingleSelectionModelConnector extends
 
     @OnStateChange("userSelectionAllowed")
     void updateUserSelectionAllowed() {
-        selectionModel.setUserSelectionAllowed(getState().userSelectionAllowed);
+
+        if (selectionModel instanceof HasUserSelectionAllowed) {
+            ((HasUserSelectionAllowed) selectionModel)
+                    .setUserSelectionAllowed(getState().userSelectionAllowed);
+        } else {
+            getLogger().warning("userSelectionAllowed set to "
+                    + getState().userSelectionAllowed
+                    + " but the selection model does not implement "
+                    + HasUserSelectionAllowed.class.getSimpleName());
+        }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(SingleSelectionModelConnector.class.getName());
     }
 
     /**
      * SingleSelectionModel without a selection column renderer.
      */
     public class SingleSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Single<JsonObject> {
+            implements SelectionModel.Single<JsonObject>,
+            HasUserSelectionAllowed<JsonObject> {
 
         private RowHandle<JsonObject> selectedRow;
         private boolean deselectAllowed;

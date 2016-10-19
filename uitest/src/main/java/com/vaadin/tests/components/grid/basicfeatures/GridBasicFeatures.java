@@ -75,6 +75,7 @@ import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Grid.RowStyleGenerator;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Grid.SelectionModel;
+import com.vaadin.ui.Grid.SelectionModel.HasUserSelectionAllowed;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -511,7 +512,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             grid.removeSelectionListener(selectionListener);
                         }
 
-                        grid.getSelectionModel()
+                        ((HasUserSelectionAllowed) grid.getSelectionModel())
                                 .setUserSelectionAllowed(allowUserSelection);
                     }
                 });
@@ -815,7 +816,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         allowUserSelection = value.booleanValue();
 
                         SelectionModel model = c.getSelectionModel();
-                        model.setUserSelectionAllowed(allowUserSelection);
+                        ((HasUserSelectionAllowed) model)
+                                .setUserSelectionAllowed(allowUserSelection);
                     }
                 });
         createBooleanAction("Column Reordering Allowed", "State", false,
@@ -1282,12 +1284,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 }, null);
 
-        createBooleanAction("Simple resize mode", "Columns", false, new Command<Grid, Boolean>() {
-            @Override
-            public void execute(Grid g, Boolean value, Object data) {
-                g.setColumnResizeMode(value ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED);
-            }
-        });
+        createBooleanAction("Simple resize mode", "Columns", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid g, Boolean value, Object data) {
+                        g.setColumnResizeMode(value ? ColumnResizeMode.SIMPLE
+                                : ColumnResizeMode.ANIMATED);
+                    }
+                });
     }
 
     private static String getColumnProperty(int c) {

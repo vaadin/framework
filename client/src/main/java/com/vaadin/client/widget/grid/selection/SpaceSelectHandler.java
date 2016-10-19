@@ -44,7 +44,7 @@ public class SpaceSelectHandler<T> {
 
         @Override
         public void onKeyDown(GridKeyDownEvent event) {
-            if (!grid.getSelectionModel().isUserSelectionAllowed()) {
+            if (!grid.isUserSelectionAllowed()) {
                 return;
             }
 

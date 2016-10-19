@@ -70,16 +70,4 @@ public class SelectionModelNone<T> extends AbstractRowHandleSelectionModel<T>
                 "This selection model " + "does not support deselection");
     }
 
-    @Override
-    public boolean isUserSelectionAllowed() {
-        return false;
-    }
-
-    @Override
-    public void setUserSelectionAllowed(boolean userSelectionAllowed) {
-        throw new UnsupportedOperationException(
-                "This selection model " + "does not support selection");
-
-    }
-
 }

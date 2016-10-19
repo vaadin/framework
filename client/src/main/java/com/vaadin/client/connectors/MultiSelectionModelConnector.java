@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -35,6 +36,7 @@ import com.vaadin.client.widget.grid.DataAvailableEvent;
 import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
 import com.vaadin.client.widget.grid.events.SelectAllHandler;
+import com.vaadin.client.widget.grid.selection.HasUserSelectionAllowed;
 import com.vaadin.client.widget.grid.selection.MultiSelectionRenderer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Multi;
@@ -98,11 +100,28 @@ public class MultiSelectionModelConnector extends
 
     @OnStateChange("userSelectionAllowed")
     void updateUserSelectionAllowed() {
-        selectionModel.setUserSelectionAllowed(getState().userSelectionAllowed);
+        if (selectionModel instanceof HasUserSelectionAllowed) {
+            ((HasUserSelectionAllowed) selectionModel)
+                    .setUserSelectionAllowed(getState().userSelectionAllowed);
+        } else {
+            getLogger().warning("userSelectionAllowed set to "
+                    + getState().userSelectionAllowed
+                    + " but the selection model does not implement "
+                    + HasUserSelectionAllowed.class.getSimpleName());
+        }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(MultiSelectionModelConnector.class.getName());
+    }
+
+    /**
+     * The default multi selection model used for this connector.
+     *
+     */
     protected class MultiSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Multi.Batched<JsonObject> {
+            implements SelectionModel.Multi.Batched<JsonObject>,
+            HasUserSelectionAllowed<JsonObject> {
 
         private ComplexRenderer<Boolean> renderer = null;
         private Set<RowHandle<JsonObject>> selected = new HashSet<RowHandle<JsonObject>>();

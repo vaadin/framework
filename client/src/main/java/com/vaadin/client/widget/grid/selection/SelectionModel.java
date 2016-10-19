@@ -81,23 +81,6 @@ public interface SelectionModel<T> {
     public Collection<T> getSelectedRows();
 
     /**
-     * Checks if the user is allowed to change the selection.
-     * 
-     * @return <code>true</code> if the user is allowed to change the selection,
-     *         <code>false</code> otherwise
-     */
-    public boolean isUserSelectionAllowed();
-
-    /**
-     * Sets whether the user is allowed to change the selection.
-     * 
-     * @param userSelectionAllowed
-     *            <code>true</code> if the user is allowed to change the
-     *            selection, <code>false</code> otherwise
-     */
-    public void setUserSelectionAllowed(boolean userSelectionAllowed);
-
-    /**
      * Selection model that allows a maximum of one row to be selected at any
      * one time.
      *

@@ -158,6 +158,7 @@ import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
 import com.vaadin.client.widget.grid.events.SelectAllHandler;
 import com.vaadin.client.widget.grid.selection.HasSelectionHandlers;
+import com.vaadin.client.widget.grid.selection.HasUserSelectionAllowed;
 import com.vaadin.client.widget.grid.selection.MultiSelectionRenderer;
 import com.vaadin.client.widget.grid.selection.SelectionEvent;
 import com.vaadin.client.widget.grid.selection.SelectionHandler;
@@ -1921,8 +1922,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         checkBox.addClickHandler(new ClickHandler() {
                             @Override
                             public void onClick(ClickEvent event) {
-                                if (!grid.getSelectionModel()
-                                        .isUserSelectionAllowed()) {
+                                if (!grid.isUserSelectionAllowed()) {
                                     return;
                                 }
                                 T row = pinnedRowHandle.getRow();
@@ -2921,8 +2921,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (selectAllCheckBox == null) {
                 selectAllCheckBox = GWT.create(CheckBox.class);
-                selectAllCheckBox.setEnabled(
-                        getSelectionModel().isUserSelectionAllowed());
+                selectAllCheckBox.setEnabled(isUserSelectionAllowed());
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
                 selectAllCheckBox.addValueChangeHandler(
@@ -2931,8 +2930,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             @Override
                             public void onValueChange(
                                     ValueChangeEvent<Boolean> event) {
-                                if (!getSelectionModel()
-                                        .isUserSelectionAllowed()) {
+                                if (!isUserSelectionAllowed()) {
                                     return;
                                 }
                                 if (event.getValue()) {
@@ -2972,7 +2970,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
                             return;
                         }
-                        if (!getSelectionModel().isUserSelectionAllowed()) {
+                        if (!isUserSelectionAllowed()) {
                             return;
                         }
 
@@ -4445,8 +4443,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     reordered.addAll(columns.subList(
                             draggedColumnIndex + colspan, columns.size()));
                 }
-                reordered.remove(selectionColumn); // since setColumnOrder will
-                                                   // add it anyway!
+                reordered.remove(selectionColumn); // since
+                                                   // setColumnOrder
+                                                   // will
+                                                   // add
+                                                   // it
+                                                   // anyway!
 
                 // capture focused cell column before reorder
                 Cell focusedCell = cellFocusHandler.getFocusedCell();
@@ -4460,7 +4462,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         .toArray(new Column[reordered.size()]);
                 setColumnOrder(array);
                 transferCellFocusOnDrop();
-            } // else no reordering
+            } // else
+              // no
+              // reordering
         }
 
         private void transferCellFocusOnDrop() {
@@ -6509,8 +6513,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             assert column.isHidden();
             // Hidden columns are not included in Escalator
         } else {
-            getEscalator().getColumnConfiguration().removeColumns(visibleColumnIndex,
-                    1);
+            getEscalator().getColumnConfiguration()
+                    .removeColumns(visibleColumnIndex, 1);
         }
 
         updateFrozenColumns();
@@ -9235,5 +9239,21 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         }
         return null;
+    }
+
+    /**
+     * Checks if selection by the user is allowed in the grid.
+     * 
+     * @return <code>true</code> if selection by the user is allowed by the
+     *         selection model (the default), <code>false</code> otherwise
+     */
+    public boolean isUserSelectionAllowed() {
+        if (!(getSelectionModel() instanceof HasUserSelectionAllowed)) {
+            // Selection model does not support toggling user selection allowed
+            // - old default is to always allow selection
+            return true;
+        }
+        return ((HasUserSelectionAllowed) getSelectionModel())
+                .isUserSelectionAllowed();
     }
 }

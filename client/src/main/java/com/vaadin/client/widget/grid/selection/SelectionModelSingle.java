@@ -29,7 +29,7 @@ import com.vaadin.client.widgets.Grid;
  * @since 7.4
  */
 public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
-        implements SelectionModel.Single<T> {
+        implements SelectionModel.Single<T>, HasUserSelectionAllowed<T> {
 
     private Grid<T> grid;
     private RowHandle<T> selectedRow;

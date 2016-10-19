@@ -633,7 +633,7 @@ public class MultiSelectionRenderer<T>
             CheckBox checkBox) {
         checkBox.setValue(data, false);
         checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive()
-                && grid.getSelectionModel().isUserSelectionAllowed());
+                && grid.isUserSelectionAllowed());
     }
 
     @Override
@@ -771,7 +771,7 @@ public class MultiSelectionRenderer<T>
     }
 
     protected void setSelected(final int logicalRow, final boolean select) {
-        if (!grid.getSelectionModel().isUserSelectionAllowed()) {
+        if (!grid.isUserSelectionAllowed()) {
             return;
         }
         T row = grid.getDataSource().getRow(logicalRow);

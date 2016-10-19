@@ -36,7 +36,7 @@ public class ClickSelectHandler<T> {
 
         @Override
         public void onClick(GridClickEvent event) {
-            if (!grid.getSelectionModel().isUserSelectionAllowed()) {
+            if (!grid.isUserSelectionAllowed()) {
                 return;
             }
 

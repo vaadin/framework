@@ -105,6 +105,7 @@ import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Grid.SelectionModel.HasUserSelectionAllowed;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -569,11 +570,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
         }
 
-        private void bindFields(List<Field<?>> fields,
-                Item itemDataSource) {
+        private void bindFields(List<Field<?>> fields, Item itemDataSource) {
             for (Field<?> field : fields) {
-                if (itemDataSource.getItemProperty(getPropertyId(field))
-                        != null) {
+                if (itemDataSource
+                        .getItemProperty(getPropertyId(field)) != null) {
                     bind(field, getPropertyId(field));
                 }
             }
@@ -1105,6 +1105,34 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * SelectionModel should extend {@link AbstractGridExtension}.
      */
     public interface SelectionModel extends Serializable, Extension {
+
+        /**
+         * Interface implemented by selection models which support disabling
+         * client side selection while still allowing programmatic selection on
+         * the server.
+         *
+         */
+        public interface HasUserSelectionAllowed extends SelectionModel {
+
+            /**
+             * Checks if the user is allowed to change the selection.
+             * 
+             * @return <code>true</code> if the user is allowed to change the
+             *         selection, <code>false</code> otherwise
+             */
+            public boolean isUserSelectionAllowed();
+
+            /**
+             * Sets whether the user is allowed to change the selection.
+             * 
+             * @param userSelectionAllowed
+             *            <code>true</code> if the user is allowed to change the
+             *            selection, <code>false</code> otherwise
+             */
+            public void setUserSelectionAllowed(boolean userSelectionAllowed);
+
+        }
+
         /**
          * Checks whether an item is selected or not.
          *
@@ -1144,24 +1172,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * selected.
          */
         void reset();
-
-        /**
-         * Checks if the user is allowed to change the selection.
-         * 
-         * @return <code>true</code> if the user is allowed to change the
-         *         selection, <code>false</code> otherwise
-         */
-        public abstract boolean isUserSelectionAllowed();
-
-        /**
-         * Sets whether the user is allowed to change the selection.
-         * 
-         * @param userSelectionAllowed
-         *            <code>true</code> if the user is allowed to change the
-         *            selection, <code>false</code> otherwise
-         */
-        public abstract void setUserSelectionAllowed(
-                boolean userSelectionAllowed);
 
         /**
          * A SelectionModel that supports multiple selections to be made.
@@ -1482,7 +1492,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * A default implementation of a {@link SelectionModel.Single}
      */
     public static class SingleSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Single {
+            implements SelectionModel.Single, HasUserSelectionAllowed {
 
         @Override
         protected void extend(AbstractClientConnector target) {
@@ -1624,24 +1634,14 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             // NOOP
         }
 
-        @Override
-        public boolean isUserSelectionAllowed() {
-            return false;
-        }
-
-        @Override
-        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
-            throw new UnsupportedOperationException(
-                    getClass().getName() + " does not support user selection");
-        }
-
     }
 
     /**
      * A default implementation of a {@link SelectionModel.Multi}
      */
     public static class MultiSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Multi {
+            implements SelectionModel.Multi,
+            SelectionModel.HasUserSelectionAllowed {
 
         /**
          * The default selection size limit.
@@ -2305,8 +2305,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             Item item = cell.getItem();
             Property itemProperty = item.getItemProperty(cell.getPropertyId());
-            Object modelValue =
-                    itemProperty == null ? null : itemProperty.getValue();
+            Object modelValue = itemProperty == null ? null
+                    : itemProperty.getValue();
 
             data.put(columnKeys.key(cell.getPropertyId()), AbstractRenderer
                     .encodeValue(modelValue, renderer, converter, getLocale()));
@@ -4631,8 +4631,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
     /**
-     * Poperty ID to Field mapping that stores editor fields set by {@link
-     * #setEditorField(Object, Field)}.
+     * Poperty ID to Field mapping that stores editor fields set by
+     * {@link #setEditorField(Object, Field)}.
      */
     private Map<Object, Field<?>> editorFields = new HashMap<Object, Field<?>>();
 
@@ -5339,10 +5339,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Sets the column resize mode to use. The default mode is {@link ColumnResizeMode#ANIMATED}.
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
      *
-     * @param mode a ColumnResizeMode value
-
+     * @param mode
+     *            a ColumnResizeMode value
+     * 
      * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
@@ -5350,7 +5352,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Returns the current column resize mode. The default mode is {@link ColumnResizeMode#ANIMATED}.
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
      *
      * @return a ColumnResizeMode value
      * 
@@ -6941,7 +6944,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
 
-        // If field group has no field for this property, see if we have it stored
+        // If field group has no field for this property, see if we have it
+        // stored
         if (editor == null) {
             editor = editorFields.get(propertyId);
             if (editor != null) {
@@ -7005,9 +7009,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         editorFieldGroup.setItemDataSource(item);
 
         for (Column column : getColumns()) {
-            column.getState().editorConnector =
-                    item.getItemProperty(column.getPropertyId()) == null
-                            ? null : getEditorField(column.getPropertyId());
+            column.getState().editorConnector = item
+                    .getItemProperty(column.getPropertyId()) == null ? null
+                            : getEditorField(column.getPropertyId());
         }
 
         editorActive = true;
