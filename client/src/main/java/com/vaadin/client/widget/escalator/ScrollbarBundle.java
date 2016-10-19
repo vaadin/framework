@@ -368,6 +368,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     private HandlerRegistration scrollSizeTemporaryScrollHandler;
     private HandlerRegistration offsetSizeTemporaryScrollHandler;
+    private HandlerRegistration scrollInProgress;
 
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
@@ -530,6 +531,16 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
         if (!WidgetUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
+            if (scrollInProgress == null) {
+                // Only used for tracking that there is "workPending"
+                scrollInProgress = addScrollHandler(new ScrollHandler() {
+                    @Override
+                    public void onScroll(ScrollEvent event) {
+                        scrollInProgress.removeHandler();
+                        scrollInProgress = null;
+                    }
+                });
+            }
             if (isInvisibleScrollbar) {
                 invisibleScrollbarTemporaryResizer.show();
             }
@@ -919,6 +930,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         // requestAnimationFrame - which is not automatically checked
         return scrollSizeTemporaryScrollHandler != null
                 || offsetSizeTemporaryScrollHandler != null
-                || scrollEventFirer.isBeingFired;
+                || scrollInProgress != null || scrollEventFirer.isBeingFired;
     }
 }
