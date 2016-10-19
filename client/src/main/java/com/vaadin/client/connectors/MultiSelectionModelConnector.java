@@ -40,7 +40,9 @@ import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widget.grid.selection.SelectionModel.Multi;
 import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.HeaderCell;
+import com.vaadin.client.widgets.Grid.SelectionColumn;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.Range;
@@ -94,6 +96,11 @@ public class MultiSelectionModelConnector extends
         }
     }
 
+    @OnStateChange("userSelectionAllowed")
+    void updateUserSelectionAllowed() {
+        selectionModel.setUserSelectionAllowed(getState().userSelectionAllowed);
+    }
+
     protected class MultiSelectionModel extends AbstractSelectionModel
             implements SelectionModel.Multi.Batched<JsonObject> {
 
@@ -104,6 +111,7 @@ public class MultiSelectionModelConnector extends
         private HandlerRegistration dataAvailable;
         private Range availableRows;
         private boolean batchSelect = false;
+        private boolean userSelectionAllowed = true;
 
         @Override
         public void setGrid(Grid<JsonObject> grid) {
@@ -381,6 +389,22 @@ public class MultiSelectionModelConnector extends
         @Override
         public Collection<JsonObject> getDeselectedRowsBatch() {
             return Collections.unmodifiableSet(getRows(deselected));
+        }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            this.userSelectionAllowed = userSelectionAllowed;
+            for (Column<?, ?> c : getGrid().getColumns()) {
+                if (c instanceof SelectionColumn) {
+                    ((SelectionColumn) c)
+                            .setUserSelectionAllowed(userSelectionAllowed);
+                }
+            }
         }
     }
 }

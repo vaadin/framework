@@ -45,6 +45,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
     /* Event handling for selection with space key */
     private SpaceSelectHandler<T> spaceSelectHandler;
+    private boolean userSelectionAllowed = true;
 
     public SelectionModelMulti() {
         grid = null;
@@ -269,5 +270,15 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             rows.add(handle.getRow());
         }
         return rows;
+    }
+
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return userSelectionAllowed;
+    }
+
+    @Override
+    public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+        this.userSelectionAllowed = userSelectionAllowed;
     }
 }

@@ -108,6 +108,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     private int containerDelay = 0;
 
     private boolean singleSelectAllowDeselect = true;
+    private boolean allowUserSelection = true;
 
     private IndexedContainer ds;
     private Grid grid;
@@ -509,6 +510,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         } else {
                             grid.removeSelectionListener(selectionListener);
                         }
+
+                        grid.getSelectionModel()
+                                .setUserSelectionAllowed(allowUserSelection);
                     }
                 });
 
@@ -802,6 +806,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                             ((SelectionModel.Single) model).setDeselectAllowed(
                                     singleSelectAllowDeselect);
                         }
+                    }
+                });
+        createBooleanAction("Allow user selection", "State", allowUserSelection,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid c, Boolean value, Object data) {
+                        allowUserSelection = value.booleanValue();
+
+                        SelectionModel model = c.getSelectionModel();
+                        model.setUserSelectionAllowed(allowUserSelection);
                     }
                 });
         createBooleanAction("Column Reordering Allowed", "State", false,

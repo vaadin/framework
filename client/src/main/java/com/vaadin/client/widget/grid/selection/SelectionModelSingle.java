@@ -41,6 +41,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
     private ClickSelectHandler<T> clickSelectHandler;
 
     private boolean deselectAllowed = true;
+    private boolean userSelectionAllowed = true;
 
     @Override
     public boolean isSelected(T row) {
@@ -170,6 +171,16 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
         if (clickSelectHandler != null) {
             clickSelectHandler.setDeselectAllowed(deselectAllowed);
         }
+    }
+
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return userSelectionAllowed;
+    }
+
+    @Override
+    public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+        this.userSelectionAllowed = userSelectionAllowed;
     }
 
 }

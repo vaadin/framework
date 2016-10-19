@@ -1921,6 +1921,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         checkBox.addClickHandler(new ClickHandler() {
                             @Override
                             public void onClick(ClickEvent event) {
+                                if (!grid.getSelectionModel()
+                                        .isUserSelectionAllowed()) {
+                                    return;
+                                }
                                 T row = pinnedRowHandle.getRow();
                                 if (grid.isSelected(row)) {
                                     grid.deselect(row);
@@ -2885,6 +2889,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private boolean initDone = false;
         private boolean selected = false;
         private CheckBox selectAllCheckBox;
+        private boolean userSelectionAllowed = true;
+        private boolean enabled = true;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
@@ -2915,6 +2921,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (selectAllCheckBox == null) {
                 selectAllCheckBox = GWT.create(CheckBox.class);
+                selectAllCheckBox.setEnabled(
+                        getSelectionModel().isUserSelectionAllowed());
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
                 selectAllCheckBox.addValueChangeHandler(
@@ -2923,6 +2931,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             @Override
                             public void onValueChange(
                                     ValueChangeEvent<Boolean> event) {
+                                if (!getSelectionModel()
+                                        .isUserSelectionAllowed()) {
+                                    return;
+                                }
                                 if (event.getValue()) {
                                     fireEvent(new SelectAllEvent<T>(model));
                                     selected = true;
@@ -2937,6 +2949,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 addHeaderClickHandler(new HeaderClickHandler() {
                     @Override
                     public void onClick(GridClickEvent event) {
+                        if (!userSelectionAllowed) {
+                            return;
+                        }
+
                         CellReference<?> targetCell = event.getTargetCell();
                         int defaultRowIndex = getHeader().getRows()
                                 .indexOf(getDefaultHeaderRow());
@@ -2956,6 +2972,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
                             return;
                         }
+                        if (!getSelectionModel().isUserSelectionAllowed()) {
+                            return;
+                        }
+
                         HeaderRow targetHeaderRow = getHeader()
                                 .getRow(event.getFocusedCell().getRowIndex());
                         if (!targetHeaderRow.isDefault()) {
@@ -3051,14 +3071,35 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *            to disable it.
          */
         public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
             if (selectAllCheckBox != null) {
-                selectAllCheckBox.setEnabled(enabled);
+                selectAllCheckBox.setEnabled(enabled && userSelectionAllowed);
             }
         }
 
         @Override
         public void onEnabled(boolean enabled) {
             setEnabled(enabled);
+        }
+
+        /**
+         * Sets whether the user is allowed to change the selection.
+         * 
+         * @param userSelectionAllowed
+         *            <code>true</code> if the user is allowed to change the
+         *            selection, <code>false</code> otherwise
+         */
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            if (userSelectionAllowed == this.userSelectionAllowed) {
+                return;
+            }
+
+            this.userSelectionAllowed = userSelectionAllowed;
+            // Update checkbox state
+            setEnabled(enabled);
+            // Re-render select checkboxes
+            getEscalator().getBody().refreshRows(0,
+                    getEscalator().getBody().getRowCount());
         }
     }
 

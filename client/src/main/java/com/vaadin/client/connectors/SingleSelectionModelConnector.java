@@ -75,6 +75,11 @@ public class SingleSelectionModelConnector extends
         selectionModel.setDeselectAllowed(getState().deselectAllowed);
     }
 
+    @OnStateChange("userSelectionAllowed")
+    void updateUserSelectionAllowed() {
+        selectionModel.setUserSelectionAllowed(getState().userSelectionAllowed);
+    }
+
     /**
      * SingleSelectionModel without a selection column renderer.
      */
@@ -83,6 +88,7 @@ public class SingleSelectionModelConnector extends
 
         private RowHandle<JsonObject> selectedRow;
         private boolean deselectAllowed;
+        private boolean userSelectionAllowed = true;
 
         @Override
         public Renderer<Boolean> getSelectionColumnRenderer() {
@@ -176,5 +182,16 @@ public class SingleSelectionModelConnector extends
         public boolean isDeselectAllowed() {
             return deselectAllowed;
         }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            this.userSelectionAllowed = userSelectionAllowed;
+        }
+
     }
 }

@@ -1146,6 +1146,24 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         void reset();
 
         /**
+         * Checks if the user is allowed to change the selection.
+         * 
+         * @return <code>true</code> if the user is allowed to change the
+         *         selection, <code>false</code> otherwise
+         */
+        public abstract boolean isUserSelectionAllowed();
+
+        /**
+         * Sets whether the user is allowed to change the selection.
+         * 
+         * @param userSelectionAllowed
+         *            <code>true</code> if the user is allowed to change the
+         *            selection, <code>false</code> otherwise
+         */
+        public abstract void setUserSelectionAllowed(
+                boolean userSelectionAllowed);
+
+        /**
          * A SelectionModel that supports multiple selections to be made.
          * <p>
          * This interface has a contract of having the same behavior, no matter
@@ -1473,6 +1491,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void select(String rowKey) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select '" + rowKey
+                                        + "' although user selection is disallowed");
+                    }
                     SingleSelectionModel.this.select(getItemId(rowKey), false);
                 }
             });
@@ -1563,6 +1586,16 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         protected SingleSelectionModelState getState() {
             return (SingleSelectionModelState) super.getState();
         }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return getState().userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            getState().userSelectionAllowed = userSelectionAllowed;
+        }
     }
 
     /**
@@ -1590,6 +1623,18 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         public void reset() {
             // NOOP
         }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return false;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            throw new UnsupportedOperationException(
+                    getClass().getName() + " does not support user selection");
+        }
+
     }
 
     /**
@@ -1614,6 +1659,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void select(List<String> rowKeys) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select '" + rowKeys
+                                        + "' although user selection is disallowed");
+                    }
+
                     List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
@@ -1623,6 +1674,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void deselect(List<String> rowKeys) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to deselect '" + rowKeys
+                                        + "' although user selection is disallowed");
+                    }
+
                     List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
@@ -1632,11 +1689,21 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void selectAll() {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select all although user selection is disallowed");
+                    }
+
                     MultiSelectionModel.this.selectAll(false);
                 }
 
                 @Override
                 public void deselectAll() {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to deselect all although user selection is disallowed");
+                    }
+
                     MultiSelectionModel.this.deselectAll(false);
                 }
             });
@@ -1919,6 +1986,16 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         @Override
         protected MultiSelectionModelState getState() {
             return (MultiSelectionModelState) super.getState();
+        }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return getState().userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            getState().userSelectionAllowed = userSelectionAllowed;
         }
     }
 

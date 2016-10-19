@@ -474,6 +474,10 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Body rows", "Select first row");
     }
 
+    private void toggleUserSelectionAllowed() {
+        selectMenuPath("Component", "State", "Allow user selection");
+    }
+
     private GridRowElement getRow(int i) {
         return getGridElement().getRow(i);
     }
@@ -517,4 +521,157 @@ public class GridSelectionTest extends GridBasicFeaturesTest {
         getGridElement().getCell(0, 0).click();
         assertTrue("row should become selected", getRow(0).isSelected());
     }
+
+    @Test
+    public void singleSelectUserSelectionDisallowedSpaceSelectionNoOp() {
+        openTestURL();
+        setSelectionModelSingle();
+        getGridElement().focus();
+        getGridElement().sendKeys(Keys.DOWN, Keys.SPACE);
+        assertTrue("row was selected when selection was allowed",
+                getRow(1).isSelected());
+        toggleUserSelectionAllowed();
+        getGridElement().sendKeys(Keys.SPACE);
+        assertTrue("deselect disallowed", getRow(1).isSelected());
+        getGridElement().sendKeys(Keys.DOWN, Keys.SPACE);
+        assertFalse("select disallowed", getRow(2).isSelected());
+        assertTrue("old selection remains", getRow(1).isSelected());
+        toggleUserSelectionAllowed();
+        getGridElement().sendKeys(Keys.SPACE);
+        assertTrue("select allowed again", getRow(2).isSelected());
+        assertFalse("old selection removed", getRow(1).isSelected());
+
+    }
+
+    @Test
+    public void singleSelectUserSelectionDisallowedClickSelectionNoOp() {
+        openTestURL();
+        setSelectionModelSingle();
+        getGridElement().getCell(1, 0).click();
+        assertTrue("selection allowed, should have been selected",
+                getRow(1).isSelected());
+        toggleUserSelectionAllowed();
+        getGridElement().getCell(1, 0).click();
+        assertTrue("deselect disallowed, should remain selected",
+                getRow(1).isSelected());
+        getGridElement().getCell(2, 0).click();
+        assertFalse("select disallowed, should not have been selected",
+                getRow(2).isSelected());
+        assertTrue("select disallowed, old selection should have remained",
+                getRow(1).isSelected());
+        toggleUserSelectionAllowed();
+        getGridElement().getCell(2, 0).click();
+        assertTrue("select allowed again, row should have been selected",
+                getRow(2).isSelected());
+        assertFalse("old selection removed", getRow(1).isSelected());
+
+    }
+
+    @Test
+    public void multiSelectUserSelectionDisallowedSpaceSelectionNoOp() {
+        openTestURL();
+        setSelectionModelMulti();
+        getGridElement().focus();
+        getGridElement().sendKeys(Keys.DOWN, Keys.SPACE);
+        assertTrue("selection allowed, should have been selected",
+                getRow(1).isSelected());
+        toggleUserSelectionAllowed();
+        getGridElement().sendKeys(Keys.SPACE);
+        assertTrue("deselect disallowed, should remain selected",
+                getRow(1).isSelected());
+        getGridElement().sendKeys(Keys.DOWN, Keys.SPACE);
+        assertFalse("select disallowed, should not have been selected",
+                getRow(2).isSelected());
+        assertTrue("select disallowed, old selection should have remained",
+                getRow(1).isSelected());
+
+        toggleUserSelectionAllowed();
+        getGridElement().sendKeys(Keys.SPACE);
+        assertTrue("select allowed again, row should have been selected",
+                getRow(2).isSelected());
+        assertTrue(
+                "select allowed again but old selection should have remained",
+                getRow(1).isSelected());
+    }
+
+    @Test
+    public void multiSelectUserSelectionDisallowedCheckboxSelectionNoOp() {
+        openTestURL();
+        setSelectionModelMulti();
+        assertTrue(getSelectionCheckbox(0).isEnabled());
+        toggleUserSelectionAllowed();
+        assertFalse(getSelectionCheckbox(0).isEnabled());
+
+        // Select by clicking on checkbox (should always fail as it is disabled)
+        getSelectionCheckbox(0).click();
+        assertFalse(getGridElement().getRow(0).isSelected());
+        // Select by clicking on cell (should fail)
+        getGridElement().getCell(0, 0).click();
+        assertFalse(getGridElement().getRow(0).isSelected());
+
+        toggleUserSelectionAllowed();
+        assertTrue(getSelectionCheckbox(0).isEnabled());
+        getSelectionCheckbox(0).click();
+        assertTrue(getGridElement().getRow(0).isSelected());
+    }
+
+    @Test
+    public void multiSelectUserSelectionDisallowedCheckboxSelectAllNoOp() {
+        openTestURL();
+        setSelectionModelMulti();
+
+        assertTrue(getSelectAllCheckbox().isEnabled());
+        toggleUserSelectionAllowed();
+        assertFalse(getSelectAllCheckbox().isEnabled());
+
+        // Select all by clicking on checkbox (should not select)
+        getSelectAllCheckbox().click();
+        assertFalse(getSelectAllCheckbox().isSelected());
+        assertFalse(getGridElement().getRow(0).isSelected());
+        assertFalse(getGridElement().getRow(10).isSelected());
+
+        // Select all by clicking on header cell (should not select)
+        getGridElement().getHeaderCell(0, 0).click();
+        assertFalse(getSelectAllCheckbox().isSelected());
+        assertFalse(getGridElement().getRow(0).isSelected());
+        assertFalse(getGridElement().getRow(10).isSelected());
+
+        toggleUserSelectionAllowed();
+
+        assertTrue(getSelectAllCheckbox().isEnabled());
+        getSelectAllCheckbox().click();
+        assertTrue(getGridElement().getRow(0).isSelected());
+        assertTrue(getGridElement().getRow(10).isSelected());
+    }
+
+    @Test
+    public void singleSelectUserSelectionDisallowedServerSelect() {
+        openTestURL();
+        setSelectionModelSingle();
+        toggleUserSelectionAllowed();
+
+        toggleFirstRowSelection();
+        assertTrue(getGridElement().getRow(0).isSelected());
+    }
+
+    @Test
+    public void multiSelectUserSelectionDisallowedServerSelect() {
+        openTestURL();
+        setSelectionModelMulti();
+        toggleUserSelectionAllowed();
+
+        toggleFirstRowSelection();
+        assertTrue(getGridElement().getRow(0).isSelected());
+    }
+
+    private WebElement getSelectAllCheckbox() {
+        return getGridElement().getHeaderCell(0, 0)
+                .findElement(By.tagName("input"));
+    }
+
+    private WebElement getSelectionCheckbox(int row) {
+        return getGridElement().getCell(row, 0)
+                .findElement(By.tagName("input"));
+    }
+
 }
