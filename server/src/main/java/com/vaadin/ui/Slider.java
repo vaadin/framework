@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -287,6 +288,22 @@ public class Slider extends AbstractField<Double> {
         }
 
         getState().value = trimmedValue;
+    }
+
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param value
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code value} is {@code null}
+     */
+    @Override
+    public void setValue(Double value) {
+        Objects.requireNonNull(value, "color cannot be null");
+        super.setValue(value);
     }
 
     @Override

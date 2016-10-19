@@ -63,8 +63,19 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
         setValue(color);
     }
 
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param color
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
+     */
     @Override
     public void setValue(Color color) {
+        Objects.requireNonNull(color, "color cannot be null");
         this.color = color;
 
         // Unregister listener
@@ -160,7 +171,8 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
                 }
 
                 oldValue = value;
-                fireEvent(new ValueChangeEvent<>(this, event.isUserOriginated()));
+                fireEvent(
+                        new ValueChangeEvent<>(this, event.isUserOriginated()));
             }
 
         } catch (NumberFormatException nfe) {

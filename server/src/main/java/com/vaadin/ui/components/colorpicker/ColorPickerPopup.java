@@ -458,11 +458,19 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         return history;
     }
 
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param color
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
+     */
     @Override
     public void setValue(Color color) {
-        if (color == null) {
-            return;
-        }
+        Objects.requireNonNull(color, "color cannot be null");
 
         selectedColor = color;
 

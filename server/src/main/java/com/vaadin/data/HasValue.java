@@ -80,6 +80,7 @@ public interface HasValue<V> extends Serializable {
          *            {@code true} if this event originates from the client,
          *            {@code false} otherwise.
          */
+
         public ValueChangeEvent(Component component, HasValue<V> hasValue,
                 boolean userOriginated) {
             super(hasValue);
@@ -141,7 +142,6 @@ public interface HasValue<V> extends Serializable {
     @FunctionalInterface
     public interface ValueChangeListener<V>
             extends Consumer<ValueChangeEvent<V>>, Serializable {
-
         @Deprecated
         public static final Method VALUE_CHANGE_METHOD = ReflectTools
                 .findMethod(ValueChangeListener.class, "accept",

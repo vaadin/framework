@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import java.util.Objects;
+
 import org.jsoup.nodes.Element;
 
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -100,13 +102,20 @@ public class RichTextArea extends AbstractField<String>
         return (RichTextAreaState) super.getState(markAsDirty);
     }
 
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     * 
+     * @param value
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code value} is {@code null}
+     */
     @Override
     public void setValue(String value) {
-        if (value == null) {
-            setValue("", false);
-        } else {
-            setValue(value, false);
-        }
+        Objects.requireNonNull(value, "value cannot be null");
+        setValue(value, false);
     }
 
     @Override

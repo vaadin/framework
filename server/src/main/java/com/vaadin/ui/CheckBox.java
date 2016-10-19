@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -115,21 +116,18 @@ public class CheckBox extends AbstractField<Boolean>
     }
 
     /**
-     * Sets the value of this ComboBox. If the new value is not equal to
-     * {@code getValue()}, fires a value change event. Throws
-     * {@code IllegalArgumentException} if the value is null.
+     * Sets the value of this CheckBox. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
      *
      * @param value
-     *            the new value
-     * @throws IllegalArgumentException
-     *             if the value is null
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code value} is {@code null}
      */
     @Override
     public void setValue(Boolean value) {
-        if (value == null) {
-            throw new IllegalArgumentException(
-                    "CheckBox value must not be null");
-        }
+        Objects.requireNonNull(value, "CheckBox value must not be null");
         super.setValue(value);
     }
 

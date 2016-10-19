@@ -13,31 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.tests.server.component.colorpicker;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-public class CheckBoxTest {
-    @Test
-    public void initiallyFalse() {
-        CheckBox cb = new CheckBox();
-        Assert.assertFalse(cb.getValue());
-    }
+import com.vaadin.ui.AbstractColorPicker;
 
-    @Test
-    public void testSetValue() {
-        CheckBox cb = new CheckBox();
-        cb.setValue(true);
-        Assert.assertTrue(cb.getValue());
-        cb.setValue(false);
-        Assert.assertFalse(cb.getValue());
-    }
+/**
+ * @author Vaadin Ltd
+ *
+ */
+public class AbstractColorPickerTest {
 
     @Test(expected = NullPointerException.class)
     public void setValue_nullValue_throwsNPE() {
-        CheckBox cb = new CheckBox();
-        cb.setValue(null);
-    }
+        AbstractColorPicker picker = Mockito.mock(AbstractColorPicker.class);
+        Mockito.doCallRealMethod().when(picker).setValue(null);
 
+        picker.setValue(null);
+    }
 }

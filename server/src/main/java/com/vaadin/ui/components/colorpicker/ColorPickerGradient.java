@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
+import java.util.Objects;
+
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientState;
@@ -62,6 +64,22 @@ public class ColorPickerGradient extends AbstractField<Color> {
         this();
         addStyleName(id);
         this.converter = converter;
+    }
+
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param color
+     *            the new color, not {@code null}
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
+     */
+    @Override
+    public void setValue(Color color) {
+        Objects.requireNonNull(color, "value must not be null");
+        super.setValue(color);
     }
 
     @Override

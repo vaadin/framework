@@ -126,4 +126,10 @@ public class SliderTest {
 
         assertThat(slider.getValue(), is(1.23));
     }
+
+    @Test(expected = NullPointerException.class)
+    public void setValue_nullValue_throwNPE() {
+        Slider slider = new Slider();
+        slider.setValue(null);
+    }
 }

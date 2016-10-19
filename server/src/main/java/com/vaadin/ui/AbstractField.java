@@ -52,8 +52,8 @@ public abstract class AbstractField<T> extends AbstractComponent
         implements HasValue<T>, HasRequired, Focusable {
 
     @Deprecated
-    private static final Method VALUE_CHANGE_METHOD = ReflectTools
-            .findMethod(ValueChangeListener.class, "accept", ValueChangeEvent.class);
+    private static final Method VALUE_CHANGE_METHOD = ReflectTools.findMethod(
+            ValueChangeListener.class, "accept", ValueChangeEvent.class);
 
     @Override
     public void setValue(T value) {

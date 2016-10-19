@@ -79,9 +79,19 @@ public abstract class AbstractTextField extends AbstractField<String>
         registerRpc(new AbstractTextFieldFocusAndBlurRpcImpl());
     }
 
+    /**
+     * Sets the value of this text field. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is not null.
+     *
+     * @param value
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code value} is {@code null}
+     */
     @Override
     public void setValue(String value) {
-        Objects.requireNonNull(value, "Null value not supported");
+        Objects.requireNonNull(value, "value cannot be null");
         setValue(value, false);
     }
 

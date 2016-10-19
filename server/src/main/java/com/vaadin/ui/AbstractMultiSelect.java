@@ -366,7 +366,7 @@ public abstract class AbstractMultiSelect<T>
      *
      * @param value
      *            the items to select, not {@code null}
-     * @throws IllegalArgumentException
+     * @throws NullPointerException
      *             if the value is invalid
      */
     @Override

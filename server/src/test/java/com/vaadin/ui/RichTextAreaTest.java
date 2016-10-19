@@ -88,11 +88,10 @@ public class RichTextAreaTest extends ComponentTest {
         Assert.assertEquals("bar", tf.getValue());
     }
 
-    @Test
-    public void setValueNullBecomesEmptyString() {
+    @Test(expected = NullPointerException.class)
+    public void setValue_nullValue_throwsNPE() {
         RichTextArea tf = new RichTextArea();
         tf.setValue(null);
-        Assert.assertEquals("", tf.getValue());
     }
 
     @Test

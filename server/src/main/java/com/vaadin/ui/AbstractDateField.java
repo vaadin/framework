@@ -484,6 +484,13 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
         return value;
     }
 
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent} .
+     *
+     * @param value
+     *            the new value, may be {@code null}
+     */
     @Override
     public void setValue(LocalDate value) {
         /*

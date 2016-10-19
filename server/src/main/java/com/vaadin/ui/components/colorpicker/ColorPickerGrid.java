@@ -18,6 +18,7 @@ package com.vaadin.ui.components.colorpicker;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridServerRpc;
@@ -172,6 +173,22 @@ public class ColorPickerGrid extends AbstractField<Color> {
      */
     public int[] getPosition() {
         return new int[] { x, y };
+    }
+
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param color
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
+     */
+    @Override
+    public void setValue(Color color) {
+        Objects.requireNonNull(color, "value cannot be null");
+        super.setValue(color);
     }
 
     @Override

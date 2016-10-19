@@ -164,10 +164,12 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
     /**
      * Sets the selected color of this color picker. If the new color is not
-     * equal to getValue(), fires a value change event.
+     * equal to getValue(), fires a {@link ValueChangeEvent}.
      *
      * @param color
      *            the new selected color, not null
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
      */
     @Override
     public void setValue(Color color) {
