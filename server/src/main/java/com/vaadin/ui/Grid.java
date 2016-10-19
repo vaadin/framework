@@ -1635,14 +1635,19 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *            the column value type
      *
      * @return the new column
+     * @throws IllegalArgumentException
+     *             if the same identifier is used for multiple columns
      *
      * @see {@link AbstractRenderer}
      */
     public <V> Column<T, V> addColumn(String identifier,
             Function<T, ? extends V> valueProvider,
-            AbstractRenderer<? super T, V> renderer) {
-        assert !columnKeys.containsKey(identifier) : "Duplicate identifier: "
-                + identifier;
+            AbstractRenderer<? super T, V> renderer)
+            throws IllegalArgumentException {
+        if (columnKeys.containsKey(identifier)) {
+            throw new IllegalArgumentException(
+                    "Multiple columns with the same identifier: " + identifier);
+        }
 
         final Column<T, V> column = new Column<>(
                 SharedUtil.camelCaseToHumanFriendly(identifier), valueProvider,
@@ -1661,6 +1666,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *            the value provider
      *
      * @return the new column
+     * @throws IllegalArgumentException
+     *             if the same identifier is used for multiple columns
      */
     public Column<T, String> addColumn(String identifier,
             Function<T, String> valueProvider) {

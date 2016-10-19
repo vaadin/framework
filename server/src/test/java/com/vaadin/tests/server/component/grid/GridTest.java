@@ -74,4 +74,9 @@ public class GridTest {
                 "Random Column Id",
                 grid.getColumn("randomColumnId").getCaption());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGridMultipleColumnsWithSameIdentifier() {
+        grid.addColumn("foo", t -> t);
+    }
 }
