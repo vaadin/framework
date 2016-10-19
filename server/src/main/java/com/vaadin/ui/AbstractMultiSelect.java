@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
@@ -50,7 +51,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public abstract class AbstractMultiSelect<T>
-        extends AbstractListing<T, Multi<T>> {
+        extends AbstractListing<T, Multi<T>> implements HasValue<Set<T>> {
 
     /**
      * Simple implementation of multiselectmodel.
@@ -332,6 +333,68 @@ public abstract class AbstractMultiSelect<T>
         Objects.requireNonNull(itemCaptionGenerator);
         this.itemCaptionGenerator = itemCaptionGenerator;
         getDataCommunicator().reset();
+    }
+
+    /**
+     * Returns the current value of this object which is an immutable set of the
+     * currently selected items.
+     * <p>
+     * The call is delegated to {@link #getSelectedItems()}
+     *
+     * @return the current selection
+     * 
+     * @see #getSelectedItems()
+     * @see SelectionModel#getSelectedItems
+     */
+    @Override
+    public Set<T> getValue() {
+        return getSelectedItems();
+    }
+
+    /**
+     * Sets the value of this object which is a set of items to select. If the
+     * new value is not equal to {@code getValue()}, fires a value change event.
+     * May throw {@code IllegalArgumentException} if the value is not
+     * acceptable.
+     * <p>
+     * The method effectively selects the given items and deselects previously
+     * selected. The call is delegated to
+     * {@link Multi#updateSelection(Set, Set)}.
+     *
+     * @see Multi#updateSelection(Set, Set)
+     *
+     * @param value
+     *            the items to select, not {@code null}
+     * @throws IllegalArgumentException
+     *             if the value is invalid
+     */
+    @Override
+    public void setValue(Set<T> value) {
+        Objects.requireNonNull(value);
+        Set<T> copy = value.stream().map(Objects::requireNonNull)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        getSelectionModel().updateSelection(copy,
+                new LinkedHashSet<>(getSelectionModel().getSelectedItems()));
+    }
+
+    /**
+     * Adds a value change listener. The listener is called when the selection
+     * set of this multi select is changed either by the user or
+     * programmatically.
+     * 
+     * @see #addSelectionListener(MultiSelectionListener)
+     *
+     * @param listener
+     *            the value change listener, not null
+     * @return a registration for the listener
+     */
+    @Override
+    public Registration addValueChangeListener(
+            HasValue.ValueChangeListener<? super Set<T>> listener) {
+        return addSelectionListener(
+                event -> listener.accept(new ValueChange<>(event.getConnector(),
+                        event.getValue(), event.isUserOriginated())));
     }
 
     /**

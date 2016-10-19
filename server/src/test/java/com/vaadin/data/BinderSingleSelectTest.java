@@ -26,8 +26,8 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.NativeSelect;
 
-public class BinderSingleSelectTest extends
-        BinderTestBase<Binder<Person>, Person> {
+public class BinderSingleSelectTest
+        extends BinderTestBase<Binder<Person>, Person> {
 
     private NativeSelect<Sex> select;
 
@@ -52,7 +52,7 @@ public class BinderSingleSelectTest extends
     public void personBound_bindSelect_selectionUpdated() {
         item.setSex(Sex.MALE);
         binder.bind(item);
-        binder.forSelect(select).bind(Person::getSex, Person::setSex);
+        binder.forField(select).bind(Person::getSex, Person::setSex);
 
         assertSame(Sex.MALE, select.getSelectedItem().orElse(null));
     }
@@ -103,7 +103,7 @@ public class BinderSingleSelectTest extends
     }
 
     protected void bindSex() {
-        binder.forSelect(select).bind(Person::getSex, Person::setSex);
+        binder.forField(select).bind(Person::getSex, Person::setSex);
         binder.bind(item);
     }
 }

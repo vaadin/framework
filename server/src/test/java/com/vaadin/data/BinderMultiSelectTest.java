@@ -65,7 +65,7 @@ public class BinderMultiSelectTest
         select = new CheckBoxGroup<>();
         select.setItems(TestEnum.values());
 
-        converterBinder.forSelect(select)
+        converterBinder.forField(select)
                 .withConverter(new TestEnumSetToStringConverter())
                 .bind(AtomicReference<String>::get,
                         AtomicReference<String>::set);
@@ -85,7 +85,7 @@ public class BinderMultiSelectTest
     public void beanBound_bindSelect_selectionUpdated() {
         item.setEnums(Collections.singleton(TestEnum.TWO));
         binder.bind(item);
-        binder.forSelect(select).bind(BeanWithEnums::getEnums,
+        binder.forField(select).bind(BeanWithEnums::getEnums,
                 BeanWithEnums::setEnums);
 
         assertEquals(Collections.singleton(TestEnum.TWO),
@@ -173,7 +173,7 @@ public class BinderMultiSelectTest
 
     @Test
     public void withValidator_validate_validatorUsed() {
-        binder.forSelect(select)
+        binder.forField(select)
                 .withValidator(selection -> selection.size() % 2 == 1,
                         "Must select odd number of items")
                 .bind(BeanWithEnums::getEnums, BeanWithEnums::setEnums);
@@ -187,7 +187,7 @@ public class BinderMultiSelectTest
     }
 
     protected void bindEnum() {
-        binder.forSelect(select).bind(BeanWithEnums::getEnums,
+        binder.forField(select).bind(BeanWithEnums::getEnums,
                 BeanWithEnums::setEnums);
         binder.bind(item);
     }

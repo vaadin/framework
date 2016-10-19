@@ -116,8 +116,8 @@ public interface HasValue<V> extends Serializable {
      * @see Registration
      */
     @FunctionalInterface
-    public interface ValueChangeListener<V> extends
-            EventListener<ValueChange<V>> {
+    public interface ValueChangeListener<V>
+            extends EventListener<ValueChange<V>> {
 
         @Deprecated
         public static final Method VALUE_CHANGE_METHOD = ReflectTools
@@ -162,7 +162,7 @@ public interface HasValue<V> extends Serializable {
 
     /**
      * Adds a value change listener. The listener is called when the value of
-     * this {@code hasValue} is changed either by the user or programmatically.
+     * this {@code HasValue} is changed either by the user or programmatically.
      *
      * @param listener
      *            the value change listener, not null

@@ -19,11 +19,13 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.event.selection.SingleSelectionChange;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionModel.Single;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
 import com.vaadin.util.ReflectTools;
@@ -42,7 +44,8 @@ import com.vaadin.util.ReflectTools;
  * @since 8.0
  */
 public abstract class AbstractSingleSelect<T> extends
-        AbstractListing<T, AbstractSingleSelect<T>.AbstractSingleSelection> {
+        AbstractListing<T, AbstractSingleSelect<T>.AbstractSingleSelection>
+        implements HasValue<T> {
 
     /**
      * A base class for single selection model implementations. Listens to
@@ -294,6 +297,48 @@ public abstract class AbstractSingleSelect<T> extends
      */
     public void setSelectedItem(T item) {
         getSelectionModel().setSelectedItem(item);
+    }
+
+    /**
+     * Returns the current value of this object which is the currently selected
+     * item.
+     * <p>
+     * The call is delegated to {@link #getSelectedItem()}
+     *
+     * @return the current selection, may be {@code null}
+     * 
+     * @see #getSelectedItem()
+     * @see Single#getSelectedItem
+     */
+    @Override
+    public T getValue() {
+        return getSelectedItem().orElse(null);
+    }
+
+    /**
+     * Sets the value of this object which is an item to select. If the new
+     * value is not equal to {@code getValue()}, fires a value change event. If
+     * value is {@code null} then it deselects currently selected item.
+     * <p>
+     * The call is delegated to {@link #setSelectedItem(Object)}.
+     * 
+     * @see #setSelectedItem(Object)
+     * @see Single#setSelectedItem(Object)
+     *
+     * @param value
+     *            the item to select or {@code null} to clear selection
+     */
+    @Override
+    public void setValue(T value) {
+        setSelectedItem(value);
+    }
+
+    @Override
+    public Registration addValueChangeListener(
+            HasValue.ValueChangeListener<? super T> listener) {
+        return addSelectionListener(
+                event -> listener.accept(new ValueChange<>(event.getConnector(),
+                        event.getValue(), event.isUserOriginated())));
     }
 
     @Override

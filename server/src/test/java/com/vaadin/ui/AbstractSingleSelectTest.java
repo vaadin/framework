@@ -22,13 +22,24 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.event.selection.SingleSelectionChange;
+import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.datasource.bov.Person;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
+import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.ui.AbstractSingleSelect.AbstractSingleSelection;
 
 /**
@@ -41,8 +52,7 @@ public class AbstractSingleSelectTest {
     private PersonListing.AbstractSingleSelection selectionModel;
     private List<Person> selectionChanges;
 
-    private static class PersonListing extends
-            AbstractSingleSelect<Person> {
+    private static class PersonListing extends AbstractSingleSelect<Person> {
         public PersonListing() {
             setSelectionModel(new SimpleSingleSelection());
         }
@@ -77,8 +87,8 @@ public class AbstractSingleSelectTest {
         assertTrue(selectionModel.isSelected(PERSON_B));
         assertFalse(selectionModel.isSelected(PERSON_C));
 
-        assertEquals(Collections.singleton(PERSON_B), selectionModel
-                .getSelectedItems());
+        assertEquals(Collections.singleton(PERSON_B),
+                selectionModel.getSelectedItems());
 
         assertEquals(Arrays.asList(PERSON_B), selectionChanges);
     }
@@ -112,8 +122,8 @@ public class AbstractSingleSelectTest {
         assertFalse(selectionModel.isSelected(PERSON_B));
         assertTrue(selectionModel.isSelected(PERSON_C));
 
-        assertEquals(Collections.singleton(PERSON_C), selectionModel
-                .getSelectedItems());
+        assertEquals(Collections.singleton(PERSON_C),
+                selectionModel.getSelectedItems());
 
         assertEquals(Arrays.asList(PERSON_B, PERSON_C), selectionChanges);
     }
@@ -130,8 +140,8 @@ public class AbstractSingleSelectTest {
         assertFalse(selectionModel.isSelected(PERSON_B));
         assertTrue(selectionModel.isSelected(PERSON_C));
 
-        assertEquals(Collections.singleton(PERSON_C), selectionModel
-                .getSelectedItems());
+        assertEquals(Collections.singleton(PERSON_C),
+                selectionModel.getSelectedItems());
 
         assertEquals(Arrays.asList(PERSON_C), selectionChanges);
     }
@@ -148,8 +158,8 @@ public class AbstractSingleSelectTest {
         assertFalse(selectionModel.isSelected(PERSON_B));
         assertTrue(selectionModel.isSelected(PERSON_C));
 
-        assertEquals(Collections.singleton(PERSON_C), selectionModel
-                .getSelectedItems());
+        assertEquals(Collections.singleton(PERSON_C),
+                selectionModel.getSelectedItems());
 
         assertEquals(Arrays.asList(PERSON_C), selectionChanges);
     }
@@ -170,6 +180,111 @@ public class AbstractSingleSelectTest {
         assertTrue(selectionModel.getSelectedItems().isEmpty());
 
         assertEquals(Arrays.asList(PERSON_C, null), selectionChanges);
+    }
+
+    @Test
+    public void getValue() {
+        selectionModel.setSelectedItem(PERSON_B);
+
+        Assert.assertEquals(PERSON_B, listing.getValue());
+
+        selectionModel.deselectAll();
+        Assert.assertNull(listing.getValue());
+    }
+
+    @Test
+    @SuppressWarnings({ "rawtypes" })
+    public void getValue_isDelegatedTo_getSelectedItem() {
+        AbstractSingleSelect select = Mockito.mock(AbstractSingleSelect.class);
+        Optional selected = Optional.of(new Object());
+        Mockito.when(select.getSelectedItem()).thenReturn(selected);
+        Mockito.doCallRealMethod().when(select).getValue();
+
+        Assert.assertSame(selected.get(), select.getValue());
+
+        selected = Optional.empty();
+        Mockito.when(select.getSelectedItem()).thenReturn(selected);
+        Assert.assertNull(select.getValue());
+    }
+
+    @Test
+    public void setValue() {
+        listing.setValue(PERSON_C);
+
+        Assert.assertEquals(PERSON_C, selectionModel.getSelectedItem().get());
+
+        listing.setValue(null);
+
+        Assert.assertFalse(selectionModel.getSelectedItem().isPresent());
+    }
+
+    @Test
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void setValue_isDelegatedTo_setSelectedItem() {
+        AbstractSingleSelect select = Mockito.mock(AbstractSingleSelect.class);
+        Mockito.doCallRealMethod().when(select).setValue(Mockito.any());
+
+        Object value = new Object();
+        select.setValue(value);
+        Mockito.verify(select).setSelectedItem(value);
+
+        select.setValue(null);
+        Mockito.verify(select).setSelectedItem(null);
+    }
+
+    @SuppressWarnings({ "unchecked", "serial" })
+    @Test
+    public void addValueChangeListener() {
+        AtomicReference<SingleSelectionListener<String>> selectionListener = new AtomicReference<>();
+        Registration registration = Mockito.mock(Registration.class);
+        AbstractSingleSelect<String> select = new AbstractSingleSelect<String>() {
+            @Override
+            public Registration addSelectionListener(
+                    SingleSelectionListener<String> listener) {
+                selectionListener.set(listener);
+                return registration;
+            }
+        };
+
+        AtomicReference<ValueChange<?>> event = new AtomicReference<>();
+        Registration actualRegistration = select.addValueChangeListener(evt -> {
+            Assert.assertNull(event.get());
+            event.set(evt);
+        });
+        Assert.assertSame(registration, actualRegistration);
+
+        String value = "foo";
+        selectionListener.get()
+                .accept(new SingleSelectionChange<>(select, value, true));
+
+        Assert.assertEquals(select, event.get().getConnector());
+        Assert.assertEquals(value, event.get().getValue());
+        Assert.assertTrue(event.get().isUserOriginated());
+    }
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
+    public void setValue_isDelegatedToDeselectAndUpdateSelection() {
+        Multi<?> model = Mockito.mock(Multi.class);
+        AbstractMultiSelect<String> select = new AbstractMultiSelect<String>() {
+            @Override
+            public Multi<String> getSelectionModel() {
+                return (Multi<String>) model;
+            }
+        };
+
+        Set set = new LinkedHashSet<>();
+        set.add("foo1");
+        set.add("foo");
+        Set selected = new LinkedHashSet<>();
+        selected.add("bar1");
+        selected.add("bar");
+        selected.add("bar2");
+        Mockito.when(model.getSelectedItems()).thenReturn(selected);
+
+        select.setValue(set);
+
+        Mockito.verify(model).updateSelection(set, selected);
     }
 
 }

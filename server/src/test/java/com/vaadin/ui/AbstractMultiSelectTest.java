@@ -17,8 +17,12 @@ package com.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,7 +34,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.Mockito;
 
+import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.event.selection.MultiSelectionEvent;
+import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
@@ -210,6 +218,113 @@ public class AbstractMultiSelectTest {
         rpcUpdateSelection(new String[] { "6", "8" }, new String[] { "6" });
         Assert.assertEquals(11, listenerCount.get());
         assertSelectionOrder(selectionModel, "6", "4", "8");
+    }
+
+    @Test
+    public void getValue() {
+        selectionModel.selectItems("1");
+
+        Assert.assertEquals(Collections.singleton("1"),
+                selectToTest.getValue());
+
+        selectionModel.deselectAll();
+        LinkedHashSet<String> set = new LinkedHashSet<>();
+        set.add("1");
+        set.add("5");
+        selectionModel.selectItems(set.toArray(new String[2]));
+        Assert.assertEquals(set, selectToTest.getValue());
+
+        set.add("3");
+        selectionModel.selectItems("3");
+        Assert.assertEquals(set, selectToTest.getValue());
+    }
+
+    @Test
+    @SuppressWarnings({ "serial", "unchecked" })
+    public void getValue_isDelegatedTo_getSelectedItems() {
+        Set<String> set = Mockito.mock(Set.class);
+        AbstractMultiSelect<String> select = new AbstractMultiSelect<String>() {
+
+            @Override
+            public Set<String> getSelectedItems() {
+                return set;
+            }
+        };
+
+        Assert.assertSame(set, select.getValue());
+    }
+
+    @Test
+    public void setValue() {
+        selectToTest.setValue(Collections.singleton("1"));
+
+        Assert.assertEquals(Collections.singleton("1"),
+                selectionModel.getSelectedItems());
+
+        Set<String> set = new LinkedHashSet<>();
+        set.add("4");
+        set.add("3");
+        selectToTest.setValue(set);
+
+        Assert.assertEquals(set, selectionModel.getSelectedItems());
+    }
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
+    public void setValue_isDelegatedToDeselectAndUpdateSelection() {
+        Multi<?> model = Mockito.mock(Multi.class);
+        AbstractMultiSelect<String> select = new AbstractMultiSelect<String>() {
+            @Override
+            public Multi<String> getSelectionModel() {
+                return (Multi<String>) model;
+            }
+        };
+
+        Set set = new LinkedHashSet<>();
+        set.add("foo1");
+        set.add("foo");
+        Set selected = new LinkedHashSet<>();
+        selected.add("bar1");
+        selected.add("bar");
+        selected.add("bar2");
+        Mockito.when(model.getSelectedItems()).thenReturn(selected);
+
+        select.setValue(set);
+
+        Mockito.verify(model).updateSelection(set, selected);
+    }
+
+    @SuppressWarnings({ "unchecked", "serial" })
+    @Test
+    public void addValueChangeListener() {
+        AtomicReference<MultiSelectionListener<String>> selectionListener = new AtomicReference<>();
+        Registration registration = Mockito.mock(Registration.class);
+        AbstractMultiSelect<String> select = new AbstractMultiSelect<String>() {
+            @Override
+            public Registration addSelectionListener(
+                    MultiSelectionListener<String> listener) {
+                selectionListener.set(listener);
+                return registration;
+            }
+        };
+
+        AtomicReference<ValueChange<?>> event = new AtomicReference<>();
+        Registration actualRegistration = select.addValueChangeListener(evt -> {
+            Assert.assertNull(event.get());
+            event.set(evt);
+        });
+
+        Assert.assertSame(registration, actualRegistration);
+
+        Set<String> set = new HashSet<>();
+        set.add("foo");
+        set.add("bar");
+        selectionListener.get().accept(new MultiSelectionEvent<>(select,
+                Mockito.mock(Set.class), set, true));
+
+        Assert.assertEquals(select, event.get().getConnector());
+        Assert.assertEquals(set, event.get().getValue());
+        Assert.assertTrue(event.get().isUserOriginated());
     }
 
     private void rpcSelect(String... keysToSelect) {
