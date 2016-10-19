@@ -534,4 +534,9 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         this.color = color;
         getState().color = color.getCSS();
     }
+
+    @Override
+    public Color getEmptyValue() {
+        return Color.WHITE;
+    }
 }

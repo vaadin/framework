@@ -17,6 +17,9 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.EventListener;
@@ -170,4 +173,29 @@ public interface HasValue<V> extends Serializable {
      */
     public Registration addValueChangeListener(
             ValueChangeListener<? super V> listener);
+
+    /**
+     * Returns the value that represents an empty value.
+     * <p>
+     * By default {@link HasValue} is expected to support {@code null} as empty
+     * values. Specific implementations might not support this.
+     *
+     * @return empty value
+     * @see Binder#bind(HasValue, Function, BiConsumer)
+     */
+    public default V getEmptyValue() {
+        return null;
+    }
+
+    /**
+     * Returns whether this {@code HasValue} is considered to be empty.
+     * <p>
+     * By default this is an equality check between current value and empty
+     * value.
+     *
+     * @return {@code true} if considered empty; {@code false} if not
+     */
+    public default boolean isEmpty() {
+        return Objects.equals(getValue(), getEmptyValue());
+    }
 }

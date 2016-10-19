@@ -294,6 +294,11 @@ public class Slider extends AbstractField<Double> {
         return getState().value;
     }
 
+    @Override
+    public Double getEmptyValue() {
+        return getMin();
+    }
+
     /**
      * Thrown when the value of the slider is about to be set to a value that is
      * outside the valid range of the slider.

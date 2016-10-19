@@ -280,6 +280,23 @@ public class Binder<BEAN> implements Serializable {
         }
 
         /**
+         * Maps binding value {@code null} to given null representation and back
+         * to {@code null} when converting back to model value.
+         *
+         * @param nullRepresentation
+         *            the value to use instead of {@code null}
+         * @return a new binding with null representation handling.
+         */
+        public default Binding<BEAN, FIELDVALUE, TARGET> withNullRepresentation(
+                TARGET nullRepresentation) {
+            return withConverter(
+                    fieldValue -> Objects.equals(fieldValue, nullRepresentation)
+                            ? null : fieldValue,
+                    modelValue -> Objects.isNull(modelValue)
+                            ? nullRepresentation : modelValue);
+        }
+
+        /**
          * Gets the field the binding uses.
          *
          * @return the field for the binding
@@ -615,10 +632,6 @@ public class Binder<BEAN> implements Serializable {
             return validationStatus;
         }
 
-        private void setBeanValue(BEAN bean, TARGET value) {
-            setter.accept(bean, value);
-        }
-
         private void notifyStatusHandler(ValidationStatus<?> status) {
             statusHandler.accept(status);
         }
@@ -694,6 +707,13 @@ public class Binder<BEAN> implements Serializable {
      * {@link Binding#bind(Function, BiConsumer) Binding.bind} which completes
      * the binding. Until {@code Binding.bind} is called, the binding has no
      * effect.
+     * <p>
+     * <strong>Note:</strong> Not all {@link HasValue} implementations support
+     * passing {@code null} as the value. For these the Binder will
+     * automatically change {@code null} to a null representation provided by
+     * {@link HasValue#getEmptyValue()}. This conversion is one-way only, if you
+     * want to have a two-way mapping back to {@code null}, use
+     * {@link Binding#withNullRepresentation(Object))}.
      *
      * @param <FIELDVALUE>
      *            the value type of the field
@@ -710,7 +730,10 @@ public class Binder<BEAN> implements Serializable {
         clearError(field);
         getStatusLabel().ifPresent(label -> label.setValue(""));
 
-        return createBinding(field, Converter.identity(),
+        return createBinding(field, Converter.from(fieldValue -> fieldValue,
+                modelValue -> Objects.isNull(modelValue) ? field.getEmptyValue()
+                        : modelValue,
+                exception -> exception.getMessage()),
                 this::handleValidationStatus);
     }
 
@@ -721,6 +744,14 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * Use the {@link #forField(HasValue)} overload instead if you want to
      * further configure the new binding.
+     * <p>
+     * <strong>Note:</strong> Not all {@link HasValue} implementations support
+     * passing {@code null} as the value. For these the Binder will
+     * automatically change {@code null} to a null representation provided by
+     * {@link HasValue#getEmptyValue()}. This conversion is one-way only, if you
+     * want to have a two-way mapping back to {@code null}, use
+     * {@link #forField(HasValue)} and
+     * {@link Binding#withNullRepresentation(Object))}.
      * <p>
      * When a bean is bound with {@link Binder#bind(BEAN)}, the field value is
      * set to the return value of the given getter. The property value is then
@@ -905,8 +936,8 @@ public class Binder<BEAN> implements Serializable {
 
         // Save old bean values so we can restore them if validators fail
         Map<Binding<BEAN, ?, ?>, Object> oldValues = new HashMap<>();
-        bindings.forEach(binding -> oldValues.put(binding,
-                binding.convertDataToFieldType(bean)));
+        bindings.forEach(
+                binding -> oldValues.put(binding, binding.getter.apply(bean)));
 
         bindings.forEach(binding -> binding.storeFieldValue(bean));
         // Now run bean level validation against the updated bean
@@ -915,8 +946,8 @@ public class Binder<BEAN> implements Serializable {
                 .findAny().isPresent();
         if (hasErrors) {
             // Bean validator failed, revert values
-            bindings.forEach((BindingImpl binding) -> binding.setBeanValue(bean,
-                    oldValues.get(binding)));
+            bindings.forEach((BindingImpl binding) -> binding.setter
+                    .accept(bean, oldValues.get(binding)));
         } else {
             // Save successful, reset hasChanges to false
             setHasChanges(false);

@@ -4,11 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
+import java.util.Objects;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.Person;
+import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.ui.TextField;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
@@ -173,5 +177,80 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     protected void bindName() {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
         binder.bind(item);
+    }
+
+    @Test
+    public void binding_with_null_representation() {
+        String nullRepresentation = "Some arbitrary text";
+        String realName = "John";
+        Person namelessPerson = new Person(null, "Doe", "", 25, Sex.UNKNOWN,
+                null);
+
+        binder.forField(nameField).withNullRepresentation(nullRepresentation)
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        // Bind a person with null value and check that null representation is
+        // used
+        binder.bind(namelessPerson);
+        Assert.assertEquals(
+                "Null value from bean was not converted to explicit null representation",
+                nullRepresentation, nameField.getValue());
+
+        // Verify that changes are applied to bean
+        nameField.setValue(realName);
+        Assert.assertEquals(
+                "Bean was not correctly updated from a change in the field",
+                realName, namelessPerson.getFirstName());
+
+        // Verify conversion back to null
+        nameField.setValue(nullRepresentation);
+        Assert.assertEquals(
+                "Two-way null representation did not change value back to null",
+                null, namelessPerson.getFirstName());
+    }
+
+    @Test
+    public void binding_with_default_null_representation() {
+        TextField nullTextField = new TextField() {
+            @Override
+            public String getEmptyValue() {
+                return "null";
+            }
+        };
+
+        Person namelessPerson = new Person(null, "Doe", "", 25, Sex.UNKNOWN,
+                null);
+        binder.bind(nullTextField, Person::getFirstName, Person::setFirstName);
+        binder.bind(namelessPerson);
+
+        Assert.assertTrue(nullTextField.isEmpty());
+        Assert.assertEquals(null, namelessPerson.getFirstName());
+
+        // Change value, see that textfield is not empty and bean is updated.
+        nullTextField.setValue("");
+        Assert.assertFalse(nullTextField.isEmpty());
+        Assert.assertEquals("First name of person was not properly updated", "",
+                namelessPerson.getFirstName());
+
+        // Verify that default null representation does not map back to null
+        nullTextField.setValue("null");
+        Assert.assertTrue(nullTextField.isEmpty());
+        Assert.assertEquals("Default one-way null representation failed.",
+                "null", namelessPerson.getFirstName());
+    }
+
+    @Test
+    public void binding_with_null_representation_value_not_null() {
+        String nullRepresentation = "Some arbitrary text";
+
+        binder.forField(nameField).withNullRepresentation(nullRepresentation)
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        Assert.assertFalse("First name in item should not be null",
+                Objects.isNull(item.getFirstName()));
+        binder.bind(item);
+
+        Assert.assertEquals("Field value was not set correctly",
+                item.getFirstName(), nameField.getValue());
     }
 }

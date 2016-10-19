@@ -115,6 +115,11 @@ public class RichTextArea extends AbstractField<String>
     }
 
     @Override
+    public String getEmptyValue() {
+        return "";
+    }
+
+    @Override
     protected void doSetValue(String value) {
         getState().value = value;
     }
@@ -149,16 +154,6 @@ public class RichTextArea extends AbstractField<String>
     @Override
     public int getValueChangeTimeout() {
         return getState(false).valueChangeTimeout;
-    }
-
-    /**
-     * Checks if the field is empty.
-     *
-     * @return <code>true</code> if the field value is an empty string,
-     *         <code>false</code> otherwise
-     */
-    public boolean isEmpty() {
-        return getValue().length() == 0;
     }
 
     /**

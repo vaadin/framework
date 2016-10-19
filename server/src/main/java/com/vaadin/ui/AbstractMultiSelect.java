@@ -342,7 +342,7 @@ public abstract class AbstractMultiSelect<T>
      * The call is delegated to {@link #getSelectedItems()}
      *
      * @return the current selection
-     * 
+     *
      * @see #getSelectedItems()
      * @see SelectionModel#getSelectedItems
      */
@@ -378,11 +378,16 @@ public abstract class AbstractMultiSelect<T>
                 new LinkedHashSet<>(getSelectionModel().getSelectedItems()));
     }
 
+    @Override
+    public Set<T> getEmptyValue() {
+        return Collections.emptySet();
+    }
+
     /**
      * Adds a value change listener. The listener is called when the selection
      * set of this multi select is changed either by the user or
      * programmatically.
-     * 
+     *
      * @see #addSelectionListener(MultiSelectionListener)
      *
      * @param listener

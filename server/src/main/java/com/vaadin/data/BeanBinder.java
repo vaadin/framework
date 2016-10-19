@@ -266,8 +266,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     @Override
     public <FIELDVALUE> BeanBinding<BEAN, FIELDVALUE, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
-        return createBinding(field, Converter.identity(),
-                this::handleValidationStatus);
+        return (BeanBinding<BEAN, FIELDVALUE, FIELDVALUE>) super.forField(
+                field);
     }
 
     /**
