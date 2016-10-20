@@ -15,13 +15,13 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.event.SelectionEvent;
-import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.SelectionEvent;
+import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 

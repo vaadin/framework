@@ -18,10 +18,10 @@ package com.vaadin.v7.tests.components.grid;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.event.SelectionEvent;
-import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.v7.event.SelectionEvent;
+import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 

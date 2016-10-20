@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.event.SelectionEvent;
-import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.event.SelectionEvent;
+import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.ui.Grid;
 
 public class BasicCrudGrid extends AbstractBasicCrud {

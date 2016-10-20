@@ -24,9 +24,9 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.event.SelectionEvent;
-import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.SelectionEvent;
+import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 import com.vaadin.v7.ui.Grid.SelectionModel;

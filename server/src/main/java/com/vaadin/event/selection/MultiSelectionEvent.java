@@ -16,6 +16,7 @@
 package com.vaadin.event.selection;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import com.vaadin.data.HasValue.ValueChange;
@@ -33,7 +34,8 @@ import com.vaadin.ui.AbstractListing;
  * @param <T>
  *            the data type of the selection model
  */
-public class MultiSelectionEvent<T> extends ValueChange<Set<T>> {
+public class MultiSelectionEvent<T> extends ValueChange<Set<T>>
+        implements SelectionEvent<T> {
 
     private final Set<T> oldSelection;
 
@@ -74,5 +76,10 @@ public class MultiSelectionEvent<T> extends ValueChange<Set<T>> {
      */
     public Set<T> getOldSelection() {
         return Collections.unmodifiableSet(oldSelection);
+    }
+
+    @Override
+    public Optional<T> getFirstSelected() {
+        return getValue().stream().findFirst();
     }
 }

@@ -29,7 +29,8 @@ import com.vaadin.ui.AbstractListing;
  *            the type of the selected item
  * @since 8.0
  */
-public class SingleSelectionChange<T> extends ValueChange<T> {
+public class SingleSelectionChange<T> extends ValueChange<T>
+        implements SelectionEvent<T> {
 
     /**
      * Creates a new selection change event.
@@ -42,8 +43,8 @@ public class SingleSelectionChange<T> extends ValueChange<T> {
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      */
-    public SingleSelectionChange(AbstractListing<T, ?> source,
-            T selectedItem, boolean userOriginated) {
+    public SingleSelectionChange(AbstractListing<T, ?> source, T selectedItem,
+            boolean userOriginated) {
         super(source, selectedItem, userOriginated);
     }
 
@@ -63,5 +64,10 @@ public class SingleSelectionChange<T> extends ValueChange<T> {
     @SuppressWarnings("unchecked")
     public AbstractListing<T, ?> getSource() {
         return (AbstractListing<T, ?>) super.getSource();
+    }
+
+    @Override
+    public Optional<T> getFirstSelected() {
+        return getSelectedItem();
     }
 }

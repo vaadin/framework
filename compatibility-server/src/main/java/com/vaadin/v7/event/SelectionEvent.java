@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event;
+package com.vaadin.v7.event;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -29,6 +29,7 @@ import java.util.Set;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class SelectionEvent extends EventObject {
 
     private LinkedHashSet<Object> oldSelection;
@@ -98,6 +99,7 @@ public class SelectionEvent extends EventObject {
      * The listener interface for receiving {@link SelectionEvent
      * SelectionEvents}.
      */
+    @Deprecated
     public interface SelectionListener extends Serializable {
         /**
          * Notifies the listener that the selection state has changed.
@@ -112,6 +114,7 @@ public class SelectionEvent extends EventObject {
      * The interface for adding and removing listeners for {@link SelectionEvent
      * SelectionEvents}.
      */
+    @Deprecated
     public interface SelectionNotifier extends Serializable {
         /**
          * Registers a new selection listener

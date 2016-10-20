@@ -7,8 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import com.vaadin.annotations.Push;
-import com.vaadin.event.SelectionEvent;
-import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -17,6 +15,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.SelectionEvent;
+import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
