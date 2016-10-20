@@ -53,7 +53,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     @Deprecated
     private static final Method VALUE_CHANGE_METHOD = ReflectTools
-            .findMethod(ValueChangeListener.class, "accept", ValueChange.class);
+            .findMethod(ValueChangeListener.class, "accept", ValueChangeEvent.class);
 
     @Override
     public void setValue(T value) {
@@ -100,9 +100,9 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     @Override
     public Registration addValueChangeListener(
-            ValueChangeListener<? super T> listener) {
-        addListener(ValueChange.class, listener, VALUE_CHANGE_METHOD);
-        return () -> removeListener(ValueChange.class, listener);
+            ValueChangeListener<T> listener) {
+        addListener(ValueChangeEvent.class, listener, VALUE_CHANGE_METHOD);
+        return () -> removeListener(ValueChangeEvent.class, listener);
     }
 
     @Override
@@ -183,8 +183,8 @@ public abstract class AbstractField<T> extends AbstractComponent
      *            {@code false} otherwise.
      * @return the new event
      */
-    protected ValueChange<T> createValueChange(boolean userOriginated) {
-        return new ValueChange<>(this, userOriginated);
+    protected ValueChangeEvent<T> createValueChange(boolean userOriginated) {
+        return new ValueChangeEvent<>(this, userOriginated);
     }
 
     @Override

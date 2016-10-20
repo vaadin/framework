@@ -51,7 +51,8 @@ public class SelectionEventTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
     public void getFirstSelected_singleSelectEvent() {
-        SingleSelectionChange event = Mockito.mock(SingleSelectionChange.class);
+        SingleSelectionChangeEvent event = Mockito
+                .mock(SingleSelectionChangeEvent.class);
         Mockito.doCallRealMethod().when(event).getFirstSelected();
 
         Mockito.when(event.getSelectedItem()).thenReturn(Optional.of("foo"));

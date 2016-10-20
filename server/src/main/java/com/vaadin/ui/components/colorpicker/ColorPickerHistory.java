@@ -50,7 +50,7 @@ public class ColorPickerHistory extends CustomField<Color> {
         ColorPickerGrid grid = new ColorPickerGrid(ROWS, COLUMNS);
         grid.setWidth("100%");
         grid.setPosition(0, 0);
-        grid.addValueChangeListener(event -> fireEvent(new ValueChange<>(this,
+        grid.addValueChangeListener(event -> fireEvent(new ValueChangeEvent<>(this,
                 event.isUserOriginated())));
 
         return grid;

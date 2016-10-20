@@ -15,7 +15,8 @@
  */
 package com.vaadin.event.selection;
 
-import com.vaadin.event.EventListener;
+import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * A listener for {@code SingleSelectionChange} events.
@@ -25,14 +26,14 @@ import com.vaadin.event.EventListener;
  * @param <T>
  *            the type of the selected item
  * 
- * @see SingleSelectionChange
+ * @see SingleSelectionChangeEvent
  * 
  * @since 8.0
  */
 @FunctionalInterface
-public interface SingleSelectionListener<T> extends
-        EventListener<SingleSelectionChange<T>> {
+public interface SingleSelectionListener<T>
+        extends Consumer<SingleSelectionChangeEvent<T>>, Serializable {
 
     @Override
-    public void accept(SingleSelectionChange<T> event);
+    public void accept(SingleSelectionChangeEvent<T> event);
 }

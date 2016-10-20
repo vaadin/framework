@@ -157,7 +157,7 @@ public class CustomDateFormats extends TestBase {
         df.setData(new Data(serversideValueLabel, pattern));
         df.setValue(LocalDate.of(2010, 2, 1));
         df.addValueChangeListener(event -> updateServerSideLabel(
-                (AbstractDateField) event.getConnector()));
+                (AbstractDateField) event.getComponent()));
 
         Label patternLabel = new Label(pattern);
         patternLabel.setWidth(null);

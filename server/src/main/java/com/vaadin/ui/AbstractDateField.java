@@ -612,7 +612,7 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
 
     @Override
     protected void fireEvent(EventObject event) {
-        if (event instanceof ValueChange) {
+        if (event instanceof ValueChangeEvent) {
             if (!preventValueChangeEvent) {
                 super.fireEvent(event);
             }

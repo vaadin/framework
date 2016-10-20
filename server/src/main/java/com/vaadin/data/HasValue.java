@@ -17,14 +17,13 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.EventObject;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
-import com.vaadin.event.ConnectorEvent;
-import com.vaadin.event.EventListener;
-import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.Registration;
+import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -47,54 +46,60 @@ public interface HasValue<V> extends Serializable {
      * @param <V>
      *            the value type
      */
-    public class ValueChange<V> extends ConnectorEvent {
+    public class ValueChangeEvent<V> extends EventObject {
 
-        private final V value;
         private final boolean userOriginated;
+        private final Component component;
 
         /**
          * Creates a new {@code ValueChange} event containing the current value
-         * of the given value-bearing source connector.
+         * of the given value-bearing source component.
          *
-         * @param <CONNECTOR>
-         *            the type of the source connector
-         * @param source
-         *            the source connector bearing the value, not null
+         * @param <COMPONENT>
+         *            the type of the source component
+         * @param component
+         *            the source component bearing the value, not null
          * @param userOriginated
          *            {@code true} if this event originates from the client,
          *            {@code false} otherwise.
          */
-        public <CONNECTOR extends ClientConnector & HasValue<V>> ValueChange(
-                CONNECTOR source, boolean userOriginated) {
-            this(source, source.getValue(), userOriginated);
+        public <COMPONENT extends Component & HasValue<V>> ValueChangeEvent(
+                COMPONENT component, boolean userOriginated) {
+            this(component, component, userOriginated);
         }
 
         /**
          * Creates a new {@code ValueChange} event containing the given value,
-         * originating from the given source connector.
+         * originating from the given source component.
          *
-         * @param source
-         *            the source connector, not null
-         * @param value
-         *            the new value, may be null
+         * @param component
+         *            the component, not null
+         * @param hasValue
+         *            the HasValue instance bearing the value, not null
          * @param userOriginated
          *            {@code true} if this event originates from the client,
          *            {@code false} otherwise.
          */
-        public ValueChange(ClientConnector source, V value,
+        public ValueChangeEvent(Component component, HasValue<V> hasValue,
                 boolean userOriginated) {
-            super(source);
-            this.value = value;
+            super(hasValue);
             this.userOriginated = userOriginated;
+            this.component = component;
         }
 
         /**
-         * Returns the new value of the source connector.
+         * Returns the new value of the event source.
+         * <p>
+         * This a shorthand method for {@link HasValue#getValue()} for the event
+         * source {@link #getSource()}. Thus the value is always the most recent
+         * one, even if has been changed after the firing of this event.
+         * 
+         * @see HasValue#getValue()
          *
          * @return the new value
          */
         public V getValue() {
-            return value;
+            return getSource().getValue();
         }
 
         /**
@@ -107,6 +112,21 @@ public interface HasValue<V> extends Serializable {
         public boolean isUserOriginated() {
             return userOriginated;
         }
+
+        /**
+         * Returns the component.
+         *
+         * @return the component, not null
+         */
+        public Component getComponent() {
+            return component;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public HasValue<V> getSource() {
+            return (HasValue<V>) super.getSource();
+        }
     }
 
     /**
@@ -115,17 +135,17 @@ public interface HasValue<V> extends Serializable {
      * @param <V>
      *            the value type
      *
-     * @see ValueChange
+     * @see ValueChangeEvent
      * @see Registration
      */
     @FunctionalInterface
     public interface ValueChangeListener<V>
-            extends EventListener<ValueChange<V>> {
+            extends Consumer<ValueChangeEvent<V>>, Serializable {
 
         @Deprecated
         public static final Method VALUE_CHANGE_METHOD = ReflectTools
                 .findMethod(ValueChangeListener.class, "accept",
-                        ValueChange.class);
+                        ValueChangeEvent.class);
 
         /**
          * Invoked when this listener receives a value change event from an
@@ -135,7 +155,7 @@ public interface HasValue<V> extends Serializable {
          *            the received event, not null
          */
         @Override
-        public void accept(ValueChange<V> event);
+        public void accept(ValueChangeEvent<V> event);
     }
 
     /**
@@ -171,8 +191,7 @@ public interface HasValue<V> extends Serializable {
      *            the value change listener, not null
      * @return a registration for the listener
      */
-    public Registration addValueChangeListener(
-            ValueChangeListener<? super V> listener);
+    public Registration addValueChangeListener(ValueChangeListener<V> listener);
 
     /**
      * Returns the value that represents an empty value.
@@ -181,7 +200,7 @@ public interface HasValue<V> extends Serializable {
      * values. Specific implementations might not support this.
      *
      * @return empty value
-     * @see Binder#bind(HasValue, Function, BiConsumer)
+     * @see Binder#bind(HasValue, java.util.function.Function, BiConsumer)
      */
     public default V getEmptyValue() {
         return null;

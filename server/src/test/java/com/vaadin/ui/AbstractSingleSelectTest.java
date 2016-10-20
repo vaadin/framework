@@ -33,8 +33,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.vaadin.data.HasValue.ValueChange;
-import com.vaadin.event.selection.SingleSelectionChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.event.selection.SingleSelectionChangeEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.datasource.bov.Person;
 import com.vaadin.shared.Registration;
@@ -237,6 +237,7 @@ public class AbstractSingleSelectTest {
     public void addValueChangeListener() {
         AtomicReference<SingleSelectionListener<String>> selectionListener = new AtomicReference<>();
         Registration registration = Mockito.mock(Registration.class);
+        String value = "foo";
         AbstractSingleSelect<String> select = new AbstractSingleSelect<String>() {
             @Override
             public Registration addSelectionListener(
@@ -244,20 +245,24 @@ public class AbstractSingleSelectTest {
                 selectionListener.set(listener);
                 return registration;
             }
+
+            @Override
+            public String getValue() {
+                return value;
+            }
         };
 
-        AtomicReference<ValueChange<?>> event = new AtomicReference<>();
+        AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
         Registration actualRegistration = select.addValueChangeListener(evt -> {
             Assert.assertNull(event.get());
             event.set(evt);
         });
         Assert.assertSame(registration, actualRegistration);
 
-        String value = "foo";
         selectionListener.get()
-                .accept(new SingleSelectionChange<>(select, value, true));
+                .accept(new SingleSelectionChangeEvent<>(select, true));
 
-        Assert.assertEquals(select, event.get().getConnector());
+        Assert.assertEquals(select, event.get().getComponent());
         Assert.assertEquals(value, event.get().getValue());
         Assert.assertTrue(event.get().isUserOriginated());
     }

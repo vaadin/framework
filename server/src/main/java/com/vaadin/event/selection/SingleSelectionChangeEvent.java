@@ -17,8 +17,9 @@ package com.vaadin.event.selection;
 
 import java.util.Optional;
 
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.ui.AbstractListing;
+import com.vaadin.ui.AbstractSingleSelect;
 
 /**
  * Fired when the selection changes in a listing component.
@@ -29,7 +30,7 @@ import com.vaadin.ui.AbstractListing;
  *            the type of the selected item
  * @since 8.0
  */
-public class SingleSelectionChange<T> extends ValueChange<T>
+public class SingleSelectionChangeEvent<T> extends ValueChangeEvent<T>
         implements SelectionEvent<T> {
 
     /**
@@ -37,20 +38,24 @@ public class SingleSelectionChange<T> extends ValueChange<T>
      * 
      * @param source
      *            the listing that fired the event
-     * @param selectedItem
-     *            the selected item or {@code null} if deselected
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      */
-    public SingleSelectionChange(AbstractListing<T, ?> source, T selectedItem,
+    public SingleSelectionChangeEvent(AbstractSingleSelect<T> source,
             boolean userOriginated) {
-        super(source, selectedItem, userOriginated);
+        super(source, userOriginated);
     }
 
     /**
      * Returns an optional of the item that was selected, or an empty optional
      * if a previously selected item was deselected.
+     * <p>
+     * The result is the current selection of the source
+     * {@link AbstractSingleSelect} object. So it's always exactly the same as
+     * optional describing {@link AbstractSingleSelect#getValue()}.
+     * 
+     * @see #getValue()
      * 
      * @return the selected item or an empty optional if deselected
      *
@@ -62,8 +67,8 @@ public class SingleSelectionChange<T> extends ValueChange<T>
 
     @Override
     @SuppressWarnings("unchecked")
-    public AbstractListing<T, ?> getSource() {
-        return (AbstractListing<T, ?>) super.getSource();
+    public AbstractListing<T, ?> getComponent() {
+        return (AbstractListing<T, ?>) super.getComponent();
     }
 
     @Override

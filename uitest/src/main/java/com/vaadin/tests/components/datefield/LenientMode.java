@@ -3,7 +3,7 @@ package com.vaadin.tests.components.datefield;
 import java.time.LocalDate;
 import java.util.Locale;
 
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
@@ -72,7 +72,7 @@ public class LenientMode extends TestBase
     }
 
     @Override
-    public void accept(ValueChange<LocalDate> event) {
+    public void accept(ValueChangeEvent<LocalDate> event) {
         getMainWindow().showNotification("New value" + event.getValue());
     }
 

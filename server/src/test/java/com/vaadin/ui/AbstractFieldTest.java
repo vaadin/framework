@@ -9,7 +9,7 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.server.ClientConnector;
 
@@ -33,7 +33,7 @@ public class AbstractFieldTest extends EasyMockSupport {
     TextField field;
 
     ValueChangeListener<String> l;
-    Capture<ValueChange<String>> capture;
+    Capture<ValueChangeEvent<String>> capture;
 
     @Before
     public void setUp() {
@@ -112,11 +112,11 @@ public class AbstractFieldTest extends EasyMockSupport {
         return createStrictMock(ValueChangeListener.class);
     }
 
-    private void assertEventEquals(ValueChange<String> e, String value,
+    private void assertEventEquals(ValueChangeEvent<String> e, String value,
             ClientConnector source, boolean userOriginated) {
         assertEquals("event value", value, e.getValue());
         assertSame("event source", source, e.getSource());
-        assertSame("event source connector", source, e.getConnector());
+        assertSame("event source connector", source, e.getSource());
         assertEquals("event from user", userOriginated, e.isUserOriginated());
     }
 }

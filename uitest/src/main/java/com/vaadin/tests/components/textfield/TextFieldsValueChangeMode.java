@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -72,9 +72,9 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
         return vl;
     }
 
-    private void logValueChange(ValueChange<String> listener) {
+    private void logValueChange(ValueChangeEvent<String> listener) {
         AbstractField<String> field = (AbstractField<String>) listener
-                .getConnector();
+                .getComponent();
         String msg = "Value change event for " + field.getCaption()
                 + ", new value: '" + listener.getValue() + "'";
         if (field instanceof AbstractTextField) {

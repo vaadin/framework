@@ -441,7 +441,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
     }
 
     private void okButtonClick(ClickEvent event) {
-        fireEvent(new ValueChange<>(this, true));
+        fireEvent(new ValueChangeEvent<>(this, true));
         close();
     }
 
@@ -482,11 +482,11 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     @Override
     public Registration addValueChangeListener(
-            ValueChangeListener<? super Color> listener) {
+            ValueChangeListener<Color> listener) {
         Objects.requireNonNull(listener, "listener cannot be null");
-        addListener(ValueChange.class, listener,
+        addListener(ValueChangeEvent.class, listener,
                 ValueChangeListener.VALUE_CHANGE_METHOD);
-        return () -> removeListener(ValueChange.class, listener);
+        return () -> removeListener(ValueChangeEvent.class, listener);
     }
 
     /**
@@ -498,7 +498,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         return Collections.unmodifiableList(history.getHistory());
     }
 
-    private void colorChanged(ValueChange<Color> event) {
+    private void colorChanged(ValueChangeEvent<Color> event) {
         setValue(event.getValue());
 
         updatingColors = true;

@@ -15,7 +15,7 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.shared.ui.ValueChangeMode;
 
 /**
@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.ValueChangeMode;
  */
 public interface HasValueChangeMode extends Component {
     /**
-     * Sets the mode how the TextField triggers {@link ValueChange}s.
+     * Sets the mode how the TextField triggers {@link ValueChangeEvent}s.
      *
      * @param valueChangeMode
      *            the new mode
@@ -35,14 +35,14 @@ public interface HasValueChangeMode extends Component {
     /**
      * Returns the currently set {@link ValueChangeMode}.
      *
-     * @return the mode used to trigger {@link ValueChange}s.
+     * @return the mode used to trigger {@link ValueChangeEvent}s.
      *
      * @see ValueChangeMode
      */
     public ValueChangeMode getValueChangeMode();
 
     /**
-     * Sets how often {@link ValueChange}s are triggered when the
+     * Sets how often {@link ValueChangeEvent}s are triggered when the
      * {@link ValueChangeMode} is set to either {@link ValueChangeMode#LAZY} or
      * {@link ValueChangeMode#TIMEOUT}.
      *
@@ -57,11 +57,11 @@ public interface HasValueChangeMode extends Component {
 
     /**
      * Returns the currently set timeout, in milliseconds, for how often
-     * {@link ValueChange}s are triggered if the current {@link ValueChangeMode}
+     * {@link ValueChangeEvent}s are triggered if the current {@link ValueChangeMode}
      * is set to either {@link ValueChangeMode#LAZY} or
      * {@link ValueChangeMode#TIMEOUT}.
      *
-     * @return the timeout in milliseconds of how often {@link ValueChange}s are
+     * @return the timeout in milliseconds of how often {@link ValueChangeEvent}s are
      *         triggered.
      */
     public int getValueChangeTimeout();

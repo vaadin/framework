@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.event.selection.SingleSelectionChange;
+import com.vaadin.event.selection.SingleSelectionChangeEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.shared.Registration;
@@ -127,8 +127,8 @@ public abstract class AbstractSingleSelect<T> extends
             }
 
             doSetSelectedKey(key);
-            fireEvent(new SingleSelectionChange<>(AbstractSingleSelect.this,
-                    getSelectedItem().orElse(null), true));
+            fireEvent(new SingleSelectionChangeEvent<>(
+                    AbstractSingleSelect.this, true));
         }
 
         /**
@@ -148,8 +148,8 @@ public abstract class AbstractSingleSelect<T> extends
             }
 
             doSetSelectedKey(key);
-            fireEvent(new SingleSelectionChange<>(AbstractSingleSelect.this,
-                    item, false));
+            fireEvent(new SingleSelectionChangeEvent<>(
+                    AbstractSingleSelect.this, false));
         }
 
         /**
@@ -229,7 +229,7 @@ public abstract class AbstractSingleSelect<T> extends
     @Deprecated
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SingleSelectionListener.class, "accept",
-                    SingleSelectionChange.class);
+                    SingleSelectionChangeEvent.class);
 
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
@@ -272,9 +272,9 @@ public abstract class AbstractSingleSelect<T> extends
      */
     public Registration addSelectionListener(
             SingleSelectionListener<T> listener) {
-        addListener(SingleSelectionChange.class, listener,
+        addListener(SingleSelectionChangeEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
-        return () -> removeListener(SingleSelectionChange.class, listener);
+        return () -> removeListener(SingleSelectionChangeEvent.class, listener);
     }
 
     /**
@@ -335,10 +335,9 @@ public abstract class AbstractSingleSelect<T> extends
 
     @Override
     public Registration addValueChangeListener(
-            HasValue.ValueChangeListener<? super T> listener) {
-        return addSelectionListener(
-                event -> listener.accept(new ValueChange<>(event.getConnector(),
-                        event.getValue(), event.isUserOriginated())));
+            HasValue.ValueChangeListener<T> listener) {
+        return addSelectionListener(event -> listener.accept(
+                new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 
     @Override

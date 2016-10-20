@@ -19,9 +19,8 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import com.vaadin.data.HasValue.ValueChange;
-import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.ui.AbstractListing;
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.ui.AbstractMultiSelect;
 
 /**
  * Event fired when the the selection changes in a
@@ -34,7 +33,7 @@ import com.vaadin.ui.AbstractListing;
  * @param <T>
  *            the data type of the selection model
  */
-public class MultiSelectionEvent<T> extends ValueChange<Set<T>>
+public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
         implements SelectionEvent<T> {
 
     private final Set<T> oldSelection;
@@ -46,22 +45,24 @@ public class MultiSelectionEvent<T> extends ValueChange<Set<T>>
      *            the listing component in which the selection changed
      * @param oldSelection
      *            the old set of selected items
-     * @param newSelection
-     *            the new set of selected items
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      */
-    public MultiSelectionEvent(
-            AbstractListing<T, SelectionModel.Multi<T>> source,
-            Set<T> oldSelection, Set<T> newSelection, boolean userOriginated) {
-        super(source, Collections.unmodifiableSet(newSelection),
-                userOriginated);
+    public MultiSelectionEvent(AbstractMultiSelect<T> source,
+            Set<T> oldSelection, boolean userOriginated) {
+        super(source, userOriginated);
         this.oldSelection = oldSelection;
     }
 
     /**
      * Gets the new selection.
+     * <p>
+     * The result is the current selection of the source
+     * {@link AbstractMultiSelect} object. So it's always exactly the same as
+     * {@link AbstractMultiSelect#getValue()}
+     * 
+     * @see #getValue()
      *
      * @return a set of items selected after the selection was changed
      */

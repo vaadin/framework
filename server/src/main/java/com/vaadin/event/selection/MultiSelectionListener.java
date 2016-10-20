@@ -15,7 +15,8 @@
  */
 package com.vaadin.event.selection;
 
-import com.vaadin.event.EventListener;
+import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * Listens to changes from a
@@ -29,7 +30,7 @@ import com.vaadin.event.EventListener;
  *            the data type of the selection model
  */
 public interface MultiSelectionListener<T>
-        extends EventListener<MultiSelectionEvent<T>> {
+        extends Consumer<MultiSelectionEvent<T>>, Serializable {
     @Override
     // Explicitly defined to make reflection logic happy
     void accept(MultiSelectionEvent<T> event);

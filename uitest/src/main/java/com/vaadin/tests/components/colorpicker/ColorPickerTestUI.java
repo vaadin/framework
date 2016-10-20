@@ -27,7 +27,7 @@ import java.util.Date;
 import javax.imageio.ImageIO;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.colorpicker.Color;
@@ -446,7 +446,7 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
         display.setSource(imageresource);
     }
 
-    private void colorChanged(ValueChange<Color> event) {
+    private void colorChanged(ValueChangeEvent<Color> event) {
         if (event.getSource() == colorpicker1
                 || event.getSource() == colorpicker3
                 || event.getSource() == colorpicker5) {

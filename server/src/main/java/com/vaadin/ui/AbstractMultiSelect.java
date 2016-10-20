@@ -187,7 +187,7 @@ public abstract class AbstractMultiSelect<T>
             LinkedHashSet<T> newSelection = new LinkedHashSet<>(selection);
 
             fireEvent(new MultiSelectionEvent<>(AbstractMultiSelect.this,
-                    oldSelection, newSelection, userOriginated));
+                    oldSelection, userOriginated));
 
             getDataCommunicator().reset();
         }
@@ -397,10 +397,9 @@ public abstract class AbstractMultiSelect<T>
      */
     @Override
     public Registration addValueChangeListener(
-            HasValue.ValueChangeListener<? super Set<T>> listener) {
-        return addSelectionListener(
-                event -> listener.accept(new ValueChange<>(event.getConnector(),
-                        event.getValue(), event.isUserOriginated())));
+            HasValue.ValueChangeListener<Set<T>> listener) {
+        return addSelectionListener(event -> listener.accept(
+                new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 
     /**

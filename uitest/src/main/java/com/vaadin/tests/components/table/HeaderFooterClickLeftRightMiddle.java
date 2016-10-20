@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
@@ -50,7 +50,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void accept(ValueChange<Boolean> event) {
+                    public void accept(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(HeaderClickEvent.class)
                                 .isEmpty()) {
                             table.addHeaderClickListener(headerClickListener);
@@ -80,7 +80,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void accept(ValueChange<Boolean> event) {
+                    public void accept(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(FooterClickEvent.class)
                                 .isEmpty()) {
                             table.addFooterClickListener(footerClickListener);

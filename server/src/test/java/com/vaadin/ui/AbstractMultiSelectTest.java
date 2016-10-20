@@ -36,7 +36,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.DataSource;
@@ -299,6 +299,9 @@ public class AbstractMultiSelectTest {
     public void addValueChangeListener() {
         AtomicReference<MultiSelectionListener<String>> selectionListener = new AtomicReference<>();
         Registration registration = Mockito.mock(Registration.class);
+        Set<String> set = new HashSet<>();
+        set.add("foo");
+        set.add("bar");
         AbstractMultiSelect<String> select = new AbstractMultiSelect<String>() {
             @Override
             public Registration addSelectionListener(
@@ -306,9 +309,14 @@ public class AbstractMultiSelectTest {
                 selectionListener.set(listener);
                 return registration;
             }
+
+            @Override
+            public Set<String> getValue() {
+                return set;
+            }
         };
 
-        AtomicReference<ValueChange<?>> event = new AtomicReference<>();
+        AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
         Registration actualRegistration = select.addValueChangeListener(evt -> {
             Assert.assertNull(event.get());
             event.set(evt);
@@ -316,13 +324,10 @@ public class AbstractMultiSelectTest {
 
         Assert.assertSame(registration, actualRegistration);
 
-        Set<String> set = new HashSet<>();
-        set.add("foo");
-        set.add("bar");
         selectionListener.get().accept(new MultiSelectionEvent<>(select,
-                Mockito.mock(Set.class), set, true));
+                Mockito.mock(Set.class), true));
 
-        Assert.assertEquals(select, event.get().getConnector());
+        Assert.assertEquals(select, event.get().getComponent());
         Assert.assertEquals(set, event.get().getValue());
         Assert.assertTrue(event.get().isUserOriginated());
     }

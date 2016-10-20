@@ -15,17 +15,18 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.server.data.DataSource;
-import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
-import com.vaadin.shared.data.selection.SelectionServerRpc;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.vaadin.server.data.DataSource;
+import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.shared.data.selection.SelectionModel.Multi;
+import com.vaadin.shared.data.selection.SelectionServerRpc;
 
 public class RadioButtonGroupTest {
     private RadioButtonGroup<String> radioButtonGroup;
@@ -39,7 +40,6 @@ public class RadioButtonGroupTest {
                 .setDataSource(DataSource.create("Third", "Second", "First"));
         selectionModel = radioButtonGroup.getSelectionModel();
     }
-
 
     @Test
     public void apiSelectionChange_notUserOriginated() {
@@ -69,7 +69,7 @@ public class RadioButtonGroupTest {
         });
 
         SelectionServerRpc rpc = ComponentTest.getRpcProxy(radioButtonGroup,
-                                                           SelectionServerRpc.class);
+                SelectionServerRpc.class);
 
         rpc.select(getItemKey("First"));
         rpc.select(getItemKey("Second"));

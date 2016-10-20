@@ -99,14 +99,14 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     @Override
     public Registration addValueChangeListener(
-            ValueChangeListener<? super Color> listener) {
+            ValueChangeListener<Color> listener) {
         Objects.requireNonNull(listener, "listener cannot be null");
-        addListener(ValueChange.class, listener,
+        addListener(ValueChangeEvent.class, listener,
                 ValueChangeListener.VALUE_CHANGE_METHOD);
-        return () -> removeListener(ValueChange.class, listener);
+        return () -> removeListener(ValueChangeEvent.class, listener);
     }
 
-    private void valueChange(ValueChange<String> event) {
+    private void valueChange(ValueChangeEvent<String> event) {
         String value = event.getValue();
         try {
             if (value != null) {
@@ -160,8 +160,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
                 }
 
                 oldValue = value;
-                fireEvent(new ValueChange<>((Component) field.getData(), color,
-                        event.isUserOriginated()));
+                fireEvent(new ValueChangeEvent<>(this, event.isUserOriginated()));
             }
 
         } catch (NumberFormatException nfe) {

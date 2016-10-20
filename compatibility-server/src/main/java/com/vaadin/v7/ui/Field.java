@@ -17,7 +17,7 @@
 package com.vaadin.v7.ui;
 
 import com.vaadin.data.HasRequired;
-import com.vaadin.data.HasValue.ValueChange;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.v7.data.BufferedValidatable;
@@ -96,7 +96,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      * @author Vaadin Ltd.
      * @since 3.0
      *
-     * @deprecated As of 8.0, replaced by {@link ValueChange}.
+     * @deprecated As of 8.0, replaced by {@link ValueChangeEvent}.
      */
     @Deprecated
     @SuppressWarnings("serial")

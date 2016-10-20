@@ -168,7 +168,7 @@ public class ColorPickerSelect extends CustomField<Color> {
         return colors;
     }
 
-    private void valueChange(ValueChange<ColorRange> event) {
+    private void valueChange(ValueChangeEvent<ColorRange> event) {
         if (grid == null) {
             return;
         }

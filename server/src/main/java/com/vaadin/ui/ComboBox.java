@@ -559,14 +559,12 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
         return getSelectionModel().getSelectedItem().orElse(null);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Registration addValueChangeListener(
-            HasValue.ValueChangeListener<? super T> listener) {
+            HasValue.ValueChangeListener<T> listener) {
         return addSelectionListener(event -> {
-            ((ValueChangeListener<T>) listener)
-                    .accept(new ValueChange<>(event.getConnector(),
-                            event.getValue(), event.isUserOriginated()));
+            listener.accept(new ValueChangeEvent<>(event.getComponent(), this,
+                    event.isUserOriginated()));
         });
     }
 
