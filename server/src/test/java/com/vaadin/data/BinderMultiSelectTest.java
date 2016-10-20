@@ -20,7 +20,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -30,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.tests.data.bean.BeanWithEnums;
 import com.vaadin.tests.data.bean.TestEnum;
 import com.vaadin.ui.CheckBoxGroup;
@@ -40,14 +40,14 @@ public class BinderMultiSelectTest
             implements Converter<Set<TestEnum>, String> {
         @Override
         public Result<String> convertToModel(Set<TestEnum> value,
-                Locale locale) {
+                ValueContext context) {
             return Result.ok(value.stream().map(TestEnum::name)
                     .collect(Collectors.joining(",")));
         }
 
         @Override
         public Set<TestEnum> convertToPresentation(String value,
-                Locale locale) {
+                ValueContext context) {
             return Stream.of(value.split(","))
                     .filter(string -> !string.isEmpty()).map(TestEnum::valueOf)
                     .collect(Collectors.toSet());

@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class StringToDoubleConverterTest extends AbstractConverterTest {
 
@@ -15,18 +16,21 @@ public class StringToDoubleConverterTest extends AbstractConverterTest {
 
     @Test
     public void testEmptyStringConversion() {
-        assertValue(null, getConverter().convertToModel("", null));
+        assertValue(null,
+                getConverter().convertToModel("", new ValueContext()));
     }
 
     @Test
     public void testValueConversion() {
-        Result<Double> value = getConverter().convertToModel("10", null);
+        Result<Double> value = getConverter().convertToModel("10",
+                new ValueContext());
         assertValue(10.0d, value);
     }
 
     @Test
     public void testErrorMessage() {
-        Result<Double> result = getConverter().convertToModel("abc", null);
+        Result<Double> result = getConverter().convertToModel("abc",
+                new ValueContext());
         Assert.assertTrue(result.isError());
         Assert.assertEquals("Failed", result.getMessage().get());
     }

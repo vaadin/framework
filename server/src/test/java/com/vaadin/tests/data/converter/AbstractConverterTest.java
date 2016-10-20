@@ -5,12 +5,14 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public abstract class AbstractConverterTest {
 
     @Test
     public void testNullConversion() {
-        assertValue(null, getConverter().convertToModel(null, null));
+        assertValue(null,
+                getConverter().convertToModel(null, new ValueContext()));
     }
 
     protected abstract Converter<?, ?> getConverter();

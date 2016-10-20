@@ -63,8 +63,9 @@ public class StringToIntegerConverter
     }
 
     @Override
-    public Result<Integer> convertToModel(String value, Locale locale) {
-        Result<Number> n = convertToNumber(value, locale);
+    public Result<Integer> convertToModel(String value, ValueContext context) {
+        Result<Number> n = convertToNumber(value,
+                context.getLocale().orElse(null));
         return n.flatMap(number -> {
             if (number == null) {
                 return Result.ok(null);

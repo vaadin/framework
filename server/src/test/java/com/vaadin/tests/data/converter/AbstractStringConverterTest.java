@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public abstract class AbstractStringConverterTest
         extends AbstractConverterTest {
@@ -15,16 +16,18 @@ public abstract class AbstractStringConverterTest
     @Test
     public void testEmptyStringConversion() {
         assertValue("Null value was converted incorrectly", null,
-                getConverter().convertToModel("", null));
+                getConverter().convertToModel("", new ValueContext()));
     }
 
     @Test
     public void testErrorMessage() {
-        Result<?> result = getConverter().convertToModel("abc", null);
+        Result<?> result = getConverter().convertToModel("abc",
+                new ValueContext());
         Assert.assertTrue(result.isError());
         Assert.assertEquals(getErrorMessage(), result.getMessage().get());
     }
 
+    @Override
     protected String getErrorMessage() {
         return "conversion failed";
     }

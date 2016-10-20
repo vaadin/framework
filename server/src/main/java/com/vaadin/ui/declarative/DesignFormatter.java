@@ -36,6 +36,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToBigDecimalConverter;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToFloatConverter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
@@ -88,12 +89,14 @@ public class DesignFormatter implements Serializable {
         Converter<String, Boolean> booleanConverter = new Converter<String, Boolean>() {
 
             @Override
-            public Result<Boolean> convertToModel(String value, Locale locale) {
+            public Result<Boolean> convertToModel(String value,
+                    ValueContext context) {
                 return Result.ok(!value.equalsIgnoreCase("false"));
             }
 
             @Override
-            public String convertToPresentation(Boolean value, Locale locale) {
+            public String convertToPresentation(Boolean value,
+                    ValueContext context) {
                 if (value.booleanValue()) {
                     return "";
                 } else {
@@ -146,12 +149,14 @@ public class DesignFormatter implements Serializable {
         converterMap.put(String.class, new Converter<String, String>() {
 
             @Override
-            public Result<String> convertToModel(String value, Locale locale) {
+            public Result<String> convertToModel(String value,
+                    ValueContext context) {
                 return Result.ok(value);
             }
 
             @Override
-            public String convertToPresentation(String value, Locale locale) {
+            public String convertToPresentation(String value,
+                    ValueContext context) {
                 return value;
             }
 
@@ -163,7 +168,7 @@ public class DesignFormatter implements Serializable {
 
             @Override
             public Result<Character> convertToModel(String value,
-                    Locale locale) {
+                    ValueContext context) {
                 return Result.ok(value.charAt(0));
             }
 
@@ -226,7 +231,8 @@ public class DesignFormatter implements Serializable {
     public <T> T parse(String value, Class<? extends T> type) {
         Converter<String, T> converter = findConverterFor(type);
         if (converter != null) {
-            Result<T> result = converter.convertToModel(value, null);
+            Result<T> result = converter.convertToModel(value,
+                    new ValueContext());
             return result.getOrThrow(msg -> new IllegalArgumentException(msg));
         } else {
             return null;
@@ -262,7 +268,7 @@ public class DesignFormatter implements Serializable {
         } else {
             Converter<String, Object> converter = findConverterFor(
                     object.getClass());
-            return converter.convertToPresentation(object, null);
+            return converter.convertToPresentation(object, new ValueContext());
         }
     }
 

@@ -45,11 +45,17 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      *
      * @param value
      *            The value to convert. Can be null
-     * @param locale
-     *            The locale to use for conversion. Can be null.
+     * @param context
+     *            The value context for the conversion.
      * @return The converted value compatible with the source type
      */
-    public Result<MODEL> convertToModel(PRESENTATION value, Locale locale);
+    public Result<MODEL> convertToModel(PRESENTATION value,
+            ValueContext context);
+
+    default public Result<MODEL> convertToModel(PRESENTATION value,
+            Locale locale) {
+        return convertToModel(value, new ValueContext(locale));
+    }
 
     /**
      * Converts the given value from presentation type to model type.
@@ -58,11 +64,17 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      *
      * @param value
      *            The value to convert. Can be null
-     * @param locale
-     *            The locale to use for conversion. Can be null.
+     * @param context
+     *            The value context for the conversion.
      * @return The converted value compatible with the source type
      */
-    public PRESENTATION convertToPresentation(MODEL value, Locale locale);
+    public PRESENTATION convertToPresentation(MODEL value,
+            ValueContext context);
+
+    default public PRESENTATION convertToPresentation(MODEL value,
+            Locale locale) {
+        return convertToPresentation(value, new ValueContext());
+    }
 
     /**
      * Returns a converter that returns its input as-is in both directions.
@@ -124,12 +136,12 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
         return new Converter<P, M>() {
 
             @Override
-            public Result<M> convertToModel(P value, Locale locale) {
+            public Result<M> convertToModel(P value, ValueContext context) {
                 return toModel.apply(value);
             }
 
             @Override
-            public P convertToPresentation(M value, Locale locale) {
+            public P convertToPresentation(M value, ValueContext context) {
                 return toPresentation.apply(value);
             }
         };
@@ -157,16 +169,18 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
             Converter<MODEL, T> other) {
         return new Converter<PRESENTATION, T>() {
             @Override
-            public Result<T> convertToModel(PRESENTATION value, Locale locale) {
+            public Result<T> convertToModel(PRESENTATION value,
+                    ValueContext context) {
                 Result<MODEL> model = Converter.this.convertToModel(value,
-                        locale);
-                return model.flatMap(v -> other.convertToModel(v, locale));
+                        context);
+                return model.flatMap(v -> other.convertToModel(v, context));
             }
 
             @Override
-            public PRESENTATION convertToPresentation(T value, Locale locale) {
-                MODEL model = other.convertToPresentation(value, locale);
-                return Converter.this.convertToPresentation(model, locale);
+            public PRESENTATION convertToPresentation(T value,
+                    ValueContext context) {
+                MODEL model = other.convertToPresentation(value, context);
+                return Converter.this.convertToPresentation(model, context);
             }
         };
     }

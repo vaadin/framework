@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.StringToBigDecimalConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class StringToBigDecimalConverterTest
         extends AbstractStringConverterTest {
@@ -35,7 +36,7 @@ public class StringToBigDecimalConverterTest
     @Test
     public void testValueParsing() {
         Result<BigDecimal> converted = getConverter().convertToModel("10",
-                null);
+                new ValueContext());
         BigDecimal expected = new BigDecimal(10);
         assertValue(expected, converted);
     }
@@ -46,7 +47,7 @@ public class StringToBigDecimalConverterTest
         String expected = "12,5";
 
         String converted = getConverter().convertToPresentation(bd,
-                Locale.GERMAN);
+                new ValueContext(Locale.GERMAN));
         Assert.assertEquals(expected, converted);
     }
 }

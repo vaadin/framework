@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.junit.Test;
 
 import com.vaadin.data.util.converter.DateToSqlDateConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class DateToSqlDateConverterTest extends AbstractConverterTest {
 
@@ -18,7 +19,7 @@ public class DateToSqlDateConverterTest extends AbstractConverterTest {
     public void testValueConversion() {
         Date testDate = new Date(100, 0, 1);
         long time = testDate.getTime();
-        assertValue(testDate, getConverter()
-                .convertToModel(new java.sql.Date(time), Locale.ENGLISH));
+        assertValue(testDate, getConverter().convertToModel(
+                new java.sql.Date(time), new ValueContext(Locale.ENGLISH)));
     }
 }

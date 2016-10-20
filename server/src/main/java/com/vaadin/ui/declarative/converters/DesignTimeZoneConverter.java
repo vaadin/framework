@@ -15,11 +15,11 @@
  */
 package com.vaadin.ui.declarative.converters;
 
-import java.util.Locale;
 import java.util.TimeZone;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -32,7 +32,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 public class DesignTimeZoneConverter implements Converter<String, TimeZone> {
 
     @Override
-    public Result<TimeZone> convertToModel(String value, Locale locale) {
+    public Result<TimeZone> convertToModel(String value, ValueContext context) {
         if (value == null || value.isEmpty()) {
             return Result.ok(null);
         }
@@ -41,7 +41,7 @@ public class DesignTimeZoneConverter implements Converter<String, TimeZone> {
     }
 
     @Override
-    public String convertToPresentation(TimeZone value, Locale locale) {
+    public String convertToPresentation(TimeZone value, ValueContext context) {
         if (value == null) {
             return "";
         } else {

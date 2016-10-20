@@ -60,14 +60,16 @@ public class StringToBigIntegerConverter
     }
 
     @Override
-    public Result<BigInteger> convertToModel(String value, Locale locale) {
-        return convertToNumber(value, locale).map(number -> {
-            if (number == null) {
-                return null;
-            } else {
-                return ((BigDecimal) number).toBigInteger();
-            }
-        });
+    public Result<BigInteger> convertToModel(String value,
+            ValueContext context) {
+        return convertToNumber(value, context.getLocale().orElse(null))
+                .map(number -> {
+                    if (number == null) {
+                        return null;
+                    } else {
+                        return ((BigDecimal) number).toBigInteger();
+                    }
+                });
     }
 
 }

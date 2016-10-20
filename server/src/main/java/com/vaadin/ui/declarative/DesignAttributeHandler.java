@@ -37,6 +37,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Alignment;
@@ -398,7 +399,7 @@ public class DesignAttributeHandler implements Serializable {
         Converter<String, Object> converter = (Converter<String, Object>) getFormatter()
                 .findConverterFor(sourceType);
         if (converter != null) {
-            return converter.convertToPresentation(value, null);
+            return converter.convertToPresentation(value, new ValueContext());
         } else {
             return value.toString();
         }

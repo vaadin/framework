@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.StringToLongConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class StringToLongConverterTest extends AbstractStringConverterTest {
 
@@ -15,21 +16,23 @@ public class StringToLongConverterTest extends AbstractStringConverterTest {
     @Override
     @Test
     public void testEmptyStringConversion() {
-        assertValue(null, getConverter().convertToModel("", null));
+        assertValue(null,
+                getConverter().convertToModel("", new ValueContext()));
     }
 
     @Test
     public void testValueConversion() {
         assertValue(Long.valueOf(10),
-                getConverter().convertToModel("10", null));
+                getConverter().convertToModel("10", new ValueContext()));
     }
 
     @Test
     public void testExtremeLongValueConversion() {
         Result<Long> l = getConverter().convertToModel("9223372036854775807",
-                null);
+                new ValueContext());
         assertValue(Long.MAX_VALUE, l);
-        l = getConverter().convertToModel("-9223372036854775808", null);
+        l = getConverter().convertToModel("-9223372036854775808",
+                new ValueContext());
         assertValue(Long.MIN_VALUE, l);
     }
 
@@ -37,10 +40,11 @@ public class StringToLongConverterTest extends AbstractStringConverterTest {
     public void testOutOfBoundsValueConversion() {
         // Long.MAX_VALUE+1 is converted to Long.MAX_VALUE
         Result<Long> l = getConverter().convertToModel("9223372036854775808",
-                null);
+                new ValueContext());
         assertValue(Long.MAX_VALUE, l);
         // Long.MIN_VALUE-1 is converted to Long.MIN_VALUE
-        l = getConverter().convertToModel("-9223372036854775809", null);
+        l = getConverter().convertToModel("-9223372036854775809",
+                new ValueContext());
         assertValue(Long.MIN_VALUE, l);
 
     }

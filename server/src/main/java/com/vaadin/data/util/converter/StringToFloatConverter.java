@@ -47,8 +47,9 @@ public class StringToFloatConverter
     }
 
     @Override
-    public Result<Float> convertToModel(String value, Locale locale) {
-        Result<Number> n = convertToNumber(value, locale);
+    public Result<Float> convertToModel(String value, ValueContext context) {
+        Result<Number> n = convertToNumber(value,
+                context.getLocale().orElse(null));
 
         return n.map(number -> {
             if (number == null) {

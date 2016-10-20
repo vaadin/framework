@@ -109,12 +109,12 @@ public abstract class AbstractStringToNumberConverter<T>
     }
 
     @Override
-    public String convertToPresentation(T value, Locale locale) {
+    public String convertToPresentation(T value, ValueContext context) {
         if (value == null) {
             return null;
         }
 
-        return getFormat(locale).format(value);
+        return getFormat(context.getLocale().orElse(null)).format(value);
     }
 
 }

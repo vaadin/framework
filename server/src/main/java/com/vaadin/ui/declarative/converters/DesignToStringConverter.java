@@ -16,10 +16,10 @@
 package com.vaadin.ui.declarative.converters;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Locale;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -72,7 +72,7 @@ public class DesignToStringConverter<TYPE> implements Converter<String, TYPE> {
     }
 
     @Override
-    public Result<TYPE> convertToModel(String value, Locale locale) {
+    public Result<TYPE> convertToModel(String value, ValueContext context) {
         try {
             return Result.ok(type
                     .cast(type.getMethod(this.staticMethodName, String.class)
@@ -85,7 +85,7 @@ public class DesignToStringConverter<TYPE> implements Converter<String, TYPE> {
     }
 
     @Override
-    public String convertToPresentation(TYPE value, Locale locale) {
+    public String convertToPresentation(TYPE value, ValueContext context) {
         if (value == null) {
             return NULL_VALUE_REPRESENTATION;
         } else {

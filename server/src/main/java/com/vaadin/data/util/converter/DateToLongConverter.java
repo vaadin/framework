@@ -17,7 +17,6 @@
 package com.vaadin.data.util.converter;
 
 import java.util.Date;
-import java.util.Locale;
 
 import com.vaadin.data.Result;
 
@@ -30,7 +29,7 @@ import com.vaadin.data.Result;
 public class DateToLongConverter implements Converter<Date, Long> {
 
     @Override
-    public Result<Long> convertToModel(Date value, Locale locale) {
+    public Result<Long> convertToModel(Date value, ValueContext context) {
         if (value == null) {
             return Result.ok(null);
         }
@@ -39,7 +38,7 @@ public class DateToLongConverter implements Converter<Date, Long> {
     }
 
     @Override
-    public Date convertToPresentation(Long value, Locale locale) {
+    public Date convertToPresentation(Long value, ValueContext context) {
         if (value == null) {
             return null;
         }

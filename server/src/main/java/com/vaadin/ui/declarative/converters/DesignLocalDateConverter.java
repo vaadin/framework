@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -34,12 +35,13 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 public class DesignLocalDateConverter implements Converter<String, LocalDate> {
 
     @Override
-    public Result<LocalDate> convertToModel(String value, Locale locale) {
+    public Result<LocalDate> convertToModel(String value,
+            ValueContext context) {
         for (String pattern : new String[] { "yyyy-MM-dd", "yyyy-MM",
                 "yyyy" }) {
             try {
-                Locale effectiveLocale = locale == null ? Locale.ENGLISH
-                        : locale;
+                Locale effectiveLocale = context.getLocale()
+                        .orElse(Locale.ENGLISH);
                 LocalDate date = DateTimeFormatter
                         .ofPattern(pattern, effectiveLocale)
                         .parse(value, LocalDate::from);
@@ -52,9 +54,11 @@ public class DesignLocalDateConverter implements Converter<String, LocalDate> {
     }
 
     @Override
-    public String convertToPresentation(LocalDate value, Locale locale) {
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd",
-                locale == null ? Locale.ENGLISH : locale).format(value);
+    public String convertToPresentation(LocalDate value, ValueContext context) {
+        return DateTimeFormatter
+                .ofPattern("yyyy-MM-dd",
+                        context.getLocale().orElse(Locale.ENGLISH))
+                .format(value);
     }
 
 }

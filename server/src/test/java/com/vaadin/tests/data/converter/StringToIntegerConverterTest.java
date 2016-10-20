@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class StringToIntegerConverterTest extends AbstractConverterTest {
 
@@ -15,7 +16,8 @@ public class StringToIntegerConverterTest extends AbstractConverterTest {
 
     @Test
     public void testEmptyStringConversion() {
-        assertValue(null, getConverter().convertToModel("", null));
+        assertValue(null,
+                getConverter().convertToModel("", new ValueContext()));
     }
 
     @Test
@@ -28,7 +30,7 @@ public class StringToIntegerConverterTest extends AbstractConverterTest {
         for (Number value : values) {
             try {
                 getConverter().convertToModel(String.format("%.0f", value),
-                        null);
+                        new ValueContext());
             } catch (Exception e) {
                 accepted = true;
             }
@@ -39,12 +41,13 @@ public class StringToIntegerConverterTest extends AbstractConverterTest {
     @Test
     public void testValueConversion() {
         assertValue(Integer.valueOf(10),
-                getConverter().convertToModel("10", null));
+                getConverter().convertToModel("10", new ValueContext()));
     }
 
     @Test
     public void testErrorMessage() {
-        Result<Integer> result = getConverter().convertToModel("abc", null);
+        Result<Integer> result = getConverter().convertToModel("abc",
+                new ValueContext());
         Assert.assertTrue(result.isError());
         Assert.assertEquals("Failed", result.getMessage().get());
     }

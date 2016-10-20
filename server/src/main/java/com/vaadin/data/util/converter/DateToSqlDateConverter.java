@@ -20,7 +20,6 @@
 package com.vaadin.data.util.converter;
 
 import java.util.Date;
-import java.util.Locale;
 
 import com.vaadin.data.Result;
 
@@ -37,7 +36,8 @@ import com.vaadin.data.Result;
 public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
 
     @Override
-    public Result<java.sql.Date> convertToModel(Date value, Locale locale) {
+    public Result<java.sql.Date> convertToModel(Date value,
+            ValueContext context) {
         if (value == null) {
             return Result.ok(null);
         }
@@ -46,7 +46,8 @@ public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
     }
 
     @Override
-    public Date convertToPresentation(java.sql.Date value, Locale locale) {
+    public Date convertToPresentation(java.sql.Date value,
+            ValueContext context) {
         if (value == null) {
             return null;
         }

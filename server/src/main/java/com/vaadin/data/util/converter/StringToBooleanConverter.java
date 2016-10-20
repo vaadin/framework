@@ -72,7 +72,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     @Override
-    public Result<Boolean> convertToModel(String value, Locale locale) {
+    public Result<Boolean> convertToModel(String value, ValueContext context) {
         if (value == null) {
             return Result.ok(null);
         }
@@ -80,6 +80,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
         // Remove leading and trailing white space
         value = value.trim();
 
+        Locale locale = context.getLocale().orElse(null);
         if (getTrueString(locale).equals(value)) {
             return Result.ok(true);
         } else if (getFalseString(locale).equals(value)) {
@@ -92,10 +93,11 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     @Override
-    public String convertToPresentation(Boolean value, Locale locale) {
+    public String convertToPresentation(Boolean value, ValueContext context) {
         if (value == null) {
             return null;
         }
+        Locale locale = context.getLocale().orElse(null);
         if (value) {
             return getTrueString(locale);
         } else {

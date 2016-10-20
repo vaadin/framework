@@ -17,12 +17,12 @@ package com.vaadin.ui.declarative.converters;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -121,7 +121,8 @@ public class DesignShortcutActionConverter
     }
 
     @Override
-    public Result<ShortcutAction> convertToModel(String value, Locale locale) {
+    public Result<ShortcutAction> convertToModel(String value,
+            ValueContext context) {
         if (value.length() == 0) {
             return Result.ok(null);
         }
@@ -159,7 +160,8 @@ public class DesignShortcutActionConverter
     }
 
     @Override
-    public String convertToPresentation(ShortcutAction value, Locale locale) {
+    public String convertToPresentation(ShortcutAction value,
+            ValueContext context) {
         StringBuilder sb = new StringBuilder();
         // handle modifiers
         if (value.getModifiers() != null) {

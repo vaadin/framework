@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
@@ -44,7 +45,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 public class DesignResourceConverter implements Converter<String, Resource> {
 
     @Override
-    public Result<Resource> convertToModel(String value, Locale locale) {
+    public Result<Resource> convertToModel(String value, ValueContext context) {
         if (!value.contains("://")) {
             // assume it'is "file://" protocol, one that is used to access a
             // file on a given path on the server, this will later be striped
@@ -63,7 +64,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
     }
 
     @Override
-    public String convertToPresentation(Resource value, Locale locale) {
+    public String convertToPresentation(Resource value, ValueContext context) {
         ResourceConverterByProtocol byType = ResourceConverterByProtocol
                 .byType(value.getClass());
         if (byType != null) {

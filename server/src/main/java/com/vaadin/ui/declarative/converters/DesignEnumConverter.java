@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -46,7 +47,7 @@ public class DesignEnumConverter<T extends Enum>
 
     @SuppressWarnings("unchecked")
     @Override
-    public Result<T> convertToModel(String value, Locale locale) {
+    public Result<T> convertToModel(String value, ValueContext context) {
         if (value == null || value.trim().equals("")) {
             return Result.ok(null);
         }
@@ -60,7 +61,7 @@ public class DesignEnumConverter<T extends Enum>
     }
 
     @Override
-    public String convertToPresentation(T value, Locale locale) {
+    public String convertToPresentation(T value, ValueContext context) {
         if (value == null) {
             return null;
         }

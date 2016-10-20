@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
@@ -563,8 +564,21 @@ public class Binder<BEAN> implements Serializable {
         private ValidationStatus<TARGET> doValidation() {
             FIELDVALUE fieldValue = field.getValue();
             Result<TARGET> dataValue = converterValidatorChain
-                    .convertToModel(fieldValue, findLocale());
+                    .convertToModel(fieldValue, createValueContext());
             return new ValidationStatus<>(this, dataValue);
+        }
+
+        /**
+         * Creates a value context from the current state of the binding and its
+         * field.
+         *
+         * @return the value context
+         */
+        protected ValueContext createValueContext() {
+            if (field instanceof Component) {
+                return new ValueContext((Component) field);
+            }
+            return new ValueContext(findLocale());
         }
 
         private void unbind() {
@@ -584,8 +598,8 @@ public class Binder<BEAN> implements Serializable {
         }
 
         private FIELDVALUE convertDataToFieldType(BEAN bean) {
-            return converterValidatorChain
-                    .convertToPresentation(getter.apply(bean), findLocale());
+            return converterValidatorChain.convertToPresentation(
+                    getter.apply(bean), createValueContext());
         }
 
         /**
@@ -661,7 +675,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public Result<T> convertToModel(T value, Locale locale) {
+        public Result<T> convertToModel(T value, ValueContext context) {
             Result<? super T> validationResult = validator.apply(value);
             if (validationResult.isError()) {
                 return Result.error(validationResult.getMessage().get());
@@ -671,7 +685,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public T convertToPresentation(T value, Locale locale) {
+        public T convertToPresentation(T value, ValueContext context) {
             return value;
         }
 

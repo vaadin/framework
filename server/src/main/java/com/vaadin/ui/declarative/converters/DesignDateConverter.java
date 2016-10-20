@@ -18,10 +18,10 @@ package com.vaadin.ui.declarative.converters;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**
@@ -34,7 +34,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 public class DesignDateConverter implements Converter<String, Date> {
 
     @Override
-    public Result<Date> convertToModel(String value, Locale locale) {
+    public Result<Date> convertToModel(String value, ValueContext context) {
         for (String pattern : new String[] { "yyyy-MM-dd HH:mm:ssZ",
                 "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH",
                 "yyyy-MM-dd", "yyyy-MM", "yyyy" }) {
@@ -48,7 +48,7 @@ public class DesignDateConverter implements Converter<String, Date> {
     }
 
     @Override
-    public String convertToPresentation(Date value, Locale locale) {
+    public String convertToPresentation(Date value, ValueContext context) {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").format(value);
     }
 

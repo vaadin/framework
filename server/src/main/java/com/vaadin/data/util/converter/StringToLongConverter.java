@@ -62,8 +62,9 @@ public class StringToLongConverter
     }
 
     @Override
-    public Result<Long> convertToModel(String value, Locale locale) {
-        Result<Number> n = convertToNumber(value, locale);
+    public Result<Long> convertToModel(String value, ValueContext context) {
+        Result<Number> n = convertToNumber(value,
+                context.getLocale().orElse(null));
         return n.map(number -> {
             if (number == null) {
                 return null;

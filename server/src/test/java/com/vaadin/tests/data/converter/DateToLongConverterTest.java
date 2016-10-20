@@ -5,6 +5,7 @@ import java.util.Date;
 import org.junit.Test;
 
 import com.vaadin.data.util.converter.DateToLongConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class DateToLongConverterTest extends AbstractConverterTest {
 
@@ -16,7 +17,8 @@ public class DateToLongConverterTest extends AbstractConverterTest {
     @Override
     @Test
     public void testNullConversion() {
-        assertValue(null, getConverter().convertToModel(null, null));
+        assertValue(null,
+                getConverter().convertToModel(null, new ValueContext()));
     }
 
     @Test
@@ -25,6 +27,6 @@ public class DateToLongConverterTest extends AbstractConverterTest {
         assertValue(
                 Long.valueOf(946677600000l
                         + (d.getTimezoneOffset() + 120) * 60 * 1000L),
-                getConverter().convertToModel(d, null));
+                getConverter().convertToModel(d, new ValueContext()));
     }
 }

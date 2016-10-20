@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.junit.Test;
 
 import com.vaadin.data.util.converter.StringToDateConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class StringToDateConverterTest extends AbstractConverterTest {
 
@@ -16,12 +17,13 @@ public class StringToDateConverterTest extends AbstractConverterTest {
 
     @Test
     public void testEmptyStringConversion() {
-        assertValue(null, getConverter().convertToModel("", null));
+        assertValue(null,
+                getConverter().convertToModel("", new ValueContext()));
     }
 
     @Test
     public void testValueConversion() {
-        assertValue(new Date(100, 0, 1), getConverter()
-                .convertToModel("Jan 1, 2000 12:00:00 AM", Locale.ENGLISH));
+        assertValue(new Date(100, 0, 1), getConverter().convertToModel(
+                "Jan 1, 2000 12:00:00 AM", new ValueContext(Locale.ENGLISH)));
     }
 }

@@ -17,7 +17,6 @@ package com.vaadin.data;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -31,6 +30,7 @@ import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.ValidationStatus.Status;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.AbstractErrorMessage;
@@ -537,7 +537,7 @@ public class BinderBookOfVaadinTest {
     class MyConverter implements Converter<String, Integer> {
         @Override
         public Result<Integer> convertToModel(String fieldValue,
-                Locale locale) {
+                ValueContext context) {
             // Produces a converted value or an error
             try {
                 // ok is a static helper method that creates a Result
@@ -549,7 +549,8 @@ public class BinderBookOfVaadinTest {
         }
 
         @Override
-        public String convertToPresentation(Integer integer, Locale locale) {
+        public String convertToPresentation(Integer integer,
+                ValueContext context) {
             // Converting to the field type should always succeed,
             // so there is no support for returning an error Result.
             return String.valueOf(integer);

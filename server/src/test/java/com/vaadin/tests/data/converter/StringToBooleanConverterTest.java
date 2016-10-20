@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.converter.StringToBooleanConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class StringToBooleanConverterTest extends AbstractStringConverterTest {
 
@@ -43,42 +44,49 @@ public class StringToBooleanConverterTest extends AbstractStringConverterTest {
 
     @Test
     public void testValueConversion() {
-        assertValue(true, getConverter().convertToModel("true", null));
-        assertValue(false, getConverter().convertToModel("false", null));
+        assertValue(true,
+                getConverter().convertToModel("true", new ValueContext()));
+        assertValue(false,
+                getConverter().convertToModel("false", new ValueContext()));
     }
 
     @Test
     public void testYesNoValueConversion() {
-        assertValue(true, yesNoConverter.convertToModel("yes", null));
-        assertValue(false, yesNoConverter.convertToModel("no", null));
+        assertValue(true,
+                yesNoConverter.convertToModel("yes", new ValueContext()));
+        assertValue(false,
+                yesNoConverter.convertToModel("no", new ValueContext()));
 
         Assert.assertEquals("yes",
-                yesNoConverter.convertToPresentation(true, null));
-        Assert.assertEquals("no",
-                yesNoConverter.convertToPresentation(false, null));
+                yesNoConverter.convertToPresentation(true, new ValueContext()));
+        Assert.assertEquals("no", yesNoConverter.convertToPresentation(false,
+                new ValueContext()));
     }
 
     @Test
     public void testEmptyTrueValueConversion() {
-        assertValue(true, emptyTrueConverter.convertToModel("", null));
-        assertValue(false, emptyTrueConverter.convertToModel("ABSENT", null));
+        assertValue(true,
+                emptyTrueConverter.convertToModel("", new ValueContext()));
+        assertValue(false, emptyTrueConverter.convertToModel("ABSENT",
+                new ValueContext()));
 
-        Assert.assertEquals("",
-                emptyTrueConverter.convertToPresentation(true, null));
-        Assert.assertEquals("ABSENT",
-                emptyTrueConverter.convertToPresentation(false, null));
+        Assert.assertEquals("", emptyTrueConverter.convertToPresentation(true,
+                new ValueContext()));
+        Assert.assertEquals("ABSENT", emptyTrueConverter
+                .convertToPresentation(false, new ValueContext()));
     }
 
     @Test
     public void testLocale() {
-        Assert.assertEquals("May 18, 2033",
-                localeConverter.convertToPresentation(true, Locale.US));
-        Assert.assertEquals("January 24, 2065",
-                localeConverter.convertToPresentation(false, Locale.US));
+        Assert.assertEquals("May 18, 2033", localeConverter
+                .convertToPresentation(true, new ValueContext(Locale.US)));
+        Assert.assertEquals("January 24, 2065", localeConverter
+                .convertToPresentation(false, new ValueContext(Locale.US)));
 
-        Assert.assertEquals("18. Mai 2033",
-                localeConverter.convertToPresentation(true, Locale.GERMANY));
+        Assert.assertEquals("18. Mai 2033", localeConverter
+                .convertToPresentation(true, new ValueContext(Locale.GERMANY)));
         Assert.assertEquals("24. Januar 2065",
-                localeConverter.convertToPresentation(false, Locale.GERMANY));
+                localeConverter.convertToPresentation(false,
+                        new ValueContext(Locale.GERMANY)));
     }
 }

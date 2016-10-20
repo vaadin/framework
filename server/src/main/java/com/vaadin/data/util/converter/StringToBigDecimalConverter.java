@@ -60,8 +60,9 @@ public class StringToBigDecimalConverter
     }
 
     @Override
-    public Result<BigDecimal> convertToModel(String value, Locale locale) {
-        return convertToNumber(value, locale)
+    public Result<BigDecimal> convertToModel(String value,
+            ValueContext context) {
+        return convertToNumber(value, context.getLocale().orElse(null))
                 .map(number -> (BigDecimal) number);
     }
 

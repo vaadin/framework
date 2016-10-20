@@ -58,7 +58,7 @@ public class StringToDateConverter implements Converter<String, Date> {
     }
 
     @Override
-    public Result<Date> convertToModel(String value, Locale locale) {
+    public Result<Date> convertToModel(String value, ValueContext context) {
         if (value == null) {
             return Result.ok(null);
         }
@@ -67,7 +67,8 @@ public class StringToDateConverter implements Converter<String, Date> {
         value = value.trim();
 
         ParsePosition parsePosition = new ParsePosition(0);
-        Date parsedValue = getFormat(locale).parse(value, parsePosition);
+        Date parsedValue = getFormat(context.getLocale().orElse(null))
+                .parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
             return Result.error("Could not convert '" + value);
         }
@@ -76,12 +77,12 @@ public class StringToDateConverter implements Converter<String, Date> {
     }
 
     @Override
-    public String convertToPresentation(Date value, Locale locale) {
+    public String convertToPresentation(Date value, ValueContext context) {
         if (value == null) {
             return null;
         }
 
-        return getFormat(locale).format(value);
+        return getFormat(context.getLocale().orElse(null)).format(value);
     }
 
 }

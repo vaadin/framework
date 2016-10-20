@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.StringToBigIntegerConverter;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class StringToBigIntegerConverterTest
         extends AbstractStringConverterTest {
@@ -36,7 +37,7 @@ public class StringToBigIntegerConverterTest
     public void testValueParsing() {
         String bigInt = "1180591620717411303424"; // 2^70 > 2^63 - 1
         Result<BigInteger> converted = getConverter().convertToModel(bigInt,
-                null);
+                new ValueContext());
         BigInteger expected = new BigInteger(bigInt);
         assertValue("Value bigger than max long was converted incorrectly",
                 expected, converted);
@@ -48,7 +49,7 @@ public class StringToBigIntegerConverterTest
         String expected = "1.000";
 
         String converted = getConverter().convertToPresentation(bd,
-                Locale.GERMAN);
+                new ValueContext(Locale.GERMAN));
         Assert.assertEquals(
                 "Value with specific locale was converted incorrectly",
                 expected, converted);
