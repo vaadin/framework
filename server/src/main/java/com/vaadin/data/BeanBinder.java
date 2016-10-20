@@ -269,11 +269,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     @Override
     public <FIELDVALUE> BeanBinding<BEAN, FIELDVALUE, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
-        BeanBindingImpl<BEAN, FIELDVALUE, FIELDVALUE> binding = createBinding(
-                field, Converter.identity(), this::handleValidationStatus);
-        return binding.withConverter(fieldValue -> fieldValue,
-                modelValue -> modelValue != null ? modelValue
-                        : field.getEmptyValue());
+        return createBinding(field, Converter.identity(),
+                this::handleValidationStatus);
     }
 
     @Override

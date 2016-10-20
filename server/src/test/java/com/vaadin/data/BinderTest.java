@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.Person;
-import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.ui.TextField;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
@@ -175,49 +173,5 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     protected void bindName() {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
         binder.bind(item);
-    }
-
-    @Test
-    public void binding_with_null_representation() {
-        String nullRepresentation = "Some arbitrary text";
-        String realName = "John";
-        Person namelessPerson = new Person(null, "Doe", "", 25, Sex.UNKNOWN,
-                null);
-
-        binder.forField(nameField).withNullRepresentation(nullRepresentation)
-                .bind(Person::getFirstName, Person::setFirstName);
-
-        binder.bind(namelessPerson);
-        Assert.assertEquals(nullRepresentation, nameField.getValue());
-
-        nameField.setValue(realName);
-        Assert.assertEquals(realName, namelessPerson.getFirstName());
-
-        nameField.setValue(nullRepresentation);
-        Assert.assertEquals(null, namelessPerson.getFirstName());
-    }
-
-    @Test
-    public void binding_with_default_null_representation() {
-        TextField nullTextField = new TextField() {
-            @Override
-            public String getEmptyValue() {
-                return "null";
-            }
-        };
-
-        Person namelessPerson = new Person(null, "Doe", "", 25, Sex.UNKNOWN,
-                null);
-        binder.bind(nullTextField, Person::getFirstName, Person::setFirstName);
-        binder.bind(namelessPerson);
-
-        Assert.assertTrue(nullTextField.isEmpty());
-        Assert.assertEquals(null, namelessPerson.getFirstName());
-
-        // Change to something and back to null representation
-        nullTextField.setValue("");
-        nullTextField.setValue("null");
-        Assert.assertTrue(nullTextField.isEmpty());
-        Assert.assertEquals("null", namelessPerson.getFirstName());
     }
 }

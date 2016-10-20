@@ -17,7 +17,6 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
-import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -81,8 +80,11 @@ public abstract class AbstractTextField extends AbstractField<String>
 
     @Override
     public void setValue(String value) {
-        Objects.requireNonNull(value, "Null value not supported");
-        setValue(value, false);
+        if (value == null) {
+            setValue("", false);
+        } else {
+            setValue(value, false);
+        }
     }
 
     /**
@@ -268,6 +270,16 @@ public abstract class AbstractTextField extends AbstractField<String>
         setValue("");
     }
 
+    /**
+     * Checks if the field is empty.
+     *
+     * @return <code>true</code> if the field value is an empty string,
+     *         <code>false</code> otherwise
+     */
+    public boolean isEmpty() {
+        return "".equals(getValue());
+    }
+
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
@@ -286,10 +298,5 @@ public abstract class AbstractTextField extends AbstractField<String>
                                             // output
         customAttributes.add("cursor-position");
         return customAttributes;
-    }
-
-    @Override
-    public String getEmptyValue() {
-        return "";
     }
 }
