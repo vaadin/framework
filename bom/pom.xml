@@ -6,6 +6,7 @@
         <artifactId>vaadin-parent</artifactId>
         <version>1.0.0</version>
     </parent>
+    <groupId>com.vaadin</groupId>
     <artifactId>vaadin-bom</artifactId>
     <packaging>pom</packaging>
     <version>8.0-SNAPSHOT</version>
