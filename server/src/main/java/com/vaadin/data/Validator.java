@@ -21,6 +21,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.vaadin.server.SerializablePredicate;
+
 /**
  * A functional interface for validating user input or other potentially invalid
  * data. When a validator instance is applied to a value of the corresponding
@@ -117,7 +119,7 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      *            the message returned if validation fails, not null
      * @return the new validator using the function
      */
-    public static <T> Validator<T> from(Predicate<T> guard,
+    public static <T> Validator<T> from(SerializablePredicate<T> guard,
             String errorMessage) {
         Objects.requireNonNull(guard, "guard cannot be null");
         Objects.requireNonNull(errorMessage, "errorMessage cannot be null");

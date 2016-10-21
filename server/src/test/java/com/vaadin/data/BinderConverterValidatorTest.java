@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,6 +33,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Label;
@@ -640,7 +640,8 @@ public class BinderConverterValidatorTest
     @Test
     public void binderLoad_withCrossFieldValidation_clearsErrors() {
         TextField lastNameField = new TextField();
-        final Predicate<String> lengthPredicate = v -> v.length() > 2;
+        final SerializablePredicate<String> lengthPredicate = v -> v
+                .length() > 2;
 
         Binding<Person, String, String> firstNameBinding = binder
                 .forField(nameField).withValidator(lengthPredicate, "length");

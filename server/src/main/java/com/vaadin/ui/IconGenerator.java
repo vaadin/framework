@@ -15,10 +15,8 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
-import java.util.function.Function;
-
 import com.vaadin.server.Resource;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A callback interface for generating icons for an item.
@@ -27,7 +25,7 @@ import com.vaadin.server.Resource;
  *            item type for which the icon is generated
  */
 @FunctionalInterface
-public interface IconGenerator<T> extends Function<T, Resource>, Serializable {
+public interface IconGenerator<T> extends SerializableFunction<T, Resource> {
 
     /**
      * Gets an icon resource for the {@code item}.

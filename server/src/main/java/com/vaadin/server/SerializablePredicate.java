@@ -13,31 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.server;
 
-import com.vaadin.server.SerializableFunction;
+import java.io.Serializable;
+import java.util.function.Predicate;
 
 /**
- * {@link ItemCaptionGenerator} can be used to customize the string shown to the
- * user for an item.
- *
- * @see ComboBox#setItemCaptionGenerator(ItemCaptionProvider)
- * @param <T>
- *            item type
- * @since 8.0
+ * A {@link Predicate} that is also {@link Serializable}.
+ * 
  * @author Vaadin Ltd
+ * @since 8.0
+ * @param <T>
+ *            the type of the input to the predicate
+ *
  */
-@FunctionalInterface
-public interface ItemCaptionGenerator<T>
-        extends SerializableFunction<T, String> {
-
-    /**
-     * Gets a caption for the {@code item}.
-     *
-     * @param item
-     *            the item to get caption for
-     * @return the caption of the item
-     */
-    @Override
-    String apply(T item);
+public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
+    // Only method inherited from Function
 }

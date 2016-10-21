@@ -28,8 +28,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.util.converter.Converter;
@@ -37,6 +35,9 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.SerializableBiConsumer;
+import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractComponent;
@@ -139,8 +140,8 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called on this binding
          */
-        public void bind(Function<BEAN, TARGET> getter,
-                BiConsumer<BEAN, TARGET> setter);
+        public void bind(SerializableFunction<BEAN, TARGET> getter,
+                com.vaadin.server.SerializableBiConsumer<BEAN, TARGET> setter);
 
         /**
          * Adds a validator to this binding. Validators are applied, in
@@ -159,14 +160,14 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * A convenience method to add a validator to this binding using the
-         * {@link Validator#from(Predicate, String)} factory method.
+         * {@link Validator#from(SerializablePredicate, String)} factory method.
          * <p>
          * Validators are applied, in registration order, when the field value
          * is saved to the backing property. If any validator returns a failure,
          * the property value is not updated.
          *
          * @see #withValidator(Validator)
-         * @see Validator#from(Predicate, String)
+         * @see Validator#from(SerializablePredicate, String)
          *
          * @param predicate
          *            the predicate performing validation, not null
@@ -177,7 +178,8 @@ public class Binder<BEAN> implements Serializable {
          *             if {@code bind} has already been called
          */
         public default Binding<BEAN, FIELDVALUE, TARGET> withValidator(
-                Predicate<? super TARGET> predicate, String message) {
+                SerializablePredicate<? super TARGET> predicate,
+                String message) {
             return withValidator(Validator.from(predicate, message));
         }
 
@@ -189,8 +191,8 @@ public class Binder<BEAN> implements Serializable {
          * which must match the current target data type of the binding, and a
          * model type, which can be any data type and becomes the new target
          * type of the binding. When invoking
-         * {@link #bind(Function, BiConsumer)}, the target type of the binding
-         * must match the getter/setter types.
+         * {@link #bind(SerializableFunction, SerializableBiConsumer)}, the
+         * target type of the binding must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
          * property using an appropriate converter such as a
@@ -215,8 +217,8 @@ public class Binder<BEAN> implements Serializable {
          * type, which must match the current target data type of the binding,
          * and a model type, which can be any data type and becomes the new
          * target type of the binding. When invoking
-         * {@link #bind(Function, BiConsumer)}, the target type of the binding
-         * must match the getter/setter types.
+         * {@link #bind(SerializableFunction, SerializableBiConsumer)}, the
+         * target type of the binding must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
          * property using appropriate functions such as:
@@ -235,8 +237,8 @@ public class Binder<BEAN> implements Serializable {
          *             if {@code bind} has already been called
          */
         public default <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
-                Function<TARGET, NEWTARGET> toModel,
-                Function<NEWTARGET, TARGET> toPresentation) {
+                SerializableFunction<TARGET, NEWTARGET> toModel,
+                SerializableFunction<NEWTARGET, TARGET> toPresentation) {
             return withConverter(Converter.from(toModel, toPresentation,
                     exception -> exception.getMessage()));
         }
@@ -250,8 +252,8 @@ public class Binder<BEAN> implements Serializable {
          * type, which must match the current target data type of the binding,
          * and a model type, which can be any data type and becomes the new
          * target type of the binding. When invoking
-         * {@link #bind(Function, BiConsumer)}, the target type of the binding
-         * must match the getter/setter types.
+         * {@link #bind(SerializableFunction, SerializableBiConsumer)}, the
+         * target type of the binding must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
          * property using appropriate functions such as:
@@ -273,8 +275,8 @@ public class Binder<BEAN> implements Serializable {
          *             if {@code bind} has already been called
          */
         public default <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
-                Function<TARGET, NEWTARGET> toModel,
-                Function<NEWTARGET, TARGET> toPresentation,
+                SerializableFunction<TARGET, NEWTARGET> toModel,
+                SerializableFunction<NEWTARGET, TARGET> toPresentation,
                 String errorMessage) {
             return withConverter(Converter.from(toModel, toPresentation,
                     exception -> errorMessage));
@@ -411,8 +413,8 @@ public class Binder<BEAN> implements Serializable {
         private ValidationStatusHandler statusHandler;
         private boolean isStatusHandlerChanged;
 
-        private Function<BEAN, TARGET> getter;
-        private BiConsumer<BEAN, TARGET> setter;
+        private SerializableFunction<BEAN, TARGET> getter;
+        private SerializableBiConsumer<BEAN, TARGET> setter;
 
         /**
          * Contains all converters and validators chained together in the
@@ -443,8 +445,8 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public void bind(Function<BEAN, TARGET> getter,
-                BiConsumer<BEAN, TARGET> setter) {
+        public void bind(SerializableFunction<BEAN, TARGET> getter,
+                SerializableBiConsumer<BEAN, TARGET> setter) {
             checkUnbound();
             Objects.requireNonNull(getter, "getter cannot be null");
 
@@ -717,7 +719,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Creates a new binding for the given field. The returned binding may be
-     * further configured before invoking
+     * further configured before invoking <<<<<<< Upstream, based on master
      * {@link Binding#bind(Function, BiConsumer) Binding.bind} which completes
      * the binding. Until {@code Binding.bind} is called, the binding has no
      * effect.
@@ -727,7 +729,11 @@ public class Binder<BEAN> implements Serializable {
      * automatically change {@code null} to a null representation provided by
      * {@link HasValue#getEmptyValue()}. This conversion is one-way only, if you
      * want to have a two-way mapping back to {@code null}, use
-     * {@link Binding#withNullRepresentation(Object))}.
+     * {@link Binding#withNullRepresentation(Object))}. =======
+     * {@link Binding#bind(SerializableFunction, SerializableBiConsumer)
+     * Binding.bind} which completes the binding. Until {@code Binding.bind} is
+     * called, the binding has no effect. >>>>>>> 7d541b5 Correct serializable
+     * issues and test that components can be serialized
      *
      * @param <FIELDVALUE>
      *            the value type of the field
@@ -735,7 +741,7 @@ public class Binder<BEAN> implements Serializable {
      *            the field to be bound, not null
      * @return the new binding
      *
-     * @see #bind(HasValue, Function, BiConsumer)
+     * @see #bind(HasValue, SerializableFunction, SerializableBiConsumer)
      */
     public <FIELDVALUE> Binding<BEAN, FIELDVALUE, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
@@ -803,8 +809,8 @@ public class Binder<BEAN> implements Serializable {
      *            if read-only
      */
     public <FIELDVALUE> void bind(HasValue<FIELDVALUE> field,
-            Function<BEAN, FIELDVALUE> getter,
-            BiConsumer<BEAN, FIELDVALUE> setter) {
+            SerializableFunction<BEAN, FIELDVALUE> getter,
+            SerializableBiConsumer<BEAN, FIELDVALUE> setter) {
         forField(field).bind(getter, setter);
     }
 
@@ -1151,7 +1157,8 @@ public class Binder<BEAN> implements Serializable {
      * <li>{@link #load(Object)} is called
      * <li>{@link #bind(Object)} is called
      * <li>{@link #unbind(Object)} is called
-     * <li>{@link Binding#bind(Function, BiConsumer)} is called
+     * <li>{@link Binding#bind(SerializableFunction, SerializableBiConsumer)} is
+     * called
      * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
      * </ul>
      *

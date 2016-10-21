@@ -18,8 +18,9 @@ package com.vaadin.server.data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Stream;
+
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A {@link DataSource} for any back end.
@@ -29,8 +30,8 @@ import java.util.stream.Stream;
  */
 public class BackEndDataSource<T> extends AbstractDataSource<T> {
 
-    private Function<Query, Stream<T>> request;
-    private Function<Query, Integer> sizeCallback;
+    private SerializableFunction<Query, Stream<T>> request;
+    private SerializableFunction<Query, Integer> sizeCallback;
 
     /**
      * Constructs a new DataSource to request data from an arbitrary back end
@@ -41,8 +42,8 @@ public class BackEndDataSource<T> extends AbstractDataSource<T> {
      * @param sizeCallback
      *            function that return the amount of data in back end for query
      */
-    public BackEndDataSource(Function<Query, Stream<T>> request,
-            Function<Query, Integer> sizeCallback) {
+    public BackEndDataSource(SerializableFunction<Query, Stream<T>> request,
+            SerializableFunction<Query, Integer> sizeCallback) {
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
         this.request = request;

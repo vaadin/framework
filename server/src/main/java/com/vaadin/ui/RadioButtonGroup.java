@@ -18,11 +18,11 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import com.vaadin.data.Listing;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.ui.ListingJsonConstants;
@@ -45,7 +45,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
 
     private ItemCaptionGenerator<T> itemCaptionGenerator = String::valueOf;
 
-    private Predicate<T> itemEnabledProvider = item -> true;
+    private SerializablePredicate<T> itemEnabledProvider = item -> true;
 
     /**
      * Constructs a new RadioButtonGroup with caption.
@@ -226,7 +226,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
      * @return the item enabled predicate
      * @see #setItemEnabledProvider
      */
-    public Predicate<T> getItemEnabledProvider() {
+    public SerializablePredicate<T> getItemEnabledProvider() {
         return itemEnabledProvider;
     }
 
@@ -240,7 +240,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
      * @param itemEnabledProvider
      *            the item enable predicate, not null
      */
-    public void setItemEnabledProvider(Predicate<T> itemEnabledProvider) {
+    public void setItemEnabledProvider(
+            SerializablePredicate<T> itemEnabledProvider) {
         Objects.requireNonNull(itemEnabledProvider);
         this.itemEnabledProvider = itemEnabledProvider;
     }

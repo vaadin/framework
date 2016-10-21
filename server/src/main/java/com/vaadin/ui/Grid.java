@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,6 +42,8 @@ import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.EventListener;
 import com.vaadin.server.EncodeResult;
 import com.vaadin.server.JsonCodec;
+import com.vaadin.server.SerializableComparator;
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -461,7 +464,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     @FunctionalInterface
     public interface DescriptionGenerator<T>
-            extends Function<T, String>, Serializable {
+            extends SerializableFunction<T, String> {
     }
 
     /**
@@ -539,10 +542,14 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
             // Set sort orders
             // In-memory comparator
-            Comparator<T> comparator = sortOrder.stream()
+            BinaryOperator<SerializableComparator<T>> operator = (comparator1,
+                    comparator2) -> SerializableComparator.asInstance(
+                            (Comparator<T> & Serializable) comparator1
+                                    .thenComparing(comparator2));
+            SerializableComparator<T> comparator = sortOrder.stream()
                     .map(order -> order.getSorted()
                             .getComparator(order.getDirection()))
-                    .reduce((x, y) -> 0, Comparator::thenComparing);
+                    .reduce((x, y) -> 0, operator);
             getDataCommunicator().setInMemorySorting(comparator);
 
             // Back-end sort properties
@@ -755,10 +762,10 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     public static class Column<T, V> extends AbstractGridExtension<T> {
 
-        private final Function<T, ? extends V> valueProvider;
+        private final SerializableFunction<T, ? extends V> valueProvider;
 
-        private Function<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
-        private Comparator<T> comparator;
+        private SerializableFunction<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
+        private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
 
@@ -773,7 +780,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          * @param renderer
          *            the type of value
          */
-        protected Column(String caption, Function<T, ? extends V> valueProvider,
+        protected Column(String caption,
+                SerializableFunction<T, ? extends V> valueProvider,
                 Renderer<V> renderer) {
             Objects.requireNonNull(caption, "Header caption can't be null");
             Objects.requireNonNull(valueProvider,
@@ -995,7 +1003,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          *            the comparator to use when sorting data in this column
          * @return this column
          */
-        public Column<T, V> setComparator(Comparator<T> comparator) {
+        public Column<T, V> setComparator(
+                SerializableComparator<T> comparator) {
             Objects.requireNonNull(comparator, "Comparator can't be null");
             this.comparator = comparator;
             return this;
@@ -1009,11 +1018,13 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          *            the direction this column is sorted by
          * @return comparator for this column
          */
-        public Comparator<T> getComparator(SortDirection sortDirection) {
+        public SerializableComparator<T> getComparator(
+                SortDirection sortDirection) {
             Objects.requireNonNull(comparator,
                     "No comparator defined for sorted column.");
             boolean reverse = sortDirection != SortDirection.ASCENDING;
-            return reverse ? comparator.reversed() : comparator;
+            return reverse ? (t1, t2) -> comparator.reversed().compare(t1, t2)
+                    : comparator;
         }
 
         /**
@@ -1044,7 +1055,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          * @return this column
          */
         public Column<T, V> setSortOrderProvider(
-                Function<SortDirection, Stream<SortOrder<String>>> provider) {
+                SerializableFunction<SortDirection, Stream<SortOrder<String>>> provider) {
             Objects.requireNonNull(provider,
                     "Sort order provider can't be null");
             sortOrderProvider = provider;
@@ -1708,7 +1719,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      * @see {@link AbstractRenderer}
      */
     public <V> Column<T, V> addColumn(String identifier,
-            Function<T, ? extends V> valueProvider,
+            SerializableFunction<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer)
             throws IllegalArgumentException {
         if (columnKeys.containsKey(identifier)) {
@@ -1737,7 +1748,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *             if the same identifier is used for multiple columns
      */
     public Column<T, String> addColumn(String identifier,
-            Function<T, String> valueProvider) {
+            SerializableFunction<T, String> valueProvider) {
         return addColumn(identifier, valueProvider, new TextRenderer());
     }
 
@@ -1751,7 +1762,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(Function<T, String> valueProvider) {
+    public Column<T, String> addColumn(
+            SerializableFunction<T, String> valueProvider) {
         return addColumn(getGeneratedIdentifier(), valueProvider,
                 new TextRenderer());
     }
@@ -1771,7 +1783,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @see {@link AbstractRenderer}
      */
-    public <V> Column<T, V> addColumn(Function<T, ? extends V> valueProvider,
+    public <V> Column<T, V> addColumn(
+            SerializableFunction<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
         return addColumn(getGeneratedIdentifier(), valueProvider, renderer);
     }
@@ -2522,4 +2535,5 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
             boolean userOriginated) {
         fireEvent(new ColumnResizeEvent(this, column, userOriginated));
     }
+
 }

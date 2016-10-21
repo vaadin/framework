@@ -19,11 +19,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
-import java.util.function.Function;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -36,8 +35,8 @@ public class GridDefaultHeaderTest {
     public void setUp() {
         grid = new Grid<>();
 
-        column1 = grid.addColumn("First", Function.identity());
-        column2 = grid.addColumn("Second", Function.identity());
+        column1 = grid.addColumn("First", SerializableFunction.identity());
+        column2 = grid.addColumn("Second", SerializableFunction.identity());
     }
 
     @Test
@@ -62,8 +61,8 @@ public class GridDefaultHeaderTest {
     public void initialState_updateColumnCaption_defaultHeaderUpdated() {
         column1.setCaption("1st");
 
-        assertEquals("1st", grid.getDefaultHeaderRow().getCell(column1)
-                .getText());
+        assertEquals("1st",
+                grid.getDefaultHeaderRow().getCell(column1).getText());
     }
 
     @Test
@@ -71,8 +70,8 @@ public class GridDefaultHeaderTest {
         grid.setDefaultHeaderRow(grid.appendHeaderRow());
         column1.setCaption("1st");
 
-        assertEquals("1st", grid.getDefaultHeaderRow().getCell(column1)
-                .getText());
+        assertEquals("1st",
+                grid.getDefaultHeaderRow().getCell(column1).getText());
         assertEquals("First", grid.getHeaderRow(0).getCell(column1).getText());
     }
 
@@ -81,7 +80,6 @@ public class GridDefaultHeaderTest {
         grid.setDefaultHeaderRow(null);
         column1.setCaption("1st");
 
-        assertEquals("First", grid.getHeaderRow(0).getCell(column1)
-                .getText());
+        assertEquals("First", grid.getHeaderRow(0).getCell(column1).getText());
     }
 }

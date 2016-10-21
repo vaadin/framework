@@ -2,11 +2,10 @@ package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.function.Function;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.renderers.NumberRenderer;
@@ -18,9 +17,9 @@ public class GridTest {
     @Before
     public void setUp() {
         grid = new Grid<>();
-        grid.addColumn("foo", Function.identity());
+        grid.addColumn("foo", SerializableFunction.identity());
         grid.addColumn(String::length, new NumberRenderer());
-        grid.addColumn("randomColumnId", Function.identity());
+        grid.addColumn("randomColumnId", SerializableFunction.identity());
     }
 
     @Test

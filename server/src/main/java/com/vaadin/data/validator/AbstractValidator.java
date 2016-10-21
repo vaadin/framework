@@ -16,10 +16,10 @@
 package com.vaadin.data.validator;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.Validator;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * An abstract base class for typed validators.
@@ -31,7 +31,7 @@ import com.vaadin.data.Validator;
  */
 public abstract class AbstractValidator<T> implements Validator<T> {
 
-    private Function<T, String> messageProvider;
+    private SerializableFunction<T, String> messageProvider;
 
     /**
      * Constructs a validator with the given error message. The substring "{0}"

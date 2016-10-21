@@ -22,6 +22,7 @@ import java.util.function.Function;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Result;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * Interface that implements conversion between a model and a presentation type.
@@ -108,9 +109,10 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * @see Result
      * @see Function
      */
-    public static <P, M> Converter<P, M> from(Function<P, M> toModel,
-            Function<M, P> toPresentation,
-            Function<Exception, String> onError) {
+    public static <P, M> Converter<P, M> from(
+            SerializableFunction<P, M> toModel,
+            SerializableFunction<M, P> toPresentation,
+            SerializableFunction<Exception, String> onError) {
 
         return from(val -> Result.of(() -> toModel.apply(val), onError),
                 toPresentation);
@@ -131,8 +133,9 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      *
      * @see Function
      */
-    public static <P, M> Converter<P, M> from(Function<P, Result<M>> toModel,
-            Function<M, P> toPresentation) {
+    public static <P, M> Converter<P, M> from(
+            SerializableFunction<P, Result<M>> toModel,
+            SerializableFunction<M, P> toPresentation) {
         return new Converter<P, M>() {
 
             @Override

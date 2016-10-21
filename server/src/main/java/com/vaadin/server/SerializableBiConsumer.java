@@ -13,31 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.server;
 
-import com.vaadin.server.SerializableFunction;
+import java.io.Serializable;
+import java.util.function.BiConsumer;
 
 /**
- * {@link ItemCaptionGenerator} can be used to customize the string shown to the
- * user for an item.
- *
- * @see ComboBox#setItemCaptionGenerator(ItemCaptionProvider)
+ * A {@link BiConsumer} that is also {@link Serializable}.
+ * 
+ * @see {@link BiConsumer}
  * @param <T>
- *            item type
+ *            the type of the first argument to the operation
+ * @param <U>
+ *            the type of the second argument to the operation
+ * 
  * @since 8.0
  * @author Vaadin Ltd
+ *
  */
 @FunctionalInterface
-public interface ItemCaptionGenerator<T>
-        extends SerializableFunction<T, String> {
-
-    /**
-     * Gets a caption for the {@code item}.
-     *
-     * @param item
-     *            the item to get caption for
-     * @return the caption of the item
-     */
-    @Override
-    String apply(T item);
+public interface SerializableBiConsumer<T, U>
+        extends BiConsumer<T, U>, Serializable {
+    // Only method inherited from BiConsumer
 }

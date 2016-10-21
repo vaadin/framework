@@ -1,9 +1,18 @@
 package com.vaadin.tests.server;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,11 +20,16 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.vaadin.ui.Component;
 
 public class ClassesSerializableTest {
 
@@ -99,16 +113,30 @@ public class ClassesSerializableTest {
             classes.addAll(findServerClasses(location));
         }
 
+        ArrayList<Field> nonSerializableFunctionFields = new ArrayList<>();
+
         ArrayList<Class<?>> nonSerializableClasses = new ArrayList<>();
         for (String className : classes) {
             Class<?> cls = Class.forName(className);
+            // Don't add classes that have a @Ignore annotation on the class
+            if (isTestClass(cls)) {
+                continue;
+            }
+
+            // report fields that use lambda types that won't be serializable
+            // (also in syntehtic classes)
+            Stream.of(cls.getDeclaredFields())
+                    .filter(field -> isFunctionalType(field.getGenericType()))
+                    .forEach(nonSerializableFunctionFields::add);
+
             // skip annotations and synthetic classes
             if (cls.isAnnotation() || cls.isSynthetic()) {
                 continue;
             }
-            // Don't add classes that have a @Ignore annotation on the class
-            if (isTestClass(cls)) {
-                continue;
+
+            if (Component.class.isAssignableFrom(cls) && !cls.isInterface()
+                    && !Modifier.isAbstract(cls.getModifiers())) {
+                serializeAndDeserialize(cls);
             }
 
             // report non-serializable classes and interfaces
@@ -135,26 +163,71 @@ public class ClassesSerializableTest {
         // useful failure message including all non-serializable classes and
         // interfaces
         if (!nonSerializableClasses.isEmpty()) {
-            String nonSerializableString = "";
-            Iterator<Class<?>> it = nonSerializableClasses.iterator();
-            while (it.hasNext()) {
-                Class c = it.next();
-                nonSerializableString += ", " + c.getName();
-                if (c.isAnonymousClass()) {
-                    nonSerializableString += "(super: ";
-                    nonSerializableString += c.getSuperclass().getName();
-                    nonSerializableString += ", interfaces: ";
-                    for (Class i : c.getInterfaces()) {
-                        nonSerializableString += i.getName();
-                        nonSerializableString += ",";
-                    }
-                    nonSerializableString += ")";
-                }
-            }
-            Assert.fail(
-                    "Serializable not implemented by the following classes and interfaces: "
-                            + nonSerializableString);
+            failSerializableClasses(nonSerializableClasses);
         }
+
+        if (!nonSerializableFunctionFields.isEmpty()) {
+            failSerializableFields(nonSerializableFunctionFields);
+        }
+    }
+
+    private void serializeAndDeserialize(Class<?> clazz)
+            throws IOException, ClassNotFoundException, InstantiationException,
+            IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException {
+        Optional<Constructor<?>> defaultCtor = Stream
+                .of(clazz.getDeclaredConstructors())
+                .filter(ctor -> ctor.getParameterCount() == 0).findFirst();
+        if (!defaultCtor.isPresent()) {
+            return;
+        }
+        defaultCtor.get().setAccessible(true);
+        Object instance = defaultCtor.get().newInstance();
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(bs);
+        out.writeObject(instance);
+        byte[] data = bs.toByteArray();
+        ObjectInputStream in = new ObjectInputStream(
+                new ByteArrayInputStream(data));
+        in.readObject();
+    }
+
+    private void failSerializableFields(
+            ArrayList<Field> nonSerializableFunctionFields) {
+        String nonSerializableString = nonSerializableFunctionFields.stream()
+                .map(field -> String.format("%s.%s",
+                        field.getDeclaringClass().getName(), field.getName()))
+                .collect(Collectors.joining(", "));
+
+        Assert.fail("Fields with functional types that are not serializable: "
+                + nonSerializableString);
+    }
+
+    private void failSerializableClasses(
+            ArrayList<Class<?>> nonSerializableClasses) {
+        String nonSerializableString = "";
+        Iterator<Class<?>> it = nonSerializableClasses.iterator();
+        while (it.hasNext()) {
+            Class<?> c = it.next();
+            nonSerializableString += ", " + c.getName();
+            if (c.isAnonymousClass()) {
+                nonSerializableString += "(super: ";
+                nonSerializableString += c.getSuperclass().getName();
+                nonSerializableString += ", interfaces: ";
+                for (Class<?> i : c.getInterfaces()) {
+                    nonSerializableString += i.getName();
+                    nonSerializableString += ",";
+                }
+                nonSerializableString += ")";
+            }
+        }
+        Assert.fail(
+                "Serializable not implemented by the following classes and interfaces: "
+                        + nonSerializableString);
+    }
+
+    private static boolean isFunctionalType(Type type) {
+        return type.getTypeName().contains("java.util.function");
     }
 
     private boolean isTestClass(Class<?> cls) {
@@ -181,7 +254,6 @@ public class ClassesSerializableTest {
      *
      * @return List of class path segment strings
      */
-    //
     private final static List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
         List<String> locations = new ArrayList<>();

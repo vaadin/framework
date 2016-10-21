@@ -1,17 +1,16 @@
 package com.vaadin.tests.data.converter;
 
-import java.util.function.Function;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.server.SerializableFunction;
 
 public class ConverterTest {
 
-    Function<String, Result<String>> toModel = presentation -> {
+    SerializableFunction<String, Result<String>> toModel = presentation -> {
         if (presentation.startsWith("presentation-")) {
             return Result.ok(presentation.substring("presentation-".length()));
         } else {
@@ -19,7 +18,8 @@ public class ConverterTest {
         }
     };
 
-    Function<String, String> toPresentation = model -> "presentation-" + model;
+    SerializableFunction<String, String> toPresentation = model -> "presentation-"
+            + model;
 
     Converter<String, String> converter = Converter.from(toModel,
             toPresentation);

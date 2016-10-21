@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
@@ -187,7 +188,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private Range pushRows = Range.withLength(0, 40);
 
     private Comparator<T> inMemorySorting;
-    private Predicate<T> inMemoryFilter;
+    private SerializablePredicate<T> inMemoryFilter;
     private List<SortOrder<String>> backEndSorting = new ArrayList<>();
     private DataCommunicatorClientRpc rpc;
 
@@ -406,7 +407,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param predicate
      *            predicate used to filter data
      */
-    public void setInMemoryFilter(Predicate<T> predicate) {
+    public void setInMemoryFilter(SerializablePredicate<T> predicate) {
         inMemoryFilter = predicate;
         reset();
     }

@@ -15,8 +15,7 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
-import java.util.function.Function;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A callback interface for generating custom CSS class names for items.
@@ -28,7 +27,7 @@ import java.util.function.Function;
  * @author Vaadin Ltd
  */
 @FunctionalInterface
-public interface StyleGenerator<T> extends Function<T, String>, Serializable {
+public interface StyleGenerator<T> extends SerializableFunction<T, String> {
 
     /**
      * Gets a class name for the {@code item}.

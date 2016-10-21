@@ -20,11 +20,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
-import java.util.function.Function;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -140,14 +139,16 @@ public class GridHeaderFooterTest {
 
     @Test
     public void addColumn_headerCellAdded() {
-        Column<?, ?> column = grid.addColumn("Col", Function.identity());
+        Column<?, ?> column = grid.addColumn("Col",
+                SerializableFunction.identity());
 
         assertNotNull(grid.getHeaderRow(0).getCell(column));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void removeColumn_headerCellRemoved() {
-        Column<String, ?> column = grid.addColumn("Col", Function.identity());
+        Column<String, ?> column = grid.addColumn("Col",
+                SerializableFunction.identity());
         grid.removeColumn(column);
 
         grid.getHeaderRow(0).getCell(column);

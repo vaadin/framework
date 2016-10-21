@@ -17,9 +17,9 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
-import java.util.function.Predicate;
 
 import com.vaadin.data.Listing;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
 
@@ -128,12 +128,13 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T> {
     }
 
     @Override
-    public Predicate<T> getItemEnabledProvider() {
+    public SerializablePredicate<T> getItemEnabledProvider() {
         return super.getItemEnabledProvider();
     }
 
     @Override
-    public void setItemEnabledProvider(Predicate<T> itemEnabledProvider) {
+    public void setItemEnabledProvider(
+            SerializablePredicate<T> itemEnabledProvider) {
         super.setItemEnabledProvider(itemEnabledProvider);
     }
 }

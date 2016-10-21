@@ -21,12 +21,13 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.BeanValidator;
+import com.vaadin.server.SerializableBiConsumer;
+import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -63,7 +64,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
         @Override
         public default BeanBinding<BEAN, FIELDVALUE, TARGET> withValidator(
-                Predicate<? super TARGET> predicate, String message) {
+                SerializablePredicate<? super TARGET> predicate,
+                String message) {
             return (BeanBinding<BEAN, FIELDVALUE, TARGET>) Binding.super.withValidator(
                     predicate, message);
         }
@@ -74,16 +76,16 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
         @Override
         public default <NEWTARGET> BeanBinding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
-                Function<TARGET, NEWTARGET> toModel,
-                Function<NEWTARGET, TARGET> toPresentation) {
+                SerializableFunction<TARGET, NEWTARGET> toModel,
+                SerializableFunction<NEWTARGET, TARGET> toPresentation) {
             return (BeanBinding<BEAN, FIELDVALUE, NEWTARGET>) Binding.super.withConverter(
                     toModel, toPresentation);
         }
 
         @Override
         public default <NEWTARGET> BeanBinding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
-                Function<TARGET, NEWTARGET> toModel,
-                Function<NEWTARGET, TARGET> toPresentation,
+                SerializableFunction<TARGET, NEWTARGET> toModel,
+                SerializableFunction<NEWTARGET, TARGET> toPresentation,
                 String errorMessage) {
             return (BeanBinding<BEAN, FIELDVALUE, NEWTARGET>) Binding.super.withConverter(
                     toModel, toPresentation, errorMessage);
@@ -110,7 +112,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          * @throws IllegalArgumentException
          *             if the property has no accessible getter
          *
-         * @see Binding#bind(Function, java.util.function.BiConsumer)
+         * @see Binding#bind(SerializableFunction, SerializableBiConsumer)
          */
         public void bind(String propertyName);
     }
@@ -294,8 +296,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * @throws IllegalArgumentException
      *             if the property has no accessible getter
      *
-     * @see #bind(HasValue, java.util.function.Function,
-     *      java.util.function.BiConsumer)
+     * @see #bind(HasValue, SerializableFunction, SerializableBiConsumer)
      */
     public <FIELDVALUE> void bind(HasValue<FIELDVALUE> field,
             String propertyName) {

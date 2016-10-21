@@ -30,6 +30,7 @@ import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
@@ -279,7 +280,7 @@ public abstract class AbstractMultiSelect<T>
      * The item enabled status provider. It is up to the implementing class to
      * support this or not.
      */
-    private Predicate<T> itemEnabledProvider = item -> true;
+    private SerializablePredicate<T> itemEnabledProvider = item -> true;
 
     /**
      * Creates a new multi select with an empty data source.
@@ -440,14 +441,14 @@ public abstract class AbstractMultiSelect<T>
      * Returns the item enabled provider for this multiselect.
      * <p>
      * <em>Implementation note:</em> Override this method and
-     * {@link #setItemEnabledProvider(Predicate)} as {@code public} and invoke
-     * {@code super} methods to support this feature in the multiselect
-     * component.
+     * {@link #setItemEnabledProvider(SerializablePredicate)} as {@code public}
+     * and invoke {@code super} methods to support this feature in the
+     * multiselect component.
      *
      * @return the item enabled provider, not {@code null}
      * @see #setItemEnabledProvider(Predicate)
      */
-    protected Predicate<T> getItemEnabledProvider() {
+    protected SerializablePredicate<T> getItemEnabledProvider() {
         return itemEnabledProvider;
     }
 
@@ -466,7 +467,8 @@ public abstract class AbstractMultiSelect<T>
      * @param itemEnabledProvider
      *            the item enabled provider to set, not {@code null}
      */
-    protected void setItemEnabledProvider(Predicate<T> itemEnabledProvider) {
+    protected void setItemEnabledProvider(
+            SerializablePredicate<T> itemEnabledProvider) {
         Objects.requireNonNull(itemEnabledProvider);
         this.itemEnabledProvider = itemEnabledProvider;
     }
