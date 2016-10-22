@@ -514,4 +514,18 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Body rows", "Add third row");
         assertFalse(logContainsText("Exception occured"));
     }
+
+    @Test
+    public void getBodyRowCountJS() {
+        openTestURL();
+        GridElement grid = $(GridElement.class).first();
+        assertEquals(1000L,
+                executeScript("return arguments[0].getBodyRowCount()", grid));
+        selectMenuPath("Component", "Body rows", "Remove all rows");
+        assertEquals(0L,
+                executeScript("return arguments[0].getBodyRowCount()", grid));
+        selectMenuPath("Component", "Body rows", "Add first row");
+        assertEquals(1L,
+                executeScript("return arguments[0].getBodyRowCount()", grid));
+    }
 }
