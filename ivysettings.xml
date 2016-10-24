@@ -59,6 +59,8 @@
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-themes"
             resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-themes"
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-push"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-widgets"
