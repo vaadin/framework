@@ -672,7 +672,8 @@ public interface Container extends Serializable {
          *            ID of the Item whose children the caller is interested in
          * @return An unmodifiable {@link java.util.Collection collection}
          *         containing the IDs of all other Items that are children in
-         *         the container hierarchy
+         *         the container hierarchy; {@code null} if item does not have
+         *         any children.
          */
         public Collection<?> getChildren(Object itemId);
 
