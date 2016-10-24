@@ -87,6 +87,6 @@ public class TextField extends AbstractTextField {
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
-                def.getValue(), String.class);
+                def.getValue(), String.class, designContext);
     }
 }

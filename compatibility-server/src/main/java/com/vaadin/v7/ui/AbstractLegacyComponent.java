@@ -99,7 +99,8 @@ public class AbstractLegacyComponent extends AbstractComponent {
         // handle immediate
         if (explicitImmediateValue != null) {
             DesignAttributeHandler.writeAttribute("immediate", attr,
-                    explicitImmediateValue, def.isImmediate(), Boolean.class);
+                    explicitImmediateValue, def.isImmediate(), Boolean.class,
+                    designContext);
         }
     }
 

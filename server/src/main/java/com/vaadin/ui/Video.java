@@ -118,7 +118,7 @@ public class Video extends AbstractMedia {
         if (getPoster() != null) {
             Attributes attr = design.appendElement("poster").attributes();
             DesignAttributeHandler.writeAttribute("href", attr, getPoster(),
-                    null, Resource.class);
+                    null, Resource.class, designContext);
         }
     }
 

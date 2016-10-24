@@ -102,24 +102,25 @@ public abstract class AbstractLayout extends AbstractComponentContainer
             MarginInfo defMargin, DesignContext context) {
         if (margin.hasAll()) {
             DesignAttributeHandler.writeAttribute("margin", design.attributes(),
-                    margin.hasAll(), defMargin.hasAll(), boolean.class);
+                    margin.hasAll(), defMargin.hasAll(), boolean.class,
+                    context);
         } else {
 
             DesignAttributeHandler.writeAttribute("margin-left",
                     design.attributes(), margin.hasLeft(), defMargin.hasLeft(),
-                    boolean.class);
+                    boolean.class, context);
 
             DesignAttributeHandler.writeAttribute("margin-right",
                     design.attributes(), margin.hasRight(),
-                    defMargin.hasRight(), boolean.class);
+                    defMargin.hasRight(), boolean.class, context);
 
             DesignAttributeHandler.writeAttribute("margin-top",
                     design.attributes(), margin.hasTop(), defMargin.hasTop(),
-                    boolean.class);
+                    boolean.class, context);
 
             DesignAttributeHandler.writeAttribute("margin-bottom",
                     design.attributes(), margin.hasBottom(),
-                    defMargin.hasBottom(), boolean.class);
+                    defMargin.hasBottom(), boolean.class, context);
         }
     }
 }

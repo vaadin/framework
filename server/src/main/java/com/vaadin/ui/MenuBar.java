@@ -947,13 +947,14 @@ public class MenuBar extends AbstractComponent
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         for (MenuItem item : getItems()) {
-            design.appendChild(createMenuElement(item));
+            design.appendChild(createMenuElement(item, designContext));
         }
 
         // in many cases there seems to be an empty more menu item
         if (getMoreMenuItem() != null
                 && !getMoreMenuItem().getText().isEmpty()) {
-            Element moreMenu = createMenuElement(getMoreMenuItem());
+            Element moreMenu = createMenuElement(getMoreMenuItem(),
+                    designContext);
             moreMenu.attr("more", true);
             design.appendChild(moreMenu);
         }
@@ -963,34 +964,35 @@ public class MenuBar extends AbstractComponent
         }
     }
 
-    protected Element createMenuElement(MenuItem item) {
+    protected Element createMenuElement(MenuItem item, DesignContext context) {
         Element menuElement = new Element(Tag.valueOf("menu"), "");
         // Defaults
         MenuItem def = new MenuItem("", null, null);
 
         Attributes attr = menuElement.attributes();
         DesignAttributeHandler.writeAttribute("icon", attr, item.getIcon(),
-                def.getIcon(), Resource.class);
+                def.getIcon(), Resource.class, context);
         DesignAttributeHandler.writeAttribute("disabled", attr,
-                !item.isEnabled(), !def.isEnabled(), boolean.class);
+                !item.isEnabled(), !def.isEnabled(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("visible", attr, item.isVisible(),
-                def.isVisible(), boolean.class);
+                def.isVisible(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("separator", attr,
-                item.isSeparator(), def.isSeparator(), boolean.class);
+                item.isSeparator(), def.isSeparator(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("checkable", attr,
-                item.isCheckable(), def.isCheckable(), boolean.class);
+                item.isCheckable(), def.isCheckable(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("checked", attr, item.isChecked(),
-                def.isChecked(), boolean.class);
+                def.isChecked(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("description", attr,
-                item.getDescription(), def.getDescription(), String.class);
+                item.getDescription(), def.getDescription(), String.class,
+                context);
         DesignAttributeHandler.writeAttribute("style-name", attr,
-                item.getStyleName(), def.getStyleName(), String.class);
+                item.getStyleName(), def.getStyleName(), String.class, context);
 
         menuElement.append(item.getText());
 
         if (item.hasChildren()) {
             for (MenuItem subMenu : item.getChildren()) {
-                menuElement.appendChild(createMenuElement(subMenu));
+                menuElement.appendChild(createMenuElement(subMenu, context));
             }
         }
 

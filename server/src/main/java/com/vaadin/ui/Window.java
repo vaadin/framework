@@ -1406,7 +1406,7 @@ public class Window extends Panel
         }
 
         DesignAttributeHandler.writeAttribute("position", design.attributes(),
-                getPosition(), def.getPosition(), String.class);
+                getPosition(), def.getPosition(), String.class, context);
 
         // Process keyboard shortcuts
         if (closeShortcuts.size() == 1 && hasCloseShortcut(KeyCode.ESCAPE)) {
@@ -1425,7 +1425,8 @@ public class Window extends Panel
 
             // Write everything except the last "," to the design
             DesignAttributeHandler.writeAttribute("close-shortcut",
-                    design.attributes(), attrString.trim(), null, String.class);
+                    design.attributes(), attrString.trim(), null, String.class,
+                    context);
         }
 
         for (Component c : getAssistiveDescription()) {

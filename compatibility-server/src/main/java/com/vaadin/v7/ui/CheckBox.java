@@ -252,7 +252,7 @@ public class CheckBox extends AbstractField<Boolean> {
         CheckBox def = (CheckBox) designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
-                def.getValue(), Boolean.class);
+                def.getValue(), Boolean.class, designContext);
     }
 
     @Override

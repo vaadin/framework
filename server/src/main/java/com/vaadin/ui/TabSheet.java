@@ -1556,29 +1556,32 @@ public class TabSheet extends AbstractComponentContainer
         Attributes attr = tabElement.attributes();
         // write attributes
         DesignAttributeHandler.writeAttribute("visible", attr, tab.isVisible(),
-                def.isVisible(), Boolean.class);
+                def.isVisible(), Boolean.class, designContext);
         DesignAttributeHandler.writeAttribute("closable", attr,
-                tab.isClosable(), def.isClosable(), Boolean.class);
+                tab.isClosable(), def.isClosable(), Boolean.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("caption", attr, tab.getCaption(),
-                def.getCaption(), String.class);
+                def.getCaption(), String.class, designContext);
         DesignAttributeHandler.writeAttribute("enabled", attr, tab.isEnabled(),
-                def.isEnabled(), Boolean.class);
+                def.isEnabled(), Boolean.class, designContext);
         DesignAttributeHandler.writeAttribute("icon", attr, tab.getIcon(),
-                def.getIcon(), Resource.class);
+                def.getIcon(), Resource.class, designContext);
         DesignAttributeHandler.writeAttribute("icon-alt", attr,
                 tab.getIconAlternateText(), def.getIconAlternateText(),
-                String.class);
+                String.class, designContext);
         DesignAttributeHandler.writeAttribute("description", attr,
-                tab.getDescription(), def.getDescription(), String.class);
+                tab.getDescription(), def.getDescription(), String.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("style-name", attr,
-                tab.getStyleName(), def.getStyleName(), String.class);
+                tab.getStyleName(), def.getStyleName(), String.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("id", attr, tab.getId(),
-                def.getId(), String.class);
+                def.getId(), String.class, designContext);
         if (getSelectedTab() != null
                 && getSelectedTab().equals(tab.getComponent())) {
             // use write attribute to get consistent handling for boolean
             DesignAttributeHandler.writeAttribute("selected", attr, true, false,
-                    boolean.class);
+                    boolean.class, designContext);
         }
     }
 

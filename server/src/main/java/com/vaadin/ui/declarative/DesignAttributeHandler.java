@@ -56,25 +56,10 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
+    private final static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
 
     // translates string <-> object
-    private static DesignFormatter FORMATTER = new DesignFormatter();
-
-    private static boolean writeDefaultValues = false;
-
-    /**
-     * Set whether default attribute values should be written by the
-     * {@code DesignAttributeHandler#writeAttribute(String, Attributes, Object, Object, Class)}
-     * method. Default is {@code false}.
-     *
-     * @param value
-     *            {@code true} to write default values of attributes,
-     *            {@code false} to disable writing of default values
-     */
-    public static void setWriteDefaultValues(boolean value) {
-        writeDefaultValues = value;
-    }
+    private final static DesignFormatter FORMATTER = new DesignFormatter();
 
     /**
      * Returns the currently used formatter. All primitive types and all types
@@ -212,7 +197,7 @@ public class DesignAttributeHandler implements Serializable {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void writeAttribute(Object component, String attribute,
-            Attributes attr, Object defaultInstance) {
+            Attributes attr, Object defaultInstance, DesignContext context) {
         Method getter = findGetterForAttribute(component.getClass(), attribute);
         if (getter == null) {
             getLogger().warning(
@@ -223,7 +208,7 @@ public class DesignAttributeHandler implements Serializable {
                 Object value = getter.invoke(component);
                 Object defaultValue = getter.invoke(defaultInstance);
                 writeAttribute(attribute, attr, value, defaultValue,
-                        (Class) getter.getReturnType());
+                        (Class) getter.getReturnType(), context);
             } catch (Exception e) {
                 getLogger().log(Level.SEVERE,
                         "Failed to invoke getter for attribute " + attribute,
@@ -248,13 +233,14 @@ public class DesignAttributeHandler implements Serializable {
      *            the type of the input value
      */
     public static <T> void writeAttribute(String attribute,
-            Attributes attributes, T value, T defaultValue,
-            Class<T> inputType) {
+            Attributes attributes, T value, T defaultValue, Class<T> inputType,
+            DesignContext context) {
         if (!getFormatter().canConvert(inputType)) {
             throw new IllegalArgumentException(
                     "input type: " + inputType.getName() + " not supported");
         }
-        if (writeDefaultValues || !SharedUtil.equals(value, defaultValue)) {
+        if (context.shouldWriteDefaultValues()
+                || !SharedUtil.equals(value, defaultValue)) {
             String attributeValue = toAttributeValue(inputType, value);
             if ("".equals(attributeValue) && (inputType == boolean.class
                     || inputType == Boolean.class)) {

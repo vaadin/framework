@@ -3143,7 +3143,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             if (section.grid.getDefaultHeaderRow() == this) {
                 DesignAttributeHandler.writeAttribute("default",
-                        trElement.attributes(), true, null, boolean.class);
+                        trElement.attributes(), true, null, boolean.class,
+                        designContext);
             }
         }
 
@@ -4071,31 +4072,35 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             GridColumnState def = new GridColumnState();
 
             DesignAttributeHandler.writeAttribute("property-id", attributes,
-                    getPropertyId(), null, Object.class);
+                    getPropertyId(), null, Object.class, designContext);
 
             // Sortable is a special attribute that depends on the container.
             DesignAttributeHandler.writeAttribute("sortable", attributes,
-                    isSortable(), null, boolean.class);
+                    isSortable(), null, boolean.class, designContext);
             DesignAttributeHandler.writeAttribute("editable", attributes,
-                    isEditable(), def.editable, boolean.class);
+                    isEditable(), def.editable, boolean.class, designContext);
             DesignAttributeHandler.writeAttribute("resizable", attributes,
-                    isResizable(), def.resizable, boolean.class);
+                    isResizable(), def.resizable, boolean.class, designContext);
 
             DesignAttributeHandler.writeAttribute("hidable", attributes,
-                    isHidable(), def.hidable, boolean.class);
+                    isHidable(), def.hidable, boolean.class, designContext);
             DesignAttributeHandler.writeAttribute("hidden", attributes,
-                    isHidden(), def.hidden, boolean.class);
+                    isHidden(), def.hidden, boolean.class, designContext);
             DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
-                    attributes, getHidingToggleCaption(), null, String.class);
+                    attributes, getHidingToggleCaption(), null, String.class,
+                    designContext);
 
             DesignAttributeHandler.writeAttribute("width", attributes,
-                    getWidth(), def.width, Double.class);
+                    getWidth(), def.width, Double.class, designContext);
             DesignAttributeHandler.writeAttribute("min-width", attributes,
-                    getMinimumWidth(), def.minWidth, Double.class);
+                    getMinimumWidth(), def.minWidth, Double.class,
+                    designContext);
             DesignAttributeHandler.writeAttribute("max-width", attributes,
-                    getMaximumWidth(), def.maxWidth, Double.class);
+                    getMaximumWidth(), def.maxWidth, Double.class,
+                    designContext);
             DesignAttributeHandler.writeAttribute("expand", attributes,
-                    getExpandRatio(), def.expandRatio, Integer.class);
+                    getExpandRatio(), def.expandRatio, Integer.class,
+                    designContext);
         }
 
         /**
@@ -7332,14 +7337,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         Grid def = context.getDefaultInstance(this);
 
         DesignAttributeHandler.writeAttribute("editable", attrs,
-                isEditorEnabled(), def.isEditorEnabled(), boolean.class);
+                isEditorEnabled(), def.isEditorEnabled(), boolean.class,
+                context);
 
         DesignAttributeHandler.writeAttribute("frozen-columns", attrs,
-                getFrozenColumnCount(), def.getFrozenColumnCount(), int.class);
+                getFrozenColumnCount(), def.getFrozenColumnCount(), int.class,
+                context);
 
         if (getHeightMode() == HeightMode.ROW) {
             DesignAttributeHandler.writeAttribute("rows", attrs,
-                    getHeightByRows(), def.getHeightByRows(), double.class);
+                    getHeightByRows(), def.getHeightByRows(), double.class,
+                    context);
         }
 
         SelectionMode selectionMode = null;
@@ -7357,7 +7365,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 + selectionModel.getClass().getName();
 
         DesignAttributeHandler.writeAttribute("selection-mode", attrs,
-                selectionMode, getDefaultSelectionMode(), SelectionMode.class);
+                selectionMode, getDefaultSelectionMode(), SelectionMode.class,
+                context);
 
         if (columns.isEmpty()) {
             // Empty grid. Structure not needed.

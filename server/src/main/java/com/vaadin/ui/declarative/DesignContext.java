@@ -94,6 +94,8 @@ public class DesignContext implements Serializable {
     // this cannot be static because of testability issues
     private Boolean legacyDesignPrefix = null;
 
+    private boolean shouldWriteDefaultValues = false;
+
     public DesignContext(Document doc) {
         this.doc = doc;
         // Initialize the mapping between prefixes and package names.
@@ -830,5 +832,32 @@ public class DesignContext implements Serializable {
             customAttributes.put(component, map = new HashMap<>());
         }
         map.put(attribute, value);
+    }
+
+    /**
+     * Set whether default attribute values should be written by the
+     * {@code DesignAttributeHandler#writeAttribute(String, Attributes, Object, Object, Class, DesignContext)}
+     * method. Default is {@code false}.
+     *
+     * @since 8.0
+     * @param value
+     *            {@code true} to write default values of attributes,
+     *            {@code false} to disable writing of default values
+     */
+    public void setShouldWriteDefaultValues(boolean value) {
+        shouldWriteDefaultValues = value;
+    }
+
+    /**
+     * Determines whether default attribute values should be written by the
+     * {@code DesignAttributeHandler#writeAttribute(String, Attributes, Object, Object, Class, DesignContext)}
+     * method. Default is {@code false}.
+     *
+     * @since 8.0
+     * @return {@code true} if default values of attributes should be written,
+     *         otherwise {@code false}
+     */
+    public boolean shouldWriteDefaultValues() {
+        return shouldWriteDefaultValues;
     }
 }

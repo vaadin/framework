@@ -24,7 +24,6 @@ import com.vaadin.ui.components.colorpicker.ColorPickerPopup;
 import com.vaadin.ui.components.colorpicker.ColorPickerPreview;
 import com.vaadin.ui.components.colorpicker.ColorPickerSelect;
 import com.vaadin.ui.declarative.Design;
-import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
@@ -33,6 +32,10 @@ import com.vaadin.ui.declarative.DesignContext;
 public class ComponentDesignWriterUtility {
 
     private static final Set<String> WHITE_LIST_FQNS = new HashSet<>();
+    private static final Document document = new Document("");
+    private static final DesignContext designContext = new DesignContext(
+            document);
+
     static {
         WHITE_LIST_FQNS.add(DragAndDropWrapper.class.getName());
         WHITE_LIST_FQNS.add(Navigator.EmptyView.class.getName());
@@ -86,11 +89,9 @@ public class ComponentDesignWriterUtility {
                 "com.vaadin.server.VaadinPortlet$VaadinWebSpherePortalRequest");
         WHITE_LIST_FQNS.add("com.vaadin.server.VaadinPortlet");
         WHITE_LIST_FQNS.add("com.vaadin.server.VaadinPortletRequest");
-    }
 
-    private static final Document document = new Document("");
-    private static final DesignContext designContext = new DesignContext(
-            document);
+        designContext.setShouldWriteDefaultValues(true);
+    }
 
     @SafeVarargs
     public static List<String> getDeclarativeSyntax(
@@ -100,13 +101,10 @@ public class ComponentDesignWriterUtility {
 
     public static List<String> getDeclarativeSyntax(
             List<Class<? extends Component>> components) {
-        DesignAttributeHandler.setWriteDefaultValues(true);
-
         List<String> declarativeStrings = components.stream()
                 .map(ComponentDesignWriterUtility::getDeclarativeSyntax)
                 .collect(Collectors.toList());
 
-        DesignAttributeHandler.setWriteDefaultValues(false);
         return declarativeStrings;
     }
 
@@ -156,10 +154,8 @@ public class ComponentDesignWriterUtility {
 
     private static void printFullDeclarativeSyntax(
             List<Class<? extends Component>> components) {
-        DesignAttributeHandler.setWriteDefaultValues(true);
         components.stream().forEach(component -> System.out
                 .println(getDeclarativeSyntax(component)));
-        DesignAttributeHandler.setWriteDefaultValues(false);
     }
 
     private static List<Class<? extends Component>> getVaadin8Components()

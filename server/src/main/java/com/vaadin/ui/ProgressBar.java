@@ -126,7 +126,7 @@ public class ProgressBar extends AbstractComponent {
         Float defaultValue = ((ProgressBar) designContext
                 .getDefaultInstance(this)).getValue();
         DesignAttributeHandler.writeAttribute("value", design.attributes(),
-                getValue(), defaultValue, Float.class);
+                getValue(), defaultValue, Float.class, designContext);
     }
 
     /**

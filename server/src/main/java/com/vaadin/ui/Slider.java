@@ -372,7 +372,7 @@ public class Slider extends AbstractField<Double> {
         }
         Slider defaultSlider = context.getDefaultInstance(this);
         DesignAttributeHandler.writeAttribute(this, "value",
-                design.attributes(), defaultSlider);
+                design.attributes(), defaultSlider, context);
     }
 
     @Override

@@ -121,7 +121,8 @@ public abstract class AbstractField<T> extends AbstractComponent
         AbstractField<T> def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("readonly", attr,
-                super.isReadOnly(), def.isReadOnly(), Boolean.class);
+                super.isReadOnly(), def.isReadOnly(), Boolean.class,
+                designContext);
     }
 
     @Override

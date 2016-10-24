@@ -1944,7 +1944,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         Resource icon = getItemIcon(itemId);
         if (icon != null) {
             DesignAttributeHandler.writeAttribute("icon", element.attributes(),
-                    icon, null, Resource.class);
+                    icon, null, Resource.class, context);
         }
 
         if (isSelected(itemId)) {

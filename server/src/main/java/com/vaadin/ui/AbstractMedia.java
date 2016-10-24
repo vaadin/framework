@@ -275,7 +275,7 @@ public abstract class AbstractMedia extends AbstractComponent {
         for (Resource r : getSources()) {
             Attributes attr = design.appendElement("source").attributes();
             DesignAttributeHandler.writeAttribute("href", attr, r, null,
-                    Resource.class);
+                    Resource.class, designContext);
         }
     }
 

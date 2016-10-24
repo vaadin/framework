@@ -100,7 +100,8 @@ public abstract class AbstractEmbedded extends AbstractComponent {
         super.writeDesign(design, designContext);
         AbstractEmbedded def = designContext.getDefaultInstance(this);
         DesignAttributeHandler.writeAttribute("alt", design.attributes(),
-                getAlternateText(), def.getAlternateText(), String.class);
+                getAlternateText(), def.getAlternateText(), String.class,
+                designContext);
     }
 
     @Override

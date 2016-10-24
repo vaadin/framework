@@ -962,7 +962,7 @@ public class TreeTable extends Table implements Hierarchical {
         for (Object itemId : itemIds) {
             Element tr = writeItem(tbody, itemId, context);
             DesignAttributeHandler.writeAttribute("depth", tr.attributes(),
-                    depth, 0, int.class);
+                    depth, 0, int.class, context);
 
             if (getChildren(itemId) != null) {
                 writeItems(tbody, getChildren(itemId), depth + 1, context);
@@ -975,7 +975,7 @@ public class TreeTable extends Table implements Hierarchical {
             DesignContext context) {
         Element tr = super.writeItem(tbody, itemId, context);
         DesignAttributeHandler.writeAttribute("collapsed", tr.attributes(),
-                isCollapsed(itemId), true, boolean.class);
+                isCollapsed(itemId), true, boolean.class, context);
         return tr;
     }
 

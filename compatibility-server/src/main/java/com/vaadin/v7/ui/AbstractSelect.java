@@ -2343,7 +2343,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         Resource icon = getItemIcon(itemId);
         if (icon != null) {
             DesignAttributeHandler.writeAttribute("icon", element.attributes(),
-                    icon, null, Resource.class);
+                    icon, null, Resource.class, context);
         }
 
         if (isSelected(itemId)) {

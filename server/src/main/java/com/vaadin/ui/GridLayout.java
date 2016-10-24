@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 
 import org.jsoup.nodes.Attributes;
@@ -1453,7 +1452,7 @@ public class GridLayout extends AbstractLayout
 
             // Row Expand
             DesignAttributeHandler.writeAttribute("expand", row.attributes(),
-                    (int) getRowExpandRatio(i), 0, int.class);
+                    (int) getRowExpandRatio(i), 0, int.class, designContext);
 
             int colspan = 1;
             Element col;

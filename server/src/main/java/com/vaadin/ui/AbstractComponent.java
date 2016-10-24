@@ -1240,7 +1240,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         Attributes attr = design.attributes();
         // handle default attributes
         for (String attribute : getDefaultAttributes()) {
-            DesignAttributeHandler.writeAttribute(this, attribute, attr, def);
+            DesignAttributeHandler.writeAttribute(this, attribute, attr, def,
+                    designContext);
         }
         // handle locale
         if (getLocale() != null && (getParent() == null
@@ -1261,7 +1262,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (this instanceof Focusable) {
             DesignAttributeHandler.writeAttribute("tabindex", attr,
                     ((Focusable) this).getTabIndex(),
-                    ((Focusable) def).getTabIndex(), Integer.class);
+                    ((Focusable) def).getTabIndex(), Integer.class,
+                    designContext);
         }
         // handle custom attributes
         Map<String, String> customAttributes = designContext

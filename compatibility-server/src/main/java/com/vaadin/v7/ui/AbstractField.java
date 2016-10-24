@@ -1802,7 +1802,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
         Attributes attr = design.attributes();
         // handle readonly
         DesignAttributeHandler.writeAttribute("readonly", attr,
-                super.isReadOnly(), def.isReadOnly(), Boolean.class);
+                super.isReadOnly(), def.isReadOnly(), Boolean.class,
+                designContext);
     }
 
     private static final Logger getLogger() {

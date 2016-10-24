@@ -226,9 +226,11 @@ public class Link extends AbstractComponent {
         super.writeDesign(design, designContext);
         Link def = designContext.getDefaultInstance(this);
         DesignAttributeHandler.writeAttribute("target", design.attributes(),
-                getTargetName(), def.getTargetName(), String.class);
+                getTargetName(), def.getTargetName(), String.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("href", design.attributes(),
-                getResource(), def.getResource(), Resource.class);
+                getResource(), def.getResource(), Resource.class,
+                designContext);
     }
 
     @Override

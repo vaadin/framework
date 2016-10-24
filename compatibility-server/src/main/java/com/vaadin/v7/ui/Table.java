@@ -6327,14 +6327,14 @@ public class Table extends AbstractSelect implements Action.Container,
         Table def = context.getDefaultInstance(this);
 
         DesignAttributeHandler.writeAttribute("sortable", design.attributes(),
-                isSortEnabled(), def.isSortEnabled(), boolean.class);
+                isSortEnabled(), def.isSortEnabled(), boolean.class, context);
 
         Element table = null;
         boolean hasColumns = getVisibleColumns().length != 0;
         if (hasColumns) {
             table = design.appendElement("table");
-            writeColumns(table, def);
-            writeHeader(table, def);
+            writeColumns(table, def, context);
+            writeHeader(table, def, context);
         }
         super.writeDesign(design, context);
         if (hasColumns) {
@@ -6342,7 +6342,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    private void writeColumns(Element table, Table def) {
+    private void writeColumns(Element table, Table def, DesignContext context) {
         Object[] columns = getVisibleColumns();
         if (columns.length == 0) {
             return;
@@ -6361,23 +6361,24 @@ public class Table extends AbstractSelect implements Action.Container,
             }
 
             DesignAttributeHandler.writeAttribute("width", col.attributes(),
-                    getColumnWidth(id), def.getColumnWidth(null), int.class);
+                    getColumnWidth(id), def.getColumnWidth(null), int.class,
+                    context);
 
             DesignAttributeHandler.writeAttribute("expand", col.attributes(),
                     getColumnExpandRatio(id), def.getColumnExpandRatio(null),
-                    float.class);
+                    float.class, context);
 
             DesignAttributeHandler.writeAttribute("collapsible",
                     col.attributes(), isColumnCollapsible(id),
-                    def.isColumnCollapsible(null), boolean.class);
+                    def.isColumnCollapsible(null), boolean.class, context);
 
             DesignAttributeHandler.writeAttribute("collapsed", col.attributes(),
                     isColumnCollapsed(id), def.isColumnCollapsed(null),
-                    boolean.class);
+                    boolean.class, context);
         }
     }
 
-    private void writeHeader(Element table, Table def) {
+    private void writeHeader(Element table, Table def, DesignContext context) {
         Object[] columns = getVisibleColumns();
         if (columns.length == 0
                 || (columnIcons.isEmpty() && columnHeaders.isEmpty())) {
@@ -6389,7 +6390,8 @@ public class Table extends AbstractSelect implements Action.Container,
             Element th = header.appendElement("th");
             th.html(getColumnHeader(id));
             DesignAttributeHandler.writeAttribute("icon", th.attributes(),
-                    getColumnIcon(id), def.getColumnIcon(null), Resource.class);
+                    getColumnIcon(id), def.getColumnIcon(null), Resource.class,
+                    context);
         }
 
     }

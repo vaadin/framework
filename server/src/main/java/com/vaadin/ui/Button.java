@@ -637,11 +637,11 @@ public class Button extends AbstractFocusable
         // icon-alt
         DesignAttributeHandler.writeAttribute("icon-alt", attr,
                 getIconAlternateText(), def.getIconAlternateText(),
-                String.class);
+                String.class, designContext);
         // click-shortcut
         if (clickShortcut != null) {
             DesignAttributeHandler.writeAttribute("click-shortcut", attr,
-                    clickShortcut, null, ShortcutAction.class);
+                    clickShortcut, null, ShortcutAction.class, designContext);
         }
     }
 }

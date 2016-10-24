@@ -76,6 +76,6 @@ public class PasswordField extends TextField {
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
-                def.getValue(), String.class);
+                def.getValue(), String.class, designContext);
     }
 }

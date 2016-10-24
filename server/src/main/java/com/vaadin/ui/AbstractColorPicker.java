@@ -514,12 +514,14 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
         Attributes attribute = design.attributes();
         DesignAttributeHandler.writeAttribute("color", attribute,
-                getValue().getCSS(), Color.WHITE.getCSS(), String.class);
+                getValue().getCSS(), Color.WHITE.getCSS(), String.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("popup-style", attribute,
                 popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple",
-                "normal", String.class);
+                "normal", String.class, designContext);
         DesignAttributeHandler.writeAttribute("position", attribute,
-                positionX + "," + positionY, "0,0", String.class);
+                positionX + "," + positionY, "0,0", String.class,
+                designContext);
     }
 
     @Override

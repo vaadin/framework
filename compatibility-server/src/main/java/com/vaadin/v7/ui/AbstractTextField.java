@@ -806,7 +806,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("maxlength", attr, getMaxLength(),
-                def.getMaxLength(), Integer.class);
+                def.getMaxLength(), Integer.class, designContext);
     }
 
 }
