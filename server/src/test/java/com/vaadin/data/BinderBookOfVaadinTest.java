@@ -598,10 +598,8 @@ public class BinderBookOfVaadinTest {
         binder.forField(yearOfBirth)
                 .withConverter(new StringToIntegerConverter("err"))
                 .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
-        binder.withValidator(bean -> bean.yearOfBirth < 2000 ? Result.ok(bean)
-                : Result.error(message))
-                .withValidator(bean -> bean.yearOfBirth == 2000
-                        ? Result.error(message2) : Result.ok(bean));
+        binder.withValidator(bean -> bean.yearOfBirth < 2000, message)
+                .withValidator(bean -> bean.yearOfBirth != 2000, message2);
 
         binder.setBean(p);
 
@@ -664,13 +662,10 @@ public class BinderBookOfVaadinTest {
         BookPerson p = new BookPerson(1500, 12);
         binder.forField(yearOfBirth)
                 .withConverter(new StringToIntegerConverter("err"))
-                .withValidator(value -> value % 2 == 0 ? Result.ok(value)
-                        : Result.error(bindingMessage))
+                .withValidator(value -> value % 2 == 0, bindingMessage)
                 .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
-        binder.withValidator(bean -> bean.yearOfBirth < 2000 ? Result.ok(bean)
-                : Result.error(message))
-                .withValidator(bean -> bean.yearOfBirth == 2000
-                        ? Result.error(message2) : Result.ok(bean));
+        binder.withValidator(bean -> bean.yearOfBirth < 2000, message)
+                .withValidator(bean -> bean.yearOfBirth != 2000, message2);
 
         binder.setBean(p);
 

@@ -31,6 +31,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import com.vaadin.data.Result;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanUtil;
+import com.vaadin.data.util.converter.ValueContext;
 
 /**
  * A {@code Validator} using the JSR-303 (javax.validation) annotation-based
@@ -130,7 +131,7 @@ public class BeanValidator implements Validator<Object> {
      * annotation or equivalent.
      */
     @Override
-    public Result<Object> apply(final Object value) {
+    public Result<Object> apply(final Object value, ValueContext context) {
         Set<? extends ConstraintViolation<?>> violations = getJavaxBeanValidator()
                 .validateValue(beanType, propertyName, value);
 

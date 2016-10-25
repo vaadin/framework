@@ -19,13 +19,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.ValueContext;
 
 public class NotNullValidatorTest {
 
     @Test
     public void nullValueIsDisallowed() {
         NotNullValidator validator = new NotNullValidator("foo");
-        Result<String> result = validator.apply(null);
+        Result<String> result = validator.apply(null, new ValueContext());
         Assert.assertTrue(result.isError());
         Assert.assertEquals("foo", result.getMessage().get());
     }
@@ -33,7 +34,7 @@ public class NotNullValidatorTest {
     @Test
     public void nonNullValueIsAllowed() {
         NotNullValidator validator = new NotNullValidator("foo");
-        Result<String> result = validator.apply("bar");
+        Result<String> result = validator.apply("bar", new ValueContext());
         Assert.assertFalse(result.isError());
         result.ifOk(value -> Assert.assertEquals("bar", value));
         result.ifError(msg -> Assert.fail());

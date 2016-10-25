@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.ValueContext;
 
 /**
  * A string validator comparing the string against a Java regular expression.
@@ -70,7 +71,7 @@ public class RegexpValidator extends AbstractValidator<String> {
     }
 
     @Override
-    public Result<String> apply(String value) {
+    public Result<String> apply(String value, ValueContext context) {
         return toResult(value, isValid(value));
     }
 

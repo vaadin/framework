@@ -17,6 +17,7 @@
 package com.vaadin.data.validator;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.ValueContext;
 
 /**
  * Verifies that the length of a string is within the given range.
@@ -49,11 +50,11 @@ public class StringLengthValidator extends AbstractValidator<String> {
     }
 
     @Override
-    public Result<String> apply(String value) {
+    public Result<String> apply(String value, ValueContext context) {
         if (value == null) {
             return toResult(value, true);
         }
-        Result<?> lengthCheck = validator.apply(value.length());
+        Result<?> lengthCheck = validator.apply(value.length(), context);
         return toResult(value, !lengthCheck.isError());
     }
 

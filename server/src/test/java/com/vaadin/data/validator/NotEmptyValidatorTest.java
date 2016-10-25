@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.ValueContext;
 
 /**
  * @author Vaadin Ltd
@@ -29,7 +30,7 @@ public class NotEmptyValidatorTest {
     @Test
     public void nullValueIsDisallowed() {
         NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
-        Result<String> result = validator.apply(null);
+        Result<String> result = validator.apply(null, new ValueContext());
         Assert.assertTrue(result.isError());
         Assert.assertEquals("foo", result.getMessage().get());
     }
@@ -37,7 +38,7 @@ public class NotEmptyValidatorTest {
     @Test
     public void emptyValueIsDisallowed() {
         NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
-        Result<String> result = validator.apply("");
+        Result<String> result = validator.apply("", new ValueContext());
         Assert.assertTrue(result.isError());
         Assert.assertEquals("foo", result.getMessage().get());
     }
@@ -46,7 +47,7 @@ public class NotEmptyValidatorTest {
     public void nonNullValueIsAllowed() {
         NotEmptyValidator<Object> validator = new NotEmptyValidator<>("foo");
         Object value = new Object();
-        Result<Object> result = validator.apply(value);
+        Result<Object> result = validator.apply(value, new ValueContext());
         Assert.assertFalse(result.isError());
         result.ifOk(val -> Assert.assertEquals(value, val));
         result.ifError(msg -> Assert.fail());

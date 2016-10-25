@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.ValueContext;
 
 /**
  * Verifies that a value is within the given range.
@@ -97,7 +98,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
      * behavior depends on the used comparator.
      */
     @Override
-    public Result<T> apply(T value) {
+    public Result<T> apply(T value, ValueContext context) {
         return toResult(value, isValid(value));
     }
 

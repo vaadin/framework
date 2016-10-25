@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
@@ -92,7 +93,7 @@ public class BinderConverterValidatorTest
         String msg2 = "bar";
         binding.withValidator(new Validator<String>() {
             @Override
-            public Result<String> apply(String value) {
+            public Result<String> apply(String value, ValueContext context) {
                 return new SimpleResult<>(null, msg1);
             }
         });
@@ -125,7 +126,7 @@ public class BinderConverterValidatorTest
         // validator for Number can be used on a Double
 
         TextField salaryField = new TextField();
-        Validator<Number> positiveNumberValidator = value -> {
+        Validator<Number> positiveNumberValidator = (value, context) -> {
             if (value.doubleValue() >= 0) {
                 return Result.ok(value);
             } else {
@@ -568,8 +569,8 @@ public class BinderConverterValidatorTest
         Binding<Person, String, String> binding = binder.forField(nameField)
                 .withValidator(notEmpty);
         binding.bind(Person::getFirstName, Person::setFirstName);
-        binder.withValidator(bean -> bean.getFirstName().contains("error")
-                ? Result.error("error") : Result.ok(bean));
+        binder.withValidator(bean -> !bean.getFirstName().contains("error"),
+                "error");
         Person person = new Person();
         person.setFirstName("");
         binder.setBean(person);

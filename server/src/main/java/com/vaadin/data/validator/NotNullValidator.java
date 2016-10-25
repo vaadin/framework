@@ -19,6 +19,7 @@ package com.vaadin.data.validator;
 import java.util.Objects;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.ValueContext;
 
 /**
  * This validator is used for validating properties that do not allow null
@@ -41,7 +42,7 @@ public class NotNullValidator extends AbstractValidator<String> {
     }
 
     @Override
-    public Result<String> apply(String value) {
+    public Result<String> apply(String value, ValueContext context) {
         return Objects.isNull(value) ? Result.error(getMessage(value))
                 : Result.ok(value);
     }

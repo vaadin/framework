@@ -39,8 +39,8 @@ public class ValueContext implements Serializable {
      * Constructor for {@code ValueContext} without a {@code Locale}.
      */
     public ValueContext() {
-        this.locale = null;
         this.component = null;
+        this.locale = findLocale();
     }
 
     /**

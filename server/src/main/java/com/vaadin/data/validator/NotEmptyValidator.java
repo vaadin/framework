@@ -20,6 +20,7 @@ import java.util.Objects;
 import com.vaadin.data.HasRequired;
 import com.vaadin.data.Result;
 import com.vaadin.data.Validator;
+import com.vaadin.data.util.converter.ValueContext;
 
 /**
  * Simple validator to check against {@code null} value and empty {@link String}
@@ -65,7 +66,7 @@ public class NotEmptyValidator<T> implements Validator<T> {
     }
 
     @Override
-    public Result<T> apply(T value) {
+    public Result<T> apply(T value, ValueContext context) {
         if (Objects.isNull(value) || Objects.equals(value, "")) {
             return Result.error(message);
         } else {

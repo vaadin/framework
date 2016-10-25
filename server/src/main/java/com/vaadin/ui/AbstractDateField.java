@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -677,7 +678,8 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
                     getDateOutOfRangeMessage(),
                     getDate(getRangeStart(), getResolution()),
                     getDate(getRangeEnd(), getResolution()));
-            Result<LocalDate> result = validator.apply(value);
+            Result<LocalDate> result = validator.apply(value,
+                    new ValueContext(this));
             if (result.isError()) {
                 setComponentError(new UserError(getDateOutOfRangeMessage()));
             }

@@ -708,7 +708,8 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public Result<T> convertToModel(T value, ValueContext context) {
-            Result<? super T> validationResult = validator.apply(value);
+            Result<? super T> validationResult = validator.apply(value,
+                    context);
             if (validationResult.isError()) {
                 return Result.error(validationResult.getMessage().get());
             } else {
@@ -1073,6 +1074,28 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * A convenience method to add a validator to this binder using the
+     * {@link Validator#from(SerializablePredicate, String)} factory method.
+     * <p>
+     * Bean level validators are applied on the bean instance after the bean is
+     * updated. If the validators fail, the bean instance is reverted to its
+     * previous state.
+     *
+     * @see #save(Object)
+     * @see #saveIfValid(Object)
+     *
+     * @param predicate
+     *            the predicate performing validation, not null
+     * @param message
+     *            the error message to report in case validation failure
+     * @return this binder, for chaining
+     */
+    public Binder<BEAN> withValidator(SerializablePredicate<BEAN> predicate,
+            String message) {
+        return withValidator(Validator.from(predicate, message));
+    }
+
+    /**
      * Validates the values of all bound fields and returns the validation
      * status.
      * <p>
@@ -1134,9 +1157,10 @@ public class Binder<BEAN> implements Serializable {
      */
     private List<Result<?>> validateBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        List<Result<?>> results = Collections.unmodifiableList(
-                validators.stream().map(validator -> validator.apply(bean))
-                        .collect(Collectors.toList()));
+        List<Result<?>> results = Collections.unmodifiableList(validators
+                .stream()
+                .map(validator -> validator.apply(bean, new ValueContext()))
+                .collect(Collectors.toList()));
         return results;
     }
 

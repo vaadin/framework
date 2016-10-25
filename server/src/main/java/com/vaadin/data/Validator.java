@@ -18,9 +18,9 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.BiFunction;
 
+import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.server.SerializablePredicate;
 
 /**
@@ -48,32 +48,8 @@ import com.vaadin.server.SerializablePredicate;
  * @see Result
  */
 @FunctionalInterface
-public interface Validator<T> extends Function<T, Result<T>>, Serializable {
-
-    /**
-     * Returns a validator that chains this validator with the given function.
-     * Specifically, the function may be another validator. The resulting
-     * validator first applies this validator, and if the value passes, then the
-     * given validator.
-     * <p>
-     * For instance, the following chained validator checks if a number is
-     * between 0 and 10, inclusive:
-     *
-     * <pre>
-     * Validator&lt;Integer&gt; v = Validator.from(num -> num >= 0, "number must be >= 0")
-     *         .chain(Validator.from(num -> num <= 10, "number must be <= 10"));
-     * </pre>
-     *
-     * @param next
-     *            the validator to apply next, not null
-     * @return a chained validator
-     *
-     * @see #from(Predicate, String)
-     */
-    public default Validator<T> chain(Function<T, Result<T>> next) {
-        Objects.requireNonNull(next, "next cannot be null");
-        return val -> apply(val).flatMap(next);
-    }
+public interface Validator<T>
+        extends BiFunction<T, ValueContext, Result<T>>, Serializable {
 
     /**
      * Validates the given value. Returns a {@code Result} instance representing
@@ -81,10 +57,12 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      *
      * @param value
      *            the input value to validate
+     * @param context
+     *            the value context for validation
      * @return the validation result
      */
     @Override
-    public Result<T> apply(T value);
+    public Result<T> apply(T value, ValueContext context);
 
     /**
      * Returns a validator that passes any value.
@@ -94,7 +72,7 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
      * @return an always-passing validator
      */
     public static <T> Validator<T> alwaysPass() {
-        return v -> Result.ok(v);
+        return (v, ctx) -> Result.ok(v);
     }
 
     /**
@@ -123,7 +101,7 @@ public interface Validator<T> extends Function<T, Result<T>>, Serializable {
             String errorMessage) {
         Objects.requireNonNull(guard, "guard cannot be null");
         Objects.requireNonNull(errorMessage, "errorMessage cannot be null");
-        return value -> {
+        return (value, context) -> {
             try {
                 if (guard.test(value)) {
                     return Result.ok(value);
