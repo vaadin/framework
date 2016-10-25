@@ -68,4 +68,10 @@ public class GridScrollTest extends GridBasicFeaturesTest {
                 active);
     }
 
+    @Test
+    public void scrollIntoViewThroughSubPart() {
+        openTestURL("theme=valo");
+        GridElement grid = $(GridElement.class).first();
+        assertEquals("(10, 0)", grid.getCell(10, 0).getText());
+    }
 }
