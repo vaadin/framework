@@ -6616,15 +6616,19 @@ public class Escalator extends Widget
         } else if (type.equalsIgnoreCase("cell")) {
             // If wanted row is not visible, we need to scroll there.
             Range visibleRowRange = getVisibleRowRange();
-            if (indices.length > 0 && !visibleRowRange.contains(indices[0])) {
-                try {
-                    scrollToRow(indices[0], ScrollDestination.ANY, 0);
-                } catch (IllegalArgumentException e) {
-                    getLogger().log(Level.SEVERE, e.getMessage());
+            if (indices.length > 0) {
+                // Contains a row number, ensure it is available and visible
+                boolean rowInCache = visibleRowRange.contains(indices[0]);
+
+                // Scrolling might be a no-op if row is already in the viewport
+                scrollToRow(indices[0], ScrollDestination.ANY, 0);
+
+                if (!rowInCache) {
+                    // Row was not in cache, scrolling caused lazy loading and
+                    // the caller needs to wait and call this method again to be
+                    // able to get the requested element
+                    return null;
                 }
-                // Scrolling causes a lazy loading event. No element can
-                // currently be retrieved.
-                return null;
             }
             container = getBody();
         } else if (type.equalsIgnoreCase("footer")) {
