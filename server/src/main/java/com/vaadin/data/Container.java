@@ -665,7 +665,8 @@ public interface Container extends Serializable {
          *            ID of the Item whose children the caller is interested in
          * @return An unmodifiable {@link java.util.Collection collection}
          *         containing the IDs of all other Items that are children in
-         *         the container hierarchy
+         *         the container hierarchy; {@code null} if item does not have
+         *         any children.
          */
         public Collection<?> getChildren(Object itemId);
 
@@ -760,9 +761,8 @@ public interface Container extends Serializable {
         /**
          * Tests if the Item specified with <code>itemId</code> is a root Item.
          * The hierarchical container can have more than one root and must have
-         * at least one unless it is empty. The
-         * {@link #getParent(Object itemId)} method always returns
-         * <code>null</code> for root Items.
+         * at least one unless it is empty. The {@link #getParent(Object itemId)}
+         * method always returns <code>null</code> for root Items.
          *
          * @param itemId
          *            ID of the Item whose root status is to be tested
@@ -1249,7 +1249,6 @@ public interface Container extends Serializable {
          *             {@link #removePropertySetChangeListener(PropertySetChangeListener)}
          **/
         @Deprecated
-        public void removeListener(
-                Container.PropertySetChangeListener listener);
+        public void removeListener(Container.PropertySetChangeListener listener);
     }
 }
