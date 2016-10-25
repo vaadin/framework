@@ -184,7 +184,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
             Binding<BEAN, FIELDVALUE, Object> finalBinding;
 
-            finalBinding = withConverter(createConverter());
+            finalBinding = withConverter(createConverter(), false);
 
             if (BeanUtil.checkBeanValidationAvailable()) {
                 finalBinding = finalBinding.withValidator(new BeanValidator(

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.util.converter.Converter;
@@ -471,11 +471,7 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter) {
-            checkUnbound();
-            Objects.requireNonNull(converter, "converter cannot be null");
-
-            return getBinder().createBinding(getField(),
-                    converterValidatorChain.chain(converter), statusHandler);
+            return withConverter(converter, true);
         }
 
         @Override
@@ -496,6 +492,40 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public HasValue<FIELDVALUE> getField() {
             return field;
+        }
+
+        /**
+         * Implements {@link #withConverter(Converter)} method with additional
+         * possibility to disable (reset) default null representation converter.
+         * <p>
+         * The method {@link #withConverter(Converter)} calls this method with
+         * {@code true} provided as the second argument value.
+         * 
+         * @see #withConverter(Converter)
+         * 
+         * @param converter
+         *            the converter to use, not null
+         * @param resetNullRepresentation
+         *            if {@code true} then default null representation will be
+         *            deactivated (if not yet), otherwise it won't be removed
+         * @return a new binding with the appropriate type
+         * @param <NEWTARGET>
+         *            the type to convert to
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        protected <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+                Converter<TARGET, NEWTARGET> converter,
+                boolean resetNullRepresentation) {
+            checkUnbound();
+            Objects.requireNonNull(converter, "converter cannot be null");
+
+            if (resetNullRepresentation) {
+                getBinder().initialConverters.get(getField()).setIdentity();
+            }
+
+            return getBinder().createBinding(getField(),
+                    converterValidatorChain.chain(converter), statusHandler);
         }
 
         /**
@@ -693,11 +723,53 @@ public class Binder<BEAN> implements Serializable {
 
     }
 
+    /**
+     * Converter decorator-strategy pattern to use initially provided "delegate"
+     * converter to execute its logic until the {@code setIdentity()} method is
+     * called. Once the method is called the class changes its behavior to the
+     * same as {@link Converter#identity()} behavior.
+     */
+    private static class ConverterDelegate<FIELDVALUE>
+            implements Converter<FIELDVALUE, FIELDVALUE> {
+
+        private Converter<FIELDVALUE, FIELDVALUE> delegate;
+
+        private ConverterDelegate(Converter<FIELDVALUE, FIELDVALUE> converter) {
+            delegate = converter;
+        }
+
+        @Override
+        public Result<FIELDVALUE> convertToModel(FIELDVALUE value,
+                ValueContext context) {
+            if (delegate == null) {
+                return Result.ok(value);
+            } else {
+                return delegate.convertToModel(value, context);
+            }
+        }
+
+        @Override
+        public FIELDVALUE convertToPresentation(FIELDVALUE value,
+                ValueContext context) {
+            if (delegate == null) {
+                return value;
+            } else {
+                return delegate.convertToPresentation(value, context);
+            }
+        }
+
+        void setIdentity() {
+            delegate = null;
+        }
+    }
+
     private BEAN bean;
 
     private final Set<BindingImpl<BEAN, ?, ?>> bindings = new LinkedHashSet<>();
 
     private final List<Validator<? super BEAN>> validators = new ArrayList<>();
+
+    private final Map<HasValue<?>, ConverterDelegate<?>> initialConverters = new IdentityHashMap<>();
 
     private EventRouter eventRouter;
 
@@ -719,21 +791,17 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Creates a new binding for the given field. The returned binding may be
-     * further configured before invoking <<<<<<< Upstream, based on master
-     * {@link Binding#bind(Function, BiConsumer) Binding.bind} which completes
-     * the binding. Until {@code Binding.bind} is called, the binding has no
-     * effect.
+     * further configured before invoking
+     * {@link Binding#bind(SerializableFunction, SerializableBiConsumer)} which
+     * completes the binding. Until {@code Binding.bind} is called, the binding
+     * has no effect.
      * <p>
      * <strong>Note:</strong> Not all {@link HasValue} implementations support
      * passing {@code null} as the value. For these the Binder will
      * automatically change {@code null} to a null representation provided by
      * {@link HasValue#getEmptyValue()}. This conversion is one-way only, if you
      * want to have a two-way mapping back to {@code null}, use
-     * {@link Binding#withNullRepresentation(Object))}. =======
-     * {@link Binding#bind(SerializableFunction, SerializableBiConsumer)
-     * Binding.bind} which completes the binding. Until {@code Binding.bind} is
-     * called, the binding has no effect. >>>>>>> 7d541b5 Correct serializable
-     * issues and test that components can be serialized
+     * {@link Binding#withNullRepresentation(Object))}.
      *
      * @param <FIELDVALUE>
      *            the value type of the field
@@ -750,10 +818,7 @@ public class Binder<BEAN> implements Serializable {
         clearError(field);
         getStatusLabel().ifPresent(label -> label.setValue(""));
 
-        return createBinding(field, Converter.from(fieldValue -> fieldValue,
-                modelValue -> Objects.isNull(modelValue) ? field.getEmptyValue()
-                        : modelValue,
-                exception -> exception.getMessage()),
+        return createBinding(field, createNullRepresentationAdapter(field),
                 this::handleValidationStatus);
     }
 
@@ -1340,6 +1405,19 @@ public class Binder<BEAN> implements Serializable {
     private void fireStatusChangeEvent(boolean hasValidationErrors) {
         getEventRouter()
                 .fireEvent(new StatusChangeEvent(this, hasValidationErrors));
+    }
+
+    private <FIELDVALUE> Converter<FIELDVALUE, FIELDVALUE> createNullRepresentationAdapter(
+            HasValue<FIELDVALUE> field) {
+        Converter<FIELDVALUE, FIELDVALUE> nullRepresentationConverter = Converter
+                .from(fieldValue -> fieldValue,
+                        modelValue -> Objects.isNull(modelValue)
+                                ? field.getEmptyValue() : modelValue,
+                        exception -> exception.getMessage());
+        ConverterDelegate<FIELDVALUE> converter = new ConverterDelegate<>(
+                nullRepresentationConverter);
+        initialConverters.put(field, converter);
+        return converter;
     }
 
 }

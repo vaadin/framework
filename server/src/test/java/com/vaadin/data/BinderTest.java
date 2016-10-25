@@ -10,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.NotNullValidator;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
@@ -252,5 +254,66 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         Assert.assertEquals("Field value was not set correctly",
                 item.getFirstName(), nameField.getValue());
+    }
+
+    @Test
+    public void withConverter_disablesDefaulNullRepresentation() {
+        Integer customNullConverter = 0;
+        binder.forField(ageField).withNullRepresentation("foo")
+                .withConverter(new StringToIntegerConverter(""))
+                .withConverter(age -> age,
+                        age -> age == null ? customNullConverter : age)
+                .bind(Person::getSalary, Person::setSalary);
+        binder.bind(item);
+
+        Assert.assertEquals(customNullConverter.toString(),
+                ageField.getValue());
+
+        Integer salary = 11;
+        ageField.setValue(salary.toString());
+        Assert.assertEquals(11, salary.intValue());
+    }
+
+    @Test
+    public void beanBinder_nullRepresentationIsNotDisabled() {
+        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        binder.forField(nameField).bind("firstName");
+
+        Person person = new Person();
+        binder.bind(person);
+
+        Assert.assertEquals("", nameField.getValue());
+    }
+
+    @Test
+    public void beanBinder_withConverter_nullRepresentationIsNotDisabled() {
+        String customNullPointerRepresentation = "foo";
+        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        binder.forField(nameField)
+                .withConverter(value -> value, value -> value == null
+                        ? customNullPointerRepresentation : value)
+                .bind("firstName");
+
+        Person person = new Person();
+        binder.bind(person);
+
+        Assert.assertEquals(customNullPointerRepresentation,
+                nameField.getValue());
+    }
+
+    @Test
+    public void withValidator_doesNotDisablesDefaulNullRepresentation() {
+        String nullRepresentation = "foo";
+        binder.forField(nameField).withNullRepresentation(nullRepresentation)
+                .withValidator(new NotNullValidator(""))
+                .bind(Person::getFirstName, Person::setFirstName);
+        item.setFirstName(null);
+        binder.bind(item);
+
+        Assert.assertEquals(nullRepresentation, nameField.getValue());
+
+        String newValue = "bar";
+        nameField.setValue(newValue);
+        Assert.assertEquals(newValue, item.getFirstName());
     }
 }
