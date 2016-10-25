@@ -17,7 +17,6 @@
 package com.vaadin.data.util.converter;
 
 import java.io.Serializable;
-import java.util.Locale;
 import java.util.function.Function;
 
 import com.vaadin.data.Binder.Binding;
@@ -53,11 +52,6 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
     public Result<MODEL> convertToModel(PRESENTATION value,
             ValueContext context);
 
-    default public Result<MODEL> convertToModel(PRESENTATION value,
-            Locale locale) {
-        return convertToModel(value, new ValueContext(locale));
-    }
-
     /**
      * Converts the given value from presentation type to model type.
      * <p>
@@ -71,11 +65,6 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      */
     public PRESENTATION convertToPresentation(MODEL value,
             ValueContext context);
-
-    default public PRESENTATION convertToPresentation(MODEL value,
-            Locale locale) {
-        return convertToPresentation(value, new ValueContext());
-    }
 
     /**
      * Returns a converter that returns its input as-is in both directions.
