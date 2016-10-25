@@ -92,7 +92,7 @@ public class Jsr303Test {
             item.setAge(32);
 
             binder.bind(nameField, "firstname");
-            binder.bind(item);
+            binder.setBean(item);
 
             assertEquals(name, nameField.getValue());
 

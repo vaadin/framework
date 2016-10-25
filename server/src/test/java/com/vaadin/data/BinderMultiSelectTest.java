@@ -74,7 +74,7 @@ public class BinderMultiSelectTest
     @Test
     public void beanBound_bindSelectByShortcut_selectionUpdated() {
         item.setEnums(Collections.singleton(TestEnum.ONE));
-        binder.bind(item);
+        binder.setBean(item);
         binder.bind(select, BeanWithEnums::getEnums, BeanWithEnums::setEnums);
 
         assertEquals(Collections.singleton(TestEnum.ONE),
@@ -84,7 +84,7 @@ public class BinderMultiSelectTest
     @Test
     public void beanBound_bindSelect_selectionUpdated() {
         item.setEnums(Collections.singleton(TestEnum.TWO));
-        binder.bind(item);
+        binder.setBean(item);
         binder.forField(select).bind(BeanWithEnums::getEnums,
                 BeanWithEnums::setEnums);
 
@@ -125,7 +125,7 @@ public class BinderMultiSelectTest
 
         Set<TestEnum> enums = item.getEnums();
 
-        binder.bind(new BeanWithEnums());
+        binder.setBean(new BeanWithEnums());
         select.select(TestEnum.ONE);
 
         assertEquals(Collections.singleton(TestEnum.TWO), enums);
@@ -145,7 +145,7 @@ public class BinderMultiSelectTest
     public void unbound_changeSelection_beanValueNotUpdated() {
         item.setEnums(Collections.singleton(TestEnum.ONE));
         bindEnum();
-        binder.unbind();
+        binder.removeBean();
 
         select.select(TestEnum.TWO);
 
@@ -154,7 +154,7 @@ public class BinderMultiSelectTest
 
     @Test
     public void withConverter_load_selectUpdated() {
-        converterBinder.load(new AtomicReference<>("TWO"));
+        converterBinder.readBean(new AtomicReference<>("TWO"));
 
         assertEquals(Collections.singleton(TestEnum.TWO),
                 select.getSelectionModel().getSelectedItems());
@@ -166,7 +166,7 @@ public class BinderMultiSelectTest
         select.select(TestEnum.TWO);
 
         AtomicReference<String> reference = new AtomicReference<>("");
-        converterBinder.saveIfValid(reference);
+        converterBinder.writeBeanIfValid(reference);
 
         assertEquals("ONE,TWO", reference.get());
     }
@@ -177,7 +177,7 @@ public class BinderMultiSelectTest
                 .withValidator(selection -> selection.size() % 2 == 1,
                         "Must select odd number of items")
                 .bind(BeanWithEnums::getEnums, BeanWithEnums::setEnums);
-        binder.bind(item);
+        binder.setBean(item);
 
         assertFalse(binder.validate().isOk());
 
@@ -189,6 +189,6 @@ public class BinderMultiSelectTest
     protected void bindEnum() {
         binder.forField(select).bind(BeanWithEnums::getEnums,
                 BeanWithEnums::setEnums);
-        binder.bind(item);
+        binder.setBean(item);
     }
 }

@@ -146,7 +146,7 @@ public class BinderBookOfVaadinTest {
     @Test
     public void loadingFromBusinessObjects() {
         // this test is just to make sure the code snippet in the book compiles
-        binder.load(new BookPerson(1969, 50000));
+        binder.readBean(new BookPerson(1969, 50000));
 
         BinderValidationStatus<BookPerson> status = binder.validate();
 
@@ -160,7 +160,7 @@ public class BinderBookOfVaadinTest {
     public void handlingCheckedException() {
         // another test just to verify that book examples actually compile
         try {
-            binder.save(new BookPerson(2000, 50000));
+            binder.writeBean(new BookPerson(2000, 50000));
         } catch (ValidationException e) {
             Notification.show("Validation error count: "
                     + e.getValidationErrors().size());
@@ -265,15 +265,15 @@ public class BinderBookOfVaadinTest {
 
         // Test that the book code works
         BookPerson bookPerson = new BookPerson(1972, 4);
-        binder.bind(bookPerson);
+        binder.setBean(bookPerson);
         Assert.assertEquals(4.0, salaryLevelField.getValue().doubleValue(), 0);
         Assert.assertEquals("1,972", yearOfBirthField.getValue());
 
         bookPerson.setSalaryLevel(8);
-        binder.load(bookPerson);
+        binder.readBean(bookPerson);
         Assert.assertEquals(8.0, salaryLevelField.getValue().doubleValue(), 0);
         bookPerson.setYearOfBirth(123);
-        binder.load(bookPerson);
+        binder.readBean(bookPerson);
         Assert.assertEquals("123", yearOfBirthField.getValue());
 
         yearOfBirthField.setValue("2016");
@@ -293,7 +293,7 @@ public class BinderBookOfVaadinTest {
                         "Please enter a number")
                 .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
 
-        binder.bind(new BookPerson(1900, 5));
+        binder.setBean(new BookPerson(1900, 5));
         yearOfBirthField.setValue("abc");
         binder.validate();
         Assert.assertEquals("Please&#32;enter&#32;a&#32;number",
@@ -479,24 +479,24 @@ public class BinderBookOfVaadinTest {
         BookPerson person = new BookPerson(1900, 5);
         person.setEmail("Old Email");
         // Load person data to a form
-        binder.load(person);
+        binder.readBean(person);
 
         Button saveButton = new Button("Save", event -> {
             // Using saveIfValid to avoid the try-catch block that is
             // needed if using the regular save method
-            if (binder.saveIfValid(person)) {
+            if (binder.writeBeanIfValid(person)) {
                 // Person is valid and updated
                 // TODO Store in the database
             }
         });
 
         emailField.setValue("foo@bar.com");
-        Assert.assertTrue(binder.saveIfValid(person));
+        Assert.assertTrue(binder.writeBeanIfValid(person));
         // Person updated
         Assert.assertEquals("foo@bar.com", person.getEmail());
 
         emailField.setValue("");
-        Assert.assertFalse(binder.saveIfValid(person));
+        Assert.assertFalse(binder.writeBeanIfValid(person));
         // Person updated because phone and email are both empty
         Assert.assertEquals("foo@bar.com", person.getEmail());
     }
@@ -530,7 +530,7 @@ public class BinderBookOfVaadinTest {
         yearOfBirthField.setValue("1950");
         Assert.assertFalse(binder.validate().hasErrors());
         BookPerson person = new BookPerson(1500, 12);
-        binder.save(person);
+        binder.writeBean(person);
         Assert.assertEquals(1950, person.getYearOfBirth());
     }
 
@@ -567,7 +567,7 @@ public class BinderBookOfVaadinTest {
                 .bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
 
         BookPerson p = new BookPerson(1500, 12);
-        binder.bind(p);
+        binder.setBean(p);
 
         yearOfBirthField.setValue("abc");
         Assert.assertTrue(binder.validate().hasErrors());
@@ -578,7 +578,7 @@ public class BinderBookOfVaadinTest {
         Assert.assertTrue(binder.validate().isOk());
 
         p.setYearOfBirth(12500);
-        binder.load(p);
+        binder.readBean(p);
         Assert.assertEquals("12500", yearOfBirthField.getValue());
         Assert.assertTrue(binder.validate().isOk());
     }
@@ -603,7 +603,7 @@ public class BinderBookOfVaadinTest {
                 .withValidator(bean -> bean.yearOfBirth == 2000
                         ? Result.error(message2) : Result.ok(bean));
 
-        binder.bind(p);
+        binder.setBean(p);
 
         // first bean validator fails and passes error message to status label
         yearOfBirth.setValue("2001");
@@ -672,7 +672,7 @@ public class BinderBookOfVaadinTest {
                 .withValidator(bean -> bean.yearOfBirth == 2000
                         ? Result.error(message2) : Result.ok(bean));
 
-        binder.bind(p);
+        binder.setBean(p);
 
         // first binding validation fails, no bean level validation is done
         yearOfBirth.setValue("2001");
@@ -742,7 +742,7 @@ public class BinderBookOfVaadinTest {
         verifyEventIsFired(eventIsFired);
 
         BookPerson person = new BookPerson(2000, 1);
-        binder.load(person);
+        binder.readBean(person);
         // no changes
         Assert.assertFalse(saveButton.isEnabled());
         Assert.assertFalse(resetButton.isEnabled());
@@ -755,7 +755,7 @@ public class BinderBookOfVaadinTest {
         Assert.assertTrue(resetButton.isEnabled());
         Assert.assertTrue(eventIsFired.get());
 
-        binder.saveIfValid(person);
+        binder.writeBeanIfValid(person);
         // no changes
         Assert.assertFalse(saveButton.isEnabled());
         Assert.assertFalse(resetButton.isEnabled());
@@ -800,7 +800,7 @@ public class BinderBookOfVaadinTest {
         verifyEventIsFired(eventIsFired);
 
         BookPerson person = new BookPerson(2000, 1);
-        binder.bind(person);
+        binder.setBean(person);
         // no changes
         Assert.assertFalse(saveButton.isEnabled());
         Assert.assertFalse(resetButton.isEnabled());
@@ -821,7 +821,7 @@ public class BinderBookOfVaadinTest {
         // set valid value
         field.setValue("a");
         verifyEventIsFired(eventIsFired);
-        binder.saveIfValid(person);
+        binder.writeBeanIfValid(person);
         // there are no changes.
         Assert.assertFalse(saveButton.isEnabled());
         Assert.assertFalse(resetButton.isEnabled());

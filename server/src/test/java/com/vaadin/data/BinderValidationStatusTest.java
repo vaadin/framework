@@ -220,7 +220,7 @@ public class BinderValidationStatusTest extends
         binder.setValidationStatusHandler(r -> {
             statusCapture.set(r);
         });
-        binder.bind(item);
+        binder.setBean(item);
         Assert.assertNull(nameField.getComponentError());
 
         nameField.setValue("");
@@ -314,7 +314,7 @@ public class BinderValidationStatusTest extends
         binder.setValidationStatusHandler(r -> {
             statusCapture.set(r);
         });
-        binder.bind(item);
+        binder.setBean(item);
         Assert.assertNull(nameField.getComponentError());
 
         nameField.setValue("");

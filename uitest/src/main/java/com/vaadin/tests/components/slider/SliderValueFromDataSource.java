@@ -34,7 +34,7 @@ public class SliderValueFromDataSource extends AbstractReindeerTestUI {
                 b -> Double.valueOf(b.getFloatValue() * 10.0),
                 (b, doubleValue) -> item.getItemProperty("floatValue")
                         .setValue((float) (doubleValue / 10.0)));
-        binder.bind(bean);
+        binder.setBean(bean);
 
         ProgressBar progressBar = new ProgressBar();
         progressBar.setWidth("200px");

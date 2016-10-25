@@ -139,7 +139,7 @@ public class BeanBinderInstanceFieldTest {
         person.setFirstName("foo");
         person.setBirthDate(LocalDate.now());
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(person.getFirstName(), form.firstName.getValue());
         Assert.assertEquals(person.getBirthDate(), form.birthDate.getValue());
@@ -160,7 +160,7 @@ public class BeanBinderInstanceFieldTest {
         Person person = new Person();
         person.setFirstName("foo");
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(person.getFirstName(), form.firstName.getValue());
 
@@ -180,7 +180,7 @@ public class BeanBinderInstanceFieldTest {
         Person person = new Person();
         person.setFirstName("foo");
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertNull(form.firstName);
     }
@@ -194,7 +194,7 @@ public class BeanBinderInstanceFieldTest {
         Person person = new Person();
         person.setFirstName("foo");
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(person.getFirstName(), form.firstName.getValue());
 
@@ -254,7 +254,7 @@ public class BeanBinderInstanceFieldTest {
         Person person = new Person();
         person.setFirstName("foo");
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(person.getFirstName(), form.firstName.getValue());
 
@@ -276,7 +276,7 @@ public class BeanBinderInstanceFieldTest {
         Person person = new Person();
         person.setFirstName("foo");
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(name, form.firstName);
     }
@@ -291,7 +291,7 @@ public class BeanBinderInstanceFieldTest {
         person.setFirstName("foo");
         person.setBirthDate(LocalDate.now());
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(person.getFirstName(), form.nameField.getValue());
         Assert.assertEquals(person.getBirthDate(),
@@ -324,7 +324,7 @@ public class BeanBinderInstanceFieldTest {
         person.setFirstName(personName);
         person.setBirthDate(LocalDate.now());
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(person.getFirstName(), form.firstName.getValue());
         Assert.assertEquals(person.getBirthDate(), form.birthDate.getValue());
@@ -365,7 +365,7 @@ public class BeanBinderInstanceFieldTest {
         person.setFirstName(personName);
         person.setAge(age);
 
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(person.getFirstName(), form.firstName.getValue());
         Assert.assertEquals(String.valueOf(person.getAge()),

@@ -971,7 +971,7 @@ public class CalendarTest extends GridLayout implements View {
         initFormFields(scheduleEventFieldLayout, event.getClass());
         scheduleEventFieldGroup.setBuffered(true);
         scheduleEventFieldGroup.setItemDataSource(item);
-        scheduledEventBinder.load(event);
+        scheduledEventBinder.readBean(event);
     }
 
     private void setFormDateResolution(Resolution resolution) {
@@ -1004,7 +1004,7 @@ public class CalendarTest extends GridLayout implements View {
             throws ValidationException, CommitException {
         scheduleEventFieldGroup.commit();
         BasicEvent event = getFormCalendarEvent();
-        scheduledEventBinder.save(event);
+        scheduledEventBinder.writeBean(event);
         if (event.getEnd() == null) {
             event.setEnd(event.getStart());
         }
@@ -1017,7 +1017,7 @@ public class CalendarTest extends GridLayout implements View {
 
     private void discardCalendarEvent() {
         scheduleEventFieldGroup.discard();
-        scheduledEventBinder.load(getFormCalendarEvent());
+        scheduledEventBinder.readBean(getFormCalendarEvent());
         getUI().removeWindow(scheduleEventPopup);
     }
 

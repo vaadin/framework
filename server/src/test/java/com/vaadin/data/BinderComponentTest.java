@@ -72,7 +72,7 @@ public class BinderComponentTest
         field.setValue(initialValue);
         Assert.assertEquals("Initial value of field unexpected", initialValue,
                 field.getValue());
-        binder.bind(item);
+        binder.setBean(item);
         Assert.assertEquals("Null representation for field failed",
                 field.getEmptyValue(), field.getValue());
         field.setValue(initialValue);

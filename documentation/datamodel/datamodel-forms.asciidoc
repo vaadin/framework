@@ -45,12 +45,12 @@ When we have bound field components using our binder, we can use the binder to l
 Person person = new Person("John Doe", 1957);
 
 // Updates the value in each bound field component
-binder.load(person);
+binder.readBean(person);
 
 Button saveButton = new Button("Save",
   event -> {
     try {
-      binder.save(person);
+      binder.writeBean(person);
       // A real application would also save the updated person
       // using the application's backend
     } catch (BindingException e) {
@@ -61,7 +61,7 @@ Button saveButton = new Button("Save",
 
 // Updates the fields again with the previously saved values
 Button resetButton = new Button("Reset",
-  event -> binder.load(person));
+  event -> binder.readBean(person));
 ----
 
 With these basic steps, we have defined everything that is needed for loading, editing and saving values for a form.
@@ -319,7 +319,7 @@ Even if the user has not edited a field, all validation error will be shown if w
 [source, java]
 ----
 // Resets the form to show default values by populating the fields with the default values from the bean
-binder.load(new Person());
+binder.readBean(new Person());
 
 // This will make all current validation errors visible
 ValidationStatus<Person> status = binder.validate();
@@ -339,7 +339,7 @@ Handling a checked exception::
 [source, java]
 ----
 try {
-  binder.save(person);
+  binder.writeBean(person);
 } catch (ValidationException e) {
   Notification.show("Validation error count: "
     + e.getValidationErrors().size());
@@ -352,7 +352,7 @@ Defining an error handler when saving::
 --
 [source, java]
 ----
-binder.save(person,
+binder.writeBean(person,
   // Callback invoked if there is an error
   errors ->  {
     Notification.show("Validation error count: "
@@ -367,7 +367,7 @@ Checking a return value::
 --
 [source, java]
 ----
-boolean saved = binder.saveIfValid(person);
+boolean saved = binder.writeBeanIfValid(person);
 if (!saved) {
   Notification.show("Validation error count: "
     + binder.getValidationErrors().size());
@@ -399,7 +399,7 @@ This is useful for creating a user interface where changes are saved immediately
 ----
 // Invoked when the value of any bound field component changes
 binder.addFieldValueChangeListener(event -> {
-  if (binder.saveIfValid(person)) {
+  if (binder.writeBeanIfValid(person)) {
     // We only get here if there are no validation errors
 
     // TODO: Do something with the updated person instance
@@ -414,7 +414,7 @@ If we want all the fields to work independently of each other, we can instead sa
 ----
 binder.addFieldValueChangeListener(event -> {
   Binding<Person, ?> binding = event.getBinding();
-  if (binding.saveIfValid(person)) {
+  if (binder.writeIfValid(person)) {
     // We get here if the updated binding had no validation errors
 
     // TODO: Do something with the updated person instance
@@ -437,7 +437,7 @@ Person person = new Person("John Doe", 1957);
 
 // Loads the values from the person instance
 // Sets person to be updated when any bound field is updated
-binder.bind(person);
+binder.setBean(person);
 
 Button saveButton = new Button("Save", event -> {
   if (binder.isValid()) {
@@ -452,24 +452,6 @@ Button saveButton = new Button("Save", event -> {
 [WARNING]
 When using the [methodname]#bind# method, the business object instance will be updated whenever the user changes the value in any bound field.
 If some other part of the application is also using the same instance, then that part might show changes before the user has clicked the save button.
-
-The [methodname]#bind# method returns an [interfacename]#ItemBinding# instance that we can use to further configure the binding.
-We can change the binding to use a different business object, cancel the binding, or change whether a validation error prevents other values from being saved.
-
-[source, java]
-----
-ItemBinding<Person> binding = binder.bind(person);
-
-// Makes the binding save new values for valid fields even if
-// other fields are invalid
-binding.setSaveWhenInvalid(true);
-
-// Field changes will update anotherPerson instead of person
-binding.bind(anotherPerson);
-
-// Field changes will no longer update any person instance
-binding.cancel();
-----
 
 == Binding Beans to Forms
 
@@ -612,12 +594,12 @@ binder.forField(phoneField).bind("phone");
 
 Person person = // e.g. JPA entity or bean from Grid
 // Load person data to a form
-binder.load(person);
+binder.readBean(person);
 
 Button saveButton = new Button("Save", event -> {
   // Using saveIfValid to avoid the try-catch block that is
   // needed if using the regular save method
-  if (binder.saveIfValid(person)) {
+  if (binder.writeBeanIfValid(person)) {
     // Person is valid and updated
     // TODO Store in the database
   }
@@ -672,10 +654,10 @@ public class PersonForm extends PersonFormDesign {
   public PersonForm(Person person) {
     binder.bindInstanceFields(this);
 
-    binder.load(person);
+    binder.readBean(person);
 
     save.addClickListener(event -> {
-      if (binder.saveIfValid(person)) {
+      if (binder.writeBeanIfValid(person)) {
         // TODO: Do something with the updated person instance
       }
     });

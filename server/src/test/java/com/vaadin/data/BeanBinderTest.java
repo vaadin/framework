@@ -24,14 +24,14 @@ public class BeanBinderTest
     @Test
     public void fieldBound_bindBean_fieldValueUpdated() {
         binder.bind(nameField, "firstname");
-        binder.bind(item);
+        binder.setBean(item);
 
         assertEquals("Johannes", nameField.getValue());
     }
 
     @Test
     public void beanBound_bindField_fieldValueUpdated() {
-        binder.bind(item);
+        binder.setBean(item);
         binder.bind(nameField, "firstname");
 
         assertEquals("Johannes", nameField.getValue());
@@ -54,7 +54,7 @@ public class BeanBinderTest
 
     @Test
     public void beanBound_setValidFieldValue_propertyValueChanged() {
-        binder.bind(item);
+        binder.setBean(item);
         binder.bind(nameField, "firstname");
 
         nameField.setValue("Henri");
@@ -65,7 +65,7 @@ public class BeanBinderTest
     @Test
     public void readOnlyPropertyBound_setFieldValue_ignored() {
         binder.bind(nameField, "readOnlyProperty");
-        binder.bind(item);
+        binder.setBean(item);
 
         String propertyValue = item.getReadOnlyProperty();
         nameField.setValue("Foo");
@@ -75,7 +75,7 @@ public class BeanBinderTest
 
     @Test
     public void beanBound_setInvalidFieldValue_validationError() {
-        binder.bind(item);
+        binder.setBean(item);
         binder.bind(nameField, "firstname");
 
         nameField.setValue("H"); // too short
@@ -116,13 +116,13 @@ public class BeanBinderTest
     @Test(expected = ClassCastException.class)
     public void fieldWithIncompatibleTypeBound_bindBean_throws() {
         binder.bind(ageField, "age");
-        binder.bind(item);
+        binder.setBean(item);
     }
 
     @Test(expected = ClassCastException.class)
     public void fieldWithIncompatibleTypeBound_loadBean_throws() {
         binder.bind(ageField, "age");
-        binder.load(item);
+        binder.readBean(item);
     }
 
     @Test(expected = ClassCastException.class)
@@ -130,7 +130,7 @@ public class BeanBinderTest
             throws Throwable {
         try {
             binder.bind(ageField, "age");
-            binder.save(item);
+            binder.writeBean(item);
         } catch (RuntimeException e) {
             throw e.getCause();
         }
@@ -140,7 +140,7 @@ public class BeanBinderTest
     public void fieldWithConverterBound_bindBean_fieldValueUpdated() {
         binder.forField(ageField)
                 .withConverter(Integer::valueOf, String::valueOf).bind("age");
-        binder.bind(item);
+        binder.setBean(item);
 
         assertEquals("32", ageField.getValue());
     }
@@ -149,7 +149,7 @@ public class BeanBinderTest
     public void fieldWithInvalidConverterBound_bindBean_fieldValueUpdated() {
         binder.forField(ageField).withConverter(Float::valueOf, String::valueOf)
                 .bind("age");
-        binder.bind(item);
+        binder.setBean(item);
 
         assertEquals("32", ageField.getValue());
     }
@@ -158,7 +158,7 @@ public class BeanBinderTest
     public void beanBinderWithBoxedType() {
         binder.forField(ageField)
                 .withConverter(Integer::valueOf, String::valueOf).bind("age");
-        binder.bind(item);
+        binder.setBean(item);
 
         ageField.setValue(String.valueOf(20));
         assertEquals(20, item.getAge());

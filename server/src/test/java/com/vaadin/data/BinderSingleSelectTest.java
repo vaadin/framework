@@ -42,7 +42,7 @@ public class BinderSingleSelectTest
     @Test
     public void personBound_bindSelectByShortcut_selectionUpdated() {
         item.setSex(Sex.FEMALE);
-        binder.bind(item);
+        binder.setBean(item);
         binder.bind(select, Person::getSex, Person::setSex);
 
         assertSame(Sex.FEMALE, select.getSelectedItem().orElse(null));
@@ -51,7 +51,7 @@ public class BinderSingleSelectTest
     @Test
     public void personBound_bindSelect_selectionUpdated() {
         item.setSex(Sex.MALE);
-        binder.bind(item);
+        binder.setBean(item);
         binder.forField(select).bind(Person::getSex, Person::setSex);
 
         assertSame(Sex.MALE, select.getSelectedItem().orElse(null));
@@ -95,7 +95,7 @@ public class BinderSingleSelectTest
     public void unbound_changeSelection_beanValueNotUpdated() {
         item.setSex(Sex.UNKNOWN);
         bindSex();
-        binder.unbind();
+        binder.removeBean();
 
         select.select(Sex.FEMALE);
 
@@ -104,6 +104,6 @@ public class BinderSingleSelectTest
 
     protected void bindSex() {
         binder.forField(select).bind(Person::getSex, Person::setSex);
-        binder.bind(item);
+        binder.setBean(item);
     }
 }

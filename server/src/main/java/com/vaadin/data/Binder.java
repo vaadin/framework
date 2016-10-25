@@ -63,14 +63,14 @@ import com.vaadin.ui.UI;
  * Bean level validators can be added using the
  * {@link #withValidator(Validator)} method and will be run on the bound bean
  * once it has been updated from the values of the bound fields. Bean level
- * validators are also run as part of {@link #save(Object)} and
- * {@link #saveIfValid(Object)} if all field level validators pass.
+ * validators are also run as part of {@link #writeBean(Object)} and
+ * {@link #writeBeanIfValid(Object)} if all field level validators pass.
  * <p>
  * Note: For bean level validators, the bean must be updated before the
- * validators are run. If a bean level validator fails in {@link #save(Object)}
- * or {@link #saveIfValid(Object)}, the bean will be reverted to the previous
- * state before returning from the method. You should ensure that the
- * getters/setters in the bean do not have side effects.
+ * validators are run. If a bean level validator fails in
+ * {@link #writeBean(Object)} or {@link #writeBeanIfValid(Object)}, the bean
+ * will be reverted to the previous state before returning from the method. You
+ * should ensure that the getters/setters in the bean do not have side effects.
  * <p>
  * Unless otherwise specified, {@code Binder} method arguments cannot be null.
  *
@@ -107,11 +107,11 @@ public class Binder<BEAN> implements Serializable {
          * update the field value from the property and to store the field value
          * to the property, respectively.
          * <p>
-         * When a bean is bound with {@link Binder#bind(BEAN)}, the field value
-         * is set to the return value of the given getter. The property value is
-         * then updated via the given setter whenever the field value changes.
-         * The setter may be null; in that case the property value is never
-         * updated and the binding is said to be <i>read-only</i>.
+         * When a bean is bound with {@link Binder#setBean(BEAN)}, the field
+         * value is set to the return value of the given getter. The property
+         * value is then updated via the given setter whenever the field value
+         * changes. The setter may be null; in that case the property value is
+         * never updated and the binding is said to be <i>read-only</i>.
          * <p>
          * If the Binder is already bound to some bean, the newly bound field is
          * associated with the corresponding bean property as described above.
@@ -135,7 +135,7 @@ public class Binder<BEAN> implements Serializable {
          *            the function to get the value of the property to the
          *            field, not null
          * @param setter
-         *            the function to save the field value to the property or
+         *            the function to write the field value to the property or
          *            null if read-only
          * @throws IllegalStateException
          *             if {@code bind} has already been called on this binding
@@ -145,7 +145,7 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Adds a validator to this binding. Validators are applied, in
-         * registration order, when the field value is saved to the backing
+         * registration order, when the field value is written to the backing
          * property. If any validator returns a failure, the property value is
          * not updated.
          *
@@ -163,8 +163,8 @@ public class Binder<BEAN> implements Serializable {
          * {@link Validator#from(SerializablePredicate, String)} factory method.
          * <p>
          * Validators are applied, in registration order, when the field value
-         * is saved to the backing property. If any validator returns a failure,
-         * the property value is not updated.
+         * is written to the backing property. If any validator returns a
+         * failure, the property value is not updated.
          *
          * @see #withValidator(Validator)
          * @see Validator#from(SerializablePredicate, String)
@@ -500,9 +500,9 @@ public class Binder<BEAN> implements Serializable {
          * <p>
          * The method {@link #withConverter(Converter)} calls this method with
          * {@code true} provided as the second argument value.
-         * 
+         *
          * @see #withConverter(Converter)
-         * 
+         *
          * @param converter
          *            the converter to use, not null
          * @param resetNullRepresentation
@@ -613,7 +613,7 @@ public class Binder<BEAN> implements Serializable {
             return new ValueContext(findLocale());
         }
 
-        private void unbind() {
+        private void reset() {
             onValueChange.remove();
         }
 
@@ -643,7 +643,7 @@ public class Binder<BEAN> implements Serializable {
         private void handleFieldValueChange(BEAN bean) {
             getBinder().setHasChanges(true);
             // store field value if valid
-            ValidationStatus<TARGET> fieldValidationStatus = storeFieldValue(
+            ValidationStatus<TARGET> fieldValidationStatus = writeFieldValue(
                     bean);
             List<Result<?>> binderValidationResults;
             // if all field level validations pass, run bean level validation
@@ -661,13 +661,13 @@ public class Binder<BEAN> implements Serializable {
         }
 
         /**
-         * Saves the field value by invoking the setter function on the given
+         * Write the field value by invoking the setter function on the given
          * bean, if the value passes all registered validators.
          *
          * @param bean
          *            the bean to set the property value to
          */
-        private ValidationStatus<TARGET> storeFieldValue(BEAN bean) {
+        private ValidationStatus<TARGET> writeFieldValue(BEAN bean) {
             assert bean != null;
 
             ValidationStatus<TARGET> validationStatus = doValidation();
@@ -838,11 +838,11 @@ public class Binder<BEAN> implements Serializable {
      * {@link #forField(HasValue)} and
      * {@link Binding#withNullRepresentation(Object))}.
      * <p>
-     * When a bean is bound with {@link Binder#bind(BEAN)}, the field value is
-     * set to the return value of the given getter. The property value is then
-     * updated via the given setter whenever the field value changes. The setter
-     * may be null; in that case the property value is never updated and the
-     * binding is said to be <i>read-only</i>.
+     * When a bean is bound with {@link Binder#setBean(BEAN)}, the field value
+     * is set to the return value of the given getter. The property value is
+     * then updated via the given setter whenever the field value changes. The
+     * setter may be null; in that case the property value is never updated and
+     * the binding is said to be <i>read-only</i>.
      * <p>
      * If the Binder is already bound to some bean, the newly bound field is
      * associated with the corresponding bean property as described above.
@@ -870,7 +870,7 @@ public class Binder<BEAN> implements Serializable {
      *            the function to get the value of the property to the field,
      *            not null
      * @param setter
-     *            the function to save the field value to the property or null
+     *            the function to write the field value to the property or null
      *            if read-only
      */
     public <FIELDVALUE> void bind(HasValue<FIELDVALUE> field,
@@ -880,8 +880,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Binds the given bean to all the fields added to this Binder. To remove
-     * the binding, call {@link #unbind()}.
+     * Binds the given bean to all the fields added to this Binder. A
+     * {@code null} value removes a currently bound bean.
      * <p>
      * When a bean is bound, the field values are updated by invoking their
      * corresponding getter functions. Any changes to field values are reflected
@@ -892,31 +892,39 @@ public class Binder<BEAN> implements Serializable {
      * {@link Binding} and bean level validation for this binder (bean level
      * validators are added using {@link Binder#withValidator(Validator)}.
      *
-     * @see #load(Object)
-     * @see #save(Object)
-     * @see #saveIfValid(Object)
+     * @see #readBean(Object)
+     * @see #writeBean(Object)
+     * @see #writeBeanIfValid(Object)
      *
      * @param bean
-     *            the bean to edit, not null
+     *            the bean to edit, or {@code null} to remove a currently bound
+     *            bean
      */
-    public void bind(BEAN bean) {
-        Objects.requireNonNull(bean, "bean cannot be null");
-        doUnbind(false);
-        this.bean = bean;
-        bindings.forEach(b -> b.bind(bean));
-        // if there has been field value change listeners that trigger
-        // validation, need to make sure the validation errors are cleared
-        getValidationStatusHandler()
-                .accept(BinderValidationStatus.createUnresolvedStatus(this));
-        fireStatusChangeEvent(false);
+    public void setBean(BEAN bean) {
+        if (bean == null) {
+            if (this.bean != null) {
+                doRemoveBean(true);
+            }
+        } else {
+            doRemoveBean(false);
+            this.bean = bean;
+            bindings.forEach(b -> b.bind(bean));
+            // if there has been field value change listeners that trigger
+            // validation, need to make sure the validation errors are cleared
+            getValidationStatusHandler().accept(
+                    BinderValidationStatus.createUnresolvedStatus(this));
+            fireStatusChangeEvent(false);
+        }
     }
 
     /**
-     * Unbinds the currently bound bean if any. If there is no bound bean, does
+     * Removes the currently set bean, if any. If there is no bound bean, does
      * nothing.
+     * <p>
+     * This is a shorthand for {@link #setBean(Object)} with {@code null} bean.
      */
-    public void unbind() {
-        doUnbind(true);
+    public void removeBean() {
+        setBean(null);
     }
 
     /**
@@ -925,16 +933,16 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * The bean is not otherwise associated with this binder; in particular its
      * property values are not bound to the field value changes. To achieve
-     * that, use {@link #bind(BEAN)}.
+     * that, use {@link #setBean(BEAN)}.
      *
-     * @see #bind(Object)
-     * @see #saveIfValid(Object)
-     * @see #save(Object)
+     * @see #setBean(Object)
+     * @see #writeBeanIfValid(Object)
+     * @see #writeBean(Object)
      *
      * @param bean
      *            the bean whose property values to read, not null
      */
-    public void load(BEAN bean) {
+    public void readBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
         setHasChanges(false);
         bindings.forEach(binding -> binding.setFieldValue(bean));
@@ -945,10 +953,10 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Saves changes from the bound fields to the given bean if all validators
+     * Writes changes from the bound fields to the given bean if all validators
      * (binding and bean level) pass.
      * <p>
-     * If any field binding validator fails, no values are saved and a
+     * If any field binding validator fails, no values are written and a
      * {@code ValidationException} is thrown.
      * <p>
      * If all field level validators pass, the given bean is updated and bean
@@ -956,17 +964,18 @@ public class Binder<BEAN> implements Serializable {
      * fails, the bean updates are reverted and a {@code ValidationException} is
      * thrown.
      *
-     * @see #saveIfValid(Object)
-     * @see #load(Object)
-     * @see #bind(Object)
+     * @see #writeBeanIfValid(Object)
+     * @see #readBean(Object)
+     * @see #setBean(Object)
      *
      * @param bean
-     *            the object to which to save the field values, not null
+     *            the object to which to write the field values, not
+     *            {@code null}
      * @throws ValidationException
      *             if some of the bound field values fail to validate
      */
-    public void save(BEAN bean) throws ValidationException {
-        BinderValidationStatus<BEAN> status = doSaveIfValid(bean);
+    public void writeBean(BEAN bean) throws ValidationException {
+        BinderValidationStatus<BEAN> status = doWriteIfValid(bean);
         if (status.hasErrors()) {
             throw new ValidationException(status.getFieldValidationErrors(),
                     status.getBeanValidationErrors());
@@ -974,40 +983,41 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Saves changes from the bound fields to the given bean if all validators
+     * Writes changes from the bound fields to the given bean if all validators
      * (binding and bean level) pass.
      * <p>
-     * If any field binding validator fails, no values are saved and
+     * If any field binding validator fails, no values are written and
      * <code>false</code> is returned.
      * <p>
      * If all field level validators pass, the given bean is updated and bean
      * level validators are run on the updated bean. If any bean level validator
      * fails, the bean updates are reverted and <code>false</code> is returned.
      *
-     * @see #save(Object)
-     * @see #load(Object)
-     * @see #bind(Object)
+     * @see #writeBean(Object)
+     * @see #readBean(Object)
+     * @see #setBean(Object)
      *
      * @param bean
-     *            the object to which to save the field values, not null
+     *            the object to which to write the field values, not
+     *            {@code null}
      * @return {@code true} if there was no validation errors and the bean was
      *         updated, {@code false} otherwise
      */
-    public boolean saveIfValid(BEAN bean) {
-        return doSaveIfValid(bean).isOk();
+    public boolean writeBeanIfValid(BEAN bean) {
+        return doWriteIfValid(bean).isOk();
     }
 
     /**
-     * Saves the field values into the given bean if all field level validators
-     * pass. Runs bean level validators on the bean after saving.
+     * Writes the field values into the given bean if all field level validators
+     * pass. Runs bean level validators on the bean after writing.
      *
      * @param bean
-     *            the bean to save field values into
+     *            the bean to write field values into
      * @return a list of field validation errors if such occur, otherwise a list
      *         of bean validation errors.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private BinderValidationStatus<BEAN> doSaveIfValid(BEAN bean) {
+    private BinderValidationStatus<BEAN> doWriteIfValid(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
         // First run fields level validation
         List<ValidationStatus<?>> bindingStatuses = validateBindings();
@@ -1019,12 +1029,12 @@ public class Binder<BEAN> implements Serializable {
                     Collections.emptyList());
         }
 
-        // Save old bean values so we can restore them if validators fail
+        // Store old bean values so we can restore them if validators fail
         Map<Binding<BEAN, ?, ?>, Object> oldValues = new HashMap<>();
         bindings.forEach(
                 binding -> oldValues.put(binding, binding.getter.apply(bean)));
 
-        bindings.forEach(binding -> binding.storeFieldValue(bean));
+        bindings.forEach(binding -> binding.writeFieldValue(bean));
         // Now run bean level validation against the updated bean
         List<Result<?>> binderResults = validateBean(bean);
         boolean hasErrors = binderResults.stream().filter(Result::isError)
@@ -1034,7 +1044,7 @@ public class Binder<BEAN> implements Serializable {
             bindings.forEach((BindingImpl binding) -> binding.setter
                     .accept(bean, oldValues.get(binding)));
         } else {
-            // Save successful, reset hasChanges to false
+            // Write successful, reset hasChanges to false
             setHasChanges(false);
         }
         fireStatusChangeEvent(hasErrors);
@@ -1049,8 +1059,8 @@ public class Binder<BEAN> implements Serializable {
      * updated. If the validators fail, the bean instance is reverted to its
      * previous state.
      *
-     * @see #save(Object)
-     * @see #saveIfValid(Object)
+     * @see #writeBean(Object)
+     * @see #writeBeanIfValid(Object)
      *
      * @param validator
      *            the validator to add, not null
@@ -1066,7 +1076,7 @@ public class Binder<BEAN> implements Serializable {
      * Validates the values of all bound fields and returns the validation
      * status.
      * <p>
-     * If all field level validators pass, and {@link #bind(Object)} has been
+     * If all field level validators pass, and {@link #setBean(Object)} has been
      * used to bind to a bean, bean level validators are run for that bean. Bean
      * level validators are ignored if there is no bound bean or if any field
      * level validator fails.
@@ -1218,20 +1228,21 @@ public class Binder<BEAN> implements Serializable {
      * happens:
      * <ul>
      * <li>if it's bound and any of its bound field or select has been changed
-     * <li>{@link #save(Object)} or {@link #saveIfValid(Object)} is called
-     * <li>{@link #load(Object)} is called
-     * <li>{@link #bind(Object)} is called
-     * <li>{@link #unbind(Object)} is called
+     * <li>{@link #writeBean(Object)} or {@link #writeBeanIfValid(Object)} is
+     * called
+     * <li>{@link #readBean(Object)} is called
+     * <li>{@link #setBean(Object)} is called
+     * <li>{@link #removeBean()} is called
      * <li>{@link Binding#bind(SerializableFunction, SerializableBiConsumer)} is
      * called
      * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
      * </ul>
      *
-     * @see #load(Object)
-     * @see #save(Object)
-     * @see #saveIfValid(Object)
-     * @see #bind(Object)
-     * @see #unbind()
+     * @see #readBean(Object)
+     * @see #writeBean(Object)
+     * @see #writeBeanIfValid(Object)
+     * @see #setBean(Object)
+     * @see #removeBean()
      * @see #forField(HasValue)
      * @see #forSelect(AbstractMultiSelect)
      * @See {@link #validate()}
@@ -1287,7 +1298,7 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Handles a validation error emitted when trying to save the value of the
+     * Handles a validation error emitted when trying to write the value of the
      * given field. The default implementation sets the
      * {@link AbstractComponent#setComponentError(ErrorMessage) component error}
      * of the field if it is a Component, otherwise does nothing.
@@ -1356,7 +1367,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Sets whether the values of the fields this binder is bound to have
-     * changed since the last explicit call to either bind, save or load.
+     * changed since the last explicit call to either bind, write or read.
      *
      * @param hasChanges
      *            whether this binder should be marked to have changes
@@ -1367,11 +1378,12 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Check whether any of the bound fields' values have changed since last
-     * explicit call to bind, save or load. Unsuccessful save operations will
-     * not affect this value.
+     * explicit call to {@link #setBean(Object)}, {@link #writeBean(Object)} or
+     * {@link #readBean(Object)}. Unsuccessful write operations will not affect
+     * this value.
      *
      * @return whether any bound field's value has changed since last call to
-     *         bind, save or load
+     *         setBean, writeBean or readBean
      */
     public boolean hasChanges() {
         return hasChanges;
@@ -1389,11 +1401,11 @@ public class Binder<BEAN> implements Serializable {
         return eventRouter;
     }
 
-    private void doUnbind(boolean fireStatusEvent) {
+    private void doRemoveBean(boolean fireStatusEvent) {
         setHasChanges(false);
         if (bean != null) {
             bean = null;
-            bindings.forEach(BindingImpl::unbind);
+            bindings.forEach(BindingImpl::reset);
         }
         getValidationStatusHandler()
                 .accept(BinderValidationStatus.createUnresolvedStatus(this));

@@ -3,6 +3,7 @@ package com.vaadin.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Objects;
 
@@ -26,9 +27,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         item.setAge(32);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void bindNullBean_throws() {
-        binder.bind(null);
+    @Test
+    public void bindNullBean_noBeanPresent() {
+        binder.setBean(item);
+        assertTrue(binder.getBean().isPresent());
+
+        binder.setBean(null);
+        assertFalse(binder.getBean().isPresent());
     }
 
     @Test(expected = NullPointerException.class)
@@ -45,7 +50,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void fieldBound_bindItem_fieldValueUpdated() {
         binder.forField(nameField).bind(Person::getFirstName,
                 Person::setFirstName);
-        binder.bind(item);
+        binder.setBean(item);
         assertEquals("Johannes", nameField.getValue());
     }
 
@@ -57,7 +62,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     @Test
     public void beanBound_updateFieldValue_beanValueUpdated() {
-        binder.bind(item);
+        binder.setBean(item);
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
 
         assertEquals("Johannes", nameField.getValue());
@@ -68,14 +73,14 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void bound_getBean_returnsBoundBean() {
         assertFalse(binder.getBean().isPresent());
-        binder.bind(item);
+        binder.setBean(item);
         assertSame(item, binder.getBean().get());
     }
 
     @Test
     public void unbound_getBean_returnsNothing() {
-        binder.bind(item);
-        binder.unbind();
+        binder.setBean(item);
+        binder.removeBean();
         assertFalse(binder.getBean().isPresent());
     }
 
@@ -90,7 +95,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void unbound_changeFieldValue_beanValueNotUpdated() {
         bindName();
         nameField.setValue("Henri");
-        binder.unbind();
+        binder.removeBean();
         nameField.setValue("Aleksi");
         assertEquals("Henri", item.getFirstName());
     }
@@ -98,7 +103,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void bindNullSetter_valueChangesIgnored() {
         binder.bind(nameField, Person::getFirstName, null);
-        binder.bind(item);
+        binder.setBean(item);
         nameField.setValue("Artur");
         assertEquals(item.getFirstName(), "Johannes");
     }
@@ -110,7 +115,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         Person p2 = new Person();
         p2.setFirstName("Marlon");
-        binder.bind(p2);
+        binder.setBean(p2);
         assertEquals("Marlon", nameField.getValue());
         assertEquals("Leif", item.getFirstName());
         assertSame(p2, binder.getBean().get());
@@ -128,7 +133,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         int age = 10;
         person.setAge(age);
 
-        binder.save(person);
+        binder.writeBean(person);
 
         Assert.assertEquals(age, person.getAge());
     }
@@ -145,7 +150,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         person.setFirstName("foo");
 
-        binder.save(person);
+        binder.writeBean(person);
 
         Assert.assertEquals(fieldValue, person.getFirstName());
     }
@@ -158,7 +163,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         String name = "bar";
         person.setFirstName(name);
-        binder.load(person);
+        binder.readBean(person);
 
         Assert.assertEquals(name, nameField.getValue());
     }
@@ -171,14 +176,14 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         String name = "bar";
         person.setFirstName(name);
-        binder.load(person);
+        binder.readBean(person);
 
         Assert.assertEquals("", nameField.getValue());
     }
 
     protected void bindName() {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
-        binder.bind(item);
+        binder.setBean(item);
     }
 
     @Test
@@ -193,7 +198,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         // Bind a person with null value and check that null representation is
         // used
-        binder.bind(namelessPerson);
+        binder.setBean(namelessPerson);
         Assert.assertEquals(
                 "Null value from bean was not converted to explicit null representation",
                 nullRepresentation, nameField.getValue());
@@ -223,7 +228,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Person namelessPerson = new Person(null, "Doe", "", 25, Sex.UNKNOWN,
                 null);
         binder.bind(nullTextField, Person::getFirstName, Person::setFirstName);
-        binder.bind(namelessPerson);
+        binder.setBean(namelessPerson);
 
         Assert.assertTrue(nullTextField.isEmpty());
         Assert.assertEquals(null, namelessPerson.getFirstName());
@@ -250,7 +255,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         Assert.assertFalse("First name in item should not be null",
                 Objects.isNull(item.getFirstName()));
-        binder.bind(item);
+        binder.setBean(item);
 
         Assert.assertEquals("Field value was not set correctly",
                 item.getFirstName(), nameField.getValue());
@@ -264,7 +269,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withConverter(age -> age,
                         age -> age == null ? customNullConverter : age)
                 .bind(Person::getSalary, Person::setSalary);
-        binder.bind(item);
+        binder.setBean(item);
 
         Assert.assertEquals(customNullConverter.toString(),
                 ageField.getValue());
@@ -280,7 +285,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.forField(nameField).bind("firstName");
 
         Person person = new Person();
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals("", nameField.getValue());
     }
@@ -295,7 +300,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind("firstName");
 
         Person person = new Person();
-        binder.bind(person);
+        binder.setBean(person);
 
         Assert.assertEquals(customNullPointerRepresentation,
                 nameField.getValue());
@@ -308,7 +313,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withValidator(new NotNullValidator(""))
                 .bind(Person::getFirstName, Person::setFirstName);
         item.setFirstName(null);
-        binder.bind(item);
+        binder.setBean(item);
 
         Assert.assertEquals(nullRepresentation, nameField.getValue());
 

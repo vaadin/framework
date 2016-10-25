@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Indicates validation errors in a {@link Binder} when save is requested.
+ * Indicates validation errors in a {@link Binder} when a field value is
+ * validated.
  *
- * @see Binder#save(Object)
+ * @see Binder#writeBean(Object)
+ * @see Binder#writeBeanIfValid(Object)
  *
  * @author Vaadin Ltd
  * @since 8.0

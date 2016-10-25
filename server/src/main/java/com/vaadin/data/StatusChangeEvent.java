@@ -16,10 +16,10 @@
 package com.vaadin.data;
 
 import java.util.EventObject;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.server.SerializableBiConsumer;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * Binder status change event.
@@ -27,17 +27,19 @@ import com.vaadin.data.Binder.Binding;
  * The {@link Binder} status is changed whenever any of the following happens:
  * <ul>
  * <li>if it's bound and any of its bound field or select has been changed
- * <li>{@link #save(Object)} or {@link #saveIfValid(Object)} is called
- * <li>{@link #load(Object)} is called
- * <li>{@link #bind(Object)} is called
- * <li>{@link #unbind(Object)} is called
- * <li>{@link Binding#bind(Function, BiConsumer)} is called
+ * <li>{@link Binder#writeBean(Object)} or
+ * {@link Binder#writeBeanIfValid(Object)} is called
+ * <li>{@link Binder#readBean(Object)} is called
+ * <li>{@link Binder#setBean(Object)} is called
+ * <li>{@link Binder#removeBean()} is called
+ * <li>{@link Binding#bind(SerializableFunction, SerializableBiConsumer)} is
+ * called
  * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
  * </ul>
- * 
+ *
  * @see StatusChangeListener#statusChange(StatusChangeEvent)
  * @see Binder#addStatusChangeListener(StatusChangeListener)
- * 
+ *
  * @author Vaadin Ltd
  *
  */
@@ -48,7 +50,7 @@ public class StatusChangeEvent extends EventObject {
     /**
      * Create a new status change event for given {@code binder} using its
      * current validation status.
-     * 
+     *
      * @param binder
      *            the event source binder
      * @param hasValidationErrors
@@ -61,7 +63,7 @@ public class StatusChangeEvent extends EventObject {
 
     /**
      * Gets the binder validation status.
-     * 
+     *
      * @return {@code true} if the binder has validation errors, {@code false}
      *         otherwise
      */
@@ -76,7 +78,7 @@ public class StatusChangeEvent extends EventObject {
 
     /**
      * Gets the binder.
-     * 
+     *
      * @return the binder
      */
     public Binder<?> getBinder() {
