@@ -17,16 +17,17 @@ package com.vaadin.client.ui;
 
 import java.util.Objects;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.user.client.ui.ListBox;
+import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 
 /**
  * The client-side widget for the {@code NativeSelect} component.
  *
  * @author Vaadin Ltd.
  */
-public class VNativeSelect extends Composite {
+public class VNativeSelect extends FocusableFlowPanelComposite
+        implements HasAllFocusHandlers {
 
     private final ListBox listBox = new ListBox();
 
@@ -34,9 +35,7 @@ public class VNativeSelect extends Composite {
      * Creates a new {@code VNativeSelect} instance.
      */
     public VNativeSelect() {
-        FlowPanel panel = new FlowPanel();
-        panel.add(listBox);
-        initWidget(panel);
+        getWidget().add(listBox);
     }
 
     /**

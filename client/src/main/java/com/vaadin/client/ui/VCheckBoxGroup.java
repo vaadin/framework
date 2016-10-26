@@ -23,19 +23,14 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.google.gwt.aria.client.Roles;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasAllFocusHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.widgets.ChildFocusAwareFlowPanel;
+import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ListingJsonConstants;
 
@@ -47,8 +42,8 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
-        com.vaadin.client.Focusable, HasEnabled, HasAllFocusHandlers {
+public class VCheckBoxGroup extends FocusableFlowPanelComposite implements
+        Field, ClickHandler, com.vaadin.client.Focusable, HasEnabled {
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
@@ -60,14 +55,6 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
      */
     public ApplicationConnection client;
 
-    /**
-     * Widget holding the different options (e.g. ListBox or Panel for radio
-     * buttons) (optional, fallbacks to container Panel)
-     * <p>
-     * For internal use only. May be removed or replaced in the future.
-     */
-    private ChildFocusAwareFlowPanel optionsContainer;
-
     private boolean htmlContentAllowed = false;
 
     private boolean enabled;
@@ -75,9 +62,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
     private List<BiConsumer<JsonObject, Boolean>> selectionChangeListeners;
 
     public VCheckBoxGroup() {
-        optionsContainer = new ChildFocusAwareFlowPanel();
-        initWidget(optionsContainer);
-        optionsContainer.setStyleName(CLASSNAME);
+        getWidget().setStyleName(CLASSNAME);
         optionsToItems = new HashMap<>();
         selectionChangeListeners = new ArrayList<>();
     }
@@ -88,12 +73,12 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
     public void buildOptions(List<JsonObject> items) {
         Roles.getGroupRole().set(getElement());
         int i = 0;
-        int widgetsToRemove = optionsContainer.getWidgetCount() - items.size();
+        int widgetsToRemove = getWidget().getWidgetCount() - items.size();
         if (widgetsToRemove < 0) {
             widgetsToRemove = 0;
         }
         List<Widget> remove = new ArrayList<>(widgetsToRemove);
-        for (Widget widget : optionsContainer) {
+        for (Widget widget : getWidget()) {
             if (i < items.size()) {
                 updateItem((VCheckBox) widget, items.get(i), false);
                 i++;
@@ -109,7 +94,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
     }
 
     private void remove(Widget widget) {
-        optionsContainer.remove(widget);
+        getWidget().remove(widget);
         optionsToItems.remove(widget);
     }
 
@@ -135,7 +120,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
         if (requireInitializations) {
             widget.addStyleName(CLASSNAME_OPTION);
             widget.addClickHandler(this);
-            optionsContainer.add(widget);
+            getWidget().add(widget);
         }
         optionsToItems.put(widget, item);
     }
@@ -161,7 +146,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
     }
 
     public void setTabIndex(int tabIndex) {
-        for (Widget anOptionsContainer : optionsContainer) {
+        for (Widget anOptionsContainer : getWidget()) {
             FocusWidget widget = (FocusWidget) anOptionsContainer;
             widget.setTabIndex(tabIndex);
         }
@@ -185,7 +170,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
 
     @Override
     public void focus() {
-        optionsContainer.focus();
+        getWidget().focus();
     }
 
     public boolean isHtmlContentAllowed() {
@@ -227,13 +212,4 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
                 .remove(selectionChanged);
     }
 
-    @Override
-    public HandlerRegistration addFocusHandler(FocusHandler handler) {
-        return optionsContainer.addFocusHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addBlurHandler(BlurHandler handler) {
-        return optionsContainer.addBlurHandler(handler);
-    }
 }

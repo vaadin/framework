@@ -18,7 +18,15 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.data.DataSource;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.nativeselect.NativeSelectState;
 
@@ -34,14 +42,16 @@ import com.vaadin.shared.ui.nativeselect.NativeSelectState;
  * 
  * @see com.vaadin.ui.ComboBox
  */
-public class NativeSelect<T> extends AbstractSingleSelect<T> {
+public class NativeSelect<T> extends AbstractSingleSelect<T>
+        implements FocusNotifier, BlurNotifier {
 
     /**
      * Creates a new {@code NativeSelect} with an empty caption and no items.
      */
     public NativeSelect() {
-        addDataGenerator((item, json) -> json.put(
-                DataCommunicatorConstants.DATA, String.valueOf(item)));
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
+        addDataGenerator((item, json) -> json
+                .put(DataCommunicatorConstants.DATA, String.valueOf(item)));
 
         setSelectionModel(new SimpleSingleSelection());
     }
@@ -83,6 +93,34 @@ public class NativeSelect<T> extends AbstractSingleSelect<T> {
     public NativeSelect(String caption, DataSource<T> dataSource) {
         this(caption);
         setDataSource(dataSource);
+    }
+
+    @Override
+    public Registration addFocusListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    @Override
+    public Registration addBlurListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeBlurListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
     @Override

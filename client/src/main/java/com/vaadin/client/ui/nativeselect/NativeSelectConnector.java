@@ -18,7 +18,7 @@ package com.vaadin.client.ui.nativeselect;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.annotations.OnStateChange;
-import com.vaadin.client.connectors.AbstractListingConnector;
+import com.vaadin.client.connectors.AbstractFocusableListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.VNativeSelect;
 import com.vaadin.shared.Range;
@@ -41,8 +41,8 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 @Connect(com.vaadin.ui.NativeSelect.class)
-public class NativeSelectConnector
-        extends AbstractListingConnector<SelectionModel.Single<?>> {
+public class NativeSelectConnector extends
+        AbstractFocusableListingConnector<VNativeSelect, SelectionModel.Single<?>> {
 
     private HandlerRegistration selectionChangeRegistration;
     private Registration dataChangeRegistration;
@@ -65,11 +65,6 @@ public class NativeSelectConnector
         super.onUnregister();
         selectionChangeRegistration.removeHandler();
         selectionChangeRegistration = null;
-    }
-
-    @Override
-    public VNativeSelect getWidget() {
-        return (VNativeSelect) super.getWidget();
     }
 
     @Override
