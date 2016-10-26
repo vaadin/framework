@@ -31,7 +31,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -720,25 +719,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private boolean serveStaticResources(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
-        String pathInfo = request.getPathInfo();
-        if (pathInfo == null) {
-            return false;
-        }
-
-        String decodedRequestURI = URLDecoder.decode(request.getRequestURI(),
-                "UTF-8");
-        if ((request.getContextPath() != null)
-                && (decodedRequestURI.startsWith("/VAADIN/"))) {
-            serveStaticResourcesInVAADIN(decodedRequestURI, request, response);
-            return true;
-        }
-
-        String decodedContextPath = URLDecoder.decode(request.getContextPath(),
-                "UTF-8");
-        if (decodedRequestURI.startsWith(decodedContextPath + "/VAADIN/")) {
-            serveStaticResourcesInVAADIN(
-                    decodedRequestURI.substring(decodedContextPath.length()),
-                    request, response);
+        String filePath = getStaticFilePath(request);
+        if (filePath != null) {
+            serveStaticResourcesInVAADIN(filePath, request, response);
             return true;
         }
 
@@ -1284,8 +1267,25 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     protected boolean isStaticResourceRequest(HttpServletRequest request) {
-        return request.getRequestURI()
-                .startsWith(request.getContextPath() + "/VAADIN/");
+        return getStaticFilePath(request) != null;
+    }
+
+    protected String getStaticFilePath(HttpServletRequest request) {
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null) {
+            return null;
+        }
+        // Servlet mapped as /* serves at /VAADIN
+        // Servlet mapped as /foo/bar/* serves at /foo/bar/VAADIN
+        if (pathInfo.startsWith("/VAADIN/")) {
+            return pathInfo;
+        }
+        String servletPrefixedPath = request.getServletPath() + pathInfo;
+        // Servlet mapped as /VAADIN/*
+        if (servletPrefixedPath.startsWith("/VAADIN/")) {
+            return servletPrefixedPath;
+        }
+        return null;
     }
 
     /**

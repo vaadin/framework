@@ -15,8 +15,11 @@
  */
 package com.vaadin.server;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class VaadinServletTest {
 
@@ -56,5 +59,78 @@ public class VaadinServletTest {
                 .getLastPathParameter("http://myhost.com/a;hello/;b=1,c=2"));
         Assert.assertEquals("", VaadinServlet
                 .getLastPathParameter("http://myhost.com/a;hello/;b=1,c=2/"));
+    }
+
+    @Test
+    public void getStaticFilePath() {
+        VaadinServlet servlet = new VaadinServlet();
+
+        // Mapping: /VAADIN/*
+        // /VAADIN
+        Assert.assertNull(servlet
+                .getStaticFilePath(createServletRequest("/VAADIN", null)));
+        // /VAADIN/ - not really sensible but still interpreted as a resource
+        // request
+        Assert.assertEquals("/VAADIN/", servlet
+                .getStaticFilePath(createServletRequest("/VAADIN", "/")));
+        // /VAADIN/vaadinBootstrap.js
+        Assert.assertEquals("/VAADIN/vaadinBootstrap.js",
+                servlet.getStaticFilePath(createServletRequest("/VAADIN",
+                        "/vaadinBootstrap.js")));
+        // /VAADIN/foo bar.js
+        Assert.assertEquals("/VAADIN/foo bar.js", servlet.getStaticFilePath(
+                createServletRequest("/VAADIN", "/foo bar.js")));
+        // /VAADIN/.. - not normalized and disallowed in this method
+        Assert.assertEquals("/VAADIN/..", servlet
+                .getStaticFilePath(createServletRequest("/VAADIN", "/..")));
+
+        // Mapping: /*
+        // /
+        Assert.assertNull(
+                servlet.getStaticFilePath(createServletRequest("", null)));
+        // /VAADIN
+        Assert.assertNull(
+                servlet.getStaticFilePath(createServletRequest("", "/VAADIN")));
+        // /VAADIN/
+        Assert.assertEquals("/VAADIN/", servlet
+                .getStaticFilePath(createServletRequest("", "/VAADIN/")));
+        // /VAADIN/foo bar.js
+        Assert.assertEquals("/VAADIN/foo bar.js", servlet.getStaticFilePath(
+                createServletRequest("", "/VAADIN/foo bar.js")));
+        // /VAADIN/.. - not normalized and disallowed in this method
+        Assert.assertEquals("/VAADIN/..", servlet
+                .getStaticFilePath(createServletRequest("", "/VAADIN/..")));
+        // /BAADIN/foo.js
+        Assert.assertNull(servlet
+                .getStaticFilePath(createServletRequest("", "/BAADIN/foo.js")));
+
+        // Mapping: /myservlet/*
+        // /myservlet
+        Assert.assertNull(servlet
+                .getStaticFilePath(createServletRequest("/myservlet", null)));
+        // /myservlet/VAADIN
+        Assert.assertNull(servlet.getStaticFilePath(
+                createServletRequest("/myservlet", "/VAADIN")));
+        // /myservlet/VAADIN/
+        Assert.assertEquals("/VAADIN/", servlet.getStaticFilePath(
+                createServletRequest("/myservlet", "/VAADIN/")));
+        // /myservlet/VAADIN/foo bar.js
+        Assert.assertEquals("/VAADIN/foo bar.js", servlet.getStaticFilePath(
+                createServletRequest("/myservlet", "/VAADIN/foo bar.js")));
+        // /myservlet/VAADIN/.. - not normalized and disallowed in this method
+        Assert.assertEquals("/VAADIN/..", servlet.getStaticFilePath(
+                createServletRequest("/myservlet", "/VAADIN/..")));
+        // /myservlet/BAADIN/foo.js
+        Assert.assertNull(servlet.getStaticFilePath(
+                createServletRequest("/myservlet", "/BAADIN/foo.js")));
+
+    }
+
+    private HttpServletRequest createServletRequest(String servletPath,
+            String pathInfo) {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(request.getServletPath()).thenReturn(servletPath);
+        Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
+        return request;
     }
 }

@@ -146,6 +146,15 @@
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
+    <servlet>
+        <servlet-name>ResourcesFromServlet</servlet-name>
+        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
+        <init-param>
+            <param-name>resources</param-name>
+            <param-value>/servlet-with-resources</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
 
     <!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
     <servlet>
@@ -219,6 +228,11 @@
     <servlet-mapping>
         <servlet-name>VaadinStaticFiles</servlet-name>
         <url-pattern>/VAADIN/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ResourcesFromServlet</servlet-name>
+        <url-pattern>/servlet-with-resources/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
