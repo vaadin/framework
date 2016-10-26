@@ -19,8 +19,16 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Listing;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataSource;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
 
 /**
@@ -32,7 +40,8 @@ import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class CheckBoxGroup<T> extends AbstractMultiSelect<T> {
+public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
+        implements FocusNotifier, BlurNotifier {
 
     /**
      * Constructs a new CheckBoxGroup with caption.
@@ -80,6 +89,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T> {
      * @see Listing#setDataSource(DataSource)
      */
     public CheckBoxGroup() {
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
     }
 
     /**
@@ -136,5 +146,33 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T> {
     public void setItemEnabledProvider(
             SerializablePredicate<T> itemEnabledProvider) {
         super.setItemEnabledProvider(itemEnabledProvider);
+    }
+
+    @Override
+    public Registration addFocusListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    @Override
+    public Registration addBlurListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeBlurListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 }

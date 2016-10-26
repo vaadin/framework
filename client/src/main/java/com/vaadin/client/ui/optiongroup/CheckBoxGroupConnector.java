@@ -24,6 +24,7 @@ import java.util.List;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.VCheckBoxGroup;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.data.selection.SelectionModel;
@@ -38,10 +39,20 @@ import elemental.json.JsonObject;
 public class CheckBoxGroupConnector
         extends AbstractListingConnector<SelectionModel<?>> {
 
+    private ConnectorFocusAndBlurHandler handler;
+
     @Override
     protected void init() {
         super.init();
         getWidget().addSelectionChangeHandler(this::selectionChanged);
+        handler = ConnectorFocusAndBlurHandler.addHandlers(this);
+    }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        handler.removeHandlers();
+        handler = null;
     }
 
     private void selectionChanged(JsonObject changedItem, Boolean selected) {
@@ -88,4 +99,5 @@ public class CheckBoxGroupConnector
     public CheckBoxGroupState getState() {
         return (CheckBoxGroupState) super.getState();
     }
+
 }

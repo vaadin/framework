@@ -23,7 +23,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.MouseEventDetails;
@@ -67,20 +67,12 @@ public class CheckBox extends AbstractField<Boolean> {
         }
     };
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
-            this) {
-        @Override
-        protected void fireEvent(Event event) {
-            CheckBox.this.fireEvent(event);
-        }
-    };
-
     /**
      * Creates a new checkbox.
      */
     public CheckBox() {
         registerRpc(rpc);
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
         setValue(Boolean.FALSE);
     }
 

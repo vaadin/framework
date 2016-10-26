@@ -19,6 +19,7 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import com.vaadin.server.SerializableConsumer;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
@@ -209,6 +210,38 @@ public interface FieldEvents {
         @Override
         public void focus() {
             fireEvent(new FocusEvent(component));
+        }
+    }
+
+    /**
+     * Focus and blur server RPC implementation which fires focus or blur event
+     * using a provided event handler.
+     * 
+     * @author Vaadin Ltd
+     *
+     */
+    public static class FocusAndBlurServerRpcDecorator
+            extends FocusAndBlurServerRpcImpl {
+
+        private final SerializableConsumer<Event> eventHandler;
+
+        /**
+         * Create a new decorator instance.
+         * 
+         * @param component
+         *            the source events component
+         * @param eventHandler
+         *            the event handler to delegate event firing
+         */
+        public FocusAndBlurServerRpcDecorator(Component component,
+                SerializableConsumer<Event> eventHandler) {
+            super(component);
+            this.eventHandler = eventHandler;
+        }
+
+        @Override
+        protected void fireEvent(Event event) {
+            eventHandler.accept(event);
         }
     }
 

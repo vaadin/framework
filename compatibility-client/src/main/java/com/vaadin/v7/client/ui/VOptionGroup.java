@@ -95,8 +95,8 @@ public class VOptionGroup extends VOptionGroupBase
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
-        optionsToKeys = new HashMap<CheckBox, String>();
-        optionsEnabled = new HashMap<CheckBox, Boolean>();
+        optionsToKeys = new HashMap<>();
+        optionsEnabled = new HashMap<>();
 
         wasMultiselect = isMultiselect();
     }
@@ -113,12 +113,12 @@ public class VOptionGroup extends VOptionGroupBase
          * rebuilt (losing focus) if number of elements or their order is
          * changed.
          */
-        HashMap<String, CheckBox> keysToOptions = new HashMap<String, CheckBox>();
+        HashMap<String, CheckBox> keysToOptions = new HashMap<>();
         for (Map.Entry<CheckBox, String> entry : optionsToKeys.entrySet()) {
             keysToOptions.put(entry.getValue(), entry.getKey());
         }
-        ArrayList<Widget> existingwidgets = new ArrayList<Widget>();
-        ArrayList<Widget> newwidgets = new ArrayList<Widget>();
+        ArrayList<Widget> existingwidgets = new ArrayList<>();
+        ArrayList<Widget> newwidgets = new ArrayList<>();
 
         // Get current order of elements
         for (Widget wid : panel) {

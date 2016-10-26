@@ -18,6 +18,8 @@ package com.vaadin.client;
 import static com.vaadin.shared.EventId.BLUR;
 import static com.vaadin.shared.EventId.FOCUS;
 
+import java.util.function.Supplier;
+
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -137,9 +139,36 @@ public class EventHelper {
             ComponentConnector connector, H handler, String eventIdentifier,
             HandlerRegistration handlerRegistration, Type<H> type,
             Widget widget) {
+        return updateHandler(connector, eventIdentifier, handlerRegistration,
+                () -> widget.addDomHandler(handler, type));
+    }
+
+    /**
+     * Updates handler registered using {@code handlerProvider}: removes it if
+     * connector doesn't have anymore {@code eventIdentifier} using provided
+     * {@code handlerRegistration} and adds it via provided
+     * {@code handlerProvider} if connector has event listener with
+     * {@code eventIdentifier}.
+     * 
+     * @param connector
+     *            connector to check event listener presence
+     * @param eventIdentifier
+     *            event identifier whose presence in the connector is checked
+     * @param handlerRegistration
+     *            resulting handler registration to remove added handler in case
+     *            of absence event listener
+     * @param handlerProvider
+     *            the strategy to register handler
+     * @return handlerRegistration which should be used to remove registered
+     *         handler via {@code handlerProvider}
+     */
+    public static <H extends EventHandler, W extends Widget> HandlerRegistration updateHandler(
+            ComponentConnector connector, String eventIdentifier,
+            HandlerRegistration handlerRegistration,
+            Supplier<HandlerRegistration> handlerProvider) {
         if (connector.hasEventListener(eventIdentifier)) {
             if (handlerRegistration == null) {
-                handlerRegistration = widget.addDomHandler(handler, type);
+                handlerRegistration = handlerProvider.get();
             }
         } else if (handlerRegistration != null) {
             handlerRegistration.removeHandler();
@@ -147,4 +176,5 @@ public class EventHelper {
         }
         return handlerRegistration;
     }
+
 }

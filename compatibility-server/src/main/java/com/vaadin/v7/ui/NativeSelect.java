@@ -20,7 +20,7 @@ import java.util.Collection;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.v7.data.Container;
@@ -37,33 +37,24 @@ import com.vaadin.v7.event.FieldEvents;
 public class NativeSelect extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
-            this) {
-
-        @Override
-        protected void fireEvent(Event event) {
-            NativeSelect.this.fireEvent(event);
-        }
-    };
-
     public NativeSelect() {
         super();
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
     }
 
     public NativeSelect(String caption, Collection<?> options) {
         super(caption, options);
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
     }
 
     public NativeSelect(String caption, Container dataSource) {
         super(caption, dataSource);
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
     }
 
     public NativeSelect(String caption) {
         super(caption);
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
     }
 
     @Override

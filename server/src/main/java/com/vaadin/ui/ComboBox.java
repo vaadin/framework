@@ -26,7 +26,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.KeyMapper;
@@ -115,14 +115,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             } else {
                 getDataCommunicator().setInMemoryFilter(null);
             }
-        }
-    };
-
-    private FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
-            this) {
-        @Override
-        protected void fireEvent(Component.Event event) {
-            ComboBox.this.fireEvent(event);
         }
     };
 
@@ -218,7 +210,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      */
     private void init() {
         registerRpc(rpc);
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
         addDataGenerator((T data, JsonObject jsonObject) -> {
             jsonObject.put(DataCommunicatorConstants.NAME,

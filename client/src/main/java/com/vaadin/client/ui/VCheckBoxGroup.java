@@ -18,23 +18,24 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasAllFocusHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.widgets.ChildFocusAwareFlowPanel;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ListingJsonConstants;
 
@@ -47,7 +48,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
-        com.vaadin.client.Focusable, HasEnabled {
+        com.vaadin.client.Focusable, HasEnabled, HasAllFocusHandlers {
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
@@ -65,7 +66,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public Panel optionsContainer;
+    private ChildFocusAwareFlowPanel optionsContainer;
 
     private boolean htmlContentAllowed = false;
 
@@ -74,7 +75,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
     private List<BiConsumer<JsonObject, Boolean>> selectionChangeListeners;
 
     public VCheckBoxGroup() {
-        optionsContainer = new FlowPanel();
+        optionsContainer = new ChildFocusAwareFlowPanel();
         initWidget(optionsContainer);
         optionsContainer.setStyleName(CLASSNAME);
         optionsToItems = new HashMap<>();
@@ -85,40 +86,58 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
      * Build all the options
      */
     public void buildOptions(List<JsonObject> items) {
-        /*
-         * In order to retain focus, we need to update values rather than
-         * recreate panel from scratch (#10451). However, the panel will be
-         * rebuilt (losing focus) if number of elements or their order is
-         * changed.
-         */
-
-        Roles.getRadiogroupRole().set(getElement());
-        optionsContainer.clear();
-        for (JsonObject item : items) {
-            String itemHtml = item
-                    .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
-            if (!isHtmlContentAllowed()) {
-                itemHtml = WidgetUtil.escapeHTML(itemHtml);
-            }
-            VCheckBox checkBox = new VCheckBox();
-
-            String iconUrl = item
-                    .getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
-            if (iconUrl != null && iconUrl.length() != 0) {
-                Icon icon = client.getIcon(iconUrl);
-                itemHtml = icon.getElement().getString() + itemHtml;
-            }
-
-            checkBox.addStyleName(CLASSNAME_OPTION);
-            checkBox.addClickHandler(this);
-            checkBox.setHTML(itemHtml);
-            checkBox.setValue(item
-                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
-            setOptionEnabled(checkBox, item);
-
-            optionsContainer.add(checkBox);
-            optionsToItems.put(checkBox, item);
+        Roles.getGroupRole().set(getElement());
+        int i = 0;
+        int widgetsToRemove = optionsContainer.getWidgetCount() - items.size();
+        if (widgetsToRemove < 0) {
+            widgetsToRemove = 0;
         }
+        List<Widget> remove = new ArrayList<>(widgetsToRemove);
+        for (Widget widget : optionsContainer) {
+            if (i < items.size()) {
+                updateItem((VCheckBox) widget, items.get(i), false);
+                i++;
+            } else {
+                remove.add(widget);
+            }
+        }
+        remove.stream().forEach(this::remove);
+        while (i < items.size()) {
+            updateItem(new VCheckBox(), items.get(i), true);
+            i++;
+        }
+    }
+
+    private void remove(Widget widget) {
+        optionsContainer.remove(widget);
+        optionsToItems.remove(widget);
+    }
+
+    private void updateItem(VCheckBox widget, JsonObject item,
+            boolean requireInitializations) {
+        String itemHtml = item
+                .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
+        if (!isHtmlContentAllowed()) {
+            itemHtml = WidgetUtil.escapeHTML(itemHtml);
+        }
+
+        String iconUrl = item.getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
+        if (iconUrl != null && iconUrl.length() != 0) {
+            Icon icon = client.getIcon(iconUrl);
+            itemHtml = icon.getElement().getString() + itemHtml;
+        }
+
+        widget.setHTML(itemHtml);
+        widget.setValue(
+                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+        setOptionEnabled(widget, item);
+
+        if (requireInitializations) {
+            widget.addStyleName(CLASSNAME_OPTION);
+            widget.addClickHandler(this);
+            optionsContainer.add(widget);
+        }
+        optionsToItems.put(widget, item);
     }
 
     @Override
@@ -166,10 +185,7 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
 
     @Override
     public void focus() {
-        Iterator<Widget> iterator = optionsContainer.iterator();
-        if (iterator.hasNext()) {
-            ((Focusable) iterator.next()).setFocus(true);
-        }
+        optionsContainer.focus();
     }
 
     public boolean isHtmlContentAllowed() {
@@ -209,5 +225,15 @@ public class VCheckBoxGroup extends Composite implements Field, ClickHandler,
         selectionChangeListeners.add(selectionChanged);
         return (Registration) () -> selectionChangeListeners
                 .remove(selectionChanged);
+    }
+
+    @Override
+    public HandlerRegistration addFocusHandler(FocusHandler handler) {
+        return optionsContainer.addFocusHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addBlurHandler(BlurHandler handler) {
+        return optionsContainer.addBlurHandler(handler);
     }
 }

@@ -31,7 +31,7 @@ import org.jsoup.nodes.Element;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
-import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
@@ -134,7 +134,7 @@ public class TabSheet extends AbstractComponentContainer
         super();
 
         registerRpc(rpc);
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
         // expand horizontally by default
         setWidth(100, UNITS_PERCENTAGE);
@@ -674,15 +674,6 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     private TabsheetServerRpcImpl rpc = new TabsheetServerRpcImpl();
-
-    private FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
-            this) {
-
-        @Override
-        protected void fireEvent(Event event) {
-            TabSheet.this.fireEvent(event);
-        }
-    };
 
     /**
      * Replaces a component (tab content) with another. This can be used to
