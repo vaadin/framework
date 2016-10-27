@@ -1,11 +1,11 @@
 ---
-title: Installing Commercial Vaadin Add-on Licence
+title: Installing Commercial Vaadin Add-on License
 order: 5
 layout: page
 ---
 
 [[addons.cval]]
-= Installing Commercial Vaadin Add-on Licence
+= Installing Commercial Vaadin Add-on License
 
 The commercial Vaadin add-ons require installing a license key before using
 them. The license keys are development licenses and checked during widget set
