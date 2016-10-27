@@ -388,7 +388,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        window.setClosable(!isReadOnly());
+        window.setClosable(state.closable);
         // initialize position from state
         updateWindowPosition();
 

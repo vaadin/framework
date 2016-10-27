@@ -12,6 +12,7 @@ import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Layout.SpacingHandler;
+import com.vaadin.v7.ui.AbstractLegacyComponent;
 import com.vaadin.v7.ui.Field;
 
 public abstract class AbstractComponentTestCase<T extends AbstractComponent>
@@ -124,8 +125,13 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     protected Command<T, String> descriptionCommand = (c, value, data) -> c
             .setDescription(value);
 
-    protected Command<T, Boolean> readonlyCommand = (c, enabled, data) -> c
-            .setReadOnly(enabled);
+    protected Command<T, Boolean> readonlyCommand = (c, enabled, data) -> {
+        if (c instanceof HasValue) {
+            ((HasValue) c).setReadOnly(enabled);
+        } else if (c instanceof AbstractLegacyComponent) {
+            ((AbstractLegacyComponent) c).setReadOnly(enabled);
+        }
+    };
 
     protected Command<T, Boolean> visibleCommand = (c, enabled, data) -> c
             .setVisible(enabled);

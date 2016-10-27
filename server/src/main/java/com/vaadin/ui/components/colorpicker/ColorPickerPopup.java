@@ -723,4 +723,14 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
     private static Logger getLogger() {
         return Logger.getLogger(ColorPickerPopup.class.getName());
     }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return super.isReadOnly();
+    }
 }

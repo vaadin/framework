@@ -26,8 +26,8 @@ import com.vaadin.v7.shared.AbstractLegacyComponentState;
 /**
  * An abstract base class for compatibility components.
  * <p>
- * Used since immediate property has been removed in Vaadin 8 from
- * {@link AbstractComponent}.
+ * Used since immediate and read-only properties has been removed in Vaadin 8
+ * from {@link AbstractComponent}.
  *
  * @author Vaadin Ltd
  * @since 8.0
@@ -76,6 +76,62 @@ public class AbstractLegacyComponent extends AbstractComponent {
     public void setImmediate(boolean immediate) {
         explicitImmediateValue = immediate;
         getState().immediate = immediate;
+    }
+
+    /**
+     * Tests whether the component is in the read-only mode. The user can not
+     * change the value of a read-only component. As only {@code AbstractField}
+     * or {@code LegacyField} components normally have a value that can be input
+     * or changed by the user, this is mostly relevant only to field components,
+     * though not restricted to them.
+     *
+     * <p>
+     * Notice that the read-only mode only affects whether the user can change
+     * the <i>value</i> of the component; it is possible to, for example, scroll
+     * a read-only table.
+     * </p>
+     *
+     * <p>
+     * The method will return {@code true} if the component or any of its
+     * parents is in the read-only mode.
+     * </p>
+     *
+     * @return <code>true</code> if the component or any of its parents is in
+     *         read-only mode, <code>false</code> if not.
+     * @see #setReadOnly(boolean)
+     */
+    @Override
+    public boolean isReadOnly() {
+        return getState(false).readOnly;
+    }
+
+    /**
+     * Sets the read-only mode of the component to the specified mode. The user
+     * can not change the value of a read-only component.
+     *
+     * <p>
+     * As only {@code AbstractField} or {@code LegacyField} components normally
+     * have a value that can be input or changed by the user, this is mostly
+     * relevant only to field components, though not restricted to them.
+     * </p>
+     *
+     * <p>
+     * Notice that the read-only mode only affects whether the user can change
+     * the <i>value</i> of the component; it is possible to, for example, scroll
+     * a read-only table.
+     * </p>
+     *
+     * <p>
+     * In Vaadin 8 the read-only property is part of {@link HasValue} API.
+     * </p>
+     *
+     * @param readOnly
+     *            a boolean value specifying whether the component is put
+     *            read-only mode or not
+     */
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        getState().readOnly = readOnly;
     }
 
     @Override

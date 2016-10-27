@@ -370,56 +370,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public HasComponents getParent();
 
     /**
-     * Tests whether the component is in the read-only mode. The user can not
-     * change the value of a read-only component. As only {@code AbstractField}
-     * or {@code LegacyField} components normally have a value that can be input
-     * or changed by the user, this is mostly relevant only to field components,
-     * though not restricted to them.
-     *
-     * <p>
-     * Notice that the read-only mode only affects whether the user can change
-     * the <i>value</i> of the component; it is possible to, for example, scroll
-     * a read-only table.
-     * </p>
-     *
-     * <p>
-     * The method will return {@code true} if the component or any of its
-     * parents is in the read-only mode.
-     * </p>
-     *
-     * @return <code>true</code> if the component or any of its parents is in
-     *         read-only mode, <code>false</code> if not.
-     * @see #setReadOnly(boolean)
-     */
-    public boolean isReadOnly();
-
-    /**
-     * Sets the read-only mode of the component to the specified mode. The user
-     * can not change the value of a read-only component.
-     *
-     * <p>
-     * As only {@code AbstractField} or{@code LegacyField} components normally
-     * have a value that can be input or changed by the user, this is mostly
-     * relevant only to field components, though not restricted to them.
-     * </p>
-     *
-     * <p>
-     * Notice that the read-only mode only affects whether the user can change
-     * the <i>value</i> of the component; it is possible to, for example, scroll
-     * a read-only table.
-     * </p>
-     *
-     * <p>
-     * This method will trigger a {@link RepaintRequestEvent}.
-     * </p>
-     *
-     * @param readOnly
-     *            a boolean value specifying whether the component is put
-     *            read-only mode or not
-     */
-    public void setReadOnly(boolean readOnly);
-
-    /**
      * Gets the caption of the component.
      *
      * <p>

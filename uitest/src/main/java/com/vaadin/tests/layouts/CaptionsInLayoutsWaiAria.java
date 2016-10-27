@@ -24,6 +24,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.AbstractLegacyComponent;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.OptionGroup;
@@ -163,7 +164,11 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     protected void setReadOnly(boolean value) {
         for (Component c : components) {
-            c.setReadOnly(value);
+            if (c instanceof HasValue) {
+                ((HasValue<String>) c).setReadOnly(value);
+            } else if (c instanceof AbstractLegacyComponent) {
+                ((AbstractLegacyComponent) c).setReadOnly(value);
+            }
         }
     }
 

@@ -35,6 +35,7 @@ import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ContextClickEvent;
@@ -602,24 +603,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /*
-     * Tests if the component is in read-only mode. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
-     */
-    @Override
-    public boolean isReadOnly() {
-        return getState(false).readOnly;
-    }
-
-    /*
-     * Sets the component's read-only mode. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
-     */
-    @Override
-    public void setReadOnly(boolean readOnly) {
-        getState().readOnly = readOnly;
-    }
-
-    /*
      * Notify the component that it's attached to a window. Don't add a JavaDoc
      * comment here, we use the default documentation from implemented
      * interface.
@@ -1058,6 +1041,33 @@ public abstract class AbstractComponent extends AbstractClientConnector
             }
         }
         return false;
+    }
+
+    /**
+     * Sets the read-only status in the state of this {@code AbstractComponent}.
+     * This method should be made public in {@link Component Components} that
+     * implement {@link HasValue}.
+     *
+     * @param readOnly
+     *            a boolean value specifying whether the component is put
+     *            read-only mode or not
+     */
+    protected void setReadOnly(boolean readOnly) {
+        if (readOnly != isReadOnly()) {
+            getState().readOnly = readOnly;
+        }
+    }
+
+    /**
+     * Returns the read-only status from the state of this
+     * {@code AbstractComponent}. This method should be made public in
+     * {@link Component Components} that implement {@link HasValue}.
+     *
+     * @return {@code true} if state has read-only on; {@code false} if not
+     * @see #setReadOnly(boolean)
+     */
+    protected boolean isReadOnly() {
+        return getState(false).readOnly;
     }
 
     /**

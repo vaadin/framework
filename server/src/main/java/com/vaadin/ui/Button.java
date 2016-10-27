@@ -325,7 +325,7 @@ public class Button extends AbstractFocusable
      *
      * @param listener
      *            the Listener to be removed.
-     * 
+     *
      * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
      *             registration object returned from
      *             {@link #addClickListener(ClickListener)}.
@@ -342,7 +342,7 @@ public class Button extends AbstractFocusable
      * No action is taken is the button is disabled.
      */
     public void click() {
-        if (isEnabled() && !isReadOnly()) {
+        if (isEnabled()) {
             fireClick();
         }
     }

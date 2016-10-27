@@ -736,15 +736,10 @@ public class Window extends Panel
      * close event to the server. Setting closable to false will remove the X
      * from the window and prevent the user from closing the window.
      *
-     * Note! For historical reasons readonly controls the closability of the
-     * window and therefore readonly and closable affect each other. Setting
-     * readonly to true will set closable to false and vice versa.
-     * <p/>
-     *
      * @return true if the window can be closed by the user.
      */
     public boolean isClosable() {
-        return !isReadOnly();
+        return getState(false).closable;
     }
 
     /**
@@ -753,25 +748,20 @@ public class Window extends Panel
      * close event to the server. Setting closable to false will remove the X
      * from the window and prevent the user from closing the window.
      *
-     * Note! For historical reasons readonly controls the closability of the
-     * window and therefore readonly and closable affect each other. Setting
-     * readonly to true will set closable to false and vice versa.
-     * <p/>
-     *
      * @param closable
      *            determines if the window can be closed by the user.
      */
     public void setClosable(boolean closable) {
-        setReadOnly(!closable);
+        if (closable != isClosable()) {
+            getState().closable = closable;
+        }
     }
 
     /**
      * Indicates whether a window can be dragged or not. By default a window is
      * draggable.
-     * <p/>
      *
-     * @param draggable
-     *            true if the window can be dragged by the user
+     * @return {@code true} if window is draggable; {@code false} if not
      */
     public boolean isDraggable() {
         return getState(false).draggable;

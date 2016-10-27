@@ -59,24 +59,13 @@ public abstract class AbstractField<T> extends AbstractComponent
         setValue(value, false);
     }
 
-    /**
-     * Returns whether the value of this field can be changed by the user or
-     * not. By default fields are not read-only.
-     *
-     * @return {@code true} if this field is in read-only mode, {@code false}
-     *         otherwise.
-     *
-     * @see #setReadOnly(boolean)
-     */
     @Override
     public boolean isReadOnly() {
         return super.isReadOnly();
     }
 
     /**
-     * Sets whether the value of this field can be changed by the user or not. A
-     * field in read-only mode typically looks visually different to signal to
-     * the user that the value cannot be edited.
+     * {@inheritDoc}
      * <p>
      * The server ignores (potentially forged) value change requests from the
      * client to fields that are read-only. Programmatically changing the field
@@ -119,9 +108,8 @@ public abstract class AbstractField<T> extends AbstractComponent
         super.writeDesign(design, designContext);
         AbstractField<T> def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
-        DesignAttributeHandler.writeAttribute("readonly", attr,
-                super.isReadOnly(), def.isReadOnly(), Boolean.class,
-                designContext);
+        DesignAttributeHandler.writeAttribute("readonly", attr, isReadOnly(),
+                def.isReadOnly(), Boolean.class, designContext);
     }
 
     @Override

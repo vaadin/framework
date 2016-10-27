@@ -39,7 +39,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * declarative test for a real component should extend it and implement abstract
  * methods to be able to test the common properties. Components specific
  * properties should be tested additionally in the subclasses implementations.
- * 
+ *
  * @author Vaadin Ltd
  *
  */
@@ -48,14 +48,14 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
 
     /**
      * Returns expected element tag for the tested component.
-     * 
+     *
      * @return expected element tag
      */
     protected abstract String getComponentTag();
 
     /**
      * Returns component class which is a subject to test
-     * 
+     *
      * @return the component class
      */
     protected abstract Class<? extends T> getComponentClass();
@@ -110,7 +110,13 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
         component.setIcon(new FileResource(new File(icon)));
         component.setLocale(locale);
         component.setPrimaryStyleName(primaryStyle);
-        component.setReadOnly(readOnly);
+        try {
+            component.getClass()
+                    .getMethod("setReadOnly", new Class[] { boolean.class })
+                    .invoke(component, readOnly);
+        } catch (Exception e) {
+            // Ignore
+        }
         component.setResponsive(responsive);
         component.setStyleName(styleName);
         component.setVisible(visible);

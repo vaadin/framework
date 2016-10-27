@@ -35,6 +35,8 @@ public class WindowState extends PanelState {
     @NoLayout
     public boolean centered = false;
     @NoLayout
+    public boolean closable = true;
+    @NoLayout
     public int positionX = -1;
     @NoLayout
     public int positionY = -1;

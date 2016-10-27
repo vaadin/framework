@@ -47,14 +47,6 @@ public class ButtonClickTest {
         Assert.assertFalse("Disabled button fires click events", clicked);
     }
 
-    @Test
-    public void testClickReadOnly() {
-        Button b = getButton();
-        b.setReadOnly(true);
-        b.click();
-        Assert.assertFalse("Read only button fires click events", clicked);
-    }
-
     private Button getButton() {
         Button b = new Button();
         UI ui = createUI();

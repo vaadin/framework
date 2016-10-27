@@ -36,7 +36,6 @@ import com.vaadin.server.UploadException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload.FailedEvent;
 
@@ -443,12 +442,6 @@ public class FileUploadHandler implements RequestHandler {
                 throw new UploadException("Warning: file upload ignored for "
                         + connector.getConnectorId()
                         + " because the component was disabled");
-            }
-            if ((connector instanceof Component)
-                    && ((Component) connector).isReadOnly()) {
-                // Only checked for legacy reasons
-                throw new UploadException(
-                        "File upload ignored because the component is read-only");
             }
         } finally {
             session.unlock();

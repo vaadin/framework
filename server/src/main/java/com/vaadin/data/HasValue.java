@@ -235,4 +235,26 @@ public interface HasValue<V> extends Serializable {
      * @return <code>true</code> if visible, <code>false</code> if not
      */
     public boolean isRequiredIndicatorVisible();
+
+    /**
+     * Sets the read-only mode of this {@code HasValue} to given mode. The user
+     * can't change the value when in read-only mode.
+     * <p>
+     * A {@code HasValue} with a visual component in read-only mode typically
+     * looks visually different to signal to the user that the value cannot be
+     * edited.
+     *
+     * @param readOnly
+     *            a boolean value specifying whether the component is put
+     *            read-only mode or not
+     */
+    public void setReadOnly(boolean readOnly);
+
+    /**
+     * Returns whether this {@code HasValue} is in read-only mode or not.
+     *
+     * @return {@code false} if the user can modify the value, {@code true} if
+     *         not.
+     */
+    public boolean isReadOnly();
 }

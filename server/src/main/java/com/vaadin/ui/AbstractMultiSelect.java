@@ -491,6 +491,15 @@ public abstract class AbstractMultiSelect<T>
     @Override
     protected RequiredIndicatorState getState(boolean markAsDirty) {
         return (RequiredIndicatorState) super.getState(markAsDirty);
-    };
+    }
 
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return super.isReadOnly();
+    }
 }

@@ -359,4 +359,14 @@ public abstract class AbstractSingleSelect<T> extends
     public boolean isRequiredIndicatorVisible() {
         return super.isRequiredIndicatorVisible();
     }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return super.isReadOnly();
+    }
 }

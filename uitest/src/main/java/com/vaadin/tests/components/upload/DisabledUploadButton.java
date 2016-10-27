@@ -13,13 +13,6 @@ public class DisabledUploadButton extends AbstractReindeerTestUI {
 
         addComponent(upload);
 
-        addButton("Set readonly", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                upload.setReadOnly(true);
-            }
-        });
-
         addButton("Set disabled", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {

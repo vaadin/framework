@@ -36,15 +36,6 @@ public class DisabledUploadButtonTest extends MultiBrowserTest {
     }
 
     @Test
-    public void buttonIsReadonly() {
-        assertThat(getUploadButtonClass(), not(containsString("v-disabled")));
-
-        clickButton("Set readonly");
-
-        assertThat(getUploadButtonClass(), containsString("v-disabled"));
-    }
-
-    @Test
     public void buttonIsDisabled() {
         assertThat(getUploadButtonClass(), not(containsString("v-disabled")));
 

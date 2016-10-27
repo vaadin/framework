@@ -4,6 +4,7 @@ import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.v7.ui.AbstractLegacyComponent;
 import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.v7.ui.NativeSelect;
@@ -27,7 +28,8 @@ public class OptionGroupBaseSelects
         cb.addValueChangeListener(event -> {
             for (Component c : layout) {
                 if (c instanceof AbstractSelect) {
-                    c.setReadOnly(!c.isReadOnly());
+                    AbstractLegacyComponent legacyComponent = (AbstractLegacyComponent) c;
+                    legacyComponent.setReadOnly(!legacyComponent.isReadOnly());
                 }
             }
         });
