@@ -21,12 +21,11 @@ import java.util.List;
 
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.connectors.AbstractFocusableListingConnector;
+import com.vaadin.client.connectors.AbstractSingleSelectConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.VRadioButtonGroup;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
@@ -35,8 +34,8 @@ import com.vaadin.ui.RadioButtonGroup;
 import elemental.json.JsonObject;
 
 @Connect(RadioButtonGroup.class)
-public class RadioButtonGroupConnector extends
-        AbstractFocusableListingConnector<VRadioButtonGroup, SelectionModel.Single<?>> {
+public class RadioButtonGroupConnector
+        extends AbstractSingleSelectConnector<VRadioButtonGroup> {
 
     private Registration selectionChangeRegistration;
     private Registration dataChangeRegistration;

@@ -60,6 +60,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.RequiredIndicatorState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -1045,7 +1046,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
-     * Returns true if the component is responsive
+     * Returns true if the component is responsive.
      *
      * @since 7.5.0
      * @return true if the component is responsive
@@ -1368,6 +1369,58 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void removeContextClickListener(ContextClickListener listener) {
         removeListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,
                 listener);
+    }
+
+    /**
+     * Sets the visibility of the required indicator. <strong>NOTE: Does not
+     * apply for all components!</strong>.
+     * <p>
+     * If the component supports the required indicator (state extends
+     * {@link RequiredIndicatorState}), then expose this method and
+     * {@link #isRequiredIndicatorVisible()} as {@code public} in the component
+     * and call this method.
+     * <p>
+     * This method will throw a {@link IllegalStateException} if the component
+     * state (returned by {@link #getState()}) does not inherit
+     * {@link RequiredIndicatorState}.
+     *
+     * @param visible
+     *            <code>true</code> to make the required indicator visible,
+     *            <code>false</code> if not
+     */
+    protected void setRequiredIndicatorVisible(boolean visible) {
+        if (getState(false) instanceof RequiredIndicatorState) {
+            ((RequiredIndicatorState) getState()).required = visible;
+        } else {
+            throw new IllegalStateException(
+                    "This component does not support the required indicator, since state is of type "
+                            + getStateType().getSimpleName()
+                            + " and does not inherit "
+                            + RequiredIndicatorState.class.getSimpleName());
+        }
+    }
+
+    /**
+     * Checks whether the required indicator is visible or not. <strong>NOTE:
+     * Does not apply for all components!</strong>.
+     * <p>
+     * This method will throw a {@link IllegalStateException} if the component
+     * state (returned by {@link #getState()}) does not inherit
+     * {@link RequiredIndicatorState}.
+     *
+     * @return <code>true</code> if visible, <code>false</code> if not
+     * @see #setRequiredIndicatorVisible(boolean)
+     */
+    protected boolean isRequiredIndicatorVisible() {
+        if (getState(false) instanceof RequiredIndicatorState) {
+            return ((RequiredIndicatorState) getState(false)).required;
+        } else {
+            throw new IllegalStateException(
+                    "This component does not support the required indicator, since state is of type "
+                            + getStateType().getSimpleName()
+                            + " and does not inherit "
+                            + RequiredIndicatorState.class.getSimpleName());
+        }
     }
 
     private static final Logger getLogger() {

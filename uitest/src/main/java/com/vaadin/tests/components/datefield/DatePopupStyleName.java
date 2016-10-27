@@ -15,7 +15,7 @@ public class DatePopupStyleName extends TestBase {
         final AbstractDateField df = new TestDateField();
         df.setValue(LocalDate.of(1970, 1, 15));
         df.setWidth("200px");
-        df.setRequired(true);
+        df.setRequiredIndicatorVisible(true);
         df.setComponentError(new UserError("abc"));
         df.addStyleName("popup-style");
         addComponent(df);

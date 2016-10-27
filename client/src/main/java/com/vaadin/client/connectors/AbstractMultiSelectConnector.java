@@ -25,11 +25,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.ui.ListingJsonConstants;
+import com.vaadin.shared.ui.RequiredIndicatorState;
 
 import elemental.json.JsonObject;
 
@@ -44,7 +46,8 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public abstract class AbstractMultiSelectConnector
-        extends AbstractListingConnector<SelectionModel.Multi<?>> {
+        extends AbstractListingConnector<SelectionModel.Multi<?>>
+        implements HasRequiredIndicator {
 
     /**
      * Abstraction layer to help populate different multiselect widgets based on
@@ -148,11 +151,15 @@ public abstract class AbstractMultiSelectConnector
     protected void init() {
         super.init();
 
-        MultiSelectServerRpc rpcProxy = getRpcProxy(
-                MultiSelectServerRpc.class);
+        MultiSelectServerRpc rpcProxy = getRpcProxy(MultiSelectServerRpc.class);
         getMultiSelectWidget().addSelectionChangeListener(
                 (addedItems, removedItems) -> rpcProxy
                         .updateSelection(addedItems, removedItems));
+    }
+
+    @Override
+    public RequiredIndicatorState getState() {
+        return (RequiredIndicatorState) super.getState();
     }
 
     @Override
@@ -178,5 +185,10 @@ public abstract class AbstractMultiSelectConnector
             items.add(getDataSource().getRow(i));
         }
         getMultiSelectWidget().setItems(items);
+    }
+
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return getState().required && !isReadOnly();
     }
 }

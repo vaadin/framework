@@ -1433,42 +1433,11 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
         removePropertyListeners();
     }
 
-    /**
-     * Is this field required. Required fields must filled by the user.
-     *
-     * If the field is required, it is visually indicated in the user interface.
-     * Furthermore, setting field to be required implicitly adds "non-empty"
-     * validator and thus isValid() == false or any isEmpty() fields. In those
-     * cases validation errors are not painted as it is obvious that the user
-     * must fill in the required fields.
-     *
-     * On the other hand, for the non-required fields isValid() == true if the
-     * field isEmpty() regardless of any attached validators.
-     *
-     *
-     * @return <code>true</code> if the field is required, otherwise
-     *         <code>false</code>.
-     */
     @Override
     public boolean isRequired() {
         return getState(false).required;
     }
 
-    /**
-     * Sets the field required. Required fields must filled by the user.
-     *
-     * If the field is required, it is visually indicated in the user interface.
-     * Furthermore, setting field to be required implicitly adds "non-empty"
-     * validator and thus isValid() == false or any isEmpty() fields. In those
-     * cases validation errors are not painted as it is obvious that the user
-     * must fill in the required fields.
-     *
-     * On the other hand, for the non-required fields isValid() == true if the
-     * field isEmpty() regardless of any attached validators.
-     *
-     * @param required
-     *            Is the field required.
-     */
     @Override
     public void setRequired(boolean required) {
         getState().required = required;

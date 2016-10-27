@@ -94,7 +94,7 @@ public interface HasValue<V> extends Serializable {
          * This a shorthand method for {@link HasValue#getValue()} for the event
          * source {@link #getSource()}. Thus the value is always the most recent
          * one, even if has been changed after the firing of this event.
-         * 
+         *
          * @see HasValue#getValue()
          *
          * @return the new value
@@ -217,4 +217,22 @@ public interface HasValue<V> extends Serializable {
     public default boolean isEmpty() {
         return Objects.equals(getValue(), getEmptyValue());
     }
+
+    /**
+     * Sets the required indicator visible or not.
+     * <p>
+     * If set visible, it is visually indicated in the user interface.
+     *
+     * @param requiredIndicatorVisible
+     *            <code>true</code> to make the required indicator visible,
+     *            <code>false</code> if not
+     */
+    public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible);
+
+    /**
+     * Checks whether the required indicator is visible.
+     *
+     * @return <code>true</code> if visible, <code>false</code> if not
+     */
+    public boolean isRequiredIndicatorVisible();
 }

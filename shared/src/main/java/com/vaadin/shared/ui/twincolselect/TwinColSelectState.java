@@ -16,14 +16,14 @@
 package com.vaadin.shared.ui.twincolselect;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.RequiredIndicatorState;
 
 /**
  * Shared state for the TwinColSelect component.
  *
  * @since 7.0
  */
-public class TwinColSelectState extends TabIndexState {
+public class TwinColSelectState extends RequiredIndicatorState {
     {
         primaryStyleName = "v-select-twincol";
     }

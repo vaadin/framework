@@ -668,6 +668,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
              */
             getWidget().setStylePrimaryName(state.primaryStyleName);
         }
+
+        // set required style name if components supports that
+        if (this instanceof HasRequiredIndicator) {
+            getWidget().setStyleName(StyleConstants.REQUIRED,
+                    ((HasRequiredIndicator) this).isRequiredIndicatorVisible());
+        }
+
         Profiler.leave("AbstractComponentConnector.updateWidgetStyleNames");
     }
 

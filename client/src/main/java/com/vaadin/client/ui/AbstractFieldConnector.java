@@ -30,14 +30,6 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector
         return getState().modified;
     }
 
-    /**
-     * Checks whether the required indicator should be shown for the field.
-     *
-     * Required indicators are hidden if the field or its data source is
-     * read-only.
-     *
-     * @return true if required indicator should be shown
-     */
     @Override
     public boolean isRequiredIndicatorVisible() {
         return getState().required && !isReadOnly();
@@ -58,8 +50,5 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector
         // add / remove error style name to Fields
         setWidgetStyleNameWithPrefix(getWidget().getStylePrimaryName(),
                 StyleConstants.REQUIRED_EXT, isRequiredIndicatorVisible());
-
-        getWidget().setStyleName(StyleConstants.REQUIRED,
-                isRequiredIndicatorVisible());
     }
 }

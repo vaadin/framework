@@ -16,7 +16,7 @@
 package com.vaadin.shared.ui.listselect;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.RequiredIndicatorState;
 
 /**
  * Shared state for ListSelect component.
@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.TabIndexState;
  * @author Vaadin Ltd
  *
  */
-public class ListSelectState extends TabIndexState {
+public class ListSelectState extends RequiredIndicatorState {
     {
         primaryStyleName = "v-select";
     }

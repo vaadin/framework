@@ -710,6 +710,16 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         }
     };
 
+    @Override
+    public void setRequiredIndicatorVisible(boolean visible) {
+        super.setRequiredIndicatorVisible(visible);
+    }
+
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return super.isRequiredIndicatorVisible();
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(ColorPickerPopup.class.getName());
     }

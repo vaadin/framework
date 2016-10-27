@@ -26,7 +26,7 @@ public class CheckBoxWithPropertyDataSource extends CheckBox {
     }
 
     public void validate() {
-        if (isRequired() && !getValue()) {
+        if (isRequiredIndicatorVisible() && !getValue()) {
             throw new InvalidValueException(
                     "Required CheckBox should be checked");
         }

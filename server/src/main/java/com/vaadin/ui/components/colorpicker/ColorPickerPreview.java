@@ -185,4 +185,14 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     protected String getCss(Component c) {
         return "background: " + color.getCSS();
     }
+
+    @Override
+    public void setRequiredIndicatorVisible(boolean visible) {
+        super.setRequiredIndicatorVisible(visible);
+    }
+
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return super.isRequiredIndicatorVisible();
+    }
 }

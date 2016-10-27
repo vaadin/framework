@@ -22,6 +22,7 @@ import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.HasErrorIndicator;
+import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VComboBox;
 import com.vaadin.client.ui.VComboBox.DataReceivedHandler;
@@ -42,7 +43,8 @@ import elemental.json.JsonObject;
 @Connect(ComboBox.class)
 public class ComboBoxConnector
         extends AbstractListingConnector<SelectionModel.Single<?>>
-        implements HasDataSource, SimpleManagedLayout, HasErrorIndicator {
+        implements HasRequiredIndicator, HasDataSource, SimpleManagedLayout,
+        HasErrorIndicator {
 
     private ComboBoxServerRpc rpc = getRpcProxy(ComboBoxServerRpc.class);
     private SelectionServerRpc selectionRpc = getRpcProxy(
@@ -181,8 +183,8 @@ public class ComboBoxConnector
                 page = 0;
             }
         }
-        int adjustment = (getWidget().nullSelectionAllowed
-                && "".equals(getWidget().lastFilter)) ? 1 : 0;
+        int adjustment = getWidget().nullSelectionAllowed
+                && "".equals(getWidget().lastFilter) ? 1 : 0;
         int startIndex = Math.max(0,
                 page * getWidget().pageLength - adjustment);
         int pageLength = getWidget().pageLength > 0 ? getWidget().pageLength
@@ -331,4 +333,8 @@ public class ComboBoxConnector
         dataChangeHandlerRegistration.remove();
     }
 
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return getState().required && !isReadOnly();
+    }
 }

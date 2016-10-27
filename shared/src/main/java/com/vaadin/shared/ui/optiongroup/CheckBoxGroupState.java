@@ -16,7 +16,7 @@
 package com.vaadin.shared.ui.optiongroup;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.RequiredIndicatorState;
 
 /**
  * Shared state for the CheckBoxGroup component.
@@ -24,7 +24,7 @@ import com.vaadin.shared.AbstractFieldState;
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class CheckBoxGroupState extends AbstractFieldState {
+public class CheckBoxGroupState extends RequiredIndicatorState {
 
     {
         primaryStyleName = "v-select-optiongroup";

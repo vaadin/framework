@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.data.HasRequired;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
@@ -13,6 +13,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.NativeSelect;
 
 public abstract class ComponentTestCase<T extends AbstractComponent>
@@ -71,7 +72,8 @@ public abstract class ComponentTestCase<T extends AbstractComponent>
         actions.add(createReadonlyAction(false));
 
         actions.add(createErrorIndicatorAction(false));
-        if (HasRequired.class.isAssignableFrom(getTestClass())) {
+        if (HasValue.class.isAssignableFrom(getTestClass())
+                || Field.class.isAssignableFrom(getTestClass())) {
             actions.add(createRequiredAction(false));
         }
 

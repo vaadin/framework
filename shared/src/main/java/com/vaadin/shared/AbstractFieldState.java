@@ -15,7 +15,7 @@
  */
 package com.vaadin.shared;
 
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.RequiredIndicatorState;
 
 /**
  * Shared state for {@link com.vaadin.ui.AbstractField}.
@@ -24,8 +24,7 @@ import com.vaadin.shared.ui.TabIndexState;
  * @since 7.0.0
  *
  */
-public class AbstractFieldState extends TabIndexState {
+public class AbstractFieldState extends RequiredIndicatorState {
     public boolean hideErrors = false;
-    public boolean required = false;
     public boolean modified = false;
 }

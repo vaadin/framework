@@ -16,8 +16,6 @@
 
 package com.vaadin.v7.ui;
 
-import com.vaadin.data.HasRequired;
-import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.v7.data.BufferedValidatable;
@@ -48,7 +46,7 @@ import com.vaadin.v7.data.Property;
 @Deprecated
 public interface Field<T> extends Component, BufferedValidatable, Property<T>,
         Property.ValueChangeNotifier, Property.ValueChangeListener,
-        Property.Editor, Focusable, HasRequired {
+        Property.Editor, Focusable {
     /**
      * Is this field required.
      *
@@ -58,7 +56,6 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      *         <code>false</code>.
      * @since 3.1
      */
-    @Override
     public boolean isRequired();
 
     /**
@@ -68,7 +65,6 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      *            Is the field required.
      * @since 3.1
      */
-    @Override
     public void setRequired(boolean required);
 
     /**

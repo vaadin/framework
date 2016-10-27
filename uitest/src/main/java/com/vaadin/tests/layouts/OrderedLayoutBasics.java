@@ -343,7 +343,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         tf = new TextArea("100% high TextField");
         tf.setCaption(null);
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setValue("100% high Field");
         tf.setHeight("100%");
         tf.setWidth("100px");
@@ -352,7 +352,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         tf = new TextArea("100% high TextField");
         tf.setCaption("100% high TextField");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setValue("100% high Field");
         tf.setHeight("100%");
         tf.setWidth("100px");
@@ -602,7 +602,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("60% x 100% TextField");
         tf.setWidth("100%");
         tf.setHeight("100%");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         // tf.setComponentError(new UserError("It's broken!"));
 
         // tf.setHeight("100%");
@@ -617,7 +617,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("60% x 60% TextField");
         tf.setWidth("100%");
         tf.setHeight("60%");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         ol.addComponent(tf);
         ol.setExpandRatio(tf, 1f);
         ol.setComponentAlignment(tf, Alignment.MIDDLE_LEFT);
@@ -696,7 +696,7 @@ public class OrderedLayoutBasics extends TestBase {
             tf.setValue("200x200 TextField");
             tf.setWidth("200px");
             tf.setHeight("200px");
-            tf.setRequired(true);
+            tf.setRequiredIndicatorVisible(true);
             // tf.setComponentError(new UserError("It's broken!"));
 
             // tf.setHeight("100%");
@@ -723,9 +723,9 @@ public class OrderedLayoutBasics extends TestBase {
             tf = new TextArea("200x200px Field");
             tf.setCaption("This one has a caption");
             tf.setWidth("200px");
-            tf.setHeight(((i + 1) * 50) + "px");
+            tf.setHeight((i + 1) * 50 + "px");
             tf.setValue(tf.getWidth() + "x" + tf.getHeight() + " TextField");
-            tf.setRequired(true);
+            tf.setRequiredIndicatorVisible(true);
             // tf.setComponentError(new UserError("It's broken!"));
 
             // tf.setHeight("100%");
@@ -814,7 +814,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         tf = new TextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
 
@@ -852,7 +852,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf = new TextField(
                 "A long caption which is probably much longer than the field");
         tf.setValue("Undefined width");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -861,7 +861,7 @@ public class OrderedLayoutBasics extends TestBase {
                 "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("Undefined width");
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -905,7 +905,7 @@ public class OrderedLayoutBasics extends TestBase {
                 "A long caption which is probably much longer than the field");
         tf.setValue("100% wide field, ratio 2");
         tf.setSizeFull();
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -916,7 +916,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("100% wide field, ratio 3");
         tf.setSizeFull();
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -959,7 +959,7 @@ public class OrderedLayoutBasics extends TestBase {
                 "A long caption which is probably much longer than the field");
         tf.setWidth("250px");
         tf.setValue("250px wide field");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -969,7 +969,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("200px wide field");
         tf.setWidth("200px");
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -1209,7 +1209,7 @@ public class OrderedLayoutBasics extends TestBase {
         ta.setValue("60% x 100% TextField");
         ta.setWidth("60%");
         ta.setHeight("100%");
-        ta.setRequired(true);
+        ta.setRequiredIndicatorVisible(true);
         ta.setRows(2);
 
         ol.addComponent(ta);

@@ -15,22 +15,18 @@
  */
 package com.vaadin.shared.ui;
 
-import com.vaadin.shared.AbstractComponentState;
-import com.vaadin.shared.annotations.NoLayout;
-
 /**
- * State for components that support tab indexes.
+ * State for components that can show the required indicator.
  *
  * @author Vaadin Ltd
- * @since 7.0.0
+ * @since 8.0.0
  *
  */
-public class TabIndexState extends AbstractComponentState {
+public class RequiredIndicatorState extends TabIndexState {
 
     /**
-     * The <i>tabulator index</i> of the field.
+     * Is the required indicator visible or not.
      */
-    @NoLayout
-    public int tabIndex = 0;
+    public boolean required;
 
 }

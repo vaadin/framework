@@ -28,7 +28,7 @@ import com.vaadin.ui.AbstractField;
  * declarative test for a real component should extend it and implement abstract
  * methods to be able to test the common properties. Components specific
  * properties should be tested additionally in the subclasses implementations.
- * 
+ *
  * @author Vaadin Ltd
  *
  */
@@ -39,10 +39,11 @@ public abstract class AbstractFieldDeclarativeTest<T extends AbstractField<V>, V
     public void requiredDeserialization()
             throws InstantiationException, IllegalAccessException {
         boolean isRequired = true;
-        String design = String.format("<%s required/>", getComponentTag());
+        String design = String.format("<%s required-indicator-visible/>",
+                getComponentTag());
 
         T component = getComponentClass().newInstance();
-        component.setRequired(isRequired);
+        component.setRequiredIndicatorVisible(isRequired);
         testRead(design, component);
         testWrite(design, component);
     }

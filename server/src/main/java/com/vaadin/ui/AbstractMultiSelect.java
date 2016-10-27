@@ -37,6 +37,7 @@ import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.shared.ui.ListingJsonConstants;
+import com.vaadin.shared.ui.RequiredIndicatorState;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
@@ -471,5 +472,25 @@ public abstract class AbstractMultiSelect<T>
         Objects.requireNonNull(itemEnabledProvider);
         this.itemEnabledProvider = itemEnabledProvider;
     }
+
+    @Override
+    public void setRequiredIndicatorVisible(boolean visible) {
+        super.setRequiredIndicatorVisible(visible);
+    }
+
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return super.isRequiredIndicatorVisible();
+    }
+
+    @Override
+    protected RequiredIndicatorState getState() {
+        return (RequiredIndicatorState) super.getState();
+    }
+
+    @Override
+    protected RequiredIndicatorState getState(boolean markAsDirty) {
+        return (RequiredIndicatorState) super.getState(markAsDirty);
+    };
 
 }

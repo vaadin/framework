@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.data.HasRequired;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
@@ -109,8 +109,10 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     // TODO Move to AbstractFieldTestCase
     protected Command<T, Boolean> requiredCommand = (c, enabled, data) -> {
-        if (c instanceof HasRequired) {
-            ((HasRequired) c).setRequired(enabled);
+        if (c instanceof HasValue) {
+            ((HasValue) c).setRequiredIndicatorVisible(enabled);
+        } else if (c instanceof Field) {
+            ((Field) c).setRequired(enabled);
         } else {
             throw new IllegalArgumentException(c.getClass().getName()
                     + " is not a field and cannot be set to required");

@@ -3,7 +3,7 @@ package com.vaadin.tests.layouts;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.HasRequired;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
@@ -24,6 +24,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.OptionGroup;
 import com.vaadin.v7.ui.PasswordField;
@@ -140,8 +141,10 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     protected void setRequired(boolean value) {
         for (AbstractComponent c : components) {
-            if (c instanceof HasRequired) {
-                ((HasRequired) c).setRequired(value);
+            if (c instanceof HasValue) {
+                ((HasValue) c).setRequiredIndicatorVisible(value);
+            } else if (c instanceof Field) {
+                ((Field) c).setRequired(value);
             }
         }
 

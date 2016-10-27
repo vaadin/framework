@@ -17,7 +17,7 @@ package com.vaadin.data.validator;
 
 import java.util.Objects;
 
-import com.vaadin.data.HasRequired;
+import com.vaadin.data.HasValue;
 import com.vaadin.data.Result;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.ValueContext;
@@ -34,21 +34,22 @@ import com.vaadin.data.util.converter.ValueContext;
  * <p>
  * If the field is required, it is visually indicated in the user interface.
  * Furthermore, required fields requires "non-empty" validator. So in addition
- * to call {@link HasRequired#setRequired(boolean)} method one should add an
- * instance of this validator explicitly so the code looks like this:
+ * to call {@link HasRequired#setRequiredIndicatorVisible(boolean)} method one
+ * should add an instance of this validator explicitly so the code looks like
+ * this:
  *
  * <pre>
  * <code>
  * Binder<Bean,String, String> binder = new Binder<>();
  * TextField name = new TextField();
- * name.setRequired(true);
+ * name.setRequiredIndicatorVisible(true);
  * binder.forField(name).withValidator(
  *      new NonEmptyValidator("Name cannot be empty"))
  *              .bind(Bean::getName, Bean::setName);
  * </code>
  * </pre>
  *
- * @see HasRequired
+ * @see HasValue#setRequiredIndicatorVisible(boolean)
  * @author Vaadin Ltd
  * @since 8.0
  *

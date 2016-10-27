@@ -24,6 +24,7 @@ import java.util.List;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractFocusableListingConnector;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.VCheckBoxGroup;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.data.selection.SelectionModel;
@@ -35,8 +36,11 @@ import elemental.json.JsonObject;
 
 @Connect(CheckBoxGroup.class)
 // We don't care about the framework-provided selection model at this point
+// TODO refactor to extend AbstractMultiSelectConnector, maybe when
+// SelectionModel is removed from client side framwork8-issues#421
 public class CheckBoxGroupConnector extends
-        AbstractFocusableListingConnector<VCheckBoxGroup, SelectionModel<?>> {
+        AbstractFocusableListingConnector<VCheckBoxGroup, SelectionModel<?>>
+        implements HasRequiredIndicator {
 
     @Override
     protected void init() {
@@ -84,4 +88,9 @@ public class CheckBoxGroupConnector extends
         return (CheckBoxGroupState) super.getState();
     }
 
+    // TODO remove once this extends AbstractMultiSelectConnector
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return getState().required && !isReadOnly();
+    }
 }

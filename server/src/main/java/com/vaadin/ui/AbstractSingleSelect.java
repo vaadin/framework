@@ -306,7 +306,7 @@ public abstract class AbstractSingleSelect<T> extends
      * The call is delegated to {@link #getSelectedItem()}
      *
      * @return the current selection, may be {@code null}
-     * 
+     *
      * @see #getSelectedItem()
      * @see Single#getSelectedItem
      */
@@ -321,7 +321,7 @@ public abstract class AbstractSingleSelect<T> extends
      * value is {@code null} then it deselects currently selected item.
      * <p>
      * The call is delegated to {@link #setSelectedItem(Object)}.
-     * 
+     *
      * @see #setSelectedItem(Object)
      * @see Single#setSelectedItem(Object)
      *
@@ -348,5 +348,15 @@ public abstract class AbstractSingleSelect<T> extends
     @Override
     protected AbstractSingleSelectState getState(boolean markAsDirty) {
         return (AbstractSingleSelectState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void setRequiredIndicatorVisible(boolean visible) {
+        super.setRequiredIndicatorVisible(visible);
+    }
+
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return super.isRequiredIndicatorVisible();
     }
 }
