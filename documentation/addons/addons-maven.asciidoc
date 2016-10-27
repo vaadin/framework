@@ -76,7 +76,7 @@ Click [guilabel]#Activate# to buy a license, obtain a trial license key, or get 
 +
 image::img/directory-activate.png[width=50%, scaledwidth=70%]
 +
-For official Vaadin add-ons, see <<addons-cval#addons.cval, "Installing Commercial Vaadin Add-on Licence">> for more information.
+For official Vaadin add-ons, see <<addons-cval#addons.cval, "Installing Commercial Vaadin Add-on License">> for more information.
 
 . _In Vaadin 7.6 and older_: You need to compile the widget set as described in <<addons.maven.compiling>>.
 
