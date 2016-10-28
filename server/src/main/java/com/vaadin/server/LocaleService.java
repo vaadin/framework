@@ -168,11 +168,11 @@ public class LocaleService implements Serializable {
         }
         final String df = ((SimpleDateFormat) dateFormat).toPattern();
 
-        int timeStart = df.indexOf("H");
+        int timeStart = df.indexOf('H');
         if (timeStart < 0) {
-            timeStart = df.indexOf("h");
+            timeStart = df.indexOf('h');
         }
-        final int ampm_first = df.indexOf("a");
+        final int ampm_first = df.indexOf('a');
         // E.g. in Korean locale AM/PM is before h:mm
         // TODO should take that into consideration on client-side as well,
         // now always h:mm a

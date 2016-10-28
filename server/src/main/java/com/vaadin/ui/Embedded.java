@@ -451,7 +451,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
 
             if (mt.equals("image/svg+xml")) {
                 type = TYPE_OBJECT;
-            } else if ((mt.substring(0, mt.indexOf("/"))
+            } else if ((mt.substring(0, mt.indexOf('/'))
                     .equalsIgnoreCase("image"))) {
                 type = TYPE_IMAGE;
             } else {

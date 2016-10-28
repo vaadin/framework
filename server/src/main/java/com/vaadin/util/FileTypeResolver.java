@@ -254,9 +254,9 @@ public class FileTypeResolver implements Serializable {
         }
 
         // Calculates the extension of the file
-        int dotIndex = fileName.indexOf(".");
-        while (dotIndex >= 0 && fileName.indexOf(".", dotIndex + 1) >= 0) {
-            dotIndex = fileName.indexOf(".", dotIndex + 1);
+        int dotIndex = fileName.indexOf('.');
+        while (dotIndex >= 0 && fileName.indexOf('.', dotIndex + 1) >= 0) {
+            dotIndex = fileName.indexOf('.', dotIndex + 1);
         }
         dotIndex++;
 

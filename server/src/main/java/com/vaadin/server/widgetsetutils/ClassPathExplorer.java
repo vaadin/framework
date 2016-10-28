@@ -211,7 +211,7 @@ public class ClassPathExplorer {
                 // remove the .gwt.xml extension
                 String classname = file.substring(0, file.length() - 8);
                 String packageName = locationString
-                    .substring(locationString.lastIndexOf("/") + 1);
+                    .substring(locationString.lastIndexOf('/') + 1);
                 classname = packageName + "." + classname;
                 if (!WidgetSetBuilder.isWidgetset(classname)) {
                     // Only return widgetsets and not GWT modules to avoid

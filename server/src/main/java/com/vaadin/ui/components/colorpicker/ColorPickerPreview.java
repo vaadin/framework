@@ -134,7 +134,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
                 } else if (value.startsWith("rgb")) {
                     // RGB color format rgb/rgba(255,255,255,0.1)
-                    String[] colors = value.substring(value.indexOf("(") + 1,
+                    String[] colors = value.substring(value.indexOf('(') + 1,
                             value.length() - 1).split(",");
 
                     int red = Integer.parseInt(colors[0]);
@@ -150,7 +150,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
                 } else if (value.startsWith("hsl")) {
                     // HSL color format hsl/hsla(100,50%,50%,1.0)
-                    String[] colors = value.substring(value.indexOf("(") + 1,
+                    String[] colors = value.substring(value.indexOf('(') + 1,
                             value.length() - 1).split(",");
 
                     int hue = Integer.parseInt(colors[0]);

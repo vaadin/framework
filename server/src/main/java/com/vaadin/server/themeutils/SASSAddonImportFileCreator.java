@@ -152,7 +152,7 @@ public class SASSAddonImportFileCreator {
 
             // Convention is to name the mixin after the stylesheet. Strip
             // .scss from filename
-            String mixin = file.substring(file.lastIndexOf("/") + 1,
+            String mixin = file.substring(file.lastIndexOf('/') + 1,
                     file.length() - ".scss".length());
 
             foundMixins.add(mixin);
@@ -170,11 +170,11 @@ public class SASSAddonImportFileCreator {
 
         try {
             // Try to parse path for better readability
-            path = path.substring(path.lastIndexOf(":") + 1,
-                    path.lastIndexOf("!"));
+            path = path.substring(path.lastIndexOf(':') + 1,
+                    path.lastIndexOf('!'));
 
             // Extract jar archive filename
-            path = path.substring(path.lastIndexOf("/") + 1);
+            path = path.substring(path.lastIndexOf('/') + 1);
 
         } catch (Exception e) {
             // Parsing failed but no worries, we then use whatever
