@@ -286,7 +286,7 @@ public class VaadinPortletSession extends VaadinSession {
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
             while (eventActionDestinationMap.containsKey(actionKey)) {
-                actionKey = actionKey + ".";
+                actionKey += ".";
             }
             PortletURL actionUrl = generateActionURL(actionKey);
             if (actionUrl != null) {
@@ -336,7 +336,7 @@ public class VaadinPortletSession extends VaadinSession {
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
             while (sharedParameterActionNameMap.containsKey(actionKey)) {
-                actionKey = actionKey + ".";
+                actionKey += ".";
             }
             PortletURL actionUrl = generateActionURL(actionKey);
             if (actionUrl != null) {

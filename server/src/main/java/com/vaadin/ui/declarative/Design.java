@@ -261,7 +261,7 @@ public class Design implements Serializable {
                         .toLowerCase(Locale.ENGLISH);
                 context.addPackagePrefix(prefix, packageName);
             }
-            prefix = prefix + "-";
+            prefix += "-";
             String className = classNameToElementName(
                     componentClass.getSimpleName());
             String tagName = prefix + className;

@@ -894,7 +894,7 @@ public class NavigatorTest {
             @Override
             protected void navigateTo(View view, String viewName,
                     String parameters) {
-                count[0] = count[0] + 1;
+                count[0] += 1;
                 super.navigateTo(view, viewName, parameters);
             }
         };

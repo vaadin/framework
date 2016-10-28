@@ -789,7 +789,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // Remove milliseconds to avoid comparison problems (milliseconds
             // are not returned by the browser in the "If-Modified-Since"
             // header).
-            lastModifiedTime = lastModifiedTime - lastModifiedTime % 1000;
+            lastModifiedTime -= lastModifiedTime % 1000;
             response.setDateHeader("Last-Modified", lastModifiedTime);
 
             if (browserHasNewestVersion(request, lastModifiedTime)) {
@@ -1360,7 +1360,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         if (servletPath.length() == 0
                 || servletPath.charAt(servletPath.length() - 1) != '/') {
-            servletPath = servletPath + "/";
+            servletPath += "/";
         }
         URL u = new URL(reqURL, servletPath);
         return u;

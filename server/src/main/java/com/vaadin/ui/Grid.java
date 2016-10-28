@@ -2529,7 +2529,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
     private String getGeneratedIdentifier() {
         String columnId = "generatedColumn" + counter;
-        counter = counter + 1;
+        counter++;
         return columnId;
     }
 

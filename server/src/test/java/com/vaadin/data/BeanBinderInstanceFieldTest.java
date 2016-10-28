@@ -375,7 +375,7 @@ public class BeanBinderInstanceFieldTest {
         Assert.assertEquals(ageField, form.noFieldInPerson);
 
         form.firstName.setValue("aa");
-        age = age + 56;
+        age += 56;
         form.noFieldInPerson.setValue(String.valueOf(age));
 
         Assert.assertEquals(personName, person.getFirstName());
