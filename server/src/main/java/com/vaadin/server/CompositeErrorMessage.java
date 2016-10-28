@@ -39,8 +39,8 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
         super(null);
         setErrorLevel(ErrorLevel.INFORMATION);
 
-        for (int i = 0; i < errorMessages.length; i++) {
-            addErrorMessage(errorMessages[i]);
+        for (ErrorMessage errorMessage : errorMessages) {
+            addErrorMessage(errorMessage);
         }
 
         if (getCauses().size() == 0) {

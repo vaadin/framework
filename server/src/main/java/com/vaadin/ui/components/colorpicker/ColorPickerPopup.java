@@ -218,7 +218,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         // Add the resize button for the history
         resize.addClickListener(this::resizeButtonClick);
-        resize.setData(new Boolean(false));
+        resize.setData(false);
         resize.setWidth("100%");
         resize.setHeight("10px");
         resize.setPrimaryStyleName("resize-button");
@@ -437,7 +437,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
             history.setHeight("85px");
         }
 
-        resize.setData(new Boolean(!minimize));
+        resize.setData(!minimize);
     }
 
     private void okButtonClick(ClickEvent event) {

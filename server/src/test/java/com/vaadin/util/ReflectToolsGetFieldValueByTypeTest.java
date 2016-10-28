@@ -24,7 +24,7 @@ public class ReflectToolsGetFieldValueByTypeTest {
         MySubClass myInstance = new MySubClass();
 
         java.lang.reflect.Field memberField;
-        Object fieldValue = new Boolean(false);
+        Object fieldValue = false;
         try {
             memberField = myInstance.getClass().getField("field");
             // Should get a String value. Without the third parameter (calling
