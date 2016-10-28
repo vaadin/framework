@@ -108,11 +108,11 @@ public class Jsr303Test {
             NoSuchMethodException, SecurityException, InstantiationException,
             IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, IOException, InterruptedException {
-        URLClassLoader loader = new TestClassLoader();
-        Class<?> clazz = loader.loadClass(Jsr303UnitTest.class.getName());
-        UnitTest test = (UnitTest) clazz.newInstance();
-        test.execute();
-        loader.close();
+        try (URLClassLoader loader = new TestClassLoader()) {
+            Class<?> clazz = loader.loadClass(Jsr303UnitTest.class.getName());
+            UnitTest test = (UnitTest) clazz.newInstance();
+            test.execute();
+        }
     }
 
 }

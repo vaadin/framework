@@ -29,6 +29,7 @@ import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Serializes resources to JSON. Currently only used for {@link CustomLayout}
@@ -82,15 +83,13 @@ public class ResourceWriter implements Serializable {
                         + "\" : ");
                 final StringBuffer layout = new StringBuffer();
 
-                try {
-                    final InputStreamReader r = new InputStreamReader(is,
-                            "UTF-8");
+                try (InputStreamReader r = new InputStreamReader(is,
+                    StandardCharsets.UTF_8)) {
                     final char[] buffer = new char[20000];
                     int charsRead = 0;
                     while ((charsRead = r.read(buffer)) > 0) {
                         layout.append(buffer, 0, charsRead);
                     }
-                    r.close();
                 } catch (final java.io.IOException e) {
                     // FIXME: Handle exception
                     getLogger().log(Level.INFO, "Resource transfer failed", e);

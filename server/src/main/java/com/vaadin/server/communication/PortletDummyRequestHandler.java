@@ -60,10 +60,10 @@ public class PortletDummyRequestHandler implements RequestHandler {
 
         final OutputStream out = ((ResourceResponse) response)
                 .getPortletOutputStream();
-        final PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print("<html><body>dummy page</body></html>");
-        outWriter.close();
+        try (PrintWriter outWriter = new PrintWriter(
+            new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+            outWriter.print("<html><body>dummy page</body></html>");
+        }
 
         return true;
     }

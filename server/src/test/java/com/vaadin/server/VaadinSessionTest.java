@@ -286,9 +286,9 @@ public class VaadinSessionTest implements Serializable {
         int uiId = ui.getUIId();
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bos);
-        out.writeObject(session);
-        out.close();
+        try (ObjectOutputStream out = new ObjectOutputStream(bos)) {
+            out.writeObject(session);
+        }
 
         session.unlock();
 

@@ -273,8 +273,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
      */
     protected String getInitialUidl(VaadinRequest request, UI uI)
             throws IOException {
-        StringWriter writer = new StringWriter();
-        try {
+        try (StringWriter writer = new StringWriter()) {
             writer.write("{");
 
             VaadinSession session = uI.getSession();
@@ -287,8 +286,6 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             String initialUIDL = writer.toString();
             getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
             return initialUIDL;
-        } finally {
-            writer.close();
         }
     }
 

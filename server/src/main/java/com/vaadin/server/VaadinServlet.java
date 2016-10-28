@@ -605,12 +605,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
             String output) throws IOException {
         response.setContentType(contentType);
         final OutputStream out = response.getOutputStream();
-        // Set the response type
-        final PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print(output);
-        outWriter.flush();
-        outWriter.close();
+        try ( // Set the response type
+            PrintWriter outWriter = new PrintWriter(
+                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+            outWriter.print(output);
+            outWriter.flush();
+        }
     }
 
     /**
@@ -1405,8 +1405,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private static String readFile(File file, Charset charset)
             throws IOException {
-        InputStream in = new FileInputStream(file);
-        try {
+        try (InputStream in = new FileInputStream(file)) {
             // no point in reading files over 2GB to a String
             byte[] b = new byte[(int) file.length()];
             int len = b.length;
@@ -1420,18 +1419,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 total += result;
             }
             return new String(b, charset);
-        } finally {
-            in.close();
         }
     }
 
     private static void writeFile(String content, File file, Charset charset)
             throws IOException {
-        FileOutputStream fos = new FileOutputStream(file);
-        try {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(content.getBytes(charset));
-        } finally {
-            fos.close();
         }
     }
 

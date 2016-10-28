@@ -84,12 +84,12 @@ public class WidgetSetBuilder {
                 }
             }
             widgetsetFile.createNewFile();
-            PrintStream printStream = new PrintStream(
-                    new FileOutputStream(widgetsetFile));
-            printStream.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            try (PrintStream printStream = new PrintStream(
+                new FileOutputStream(widgetsetFile))) {
+                printStream.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                     + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN\" \"http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd\">\n");
-            printStream.print("<module>\n");
-            printStream.print("    <!--\n"
+                printStream.print("<module>\n");
+                printStream.print("    <!--\n"
                     + "     Uncomment the following to compile the widgetset for one browser only.\n\n"
                     + "     Multiple browsers can be specified as a comma separated list. The\n"
                     + "     supported user agents at the moment of writing were:\n"
@@ -103,8 +103,8 @@ public class WidgetSetBuilder {
                     + "    See https://vaadin.com/wiki/-/wiki/Main/Using%20SuperDevMode for more\n"
                     + "    information and instructions.\n" + "    -->\n"
                     + "    <!-- <set-configuration-property name=\"devModeRedirectEnabled\" value=\"true\" /> -->\n\n");
-            printStream.print("\n</module>\n");
-            printStream.close();
+                printStream.print("\n</module>\n");
+            }
             changed = true;
         }
 
@@ -155,10 +155,10 @@ public class WidgetSetBuilder {
 
     private static void commitChanges(File widgetsetFile, String content)
             throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(widgetsetFile)));
-        bufferedWriter.write(content);
-        bufferedWriter.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+            new OutputStreamWriter(new FileOutputStream(widgetsetFile)))) {
+            bufferedWriter.write(content);
+        }
     }
 
     private static String addWidgetSet(String ws, String content) {
@@ -187,15 +187,16 @@ public class WidgetSetBuilder {
     }
 
     private static String readFile(File widgetsetFile) throws IOException {
-        Reader fi = new FileReader(widgetsetFile);
-        BufferedReader bufferedReader = new BufferedReader(fi);
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line);
-            sb.append("\n");
+        StringBuilder sb;
+        try (Reader fi = new FileReader(widgetsetFile)) {
+            BufferedReader bufferedReader = new BufferedReader(fi);
+            sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
         }
-        fi.close();
         return sb.toString();
     }
 
