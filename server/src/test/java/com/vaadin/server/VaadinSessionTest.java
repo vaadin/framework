@@ -156,8 +156,11 @@ public class VaadinSessionTest implements Serializable {
                                        // when we get here
                     httpSessionLock.lock();// simulating servlet container's
                                            // session lock
-                    mockService.fireSessionDestroy(session);
-                    httpSessionLock.unlock();
+                    try {
+                        mockService.fireSessionDestroy(session);
+                    } finally {
+                        httpSessionLock.unlock();
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
