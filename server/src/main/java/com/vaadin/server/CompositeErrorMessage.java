@@ -43,7 +43,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
             addErrorMessage(errorMessage);
         }
 
-        if (getCauses().size() == 0) {
+        if (getCauses().isEmpty()) {
             throw new IllegalArgumentException(
                     "Composite error message must have at least one error");
         }
@@ -67,7 +67,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
             addErrorMessage(i.next());
         }
 
-        if (getCauses().size() == 0) {
+        if (getCauses().isEmpty()) {
             throw new IllegalArgumentException(
                     "Composite error message must have at least one error");
         }

@@ -454,7 +454,7 @@ public class Design implements Serializable {
                     "The first level of a component hierarchy should contain at most one root component, but found "
                             + children.size() + ".");
         }
-        Element element = children.size() == 0 ? null : children.first();
+        Element element = children.isEmpty() ? null : children.first();
         if (componentRoot != null) {
             if (element == null) {
                 throw new DesignException(

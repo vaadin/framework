@@ -838,7 +838,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         private String variablesAsJsonObject() {
-            if (variables.size() == 0) {
+            if (variables.isEmpty()) {
                 return "";
             }
             final StringBuilder buf = new StringBuilder();
