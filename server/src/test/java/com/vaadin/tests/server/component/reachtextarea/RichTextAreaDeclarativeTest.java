@@ -26,6 +26,7 @@ import com.vaadin.ui.RichTextArea;
 public class RichTextAreaDeclarativeTest
         extends AbstractFieldDeclarativeTest<RichTextArea, String> {
 
+    @Override
     public void valueDeserialization()
             throws InstantiationException, IllegalAccessException {
         String value = "<b>Header</b> \n<br>Some text";
@@ -39,6 +40,7 @@ public class RichTextAreaDeclarativeTest
         testWrite(design, component);
     }
 
+    @Override
     public void readOnlyValue()
             throws InstantiationException, IllegalAccessException {
         String value = "<b>Header</b> \n<br>Some text";
