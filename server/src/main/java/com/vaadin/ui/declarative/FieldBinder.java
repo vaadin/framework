@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.vaadin.ui.Component;
+import java.util.Arrays;
 
 /**
  * Binder utility that binds member fields of a design class instance to given
@@ -249,10 +250,8 @@ public class FieldBinder implements Serializable {
             Class<?> searchClass) {
         ArrayList<java.lang.reflect.Field> memberFields = new ArrayList<>();
 
-        for (java.lang.reflect.Field memberField : searchClass
-                .getDeclaredFields()) {
-            memberFields.add(memberField);
-        }
+        memberFields.addAll(Arrays.asList(searchClass
+            .getDeclaredFields()));
         return memberFields;
     }
 

@@ -30,6 +30,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
+import java.util.Arrays;
 
 public class ClassesSerializableTest {
 
@@ -269,9 +270,7 @@ public class ClassesSerializableTest {
         }
 
         String[] split = classpath.split(pathSep);
-        for (String classpathEntry : split) {
-            locations.add(classpathEntry);
-        }
+        locations.addAll(Arrays.asList(split));
 
         return locations;
     }

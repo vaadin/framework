@@ -40,6 +40,7 @@ import com.vaadin.server.SerializableBiConsumer;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.util.ReflectTools;
+import java.util.Arrays;
 
 /**
  * A {@code Binder} subclass specialized for binding <em>beans</em>: classes
@@ -480,9 +481,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         ArrayList<Field> memberFieldInOrder = new ArrayList<>();
 
         while (searchClass != null) {
-            for (Field memberField : searchClass.getDeclaredFields()) {
-                memberFieldInOrder.add(memberField);
-            }
+            memberFieldInOrder.addAll(Arrays.asList(searchClass.getDeclaredFields()));
             searchClass = searchClass.getSuperclass();
         }
         return memberFieldInOrder;

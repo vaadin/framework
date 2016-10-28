@@ -508,9 +508,7 @@ public class ListenerMethod implements EventListener, Serializable {
                         method.invoke(target, new Object[] { event });
                     } else {
                         final Object[] arg = new Object[arguments.length];
-                        for (int i = 0; i < arg.length; i++) {
-                            arg[i] = arguments[i];
-                        }
+                        System.arraycopy(arguments, 0, arg, 0, arg.length);
                         arg[eventArgumentIndex] = event;
                         method.invoke(target, arg);
                     }

@@ -26,6 +26,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VariableOwner;
 import com.vaadin.ui.Component;
+import java.util.Arrays;
 
 /**
  * Javadoc TODO
@@ -249,9 +250,7 @@ public class ActionManager
             for (Action.Handler h : actionHandlers) {
                 Action[] as = h.getActions(target, sender);
                 if (as != null) {
-                    for (Action a : as) {
-                        actions.add(a);
-                    }
+                    actions.addAll(Arrays.asList(as));
                 }
             }
         }
