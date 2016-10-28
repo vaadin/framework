@@ -57,10 +57,11 @@ public class DataSourceBoVTest {
                 Collection<PersonSort> personSorts) {
             Stream<Person> personStream = Arrays.stream(persons).skip(offset)
                     .limit(limit);
-            if (personSorts != null)
+            if (personSorts != null) {
                 for (PersonSort personSort : personSorts) {
                     personStream = personStream.sorted(personSort);
                 }
+            }
             return personStream.collect(Collectors.toList());
         }
 
@@ -85,10 +86,11 @@ public class DataSourceBoVTest {
                 throw new IllegalArgumentException(
                         "wrong field name " + propertyName);
             }
-            if (descending)
+            if (descending) {
                 return (person1, person2) -> result.compare(person2, person1);
-            else
+            } else {
                 return result;
+            }
         }
     }
 
