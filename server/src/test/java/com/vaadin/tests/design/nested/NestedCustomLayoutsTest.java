@@ -49,7 +49,7 @@ import com.vaadin.ui.declarative.Design;
  */
 public class NestedCustomLayoutsTest {
 
-    private static String PACKAGE_MAPPING = "com_vaadin_tests_design_nested_customlayouts:com.vaadin.tests.design.nested.customlayouts";
+    private static final String PACKAGE_MAPPING = "com_vaadin_tests_design_nested_customlayouts:com.vaadin.tests.design.nested.customlayouts";
 
     @Test
     public void testNestedLayouts() throws IOException {

@@ -65,8 +65,8 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
      */
     public static class FakeServletConfig implements ServletConfig {
 
-        private ServletRegistration servletRegistration;
-        private ServletContext servletContext;
+        private final ServletRegistration servletRegistration;
+        private final ServletContext servletContext;
 
         public FakeServletConfig(ServletRegistration servletRegistration,
                 ServletContext servletContext) {

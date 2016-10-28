@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class VaadinServletResponse extends HttpServletResponseWrapper
         implements VaadinResponse {
 
-    private VaadinServletService vaadinService;
+    private final VaadinServletService vaadinService;
 
     /**
      * Wraps a http servlet response and an associated vaadin service

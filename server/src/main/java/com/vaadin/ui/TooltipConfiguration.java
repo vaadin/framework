@@ -123,7 +123,7 @@ public interface TooltipConfiguration extends Serializable {
 }
 
 class TooltipConfigurationImpl implements TooltipConfiguration {
-    private UI ui;
+    private final UI ui;
 
     public TooltipConfigurationImpl(UI ui) {
         this.ui = ui;

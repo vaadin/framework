@@ -68,8 +68,8 @@ import elemental.json.JsonObject;
 public class ConnectorTracker implements Serializable {
 
     private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<>();
-    private Set<ClientConnector> dirtyConnectors = new HashSet<>();
-    private Set<ClientConnector> uninitializedConnectors = new HashSet<>();
+    private final Set<ClientConnector> dirtyConnectors = new HashSet<>();
+    private final Set<ClientConnector> uninitializedConnectors = new HashSet<>();
 
     /**
      * Connectors that have been unregistered and should be cleaned up the next
@@ -80,7 +80,7 @@ public class ConnectorTracker implements Serializable {
 
     private boolean writingResponse = false;
 
-    private UI uI;
+    private final UI uI;
     private transient Map<ClientConnector, JsonObject> diffStates = new HashMap<>();
 
     /** Maps connectorIds to a map of named StreamVariables */
@@ -96,7 +96,7 @@ public class ConnectorTracker implements Serializable {
      * @see #getCurrentSyncId()
      * @see #cleanConcurrentlyRemovedConnectorIds(long)
      */
-    private TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<>();
+    private final TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<>();
 
     /**
      * Gets a logger for this class

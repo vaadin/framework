@@ -34,8 +34,8 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
  *
  */
 public class DragAndDropEvent implements Serializable {
-    private Transferable transferable;
-    private TargetDetails dropTargetDetails;
+    private final Transferable transferable;
+    private final TargetDetails dropTargetDetails;
 
     public DragAndDropEvent(Transferable transferable,
             TargetDetails dropTargetDetails) {

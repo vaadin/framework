@@ -28,7 +28,7 @@ import com.vaadin.ui.Component;
  */
 public class TransferableImpl implements Transferable {
     private Map<String, Object> rawVariables = new HashMap<>();
-    private Component sourceComponent;
+    private final Component sourceComponent;
 
     public TransferableImpl(Component sourceComponent,
             Map<String, Object> rawVariables) {

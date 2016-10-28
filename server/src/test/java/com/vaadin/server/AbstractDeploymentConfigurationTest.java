@@ -95,7 +95,7 @@ public class AbstractDeploymentConfigurationTest {
     private static class DeploymentConfigImpl
             extends AbstractDeploymentConfiguration {
 
-        private Properties properties;
+        private final Properties properties;
 
         DeploymentConfigImpl(Properties props) {
             properties = props;

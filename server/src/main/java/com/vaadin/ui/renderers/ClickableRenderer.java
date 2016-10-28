@@ -70,8 +70,8 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
      */
     public static class RendererClickEvent<T> extends ClickEvent {
 
-        private T item;
-        private Column column;
+        private final T item;
+        private final Column column;
 
         protected RendererClickEvent(Grid<T> source, T item, Column column,
                 MouseEventDetails mouseEventDetails) {

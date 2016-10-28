@@ -23,7 +23,7 @@ public class MenuBarIdsTest implements Command {
     private MenuItem menuFileOpen;
     private MenuItem menuFileSave;
     private MenuItem menuFileExit;
-    private Set<MenuItem> menuItems = new HashSet<>();
+    private final Set<MenuItem> menuItems = new HashSet<>();
 
     private MenuBar menuBar;
 

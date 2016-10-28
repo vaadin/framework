@@ -38,7 +38,7 @@ public class ColorPickerSelect extends CustomField<Color> {
         ALL("All colors"), RED("Red colors"), GREEN("Green colors"), BLUE(
                 "Blue colors");
 
-        private String caption;
+        private final String caption;
 
         ColorRange(String caption) {
             this.caption = caption;

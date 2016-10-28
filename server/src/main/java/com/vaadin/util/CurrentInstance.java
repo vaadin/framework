@@ -64,7 +64,7 @@ public class CurrentInstance implements Serializable {
     private final WeakReference<Object> instance;
     private final boolean inheritable;
 
-    private static InheritableThreadLocal<Map<Class<?>, CurrentInstance>> instances = new InheritableThreadLocal<Map<Class<?>, CurrentInstance>>() {
+    private static final InheritableThreadLocal<Map<Class<?>, CurrentInstance>> instances = new InheritableThreadLocal<Map<Class<?>, CurrentInstance>>() {
         @Override
         protected Map<Class<?>, CurrentInstance> childValue(
                 Map<Class<?>, CurrentInstance> parentValue) {

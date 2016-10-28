@@ -36,7 +36,7 @@ import com.vaadin.ui.Component;
 @SuppressWarnings("serial")
 public class SourceIs extends ClientSideCriterion {
 
-    private Component[] components;
+    private final Component[] components;
 
     public SourceIs(Component... component) {
         components = component;

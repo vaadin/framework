@@ -39,7 +39,7 @@ public class ClientMethodInvocation
     private final String interfaceName;
     private final String methodName;
     private transient Object[] parameters;
-    private Type[] parameterTypes;
+    private final Type[] parameterTypes;
 
     // used for sorting calls between different connectors in the same UI
     private final long sequenceNumber;

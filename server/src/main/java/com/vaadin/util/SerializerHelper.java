@@ -105,7 +105,7 @@ public class SerializerHelper {
      * List of primitive classes. Google App Engine has problems
      * serializing/deserializing these (#3064).
      */
-    private static Class<?>[] primitiveClasses = new Class<?>[] { byte.class,
+    private static final Class<?>[] primitiveClasses = new Class<?>[] { byte.class,
             short.class, int.class, long.class, float.class, double.class,
             boolean.class, char.class };
 

@@ -132,7 +132,7 @@ public interface Sizeable extends Serializable {
          */
         PERCENTAGE("%");
 
-        private String symbol;
+        private final String symbol;
 
         private Unit(String symbol) {
             this.symbol = symbol;

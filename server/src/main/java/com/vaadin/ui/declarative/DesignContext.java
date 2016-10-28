@@ -686,9 +686,9 @@ public class DesignContext implements Serializable {
      * @author Vaadin Ltd
      */
     public class ComponentCreatedEvent implements Serializable {
-        private String localId;
-        private Component component;
-        private DesignContext context;
+        private final String localId;
+        private final Component component;
+        private final DesignContext context;
 
         /**
          * Creates a new instance of ComponentCreatedEvent

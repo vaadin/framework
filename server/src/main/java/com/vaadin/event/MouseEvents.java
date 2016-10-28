@@ -60,7 +60,7 @@ public interface MouseEvents {
          */
         @Deprecated
         public static final MouseButton BUTTON_RIGHT = MouseButton.RIGHT;
-        private MouseEventDetails details;
+        private final MouseEventDetails details;
 
         public ClickEvent(Component source,
                 MouseEventDetails mouseEventDetails) {

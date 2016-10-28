@@ -28,7 +28,7 @@ import com.vaadin.data.util.converter.ValueContext;
 @SuppressWarnings("serial")
 public class StringLengthValidator extends AbstractValidator<String> {
 
-    private RangeValidator<Integer> validator;
+    private final RangeValidator<Integer> validator;
 
     /**
      * Creates a new StringLengthValidator with a given error message and

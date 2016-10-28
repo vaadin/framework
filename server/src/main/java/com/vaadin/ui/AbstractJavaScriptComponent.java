@@ -149,7 +149,7 @@ import elemental.json.JsonValue;
  * @since 7.0.0
  */
 public abstract class AbstractJavaScriptComponent extends AbstractComponent {
-    private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
+    private final JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
 
     @Override

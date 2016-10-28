@@ -650,8 +650,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      */
     public static class DetailsManager<T> extends AbstractGridExtension<T> {
 
-        private Set<T> visibleDetails = new HashSet<>();
-        private Map<T, Component> components = new HashMap<>();
+        private final Set<T> visibleDetails = new HashSet<>();
+        private final Map<T, Component> components = new HashMap<>();
         private DetailsGenerator<T> generator;
 
         /**
@@ -1821,17 +1821,17 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
     };
 
-    private Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
-    private Map<String, Column<T, ?>> columnKeys = new HashMap<>();
+    private final Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
+    private final Map<String, Column<T, ?>> columnKeys = new HashMap<>();
 
-    private List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
-    private DetailsManager<T> detailsManager;
-    private Set<Component> extensionComponents = new HashSet<>();
+    private final List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
+    private final DetailsManager<T> detailsManager;
+    private final Set<Component> extensionComponents = new HashSet<>();
     private StyleGenerator<T> styleGenerator = item -> null;
     private DescriptionGenerator<T> descriptionGenerator;
 
-    private Header header = new HeaderImpl();
-    private Footer footer = new FooterImpl();
+    private final Header header = new HeaderImpl();
+    private final Footer footer = new FooterImpl();
 
     private int counter = 0;
 

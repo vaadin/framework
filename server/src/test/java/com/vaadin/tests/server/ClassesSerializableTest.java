@@ -38,11 +38,11 @@ public class ClassesSerializableTest {
      * JARs that will be scanned for classes to test, in addition to classpath
      * directories.
      */
-    private static String JAR_PATTERN = ".*vaadin.*\\.jar";
+    private static final String JAR_PATTERN = ".*vaadin.*\\.jar";
 
-    private static String[] BASE_PACKAGES = { "com.vaadin" };
+    private static final String[] BASE_PACKAGES = { "com.vaadin" };
 
-    private static String[] EXCLUDED_PATTERNS = { "com\\.vaadin\\.demo\\..*", //
+    private static final String[] EXCLUDED_PATTERNS = { "com\\.vaadin\\.demo\\..*", //
             "com\\.vaadin\\.external\\.org\\.apache\\.commons\\.fileupload\\..*", //
             "com\\.vaadin\\.launcher\\..*", //
             "com\\.vaadin\\.client\\..*", //

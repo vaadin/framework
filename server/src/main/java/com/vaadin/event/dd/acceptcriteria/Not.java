@@ -31,7 +31,7 @@ import com.vaadin.server.PaintTarget;
 public class Not extends ClientSideCriterion {
 
     private static final long serialVersionUID = 1131422338558613244L;
-    private AcceptCriterion acceptCriterion;
+    private final AcceptCriterion acceptCriterion;
 
     public Not(ClientSideCriterion acceptCriterion) {
         this.acceptCriterion = acceptCriterion;

@@ -69,7 +69,7 @@ public class LegacyCommunicationManager implements Serializable {
     private String requestThemeName;
 
     // TODO Refactor (#11413)
-    private Map<String, Class<?>> publishedFileContexts = new HashMap<>();
+    private final Map<String, Class<?>> publishedFileContexts = new HashMap<>();
 
     /**
      * TODO New constructor - document me!

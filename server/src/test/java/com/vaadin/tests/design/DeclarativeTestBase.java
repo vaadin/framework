@@ -31,7 +31,7 @@ import com.vaadin.ui.Flash;
 public abstract class DeclarativeTestBase<T extends Component>
         extends DeclarativeTestBaseBase<T> {
 
-    private static boolean debug = false;
+    private static final boolean debug = false;
 
     private final Map<Class<?>, EqualsAsserter<?>> comparators = new HashMap<>();
     private static final EqualsAsserter standardEqualsComparator = (EqualsAsserter<Object>) Assert::assertEquals;

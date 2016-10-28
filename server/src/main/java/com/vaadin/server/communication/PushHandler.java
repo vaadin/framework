@@ -156,7 +156,7 @@ public class PushHandler {
         }
     };
 
-    private VaadinServletService service;
+    private final VaadinServletService service;
 
     public PushHandler(VaadinServletService service) {
         this.service = service;

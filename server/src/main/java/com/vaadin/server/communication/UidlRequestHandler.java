@@ -51,7 +51,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
 
     public static final String UIDL_PATH = "UIDL/";
 
-    private ServerRpcHandler rpcHandler;
+    private final ServerRpcHandler rpcHandler;
 
     public UidlRequestHandler() {
         rpcHandler = createRpcHandler();

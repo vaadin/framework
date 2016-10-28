@@ -37,7 +37,7 @@ public class CustomUIClassLoaderTest {
      */
     public class LoggingClassLoader extends ClassLoader {
 
-        private List<String> requestedClasses = new ArrayList<>();
+        private final List<String> requestedClasses = new ArrayList<>();
 
         @Override
         protected synchronized Class<?> loadClass(String name, boolean resolve)

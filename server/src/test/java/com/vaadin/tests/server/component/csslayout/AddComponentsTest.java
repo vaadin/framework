@@ -16,7 +16,7 @@ import com.vaadin.ui.Layout;
 
 public class AddComponentsTest {
 
-    private Component[] children = new Component[] { new Label("A"),
+    private final Component[] children = new Component[] { new Label("A"),
             new Label("B"), new Label("C"), new Label("D") };
 
     @Test

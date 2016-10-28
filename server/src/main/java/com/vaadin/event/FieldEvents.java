@@ -194,7 +194,7 @@ public interface FieldEvents {
     public static abstract class FocusAndBlurServerRpcImpl
             implements FocusAndBlurServerRpc {
 
-        private Component component;
+        private final Component component;
 
         public FocusAndBlurServerRpcImpl(Component component) {
             this.component = component;

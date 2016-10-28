@@ -58,7 +58,7 @@ public class FileUploadHandlerTest {
     @Mock
     private OutputStream responseOutput;
 
-    private int uiId = 123;
+    private final int uiId = 123;
     private final String connectorId = "connectorId";
     private final String variableName = "name";
     private final String expectedSecurityKey = "key";

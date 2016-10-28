@@ -83,7 +83,7 @@ public interface LoadingIndicatorConfiguration extends Serializable {
 
 class LoadingIndicatorConfigurationImpl
         implements LoadingIndicatorConfiguration {
-    private UI ui;
+    private final UI ui;
 
     public LoadingIndicatorConfigurationImpl(UI ui) {
         this.ui = ui;

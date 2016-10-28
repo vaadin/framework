@@ -151,7 +151,7 @@ public class AttachDetachListenersTest {
     public static class EventEquals<E extends ConnectorEvent>
             implements IArgumentMatcher {
 
-        private E expected;
+        private final E expected;
 
         public EventEquals(E expected) {
             this.expected = expected;

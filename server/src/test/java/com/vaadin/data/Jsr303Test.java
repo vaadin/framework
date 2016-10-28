@@ -78,7 +78,7 @@ public class Jsr303Test {
 
     public static class Jsr303UnitTest implements UnitTest {
 
-        private TextField nameField = new TextField();
+        private final TextField nameField = new TextField();
 
         @Override
         public void execute() {

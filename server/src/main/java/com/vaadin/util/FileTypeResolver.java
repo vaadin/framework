@@ -53,7 +53,7 @@ public class FileTypeResolver implements Serializable {
     /**
      * Initial file extension to mime-type mapping.
      */
-    static private String initialExtToMIMEMap = "application/cu-seeme                            csm cu,"
+    private static final String initialExtToMIMEMap = "application/cu-seeme                            csm cu,"
             + "application/dsptype                             tsp,"
             + "application/futuresplash                        spl,"
             + "application/mac-binhex40                        hqx,"

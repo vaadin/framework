@@ -54,7 +54,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     private Unit posMinUnit;
     private Unit posMaxUnit;
 
-    private AbstractSplitPanelRpc rpc = new AbstractSplitPanelRpc() {
+    private final AbstractSplitPanelRpc rpc = new AbstractSplitPanelRpc() {
 
         @Override
         public void splitterClick(MouseEventDetails mouseDetails) {

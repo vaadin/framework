@@ -33,7 +33,7 @@ import com.vaadin.server.PaintTarget;
  */
 public class Or extends ClientSideCriterion {
     private static final long serialVersionUID = 1L;
-    private AcceptCriterion criteria[];
+    private final AcceptCriterion criteria[];
 
     /**
      * @param criteria

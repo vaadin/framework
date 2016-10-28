@@ -75,7 +75,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         /** A simple popup with only the swatches (palette) tab. */
         POPUP_SIMPLE("simple");
 
-        private String style;
+        private final String style;
 
         PopupStyle(String styleName) {
             style = styleName;

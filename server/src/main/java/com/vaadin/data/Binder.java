@@ -794,7 +794,7 @@ public class Binder<BEAN> implements Serializable {
      */
     private static class ValidatorAsConverter<T> implements Converter<T, T> {
 
-        private Validator<? super T> validator;
+        private final Validator<? super T> validator;
 
         /**
          * Creates a new converter wrapping the given validator.

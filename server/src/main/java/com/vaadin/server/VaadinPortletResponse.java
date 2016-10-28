@@ -47,7 +47,7 @@ public class VaadinPortletResponse implements VaadinResponse {
     }
 
     private final PortletResponse response;
-    private VaadinPortletService vaadinService;
+    private final VaadinPortletService vaadinService;
 
     /**
      * Wraps a portlet response and an associated vaadin service

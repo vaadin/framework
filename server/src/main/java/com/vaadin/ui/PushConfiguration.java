@@ -165,7 +165,7 @@ public interface PushConfiguration extends Serializable {
 }
 
 class PushConfigurationImpl implements PushConfiguration {
-    private UI ui;
+    private final UI ui;
 
     public PushConfigurationImpl(UI ui) {
         this.ui = ui;

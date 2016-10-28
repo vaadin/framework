@@ -204,17 +204,17 @@ public class JsonCodec implements Serializable {
      * happens to process Vaadin requests, so it must be protected from
      * corruption caused by concurrent access.
      */
-    private static ConcurrentMap<Class<?>, Collection<BeanProperty>> typePropertyCache = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, Collection<BeanProperty>> typePropertyCache = new ConcurrentHashMap<>();
 
-    private static Map<Class<?>, String> typeToTransportType = new HashMap<>();
+    private static final Map<Class<?>, String> typeToTransportType = new HashMap<>();
 
     /**
      * Note! This does not contain primitives.
      * <p>
      */
-    private static Map<String, Class<?>> transportTypeToType = new HashMap<>();
+    private static final Map<String, Class<?>> transportTypeToType = new HashMap<>();
 
-    private static Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<>();
+    private static final Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<>();
     static {
         customSerializers.put(Date.class, new DateSerializer());
     }

@@ -184,7 +184,7 @@ public class CsrfTokenMissingTest {
                 rpcRequest.getCsrfToken());
     }
 
-    private static Logger LOGGER = Logger
+    private static final Logger LOGGER = Logger
             .getLogger(CsrfTokenMissingTest.class.getName());
     static {
         LOGGER.setLevel(Level.ALL);

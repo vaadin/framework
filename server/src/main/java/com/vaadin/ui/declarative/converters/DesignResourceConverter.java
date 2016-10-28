@@ -170,7 +170,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             return ((ExternalResource) value).getURL();
         }
 
-        private static Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<>();
+        private static final Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<>();
         static {
             typeToConverter.put(ExternalResource.class, HTTP);
             // ^ any of non-specialized would actually work

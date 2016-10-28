@@ -42,7 +42,7 @@ public class BeanToValidate {
     @Valid
     private Address address;
 
-    private String readOnlyProperty = "READONLY DATA";
+    private final String readOnlyProperty = "READONLY DATA";
 
     private String writeOnlyProperty;
 

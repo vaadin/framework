@@ -47,9 +47,9 @@ public class JavaScriptCallbackHelper implements Serializable {
 
     private static final Method CALL_METHOD = ReflectTools.findMethod(
             JavaScriptCallbackRpc.class, "call", String.class, JsonArray.class);
-    private AbstractClientConnector connector;
+    private final AbstractClientConnector connector;
 
-    private Map<String, JavaScriptFunction> callbacks = new HashMap<>();
+    private final Map<String, JavaScriptFunction> callbacks = new HashMap<>();
     private JavaScriptCallbackRpc javascriptCallbackRpc;
 
     public JavaScriptCallbackHelper(AbstractClientConnector connector) {

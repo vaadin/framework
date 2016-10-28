@@ -731,7 +731,7 @@ public enum FontAwesome implements FontIcon {
     ;
 
     public static final String FONT_FAMILY = "FontAwesome";
-    private int codepoint;
+    private final int codepoint;
 
     FontAwesome(int codepoint) {
         this.codepoint = codepoint;

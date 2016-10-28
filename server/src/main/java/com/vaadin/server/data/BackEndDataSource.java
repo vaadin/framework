@@ -30,8 +30,8 @@ import com.vaadin.server.SerializableFunction;
  */
 public class BackEndDataSource<T> extends AbstractDataSource<T> {
 
-    private SerializableFunction<Query, Stream<T>> request;
-    private SerializableFunction<Query, Integer> sizeCallback;
+    private final SerializableFunction<Query, Stream<T>> request;
+    private final SerializableFunction<Query, Integer> sizeCallback;
 
     /**
      * Constructs a new DataSource to request data from an arbitrary back end

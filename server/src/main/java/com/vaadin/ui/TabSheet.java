@@ -1101,7 +1101,7 @@ public class TabSheet extends AbstractComponentContainer
      */
     public class TabSheetTabImpl implements Tab {
 
-        private TabState tabState;
+        private final TabState tabState;
 
         private Focusable defaultFocus;
 

@@ -114,7 +114,7 @@ public interface ClientConnector extends Connector {
     public static class ConnectorErrorEvent
             extends com.vaadin.server.ErrorEvent {
 
-        private Connector connector;
+        private final Connector connector;
 
         public ConnectorErrorEvent(Connector connector, Throwable t) {
             super(t);

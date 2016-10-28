@@ -43,9 +43,9 @@ public class DesignTest {
     private static final Charset CP1251_CHARSET = Charset.forName("cp1251");
     private static final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
 
-    private static String NON_ASCII_STRING = "\u043C";
+    private static final String NON_ASCII_STRING = "\u043C";
 
-    private static Charset DEFAULT_CHARSET = Charset.defaultCharset();
+    private static final Charset DEFAULT_CHARSET = Charset.defaultCharset();
 
     @AfterClass
     public static void restoreCharset()

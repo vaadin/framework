@@ -66,5 +66,5 @@ public class MockVaadinSession extends VaadinSession {
 
     private int closeCount;
 
-    private ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
 }

@@ -31,7 +31,7 @@ import com.vaadin.server.SerializableFunction;
  */
 public abstract class AbstractValidator<T> implements Validator<T> {
 
-    private SerializableFunction<T, String> messageProvider;
+    private final SerializableFunction<T, String> messageProvider;
 
     /**
      * Constructs a validator with the given error message. The substring "{0}"

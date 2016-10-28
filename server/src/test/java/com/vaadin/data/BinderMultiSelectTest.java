@@ -54,7 +54,7 @@ public class BinderMultiSelectTest
         }
     }
 
-    private Binder<AtomicReference<String>> converterBinder = new Binder<>();
+    private final Binder<AtomicReference<String>> converterBinder = new Binder<>();
 
     private CheckBoxGroup<TestEnum> select;
 

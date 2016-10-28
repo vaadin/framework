@@ -30,8 +30,8 @@ import com.vaadin.shared.util.SharedUtil;
  * @author Vaadin Ltd
  */
 public class SizeWithUnit implements Serializable {
-    private float size;
-    private Unit unit;
+    private final float size;
+    private final Unit unit;
     private static final Pattern sizePattern = Pattern
             .compile(SharedUtil.SIZE_PATTERN);
 

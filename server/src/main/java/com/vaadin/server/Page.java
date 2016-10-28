@@ -333,7 +333,7 @@ public class Page implements Serializable {
 
     private static class InjectedStyleString implements InjectedStyle {
 
-        private String css;
+        private final String css;
 
         public InjectedStyleString(String css) {
             this.css = css;

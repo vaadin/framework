@@ -27,10 +27,10 @@ import com.vaadin.server.StreamVariable;
  */
 public class Html5File implements Serializable {
 
-    private String name;
-    private long size;
+    private final String name;
+    private final long size;
     private StreamVariable streamVariable;
-    private String type;
+    private final String type;
 
     Html5File(String name, long size, String mimeType) {
         this.name = name;

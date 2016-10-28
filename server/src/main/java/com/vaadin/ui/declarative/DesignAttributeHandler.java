@@ -430,7 +430,7 @@ public class DesignAttributeHandler implements Serializable {
      * @author Vaadin Ltd
      */
     private static class AttributeCacheEntry implements Serializable {
-        private Map<String, Method[]> accessMethods = new ConcurrentHashMap<>();
+        private final Map<String, Method[]> accessMethods = new ConcurrentHashMap<>();
 
         private void addAttribute(String attribute, Method getter,
                 Method setter) {

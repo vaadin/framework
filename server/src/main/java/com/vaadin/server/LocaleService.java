@@ -41,9 +41,9 @@ import com.vaadin.ui.UI;
  */
 public class LocaleService implements Serializable {
 
-    private UI ui;
+    private final UI ui;
 
-    private LocaleServiceState state;
+    private final LocaleServiceState state;
 
     /**
      * Creates a LocaleService bound to the given UI

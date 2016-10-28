@@ -55,12 +55,11 @@ public class AbsoluteLayout extends AbstractLayout
     private static final String ATTR_Z_INDEX = ":z-index";
 
     private final AbsoluteLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
-            Connector clickedConnector) -> {
-        fireEvent(LayoutClickEvent.createEvent(AbsoluteLayout.this,
-                mouseDetails, clickedConnector));
-    };
+            Connector clickedConnector) -> fireEvent(
+                    LayoutClickEvent.createEvent(AbsoluteLayout.this,
+                            mouseDetails, clickedConnector));
     // Maps each component to a position
-    private LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<>();
+    private final LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<>();
 
     /**
      * Creates an AbsoluteLayout with full size.

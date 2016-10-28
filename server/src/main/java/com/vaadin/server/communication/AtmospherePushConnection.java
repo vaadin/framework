@@ -131,7 +131,7 @@ public class AtmospherePushConnection implements PushConnection {
         CONNECTED;
     }
 
-    private UI ui;
+    private final UI ui;
     private transient State state = State.DISCONNECTED;
     private transient AtmosphereResource resource;
     private transient FragmentedMessage incomingMessage;

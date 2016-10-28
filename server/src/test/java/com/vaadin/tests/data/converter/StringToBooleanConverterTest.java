@@ -21,7 +21,7 @@ public class StringToBooleanConverterTest extends AbstractStringConverterTest {
             getErrorMessage(), "yes", "no");
     private StringToBooleanConverter emptyTrueConverter = new StringToBooleanConverter(
             getErrorMessage(), "", "ABSENT");
-    private StringToBooleanConverter localeConverter = new StringToBooleanConverter(
+    private final StringToBooleanConverter localeConverter = new StringToBooleanConverter(
             getErrorMessage()) {
         @Override
         public String getFalseString(Locale locale) {

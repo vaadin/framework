@@ -98,14 +98,14 @@ public class ClassPathExplorer {
      * entries that could include widgets/widgetsets are listed (primarily
      * directories, Vaadin JARs and add-on JARs).
      */
-    private static List<String> rawClasspathEntries = getRawClasspathEntries();
+    private static final List<String> rawClasspathEntries = getRawClasspathEntries();
 
     /**
      * Map from identifiers (either a package name preceded by the path and a
      * slash, or a URL for a JAR file) to the corresponding URLs. This is
      * constructed from the class path.
      */
-    private static Map<String, URL> classpathLocations = getClasspathLocations(
+    private static final Map<String, URL> classpathLocations = getClasspathLocations(
             rawClasspathEntries);
 
     private static boolean debug = false;

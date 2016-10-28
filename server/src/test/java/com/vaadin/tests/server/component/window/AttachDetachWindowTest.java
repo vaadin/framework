@@ -21,7 +21,7 @@ import com.vaadin.ui.Window;
 
 public class AttachDetachWindowTest {
 
-    private VaadinSession testApp = new AlwaysLockedVaadinSession(null);
+    private final VaadinSession testApp = new AlwaysLockedVaadinSession(null);
 
     private interface TestContainer {
         public boolean attachCalled();
@@ -36,7 +36,7 @@ public class AttachDetachWindowTest {
     private class TestWindow extends Window implements TestContainer {
         boolean windowAttachCalled = false;
         boolean windowDetachCalled = false;
-        private TestContent testContent = new TestContent();
+        private final TestContent testContent = new TestContent();
 
         TestWindow() {
             setContent(testContent);
@@ -81,7 +81,7 @@ public class AttachDetachWindowTest {
         boolean contentAttachCalled = false;
         boolean childAttachCalled = false;
 
-        private Label child = new Label() {
+        private final Label child = new Label() {
             @Override
             public void attach() {
                 super.attach();
@@ -115,7 +115,7 @@ public class AttachDetachWindowTest {
     private class TestUI extends UI implements TestContainer {
         boolean rootAttachCalled = false;
         boolean rootDetachCalled = false;
-        private TestContent testContent = new TestContent();
+        private final TestContent testContent = new TestContent();
 
         public TestUI() {
             setContent(testContent);

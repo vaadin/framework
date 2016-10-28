@@ -32,7 +32,7 @@ import com.vaadin.server.PaintTarget;
  */
 public class ContainsDataFlavor extends ClientSideCriterion {
 
-    private String dataFlavorId;
+    private final String dataFlavorId;
 
     /**
      * Constructs a new instance of {@link ContainsDataFlavor}.

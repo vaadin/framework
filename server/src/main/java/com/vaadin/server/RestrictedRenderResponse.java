@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  */
 class RestrictedRenderResponse implements RenderResponse, Serializable {
 
-    private RenderResponse response;
+    private final RenderResponse response;
 
     RestrictedRenderResponse(RenderResponse response) {
         this.response = response;

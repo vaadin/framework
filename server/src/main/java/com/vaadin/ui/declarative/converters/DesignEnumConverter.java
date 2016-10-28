@@ -33,7 +33,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 public class DesignEnumConverter<T extends Enum>
         implements Converter<String, T> {
 
-    private Class<T> type;
+    private final Class<T> type;
 
     /**
      * Creates a converter for the given enum type.

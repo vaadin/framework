@@ -85,7 +85,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         private final Map<Class<?>, CurrentInstance> instances = CurrentInstance
                 .getInstances(true);
         private final VaadinSession session;
-        private Runnable runnable;
+        private final Runnable runnable;
 
         /**
          * Creates an instance for the given runnable

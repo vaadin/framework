@@ -40,7 +40,7 @@ public class ColorPickerHistory extends CustomField<Color> {
     private static final int COLUMNS = 15;
 
     /** Temporary color history for when the component is detached. */
-    private ArrayBlockingQueue<Color> tempHistory = new ArrayBlockingQueue<>(
+    private final ArrayBlockingQueue<Color> tempHistory = new ArrayBlockingQueue<>(
             ROWS * COLUMNS);
 
     @Override

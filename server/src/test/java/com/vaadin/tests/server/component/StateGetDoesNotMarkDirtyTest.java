@@ -19,7 +19,7 @@ import com.vaadin.ui.UI;
 
 public class StateGetDoesNotMarkDirtyTest {
 
-    private Set<String> excludedMethods = new HashSet<>();
+    private final Set<String> excludedMethods = new HashSet<>();
 
     @Before
     public void setUp() {

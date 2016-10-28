@@ -23,7 +23,7 @@ import com.vaadin.ui.TextField;
 public class ExtendedDesignWithEmptyAnnotation
         extends DesignWithEmptyAnnotation {
 
-    private TextField customField = new TextField();
+    private final TextField customField = new TextField();
 
     public ExtendedDesignWithEmptyAnnotation() {
         super();

@@ -118,7 +118,7 @@ public interface NotificationConfiguration extends Serializable {
 
 class NotificationConfigurationImpl implements NotificationConfiguration {
 
-    private UI ui;
+    private final UI ui;
 
     public NotificationConfigurationImpl(UI ui) {
         this.ui = ui;

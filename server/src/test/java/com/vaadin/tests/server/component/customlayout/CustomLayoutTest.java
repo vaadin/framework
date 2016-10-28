@@ -142,6 +142,6 @@ public class CustomLayoutTest {
 
         private int readCount;
         private boolean isClosed;
-        private int maxArrayLength;
+        private final int maxArrayLength;
     }
 }

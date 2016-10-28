@@ -17,10 +17,10 @@ public class MockDeploymentConfiguration
     private int heartbeatInterval = 300;
     private boolean closeIdleSessions = false;
     private PushMode pushMode = PushMode.DISABLED;
-    private Properties initParameters = new Properties();
-    private Map<String, String> applicationOrSystemProperty = new HashMap<>();
+    private final Properties initParameters = new Properties();
+    private final Map<String, String> applicationOrSystemProperty = new HashMap<>();
     private boolean syncIdCheckEnabled = true;
-    private boolean sendUrlsAsParameters = true;
+    private final boolean sendUrlsAsParameters = true;
 
     @Override
     public boolean isProductionMode() {

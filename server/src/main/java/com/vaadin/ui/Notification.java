@@ -70,7 +70,7 @@ public class Notification implements Serializable {
          */
         ASSISTIVE_NOTIFICATION("assistive");
 
-        private String style;
+        private final String style;
 
         Type(String style) {
             this.style = style;

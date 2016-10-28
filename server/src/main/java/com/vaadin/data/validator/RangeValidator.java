@@ -35,7 +35,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
     private T maxValue = null;
     private boolean minValueIncluded = true;
     private boolean maxValueIncluded = true;
-    private Comparator<? super T> comparator;
+    private final Comparator<? super T> comparator;
 
     /**
      * Creates a new range validator of the given type. Passing null to either

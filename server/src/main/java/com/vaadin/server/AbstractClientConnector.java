@@ -61,13 +61,13 @@ public abstract class AbstractClientConnector
      * A map from client to server RPC interface class name to the RPC call
      * manager that handles incoming RPC calls for that interface.
      */
-    private Map<String, ServerRpcManager<?>> rpcManagerMap = new HashMap<>();
+    private final Map<String, ServerRpcManager<?>> rpcManagerMap = new HashMap<>();
 
     /**
      * A map from server to client RPC interface class to the RPC proxy that
      * sends ourgoing RPC calls for that interface.
      */
-    private Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<>();
+    private final Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<>();
 
     /**
      * Shared state object to be communicated from the server to the client when
@@ -84,7 +84,7 @@ public abstract class AbstractClientConnector
 
     private String connectorId;
 
-    private ArrayList<Extension> extensions = new ArrayList<>();
+    private final ArrayList<Extension> extensions = new ArrayList<>();
 
     /**
      * The EventRouter used for the event model.
@@ -378,7 +378,7 @@ public abstract class AbstractClientConnector
     private class RpcInvocationHandler
             implements InvocationHandler, Serializable {
 
-        private String rpcInterfaceName;
+        private final String rpcInterfaceName;
 
         public RpcInvocationHandler(Class<?> rpcInterface) {
             rpcInterfaceName = rpcInterface.getName().replaceAll("\\$", ".");

@@ -63,7 +63,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
      */
     private ErrorLevel level = ErrorLevel.ERROR;
 
-    private List<ErrorMessage> causes = new ArrayList<>();
+    private final List<ErrorMessage> causes = new ArrayList<>();
 
     protected AbstractErrorMessage(String message) {
         this.message = message;

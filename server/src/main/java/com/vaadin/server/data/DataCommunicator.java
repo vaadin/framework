@@ -177,11 +177,11 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
     }
 
-    private Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
-    private ActiveDataHandler handler = new ActiveDataHandler();
+    private final Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
+    private final ActiveDataHandler handler = new ActiveDataHandler();
 
     private DataSource<T> dataSource = DataSource.create();
-    private DataKeyMapper<T> keyMapper;
+    private final DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
     private final Set<T> updatedData = new HashSet<>();
@@ -189,8 +189,8 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     private Comparator<T> inMemorySorting;
     private SerializablePredicate<T> inMemoryFilter;
-    private List<SortOrder<String>> backEndSorting = new ArrayList<>();
-    private DataCommunicatorClientRpc rpc;
+    private final List<SortOrder<String>> backEndSorting = new ArrayList<>();
+    private final DataCommunicatorClientRpc rpc;
 
     public DataCommunicator() {
         addDataGenerator(handler);

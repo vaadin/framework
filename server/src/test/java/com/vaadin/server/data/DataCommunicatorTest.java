@@ -85,7 +85,7 @@ public class DataCommunicatorTest {
         }
     }
 
-    private MockVaadinSession session = new MockVaadinSession(
+    private final MockVaadinSession session = new MockVaadinSession(
             Mockito.mock(VaadinService.class));
 
     @Test

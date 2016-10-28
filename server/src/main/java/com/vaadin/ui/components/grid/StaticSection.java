@@ -150,8 +150,8 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
      */
     abstract static class StaticCell implements Serializable {
 
-        private CellState cellState = new CellState();
-        private StaticRow<?> row;
+        private final CellState cellState = new CellState();
+        private final StaticRow<?> row;
 
         protected StaticCell(StaticRow<?> row) {
             this.row = row;

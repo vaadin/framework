@@ -45,10 +45,10 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
         LayoutClickNotifier, Layout.MarginHandler {
 
     private final AbstractOrderedLayoutServerRpc rpc = (
-            MouseEventDetails mouseDetails, Connector clickedConnector) -> {
-        fireEvent(LayoutClickEvent.createEvent(AbstractOrderedLayout.this,
-                mouseDetails, clickedConnector));
-    };
+            MouseEventDetails mouseDetails,
+            Connector clickedConnector) -> fireEvent(
+                    LayoutClickEvent.createEvent(AbstractOrderedLayout.this,
+                            mouseDetails, clickedConnector));
 
     public static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
 

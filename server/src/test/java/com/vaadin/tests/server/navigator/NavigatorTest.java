@@ -217,7 +217,7 @@ public class NavigatorTest {
             return page;
         }
 
-        private Page page;
+        private final Page page;
     }
 
     private static class TestPage extends Page {

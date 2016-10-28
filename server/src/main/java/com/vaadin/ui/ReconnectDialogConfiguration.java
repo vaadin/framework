@@ -132,7 +132,7 @@ public interface ReconnectDialogConfiguration extends Serializable {
 }
 
 class ReconnectDialogConfigurationImpl implements ReconnectDialogConfiguration {
-    private UI ui;
+    private final UI ui;
 
     public ReconnectDialogConfigurationImpl(UI ui) {
         this.ui = ui;

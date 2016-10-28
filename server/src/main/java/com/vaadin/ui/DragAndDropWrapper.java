@@ -351,7 +351,7 @@ public class DragAndDropWrapper extends CustomComponent
 
     final class ProxyReceiver implements StreamVariable {
 
-        private String id;
+        private final String id;
         private Html5File file;
 
         public ProxyReceiver(String id, Html5File file) {
@@ -425,7 +425,7 @@ public class DragAndDropWrapper extends CustomComponent
         class ReceivingEventWrapper implements StreamingErrorEvent,
                 StreamingEndEvent, StreamingStartEvent, StreamingProgressEvent {
 
-            private StreamingEvent wrappedEvent;
+            private final StreamingEvent wrappedEvent;
 
             ReceivingEventWrapper(StreamingEvent e) {
                 wrappedEvent = e;

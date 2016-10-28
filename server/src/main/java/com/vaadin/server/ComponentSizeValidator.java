@@ -631,9 +631,9 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
-    private static Map<Object, FileLocation> creationLocations = new HashMap<>();
-    private static Map<Object, FileLocation> widthLocations = new HashMap<>();
-    private static Map<Object, FileLocation> heightLocations = new HashMap<>();
+    private static final Map<Object, FileLocation> creationLocations = new HashMap<>();
+    private static final Map<Object, FileLocation> widthLocations = new HashMap<>();
+    private static final Map<Object, FileLocation> heightLocations = new HashMap<>();
 
     public static class FileLocation implements Serializable {
         public String method;

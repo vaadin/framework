@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class StringLengthValidatorTest extends ValidatorTestBase {
 
-    private static String LONG_STRING = Stream.generate(() -> "x").limit(1000)
+    private static final String LONG_STRING = Stream.generate(() -> "x").limit(1000)
             .collect(Collectors.joining());
 
     @Test
