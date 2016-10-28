@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +47,7 @@ public class CustomLayoutTest {
         for (int i = 0; i < buffer; i++) {
             builder.append('a');
         }
-        byte[] bytes = builder.toString().getBytes(Charset.forName("UTF-8"));
+        byte[] bytes = builder.toString().getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         InputStreamImpl stream = new InputStreamImpl(inputStream, buffer / 2);
         new CustomLayout(stream);

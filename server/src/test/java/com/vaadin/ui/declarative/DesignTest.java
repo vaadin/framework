@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,8 +40,8 @@ import com.vaadin.ui.Label;
  */
 public class DesignTest {
 
-    private static Charset CP1251_CHARSET = Charset.forName("cp1251");
-    private static Charset UTF8_CHARSET = Charset.forName("UTF-8");
+    private static final Charset CP1251_CHARSET = Charset.forName("cp1251");
+    private static final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
 
     private static String NON_ASCII_STRING = "\u043C";
 

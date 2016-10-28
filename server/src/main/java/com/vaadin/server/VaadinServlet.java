@@ -32,6 +32,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -606,8 +607,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         response.setContentType(contentType);
         final OutputStream out = response.getOutputStream();
         try ( // Set the response type
-            PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+                PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+                        new OutputStreamWriter(out, "UTF-8")))) {
             outWriter.print(output);
             outWriter.flush();
         }
@@ -1069,7 +1070,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return null;
         }
 
-        String jsonString = readFile(scssCacheFile, Charset.forName("UTF-8"));
+        String jsonString = readFile(scssCacheFile, StandardCharsets.UTF_8);
 
         JsonObject entryJson = Json.parse(jsonString);
 
@@ -1394,8 +1395,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         String cacheEntryJsonString = cacheEntry.asJson();
 
         try {
-            writeFile(cacheEntryJsonString, cacheFile,
-                    Charset.forName("UTF-8"));
+            writeFile(cacheEntryJsonString, cacheFile, StandardCharsets.UTF_8);
         } catch (IOException e) {
             getLogger().log(Level.WARNING,
                     "Error persisting scss cache " + cacheFile, e);

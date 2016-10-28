@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.jsoup.nodes.Attributes;
@@ -97,10 +97,10 @@ public class AbstractComponentDeclarativeTest
         Boolean[] explicitImmediate = { null, Boolean.FALSE, Boolean.TRUE,
                 Boolean.TRUE };
         boolean[] immediate = { true, false, true, true };
-        for (int i = 0; i < design.length; i++) {
+        for (String design1 : design) {
             component = (AbstractComponent) Design
                     .read(new ByteArrayInputStream(
-                            design[i].getBytes(Charset.forName("UTF-8"))));
+                            design1.getBytes(StandardCharsets.UTF_8)));
         }
     }
 
