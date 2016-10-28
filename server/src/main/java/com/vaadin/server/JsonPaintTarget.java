@@ -25,13 +25,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User Interface Description Language Target.
@@ -728,11 +729,11 @@ public class JsonPaintTarget implements PaintTarget {
     class JsonTag implements Serializable {
         boolean firstField = false;
 
-        Vector<Object> variables = new Vector<>();
+        List<Object> variables = new ArrayList<>();
 
-        Vector<Object> children = new Vector<>();
+        List<Object> children = new ArrayList<>();
 
-        Vector<Object> attr = new Vector<>();
+        List<Object> attr = new ArrayList<>();
 
         StringBuilder data = new StringBuilder();
 

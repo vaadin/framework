@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -197,7 +196,7 @@ public class ComponentSizeValidator implements Serializable {
         private final boolean invalidHeight;
         private final boolean invalidWidth;
 
-        private final Vector<InvalidLayout> subErrors = new Vector<>();
+        private final List<InvalidLayout> subErrors = new ArrayList<>();
 
         public InvalidLayout(Component component, boolean height,
                 boolean width) {
