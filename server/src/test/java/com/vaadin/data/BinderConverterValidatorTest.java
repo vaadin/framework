@@ -91,12 +91,8 @@ public class BinderConverterValidatorTest
         binding.withValidator(Validator.alwaysPass());
         String msg1 = "foo";
         String msg2 = "bar";
-        binding.withValidator(new Validator<String>() {
-            @Override
-            public ValidationResult apply(String value, ValueContext context) {
-                return ValidationResult.error(msg1);
-            }
-        });
+        binding.withValidator((String value,
+                ValueContext context) -> ValidationResult.error(msg1));
         binding.withValidator(value -> false, msg2);
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -356,8 +352,8 @@ public class BinderConverterValidatorTest
         bindName();
 
         AtomicBoolean beanLevelValidationRun = new AtomicBoolean();
-        binder.withValidator(Validator.from(
-                bean -> beanLevelValidationRun.getAndSet(true), ""));
+        binder.withValidator(Validator
+                .from(bean -> beanLevelValidationRun.getAndSet(true), ""));
 
         ageField.setValue("not a number");
 
@@ -373,8 +369,8 @@ public class BinderConverterValidatorTest
         bindName();
 
         AtomicBoolean beanLevelValidationRun = new AtomicBoolean();
-        binder.withValidator(Validator.from(
-                bean -> beanLevelValidationRun.getAndSet(true), ""));
+        binder.withValidator(Validator
+                .from(bean -> beanLevelValidationRun.getAndSet(true), ""));
 
         ageField.setValue(String.valueOf(12));
 

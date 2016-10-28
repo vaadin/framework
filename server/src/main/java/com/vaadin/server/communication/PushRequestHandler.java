@@ -67,11 +67,8 @@ public class PushRequestHandler
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        service.addServiceDestroyListener(new ServiceDestroyListener() {
-            @Override
-            public void serviceDestroy(ServiceDestroyEvent event) {
-                destroy();
-            }
+        service.addServiceDestroyListener((ServiceDestroyEvent event) -> {
+            destroy();
         });
 
         final ServletConfig vaadinServletConfig = service.getServlet()

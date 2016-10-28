@@ -152,14 +152,7 @@ public class VaadinClasses {
             findPackages(juc, basePackage, baseClass, classes);
         }
 
-        Collections.sort(classes, new Comparator<Class<? extends T>>() {
-
-            @Override
-            public int compare(Class<? extends T> o1, Class<? extends T> o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-
-        });
+        Collections.sort(classes, (Class<? extends T> o1, Class<? extends T> o2) -> o1.getName().compareTo(o2.getName()));
         return classes;
     }
 

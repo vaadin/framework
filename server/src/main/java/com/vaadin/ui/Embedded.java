@@ -104,11 +104,8 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
 
     private String altText;
 
-    private EmbeddedServerRpc rpc = new EmbeddedServerRpc() {
-        @Override
-        public void click(MouseEventDetails mouseDetails) {
-            fireEvent(new ClickEvent(Embedded.this, mouseDetails));
-        }
+    private EmbeddedServerRpc rpc = (MouseEventDetails mouseDetails) -> {
+        fireEvent(new ClickEvent(Embedded.this, mouseDetails));
     };
 
     /**

@@ -23,7 +23,6 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -101,20 +100,16 @@ public class SASSAddonImportFileCreator {
             // Sort addon styles so that CSS imports are first and SCSS import
             // last
             List<String> paths = new ArrayList<>(addonThemes.keySet());
-            Collections.sort(paths, new Comparator<String>() {
-
-                @Override
-                public int compare(String path1, String path2) {
-                    if (path1.toLowerCase().endsWith(".css")
-                            && path2.toLowerCase().endsWith(".scss")) {
-                        return -1;
-                    }
-                    if (path1.toLowerCase().endsWith(".scss")
-                            && path2.toLowerCase().endsWith(".css")) {
-                        return 1;
-                    }
-                    return 0;
+            Collections.sort(paths, (String path1, String path2) -> {
+                if (path1.toLowerCase().endsWith(".css")
+                        && path2.toLowerCase().endsWith(".scss")) {
+                    return -1;
                 }
+                if (path1.toLowerCase().endsWith(".scss")
+                        && path2.toLowerCase().endsWith(".css")) {
+                    return 1;
+                }
+                return 0;
             });
 
             List<String> mixins = new ArrayList<>();

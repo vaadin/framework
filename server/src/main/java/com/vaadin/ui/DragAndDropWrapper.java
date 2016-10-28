@@ -112,12 +112,8 @@ public class DragAndDropWrapper extends CustomComponent
 
     }
 
-    private final DragAndDropWrapperServerRpc rpc = new DragAndDropWrapperServerRpc() {
-
-        @Override
-        public void poll() {
-            // #19616 RPC to poll the server for changes
-        }
+    private final DragAndDropWrapperServerRpc rpc = () -> {
+        // #19616 RPC to poll the server for changes
     };
 
     private Map<String, ProxyReceiver> receivers = new HashMap<>();

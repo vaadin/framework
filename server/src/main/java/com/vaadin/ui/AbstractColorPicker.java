@@ -87,13 +87,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         }
     }
 
-    private ColorPickerServerRpc rpc = new ColorPickerServerRpc() {
-
-        @Override
-        public void openPopup(boolean open) {
-            showPopup(open);
-        }
-    };
+    private ColorPickerServerRpc rpc = this::showPopup;
 
     protected static final String STYLENAME_DEFAULT = "v-colorpicker";
     protected static final String STYLENAME_BUTTON = "v-button";

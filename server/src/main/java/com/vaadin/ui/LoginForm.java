@@ -315,12 +315,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
         resource.setCacheTime(-1);
         setResource(LoginFormConstants.LOGIN_RESOURCE_NAME, resource);
 
-        registerRpc(new LoginFormRpc() {
-            @Override
-            public void submitCompleted() {
-                login();
-            }
-        });
+        registerRpc((LoginFormRpc) this::login);
 
         initialized = true;
 

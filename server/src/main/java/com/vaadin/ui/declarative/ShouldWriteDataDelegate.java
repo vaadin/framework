@@ -35,12 +35,8 @@ public interface ShouldWriteDataDelegate extends Serializable {
      * is provided by a data source connected to a back end system and that the
      * data should thus not be written.
      */
-    public static final ShouldWriteDataDelegate DEFAULT = new ShouldWriteDataDelegate() {
-        @Override
-        public boolean shouldWriteData(Component component) {
-            return false;
-        }
-    };
+    public static final ShouldWriteDataDelegate DEFAULT = (
+            Component component) -> false;
 
     /**
      * Determines whether the container data of a component should be written

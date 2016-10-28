@@ -57,13 +57,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
         }
     }
 
-    private final PopupViewServerRpc rpc = new PopupViewServerRpc() {
-
-        @Override
-        public void setPopupVisibility(boolean visible) {
-            setPopupVisible(visible);
-        }
-    };
+    private final PopupViewServerRpc rpc = this::setPopupVisible;
 
     /* Constructors */
 

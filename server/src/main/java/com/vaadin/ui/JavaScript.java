@@ -52,16 +52,13 @@ public class JavaScript extends AbstractExtension {
      * object.
      */
     public JavaScript() {
-        registerRpc(new JavaScriptCallbackRpc() {
-            @Override
-            public void call(String name, JsonArray arguments) {
-                JavaScriptFunction function = functions.get(name);
-                // TODO handle situation if name is not registered
-                try {
-                    function.call(arguments);
-                } catch (JsonException e) {
-                    throw new IllegalArgumentException(e);
-                }
+        registerRpc((JavaScriptCallbackRpc) (String name, JsonArray arguments) -> {
+            JavaScriptFunction function = functions.get(name);
+            // TODO handle situation if name is not registered
+            try {
+                function.call(arguments);
+            } catch (JsonException e) {
+                throw new IllegalArgumentException(e);
             }
         });
     }

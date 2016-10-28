@@ -71,43 +71,40 @@ public class PushHandler {
      * open by calling resource.suspend(). If there is a pending push, send it
      * now.
      */
-    private final PushEventCallback establishCallback = new PushEventCallback() {
-        @Override
-        public void run(AtmosphereResource resource, UI ui) throws IOException {
-            getLogger().log(Level.FINER,
-                    "New push connection for resource {0} with transport {1}",
-                    new Object[] { resource.uuid(), resource.transport() });
-
-            resource.getResponse().setContentType("text/plain; charset=UTF-8");
-
-            VaadinSession session = ui.getSession();
-            if (resource.transport() == TRANSPORT.STREAMING) {
-                // Must ensure that the streaming response contains
-                // "Connection: close", otherwise iOS 6 will wait for the
-                // response to this request before sending another request to
-                // the same server (as it will apparently try to reuse the same
-                // connection)
-                resource.getResponse().addHeader("Connection", "close");
-            }
-
-            String requestToken = resource.getRequest()
-                    .getParameter(ApplicationConstants.CSRF_TOKEN_PARAMETER);
-            if (!VaadinService.isCsrfTokenValid(session, requestToken)) {
-                getLogger().log(Level.WARNING,
-                        "Invalid CSRF token in new connection received from {0}",
-                        resource.getRequest().getRemoteHost());
-                // Refresh on client side, create connection just for
-                // sending a message
-                sendRefreshAndDisconnect(resource);
-                return;
-            }
-
-            suspend(resource);
-
-            AtmospherePushConnection connection = getConnectionForUI(ui);
-            assert (connection != null);
-            connection.connect(resource);
+    private final PushEventCallback establishCallback = (AtmosphereResource resource, UI ui) -> {
+        getLogger().log(Level.FINER,
+            "New push connection for resource {0} with transport {1}",
+            new Object[] { resource.uuid(), resource.transport() });
+        
+        resource.getResponse().setContentType("text/plain; charset=UTF-8");
+        
+        VaadinSession session = ui.getSession();
+        if (resource.transport() == TRANSPORT.STREAMING) {
+            // Must ensure that the streaming response contains
+            // "Connection: close", otherwise iOS 6 will wait for the
+            // response to this request before sending another request to
+            // the same server (as it will apparently try to reuse the same
+            // connection)
+            resource.getResponse().addHeader("Connection", "close");
         }
+        
+        String requestToken = resource.getRequest()
+            .getParameter(ApplicationConstants.CSRF_TOKEN_PARAMETER);
+        if (!VaadinService.isCsrfTokenValid(session, requestToken)) {
+            getLogger().log(Level.WARNING,
+                "Invalid CSRF token in new connection received from {0}",
+                resource.getRequest().getRemoteHost());
+            // Refresh on client side, create connection just for
+            // sending a message
+            sendRefreshAndDisconnect(resource);
+            return;
+        }
+        
+        suspend(resource);
+        
+        AtmospherePushConnection connection = getConnectionForUI(ui);
+        assert (connection != null);
+        connection.connect(resource);
     };
 
     /**
@@ -117,48 +114,45 @@ public class PushHandler {
      * the request and send changed UI state via the push channel (we do not
      * respond to the request directly.)
      */
-    private final PushEventCallback receiveCallback = new PushEventCallback() {
-        @Override
-        public void run(AtmosphereResource resource, UI ui) throws IOException {
-            getLogger().log(Level.FINER, "Received message from resource {0}",
-                    resource.uuid());
-
-            AtmosphereRequest req = resource.getRequest();
-
-            AtmospherePushConnection connection = getConnectionForUI(ui);
-
-            assert connection != null : "Got push from the client "
-                    + "even though the connection does not seem to be "
-                    + "valid. This might happen if a HttpSession is "
-                    + "serialized and deserialized while the push "
-                    + "connection is kept open or if the UI has a "
-                    + "connection of unexpected type.";
-
-            Reader reader = connection.receiveMessage(req.getReader());
-            if (reader == null) {
-                // The whole message was not yet received
-                return;
-            }
-
-            // Should be set up by caller
-            VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
-            assert vaadinRequest != null;
-
-            try {
-                new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
-                connection.push(false);
-            } catch (JsonException e) {
-                getLogger().log(Level.SEVERE, "Error writing JSON to response",
-                        e);
-                // Refresh on client side
-                sendRefreshAndDisconnect(resource);
-            } catch (InvalidUIDLSecurityKeyException e) {
-                getLogger().log(Level.WARNING,
-                        "Invalid security key received from {0}",
-                        resource.getRequest().getRemoteHost());
-                // Refresh on client side
-                sendRefreshAndDisconnect(resource);
-            }
+    private final PushEventCallback receiveCallback = (AtmosphereResource resource, UI ui) -> {
+        getLogger().log(Level.FINER, "Received message from resource {0}",
+            resource.uuid());
+        
+        AtmosphereRequest req = resource.getRequest();
+        
+        AtmospherePushConnection connection = getConnectionForUI(ui);
+        
+        assert connection != null : "Got push from the client "
+            + "even though the connection does not seem to be "
+            + "valid. This might happen if a HttpSession is "
+            + "serialized and deserialized while the push "
+            + "connection is kept open or if the UI has a "
+            + "connection of unexpected type.";
+        
+        Reader reader = connection.receiveMessage(req.getReader());
+        if (reader == null) {
+            // The whole message was not yet received
+            return;
+        }
+        
+        // Should be set up by caller
+        VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
+        assert vaadinRequest != null;
+        
+        try {
+            new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
+            connection.push(false);
+        } catch (JsonException e) {
+            getLogger().log(Level.SEVERE, "Error writing JSON to response",
+                e);
+            // Refresh on client side
+            sendRefreshAndDisconnect(resource);
+        } catch (InvalidUIDLSecurityKeyException e) {
+            getLogger().log(Level.WARNING,
+                "Invalid security key received from {0}",
+                resource.getRequest().getRemoteHost());
+            // Refresh on client side
+            sendRefreshAndDisconnect(resource);
         }
     };
 

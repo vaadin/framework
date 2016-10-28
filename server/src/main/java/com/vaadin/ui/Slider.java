@@ -35,37 +35,32 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 public class Slider extends AbstractField<Double> {
 
-    private SliderServerRpc rpc = new SliderServerRpc() {
+    private SliderServerRpc rpc = (double value) -> {
 
-        @Override
-        public void valueChanged(double value) {
+        /*
+         * Client side updates the state before sending the event so we need to
+         * make sure the cached state is updated to match the client. If we do
+         * not do this, a reverting setValue() call in a listener will not cause
+         * the new state to be sent to the client.
+         *
+         * See #12133.
+         */
+        getUI().getConnectorTracker().getDiffState(Slider.this).put("value",
+                value);
 
-            /*
-             * Client side updates the state before sending the event so we need
-             * to make sure the cached state is updated to match the client. If
-             * we do not do this, a reverting setValue() call in a listener will
-             * not cause the new state to be sent to the client.
-             *
-             * See #12133.
-             */
-            getUI().getConnectorTracker().getDiffState(Slider.this).put("value",
-                    value);
-
-            try {
-                setValue(value, true);
-            } catch (final ValueOutOfBoundsException e) {
-                // Convert to nearest bound
-                double out = e.getValue().doubleValue();
-                if (out < getState().minValue) {
-                    out = getState().minValue;
-                }
-                if (out > getState().maxValue) {
-                    out = getState().maxValue;
-                }
-                Slider.super.setValue(new Double(out), false);
+        try {
+            setValue(value, true);
+        } catch (final ValueOutOfBoundsException e) {
+            // Convert to nearest bound
+            double out = e.getValue().doubleValue();
+            if (out < getState().minValue) {
+                out = getState().minValue;
             }
+            if (out > getState().maxValue) {
+                out = getState().maxValue;
+            }
+            Slider.super.setValue(new Double(out), false);
         }
-
     };
 
     /**

@@ -89,27 +89,24 @@ public class LegacyUidlWriter implements Serializable {
         // Vaadin 6 requires parents to be painted before children as component
         // containers rely on that their updateFromUIDL method has been called
         // before children start calling e.g. updateCaption
-        Collections.sort(paintables, new Comparator<Component>() {
-            @Override
-            public int compare(Component c1, Component c2) {
-                int depth1 = 0;
-                while (c1.getParent() != null) {
-                    depth1++;
-                    c1 = c1.getParent();
-                }
-                int depth2 = 0;
-                while (c2.getParent() != null) {
-                    depth2++;
-                    c2 = c2.getParent();
-                }
-                if (depth1 < depth2) {
-                    return -1;
-                }
-                if (depth1 > depth2) {
-                    return 1;
-                }
-                return 0;
+        Collections.sort(paintables, (Component c1, Component c2) -> {
+            int depth1 = 0;
+            while (c1.getParent() != null) {
+                depth1++;
+                c1 = c1.getParent();
             }
+            int depth2 = 0;
+            while (c2.getParent() != null) {
+                depth2++;
+                c2 = c2.getParent();
+            }
+            if (depth1 < depth2) {
+                return -1;
+            }
+            if (depth1 > depth2) {
+                return 1;
+            }
+            return 0;
         });
     }
 

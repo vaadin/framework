@@ -53,11 +53,8 @@ public class Panel extends AbstractSingleComponentContainer
      */
     protected ActionManager actionManager;
 
-    private PanelServerRpc rpc = new PanelServerRpc() {
-        @Override
-        public void click(MouseEventDetails mouseDetails) {
-            fireEvent(new ClickEvent(Panel.this, mouseDetails));
-        }
+    private PanelServerRpc rpc = (MouseEventDetails mouseDetails) -> {
+        fireEvent(new ClickEvent(Panel.this, mouseDetails));
     };
 
     /**

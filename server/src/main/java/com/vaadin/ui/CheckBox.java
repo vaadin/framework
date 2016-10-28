@@ -38,34 +38,28 @@ import com.vaadin.ui.declarative.DesignContext;
 public class CheckBox extends AbstractField<Boolean>
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {
-
-        @Override
-        public void setChecked(boolean checked,
-                MouseEventDetails mouseEventDetails) {
-            if (isReadOnly()) {
-                return;
-            }
-
-            /*
-             * Client side updates the state before sending the event so we need
-             * to make sure the cached state is updated to match the client. If
-             * we do not do this, a reverting setValue() call in a listener will
-             * not cause the new state to be sent to the client.
-             *
-             * See #11028, #10030.
-             */
-            getUI().getConnectorTracker().getDiffState(CheckBox.this)
-                    .put("checked", checked);
-
-            final Boolean oldValue = getValue();
-            final Boolean newValue = checked;
-
-            if (!newValue.equals(oldValue)) {
-                // The event is only sent if the switch state is changed
-                setValue(newValue);
-            }
-
+    private CheckBoxServerRpc rpc = (boolean checked, MouseEventDetails mouseEventDetails) -> {
+        if (isReadOnly()) {
+            return;
+        }
+        
+        /*
+        * Client side updates the state before sending the event so we need
+        * to make sure the cached state is updated to match the client. If
+        * we do not do this, a reverting setValue() call in a listener will
+        * not cause the new state to be sent to the client.
+        *
+        * See #11028, #10030.
+        */
+        getUI().getConnectorTracker().getDiffState(CheckBox.this)
+            .put("checked", checked);
+        
+        final Boolean oldValue = getValue();
+        final Boolean newValue = checked;
+        
+        if (!newValue.equals(oldValue)) {
+            // The event is only sent if the switch state is changed
+            setValue(newValue);
         }
     };
 

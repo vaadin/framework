@@ -537,36 +537,30 @@ public abstract class AbstractClientConnector
         final Iterator<Component> componentsIterator = ((HasComponents) connector)
                 .iterator();
         final Iterator<Extension> extensionsIterator = extensions.iterator();
-        Iterable<? extends ClientConnector> combinedIterable = new Iterable<ClientConnector>() {
-
+        Iterable<? extends ClientConnector> combinedIterable = () -> new Iterator<ClientConnector>() {
+            
             @Override
-            public Iterator<ClientConnector> iterator() {
-                return new Iterator<ClientConnector>() {
-
-                    @Override
-                    public boolean hasNext() {
-                        return componentsIterator.hasNext()
-                                || extensionsIterator.hasNext();
-                    }
-
-                    @Override
-                    public ClientConnector next() {
-                        if (componentsIterator.hasNext()) {
-                            return componentsIterator.next();
-                        }
-                        if (extensionsIterator.hasNext()) {
-                            return extensionsIterator.next();
-                        }
-                        throw new NoSuchElementException();
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-
-                };
+            public boolean hasNext() {
+                return componentsIterator.hasNext()
+                    || extensionsIterator.hasNext();
             }
+            
+            @Override
+            public ClientConnector next() {
+                if (componentsIterator.hasNext()) {
+                    return componentsIterator.next();
+                }
+                if (extensionsIterator.hasNext()) {
+                    return extensionsIterator.next();
+                }
+                throw new NoSuchElementException();
+            }
+            
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+            
         };
         return combinedIterable;
     }

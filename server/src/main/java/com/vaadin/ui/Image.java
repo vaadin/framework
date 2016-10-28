@@ -34,11 +34,8 @@ import com.vaadin.shared.ui.image.ImageState;
 @SuppressWarnings("serial")
 public class Image extends AbstractEmbedded {
 
-    protected ImageServerRpc rpc = new ImageServerRpc() {
-        @Override
-        public void click(MouseEventDetails mouseDetails) {
-            fireEvent(new ClickEvent(Image.this, mouseDetails));
-        }
+    protected ImageServerRpc rpc = (MouseEventDetails mouseDetails) -> {
+        fireEvent(new ClickEvent(Image.this, mouseDetails));
     };
 
     /**

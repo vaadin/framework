@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -55,14 +54,10 @@ public class AbsoluteLayout extends AbstractLayout
     private static final String ATTR_LEFT = ":left";
     private static final String ATTR_Z_INDEX = ":z-index";
 
-    private AbsoluteLayoutServerRpc rpc = new AbsoluteLayoutServerRpc() {
-
-        @Override
-        public void layoutClick(MouseEventDetails mouseDetails,
-                Connector clickedConnector) {
-            fireEvent(LayoutClickEvent.createEvent(AbsoluteLayout.this,
-                    mouseDetails, clickedConnector));
-        }
+    private final AbsoluteLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
+            Connector clickedConnector) -> {
+        fireEvent(LayoutClickEvent.createEvent(AbsoluteLayout.this,
+                mouseDetails, clickedConnector));
     };
     // Maps each component to a position
     private LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<>();

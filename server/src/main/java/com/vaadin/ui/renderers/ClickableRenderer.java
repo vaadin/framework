@@ -126,19 +126,13 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
     protected ClickableRenderer(Class<V> presentationType,
             String nullRepresentation) {
         super(presentationType, nullRepresentation);
-        registerRpc(new RendererClickRpc() {
-
-            @Override
-            public void click(String rowKey, String columnId,
-                    MouseEventDetails mouseDetails) {
-
-                Grid<T> grid = getParentGrid();
-                T item = grid.getDataCommunicator().getKeyMapper().get(rowKey);
-                Column column = grid.getColumn(columnId);
-
-                fireEvent(new RendererClickEvent<>(grid, item, column,
-                        mouseDetails));
-            }
+        registerRpc((RendererClickRpc) (String rowKey, String columnId, MouseEventDetails mouseDetails) -> {
+            Grid<T> grid = getParentGrid();
+            T item = grid.getDataCommunicator().getKeyMapper().get(rowKey);
+            Column column = grid.getColumn(columnId);
+            
+            fireEvent(new RendererClickEvent<>(grid, item, column,
+                mouseDetails));
         });
     }
 

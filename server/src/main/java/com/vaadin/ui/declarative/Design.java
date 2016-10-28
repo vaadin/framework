@@ -472,11 +472,8 @@ public class Design implements Serializable {
             }
             // create listener for component creations that binds the created
             // components to the componentRoot instance fields
-            ComponentCreationListener creationListener = new ComponentCreationListener() {
-                @Override
-                public void componentCreated(ComponentCreatedEvent event) {
-                    binder.bindField(event.getComponent(), event.getLocalId());
-                }
+            ComponentCreationListener creationListener = (ComponentCreatedEvent event) -> {
+                binder.bindField(event.getComponent(), event.getLocalId());
             };
             designContext.addComponentCreationListener(creationListener);
             // create subtree

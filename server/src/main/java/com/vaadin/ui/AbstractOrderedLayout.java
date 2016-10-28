@@ -44,14 +44,10 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
         implements Layout.AlignmentHandler, Layout.SpacingHandler,
         LayoutClickNotifier, Layout.MarginHandler {
 
-    private AbstractOrderedLayoutServerRpc rpc = new AbstractOrderedLayoutServerRpc() {
-
-        @Override
-        public void layoutClick(MouseEventDetails mouseDetails,
-                Connector clickedConnector) {
-            fireEvent(LayoutClickEvent.createEvent(AbstractOrderedLayout.this,
-                    mouseDetails, clickedConnector));
-        }
+    private final AbstractOrderedLayoutServerRpc rpc = (
+            MouseEventDetails mouseDetails, Connector clickedConnector) -> {
+        fireEvent(LayoutClickEvent.createEvent(AbstractOrderedLayout.this,
+                mouseDetails, clickedConnector));
     };
 
     public static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
@@ -507,8 +503,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
         // write default attributes
         super.writeDesign(design, designContext);
 
-        AbstractOrderedLayout def = designContext
-                .getDefaultInstance(this);
+        AbstractOrderedLayout def = designContext.getDefaultInstance(this);
 
         writeMargin(design, getMargin(), def.getMargin(), designContext);
 

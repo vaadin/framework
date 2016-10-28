@@ -21,12 +21,8 @@ public class ButtonClickTest {
     public void clickDetachedButton() {
         Button b = new Button();
         AtomicInteger counter = new AtomicInteger(0);
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                counter.incrementAndGet();
-            }
+        b.addClickListener((ClickEvent event) -> {
+            counter.incrementAndGet();
         });
 
         b.click();
@@ -67,11 +63,8 @@ public class ButtonClickTest {
 
     private void addClickListener(Button b) {
         clicked = false;
-        b.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent ev) {
-                clicked = true;
-            }
+        b.addClickListener((ClickEvent ev) -> {
+            clicked = true;
         });
     }
 }

@@ -34,13 +34,7 @@ public abstract class DeclarativeTestBase<T extends Component>
     private static boolean debug = false;
 
     private final Map<Class<?>, EqualsAsserter<?>> comparators = new HashMap<>();
-    private static EqualsAsserter standardEqualsComparator = new EqualsAsserter<Object>() {
-
-        @Override
-        public void assertObjectEquals(Object o1, Object o2) {
-            Assert.assertEquals(o1, o2);
-        }
-    };
+    private static final EqualsAsserter standardEqualsComparator = (EqualsAsserter<Object>) Assert::assertEquals;
 
     public class IntrospectorEqualsAsserter<C> implements EqualsAsserter<C> {
 

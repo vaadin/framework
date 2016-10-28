@@ -138,13 +138,7 @@ public class TabSheet extends AbstractComponentContainer
 
         // expand horizontally by default
         setWidth(100, UNITS_PERCENTAGE);
-        setCloseHandler(new CloseHandler() {
-
-            @Override
-            public void onTabClose(TabSheet tabsheet, Component c) {
-                tabsheet.removeComponent(c);
-            }
-        });
+        setCloseHandler(TabSheet::removeComponent);
     }
 
     /**
