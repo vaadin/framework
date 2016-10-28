@@ -203,10 +203,10 @@ public class LocaleService implements Serializable {
          *
          * We use timeformat to determine 12/24-hour clock
          */
-        final boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
+        final boolean twelve_hour_clock = timeformat.contains("a");
         // TODO there are other possibilities as well, like 'h' in french
         // (ignore them, too complicated)
-        final String hour_min_delimiter = timeformat.indexOf(".") > -1 ? "."
+        final String hour_min_delimiter = timeformat.contains(".") ? "."
                 : ":";
         // outWriter.print("\"tf\":\"" + timeformat + "\",");
         localeData.twelveHourClock = twelve_hour_clock;
