@@ -92,9 +92,7 @@ public class ComponentSizeValidator implements Serializable {
             }
         } else if (isForm(component)) {
             HasComponents form = (HasComponents) component;
-            for (Iterator<Component> iterator = form.iterator(); iterator
-                    .hasNext();) {
-                Component child = iterator.next();
+            for (Component child : form) {
                 errors = validateComponentRelativeSizes(child, errors, parent);
             }
         }

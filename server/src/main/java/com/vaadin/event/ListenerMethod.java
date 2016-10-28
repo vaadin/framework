@@ -25,6 +25,7 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -118,9 +119,8 @@ public class ListenerMethod implements EventListener, Serializable {
     private static Method findHighestMethod(Class<?> cls, String method,
             Class<?>[] paramTypes) {
         Class<?>[] ifaces = cls.getInterfaces();
-        for (int i = 0; i < ifaces.length; i++) {
-            Method ifaceMethod = findHighestMethod(ifaces[i], method,
-                    paramTypes);
+        for (Class<?> iface : ifaces) {
+            Method ifaceMethod = findHighestMethod(iface, method, paramTypes);
             if (ifaceMethod != null) {
                 return ifaceMethod;
             }
@@ -132,14 +132,12 @@ public class ListenerMethod implements EventListener, Serializable {
                 return parentMethod;
             }
         }
-        Method[] methods = cls.getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            // we ignore parameter types for now - you need to add this
-            if (methods[i].getName().equals(method)) {
-                return methods[i];
-            }
-        }
-        return null;
+        
+        // we ignore parameter types for now - you need to add this
+        return Stream.of(cls.getMethods())
+            .filter(m -> method.equals(m.getName()))
+            .findAny().orElse(null);
+        
     }
 
     /**
@@ -247,9 +245,9 @@ public class ListenerMethod implements EventListener, Serializable {
         // Finds the correct method
         final Method[] methods = target.getClass().getMethods();
         Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method method1 : methods) {
+            if (method1.getName().equals(methodName)) {
+                method = method1;
             }
         }
         if (method == null) {
@@ -359,9 +357,9 @@ public class ListenerMethod implements EventListener, Serializable {
         // Find the correct method
         final Method[] methods = target.getClass().getMethods();
         Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method method1 : methods) {
+            if (method1.getName().equals(methodName)) {
+                method = method1;
             }
         }
         if (method == null) {
@@ -461,9 +459,9 @@ public class ListenerMethod implements EventListener, Serializable {
         // Finds the correct method
         final Method[] methods = target.getClass().getMethods();
         Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method method1 : methods) {
+            if (method1.getName().equals(methodName)) {
+                method = method1;
             }
         }
         if (method == null) {

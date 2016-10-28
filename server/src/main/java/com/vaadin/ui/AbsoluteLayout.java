@@ -301,8 +301,8 @@ public class AbsoluteLayout extends AbstractLayout
             }
 
             String[] cssProperties = css.split(";");
-            for (int i = 0; i < cssProperties.length; i++) {
-                String[] keyValuePair = cssProperties[i].split(":");
+            for (String cssProperty : cssProperties) {
+                String[] keyValuePair = cssProperty.split(":");
                 String key = keyValuePair[0].trim();
                 if (key.equals("")) {
                     continue;
@@ -319,22 +319,27 @@ public class AbsoluteLayout extends AbstractLayout
                     String symbol = value.replaceAll("[0-9\\.\\-]+", "");
                     if (!symbol.equals("")) {
                         value = value.substring(0, value.indexOf(symbol))
-                                .trim();
+                            .trim();
                     }
                     float v = Float.parseFloat(value);
                     Unit unit = Unit.getUnitFromSymbol(symbol);
-                    if (key.equals("top")) {
-                        topValue = v;
-                        topUnits = unit;
-                    } else if (key.equals("right")) {
-                        rightValue = v;
-                        rightUnits = unit;
-                    } else if (key.equals("bottom")) {
-                        bottomValue = v;
-                        bottomUnits = unit;
-                    } else if (key.equals("left")) {
-                        leftValue = v;
-                        leftUnits = unit;
+                    switch (key) {
+                        case "top":
+                            topValue = v;
+                            topUnits = unit;
+                            break;
+                        case "right":
+                            rightValue = v;
+                            rightUnits = unit;
+                            break;
+                        case "bottom":
+                            bottomValue = v;
+                            bottomUnits = unit;
+                            break;
+                        case "left":
+                            leftValue = v;
+                            leftUnits = unit;
+                            break;
                     }
                 }
             }
