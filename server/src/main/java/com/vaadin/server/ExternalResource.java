@@ -80,7 +80,7 @@ public class ExternalResource implements Resource, Serializable {
             throw new RuntimeException("Source must be non-null");
         }
 
-        this.sourceURL = sourceURL.toString();
+        this.sourceURL = sourceURL;
     }
 
     /**
@@ -113,7 +113,7 @@ public class ExternalResource implements Resource, Serializable {
     @Override
     public String getMIMEType() {
         if (mimeType == null) {
-            mimeType = FileTypeResolver.getMIMEType(getURL().toString());
+            mimeType = FileTypeResolver.getMIMEType(getURL());
         }
         return mimeType;
     }

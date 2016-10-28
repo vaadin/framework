@@ -84,7 +84,7 @@ public class ThemeResource implements Resource {
      */
     @Override
     public String toString() {
-        return resourceID.toString();
+        return resourceID;
     }
 
     /**
