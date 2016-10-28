@@ -340,13 +340,12 @@ public class Navigator implements Serializable {
                 try {
                     View view = viewClass.newInstance();
                     return view;
-                } catch (InstantiationException e) {
-                    // TODO error handling
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     // TODO error handling
                     throw new RuntimeException(e);
                 }
+                // TODO error handling
+                
             }
             return null;
         }

@@ -601,9 +601,7 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
                 try {
                     type = (getState(false).getClass()
                             .getDeclaredField(diffStateKey).getGenericType());
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                } catch (SecurityException e) {
+                } catch (NoSuchFieldException | SecurityException e) {
                     e.printStackTrace();
                 }
                 EncodeResult encodeResult = JsonCodec.encode(

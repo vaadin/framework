@@ -86,9 +86,7 @@ public class FieldBinder implements Serializable {
                 if (value == null) {
                     unboundFields.add(f.getName());
                 }
-            } catch (IllegalArgumentException e) {
-                throw new FieldBindingException("Could not get field value", e);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalArgumentException | IllegalAccessException e) {
                 throw new FieldBindingException("Could not get field value", e);
             }
         }
@@ -197,10 +195,7 @@ public class FieldBinder implements Serializable {
                 field.set(bindTarget, instance);
             }
             return true;
-        } catch (IllegalAccessException e) {
-            throw new FieldBindingException(
-                    "Field binding failed for " + identifier, e);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException | IllegalArgumentException e) {
             throw new FieldBindingException(
                     "Field binding failed for " + identifier, e);
         }

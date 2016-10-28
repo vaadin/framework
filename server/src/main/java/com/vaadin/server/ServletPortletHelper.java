@@ -183,11 +183,7 @@ public class ServletPortletHelper implements Serializable {
         } catch (ClassCastException e) {
             throw new ServiceException("UIProvider class " + uiProviderProperty
                     + " does not extend UIProvider", e);
-        } catch (InstantiationException e) {
-            throw new ServiceException(
-                    "Could not instantiate UIProvider " + uiProviderProperty,
-                    e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new ServiceException(
                     "Could not instantiate UIProvider " + uiProviderProperty,
                     e);
