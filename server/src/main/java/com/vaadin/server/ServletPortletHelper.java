@@ -251,4 +251,7 @@ public class ServletPortletHelper implements Serializable {
 
         return Locale.getDefault();
     }
+
+    private ServletPortletHelper() {
+    }
 }

@@ -731,4 +731,7 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
+    private ComponentSizeValidator() {
+    }
+
 }

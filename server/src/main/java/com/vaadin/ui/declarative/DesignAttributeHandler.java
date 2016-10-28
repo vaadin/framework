@@ -508,4 +508,7 @@ public class DesignAttributeHandler implements Serializable {
         }
     }
 
+    private DesignAttributeHandler() {
+    }
+
 }

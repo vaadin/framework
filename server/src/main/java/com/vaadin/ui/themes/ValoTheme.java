@@ -1072,4 +1072,7 @@ public class ValoTheme {
      * </pre>
      */
     public static final String MENU_APPEAR_ON_HOVER = "valo-menu-hover";
+
+    private ValoTheme() {
+    }
 }

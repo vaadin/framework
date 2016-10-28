@@ -189,5 +189,8 @@ public class BeanValidator implements Validator<Object> {
         private static ValidatorFactory getFactory() {
             return Validation.buildDefaultValidatorFactory();
         }
+
+        private LazyFactoryInitializer() {
+        }
     }
 }

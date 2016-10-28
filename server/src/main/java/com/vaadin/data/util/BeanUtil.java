@@ -239,5 +239,8 @@ public final class BeanUtil implements Serializable {
                 return false;
             }
         }
+
+        private LazyValidationAvailability() {
+        }
     }
 }

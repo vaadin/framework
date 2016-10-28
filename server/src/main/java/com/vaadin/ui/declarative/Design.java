@@ -773,4 +773,7 @@ public class Design implements Serializable {
         outputStream.write(doc.html().getBytes(UTF8));
     }
 
+    private Design() {
+    }
+
 }

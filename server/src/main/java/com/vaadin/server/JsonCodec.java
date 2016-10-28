@@ -993,4 +993,7 @@ public class JsonCodec implements Serializable {
         JSONSerializer serializer = customSerializers.get(value.getClass());
         return serializer.serialize(value, connectorTracker);
     }
+
+    private JsonCodec() {
+    }
 }

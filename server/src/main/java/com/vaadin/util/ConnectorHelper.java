@@ -98,4 +98,7 @@ public class ConnectorHelper {
         }
     }
 
+    private ConnectorHelper() {
+    }
+
 }

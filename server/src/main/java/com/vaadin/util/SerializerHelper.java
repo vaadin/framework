@@ -154,4 +154,7 @@ public class SerializerHelper {
 
     }
 
+    private SerializerHelper() {
+    }
+
 }

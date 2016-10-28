@@ -43,4 +43,7 @@ public class TestUtil {
                             + " has no match in the first iterable.");
         }
     }
+
+    private TestUtil() {
+    }
 }

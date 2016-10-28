@@ -213,4 +213,7 @@ public class ReflectTools implements Serializable {
         }
         return type;
     }
+
+    private ReflectTools() {
+    }
 }

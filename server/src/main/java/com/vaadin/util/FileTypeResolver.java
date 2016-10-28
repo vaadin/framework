@@ -392,4 +392,7 @@ public class FileTypeResolver implements Serializable {
     public static Map<String, Resource> getMIMETypeToIconMapping() {
         return Collections.unmodifiableMap(MIMEToIconMap);
     }
+
+    private FileTypeResolver() {
+    }
 }

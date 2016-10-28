@@ -116,4 +116,7 @@ public class ComponentTest {
                 new HashSet<>(Arrays.asList(encodeState.keys())));
     }
 
+    private ComponentTest() {
+    }
+
 }

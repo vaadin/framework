@@ -54,4 +54,7 @@ class VaadinServiceClassLoaderUtil {
                 new VaadinServiceClassLoaderUtil.GetClassLoaderPrivilegedAction());
     }
 
+    private VaadinServiceClassLoaderUtil() {
+    }
+
 }

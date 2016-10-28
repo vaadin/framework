@@ -69,4 +69,7 @@ public class LegacyPaint implements Serializable {
 
     }
 
+    private LegacyPaint() {
+    }
+
 }
