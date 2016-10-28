@@ -1382,7 +1382,7 @@ public class Window extends Panel
             }
         }
         super.readDesignChildren(content, context);
-        setAssistiveDescription(descriptions.toArray(new Component[0]));
+        setAssistiveDescription(descriptions.toArray(new Component[descriptions.size()]));
     }
 
     @Override
