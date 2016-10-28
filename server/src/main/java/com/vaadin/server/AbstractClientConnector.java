@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -998,7 +997,7 @@ public abstract class AbstractClientConnector
      */
     public Collection<?> getListeners(Class<?> eventType) {
         if (eventRouter == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         return eventRouter.getListeners(eventType);

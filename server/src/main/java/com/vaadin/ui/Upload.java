@@ -229,14 +229,14 @@ public class Upload extends AbstractComponent
 
     static {
         try {
-            UPLOAD_FINISHED_METHOD = FinishedListener.class.getDeclaredMethod(
-                    "uploadFinished", FinishedEvent.class);
-            UPLOAD_FAILED_METHOD = FailedListener.class.getDeclaredMethod(
-                    "uploadFailed", FailedEvent.class);
-            UPLOAD_STARTED_METHOD = StartedListener.class.getDeclaredMethod(
-                    "uploadStarted", StartedEvent.class);
-            UPLOAD_SUCCEEDED_METHOD = SucceededListener.class.getDeclaredMethod(
-                    "uploadSucceeded", SucceededEvent.class);
+            UPLOAD_FINISHED_METHOD = FinishedListener.class
+                    .getDeclaredMethod("uploadFinished", FinishedEvent.class);
+            UPLOAD_FAILED_METHOD = FailedListener.class
+                    .getDeclaredMethod("uploadFailed", FailedEvent.class);
+            UPLOAD_STARTED_METHOD = StartedListener.class
+                    .getDeclaredMethod("uploadStarted", StartedEvent.class);
+            UPLOAD_SUCCEEDED_METHOD = SucceededListener.class
+                    .getDeclaredMethod("uploadSucceeded", SucceededEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
@@ -1118,7 +1118,7 @@ public class Upload extends AbstractComponent
     public java.util.Collection<?> getListeners(java.lang.Class<?> eventType) {
         if (StreamingProgressEvent.class.isAssignableFrom(eventType)) {
             if (progressListeners == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             } else {
                 return Collections.unmodifiableCollection(progressListeners);
             }

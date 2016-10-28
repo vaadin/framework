@@ -154,7 +154,7 @@ public class MockServletContext implements ServletContext {
      */
     @Override
     public Enumeration getServlets() {
-        return Collections.enumeration(Collections.EMPTY_SET);
+        return Collections.enumeration(Collections.emptySet());
     }
 
     /*
@@ -233,7 +233,7 @@ public class MockServletContext implements ServletContext {
      */
     @Override
     public Enumeration getInitParameterNames() {
-        return Collections.enumeration(Collections.EMPTY_LIST);
+        return Collections.enumeration(Collections.emptyList());
     }
 
     /*
