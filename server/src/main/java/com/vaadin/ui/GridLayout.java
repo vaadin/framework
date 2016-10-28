@@ -1281,7 +1281,7 @@ public class GridLayout extends AbstractLayout
         for (Element e : design.children()) {
             if (e.tagName().equalsIgnoreCase("row")) {
                 rowElements.add(e);
-                rows.add(new HashMap<Integer, Component>());
+                rows.add(new HashMap<>());
 
             }
         }
@@ -1333,7 +1333,7 @@ public class GridLayout extends AbstractLayout
                             + colspan; ++colIndex) {
                         if (rowIndex == rows.size()) {
                             // Rowspan with not enough rows. Fix by adding rows.
-                            rows.add(new HashMap<Integer, Component>());
+                            rows.add(new HashMap<>());
                         }
                         rows.get(rowIndex).put(colIndex + skippedColumns,
                                 child);

@@ -136,7 +136,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
                 T item = grid.getDataCommunicator().getKeyMapper().get(rowKey);
                 Column column = grid.getColumn(columnId);
 
-                fireEvent(new RendererClickEvent<T>(grid, item, column,
+                fireEvent(new RendererClickEvent<>(grid, item, column,
                         mouseDetails));
             }
         });

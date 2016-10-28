@@ -276,7 +276,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
             BootstrapContext context = new BootstrapContext(response,
                     new BootstrapFragmentResponse(this, request, session,
-                            uiClass, new ArrayList<Node>(), provider));
+                            uiClass, new ArrayList<>(), provider));
 
             setupMainDiv(context);
 

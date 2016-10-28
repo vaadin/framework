@@ -716,7 +716,7 @@ public class ComponentSizeValidator implements Serializable {
     public static List<InvalidLayout> validateLayouts(UI ui) {
         List<InvalidLayout> invalidRelativeSizes = ComponentSizeValidator
                 .validateComponentRelativeSizes(ui.getContent(),
-                        new ArrayList<ComponentSizeValidator.InvalidLayout>(),
+                        new ArrayList<>(),
                         null);
 
         // Also check any existing subwindows

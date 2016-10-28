@@ -124,7 +124,7 @@ public abstract class DeclarativeTestBase<T extends Component>
                 System.out.println("No comparator found for " + c.getName()
                         + ". Using introspector.");
             }
-            return new IntrospectorEqualsAsserter<T>(c);
+            return new IntrospectorEqualsAsserter<>(c);
         }
         return comp;
     }
