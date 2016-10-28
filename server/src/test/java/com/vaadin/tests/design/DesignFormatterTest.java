@@ -80,15 +80,15 @@ public class DesignFormatterTest {
         assertEquals("", formatter.format(true));
         assertEquals("false", formatter.format(false));
 
-        assertEquals(true, formatter.parse("true", boolean.class));
-        assertEquals(true, formatter.parse("foobar", boolean.class));
-        assertEquals(true, formatter.parse("", boolean.class));
-        assertEquals(false, formatter.parse("false", boolean.class));
+        Assert.assertTrue(formatter.parse("true", boolean.class));
+        Assert.assertTrue(formatter.parse("foobar", boolean.class));
+        Assert.assertTrue(formatter.parse("", boolean.class));
+        Assert.assertFalse(formatter.parse("false", boolean.class));
 
-        assertEquals(true, formatter.parse("true", Boolean.class));
-        assertEquals(true, formatter.parse("foobar", Boolean.class));
-        assertEquals(true, formatter.parse("", Boolean.class));
-        assertEquals(false, formatter.parse("false", Boolean.class));
+        Assert.assertTrue(formatter.parse("true", Boolean.class));
+        Assert.assertTrue(formatter.parse("foobar", Boolean.class));
+        Assert.assertTrue(formatter.parse("", Boolean.class));
+        Assert.assertFalse(formatter.parse("false", Boolean.class));
     }
 
     @Test

@@ -53,8 +53,8 @@ public class VaadinServletConfigurationTest {
         DeploymentConfiguration configuration = servlet.getService()
                 .getDeploymentConfiguration();
 
-        Assert.assertEquals(true, configuration.isProductionMode());
-        Assert.assertEquals(true, configuration.isCloseIdleSessions());
+        Assert.assertTrue(configuration.isProductionMode());
+        Assert.assertTrue(configuration.isCloseIdleSessions());
         Assert.assertEquals(1234, configuration.getHeartbeatInterval());
         Assert.assertEquals(4321, configuration.getResourceCacheTime());
 
@@ -78,10 +78,10 @@ public class VaadinServletConfigurationTest {
 
         // Values from servlet init params take precedence
         Assert.assertEquals(1111, configuration.getHeartbeatInterval());
-        Assert.assertEquals(false, configuration.isProductionMode());
+        Assert.assertFalse(configuration.isProductionMode());
 
         // Other params are as defined in the annotation
-        Assert.assertEquals(true, configuration.isCloseIdleSessions());
+        Assert.assertTrue(configuration.isCloseIdleSessions());
         Assert.assertEquals(4321, configuration.getResourceCacheTime());
 
         Class<? extends UI> uiClass = new DefaultUIProvider()
