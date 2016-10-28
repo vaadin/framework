@@ -48,7 +48,7 @@ public class DesignEnumConverter<T extends Enum>
     @SuppressWarnings("unchecked")
     @Override
     public Result<T> convertToModel(String value, ValueContext context) {
-        if (value == null || value.trim().equals("")) {
+        if (value == null || value.trim().isEmpty()) {
             return Result.ok(null);
         }
         try {

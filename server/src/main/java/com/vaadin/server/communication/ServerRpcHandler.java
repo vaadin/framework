@@ -90,7 +90,7 @@ public class ServerRpcHandler implements Serializable {
                 csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
             } else {
                 String csrfToken = token.asString();
-                if (csrfToken.equals("")) {
+                if (csrfToken.isEmpty()) {
                     csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
                 }
                 this.csrfToken = csrfToken;
@@ -223,7 +223,7 @@ public class ServerRpcHandler implements Serializable {
 
         String changeMessage = getMessage(reader);
 
-        if (changeMessage == null || changeMessage.equals("")) {
+        if (changeMessage == null || changeMessage.isEmpty()) {
             // The client sometimes sends empty messages, this is probably a bug
             return;
         }

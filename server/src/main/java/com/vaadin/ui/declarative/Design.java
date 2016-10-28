@@ -571,7 +571,7 @@ public class Design implements Serializable {
         DesignRoot designAnnotation = annotatedClass
                 .getAnnotation(DesignRoot.class);
         String filename = designAnnotation.value();
-        if (filename.equals("")) {
+        if (filename.isEmpty()) {
             // No value, assume the html file is named as the class
             filename = annotatedClass.getSimpleName() + ".html";
         }

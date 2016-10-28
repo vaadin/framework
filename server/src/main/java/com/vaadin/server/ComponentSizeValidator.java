@@ -608,7 +608,7 @@ public class ComponentSizeValidator implements Serializable {
             } else if (parent instanceof Window) {
                 // Sub window can define width based on caption
                 if (parent.getCaption() != null
-                        && !parent.getCaption().equals("")) {
+                        && !parent.getCaption().isEmpty()) {
                     return true;
                 } else {
                     return false;

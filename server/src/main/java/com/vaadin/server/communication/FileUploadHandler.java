@@ -370,7 +370,7 @@ public class FileUploadHandler implements RequestHandler {
                 rawfilename = rawfilename.substring(0,
                         rawfilename.indexOf(quote));
                 firstFileFieldFound = true;
-            } else if (firstFileFieldFound && readLine.equals("")) {
+            } else if (firstFileFieldFound && readLine.isEmpty()) {
                 atStart = true;
             } else if (readLine.startsWith("Content-Type")) {
                 rawMimeType = readLine.split(": ")[1];

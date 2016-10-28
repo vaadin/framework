@@ -304,7 +304,7 @@ public class AbsoluteLayout extends AbstractLayout
             for (int i = 0; i < cssProperties.length; i++) {
                 String[] keyValuePair = cssProperties[i].split(":");
                 String key = keyValuePair[0].trim();
-                if (key.equals("")) {
+                if (key.isEmpty()) {
                     continue;
                 }
                 if (key.equals("z-index")) {
@@ -317,7 +317,7 @@ public class AbsoluteLayout extends AbstractLayout
                         value = "";
                     }
                     String symbol = value.replaceAll("[0-9\\.\\-]+", "");
-                    if (!symbol.equals("")) {
+                    if (!symbol.isEmpty()) {
                         value = value.substring(0, value.indexOf(symbol))
                                 .trim();
                     }
