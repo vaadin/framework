@@ -45,8 +45,10 @@ public class AbstractClientConnectorTest {
             mock.registerRpc(implementation);
             Assert.fail("expected exception");
         } catch (Exception expected) {
-            Assert.assertEquals(expected.getMessage(),
-                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
+            Assert.assertEquals(
+                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) "
+                            + "if the Rpc implementation implements more than one interface",
+                    expected.getMessage());
         }
     }
 

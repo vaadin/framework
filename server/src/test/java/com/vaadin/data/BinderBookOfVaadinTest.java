@@ -609,9 +609,8 @@ public class BinderBookOfVaadinTest {
         BinderValidationStatus<?> status = binder.validate();
         Assert.assertEquals(0, status.getFieldValidationErrors().size());
         Assert.assertEquals(1, status.getBeanValidationErrors().size());
-        Assert.assertEquals(
-                status.getBeanValidationErrors().get(0).getErrorMessage(),
-                message);
+        Assert.assertEquals(message,
+                status.getBeanValidationErrors().get(0).getErrorMessage());
 
         Assert.assertEquals(message, formStatusLabel.getValue());
 
