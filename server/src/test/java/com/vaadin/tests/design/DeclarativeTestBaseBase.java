@@ -268,7 +268,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         }
         Collections.sort(names);
 
-        sb.append("<" + producedElem.tagName() + "");
+        sb.append("<").append(producedElem.tagName()).append("");
         for (String attrName : names) {
             sb.append(" ").append(attrName);
             if (!booleanAttributes.contains(attrName)) {

@@ -50,14 +50,14 @@ public class GraphVizClassHierarchyCreator {
         header.append("    node [shape = ellipse, style=\"dotted\"] ");
         for (Class c : classesAndParents) {
             if (!c.isInterface() && Modifier.isAbstract(c.getModifiers())) {
-                header.append(c.getSimpleName() + " ");
+                header.append(c.getSimpleName()).append(" ");
             }
         }
         if (includeInterfaces) {
             System.out.print("    node [shape = ellipse, style=\"solid\"] ");
             for (Class c : classesAndParents) {
                 if (c.isInterface()) {
-                    header.append(c.getSimpleName() + " ");
+                    header.append(c.getSimpleName()).append(" ");
                 }
             }
             header.append(";\n");

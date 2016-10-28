@@ -160,8 +160,7 @@ public class AttachDetachListenersTest {
         @Override
         public void appendTo(StringBuffer buffer) {
             buffer.append("EventEquals(");
-            buffer.append("expected " + expected.getClass().getSimpleName()
-                    + " with connector " + expected.getConnector());
+            buffer.append("expected ").append(expected.getClass().getSimpleName()).append(" with connector ").append(expected.getConnector());
             buffer.append(")");
         }
 

@@ -256,7 +256,7 @@ public class NavigatorTest {
         EasyMock.reportMatcher(new IArgumentMatcher() {
             @Override
             public void appendTo(StringBuffer buffer) {
-                buffer.append("paramsIs(\"" + expected + "\")");
+                buffer.append("paramsIs(\"").append(expected).append("\")");
             }
 
             @Override

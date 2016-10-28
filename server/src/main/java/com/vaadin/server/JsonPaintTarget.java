@@ -443,7 +443,7 @@ public class JsonPaintTarget implements PaintTarget {
                     "Parameters must be non-null strings");
         }
         final StringBuilder buf = new StringBuilder();
-        buf.append("\"" + name + "\":[");
+        buf.append("\"").append(name).append("\":[");
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
                 buf.append(",");
@@ -743,7 +743,7 @@ public class JsonPaintTarget implements PaintTarget {
         private boolean tagClosed = false;
 
         public JsonTag(String tagName) {
-            data.append("[\"" + tagName + "\"");
+            data.append("[\"").append(tagName).append("\"");
         }
 
         private void closeTag() {

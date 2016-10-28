@@ -217,7 +217,7 @@ public class ComponentSizeValidator implements Serializable {
             Component parent = component.getParent();
             String paintableId = component.getConnectorId();
 
-            clientJSON.append("\"id\":\"" + paintableId + "\"");
+            clientJSON.append("\"id\":\"").append(paintableId).append("\"");
 
             if (invalidHeight) {
                 Stack<ComponentInfo> attributes = null;
@@ -247,7 +247,7 @@ public class ComponentSizeValidator implements Serializable {
                     attributes = getHeightAttributes(component);
                 }
                 printServerError(msg, attributes, false, serverErrorStream);
-                clientJSON.append(",\"heightMsg\":\"" + msg + "\"");
+                clientJSON.append(",\"heightMsg\":\"").append(msg).append("\"");
             }
             if (invalidWidth) {
                 Stack<ComponentInfo> attributes = null;
@@ -275,7 +275,7 @@ public class ComponentSizeValidator implements Serializable {
                     msg = "A component with relative width needs a parent with defined width.";
                     attributes = getWidthAttributes(component);
                 }
-                clientJSON.append(",\"widthMsg\":\"" + msg + "\"");
+                clientJSON.append(",\"widthMsg\":\"").append(msg).append("\"");
                 printServerError(msg, attributes, true, serverErrorStream);
             }
             if (subErrors.size() > 0) {
@@ -402,8 +402,7 @@ public class ComponentSizeValidator implements Serializable {
         }
 
         if (createLoc != null) {
-            err.append(", created at (" + createLoc.file + ":"
-                    + createLoc.lineNumber + ")");
+            err.append(", created at (").append(createLoc.file).append(":").append(createLoc.lineNumber).append(")");
 
         }
 
@@ -411,8 +410,7 @@ public class ComponentSizeValidator implements Serializable {
             err.append(" (");
             err.append(attribute);
             if (sizeLoc != null) {
-                err.append(", set at (" + sizeLoc.file + ":"
-                        + sizeLoc.lineNumber + ")");
+                err.append(", set at (").append(sizeLoc.file).append(":").append(sizeLoc.lineNumber).append(")");
             }
 
             err.append(")");
