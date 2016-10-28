@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +40,8 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 @SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
@@ -105,7 +106,7 @@ public class ComponentSizeValidator implements Serializable {
      * Comparability form component which is defined in the different jar.
      * 
      * TODO : Normally this logic shouldn't be here. But it means that the whole
-     * this class has wrong design and impementation and should be refactored.
+     * this class has wrong design and implementation and should be refactored.
      */
     private static boolean isForm(Component component) {
         if (!(component instanceof HasComponents)) {
@@ -123,7 +124,7 @@ public class ComponentSizeValidator implements Serializable {
     }
 
     private static void printServerError(String msg,
-            Stack<ComponentInfo> attributes, boolean widthError,
+            Deque<ComponentInfo> attributes, boolean widthError,
             PrintStream errorStream) {
         StringBuffer err = new StringBuffer();
         err.append("Vaadin DEBUG\n");
@@ -134,7 +135,7 @@ public class ComponentSizeValidator implements Serializable {
             while (attributes.size() > LAYERS_SHOWN) {
                 attributes.pop();
             }
-            while (!attributes.empty()) {
+            while (!attributes.isEmpty()) {
                 ci = attributes.pop();
                 showComponent(ci.component, ci.info, err, indent, widthError);
             }
@@ -219,7 +220,7 @@ public class ComponentSizeValidator implements Serializable {
             clientJSON.append("\"id\":\"").append(paintableId).append("\"");
 
             if (invalidHeight) {
-                Stack<ComponentInfo> attributes = null;
+                Deque<ComponentInfo> attributes = null;
                 String msg = "";
                 // set proper error messages
                 if (parent instanceof AbstractOrderedLayout) {
@@ -249,7 +250,7 @@ public class ComponentSizeValidator implements Serializable {
                 clientJSON.append(",\"heightMsg\":\"").append(msg).append("\"");
             }
             if (invalidWidth) {
-                Stack<ComponentInfo> attributes = null;
+                Deque<ComponentInfo> attributes = null;
                 String msg = "";
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
@@ -307,9 +308,9 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
-    private static Stack<ComponentInfo> getHeightAttributes(
+    private static Deque<ComponentInfo> getHeightAttributes(
             Component component) {
-        Stack<ComponentInfo> attributes = new Stack<>();
+        Deque<ComponentInfo> attributes = new ArrayDeque<>();
         attributes
                 .add(new ComponentInfo(component, getHeightString(component)));
         Component parent = component.getParent();
@@ -322,9 +323,9 @@ public class ComponentSizeValidator implements Serializable {
         return attributes;
     }
 
-    private static Stack<ComponentInfo> getWidthAttributes(
+    private static Deque<ComponentInfo> getWidthAttributes(
             Component component) {
-        Stack<ComponentInfo> attributes = new Stack<>();
+        final Deque<ComponentInfo> attributes = new ArrayDeque<>();
         attributes.add(new ComponentInfo(component, getWidthString(component)));
         Component parent = component.getParent();
         attributes.add(new ComponentInfo(parent, getWidthString(parent)));

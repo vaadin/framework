@@ -24,14 +24,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -50,13 +51,13 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final static String UIDL_ARG_NAME = "name";
 
-    private final Stack<String> mOpenTags;
+    private final Deque<String> mOpenTags;
 
-    private final Stack<JsonTag> openJsonTags;
+    private final Deque<JsonTag> openJsonTags;
 
     // these match each other element-wise
-    private final Stack<ClientConnector> openPaintables;
-    private final Stack<String> openPaintableTags;
+    private final Deque<ClientConnector> openPaintables;
+    private final Deque<String> openPaintableTags;
 
     private final PrintWriter uidlBuffer;
 
@@ -97,11 +98,11 @@ public class JsonPaintTarget implements PaintTarget {
         uidlBuffer = new PrintWriter(outWriter);
 
         // Initialize tag-writing
-        mOpenTags = new Stack<>();
-        openJsonTags = new Stack<>();
+        mOpenTags = new ArrayDeque<>();
+        openJsonTags = new ArrayDeque<>();
 
-        openPaintables = new Stack<>();
-        openPaintableTags = new Stack<>();
+        openPaintables = new ArrayDeque<>();
+        openPaintableTags = new ArrayDeque<>();
 
         cacheEnabled = cachingRequired;
     }
@@ -157,7 +158,7 @@ public class JsonPaintTarget implements PaintTarget {
      * If the parent tag is closed before every child tag is closed an
      * PaintException is raised.
      *
-     * @param tag
+     * @param tagName
      *            the name of the end tag.
      * @throws PaintException
      *             if the paint operation failed.
