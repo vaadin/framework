@@ -784,8 +784,7 @@ public class MenuBar extends AbstractComponent
 
         /**
          * Sets the items's description. See {@link #getDescription()} for more
-         * information on what the description is. This method will trigger a
-         * {@link RepaintRequestEvent}.
+         * information on what the description is.
          *
          * @param description
          *            the new description string for the component.

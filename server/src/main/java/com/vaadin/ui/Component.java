@@ -125,10 +125,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * removing those defined in other layers.
      * </p>
      *
-     * <p>
-     * This method will trigger a {@link RepaintRequestEvent}.
-     * </p>
-     *
      * @param style
      *            the new style or styles of the component as a space-separated
      *            list
@@ -167,10 +163,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <pre>
      * .v-button-mystyle {font-style: italic;}
      * </pre>
-     *
-     * <p>
-     * This method will trigger a {@link RepaintRequestEvent}.
-     * </p>
      *
      * @param style
      *            the new style to be added to the component

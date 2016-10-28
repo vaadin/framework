@@ -289,8 +289,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the component's caption <code>String</code>. Caption is the visible
-     * name of the component. This method will trigger a
-     * {@link RepaintRequestEvent}.
+     * name of the component.
      *
      * @param caption
      *            the new caption <code>String</code> for the component.
@@ -388,8 +387,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
-     * Sets the component's icon. This method will trigger a
-     * {@link RepaintRequestEvent}.
+     * Sets the component's icon.
      *
      * @param icon
      *            the icon to be shown with the component's caption.

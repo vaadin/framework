@@ -1081,11 +1081,6 @@ public class TabSheet extends AbstractComponentContainer
          * .v-tabsheet-tabitemcell-mystyle {font-style: italic;}
          * </pre>
          *
-         * <p>
-         * This method will trigger a {@link RepaintRequestEvent} on the
-         * TabSheet to which the Tab belongs.
-         * </p>
-         *
          * @param styleName
          *            the new style to be set for tab
          * @see #getStyleName()
