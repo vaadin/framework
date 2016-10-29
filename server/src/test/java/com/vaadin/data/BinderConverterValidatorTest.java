@@ -356,7 +356,7 @@ public class BinderConverterValidatorTest
         bindName();
 
         AtomicBoolean beanLevelValidationRun = new AtomicBoolean();
-        binder.withValidator(Validator.<Person> from(
+        binder.withValidator(Validator.from(
                 bean -> beanLevelValidationRun.getAndSet(true), ""));
 
         ageField.setValue("not a number");
@@ -373,7 +373,7 @@ public class BinderConverterValidatorTest
         bindName();
 
         AtomicBoolean beanLevelValidationRun = new AtomicBoolean();
-        binder.withValidator(Validator.<Person> from(
+        binder.withValidator(Validator.from(
                 bean -> beanLevelValidationRun.getAndSet(true), ""));
 
         ageField.setValue(String.valueOf(12));
@@ -496,7 +496,7 @@ public class BinderConverterValidatorTest
                 Person::setFirstName);
 
         String msg = "foo";
-        binder.withValidator(Validator.<Person> from(
+        binder.withValidator(Validator.from(
                 prsn -> prsn.getAddress() != null || prsn.getEmail() != null,
                 msg));
 

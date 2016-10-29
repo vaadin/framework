@@ -57,7 +57,7 @@ public class ResultTest {
     @Test
     public void of_exception() {
         String message = "foo";
-        Result<String> result = Result.<String> of(() -> {
+        Result<String> result = Result.of(() -> {
             throw new RuntimeException();
         }, exception -> message);
         Assert.assertTrue(result instanceof SimpleResult);

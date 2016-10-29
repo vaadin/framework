@@ -55,7 +55,7 @@ public class EventRouterTest {
 
     @Test
     public void fireEvent_noException_eventReceived() {
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.anyObject());
 
         EasyMock.replay(component, listener, errorHandler);
         router.fireEvent(new Component.Event(component), errorHandler);
@@ -64,7 +64,7 @@ public class EventRouterTest {
 
     @Test
     public void fireEvent_exceptionFromListenerAndNoHandler_exceptionPropagated() {
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.anyObject());
         EasyMock.expectLastCall()
                 .andThrow(new RuntimeException("listener failed"));
 
@@ -81,10 +81,10 @@ public class EventRouterTest {
 
     @Test
     public void fireEvent_exceptionFromListener_errorHandlerCalled() {
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.anyObject());
         EasyMock.expectLastCall()
                 .andThrow(new RuntimeException("listener failed"));
-        errorHandler.error(EasyMock.<ErrorEvent> anyObject());
+        errorHandler.error(EasyMock.anyObject());
 
         EasyMock.replay(component, listener, errorHandler);
         router.fireEvent(new Component.Event(component), errorHandler);
@@ -97,12 +97,12 @@ public class EventRouterTest {
         router.addListener(Component.Event.class, listener2,
                 COMPONENT_EVENT_METHOD);
 
-        listener.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener.componentEvent(EasyMock.anyObject());
         EasyMock.expectLastCall()
                 .andThrow(new RuntimeException("listener failed"));
-        errorHandler.error(EasyMock.<ErrorEvent> anyObject());
+        errorHandler.error(EasyMock.anyObject());
         // second listener should be called despite an error in the first
-        listener2.componentEvent(EasyMock.<Component.Event> anyObject());
+        listener2.componentEvent(EasyMock.anyObject());
 
         EasyMock.replay(component, listener, listener2, errorHandler);
         router.fireEvent(new Component.Event(component), errorHandler);
