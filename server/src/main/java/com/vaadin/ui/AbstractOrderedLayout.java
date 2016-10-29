@@ -211,10 +211,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
         int oldLocation = -1;
         int newLocation = -1;
         int location = 0;
-        for (final Iterator<Component> i = components.iterator(); i
-                .hasNext();) {
-            final Component component = i.next();
-
+        for (final Component component : components) {
             if (component == oldComponent) {
                 oldLocation = location;
             }

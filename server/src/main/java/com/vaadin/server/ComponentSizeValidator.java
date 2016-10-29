@@ -518,9 +518,8 @@ public class ComponentSizeValidator implements Serializable {
      */
     private static boolean formHasNonRelativeWidthComponent(Component form) {
         HasComponents parent = (HasComponents) form;
-        for (Iterator<Component> iterator = parent.iterator(); iterator
-                .hasNext();) {
-            if (!hasRelativeWidth(iterator.next())) {
+        for (Component aParent : parent) {
+            if (!hasRelativeWidth(aParent)) {
                 return true;
             }
         }

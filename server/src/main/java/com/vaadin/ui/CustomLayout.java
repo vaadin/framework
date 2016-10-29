@@ -236,9 +236,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         // Gets the locations
         String oldLocation = null;
         String newLocation = null;
-        for (final Iterator<String> i = slots.keySet().iterator(); i
-                .hasNext();) {
-            final String location = i.next();
+        for (final String location : slots.keySet()) {
             final Component component = slots.get(location);
             if (component == oldComponent) {
                 oldLocation = location;

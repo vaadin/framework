@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.Writer;
-import java.util.Iterator;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +29,6 @@ import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Serializes resources to JSON. Currently only used for {@link CustomLayout}
@@ -65,9 +64,8 @@ public class ResourceWriter implements Serializable {
 
         writer.write("{");
         int resourceIndex = 0;
-        for (final Iterator<Object> i = target.getUsedResources().iterator(); i
-                .hasNext();) {
-            final String resource = (String) i.next();
+        for (Object o : target.getUsedResources()) {
+            final String resource = (String) o;
             InputStream is = null;
             try {
                 is = ui.getSession().getService().getThemeResourceAsStream(ui,
@@ -84,13 +82,13 @@ public class ResourceWriter implements Serializable {
                 final StringBuffer layout = new StringBuffer();
 
                 try (InputStreamReader r = new InputStreamReader(is,
-                    StandardCharsets.UTF_8)) {
+                        StandardCharsets.UTF_8)) {
                     final char[] buffer = new char[20000];
                     int charsRead = 0;
                     while ((charsRead = r.read(buffer)) > 0) {
                         layout.append(buffer, 0, charsRead);
                     }
-                } catch (final java.io.IOException e) {
+                } catch (final IOException e) {
                     // FIXME: Handle exception
                     getLogger().log(Level.INFO, "Resource transfer failed", e);
                 }

@@ -412,9 +412,7 @@ public class GridLayout extends AbstractLayout
     public void removeComponent(int column, int row) {
 
         // Finds the area
-        for (final Iterator<Component> i = components.iterator(); i
-                .hasNext();) {
-            final Component component = i.next();
+        for (final Component component : components) {
             final ChildComponentData childData = getState().childData
                     .get(component);
             if (childData.column1 == column && childData.row1 == row) {
@@ -480,9 +478,8 @@ public class GridLayout extends AbstractLayout
 
     private float getExpandRatioSum(Map<Integer, Float> ratioMap) {
         float sum = 0;
-        for (Iterator<Entry<Integer, Float>> iterator = ratioMap.entrySet()
-                .iterator(); iterator.hasNext();) {
-            sum += iterator.next().getValue();
+        for (Float expandRatio : ratioMap.values()) {
+            sum += expandRatio;
         }
         return sum;
     }

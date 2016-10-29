@@ -62,9 +62,8 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
         super(null);
         setErrorLevel(ErrorLevel.INFORMATION);
 
-        for (final Iterator<? extends ErrorMessage> i = errorMessages
-                .iterator(); i.hasNext();) {
-            addErrorMessage(i.next());
+        for (ErrorMessage errorMessage : errorMessages) {
+            addErrorMessage(errorMessage);
         }
 
         if (getCauses().isEmpty()) {
@@ -107,13 +106,12 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
     public String toString() {
         String retval = "[";
         int pos = 0;
-        for (final Iterator<ErrorMessage> i = getCauses().iterator(); i
-                .hasNext();) {
+        for (ErrorMessage errorMessage : getCauses()) {
             if (pos > 0) {
                 retval += ",";
             }
             pos++;
-            retval += i.next().toString();
+            retval += errorMessage.toString();
         }
         retval += "]";
 

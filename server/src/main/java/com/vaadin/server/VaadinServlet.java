@@ -661,8 +661,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     public static String stripSpecialChars(String themeName) {
         StringBuilder sb = new StringBuilder();
         char[] charArray = themeName.toCharArray();
-        for (int i = 0; i < charArray.length; i++) {
-            char c = charArray[i];
+        for (char c : charArray) {
             if (!CHAR_BLACKLIST.contains(c)) {
                 sb.append(c);
             }
@@ -1451,8 +1450,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         StringBuilder safe = new StringBuilder();
         char[] charArray = unsafe.toCharArray();
-        for (int i = 0; i < charArray.length; i++) {
-            char c = charArray[i];
+        for (char c : charArray) {
             if (isSafe(c)) {
                 safe.append(c);
             } else {

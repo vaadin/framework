@@ -854,8 +854,7 @@ public class Window extends Panel
      */
     @Deprecated
     public void removeCloseShortcut() {
-        for (int i = 0; i < closeShortcuts.size(); ++i) {
-            CloseShortcut sc = closeShortcuts.get(i);
+        for (CloseShortcut sc : closeShortcuts) {
             removeAction(sc);
         }
         closeShortcuts.clear();

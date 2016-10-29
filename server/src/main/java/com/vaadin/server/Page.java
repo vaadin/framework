@@ -821,9 +821,8 @@ public class Page implements Serializable {
 
     public void paintContent(PaintTarget target) throws PaintException {
         if (!openList.isEmpty()) {
-            for (final Iterator<OpenResource> i = openList.iterator(); i
-                    .hasNext();) {
-                (i.next()).paintContent(target);
+            for (OpenResource anOpenList : openList) {
+                (anOpenList).paintContent(target);
             }
             openList.clear();
         }
@@ -831,9 +830,7 @@ public class Page implements Serializable {
         // Paint notifications
         if (notifications != null) {
             target.startTag("notifications");
-            for (final Iterator<Notification> it = notifications.iterator(); it
-                    .hasNext();) {
-                final Notification n = it.next();
+            for (final Notification n : notifications) {
                 target.startTag("notification");
                 if (n.getCaption() != null) {
                     target.addAttribute(

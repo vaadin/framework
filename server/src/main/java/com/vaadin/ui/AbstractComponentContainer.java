@@ -72,8 +72,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
 
         // Removes all component
-        for (final Iterator<Component> i = l.iterator(); i.hasNext();) {
-            removeComponent(i.next());
+        for (Component aL : l) {
+            removeComponent(aL);
         }
     }
 
@@ -90,9 +90,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
             components.add(i.next());
         }
 
-        for (final Iterator<Component> i = components.iterator(); i
-                .hasNext();) {
-            final Component c = i.next();
+        for (final Component c : components) {
             source.removeComponent(c);
             addComponent(c);
         }
