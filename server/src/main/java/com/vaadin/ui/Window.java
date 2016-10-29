@@ -337,7 +337,7 @@ public class Window extends Panel
     static {
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class.getDeclaredMethod(
-                    "windowClose", new Class[] { CloseEvent.class });
+                    "windowClose", CloseEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
@@ -541,7 +541,7 @@ public class Window extends Panel
     static {
         try {
             WINDOW_RESIZE_METHOD = ResizeListener.class.getDeclaredMethod(
-                    "windowResized", new Class[] { ResizeEvent.class });
+                    "windowResized", ResizeEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(

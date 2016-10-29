@@ -230,13 +230,13 @@ public class Upload extends AbstractComponent
     static {
         try {
             UPLOAD_FINISHED_METHOD = FinishedListener.class.getDeclaredMethod(
-                    "uploadFinished", new Class[] { FinishedEvent.class });
+                    "uploadFinished", FinishedEvent.class);
             UPLOAD_FAILED_METHOD = FailedListener.class.getDeclaredMethod(
-                    "uploadFailed", new Class[] { FailedEvent.class });
+                    "uploadFailed", FailedEvent.class);
             UPLOAD_STARTED_METHOD = StartedListener.class.getDeclaredMethod(
-                    "uploadStarted", new Class[] { StartedEvent.class });
+                    "uploadStarted", StartedEvent.class);
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class.getDeclaredMethod(
-                    "uploadSucceeded", new Class[] { SucceededEvent.class });
+                    "uploadSucceeded", SucceededEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(

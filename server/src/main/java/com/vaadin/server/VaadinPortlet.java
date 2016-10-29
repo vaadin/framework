@@ -245,7 +245,7 @@ public class VaadinPortlet extends GenericPortlet
                 Method method = targetClass.getMethod(methodName,
                         parameterClass);
 
-                return method.invoke(null, new Object[] { argument });
+                return method.invoke(null, argument);
             } catch (InvocationTargetException ite) {
                 throw (Exception) ite.getCause();
             } finally {
@@ -359,8 +359,8 @@ public class VaadinPortlet extends GenericPortlet
                     Class<?> portletRequestClass = Class.forName(
                             "com.bea.portlet.container.PortletRequestImpl");
                     servletRequestMethod = portletRequestClass
-                            .getDeclaredMethod("getInternalRequest",
-                                    new Class[] {});
+                            .getDeclaredMethod("getInternalRequest"
+                            );
                     servletRequestMethod.setAccessible(true);
                 }
 

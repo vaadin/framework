@@ -164,9 +164,9 @@ public abstract class VaadinService implements Serializable {
                 final Class<?> classLoaderClass = getClass().getClassLoader()
                         .loadClass(classLoaderName);
                 final Constructor<?> c = classLoaderClass
-                        .getConstructor(new Class[] { ClassLoader.class });
+                        .getConstructor(ClassLoader.class);
                 setClassLoader((ClassLoader) c.newInstance(
-                        new Object[] { getClass().getClassLoader() }));
+                        getClass().getClassLoader()));
             } catch (final Exception e) {
                 throw new RuntimeException(
                         "Could not find specified class loader: "

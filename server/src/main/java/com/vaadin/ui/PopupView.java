@@ -49,7 +49,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
         try {
             POPUP_VISIBILITY_METHOD = PopupVisibilityListener.class
                     .getDeclaredMethod("popupVisibilityChange",
-                            new Class[] { PopupVisibilityEvent.class });
+                            PopupVisibilityEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(

@@ -37,8 +37,7 @@ import com.vaadin.ui.VerticalLayout;
 public class AbstractOrderedLayoutDeclarativeTest
         extends DeclarativeMarginTestBase<AbstractOrderedLayout> {
 
-    private List<String> defaultAlignments = Arrays
-            .asList(new String[] { ":top", ":left" });
+    private List<String> defaultAlignments = Arrays.asList(":top", ":left");
 
     @Test
     public void testMargins() {

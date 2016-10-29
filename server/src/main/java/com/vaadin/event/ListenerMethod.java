@@ -507,7 +507,7 @@ public class ListenerMethod implements EventListener, Serializable {
             try {
                 if (eventArgumentIndex >= 0) {
                     if (eventArgumentIndex == 0 && arguments.length == 1) {
-                        method.invoke(target, new Object[] { event });
+                        method.invoke(target, event);
                     } else {
                         final Object[] arg = new Object[arguments.length];
                         System.arraycopy(arguments, 0, arg, 0, arg.length);
