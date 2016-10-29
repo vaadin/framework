@@ -42,16 +42,16 @@ public abstract class DeclarativeTestBase<T extends Component>
         }
     };
 
-    public class IntrospectorEqualsAsserter<T> implements EqualsAsserter<T> {
+    public class IntrospectorEqualsAsserter<C> implements EqualsAsserter<C> {
 
-        private Class<T> c;
+        private final Class<C> c;
 
-        public IntrospectorEqualsAsserter(Class<T> c) {
+        public IntrospectorEqualsAsserter(Class<C> c) {
             this.c = c;
         }
 
         @Override
-        public void assertObjectEquals(T o1, T o2) {
+        public void assertObjectEquals(C o1, C o2) {
             try {
                 BeanInfo bi = Introspector.getBeanInfo(c);
                 for (PropertyDescriptor pd : bi.getPropertyDescriptors()) {
