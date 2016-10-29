@@ -621,7 +621,7 @@ public class Button extends AbstractFocusable
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         Attributes attr = design.attributes();
-        Button def = (Button) designContext.getDefaultInstance(this);
+        Button def = designContext.getDefaultInstance(this);
         String content = getCaption();
         if (content != null) {
             design.html(content);

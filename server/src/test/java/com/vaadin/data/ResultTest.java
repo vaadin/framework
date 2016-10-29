@@ -51,7 +51,7 @@ public class ResultTest {
     public void of_noException() {
         Result<String> result = Result.of(() -> "", exception -> null);
         Assert.assertTrue(result instanceof SimpleResult);
-        Assert.assertFalse(((SimpleResult<?>) result).isError());
+        Assert.assertFalse(result.isError());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ResultTest {
             throw new RuntimeException();
         }, exception -> message);
         Assert.assertTrue(result instanceof SimpleResult);
-        Assert.assertTrue(((SimpleResult<?>) result).isError());
+        Assert.assertTrue(result.isError());
         Assert.assertEquals(message, result.getMessage().get());
     }
 
@@ -80,7 +80,7 @@ public class ResultTest {
             return "bar";
         });
         Assert.assertTrue(mapResult instanceof SimpleResult);
-        Assert.assertFalse(((SimpleResult<?>) mapResult).isError());
+        Assert.assertFalse(mapResult.isError());
         mapResult.ifOk(v -> Assert.assertEquals("bar", v));
     }
 
@@ -99,7 +99,7 @@ public class ResultTest {
             return "somevalue";
         });
         Assert.assertTrue(mapResult instanceof SimpleResult);
-        Assert.assertTrue(((SimpleResult<?>) mapResult).isError());
+        Assert.assertTrue(mapResult.isError());
         mapResult.ifError(msg -> Assert.assertEquals("bar", msg));
     }
 }

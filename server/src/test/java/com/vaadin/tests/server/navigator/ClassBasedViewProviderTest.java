@@ -86,7 +86,7 @@ public class ClassBasedViewProviderTest {
         ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
                 TestView.class);
         assertNull("Received view name for null view string",
-                provider.getViewName((String) null));
+                provider.getViewName(null));
     }
 
     @Test

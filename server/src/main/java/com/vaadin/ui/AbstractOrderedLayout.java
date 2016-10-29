@@ -510,7 +510,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
         // write default attributes
         super.writeDesign(design, designContext);
 
-        AbstractOrderedLayout def = (AbstractOrderedLayout) designContext
+        AbstractOrderedLayout def = designContext
                 .getDefaultInstance(this);
 
         writeMargin(design, getMargin(), def.getMargin(), designContext);

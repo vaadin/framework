@@ -207,7 +207,7 @@ public class CheckBox extends AbstractField<Boolean>
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        CheckBox def = (CheckBox) designContext.getDefaultInstance(this);
+        CheckBox def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("checked", attr, getValue(),
                 def.getValue(), Boolean.class, designContext);

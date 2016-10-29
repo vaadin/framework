@@ -382,7 +382,7 @@ public class DesignAttributeHandler implements Serializable {
             return "";
         }
         @SuppressWarnings("unchecked")
-        Converter<String, Object> converter = (Converter<String, Object>) getFormatter()
+        Converter<String, Object> converter = getFormatter()
                 .findConverterFor(sourceType);
         if (converter != null) {
             return converter.convertToPresentation(value, new ValueContext());

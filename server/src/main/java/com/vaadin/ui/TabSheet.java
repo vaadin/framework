@@ -1592,7 +1592,7 @@ public class TabSheet extends AbstractComponentContainer
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        TabSheet def = (TabSheet) designContext.getDefaultInstance(this);
+        TabSheet def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
 
         // write tabs

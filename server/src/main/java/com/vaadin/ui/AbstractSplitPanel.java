@@ -707,7 +707,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         super.writeDesign(design, designContext);
         // handle custom attributes (write only if a value is not the
         // default value)
-        AbstractSplitPanel def = (AbstractSplitPanel) designContext
+        AbstractSplitPanel def = designContext
                 .getDefaultInstance(this);
         if (getSplitPosition() != def.getSplitPosition()
                 || !def.getSplitPositionUnit().equals(getSplitPositionUnit())) {
