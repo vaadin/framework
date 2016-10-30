@@ -20,11 +20,19 @@ import java.util.Collection;
 import java.util.Objects;
 
 import com.vaadin.data.Listing;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
 
@@ -39,7 +47,8 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
+public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
+        implements FocusNotifier, BlurNotifier {
 
     private IconGenerator<T> itemIconGenerator = item -> null;
 
@@ -93,6 +102,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
      * @see Listing#setDataSource(DataSource)
      */
     public RadioButtonGroup() {
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
         setSelectionModel(new SimpleSingleSelection());
 
         addDataGenerator(new DataGenerator<T>() {
@@ -244,5 +254,33 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T> {
             SerializablePredicate<T> itemEnabledProvider) {
         Objects.requireNonNull(itemEnabledProvider);
         this.itemEnabledProvider = itemEnabledProvider;
+    }
+
+    @Override
+    public Registration addFocusListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
+                listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    @Override
+    public Registration addBlurListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
+                listener);
+    }
+
+    @Override
+    @Deprecated
+    public void removeBlurListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 }

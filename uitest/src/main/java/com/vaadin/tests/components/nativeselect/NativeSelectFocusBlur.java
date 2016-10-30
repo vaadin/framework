@@ -15,28 +15,20 @@
  */
 package com.vaadin.tests.components.nativeselect;
 
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractListingFocusBlurTest;
+import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.NativeSelect;
 
 /**
+ * This class only provides a component type. The initialization code is inside
+ * the AbstractListingFocusBlurTest class.
+ * 
+ * @see AbstractListingFocusBlurTest
+ * 
  * @author Vaadin Ltd
  *
  */
-public class NativeSelectFocusBlur extends AbstractTestUIWithLog {
-
-    @Override
-    protected void setup(VaadinRequest request) {
-        NativeSelect<Integer> select = new NativeSelect<>();
-        select.setItems(IntStream.range(1, 10).mapToObj(Integer::valueOf)
-                .collect(Collectors.toList()));
-
-        addComponent(select);
-        select.addFocusListener(event -> log("Focus Event"));
-        select.addBlurListener(event -> log("Blur Event"));
-    }
+public class NativeSelectFocusBlur extends
+        AbstractListingFocusBlurTest<NativeSelect<Integer>, AbstractSingleSelect<Integer>.AbstractSingleSelection> {
 
 }

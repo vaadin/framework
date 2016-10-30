@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -27,17 +26,14 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.ListingJsonConstants;
@@ -50,8 +46,8 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
-        com.vaadin.client.Focusable, HasEnabled {
+public class VRadioButtonGroup extends FocusableFlowPanelComposite
+        implements Field, ClickHandler, HasEnabled {
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
@@ -64,14 +60,6 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
      */
     public ApplicationConnection client;
 
-    /**
-     * Widget holding the different options (e.g. ListBox or Panel for radio
-     * buttons) (optional, fallbacks to container Panel)
-     * <p>
-     * For internal use only. May be removed or replaced in the future.
-     */
-    public Panel optionsContainer;
-
     private boolean htmlContentAllowed = false;
 
     private boolean enabled;
@@ -81,9 +69,7 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
 
     public VRadioButtonGroup() {
         groupId = DOM.createUniqueId();
-        optionsContainer = new FlowPanel();
-        initWidget(optionsContainer);
-        optionsContainer.setStyleName(CLASSNAME);
+        getWidget().setStyleName(CLASSNAME);
         optionsToItems = new HashMap<>();
         keyToOptions = new HashMap<>();
         selectionChangeListeners = new ArrayList<>();
@@ -93,47 +79,68 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
      * Build all the options
      */
     public void buildOptions(List<JsonObject> items) {
-        /*
-         * In order to retain focus, we need to update values rather than
-         * recreate panel from scratch (#10451). However, the panel will be
-         * rebuilt (losing focus) if number of elements or their order is
-         * changed.
-         */
-
         Roles.getRadiogroupRole().set(getElement());
-        optionsContainer.clear();
-        optionsToItems.clear();
-        keyToOptions.clear();
-        for (JsonObject item : items) {
-            String itemHtml = item
-                    .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
-            if (!isHtmlContentAllowed()) {
-                itemHtml = WidgetUtil.escapeHTML(itemHtml);
-            }
-            RadioButton radioButton = new RadioButton(groupId);
-
-            String iconUrl = item
-                    .getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
-            if (iconUrl != null && iconUrl.length() != 0) {
-                Icon icon = client.getIcon(iconUrl);
-                itemHtml = icon.getElement().getString() + itemHtml;
-            }
-            radioButton.setStyleName("v-radiobutton");
-            radioButton.addStyleName(CLASSNAME_OPTION);
-            radioButton.addClickHandler(this);
-            radioButton.setHTML(itemHtml);
-            radioButton.setValue(item
-                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
-            boolean optionEnabled = !item
-                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-            boolean enabled = optionEnabled && !isReadonly() && isEnabled();
-            radioButton.setEnabled(enabled);
-            String key = item.getString(DataCommunicatorConstants.KEY);
-
-            optionsContainer.add(radioButton);
-            optionsToItems.put(radioButton, item);
-            keyToOptions.put(key, radioButton);
+        int i = 0;
+        int widgetsToRemove = getWidget().getWidgetCount() - items.size();
+        if (widgetsToRemove < 0) {
+            widgetsToRemove = 0;
         }
+        List<Widget> remove = new ArrayList<>(widgetsToRemove);
+        for (Widget widget : getWidget()) {
+            if (i < items.size()) {
+                updateItem((RadioButton) widget, items.get(i), false);
+                i++;
+            } else {
+                remove.add(widget);
+            }
+        }
+        remove.stream().forEach(this::remove);
+        while (i < items.size()) {
+            updateItem(new RadioButton(groupId), items.get(i), true);
+            i++;
+        }
+    }
+
+    private void remove(Widget widget) {
+        getWidget().remove(widget);
+        JsonObject item = optionsToItems.remove(widget);
+        if (item != null) {
+            String key = item.getString(DataCommunicatorConstants.KEY);
+            keyToOptions.remove(key);
+        }
+    }
+
+    private void updateItem(RadioButton button, JsonObject item,
+            boolean requireInitialization) {
+        String itemHtml = item
+                .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
+        if (!isHtmlContentAllowed()) {
+            itemHtml = WidgetUtil.escapeHTML(itemHtml);
+        }
+
+        String iconUrl = item.getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
+        if (iconUrl != null && iconUrl.length() != 0) {
+            Icon icon = client.getIcon(iconUrl);
+            itemHtml = icon.getElement().getString() + itemHtml;
+        }
+
+        button.setHTML(itemHtml);
+        button.setValue(
+                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+        boolean optionEnabled = !item
+                .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
+        boolean enabled = optionEnabled && !isReadonly() && isEnabled();
+        button.setEnabled(enabled);
+        String key = item.getString(DataCommunicatorConstants.KEY);
+
+        if (requireInitialization) {
+            getWidget().add(button);
+            button.setStyleName("v-radiobutton");
+            button.addStyleName(CLASSNAME_OPTION);
+            button.addClickHandler(this);
+        }
+        optionsToItems.put(button, item);
+        keyToOptions.put(key, button);
     }
 
     @Override
@@ -160,7 +167,7 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
     }
 
     public void setTabIndex(int tabIndex) {
-        for (Widget anOptionsContainer : optionsContainer) {
+        for (Widget anOptionsContainer : getWidget()) {
             FocusWidget widget = (FocusWidget) anOptionsContainer;
             widget.setTabIndex(tabIndex);
         }
@@ -177,14 +184,6 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
             Boolean isOptionEnabled = !value
                     .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
             radioButton.setEnabled(radioButtonEnabled && isOptionEnabled);
-        }
-    }
-
-    @Override
-    public void focus() {
-        Iterator<Widget> iterator = optionsContainer.iterator();
-        if (iterator.hasNext()) {
-            ((Focusable) iterator.next()).setFocus(true);
         }
     }
 
@@ -229,7 +228,7 @@ public class VRadioButtonGroup extends Composite implements Field, ClickHandler,
 
     public void selectItemKey(String selectedItemKey) {
         RadioButton radioButton = keyToOptions.get(selectedItemKey);
-        if(radioButton!=null) {//Items might not be loaded yet
+        if (radioButton != null) {// Items might not be loaded yet
             radioButton.setValue(true);
         }
     }

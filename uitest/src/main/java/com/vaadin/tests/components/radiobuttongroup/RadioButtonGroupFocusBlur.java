@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.checkboxgroup;
+package com.vaadin.tests.components.radiobuttongroup;
 
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.tests.components.AbstractListingFocusBlurTest;
-import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.AbstractSingleSelect;
+import com.vaadin.ui.RadioButtonGroup;
 
 /**
  * This class only provides a component type. The initialization code is inside
@@ -28,7 +28,7 @@ import com.vaadin.ui.CheckBoxGroup;
  * @author Vaadin Ltd
  *
  */
-public class CheckBoxGroupFocusBlur extends
-        AbstractListingFocusBlurTest<CheckBoxGroup<Integer>, Multi<Integer>> {
+public class RadioButtonGroupFocusBlur extends
+        AbstractListingFocusBlurTest<RadioButtonGroup<Integer>, AbstractSingleSelect<Integer>.AbstractSingleSelection> {
 
 }

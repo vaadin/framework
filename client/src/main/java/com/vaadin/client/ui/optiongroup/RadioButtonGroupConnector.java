@@ -16,9 +16,12 @@
 
 package com.vaadin.client.ui.optiongroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.connectors.AbstractListingConnector;
+import com.vaadin.client.connectors.AbstractFocusableListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.VRadioButtonGroup;
 import com.vaadin.shared.Range;
@@ -28,14 +31,12 @@ import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
 import com.vaadin.ui.RadioButtonGroup;
+
 import elemental.json.JsonObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Connect(RadioButtonGroup.class)
-public class RadioButtonGroupConnector
-        extends AbstractListingConnector<SelectionModel.Single<?>> {
+public class RadioButtonGroupConnector extends
+        AbstractFocusableListingConnector<VRadioButtonGroup, SelectionModel.Single<?>> {
 
     private Registration selectionChangeRegistration;
     private Registration dataChangeRegistration;
@@ -86,11 +87,6 @@ public class RadioButtonGroupConnector
     }
 
     @Override
-    public VRadioButtonGroup getWidget() {
-        return (VRadioButtonGroup) super.getWidget();
-    }
-
-    @Override
     public RadioButtonGroupState getState() {
         return (RadioButtonGroupState) super.getState();
     }
@@ -105,9 +101,8 @@ public class RadioButtonGroupConnector
      */
     private void onDataChange(Range range) {
         assert range.getStart() == 0 && range.getEnd() == getDataSource()
-                .size() : "RadioButtonGroup only supports full updates, but " +
-                "got range "
-                        + range;
+                .size() : "RadioButtonGroup only supports full updates, but "
+                        + "got range " + range;
 
         final VRadioButtonGroup select = getWidget();
         DataSource<JsonObject> dataSource = getDataSource();

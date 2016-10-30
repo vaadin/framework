@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.vaadin.client.Focusable;
 
 /**
  * Focusable composite whose widget is {@link ChildFocusAwareFlowPanel} (flow
@@ -29,7 +30,7 @@ import com.google.gwt.user.client.ui.Composite;
  *
  */
 public abstract class FocusableFlowPanelComposite extends Composite
-        implements HasAllFocusHandlers {
+        implements HasAllFocusHandlers, Focusable {
 
     private final ChildFocusAwareFlowPanel panel;
 
@@ -54,5 +55,10 @@ public abstract class FocusableFlowPanelComposite extends Composite
     @Override
     public HandlerRegistration addBlurHandler(BlurHandler handler) {
         return panel.addBlurHandler(handler);
+    }
+
+    @Override
+    public void focus() {
+        getWidget().focus();
     }
 }

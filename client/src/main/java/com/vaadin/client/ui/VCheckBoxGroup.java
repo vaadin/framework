@@ -42,8 +42,8 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class VCheckBoxGroup extends FocusableFlowPanelComposite implements
-        Field, ClickHandler, com.vaadin.client.Focusable, HasEnabled {
+public class VCheckBoxGroup extends FocusableFlowPanelComposite
+        implements Field, ClickHandler, HasEnabled {
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
@@ -99,7 +99,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite implements
     }
 
     private void updateItem(VCheckBox widget, JsonObject item,
-            boolean requireInitializations) {
+            boolean requireInitialization) {
         String itemHtml = item
                 .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
         if (!isHtmlContentAllowed()) {
@@ -117,7 +117,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite implements
                 item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         setOptionEnabled(widget, item);
 
-        if (requireInitializations) {
+        if (requireInitialization) {
             widget.addStyleName(CLASSNAME_OPTION);
             widget.addClickHandler(this);
             getWidget().add(widget);
@@ -166,11 +166,6 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite implements
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
         boolean enabled = optionEnabled && !isReadonly() && isEnabled();
         checkBox.setEnabled(enabled);
-    }
-
-    @Override
-    public void focus() {
-        getWidget().focus();
     }
 
     public boolean isHtmlContentAllowed() {
