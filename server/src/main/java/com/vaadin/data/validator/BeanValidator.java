@@ -73,7 +73,6 @@ public class BeanValidator implements Validator<Object> {
 
     private String propertyName;
     private Class<?> beanType;
-    private Locale locale;
 
     /**
      * Creates a new JSR-303 {@code BeanValidator} that validates values of the
@@ -89,25 +88,6 @@ public class BeanValidator implements Validator<Object> {
      *             false
      */
     public BeanValidator(Class<?> beanType, String propertyName) {
-        this(beanType, propertyName, Locale.getDefault());
-    }
-
-    /**
-     * Creates a new JSR-303 {@code BeanValidator} that validates values of the
-     * specified property. Localizes validation messages using the given locale.
-     *
-     * @param beanType
-     *            the bean class declaring the property, not null
-     * @param propertyName
-     *            the property to validate, not null
-     * @param locale
-     *            the locale to use, not null
-     * @throws IllegalStateException
-     *             if {@link BeanUtil#checkBeanValidationAvailable()} returns
-     *             false
-     */
-    public BeanValidator(Class<?> beanType, String propertyName,
-            Locale locale) {
         if (!BeanUtil.checkBeanValidationAvailable()) {
             throw new IllegalStateException("Cannot create a "
                     + BeanValidator.class.getSimpleName()
@@ -118,7 +98,6 @@ public class BeanValidator implements Validator<Object> {
 
         this.beanType = beanType;
         this.propertyName = propertyName;
-        setLocale(locale);
     }
 
     /**
@@ -129,6 +108,12 @@ public class BeanValidator implements Validator<Object> {
      * <p>
      * Null values are accepted unless the property has an {@code @NotNull}
      * annotation or equivalent.
+     *
+     * @param value
+     *            the input value to validate
+     * @param context
+     *            the value context for validation
+     * @return the validation result
      */
     @Override
     public Result<Object> apply(final Object value, ValueContext context) {
@@ -137,18 +122,10 @@ public class BeanValidator implements Validator<Object> {
 
         BinaryOperator<Result<Object>> accumulator = (result1,
                 result2) -> result1.flatMap(val -> result2);
+        Locale locale = context.getLocale().orElse(Locale.getDefault());
 
-        return violations.stream().map(v -> Result.error(getMessage(v)))
+        return violations.stream().map(v -> Result.error(getMessage(v, locale)))
                 .reduce(Result.ok(value), accumulator);
-    }
-
-    /**
-     * Returns the locale used for validation error messages.
-     *
-     * @return the locale used for error messages
-     */
-    public Locale getLocale() {
-        return locale;
     }
 
     @Override
@@ -180,13 +157,17 @@ public class BeanValidator implements Validator<Object> {
      * Returns the interpolated error message for the given constraint violation
      * using the locale specified for this validator.
      *
-     * @param v
+     * @param violation
      *            the constraint violation
+     * @param locale
+     *            the used locale
      * @return the localized error message
      */
-    protected String getMessage(ConstraintViolation<?> v) {
+    protected String getMessage(ConstraintViolation<?> violation,
+            Locale locale) {
         return getJavaxBeanValidatorFactory().getMessageInterpolator()
-                .interpolate(v.getMessageTemplate(), createContext(v), locale);
+                .interpolate(violation.getMessageTemplate(),
+                        createContext(violation), locale);
     }
 
     /**
@@ -199,18 +180,6 @@ public class BeanValidator implements Validator<Object> {
      */
     protected Context createContext(ConstraintViolation<?> violation) {
         return new ContextImpl(violation);
-    }
-
-    /**
-     * Sets the locale used for validation error messages. Revalidation is not
-     * automatically triggered by setting the locale.
-     *
-     * @param locale
-     *            the locale to use for error messages, not null
-     */
-    private void setLocale(Locale locale) {
-        Objects.requireNonNull(locale, "locale cannot be null");
-        this.locale = locale;
     }
 
     private static class LazyFactoryInitializer implements Serializable {

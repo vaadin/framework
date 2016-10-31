@@ -187,8 +187,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             finalBinding = withConverter(createConverter(), false);
 
             if (BeanUtil.checkBeanValidationAvailable()) {
-                finalBinding = finalBinding.withValidator(new BeanValidator(
-                        getBinder().beanType, propertyName, findLocale()));
+                finalBinding = finalBinding.withValidator(
+                        new BeanValidator(getBinder().beanType, propertyName));
             }
 
             PropertyDescriptor descriptor = getDescriptor(propertyName);
@@ -389,7 +389,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * Binds {@code property} with {@code propertyType} to the field in the
      * {@code objectWithMemberFields} instance using {@code memberField} as a
      * reference to a member.
-     * 
+     *
      * @param objectWithMemberFields
      *            the object that contains (Java) member fields to build and
      *            bind
@@ -448,7 +448,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * class. If there is no suitable default constructor or you want to
      * configure the instantiated class then override this method and provide
      * your own implementation.
-     * 
+     *
      * @see #bindInstanceFields(Object)
      * @param fieldClass
      *            type of the field
