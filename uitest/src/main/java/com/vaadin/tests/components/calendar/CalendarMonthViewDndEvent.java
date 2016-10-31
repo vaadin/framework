@@ -40,6 +40,11 @@ public class CalendarMonthViewDndEvent extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final Calendar calendar = new Calendar("Test calendar");
         final java.util.Calendar cal = getAdjustedCalendar();
+        if (cal.get(
+                java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.SUNDAY) {
+            // don't use Sunday: no space to move event on the left
+            cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
+        }
 
         Date from = cal.getTime();
 
