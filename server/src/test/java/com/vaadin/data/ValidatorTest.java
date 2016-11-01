@@ -15,18 +15,20 @@
  */
 package com.vaadin.data;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.validator.ValidatorTestBase;
 
 /**
  * @author Vaadin Ltd
  *
  */
-public class ValidatorTest {
+public class ValidatorTest extends ValidatorTestBase {
 
     @Test
     public void alwaysPass() {
@@ -46,5 +48,31 @@ public class ValidatorTest {
 
         result = validator.apply("", new ValueContext());
         Assert.assertFalse(result.isError());
+    }
+
+    @Test
+    public void withValidator_customErrorMessageProvider() {
+        String finnishError = "Käyttäjän tulee olla täysi-ikäinen";
+        String englishError = "The user must be an adult";
+        String notTranslatableError = "NOT TRANSLATABLE";
+
+        Validator<Integer> ageValidator = Validator.from(age -> age >= 18,
+                ctx -> {
+                    Locale locale = ctx.getLocale().orElse(Locale.ENGLISH);
+
+                    if (locale.getLanguage().equals("fi")) {
+                        return finnishError;
+                    } else if (locale.getLanguage().equals("en")) {
+                        return englishError;
+                    }
+                    return notTranslatableError;
+                });
+
+        setLocale(Locale.ENGLISH);
+        assertFails(17, englishError, ageValidator);
+        setLocale(new Locale("fi", "FI"));
+        assertFails(17, finnishError, ageValidator);
+        setLocale(Locale.GERMAN);
+        assertFails(17, notTranslatableError, ageValidator);
     }
 }

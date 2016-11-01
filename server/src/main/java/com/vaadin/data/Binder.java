@@ -149,6 +149,9 @@ public class Binder<BEAN> implements Serializable {
          * property. If any validator returns a failure, the property value is
          * not updated.
          *
+         * @see #withValidator(SerializablePredicate, String)
+         * @see #withValidator(SerializablePredicate, ErrorMessageProvider)
+         *
          * @param validator
          *            the validator to add, not null
          * @return this binding, for chaining
@@ -167,6 +170,7 @@ public class Binder<BEAN> implements Serializable {
          * failure, the property value is not updated.
          *
          * @see #withValidator(Validator)
+         * @see #withValidator(SerializablePredicate, ErrorMessageProvider)
          * @see Validator#from(SerializablePredicate, String)
          *
          * @param predicate
@@ -181,6 +185,34 @@ public class Binder<BEAN> implements Serializable {
                 SerializablePredicate<? super TARGET> predicate,
                 String message) {
             return withValidator(Validator.from(predicate, message));
+        }
+
+        /**
+         * A convenience method to add a validator to this binding using the
+         * {@link Validator#from(SerializablePredicate, ErrorMessageProvider)}
+         * factory method.
+         * <p>
+         * Validators are applied, in registration order, when the field value
+         * is written to the backing property. If any validator returns a
+         * failure, the property value is not updated.
+         *
+         * @see #withValidator(Validator)
+         * @see #withValidator(SerializablePredicate, String)
+         * @see Validator#from(SerializablePredicate, ErrorMessageProvider)
+         *
+         * @param predicate
+         *            the predicate performing validation, not null
+         * @param errorMessageProvider
+         *            the provider to generate error messages, not null
+         * @return this binding, for chaining
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        public default Binding<BEAN, FIELDVALUE, TARGET> withValidator(
+                SerializablePredicate<? super TARGET> predicate,
+                ErrorMessageProvider errorMessageProvider) {
+            return withValidator(
+                    Validator.from(predicate, errorMessageProvider));
         }
 
         /**
@@ -1062,6 +1094,8 @@ public class Binder<BEAN> implements Serializable {
      *
      * @see #writeBean(Object)
      * @see #writeBeanIfValid(Object)
+     * @see #withValidator(SerializablePredicate, String)
+     * @see #withValidator(SerializablePredicate, ErrorMessageProvider)
      *
      * @param validator
      *            the validator to add, not null
@@ -1081,8 +1115,10 @@ public class Binder<BEAN> implements Serializable {
      * updated. If the validators fail, the bean instance is reverted to its
      * previous state.
      *
-     * @see #save(Object)
-     * @see #saveIfValid(Object)
+     * @see #writeBean(Object)
+     * @see #writeBeanIfValid(Object)
+     * @see #withValidator(Validator)
+     * @see #withValidator(SerializablePredicate, ErrorMessageProvider)
      *
      * @param predicate
      *            the predicate performing validation, not null
@@ -1093,6 +1129,31 @@ public class Binder<BEAN> implements Serializable {
     public Binder<BEAN> withValidator(SerializablePredicate<BEAN> predicate,
             String message) {
         return withValidator(Validator.from(predicate, message));
+    }
+
+    /**
+     * A convenience method to add a validator to this binder using the
+     * {@link Validator#from(SerializablePredicate, ErrorMessageProvider)}
+     * factory method.
+     * <p>
+     * Bean level validators are applied on the bean instance after the bean is
+     * updated. If the validators fail, the bean instance is reverted to its
+     * previous state.
+     *
+     * @see #writeBean(Object)
+     * @see #writeBeanIfValid(Object)
+     * @see #withValidator(Validator)
+     * @see #withValidator(SerializablePredicate, String)
+     *
+     * @param predicate
+     *            the predicate performing validation, not null
+     * @param errorMessageProvider
+     *            the provider to generate error messages, not null
+     * @return this binder, for chaining
+     */
+    public Binder<BEAN> withValidator(SerializablePredicate<BEAN> predicate,
+            ErrorMessageProvider errorMessageProvider) {
+        return withValidator(Validator.from(predicate, errorMessageProvider));
     }
 
     /**

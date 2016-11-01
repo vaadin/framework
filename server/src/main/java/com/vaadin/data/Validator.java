@@ -101,15 +101,37 @@ public interface Validator<T>
             String errorMessage) {
         Objects.requireNonNull(guard, "guard cannot be null");
         Objects.requireNonNull(errorMessage, "errorMessage cannot be null");
+        return from(guard, ctx -> errorMessage);
+    }
+
+    /**
+     * Builds a validator out of a conditional function and an error message
+     * provider. If the function returns true, the validator returns
+     * {@code Result.ok()}; if it returns false or throws an exception,
+     * {@code Result.error()} is returned with the message from the provider.
+     *
+     * @param <T>
+     *            the value type
+     * @param guard
+     *            the function used to validate, not null
+     * @param errorMessageProvider
+     *            the provider to generate error messages, not null
+     * @return the new validator using the function
+     */
+    public static <T> Validator<T> from(SerializablePredicate<T> guard,
+            ErrorMessageProvider errorMessageProvider) {
+        Objects.requireNonNull(guard, "guard cannot be null");
+        Objects.requireNonNull(errorMessageProvider,
+                "errorMessageProvider cannot be null");
         return (value, context) -> {
             try {
                 if (guard.test(value)) {
                     return Result.ok(value);
                 } else {
-                    return Result.error(errorMessage);
+                    return Result.error(errorMessageProvider.apply(context));
                 }
             } catch (Exception e) {
-                return Result.error(errorMessage);
+                return Result.error(errorMessageProvider.apply(context));
             }
         };
     }
