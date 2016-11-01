@@ -17,6 +17,7 @@ package com.vaadin.data.validator;
 
 import java.util.Objects;
 
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
@@ -29,27 +30,16 @@ import com.vaadin.data.util.converter.ValueContext;
  * This validator works similar to {@link NotNullValidator} but in addition it
  * also check whether the value is not an empty String.
  * <p>
- * The main purpose of this validator is its usage with {@link HasRequired}
- * field instances.
+ * This validator can be suitable for fields that have been marked as required
+ * with {@link HasValue#setRequiredIndicatorVisible(boolean)}.
  * <p>
- * If the field is required, it is visually indicated in the user interface.
- * Furthermore, required fields requires "non-empty" validator. So in addition
- * to call {@link HasRequired#setRequiredIndicatorVisible(boolean)} method one
- * should add an instance of this validator explicitly so the code looks like
- * this:
- *
- * <pre>
- * <code>
- * Binder<Bean,String, String> binder = new Binder<>();
- * TextField name = new TextField();
- * name.setRequiredIndicatorVisible(true);
- * binder.forField(name).withValidator(
- *      new NonEmptyValidator("Name cannot be empty"))
- *              .bind(Bean::getName, Bean::setName);
- * </code>
- * </pre>
+ * Note that {@link Binding#setRequired(com.vaadin.data.ErrorMessageProvider)}
+ * does almost the same thing, but verifies against the value NOT being equal to
+ * what {@link HasValue#getEmptyValue()} returns and sets the required indicator
+ * visible with {@link HasValue#setRequiredIndicatorVisible(boolean)}.
  *
  * @see HasValue#setRequiredIndicatorVisible(boolean)
+ * @see Binding#setRequired(com.vaadin.data.ErrorMessageProvider)
  * @author Vaadin Ltd
  * @since 8.0
  *

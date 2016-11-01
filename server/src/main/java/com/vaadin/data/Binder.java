@@ -422,6 +422,47 @@ public class Binder<BEAN> implements Serializable {
          */
         public ValidationStatus<TARGET> validate();
 
+        /**
+         * Sets the field to be required. This means two things:
+         * <ol>
+         * <li>the required indicator is visible</li>
+         * <li>the field value is validated for not being empty*</li>
+         * </ol>
+         * For localizing the error message, use
+         * {@link #setRequired(SerializableFunction)}.
+         * <p>
+         * *Value not being the equal to what {@link HasValue#getEmptyValue()}
+         * returns.
+         *
+         * @see #setRequired(SerializableFunction)
+         * @see HasValue#setRequiredIndicatorVisible(boolean)
+         * @see HasValue#isEmpty()
+         * @param errorMessage
+         *            the error message to show for the invalid value
+         * @return this binding, for chaining
+         */
+        public default Binding<BEAN, FIELDVALUE, TARGET> setRequired(
+                String errorMessage) {
+            return setRequired(context -> errorMessage);
+        }
+
+        /**
+         * Sets the field to be required. This means two things:
+         * <ol>
+         * <li>the required indicator is visible</li>
+         * <li>the field value is validated for not being empty*</li>
+         * </ol>
+         * *Value not being the equal to what {@link HasValue#getEmptyValue()}
+         * returns.
+         *
+         * @see HasValue#setRequiredIndicatorVisible(boolean)
+         * @see HasValue#isEmpty()
+         * @param errorMessageProvider
+         *            the provider for localized validation error message
+         * @return this binding, for chaining
+         */
+        public Binding<BEAN, FIELDVALUE, TARGET> setRequired(
+                ErrorMessageProvider errorMessageProvider);
     }
 
     /**
@@ -519,6 +560,17 @@ public class Binder<BEAN> implements Serializable {
             isStatusHandlerChanged = true;
             statusHandler = handler;
             return this;
+        }
+
+        @Override
+        public Binding<BEAN, FIELDVALUE, TARGET> setRequired(
+                ErrorMessageProvider errorMessageProvider) {
+            checkUnbound();
+
+            getField().setRequiredIndicatorVisible(true);
+            return withValidator(
+                    value -> !Objects.equals(value, getField().getEmptyValue()),
+                    errorMessageProvider);
         }
 
         @Override

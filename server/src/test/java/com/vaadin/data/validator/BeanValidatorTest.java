@@ -3,6 +3,7 @@ package com.vaadin.data.validator;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.junit.After;
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.Address;
@@ -75,6 +76,11 @@ public class BeanValidatorTest extends ValidatorTestBase {
     @Test
     public void testNullValuePasses() {
         assertPasses(null, validator("nickname"));
+    }
+
+    @After
+    public void tearDown() {
+        UI.setCurrent(null);
     }
 
     private BeanValidator validator(String propertyName) {

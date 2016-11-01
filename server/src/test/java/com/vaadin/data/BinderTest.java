@@ -5,14 +5,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
-import com.vaadin.data.validator.NotNullValidator;
+import com.vaadin.data.validator.NotEmptyValidator;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
@@ -310,7 +314,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void withValidator_doesNotDisablesDefaulNullRepresentation() {
         String nullRepresentation = "foo";
         binder.forField(nameField).withNullRepresentation(nullRepresentation)
-                .withValidator(new NotNullValidator(""))
+                .withValidator(new NotEmptyValidator<>(""))
                 .bind(Person::getFirstName, Person::setFirstName);
         item.setFirstName(null);
         binder.setBean(item);
@@ -320,5 +324,65 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         String newValue = "bar";
         nameField.setValue(newValue);
         Assert.assertEquals(newValue, item.getFirstName());
+    }
+
+    @Test
+    public void setRequired_withErrorMessage_fieldGetsRequiredIndicatorAndValidator() {
+        TextField textField = new TextField();
+        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+
+        Binding<Person, String, String> binding = binder.forField(textField);
+        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+
+        binding.setRequired("foobar");
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+
+        binding.bind(Person::getFirstName, Person::setFirstName);
+        binder.setBean(item);
+        Assert.assertNull(textField.getErrorMessage());
+
+        textField.setValue(textField.getEmptyValue());
+        ErrorMessage errorMessage = textField.getErrorMessage();
+        Assert.assertNotNull(errorMessage);
+        Assert.assertEquals("foobar", errorMessage.getFormattedHtmlMessage());
+
+        textField.setValue("value");
+        Assert.assertNull(textField.getErrorMessage());
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+    }
+
+    @Test
+    public void setRequired_withErrorMessageProvider_fieldGetsRequiredIndicatorAndValidator() {
+        TextField textField = new TextField();
+        textField.setLocale(Locale.CANADA);
+        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+
+        Binding<Person, String, String> binding = binder.forField(textField);
+        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+        AtomicInteger invokes = new AtomicInteger();
+
+        binding.setRequired(context -> {
+            invokes.incrementAndGet();
+            Assert.assertSame(Locale.CANADA, context.getLocale().get());
+            return "foobar";
+        });
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+
+        binding.bind(Person::getFirstName, Person::setFirstName);
+        binder.setBean(item);
+        Assert.assertNull(textField.getErrorMessage());
+        Assert.assertEquals(0, invokes.get());
+
+        textField.setValue(textField.getEmptyValue());
+        ErrorMessage errorMessage = textField.getErrorMessage();
+        Assert.assertNotNull(errorMessage);
+        Assert.assertEquals("foobar", errorMessage.getFormattedHtmlMessage());
+        // validation is run twice, once for the field, then for all the fields
+        // for cross field validation...
+        Assert.assertEquals(2, invokes.get());
+
+        textField.setValue("value");
+        Assert.assertNull(textField.getErrorMessage());
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
     }
 }
