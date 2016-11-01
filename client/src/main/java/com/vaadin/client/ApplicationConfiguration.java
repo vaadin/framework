@@ -53,6 +53,7 @@ import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.UnknownExtensionConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -526,7 +527,11 @@ public class ApplicationConfiguration implements EntryPoint {
                 currentTag = getParentTag(currentTag.intValue());
             }
             if (type == null) {
-                type = UnknownComponentConnector.class;
+                if (isExtensionType(tag)) {
+                    type = UnknownExtensionConnector.class;
+                } else {
+                    type = UnknownComponentConnector.class;
+                }
                 if (unknownComponents == null) {
                     unknownComponents = new HashMap<Integer, String>();
                 }
@@ -535,6 +540,20 @@ public class ApplicationConfiguration implements EntryPoint {
             classes.put(tag, type);
         }
         return type;
+    }
+
+    private boolean isExtensionType(int tag) {
+        Integer currentTag = Integer.valueOf(tag);
+        while (currentTag != null) {
+            String serverSideClassNameForTag = getServerSideClassNameForTag(
+                    currentTag);
+            if ("com.vaadin.server.AbstractExtension"
+                    .equals(serverSideClassNameForTag)) {
+                return true;
+            }
+            currentTag = getParentTag(currentTag.intValue());
+        }
+        return false;
     }
 
     public void addComponentInheritanceInfo(ValueMap valueMap) {

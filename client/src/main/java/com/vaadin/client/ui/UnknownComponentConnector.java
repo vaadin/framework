@@ -31,13 +31,17 @@ public class UnknownComponentConnector extends AbstractComponentConnector {
     }
 
     public void setServerSideClassName(String serverClassName) {
-        getWidget().setCaption("Widgetset '" + GWT.getModuleName()
-                + "' does not contain implementation for " + serverClassName
-                + ". Check its component connector's @Connect mapping, widgetsets "
+        getWidget().setCaption(createMessage(serverClassName));
+    }
+
+    public static String createMessage(String serverClassName) {
+        return "Widgetset '" + GWT.getModuleName()
+                + "' does not contain an implementation for " + serverClassName
+                + ". Check the connector's @Connect mapping, the widgetset's "
                 + "GWT module description file and re-compile your"
                 + " widgetset. In case you have downloaded a vaadin"
                 + " add-on package, you might want to refer to "
                 + "<a href='http://vaadin.com/using-addons'>add-on "
-                + "instructions</a>.");
+                + "instructions</a>.";
     }
 }

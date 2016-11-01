@@ -58,6 +58,7 @@ import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.UnknownExtensionConnector;
 import com.vaadin.server.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.server.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.server.widgetsetutils.metadata.ConnectorInitVisitor;
@@ -1123,6 +1124,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 connectorsByLoadStyle.get(LoadStyle.EAGER));
         eagerBundle.processType(eagerLogger, typeOracle
                 .findType(UnknownComponentConnector.class.getCanonicalName()));
+        eagerBundle.processType(eagerLogger, typeOracle
+                .findType(UnknownExtensionConnector.class.getCanonicalName()));
         eagerBundle.processSubTypes(eagerLogger,
                 typeOracle.getType(ClientRpc.class.getName()));
         eagerBundle.processSubTypes(eagerLogger,
