@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.radiobutton;
 
+import com.vaadin.data.SelectionModel;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;

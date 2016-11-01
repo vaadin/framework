@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
+import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.ui.AbstractMultiSelect;
 import com.vaadin.ui.ItemCaptionGenerator;
 

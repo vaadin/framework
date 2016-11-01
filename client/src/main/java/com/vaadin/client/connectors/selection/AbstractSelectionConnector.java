@@ -19,7 +19,6 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 
 import elemental.json.JsonObject;
 
@@ -28,14 +27,10 @@ import elemental.json.JsonObject;
  *
  * @author Vaadin Ltd.
  * 
- * @param <SELECTIONMODEL>
- *            the supported client-side selection model
  * @since 8.0
  */
-public abstract class AbstractSelectionConnector<SELECTIONMODEL extends SelectionModel<?>>
+public abstract class AbstractSelectionConnector
         extends AbstractExtensionConnector {
-
-    private SELECTIONMODEL model = null;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -45,31 +40,12 @@ public abstract class AbstractSelectionConnector<SELECTIONMODEL extends Selectio
                     "Cannot extend a connector that is not an "
                             + AbstractListingConnector.class.getSimpleName());
         }
-        model = createSelectionModel();
-        ((AbstractListingConnector<SELECTIONMODEL>) target)
-                .setSelectionModel(model);
     }
-
-    /**
-     * Creates a selection model object to be used by the Connector.
-     *
-     * @return created selection model
-     */
-    protected abstract SELECTIONMODEL createSelectionModel();
 
     @Override
     @SuppressWarnings("unchecked")
-    public AbstractListingConnector<SELECTIONMODEL> getParent() {
-        return (AbstractListingConnector<SELECTIONMODEL>) super.getParent();
-    }
-
-    /**
-     * Returns the client-side selection model associated with this connector.
-     *
-     * @return the selection model in use
-     */
-    protected SELECTIONMODEL getSelectionModel() {
-        return model;
+    public AbstractListingConnector getParent() {
+        return (AbstractListingConnector) super.getParent();
     }
 
     /**

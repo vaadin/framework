@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.gwt.dom.client.Element;
@@ -40,6 +40,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.data.SelectionModel;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
@@ -58,7 +59,6 @@ import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
@@ -79,8 +79,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 @Connect(com.vaadin.ui.Grid.class)
-public class GridConnector
-        extends AbstractListingConnector<SelectionModel<JsonObject>>
+public class GridConnector extends AbstractListingConnector
         implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
 
     private class ItemClickHandler
@@ -205,7 +204,7 @@ public class GridConnector
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
-        getWidget().setSelectionModel(new SelectionModel.Single<JsonObject>() {
+        getWidget().setSelectionModel(new SelectionModel<JsonObject>() {
 
             @Override
             public void select(JsonObject item) {
@@ -220,7 +219,7 @@ public class GridConnector
             }
 
             @Override
-            public Optional<JsonObject> getSelectedItem() {
+            public Set<JsonObject> getSelectedItems() {
                 throw new UnsupportedOperationException(
                         "Selected item not known on the client side");
             }
@@ -230,6 +229,7 @@ public class GridConnector
                 return item.hasKey(DataCommunicatorConstants.SELECTED)
                         && item.getBoolean(DataCommunicatorConstants.SELECTED);
             }
+
         });
 
         layout();
@@ -319,12 +319,6 @@ public class GridConnector
     public void setDataSource(DataSource<JsonObject> dataSource) {
         super.setDataSource(dataSource);
         getWidget().setDataSource(dataSource);
-    }
-
-    @Override
-    public void setSelectionModel(SelectionModel<JsonObject> selectionModel) {
-        throw new UnsupportedOperationException(
-                "Cannot set a selection model for GridConnector");
     }
 
     /**

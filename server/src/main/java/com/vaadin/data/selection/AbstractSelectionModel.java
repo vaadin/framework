@@ -15,8 +15,8 @@
  */
 package com.vaadin.data.selection;
 
+import com.vaadin.data.SelectionModel;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.ui.AbstractListing.AbstractListingExtension;
 
 import elemental.json.JsonObject;

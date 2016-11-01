@@ -16,7 +16,6 @@
 package com.vaadin.client.widget.grid.selection;
 
 import com.vaadin.client.renderers.Renderer;
-import com.vaadin.shared.data.selection.SelectionModel;
 
 /**
  * Interface for SelectionModels that wants Grid to display a selection column.
@@ -24,13 +23,9 @@ import com.vaadin.shared.data.selection.SelectionModel;
  * @author Vaadin Ltd
  * @since 8.0
  *
- * @param <T>
- *            selected item type
- *
  * @see Renderer
  */
-public interface SelectionModelWithSelectionColumn<T>
-        extends SelectionModel<T> {
+public interface SelectionModelWithSelectionColumn {
 
     /**
      * Returns a new instance of the Renderer for selection column.

@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.vaadin.server.data.DataSource;
-import com.vaadin.shared.data.selection.SelectionModel;
 
 /**
  * A generic interface for components that show a list of data.

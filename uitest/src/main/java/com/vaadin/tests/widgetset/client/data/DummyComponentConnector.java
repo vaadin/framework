@@ -4,15 +4,13 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.VLabel;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.data.DummyData.DummyComponent;
 
 import elemental.json.JsonObject;
 
 @Connect(DummyComponent.class)
-public class DummyComponentConnector extends
-        AbstractListingConnector<SelectionModel<?>> {
+public class DummyComponentConnector extends AbstractListingConnector {
 
     @Override
     public FlowPanel getWidget() {

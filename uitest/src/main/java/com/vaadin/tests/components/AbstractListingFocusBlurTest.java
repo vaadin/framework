@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.googlecode.gentyref.GenericTypeReflector;
+import com.vaadin.data.SelectionModel;
 import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.ui.AbstractListing;
 
 /**

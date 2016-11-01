@@ -19,7 +19,6 @@ import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.ui.AbstractListing;
 
 import elemental.json.JsonObject;
@@ -30,17 +29,12 @@ import elemental.json.JsonValue;
  *
  * @author Vaadin Ltd.
  *
- * @param <SELECTIONMODEL>
- *            the client-side selection model type
- *
  * @since 8.0
  */
-public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionModel<?>>
-        extends AbstractFieldConnector implements HasDataSource {
+public abstract class AbstractListingConnector extends AbstractFieldConnector
+        implements HasDataSource {
 
     private DataSource<JsonObject> dataSource = null;
-
-    private SELECTIONMODEL selectionModel = null;
 
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
@@ -50,25 +44,6 @@ public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionM
     @Override
     public DataSource<JsonObject> getDataSource() {
         return dataSource;
-    }
-
-    /**
-     * Sets the selection model to use. Passing {@code null} disables selection.
-     *
-     * @param selectionModel
-     *            the selection model or null to disable
-     */
-    public void setSelectionModel(SELECTIONMODEL selectionModel) {
-        this.selectionModel = selectionModel;
-    }
-
-    /**
-     * Returns the selection model instance used.
-     *
-     * @return the selection model
-     */
-    public SELECTIONMODEL getSelectionModel() {
-        return selectionModel;
     }
 
     /**

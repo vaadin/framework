@@ -8,12 +8,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.SelectionModel;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.ListDataSource;
 import com.vaadin.server.data.Query;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.AbstractListing;

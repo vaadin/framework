@@ -20,12 +20,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.data.SelectionModel;
+import com.vaadin.data.SelectionModel.Single;
 import com.vaadin.event.selection.SingleSelectionChangeEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.shared.data.selection.SelectionModel.Single;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
 import com.vaadin.util.ReflectTools;
@@ -39,7 +39,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the item date type
  *
- * @see com.vaadin.shared.data.selection.SelectionModel.Single
+ * @see com.vaadin.data.SelectionModel.Single
  *
  * @since 8.0
  */

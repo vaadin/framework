@@ -37,12 +37,12 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
 
 @RunWith(Parameterized.class)
 public class AbstractMultiSelectTest {

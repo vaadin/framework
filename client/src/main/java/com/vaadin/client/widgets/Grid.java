@@ -83,6 +83,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
+import com.vaadin.client.data.SelectionModel;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
@@ -171,8 +172,6 @@ import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
@@ -2865,7 +2864,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * Later on this could be fixed so that it check such handlers
              * exist.
              */
-            final SelectionModel.Multi<T> model = (Multi<T>) getSelectionModel();
+            final SelectionModel<T> model = getSelectionModel();
 
             if (selectAllCheckBox == null) {
                 selectAllCheckBox = GWT.create(CheckBox.class);
@@ -5886,6 +5885,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             public void deselect(T item) {
             }
 
+            @Override
+            public boolean isSelected(T item) {
+                return false;
+            }
+
         });
 
         escalator.getBody().setSpacerUpdater(gridSpacerUpdater);
@@ -7580,7 +7584,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         this.selectionModel = selectionModel;
         if (selectionModel instanceof SelectionModelWithSelectionColumn) {
             setSelectColumnRenderer(
-                    ((SelectionModelWithSelectionColumn<T>) selectionModel)
+                    ((SelectionModelWithSelectionColumn) selectionModel)
                             .getRenderer());
         } else {
             setSelectColumnRenderer(null);
@@ -8227,8 +8231,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         columnHider.updateTogglesOrder();
 
-        fireEvent(new ColumnReorderEvent<T>(oldOrder, newOrder,
-                isUserOriginated));
+        fireEvent(
+                new ColumnReorderEvent<>(oldOrder, newOrder, isUserOriginated));
     }
 
     /**

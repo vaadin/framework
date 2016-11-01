@@ -16,7 +16,7 @@
 package com.vaadin.client.widget.grid.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import com.vaadin.shared.data.selection.SelectionModel;
+import com.vaadin.client.data.SelectionModel;
 
 /**
  * A select all event, fired by the Grid when it needs all rows in data source
@@ -32,9 +32,9 @@ public class SelectAllEvent<T> extends GwtEvent<SelectAllHandler<T>> {
      */
     private final static Type<SelectAllHandler<?>> TYPE = new Type<>();;
 
-    private SelectionModel.Multi<T> selectionModel;
+    private SelectionModel selectionModel;
 
-    public SelectAllEvent(SelectionModel.Multi<T> selectionModel) {
+    public SelectAllEvent(SelectionModel selectionModel) {
         this.selectionModel = selectionModel;
     }
 
@@ -53,7 +53,7 @@ public class SelectAllEvent<T> extends GwtEvent<SelectAllHandler<T>> {
         handler.onSelectAll(this);
     }
 
-    public SelectionModel.Multi<T> getSelectionModel() {
+    public SelectionModel getSelectionModel() {
         return selectionModel;
     }
 }

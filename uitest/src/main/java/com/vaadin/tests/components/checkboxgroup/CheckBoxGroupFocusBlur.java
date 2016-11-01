@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.checkboxgroup;
 
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
+import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.tests.components.AbstractListingFocusBlurTest;
 import com.vaadin.ui.CheckBoxGroup;
 

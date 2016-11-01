@@ -23,9 +23,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.SelectionModel;
+import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.server.data.DataSource;
-import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 
 public class RadioButtonGroupTest {

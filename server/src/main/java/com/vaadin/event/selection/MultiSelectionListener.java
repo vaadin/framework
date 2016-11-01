@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 /**
  * Listens to changes from a
- * {@link com.vaadin.shared.data.selection.SelectionModel.Multi}.
+ * {@link com.vaadin.data.SelectionModel.Multi}.
  *
  * @author Vaadin Ltd
  *

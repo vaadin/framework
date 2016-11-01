@@ -18,11 +18,11 @@ package com.vaadin.ui;
 import java.util.Objects;
 
 import com.vaadin.data.Listing;
+import com.vaadin.data.SelectionModel;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataSource;
-import com.vaadin.shared.data.selection.SelectionModel;
 
 /**
  * A base class for listing components. Provides common handling for fetching

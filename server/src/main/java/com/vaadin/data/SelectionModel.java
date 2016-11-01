@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.data.selection;
+package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Arrays;

@@ -18,7 +18,6 @@ package com.vaadin.client.connectors;
 import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
-import com.vaadin.shared.data.selection.SelectionModel;
 
 /**
  * Abstract class for listing widget connectors that contains focusable children
@@ -28,11 +27,9 @@ import com.vaadin.shared.data.selection.SelectionModel;
  *
  * @param <WIDGET>
  *            widget type which has to allow to register focus/blur handlers
- * @param <SELECTIONMODEL>
- *            the client-side selection model type
  */
-public abstract class AbstractFocusableListingConnector<WIDGET extends Widget & HasAllFocusHandlers, SELECTIONMODEL extends SelectionModel<?>>
-        extends AbstractListingConnector<SELECTIONMODEL> {
+public abstract class AbstractFocusableListingConnector<WIDGET extends Widget & HasAllFocusHandlers>
+        extends AbstractListingConnector {
 
     private ConnectorFocusAndBlurHandler handler;
 

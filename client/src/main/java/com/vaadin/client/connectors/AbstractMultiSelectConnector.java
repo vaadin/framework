@@ -30,7 +30,6 @@ import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.ui.ListingJsonConstants;
 
 import elemental.json.JsonObject;
@@ -46,8 +45,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public abstract class AbstractMultiSelectConnector
-        extends AbstractListingConnector<SelectionModel.Multi<?>>
-        implements HasRequiredIndicator {
+        extends AbstractListingConnector implements HasRequiredIndicator {
 
     /**
      * Abstraction layer to help populate different multiselect widgets based on

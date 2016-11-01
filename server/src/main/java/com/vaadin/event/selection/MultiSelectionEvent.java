@@ -24,7 +24,7 @@ import com.vaadin.ui.AbstractMultiSelect;
 
 /**
  * Event fired when the the selection changes in a
- * {@link com.vaadin.shared.data.selection.SelectionModel.Multi}.
+ * {@link com.vaadin.data.SelectionModel.Multi}.
  *
  * @author Vaadin Ltd
  *

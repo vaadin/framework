@@ -26,6 +26,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.data.SelectionModel;
+import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
@@ -35,8 +37,6 @@ import com.vaadin.server.data.DataGenerator;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
-import com.vaadin.shared.data.selection.SelectionModel;
-import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.util.ReflectTools;
 

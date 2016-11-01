@@ -30,7 +30,6 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
@@ -41,8 +40,7 @@ import com.vaadin.ui.ComboBox;
 import elemental.json.JsonObject;
 
 @Connect(ComboBox.class)
-public class ComboBoxConnector
-        extends AbstractListingConnector<SelectionModel.Single<?>>
+public class ComboBoxConnector extends AbstractListingConnector
         implements HasRequiredIndicator, HasDataSource, SimpleManagedLayout,
         HasErrorIndicator {
 
