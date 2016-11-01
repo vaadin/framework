@@ -36,6 +36,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.UnknownExtensionConnector;
 import com.vaadin.client.ui.VWindow;
 
 import elemental.json.JsonArray;
@@ -229,7 +230,8 @@ public class VUIDLBrowser extends SimpleTree {
                 int tag) {
             Class<? extends ServerConnector> widgetClassByDecodedTag = conf
                     .getConnectorClassByEncodedTag(tag);
-            if (widgetClassByDecodedTag == UnknownComponentConnector.class) {
+            if (widgetClassByDecodedTag == UnknownComponentConnector.class
+                    || widgetClassByDecodedTag == UnknownExtensionConnector.class) {
                 return conf.getUnknownServerClassNameByTag(tag)
                         + "(NO CLIENT IMPLEMENTATION FOUND)";
             } else {

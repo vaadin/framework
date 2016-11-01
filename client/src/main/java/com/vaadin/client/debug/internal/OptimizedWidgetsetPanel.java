@@ -26,6 +26,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.UnknownExtensionConnector;
 
 /**
  * Optimized widgetset view panel of the debug window.
@@ -89,7 +90,8 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
                 break;
             }
 
-            if (connectorClass != UnknownComponentConnector.class) {
+            if (connectorClass != UnknownComponentConnector.class
+                    && connectorClass != UnknownExtensionConnector.class) {
                 usedConnectors.add(connectorClass.getName());
             }
             tag++;
