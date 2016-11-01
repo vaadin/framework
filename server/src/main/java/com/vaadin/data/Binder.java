@@ -623,13 +623,30 @@ public class Binder<BEAN> implements Serializable {
          * Returns the field value run through all converters and validators,
          * but doesn't pass the {@link ValidationStatus} to any status handler.
          *
+         * @return the conversation result
+         */
+        private Result<TARGET> doConversation() {
+            FIELDVALUE fieldValue = field.getValue();
+            return converterValidatorChain.convertToModel(fieldValue,
+                    createValueContext());
+        }
+
+        private ValidationStatus<TARGET> toValidationStatus(
+                Result<TARGET> result) {
+            return new ValidationStatus<>(this,
+                    result.isError()
+                            ? ValidationResult.error(result.getMessage().get())
+                            : ValidationResult.ok());
+        }
+
+        /**
+         * Returns the field value run through all converters and validators,
+         * but doesn't pass the {@link ValidationStatus} to any status handler.
+         *
          * @return the validation status
          */
         private ValidationStatus<TARGET> doValidation() {
-            FIELDVALUE fieldValue = field.getValue();
-            Result<TARGET> dataValue = converterValidatorChain
-                    .convertToModel(fieldValue, createValueContext());
-            return new ValidationStatus<>(this, dataValue);
+            return toValidationStatus(doConversation());
         }
 
         /**
@@ -677,7 +694,7 @@ public class Binder<BEAN> implements Serializable {
             // store field value if valid
             ValidationStatus<TARGET> fieldValidationStatus = writeFieldValue(
                     bean);
-            List<Result<?>> binderValidationResults;
+            List<ValidationResult> binderValidationResults;
             // if all field level validations pass, run bean level validation
             if (!getBinder().bindings.stream().map(BindingImpl::doValidation)
                     .anyMatch(ValidationStatus::isError)) {
@@ -702,12 +719,11 @@ public class Binder<BEAN> implements Serializable {
         private ValidationStatus<TARGET> writeFieldValue(BEAN bean) {
             assert bean != null;
 
-            ValidationStatus<TARGET> validationStatus = doValidation();
+            Result<TARGET> result = doConversation();
             if (setter != null) {
-                validationStatus.getResult().ifPresent(result -> result
-                        .ifOk(value -> setter.accept(bean, value)));
+                result.ifOk(value -> setter.accept(bean, value));
             }
-            return validationStatus;
+            return toValidationStatus(result);
         }
 
         private void notifyStatusHandler(ValidationStatus<?> status) {
@@ -740,10 +756,9 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public Result<T> convertToModel(T value, ValueContext context) {
-            Result<? super T> validationResult = validator.apply(value,
-                    context);
+            ValidationResult validationResult = validator.apply(value, context);
             if (validationResult.isError()) {
-                return Result.error(validationResult.getMessage().get());
+                return Result.error(validationResult.getErrorMessage());
             } else {
                 return Result.ok(value);
             }
@@ -1069,9 +1084,9 @@ public class Binder<BEAN> implements Serializable {
 
         bindings.forEach(binding -> binding.writeFieldValue(bean));
         // Now run bean level validation against the updated bean
-        List<Result<?>> binderResults = validateBean(bean);
-        boolean hasErrors = binderResults.stream().filter(Result::isError)
-                .findAny().isPresent();
+        List<ValidationResult> binderResults = validateBean(bean);
+        boolean hasErrors = binderResults.stream()
+                .filter(ValidationResult::isError).findAny().isPresent();
         if (hasErrors) {
             // Bean validator failed, revert values
             bindings.forEach((BindingImpl binding) -> binding.setter
@@ -1216,9 +1231,9 @@ public class Binder<BEAN> implements Serializable {
      * @return a list of validation errors or an empty list if validation
      *         succeeded
      */
-    private List<Result<?>> validateBean(BEAN bean) {
+    private List<ValidationResult> validateBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        List<Result<?>> results = Collections.unmodifiableList(validators
+        List<ValidationResult> results = Collections.unmodifiableList(validators
                 .stream()
                 .map(validator -> validator.apply(bean, new ValueContext()))
                 .collect(Collectors.toList()));
@@ -1444,7 +1459,7 @@ public class Binder<BEAN> implements Serializable {
         // show first possible error or OK status in the label if set
         if (getStatusLabel().isPresent()) {
             String statusMessage = binderStatus.getBeanValidationErrors()
-                    .stream().findFirst().flatMap(Result::getMessage)
+                    .stream().findFirst().map(ValidationResult::getErrorMessage)
                     .orElse("");
             getStatusLabel().get().setValue(statusMessage);
         }

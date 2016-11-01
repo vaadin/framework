@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class ValidationException extends Exception {
 
     private final List<ValidationStatus<?>> fieldValidationErrors;
-    private final List<Result<?>> beanValidationErrors;
+    private final List<ValidationResult> beanValidationErrors;
 
     /**
      * Constructs a new exception with validation {@code errors} list.
@@ -45,7 +45,7 @@ public class ValidationException extends Exception {
      *            binder validation errors list
      */
     public ValidationException(List<ValidationStatus<?>> fieldValidationErrors,
-            List<Result<?>> beanValidationErrors) {
+            List<ValidationResult> beanValidationErrors) {
         super("Validation has failed for some fields");
         this.fieldValidationErrors = Collections
                 .unmodifiableList(fieldValidationErrors);
@@ -58,10 +58,11 @@ public class ValidationException extends Exception {
      *
      * @return a list of all validation errors
      */
-    public List<Result<?>> getValidationErrors() {
-        ArrayList<Result<?>> errors = new ArrayList<>(getFieldValidationErrors()
-                .stream().map(s -> s.getResult().get())
-                .collect(Collectors.toList()));
+    public List<ValidationResult> getValidationErrors() {
+        ArrayList<ValidationResult> errors = new ArrayList<>(
+                getFieldValidationErrors().stream()
+                        .map(s -> s.getResult().get())
+                        .collect(Collectors.toList()));
         errors.addAll(getBeanValidationErrors());
         return errors;
     }
@@ -84,7 +85,7 @@ public class ValidationException extends Exception {
      *
      * @return binder validation errors list
      */
-    public List<Result<?>> getBeanValidationErrors() {
+    public List<ValidationResult> getBeanValidationErrors() {
         return beanValidationErrors;
     }
 }

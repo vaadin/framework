@@ -53,7 +53,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
 
     private final Binder<BEAN> binder;
     private final List<ValidationStatus<?>> bindingStatuses;
-    private final List<Result<?>> binderStatuses;
+    private final List<ValidationResult> binderStatuses;
 
     /**
      * Convenience method for creating a unresolved validation status for the
@@ -90,7 +90,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      */
     public BinderValidationStatus(Binder<BEAN> source,
             List<ValidationStatus<?>> bindingStatuses,
-            List<Result<?>> binderStatuses) {
+            List<ValidationResult> binderStatuses) {
         Objects.requireNonNull(binderStatuses,
                 "binding statuses cannot be null");
         Objects.requireNonNull(binderStatuses,
@@ -116,8 +116,8 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      *         passed
      */
     public boolean hasErrors() {
-        return binderStatuses.stream().filter(Result::isError).findAny()
-                .isPresent()
+        return binderStatuses.stream().filter(ValidationResult::isError)
+                .findAny().isPresent()
                 || bindingStatuses.stream().filter(ValidationStatus::isError)
                         .findAny().isPresent();
     }
@@ -136,10 +136,11 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      *
      * @return a list of all validation errors
      */
-    public List<Result<?>> getValidationErrors() {
-        ArrayList<Result<?>> errors = new ArrayList<>(getFieldValidationErrors()
-                .stream().map(s -> s.getResult().get())
-                .collect(Collectors.toList()));
+    public List<ValidationResult> getValidationErrors() {
+        ArrayList<ValidationResult> errors = new ArrayList<>(
+                getFieldValidationErrors().stream()
+                        .map(s -> s.getResult().get())
+                        .collect(Collectors.toList()));
         errors.addAll(getBeanValidationErrors());
         return errors;
     }
@@ -166,7 +167,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      *
      * @return the bean level validation results
      */
-    public List<Result<?>> getBeanValidationResults() {
+    public List<ValidationResult> getBeanValidationResults() {
         return binderStatuses;
     }
 
@@ -193,8 +194,8 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      *
      * @return a list of failed bean level validation results
      */
-    public List<Result<?>> getBeanValidationErrors() {
-        return binderStatuses.stream().filter(Result::isError)
+    public List<ValidationResult> getBeanValidationErrors() {
+        return binderStatuses.stream().filter(ValidationResult::isError)
                 .collect(Collectors.toList());
     }
 }

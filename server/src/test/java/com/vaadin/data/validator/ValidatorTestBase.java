@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Before;
 
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.ui.Label;
@@ -18,17 +19,20 @@ public class ValidatorTestBase {
         localeContext = new Label();
     }
 
-    protected <T> void assertPasses(T value, Validator<? super T> v) {
-        v.apply(value, new ValueContext())
-                .handle(val -> Assert.assertEquals(value, val), err -> Assert
-                        .fail(value + " should pass " + v + " but got " + err));
+    protected <T> void assertPasses(T value, Validator<? super T> validator) {
+        ValidationResult result = validator.apply(value, new ValueContext());
+        if (result.isError()) {
+            Assert.fail(value + " should pass " + validator + " but got "
+                    + result.getErrorMessage());
+        }
     }
 
     protected <T> void assertFails(T value, String errorMessage,
-            Validator<? super T> v) {
-        v.apply(value, new ValueContext(localeContext)).handle(
-                val -> Assert.fail(value + " should fail " + v),
-                err -> Assert.assertEquals(errorMessage, err));
+            Validator<? super T> validator) {
+        ValidationResult result = validator.apply(value,
+                new ValueContext(localeContext));
+        Assert.assertTrue(result.isError());
+        Assert.assertEquals(errorMessage, result.getErrorMessage());
     }
 
     protected <T> void assertFails(T value, AbstractValidator<? super T> v) {

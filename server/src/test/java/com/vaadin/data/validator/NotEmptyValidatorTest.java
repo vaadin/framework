@@ -18,7 +18,7 @@ package com.vaadin.data.validator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Result;
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.util.converter.ValueContext;
 
 /**
@@ -30,26 +30,25 @@ public class NotEmptyValidatorTest {
     @Test
     public void nullValueIsDisallowed() {
         NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
-        Result<String> result = validator.apply(null, new ValueContext());
+        ValidationResult result = validator.apply(null, new ValueContext());
         Assert.assertTrue(result.isError());
-        Assert.assertEquals("foo", result.getMessage().get());
+        Assert.assertEquals("foo", result.getErrorMessage());
     }
 
     @Test
     public void emptyValueIsDisallowed() {
         NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
-        Result<String> result = validator.apply("", new ValueContext());
+        ValidationResult result = validator.apply("", new ValueContext());
         Assert.assertTrue(result.isError());
-        Assert.assertEquals("foo", result.getMessage().get());
+        Assert.assertEquals("foo", result.getErrorMessage());
     }
 
     @Test
     public void nonNullValueIsAllowed() {
         NotEmptyValidator<Object> validator = new NotEmptyValidator<>("foo");
         Object value = new Object();
-        Result<Object> result = validator.apply(value, new ValueContext());
+        ValidationResult result = validator.apply(value, new ValueContext());
         Assert.assertFalse(result.isError());
-        result.ifOk(val -> Assert.assertEquals(value, val));
-        result.ifError(msg -> Assert.fail());
+        Assert.assertFalse(result.isError());
     }
 }

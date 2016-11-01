@@ -24,9 +24,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Represents the result of an operation that might fail, such as input
- * validation or type conversion. A result may contain either a value,
- * signifying a successful operation, or an error message in case of a failure.
+ * Represents the result of an operation that might fail, such as type
+ * conversion. A result may contain either a value, signifying a successful
+ * operation, or an error message in case of a failure.
  * <p>
  * Result instances are created using the factory methods {@link #ok(R)} and
  * {@link #error(String)}, denoting success and failure respectively.

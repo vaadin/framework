@@ -610,7 +610,7 @@ public class BinderBookOfVaadinTest {
         Assert.assertEquals(0, status.getFieldValidationErrors().size());
         Assert.assertEquals(1, status.getBeanValidationErrors().size());
         Assert.assertEquals(
-                status.getBeanValidationErrors().get(0).getMessage().get(),
+                status.getBeanValidationErrors().get(0).getErrorMessage(),
                 message);
 
         Assert.assertEquals(message, formStatusLabel.getValue());
@@ -644,9 +644,10 @@ public class BinderBookOfVaadinTest {
 
         binder.setValidationStatusHandler(status -> {
             // create an error message on failed bean level validations
-            List<Result<?>> errors = status.getBeanValidationErrors();
-            String errorMessage = errors.stream().map(Result::getMessage)
-                    .map(o -> o.get()).collect(Collectors.joining("\n"));
+            List<ValidationResult> errors = status.getBeanValidationErrors();
+            String errorMessage = errors.stream()
+                    .map(ValidationResult::getErrorMessage)
+                    .collect(Collectors.joining("\n"));
             // show error in a label
             formStatusLabel.setValue(errorMessage);
             formStatusLabel.setVisible(!errorMessage.isEmpty());
@@ -685,7 +686,7 @@ public class BinderBookOfVaadinTest {
         Assert.assertEquals(0, status.getFieldValidationErrors().size());
         Assert.assertEquals(1, status.getBeanValidationErrors().size());
         Assert.assertEquals(message,
-                status.getBeanValidationErrors().get(0).getMessage().get());
+                status.getBeanValidationErrors().get(0).getErrorMessage());
 
         Assert.assertEquals(message, formStatusLabel.getValue());
 

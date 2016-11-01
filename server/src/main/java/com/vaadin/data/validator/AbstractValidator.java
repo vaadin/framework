@@ -17,7 +17,7 @@ package com.vaadin.data.validator;
 
 import java.util.Objects;
 
-import com.vaadin.data.Result;
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
 import com.vaadin.server.SerializableFunction;
 
@@ -79,7 +79,8 @@ public abstract class AbstractValidator<T> implements Validator<T> {
      *            whether the value is valid or not
      * @return the validation result
      */
-    protected Result<T> toResult(T value, boolean isValid) {
-        return isValid ? Result.ok(value) : Result.error(getMessage(value));
+    protected ValidationResult toResult(T value, boolean isValid) {
+        return isValid ? ValidationResult.ok()
+                : ValidationResult.error(getMessage(value));
     }
 }

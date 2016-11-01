@@ -18,7 +18,7 @@ package com.vaadin.data.validator;
 import java.util.Comparator;
 import java.util.Objects;
 
-import com.vaadin.data.Result;
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.util.converter.ValueContext;
 
 /**
@@ -98,7 +98,7 @@ public class RangeValidator<T> extends AbstractValidator<T> {
      * behavior depends on the used comparator.
      */
     @Override
-    public Result<T> apply(T value, ValueContext context) {
+    public ValidationResult apply(T value, ValueContext context) {
         return toResult(value, isValid(value));
     }
 

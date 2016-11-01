@@ -386,7 +386,7 @@ public class BinderValidationStatusTest
         Assert.assertEquals(1, status.getBeanValidationErrors().size());
 
         Assert.assertEquals("Need first name and age",
-                status.getBeanValidationErrors().get(0).getMessage().get());
+                status.getBeanValidationErrors().get(0).getErrorMessage());
     }
 
     @Test

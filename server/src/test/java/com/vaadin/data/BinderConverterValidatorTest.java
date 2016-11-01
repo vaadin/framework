@@ -93,8 +93,8 @@ public class BinderConverterValidatorTest
         String msg2 = "bar";
         binding.withValidator(new Validator<String>() {
             @Override
-            public Result<String> apply(String value, ValueContext context) {
-                return new SimpleResult<>(null, msg1);
+            public ValidationResult apply(String value, ValueContext context) {
+                return ValidationResult.error(msg1);
             }
         });
         binding.withValidator(value -> false, msg2);
@@ -128,9 +128,9 @@ public class BinderConverterValidatorTest
         TextField salaryField = new TextField();
         Validator<Number> positiveNumberValidator = (value, context) -> {
             if (value.doubleValue() >= 0) {
-                return Result.ok(value);
+                return ValidationResult.ok();
             } else {
-                return Result.error(NEGATIVE_ERROR_MESSAGE);
+                return ValidationResult.error(NEGATIVE_ERROR_MESSAGE);
             }
         };
         binder.forField(salaryField)

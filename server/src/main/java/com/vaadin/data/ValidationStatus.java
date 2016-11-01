@@ -22,8 +22,11 @@ import java.util.Optional;
 import com.vaadin.data.Binder.Binding;
 
 /**
- * Represents the outcome of field level validation. Use
- * {@link Binding#withValidationStatusHandler(ValidationStatusHandler)} to
+ * Represents the status of field validation. Status can be {@code Status.OK},
+ * {@code Status.ERROR} or {@code Status.RESET}. Status OK and ERROR are always
+ * associated with a ValidationResult {@link #getResult}.
+ * <p>
+ * Use {@link Binding#withValidationStatusHandler(ValidationStatusHandler)} to
  * register a handler for field level validation status changes.
  *
  * @author Vaadin Ltd
@@ -65,7 +68,7 @@ public class ValidationStatus<TARGET> implements Serializable {
     }
 
     private final Status status;
-    private final Result<TARGET> result;
+    private final ValidationResult result;
     private final Binding<?, ?, TARGET> binding;
 
     /**
@@ -94,7 +97,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      *            the result of the validation
      */
     public ValidationStatus(Binding<?, ?, TARGET> source,
-            Result<TARGET> result) {
+            ValidationResult result) {
         this(source, result.isError() ? Status.ERROR : Status.OK, result);
     }
 
@@ -112,7 +115,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      *            the related result, may be {@code null}
      */
     public ValidationStatus(Binding<?, ?, TARGET> source, Status status,
-            Result<TARGET> result) {
+            ValidationResult result) {
         Objects.requireNonNull(source, "Event source may not be null");
         Objects.requireNonNull(status, "Status may not be null");
         if (Objects.equals(status, Status.OK) && result.isError()
@@ -154,7 +157,8 @@ public class ValidationStatus<TARGET> implements Serializable {
      *         status is not an error
      */
     public Optional<String> getMessage() {
-        return Optional.ofNullable(result).flatMap(Result::getMessage);
+        return Optional.ofNullable(result).filter(ValidationResult::isError)
+                .map(ValidationResult::getErrorMessage);
     }
 
     /**
@@ -164,7 +168,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      *
      * @return the validation result
      */
-    public Optional<Result<TARGET>> getResult() {
+    public Optional<ValidationResult> getResult() {
         return Optional.ofNullable(result);
     }
 

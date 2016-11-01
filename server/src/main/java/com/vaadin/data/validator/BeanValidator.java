@@ -19,8 +19,8 @@ package com.vaadin.data.validator;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.BinaryOperator;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator.Context;
@@ -28,7 +28,7 @@ import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.ConstraintDescriptor;
 
-import com.vaadin.data.Result;
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.util.converter.ValueContext;
@@ -116,16 +116,17 @@ public class BeanValidator implements Validator<Object> {
      * @return the validation result
      */
     @Override
-    public Result<Object> apply(final Object value, ValueContext context) {
+    public ValidationResult apply(final Object value, ValueContext context) {
         Set<? extends ConstraintViolation<?>> violations = getJavaxBeanValidator()
                 .validateValue(beanType, propertyName, value);
 
-        BinaryOperator<Result<Object>> accumulator = (result1,
-                result2) -> result1.flatMap(val -> result2);
         Locale locale = context.getLocale().orElse(Locale.getDefault());
 
-        return violations.stream().map(v -> Result.error(getMessage(v, locale)))
-                .reduce(Result.ok(value), accumulator);
+        Optional<ValidationResult> result = violations.stream()
+                .map(violation -> ValidationResult
+                        .error(getMessage(violation, locale)))
+                .findFirst();
+        return result.orElse(ValidationResult.ok());
     }
 
     @Override

@@ -34,9 +34,9 @@ import com.vaadin.server.SerializablePredicate;
  * <pre>
  * Validator&lt;Integer&gt; v = num -> {
  *     if (num >= 0)
- *         return Result.ok(num);
+ *         return ValidationResult.ok();
  *     else
- *         return Result.error("number must be positive");
+ *         return ValidationResult.error("number must be positive");
  * };
  * </pre>
  *
@@ -45,15 +45,15 @@ import com.vaadin.server.SerializablePredicate;
  * @param <T>
  *            the type of the value to validate
  *
- * @see Result
+ * @see ValidationResult
  */
 @FunctionalInterface
 public interface Validator<T>
-        extends BiFunction<T, ValueContext, Result<T>>, Serializable {
+        extends BiFunction<T, ValueContext, ValidationResult>, Serializable {
 
     /**
-     * Validates the given value. Returns a {@code Result} instance representing
-     * the outcome of the validation.
+     * Validates the given value. Returns a {@code ValidationResult} instance
+     * representing the outcome of the validation.
      *
      * @param value
      *            the input value to validate
@@ -62,7 +62,7 @@ public interface Validator<T>
      * @return the validation result
      */
     @Override
-    public Result<T> apply(T value, ValueContext context);
+    public ValidationResult apply(T value, ValueContext context);
 
     /**
      * Returns a validator that passes any value.
@@ -72,14 +72,15 @@ public interface Validator<T>
      * @return an always-passing validator
      */
     public static <T> Validator<T> alwaysPass() {
-        return (v, ctx) -> Result.ok(v);
+        return (value, context) -> ValidationResult.ok();
     }
 
     /**
      * Builds a validator out of a conditional function and an error message. If
      * the function returns true, the validator returns {@code Result.ok()}; if
-     * it returns false or throws an exception, {@code Result.error()} is
-     * returned with the given message.
+     * it returns false or throws an exception,
+     * {@link ValidationResult#error(String)} is returned with the given
+     * message.
      * <p>
      * For instance, the following validator checks if a number is between 0 and
      * 10, inclusive:
@@ -126,12 +127,14 @@ public interface Validator<T>
         return (value, context) -> {
             try {
                 if (guard.test(value)) {
-                    return Result.ok(value);
+                    return ValidationResult.ok();
                 } else {
-                    return Result.error(errorMessageProvider.apply(context));
+                    return ValidationResult
+                            .error(errorMessageProvider.apply(context));
                 }
             } catch (Exception e) {
-                return Result.error(errorMessageProvider.apply(context));
+                return ValidationResult
+                        .error(errorMessageProvider.apply(context));
             }
         };
     }

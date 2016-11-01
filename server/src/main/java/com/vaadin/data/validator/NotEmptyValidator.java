@@ -18,7 +18,7 @@ package com.vaadin.data.validator;
 import java.util.Objects;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.Result;
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.ValueContext;
 
@@ -67,11 +67,11 @@ public class NotEmptyValidator<T> implements Validator<T> {
     }
 
     @Override
-    public Result<T> apply(T value, ValueContext context) {
+    public ValidationResult apply(T value, ValueContext context) {
         if (Objects.isNull(value) || Objects.equals(value, "")) {
-            return Result.error(message);
+            return ValidationResult.error(message);
         } else {
-            return Result.ok(value);
+            return ValidationResult.ok();
         }
     }
 

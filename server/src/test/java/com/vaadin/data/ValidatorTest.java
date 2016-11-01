@@ -33,17 +33,15 @@ public class ValidatorTest extends ValidatorTestBase {
     @Test
     public void alwaysPass() {
         Validator<String> alwaysPass = Validator.alwaysPass();
-        Result<String> result = alwaysPass.apply("foo", new ValueContext());
-        Assert.assertTrue(result instanceof SimpleResult);
-        SimpleResult<String> implRes = (SimpleResult<String>) result;
-        Assert.assertFalse(implRes.getMessage().isPresent());
+        ValidationResult result = alwaysPass.apply("foo", new ValueContext());
+        Assert.assertFalse(result.isError());
     }
 
     @Test
     public void from() {
         Validator<String> validator = Validator.from(Objects::nonNull,
                 "Cannot be null");
-        Result<String> result = validator.apply(null, new ValueContext());
+        ValidationResult result = validator.apply(null, new ValueContext());
         Assert.assertTrue(result.isError());
 
         result = validator.apply("", new ValueContext());

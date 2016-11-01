@@ -18,7 +18,7 @@ package com.vaadin.data.validator;
 
 import java.util.Objects;
 
-import com.vaadin.data.Result;
+import com.vaadin.data.ValidationResult;
 import com.vaadin.data.util.converter.ValueContext;
 
 /**
@@ -42,9 +42,9 @@ public class NotNullValidator extends AbstractValidator<String> {
     }
 
     @Override
-    public Result<String> apply(String value, ValueContext context) {
-        return Objects.isNull(value) ? Result.error(getMessage(value))
-                : Result.ok(value);
+    public ValidationResult apply(String value, ValueContext context) {
+        return Objects.isNull(value) ? ValidationResult.error(getMessage(value))
+                : ValidationResult.ok();
     }
 
 }
