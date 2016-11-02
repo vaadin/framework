@@ -17,7 +17,7 @@ package com.vaadin.client.connectors;
 
 import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.ui.AbstractListing;
@@ -36,7 +36,7 @@ import elemental.json.JsonValue;
  * @since 8.0
  */
 public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionModel<?>>
-        extends AbstractComponentConnector implements HasDataSource {
+        extends AbstractFieldConnector implements HasDataSource {
 
     private DataSource<JsonObject> dataSource = null;
 
@@ -64,7 +64,7 @@ public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionM
 
     /**
      * Returns the selection model instance used.
-     * 
+     *
      * @return the selection model
      */
     public SELECTIONMODEL getSelectionModel() {
@@ -73,7 +73,7 @@ public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionM
 
     /**
      * Returns the key of the given data row.
-     * 
+     *
      * @param row
      *            the row
      * @return the row key
@@ -84,7 +84,7 @@ public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionM
 
     /**
      * Returns the data of the given data row.
-     * 
+     *
      * @param row
      *            the row
      * @return the row data
@@ -95,7 +95,7 @@ public abstract class AbstractListingConnector<SELECTIONMODEL extends SelectionM
 
     /**
      * Returns whether the given row is selected.
-     * 
+     *
      * @param row
      *            the row
      * @return {@code true} if the row is selected, {@code false} otherwise

@@ -31,10 +31,10 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.client.ui.VTree;
 import com.vaadin.v7.client.ui.VTree.TreeNode;
 import com.vaadin.v7.shared.ui.tree.TreeConstants;
@@ -43,7 +43,7 @@ import com.vaadin.v7.shared.ui.tree.TreeState;
 import com.vaadin.v7.ui.Tree;
 
 @Connect(Tree.class)
-public class TreeConnector extends AbstractComponentConnector
+public class TreeConnector extends AbstractLegacyComponentConnector
         implements Paintable {
 
     protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<TreeNode, TooltipInfo>();

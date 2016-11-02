@@ -35,8 +35,20 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector
     protected void updateWidgetStyleNames() {
         super.updateWidgetStyleNames();
 
+        // add / remove read-only style name
+        setWidgetStyleName("v-readonly", isReadOnly());
+
         // add / remove error style name to Fields
         setWidgetStyleNameWithPrefix(getWidget().getStylePrimaryName(),
                 StyleConstants.REQUIRED_EXT, isRequiredIndicatorVisible());
+    }
+
+    /**
+     * Checks if the connector is read only.
+     *
+     * @return true
+     */
+    public boolean isReadOnly() {
+        return getState().readOnly;
     }
 }

@@ -18,6 +18,7 @@ package com.vaadin.v7.client.ui;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.v7.client.ComponentConnector;
 import com.vaadin.v7.shared.AbstractLegacyComponentState;
 
 /**
@@ -30,8 +31,8 @@ import com.vaadin.v7.shared.AbstractLegacyComponentState;
  * @deprecated only used for Vaadin 7 compatiblity components
  */
 @Deprecated
-public class AbstractLegacyComponentConnector
-        extends AbstractComponentConnector {
+public class AbstractLegacyComponentConnector extends AbstractComponentConnector
+        implements ComponentConnector {
 
     // overridden to be visible to VUpload in the same package. Without making
     // it public in VUploadConnector
@@ -43,5 +44,18 @@ public class AbstractLegacyComponentConnector
     @Override
     public AbstractLegacyComponentState getState() {
         return (AbstractLegacyComponentState) super.getState();
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return getState().readOnly;
+    }
+
+    @Override
+    protected void updateWidgetStyleNames() {
+        super.updateWidgetStyleNames();
+
+        // add / remove read-only style name
+        setWidgetStyleName("v-readonly", isReadOnly());
     }
 }

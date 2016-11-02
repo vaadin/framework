@@ -628,10 +628,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Set the core 'v' style name for the widget
         setWidgetStyleName(StyleConstants.UI_WIDGET, true);
 
-        // should be in AbstractFieldConnector ?
-        // add / remove read-only style name
-        setWidgetStyleName("v-readonly", isReadOnly());
-
         // add / remove error style name
         setWidgetStyleNameWithPrefix(primaryStyleName, StyleConstants.ERROR_EXT,
                 null != state.errorMessage);
@@ -728,17 +724,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }
         getWidget().setStyleName(prefix + styleName, add);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.client.ComponentConnector#isReadOnly()
-     */
-    @Override
-    @Deprecated
-    public boolean isReadOnly() {
-        return getState().readOnly;
     }
 
     @Override

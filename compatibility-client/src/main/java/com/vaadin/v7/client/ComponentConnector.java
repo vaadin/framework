@@ -13,27 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared;
-
-import com.vaadin.shared.ui.TabIndexState;
+package com.vaadin.v7.client;
 
 /**
- * State for components that can show the required indicator.
+ * Legacy ComponentConnector with {@code isReadOnly}.
  *
- * @author Vaadin Ltd
- * @since 8.0.0
+ * @author teemusa
  *
  */
-public class AbstractFieldState extends TabIndexState {
+public interface ComponentConnector
+        extends com.vaadin.client.ComponentConnector {
 
     /**
-     * Is the required indicator visible or not.
+     * Checks if the connector is read only.
+     *
+     * @deprecated This belongs in AbstractFieldConnector, see #8514
+     * @return true
      */
-    public boolean required = false;
-
-    /**
-     * Is the field read-only or not.
-     */
-    public boolean readOnly = false;
+    @Deprecated
+    public boolean isReadOnly();
 
 }

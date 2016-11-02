@@ -86,15 +86,6 @@ public interface ComponentConnector extends ServerConnector {
     public boolean isRelativeHeight();
 
     /**
-     * Checks if the connector is read only.
-     *
-     * @deprecated This belongs in AbstractFieldConnector, see #8514
-     * @return true
-     */
-    @Deprecated
-    public boolean isReadOnly();
-
-    /**
      * Return true if parent handles caption, false if the paintable handles the
      * caption itself.
      *

@@ -1053,8 +1053,16 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            read-only mode or not
      */
     protected void setReadOnly(boolean readOnly) {
-        if (readOnly != isReadOnly()) {
-            getState().readOnly = readOnly;
+        if (getState(false) instanceof AbstractFieldState) {
+            if (readOnly != isReadOnly()) {
+                ((AbstractFieldState) getState()).readOnly = readOnly;
+            }
+        } else {
+            throw new IllegalStateException(
+                    "This component does not support the read-only mode, since state is of type "
+                            + getStateType().getSimpleName()
+                            + " and does not inherit "
+                            + AbstractFieldState.class.getSimpleName());
         }
     }
 
@@ -1067,7 +1075,14 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @see #setReadOnly(boolean)
      */
     protected boolean isReadOnly() {
-        return getState(false).readOnly;
+        if (getState(false) instanceof AbstractFieldState) {
+            return ((AbstractFieldState) getState(false)).readOnly;
+        }
+        throw new IllegalStateException(
+                "This component does not support the read-only mode, since state is of type "
+                        + getStateType().getSimpleName()
+                        + " and does not inherit "
+                        + AbstractFieldState.class.getSimpleName());
     }
 
     /**
@@ -1424,13 +1439,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
     protected boolean isRequiredIndicatorVisible() {
         if (getState(false) instanceof AbstractFieldState) {
             return ((AbstractFieldState) getState(false)).required;
-        } else {
-            throw new IllegalStateException(
-                    "This component does not support the required indicator, since state is of type "
-                            + getStateType().getSimpleName()
-                            + " and does not inherit "
-                            + AbstractFieldState.class.getSimpleName());
         }
+        throw new IllegalStateException(
+                "This component does not support the required indicator, since state is of type "
+                        + getStateType().getSimpleName()
+                        + " and does not inherit "
+                        + AbstractFieldState.class.getSimpleName());
     }
 
     private static final Logger getLogger() {

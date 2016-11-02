@@ -29,4 +29,5 @@ import com.vaadin.shared.annotations.NoLayout;
 public class AbstractLegacyComponentState extends AbstractComponentState {
     @NoLayout
     public boolean immediate = false;
+    public boolean readOnly = false;
 }
