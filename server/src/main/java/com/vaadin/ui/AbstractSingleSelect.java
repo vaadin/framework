@@ -45,7 +45,7 @@ import com.vaadin.util.ReflectTools;
  */
 public abstract class AbstractSingleSelect<T> extends
         AbstractListing<T, AbstractSingleSelect<T>.AbstractSingleSelection>
-        implements HasValue<T> {
+        implements SingleSelect<T> {
 
     /**
      * A base class for single selection model implementations. Listens to
