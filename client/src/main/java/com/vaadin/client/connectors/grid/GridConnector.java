@@ -53,9 +53,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
-import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
-import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
@@ -212,6 +210,11 @@ public class GridConnector extends AbstractListingConnector
                 .map(this::getColumn).toArray(size -> new Column[size]));
     }
 
+    @OnStateChange("columnResizeMode")
+    void updateColumnResizeMode() {
+        getWidget().setColumnResizeMode(getState().columnResizeMode);
+    }
+
     /**
      * Updates the grid header section on state change.
      */
@@ -235,18 +238,21 @@ public class GridConnector extends AbstractListingConnector
         }
     }
 
-    private void updateStaticRow(RowState rowState, Grid.StaticSection.StaticRow row) {
+    private void updateStaticRow(RowState rowState,
+            Grid.StaticSection.StaticRow row) {
         rowState.cells.forEach((columnId, cellState) -> {
             updateStaticCellFromState(row.getCell(getColumn(columnId)),
                     cellState);
         });
-        for (Map.Entry<CellState, Set<String>> cellGroupEntry : rowState.cellGroups.entrySet()) {
+        for (Map.Entry<CellState, Set<String>> cellGroupEntry : rowState.cellGroups
+                .entrySet()) {
             Set<String> group = cellGroupEntry.getValue();
 
-            Grid.Column<?, ?>[] columns =
-                    group.stream().map(idToColumn::get).toArray(size->new Grid.Column<?, ?>[size]);
+            Grid.Column<?, ?>[] columns = group.stream().map(idToColumn::get)
+                    .toArray(size -> new Grid.Column<?, ?>[size]);
             // Set state to be the same as first in group.
-            updateStaticCellFromState(row.join(columns), cellGroupEntry.getKey());
+            updateStaticCellFromState(row.join(columns),
+                    cellGroupEntry.getKey());
         }
     }
 

@@ -22,6 +22,7 @@ import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
@@ -233,6 +234,10 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .getSelectionModel())
                         .addSingleSelectionListener(this::onSingleSelect);
 
+        grid.addColumnResizeListener(
+                event -> log("ColumnResizeEvent: isUserOriginated? "
+                        + event.isUserOriginated()));
+
         layout.addComponent(createMenu());
         layout.addComponent(grid);
         addComponent(layout);
@@ -345,6 +350,11 @@ public class GridBasics extends AbstractTestUIWithLog {
                     item -> grid.sort(col, SortDirection.DESCENDING));
         }
         columnsMenu.addItem("Clear sort", item -> grid.clearSortOrder());
+
+        columnsMenu.addItem("Simple resize mode",
+                item -> grid.setColumnResizeMode(item.isChecked()
+                        ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
+                .setCheckable(true);
     }
 
     private void createSizeMenu(MenuItem sizeMenu) {

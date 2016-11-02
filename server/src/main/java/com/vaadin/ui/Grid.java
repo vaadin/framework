@@ -68,6 +68,7 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.DetailsManagerState;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -845,7 +846,6 @@ public class Grid<T> extends AbstractListing<T>
             if (column != null && column.isResizable()) {
                 column.getState().width = pixels;
                 fireColumnResizeEvent(column, true);
-                markAsDirty();
             }
         }
     }
@@ -3466,6 +3466,27 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @param mode
+     *            a ColumnResizeMode value
+     */
+    public void setColumnResizeMode(ColumnResizeMode mode) {
+        getState().columnResizeMode = mode;
+    }
+
+    /**
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @return a ColumnResizeMode value
+     */
+    public ColumnResizeMode getColumnResizeMode() {
+        return getState(false).columnResizeMode;
+    }
+
+    /**
      * Creates a new Editor instance. Can be overridden to create a custom
      * Editor. If the Editor is a {@link AbstractGridExtension}, it will be
      * automatically added to {@link DataCommunicator}.
@@ -3744,7 +3765,6 @@ public class Grid<T> extends AbstractListing<T>
             getDataCommunicator().setInMemorySorting(null);
             return;
         }
-
         sortOrder.addAll(order);
         sort(userOriginated);
     }
