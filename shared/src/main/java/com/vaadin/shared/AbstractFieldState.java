@@ -15,16 +15,20 @@
  */
 package com.vaadin.shared;
 
-import com.vaadin.shared.ui.RequiredIndicatorState;
+import com.vaadin.shared.ui.TabIndexState;
 
 /**
- * Shared state for {@link com.vaadin.ui.AbstractField}.
+ * State for components that can show the required indicator.
  *
  * @author Vaadin Ltd
- * @since 7.0.0
+ * @since 8.0.0
  *
  */
-public class AbstractFieldState extends RequiredIndicatorState {
-    public boolean hideErrors = false;
-    public boolean modified = false;
+public class AbstractFieldState extends TabIndexState {
+
+    /**
+     * Is the required indicator visible or not.
+     */
+    public boolean required = false;
+
 }

@@ -55,13 +55,13 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ContextClickRpc;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ComponentStateUtil;
-import com.vaadin.shared.ui.RequiredIndicatorState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -1386,27 +1386,27 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * apply for all components!</strong>.
      * <p>
      * If the component supports the required indicator (state extends
-     * {@link RequiredIndicatorState}), then expose this method and
+     * {@link AbstractFieldState}), then expose this method and
      * {@link #isRequiredIndicatorVisible()} as {@code public} in the component
      * and call this method.
      * <p>
      * This method will throw a {@link IllegalStateException} if the component
      * state (returned by {@link #getState()}) does not inherit
-     * {@link RequiredIndicatorState}.
+     * {@link AbstractFieldState}.
      *
      * @param visible
      *            <code>true</code> to make the required indicator visible,
      *            <code>false</code> if not
      */
     protected void setRequiredIndicatorVisible(boolean visible) {
-        if (getState(false) instanceof RequiredIndicatorState) {
-            ((RequiredIndicatorState) getState()).required = visible;
+        if (getState(false) instanceof AbstractFieldState) {
+            ((AbstractFieldState) getState()).required = visible;
         } else {
             throw new IllegalStateException(
                     "This component does not support the required indicator, since state is of type "
                             + getStateType().getSimpleName()
                             + " and does not inherit "
-                            + RequiredIndicatorState.class.getSimpleName());
+                            + AbstractFieldState.class.getSimpleName());
         }
     }
 
@@ -1416,20 +1416,20 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * <p>
      * This method will throw a {@link IllegalStateException} if the component
      * state (returned by {@link #getState()}) does not inherit
-     * {@link RequiredIndicatorState}.
+     * {@link AbstractFieldState}.
      *
      * @return <code>true</code> if visible, <code>false</code> if not
      * @see #setRequiredIndicatorVisible(boolean)
      */
     protected boolean isRequiredIndicatorVisible() {
-        if (getState(false) instanceof RequiredIndicatorState) {
-            return ((RequiredIndicatorState) getState(false)).required;
+        if (getState(false) instanceof AbstractFieldState) {
+            return ((AbstractFieldState) getState(false)).required;
         } else {
             throw new IllegalStateException(
                     "This component does not support the required indicator, since state is of type "
                             + getStateType().getSimpleName()
                             + " and does not inherit "
-                            + RequiredIndicatorState.class.getSimpleName());
+                            + AbstractFieldState.class.getSimpleName());
         }
     }
 

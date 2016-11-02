@@ -15,15 +15,15 @@
  */
 package com.vaadin.shared.ui.twincolselect;
 
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.RequiredIndicatorState;
 
 /**
  * Shared state for the TwinColSelect component.
  *
  * @since 7.0
  */
-public class TwinColSelectState extends RequiredIndicatorState {
+public class TwinColSelectState extends AbstractFieldState {
     {
         primaryStyleName = "v-select-twincol";
     }

@@ -15,7 +15,6 @@
  */
 package com.vaadin.shared.ui.optiongroup;
 
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
 

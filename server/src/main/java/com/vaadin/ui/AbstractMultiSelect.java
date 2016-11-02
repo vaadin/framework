@@ -32,12 +32,12 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataGenerator;
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.data.selection.SelectionModel;
 import com.vaadin.shared.data.selection.SelectionModel.Multi;
 import com.vaadin.shared.ui.ListingJsonConstants;
-import com.vaadin.shared.ui.RequiredIndicatorState;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
@@ -484,13 +484,13 @@ public abstract class AbstractMultiSelect<T>
     }
 
     @Override
-    protected RequiredIndicatorState getState() {
-        return (RequiredIndicatorState) super.getState();
+    protected AbstractFieldState getState() {
+        return (AbstractFieldState) super.getState();
     }
 
     @Override
-    protected RequiredIndicatorState getState(boolean markAsDirty) {
-        return (RequiredIndicatorState) super.getState(markAsDirty);
+    protected AbstractFieldState getState(boolean markAsDirty) {
+        return (AbstractFieldState) super.getState(markAsDirty);
     }
 
     @Override

@@ -15,8 +15,8 @@
  */
 package com.vaadin.shared.ui.listselect;
 
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.RequiredIndicatorState;
 
 /**
  * Shared state for ListSelect component.
@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.RequiredIndicatorState;
  * @author Vaadin Ltd
  *
  */
-public class ListSelectState extends RequiredIndicatorState {
+public class ListSelectState extends AbstractFieldState {
     {
         primaryStyleName = "v-select";
     }

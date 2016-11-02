@@ -26,26 +26,14 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector
         return (AbstractFieldState) super.getState();
     }
 
-    public boolean isModified() {
-        return getState().modified;
-    }
-
     @Override
     public boolean isRequiredIndicatorVisible() {
         return getState().required && !isReadOnly();
     }
 
     @Override
-    public boolean isErrorIndicatorVisible() {
-        return super.isErrorIndicatorVisible() && !getState().hideErrors;
-    }
-
-    @Override
     protected void updateWidgetStyleNames() {
         super.updateWidgetStyleNames();
-
-        // add / remove modified style name to Fields
-        setWidgetStyleName(StyleConstants.MODIFIED, isModified());
 
         // add / remove error style name to Fields
         setWidgetStyleNameWithPrefix(getWidget().getStylePrimaryName(),
