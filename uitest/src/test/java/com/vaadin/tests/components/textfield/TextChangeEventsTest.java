@@ -2,13 +2,10 @@ package com.vaadin.tests.components.textfield;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-@RunLocally(Browser.PHANTOMJS)
 public class TextChangeEventsTest extends SingleBrowserTest {
 
     @Test

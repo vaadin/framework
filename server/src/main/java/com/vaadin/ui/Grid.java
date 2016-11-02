@@ -63,6 +63,7 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.DetailsManagerState;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -74,6 +75,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
@@ -842,7 +844,6 @@ public class Grid<T> extends AbstractListing<T>
             if (column != null && column.isResizable()) {
                 column.getState().width = pixels;
                 fireColumnResizeEvent(column, true);
-                markAsDirty();
             }
         }
     }
@@ -3270,6 +3271,27 @@ public class Grid<T> extends AbstractListing<T>
     @Override
     protected GridState getState(boolean markAsDirty) {
         return (GridState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @param mode
+     *            a ColumnResizeMode value
+     */
+    public void setColumnResizeMode(ColumnResizeMode mode) {
+        getState().columnResizeMode = mode;
+    }
+
+    /**
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @return a ColumnResizeMode value
+     */
+    public ColumnResizeMode getColumnResizeMode() {
+        return getState(false).columnResizeMode;
     }
 
     /**
