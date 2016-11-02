@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.checkboxgroup;
 
-import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.tests.components.AbstractListingFocusBlurTest;
 import com.vaadin.ui.CheckBoxGroup;
 
@@ -28,7 +27,7 @@ import com.vaadin.ui.CheckBoxGroup;
  * @author Vaadin Ltd
  *
  */
-public class CheckBoxGroupFocusBlur extends
-        AbstractListingFocusBlurTest<CheckBoxGroup<Integer>, Multi<Integer>> {
+public class CheckBoxGroupFocusBlur
+        extends AbstractListingFocusBlurTest<CheckBoxGroup<Integer>> {
 
 }

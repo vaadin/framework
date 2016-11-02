@@ -233,11 +233,9 @@ public class GridBasics extends AbstractTestUIWithLog {
             MenuItem headerTypeMenu = columnMenu.addItem("Header Type", null);
             headerTypeMenu.addItem("Text Header", selectedItem -> grid
                     .getDefaultHeaderRow().getCell(col).setText("Text Header"));
-            headerTypeMenu
-                    .addItem("HTML Header",
-                            selectedItem -> grid.getDefaultHeaderRow()
-                                    .getCell(col)
-                                    .setHtml("<b>HTML Header</b>"));
+            headerTypeMenu.addItem("HTML Header",
+                    selectedItem -> grid.getDefaultHeaderRow().getCell(col)
+                            .setHtml("<b>HTML Header</b>"));
             headerTypeMenu.addItem("Widget Header", selectedItem -> {
                 final Button button = new Button("Button Header");
                 button.addClickListener(clickEvent -> log("Button clicked!"));
@@ -293,15 +291,12 @@ public class GridBasics extends AbstractTestUIWithLog {
                         : null))
                 .setCheckable(true);
         stateMenu
-                .addItem("Cell description generator",
-                        item -> grid.getColumns().stream().findFirst()
-                                .ifPresent(
-                                        c -> c.setDescriptionGenerator(
-                                                item.isChecked()
-                                                        ? t -> "Cell tooltip for row "
-                                                                + t.getRowNumber()
-                                                                + ", Column 0"
-                                                        : null)))
+                .addItem("Cell description generator", item -> grid.getColumns()
+                        .stream().findFirst()
+                        .ifPresent(c -> c.setDescriptionGenerator(
+                                item.isChecked() ? t -> "Cell tooltip for row "
+                                        + t.getRowNumber() + ", Column 0"
+                                        : null)))
                 .setCheckable(true);
         stateMenu.addItem("Item click listener", new Command() {
 
@@ -393,10 +388,10 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void createBodyMenu(MenuItem rowMenu) {
         rowMenu.addItem("Toggle first row selection", menuItem -> {
             DataObject item = data.get(0);
-            if (grid.isSelected(item)) {
-                grid.deselect(item);
+            if (grid.getSelectionModel().isSelected(item)) {
+                grid.getSelectionModel().deselect(item);
             } else {
-                grid.select(item);
+                grid.getSelectionModel().select(item);
             }
         });
     }
@@ -432,10 +427,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void createFooterMenu(MenuItem footerMenu) {
         footerMenu.addItem("Add default footer row", menuItem -> {
             FooterRow defaultFooter = grid.appendFooterRow();
-            grid.getColumns()
-                    .forEach(column -> defaultFooter.getCell(column)
-                            .setText(grid.getDefaultHeaderRow().getCell(column)
-                                    .getText()));
+            grid.getColumns().forEach(
+                    column -> defaultFooter.getCell(column).setText(grid
+                            .getDefaultHeaderRow().getCell(column).getText()));
             footerMenu.removeChild(menuItem);
         });
         footerMenu.addItem("Append footer row", menuItem -> {

@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.radiobuttongroup;
 
 import com.vaadin.tests.components.AbstractListingFocusBlurTest;
-import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.RadioButtonGroup;
 
 /**
@@ -28,7 +27,7 @@ import com.vaadin.ui.RadioButtonGroup;
  * @author Vaadin Ltd
  *
  */
-public class RadioButtonGroupFocusBlur extends
-        AbstractListingFocusBlurTest<RadioButtonGroup<Integer>, AbstractSingleSelect<Integer>.AbstractSingleSelection> {
+public class RadioButtonGroupFocusBlur
+        extends AbstractListingFocusBlurTest<RadioButtonGroup<Integer>> {
 
 }

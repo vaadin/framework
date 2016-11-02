@@ -157,7 +157,7 @@ public class BinderMultiSelectTest
         converterBinder.readBean(new AtomicReference<>("TWO"));
 
         assertEquals(Collections.singleton(TestEnum.TWO),
-                select.getSelectionModel().getSelectedItems());
+                select.getSelectedItems());
     }
 
     @Test

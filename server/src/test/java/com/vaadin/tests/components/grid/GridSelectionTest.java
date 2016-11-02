@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.grid;
 
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,17 +20,17 @@ public class GridSelectionTest {
 
     @Test
     public void testGridWithSingleSelection() {
-        Assert.assertFalse(grid.isSelected("Foo"));
-        grid.select("Foo");
-        Assert.assertTrue(grid.isSelected("Foo"));
-        Assert.assertEquals(1, grid.getSelectedItems().size());
-        Assert.assertEquals("Foo", grid.getSelectedItems().iterator().next());
-        grid.select("Bar");
-        Assert.assertFalse(grid.isSelected("Foo"));
-        Assert.assertTrue(grid.isSelected("Bar"));
-        grid.deselect("Bar");
-        Assert.assertFalse(grid.isSelected("Bar"));
-        Assert.assertEquals(0, grid.getSelectedItems().size());
+        Assert.assertFalse(grid.getSelectionModel().isSelected("Foo"));
+        grid.getSelectionModel().select("Foo");
+        Assert.assertTrue(grid.getSelectionModel().isSelected("Foo"));
+        Assert.assertEquals(Optional.of("Foo"), grid.getSelectedItem());
+        grid.getSelectionModel().select("Bar");
+        Assert.assertFalse(grid.getSelectionModel().isSelected("Foo"));
+        Assert.assertTrue(grid.getSelectionModel().isSelected("Bar"));
+        grid.getSelectionModel().deselect("Bar");
+        Assert.assertFalse(grid.getSelectionModel().isSelected("Bar"));
+        Assert.assertFalse(
+                grid.getSelectionModel().getSelectedItem().isPresent());
     }
 
 }

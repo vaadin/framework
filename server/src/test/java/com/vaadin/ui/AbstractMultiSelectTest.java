@@ -37,7 +37,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.DataSource;
@@ -56,18 +55,16 @@ public class AbstractMultiSelectTest {
     @Parameter
     public AbstractMultiSelect<String> selectToTest;
 
-    private Multi<String> selectionModel;
     private MultiSelectServerRpc rpc;
 
     private Registration registration;
 
     @Before
     public void setUp() {
-        selectToTest.getSelectionModel().deselectAll();
+        selectToTest.deselectAll();
         // Intentional deviation from upcoming selection order
         selectToTest.setDataSource(
                 DataSource.create("3", "2", "1", "5", "8", "7", "4", "6"));
-        selectionModel = selectToTest.getSelectionModel();
         rpc = ComponentTest.getRpcProxy(selectToTest,
                 MultiSelectServerRpc.class);
     }
@@ -82,28 +79,28 @@ public class AbstractMultiSelectTest {
 
     @Test
     public void stableSelectionOrder() {
-        selectionModel.select("1");
-        selectionModel.select("2");
-        selectionModel.select("3");
+        selectToTest.select("1");
+        selectToTest.select("2");
+        selectToTest.select("3");
 
-        assertSelectionOrder(selectionModel, "1", "2", "3");
+        assertSelectionOrder("1", "2", "3");
 
-        selectionModel.deselect("1");
-        assertSelectionOrder(selectionModel, "2", "3");
+        selectToTest.deselect("1");
+        assertSelectionOrder("2", "3");
 
-        selectionModel.select("1");
-        assertSelectionOrder(selectionModel, "2", "3", "1");
+        selectToTest.select("1");
+        assertSelectionOrder("2", "3", "1");
 
-        selectionModel.selectItems("7", "8", "4");
-        assertSelectionOrder(selectionModel, "2", "3", "1", "7", "8", "4");
+        selectToTest.select("7", "8", "4");
+        assertSelectionOrder("2", "3", "1", "7", "8", "4");
 
-        selectionModel.deselectItems("2", "1", "4", "5");
-        assertSelectionOrder(selectionModel, "3", "7", "8");
+        selectToTest.deselect("2", "1", "4", "5");
+        assertSelectionOrder("3", "7", "8");
 
-        selectionModel.updateSelection(
+        selectToTest.updateSelection(
                 new LinkedHashSet<>(Arrays.asList("5", "2")),
                 new LinkedHashSet<>(Arrays.asList("3", "8")));
-        assertSelectionOrder(selectionModel, "7", "5", "2");
+        assertSelectionOrder("7", "5", "2");
     }
 
     @Test
@@ -120,27 +117,27 @@ public class AbstractMultiSelectTest {
         selectToTest.select("2");
 
         selectToTest.deselect("2");
-        selectToTest.getSelectionModel().deselectAll();
+        selectToTest.deselectAll();
 
-        selectToTest.getSelectionModel().selectItems("2", "3", "4");
-        selectToTest.getSelectionModel().deselectItems("1", "4");
+        selectToTest.select("2", "3", "4");
+        selectToTest.deselect("1", "4");
 
         Assert.assertEquals(6, listenerCount.get());
 
         // select partly selected
-        selectToTest.getSelectionModel().selectItems("2", "3", "4");
+        selectToTest.select("2", "3", "4");
         Assert.assertEquals(7, listenerCount.get());
 
         // select completely selected
-        selectToTest.getSelectionModel().selectItems("2", "3", "4");
+        selectToTest.select("2", "3", "4");
         Assert.assertEquals(7, listenerCount.get());
 
         // deselect partly not selected
-        selectToTest.getSelectionModel().selectItems("1", "4");
+        selectToTest.select("1", "4");
         Assert.assertEquals(8, listenerCount.get());
 
         // deselect completely not selected
-        selectToTest.getSelectionModel().selectItems("1", "4");
+        selectToTest.select("1", "4");
         Assert.assertEquals(8, listenerCount.get());
     }
 
@@ -154,88 +151,88 @@ public class AbstractMultiSelectTest {
         });
 
         rpcSelect("1");
-        assertSelectionOrder(selectionModel, "1");
+        assertSelectionOrder("1");
 
         rpcSelect("2");
-        assertSelectionOrder(selectionModel, "1", "2");
-        rpcDeselect("2");
-        assertSelectionOrder(selectionModel, "1");
+        assertSelectionOrder("1", "2");
+        rpcDeselectItems("2");
+        assertSelectionOrder("1");
         rpcSelect("3", "6");
-        assertSelectionOrder(selectionModel, "1", "3", "6");
-        rpcDeselect("1", "3");
-        assertSelectionOrder(selectionModel, "6");
+        assertSelectionOrder("1", "3", "6");
+        rpcDeselectItems("1", "3");
+        assertSelectionOrder("6");
 
         Assert.assertEquals(5, listenerCount.get());
 
         // select partly selected
         rpcSelect("2", "3", "4");
         Assert.assertEquals(6, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "2", "3", "4");
+        assertSelectionOrder("6", "2", "3", "4");
 
         // select completely selected
         rpcSelect("2", "3", "4");
         Assert.assertEquals(6, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "2", "3", "4");
+        assertSelectionOrder("6", "2", "3", "4");
 
         // deselect partly not selected
-        rpcDeselect("1", "4");
+        rpcDeselectItems("1", "4");
         Assert.assertEquals(7, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "2", "3");
+        assertSelectionOrder("6", "2", "3");
 
         // deselect completely not selected
-        rpcDeselect("1", "4");
+        rpcDeselectItems("1", "4");
         Assert.assertEquals(7, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "2", "3");
+        assertSelectionOrder("6", "2", "3");
 
         // select completely selected and deselect completely not selected
         rpcUpdateSelection(new String[] { "3" }, new String[] { "1", "4" });
         Assert.assertEquals(7, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "2", "3");
+        assertSelectionOrder("6", "2", "3");
 
         // select partly selected and deselect completely not selected
         rpcUpdateSelection(new String[] { "4", "2" },
                 new String[] { "1", "8" });
         Assert.assertEquals(8, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "2", "3", "4");
+        assertSelectionOrder("6", "2", "3", "4");
 
         // select completely selected and deselect partly not selected
         rpcUpdateSelection(new String[] { "4", "3" },
                 new String[] { "1", "2" });
         Assert.assertEquals(9, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "3", "4");
+        assertSelectionOrder("6", "3", "4");
 
         // duplicate case - ignored
         rpcUpdateSelection(new String[] { "2" }, new String[] { "2" });
         Assert.assertEquals(9, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "3", "4");
+        assertSelectionOrder("6", "3", "4");
 
         // duplicate case - duplicate removed
         rpcUpdateSelection(new String[] { "2" }, new String[] { "2", "3" });
         Assert.assertEquals(10, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "4");
+        assertSelectionOrder("6", "4");
 
         // duplicate case - duplicate removed
         rpcUpdateSelection(new String[] { "6", "8" }, new String[] { "6" });
         Assert.assertEquals(11, listenerCount.get());
-        assertSelectionOrder(selectionModel, "6", "4", "8");
+        assertSelectionOrder("6", "4", "8");
     }
 
     @Test
     public void getValue() {
-        selectionModel.selectItems("1");
+        selectToTest.select("1");
 
         Assert.assertEquals(Collections.singleton("1"),
                 selectToTest.getValue());
 
-        selectionModel.deselectAll();
+        selectToTest.deselectAll();
         LinkedHashSet<String> set = new LinkedHashSet<>();
         set.add("1");
         set.add("5");
-        selectionModel.selectItems(set.toArray(new String[2]));
+        selectToTest.select(set.toArray(new String[2]));
         Assert.assertEquals(set, selectToTest.getValue());
 
         set.add("3");
-        selectionModel.selectItems("3");
+        selectToTest.select("3");
         Assert.assertEquals(set, selectToTest.getValue());
     }
 
@@ -259,26 +256,21 @@ public class AbstractMultiSelectTest {
         selectToTest.setValue(Collections.singleton("1"));
 
         Assert.assertEquals(Collections.singleton("1"),
-                selectionModel.getSelectedItems());
+                selectToTest.getSelectedItems());
 
         Set<String> set = new LinkedHashSet<>();
         set.add("4");
         set.add("3");
         selectToTest.setValue(set);
 
-        Assert.assertEquals(set, selectionModel.getSelectedItems());
+        Assert.assertEquals(set, selectToTest.getSelectedItems());
     }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
     public void setValue_isDelegatedToDeselectAndUpdateSelection() {
-        Multi<?> model = Mockito.mock(Multi.class);
-        AbstractMultiSelect<String> select = new AbstractMultiSelect<String>() {
-            @Override
-            public Multi<String> getSelectionModel() {
-                return (Multi<String>) model;
-            }
-        };
+        AbstractMultiSelect<String> select = Mockito
+                .mock(AbstractMultiSelect.class);
 
         Set set = new LinkedHashSet<>();
         set.add("foo1");
@@ -287,11 +279,12 @@ public class AbstractMultiSelectTest {
         selected.add("bar1");
         selected.add("bar");
         selected.add("bar2");
-        Mockito.when(model.getSelectedItems()).thenReturn(selected);
+        Mockito.when(select.getSelectedItems()).thenReturn(selected);
+        Mockito.doCallRealMethod().when(select).setValue(Mockito.anySet());
 
         select.setValue(set);
 
-        Mockito.verify(model).updateSelection(set, selected);
+        Mockito.verify(select).updateSelection(set, selected);
     }
 
     @SuppressWarnings({ "unchecked", "serial" })
@@ -336,7 +329,7 @@ public class AbstractMultiSelectTest {
         rpcUpdateSelection(keysToSelect, new String[] {});
     }
 
-    private void rpcDeselect(String... keysToDeselect) {
+    private void rpcDeselectItems(String... keysToDeselect) {
         rpcUpdateSelection(new String[] {}, keysToDeselect);
     }
 
@@ -353,9 +346,8 @@ public class AbstractMultiSelectTest {
                 .key(dataObject);
     }
 
-    private static void assertSelectionOrder(Multi<String> selectionModel,
-            String... selectionOrder) {
+    private void assertSelectionOrder(String... selectionOrder) {
         Assert.assertEquals(Arrays.asList(selectionOrder),
-                new ArrayList<>(selectionModel.getSelectedItems()));
+                new ArrayList<>(selectToTest.getSelectedItems()));
     }
 }

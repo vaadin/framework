@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.ListDataSource;
 import com.vaadin.server.data.Query;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.ui.AbstractListing;
+import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -44,26 +42,32 @@ public class DummyData extends AbstractTestUIWithLog {
      * Simplified server only selection model. Selection state passed in data,
      * shown as bold text.
      */
-    private static class DummySelectionModel implements SelectionModel<String> {
+    public static class DummyComponent extends AbstractSingleSelect<String> {
+
         private String selected;
-        private DataCommunicator<String> communicator;
+
+        private DummyComponent() {
+            addDataGenerator((str, json) -> {
+                json.put(DataCommunicatorConstants.DATA, str);
+                if (isSelected(str)) {
+                    json.put(DataCommunicatorConstants.SELECTED, true);
+                }
+            });
+        }
 
         @Override
-        public Set<String> getSelectedItems() {
-            if (selected != null) {
-                return Collections.singleton(selected);
-            }
-            return Collections.emptySet();
+        public Optional<String> getSelectedItem() {
+            return Optional.ofNullable(selected);
         }
 
         @Override
         public void select(String item) {
             if (selected != null) {
-                communicator.refresh(selected);
+                getDataCommunicator().refresh(selected);
             }
             selected = item;
             if (selected != null) {
-                communicator.refresh(selected);
+                getDataCommunicator().refresh(selected);
             }
         }
 
@@ -72,25 +76,6 @@ public class DummyData extends AbstractTestUIWithLog {
             if (item == selected) {
                 select(null);
             }
-        }
-
-        private void setCommunicator(DataCommunicator<String> dataComm) {
-            communicator = dataComm;
-        }
-    }
-
-    public static class DummyComponent
-            extends AbstractListing<String, DummySelectionModel> {
-
-        private DummyComponent() {
-            setSelectionModel(new DummySelectionModel());
-            addDataGenerator((str, json) -> {
-                json.put(DataCommunicatorConstants.DATA, str);
-                if (isSelected(str)) {
-                    json.put(DataCommunicatorConstants.SELECTED, true);
-                }
-            });
-            getSelectionModel().setCommunicator(getDataCommunicator());
         }
     }
 

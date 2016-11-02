@@ -52,8 +52,6 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
         addDataGenerator((item, json) -> json
                 .put(DataCommunicatorConstants.DATA, String.valueOf(item)));
-
-        setSelectionModel(new SimpleSingleSelection());
     }
 
     /**

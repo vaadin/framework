@@ -103,7 +103,6 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      */
     public RadioButtonGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
-        setSelectionModel(new SimpleSingleSelection());
 
         addDataGenerator(new DataGenerator<T>() {
             @Override
@@ -127,7 +126,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
                             true);
                 }
 
-                if (getSelectionModel().isSelected(data)) {
+                if (isSelected(data)) {
                     jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_SELECTED,
                             true);
                 }

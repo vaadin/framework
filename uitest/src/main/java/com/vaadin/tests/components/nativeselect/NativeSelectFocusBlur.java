@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.nativeselect;
 
 import com.vaadin.tests.components.AbstractListingFocusBlurTest;
-import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.NativeSelect;
 
 /**
@@ -28,7 +27,7 @@ import com.vaadin.ui.NativeSelect;
  * @author Vaadin Ltd
  *
  */
-public class NativeSelectFocusBlur extends
-        AbstractListingFocusBlurTest<NativeSelect<Integer>, AbstractSingleSelect<Integer>.AbstractSingleSelection> {
+public class NativeSelectFocusBlur
+        extends AbstractListingFocusBlurTest<NativeSelect<Integer>> {
 
 }

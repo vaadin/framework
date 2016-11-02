@@ -17,7 +17,6 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Set;
 
 import com.vaadin.server.data.DataSource;
 
@@ -28,12 +27,9 @@ import com.vaadin.server.data.DataSource;
  * 
  * @param <T>
  *            the item data type
- * @param <SELECTIONMODEL>
- *            the selection logic supported by this listing
  * @since 8.0
  */
-public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>>
-        extends Serializable {
+public interface Listing<T> extends Serializable {
 
     /**
      * Returns the source of data items used by this listing.
@@ -50,13 +46,6 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>>
      *            the data source, not null
      */
     void setDataSource(DataSource<T> dataSource);
-
-    /**
-     * Returns the selection model for this listing.
-     *
-     * @return the selection model, not null
-     */
-    SELECTIONMODEL getSelectionModel();
 
     /**
      * Sets the collection of data items of this listing.
@@ -79,54 +68,4 @@ public interface Listing<T, SELECTIONMODEL extends SelectionModel<T>>
         setDataSource(DataSource.create(items));
     }
 
-    /* SelectionModel helper methods */
-
-    /**
-     * Returns an immutable set of the currently selected items. The iteration
-     * order of the items in the returned set is specified by the
-     * {@linkplain #getSelectionModel() selection model} used.
-     *
-     * @return the current selection
-     *
-     * @see SelectionModel#getSelectedItems
-     */
-    default Set<T> getSelectedItems() {
-        return getSelectionModel().getSelectedItems();
-    }
-
-    /**
-     * Selects the given item. If the item is already selected, does nothing.
-     *
-     * @param item
-     *            the item to select, not null
-     *
-     * @see SelectionModel#select
-     */
-    default void select(T item) {
-        getSelectionModel().select(item);
-    }
-
-    /**
-     * Deselects the given item. If the item is not currently selected, does
-     * nothing.
-     *
-     * @param item
-     *            the item to deselect, not null
-     *
-     * @see SelectionModel#deselect
-     */
-    default void deselect(T item) {
-        getSelectionModel().deselect(item);
-    }
-
-    /**
-     * Returns whether the given item is currently selected.
-     *
-     * @param item
-     *            the item to check, not null
-     * @return {@code true} if the item is selected, {@code false} otherwise
-     */
-    default boolean isSelected(T item) {
-        return getSelectionModel().isSelected(item);
-    }
 }

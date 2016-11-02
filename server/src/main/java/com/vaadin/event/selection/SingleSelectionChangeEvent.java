@@ -67,8 +67,8 @@ public class SingleSelectionChangeEvent<T> extends ValueChangeEvent<T>
 
     @Override
     @SuppressWarnings("unchecked")
-    public AbstractListing<T, ?> getComponent() {
-        return (AbstractListing<T, ?>) super.getComponent();
+    public AbstractListing<T> getComponent() {
+        return (AbstractListing<T>) super.getComponent();
     }
 
     @Override

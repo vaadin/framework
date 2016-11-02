@@ -32,13 +32,11 @@ import com.vaadin.server.data.DataSource;
  *
  * @param <T>
  *            the item data type
- * @param <SELECTIONMODEL>
- *            the selection logic supported by this listing
  *
  * @since 8.0
  */
-public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T>>
-        extends AbstractComponent implements Listing<T, SELECTIONMODEL> {
+public abstract class AbstractListing<T> extends AbstractComponent
+        implements Listing<T> {
 
     /**
      * A helper base class for creating extensions for Listing components. This
@@ -57,7 +55,7 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
          * @param listing
          *            the parent component to add to
          */
-        public void extend(AbstractListing<T, ?> listing) {
+        public void extend(AbstractListing<T> listing) {
             super.extend(listing);
             listing.addDataGenerator(this);
         }
@@ -82,8 +80,8 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
 
         @Override
         @SuppressWarnings("unchecked")
-        public AbstractListing<T, ?> getParent() {
-            return (AbstractListing<T, ?>) super.getParent();
+        public AbstractListing<T> getParent() {
+            return (AbstractListing<T>) super.getParent();
         }
 
         /**
@@ -99,8 +97,6 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
     }
 
     private final DataCommunicator<T> dataCommunicator;
-
-    private SELECTIONMODEL selectionModel;
 
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
@@ -144,29 +140,6 @@ public abstract class AbstractListing<T, SELECTIONMODEL extends SelectionModel<T
     @Override
     public DataSource<T> getDataSource() {
         return getDataCommunicator().getDataSource();
-    }
-
-    @Override
-    public SELECTIONMODEL getSelectionModel() {
-        assert selectionModel != null : "No selection model set by "
-                + getClass().getName() + " constructor";
-        return selectionModel;
-    }
-
-    /**
-     * Sets the selection model for this listing.
-     *
-     * @param model
-     *            the selection model to use, not null
-     */
-    protected void setSelectionModel(SELECTIONMODEL model) {
-        if (selectionModel != null) {
-            throw new IllegalStateException(
-                    "A selection model can't be changed.");
-        }
-
-        Objects.requireNonNull(model, "selection model cannot be null");
-        selectionModel = model;
     }
 
     /**

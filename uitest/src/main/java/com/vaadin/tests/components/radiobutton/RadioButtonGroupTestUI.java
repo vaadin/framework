@@ -15,14 +15,13 @@
  */
 package com.vaadin.tests.components.radiobutton;
 
-import com.vaadin.data.SelectionModel;
+import java.util.LinkedHashMap;
+import java.util.stream.IntStream;
+
 import com.vaadin.server.FontAwesome;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
-
-import java.util.LinkedHashMap;
-import java.util.stream.IntStream;
 
 /**
  * Test UI for RadioButtonGroup component
@@ -50,9 +49,9 @@ public class RadioButtonGroupTestUI
     }
 
     protected void createSelectionMenu() {
-        createClickAction(
-                "Clear selection", selectionCategory, (component, item,
-                        data) -> component.getSelectionModel().deselectAll(),
+        createClickAction("Clear selection", selectionCategory,
+                (component, item, data) -> component.getSelectedItem()
+                        .ifPresent(component::deselect),
                 "");
 
         Command<RadioButtonGroup<Object>, String> toggleSelection = (component,
@@ -62,13 +61,14 @@ public class RadioButtonGroupTestUI
                 .forEach(item -> createClickAction("Toggle " + item,
                         selectionCategory, toggleSelection, item));
     }
+
     private void createItemIconGeneratorMenu() {
-        createBooleanAction("Use Item Icon Generator", "Item Icon Generator", false,
-                this::useItemIconGenerator);
+        createBooleanAction("Use Item Icon Generator", "Item Icon Generator",
+                false, this::useItemIconGenerator);
     }
 
     private void useItemIconGenerator(RadioButtonGroup<Object> group,
-                                     boolean activate, Object data) {
+            boolean activate, Object data) {
         if (activate) {
             group.setItemIconGenerator(
                     item -> FontAwesome.values()[getIndex(item) + 1]);
@@ -85,20 +85,18 @@ public class RadioButtonGroupTestUI
         options.put("Custom Caption Generator",
                 item -> item.toString() + " Caption");
 
-        createSelectAction("Item Caption Generator", "Item Caption Generator", options,
-                "None", (radioButtonGroup, captionGenerator, data) -> {
+        createSelectAction("Item Caption Generator", "Item Caption Generator",
+                options, "None", (radioButtonGroup, captionGenerator, data) -> {
                     radioButtonGroup.setItemCaptionGenerator(captionGenerator);
                     radioButtonGroup.getDataSource().refreshAll();
                 }, true);
     }
 
     private void toggleSelection(String item) {
-        SelectionModel.Single<Object> selectionModel = getComponent()
-                .getSelectionModel();
-        if (selectionModel.isSelected(item)) {
-            selectionModel.deselect(item);
+        if (getComponent().isSelected(item)) {
+            getComponent().deselect(item);
         } else {
-            selectionModel.select(item);
+            getComponent().select(item);
         }
     }
 
@@ -107,7 +105,6 @@ public class RadioButtonGroupTestUI
                 c -> c.addSelectionListener(
                         e -> log("Selected: " + e.getSelectedItem())));
     }
-
 
     private int getIndex(Object item) {
         int index = item.toString().indexOf(' ');

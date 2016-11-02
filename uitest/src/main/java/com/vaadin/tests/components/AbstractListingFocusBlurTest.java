@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.googlecode.gentyref.GenericTypeReflector;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.VaadinRequest;
@@ -31,7 +30,7 @@ import com.vaadin.ui.AbstractListing;
  * @author Vaadin Ltd
  *
  */
-public abstract class AbstractListingFocusBlurTest<T extends AbstractListing<Integer, S> & FocusNotifier & BlurNotifier, S extends SelectionModel<Integer>>
+public abstract class AbstractListingFocusBlurTest<T extends AbstractListing<Integer> & FocusNotifier & BlurNotifier>
         extends AbstractTestUIWithLog {
 
     @Override
@@ -45,7 +44,7 @@ public abstract class AbstractListingFocusBlurTest<T extends AbstractListing<Int
         if (valueType instanceof Class<?>) {
             Class<?> clazz = (Class<?>) valueType;
             try {
-                AbstractListing<Integer, ?> select = (AbstractListing<Integer, ?>) clazz
+                AbstractListing<Integer> select = (AbstractListing<Integer>) clazz
                         .newInstance();
                 select.setItems(
                         IntStream.range(1, 10).mapToObj(Integer::valueOf)

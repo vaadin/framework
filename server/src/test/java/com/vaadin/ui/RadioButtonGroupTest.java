@@ -23,14 +23,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 
 public class RadioButtonGroupTest {
     private RadioButtonGroup<String> radioButtonGroup;
-    private SelectionModel.Single<String> selectionModel;
 
     @Before
     public void setUp() {
@@ -38,7 +36,6 @@ public class RadioButtonGroupTest {
         // Intentional deviation from upcoming selection order
         radioButtonGroup
                 .setDataSource(DataSource.create("Third", "Second", "First"));
-        selectionModel = radioButtonGroup.getSelectionModel();
     }
 
     @Test
@@ -54,7 +51,7 @@ public class RadioButtonGroupTest {
         radioButtonGroup.select("Second");
 
         radioButtonGroup.deselect("Second");
-        radioButtonGroup.getSelectionModel().deselectAll();
+        radioButtonGroup.deselect("Second");
 
         Assert.assertEquals(3, listenerCount.get());
     }

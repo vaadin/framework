@@ -52,158 +52,16 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public abstract class AbstractMultiSelect<T>
-        extends AbstractListing<T, Multi<T>> implements HasValue<Set<T>> {
+public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
+        implements MultiSelect<T> {
 
-    /**
-     * Simple implementation of multiselectmodel.
-     */
-    protected class SimpleMultiSelectModel implements SelectionModel.Multi<T> {
-
-        private Set<T> selection = new LinkedHashSet<>();
-
-        @Override
-        public void select(T item) {
-            // Not user originated
-            select(item, false);
-        }
-
-        /**
-         * Selects the given item. Depending on the implementation, may cause
-         * other items to be deselected. If the item is already selected, does
-         * nothing.
-         *
-         * @param item
-         *            the item to select, not null
-         * @param userOriginated
-         *            {@code true} if this was used originated, {@code false} if
-         *            not
-         */
-        protected void select(T item, boolean userOriginated) {
-            if (selection.contains(item)) {
-                return;
-            }
-
-            updateSelection(set -> set.add(item), userOriginated);
-        }
-
-        @Override
-        public void updateSelection(Set<T> addedItems, Set<T> removedItems) {
-            updateSelection(addedItems, removedItems, false);
-        }
-
-        /**
-         * Updates the selection by adding and removing the given items.
-         *
-         * @param addedItems
-         *            the items added to selection, not {@code} null
-         * @param removedItems
-         *            the items removed from selection, not {@code} null
-         * @param userOriginated
-         *            {@code true} if this was used originated, {@code false} if
-         *            not
-         */
-        protected void updateSelection(Set<T> addedItems, Set<T> removedItems,
-                boolean userOriginated) {
-            Objects.requireNonNull(addedItems);
-            Objects.requireNonNull(removedItems);
-
-            // if there are duplicates, some item is both added & removed, just
-            // discard that and leave things as was before
-            addedItems.removeIf(item -> removedItems.remove(item));
-
-            if (selection.containsAll(addedItems)
-                    && Collections.disjoint(selection, removedItems)) {
-                return;
-            }
-
-            updateSelection(set -> {
-                // order of add / remove does not matter since no duplicates
-                set.removeAll(removedItems);
-                set.addAll(addedItems);
-            }, userOriginated);
-        }
-
-        @Override
-        public Set<T> getSelectedItems() {
-            return Collections.unmodifiableSet(new LinkedHashSet<>(selection));
-        }
-
-        @Override
-        public void deselect(T item) {
-            // Not user originated
-            deselect(item, false);
-        }
-
-        /**
-         * Deselects the given item. If the item is not currently selected, does
-         * nothing.
-         *
-         * @param item
-         *            the item to deselect, not null
-         * @param userOriginated
-         *            {@code true} if this was used originated, {@code false} if
-         *            not
-         */
-        protected void deselect(T item, boolean userOriginated) {
-            if (!selection.contains(item)) {
-                return;
-            }
-
-            updateSelection(set -> set.remove(item), userOriginated);
-        }
-
-        /**
-         * Removes the given items. Any item that is not currently selected, is
-         * ignored. If none of the items are selected, does nothing.
-         *
-         * @param items
-         *            the items to deselect, not {@code null}
-         * @param userOriginated
-         *            {@code true} if this was used originated, {@code false} if
-         *            not
-         */
-        protected void deselect(Set<T> items, boolean userOriginated) {
-            Objects.requireNonNull(items);
-            if (items.stream().noneMatch(i -> isSelected(i))) {
-                return;
-            }
-
-            updateSelection(set -> set.removeAll(items), userOriginated);
-        }
-
-        @Override
-        public void deselectAll() {
-            if (selection.isEmpty()) {
-                return;
-            }
-
-            updateSelection(Set::clear, false);
-        }
-
-        private void updateSelection(Consumer<Set<T>> handler,
-                boolean userOriginated) {
-            LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
-            handler.accept(selection);
-            LinkedHashSet<T> newSelection = new LinkedHashSet<>(selection);
-
-            fireEvent(new MultiSelectionEvent<>(AbstractMultiSelect.this,
-                    oldSelection, userOriginated));
-
-            getDataCommunicator().reset();
-        }
-
-        @Override
-        public boolean isSelected(T item) {
-            return selection.contains(item);
-        }
-    }
+    private Set<T> selection = new LinkedHashSet<>();
 
     private class MultiSelectServerRpcImpl implements MultiSelectServerRpc {
         @Override
         public void updateSelection(Set<String> selectedItemKeys,
                 Set<String> deselectedItemKeys) {
-            getSelectionModel().updateSelection(
+            AbstractMultiSelect.this.updateSelection(
                     getItemsForSelectionChange(selectedItemKeys),
                     getItemsForSelectionChange(deselectedItemKeys), true);
         }
@@ -223,10 +81,6 @@ public abstract class AbstractMultiSelect<T>
             return Optional.of(item);
         }
 
-        private SimpleMultiSelectModel getSelectionModel() {
-            return (SimpleMultiSelectModel) AbstractMultiSelect.this
-                    .getSelectionModel();
-        }
     }
 
     private class MultiSelectDataGenerator implements DataGenerator<T> {
@@ -250,7 +104,7 @@ public abstract class AbstractMultiSelect<T>
                         true);
             }
 
-            if (getSelectionModel().isSelected(data)) {
+            if (isSelected(data)) {
                 jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_SELECTED,
                         true);
             }
@@ -287,8 +141,6 @@ public abstract class AbstractMultiSelect<T>
      * Creates a new multi select with an empty data source.
      */
     protected AbstractMultiSelect() {
-        setSelectionModel(new SimpleMultiSelectModel());
-
         registerRpc(new MultiSelectServerRpcImpl());
 
         // #FIXME it should be the responsibility of the SelectionModel
@@ -304,6 +156,7 @@ public abstract class AbstractMultiSelect<T>
      *            the value change listener, not {@code null}
      * @return a registration for the listener
      */
+    @Override
     public Registration addSelectionListener(
             MultiSelectionListener<T> listener) {
         addListener(MultiSelectionEvent.class, listener,
@@ -376,8 +229,7 @@ public abstract class AbstractMultiSelect<T>
         Set<T> copy = value.stream().map(Objects::requireNonNull)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        getSelectionModel().updateSelection(copy,
-                new LinkedHashSet<>(getSelectionModel().getSelectedItems()));
+        updateSelection(copy, new LinkedHashSet<>(getSelectedItems()));
     }
 
     @Override
@@ -501,5 +353,123 @@ public abstract class AbstractMultiSelect<T>
     @Override
     public boolean isReadOnly() {
         return super.isReadOnly();
+    }
+
+    @Override
+    public void updateSelection(Set<T> addedItems, Set<T> removedItems) {
+        updateSelection(addedItems, removedItems, false);
+    }
+
+    /**
+     * Updates the selection by adding and removing the given items.
+     *
+     * @param addedItems
+     *            the items added to selection, not {@code} null
+     * @param removedItems
+     *            the items removed from selection, not {@code} null
+     * @param userOriginated
+     *            {@code true} if this was used originated, {@code false} if not
+     */
+    protected void updateSelection(Set<T> addedItems, Set<T> removedItems,
+            boolean userOriginated) {
+        Objects.requireNonNull(addedItems);
+        Objects.requireNonNull(removedItems);
+
+        // if there are duplicates, some item is both added & removed, just
+        // discard that and leave things as was before
+        addedItems.removeIf(item -> removedItems.remove(item));
+
+        if (selection.containsAll(addedItems)
+                && Collections.disjoint(selection, removedItems)) {
+            return;
+        }
+
+        updateSelection(set -> {
+            // order of add / remove does not matter since no duplicates
+            set.removeAll(removedItems);
+            set.addAll(addedItems);
+        }, userOriginated);
+    }
+
+    @Override
+    public Set<T> getSelectedItems() {
+        return Collections.unmodifiableSet(new LinkedHashSet<>(selection));
+    }
+
+    @Override
+    public void deselectAll() {
+        if (selection.isEmpty()) {
+            return;
+        }
+
+        updateSelection(Set::clear, false);
+    }
+
+    @Override
+    public boolean isSelected(T item) {
+        return selection.contains(item);
+    }
+
+    /**
+     * Deselects the given item. If the item is not currently selected, does
+     * nothing.
+     *
+     * @param item
+     *            the item to deselect, not null
+     * @param userOriginated
+     *            {@code true} if this was used originated, {@code false} if not
+     */
+    protected void deselect(T item, boolean userOriginated) {
+        if (!selection.contains(item)) {
+            return;
+        }
+
+        updateSelection(set -> set.remove(item), userOriginated);
+    }
+
+    /**
+     * Removes the given items. Any item that is not currently selected, is
+     * ignored. If none of the items are selected, does nothing.
+     *
+     * @param items
+     *            the items to deselect, not {@code null}
+     * @param userOriginated
+     *            {@code true} if this was used originated, {@code false} if not
+     */
+    protected void deselect(Set<T> items, boolean userOriginated) {
+        Objects.requireNonNull(items);
+        if (items.stream().noneMatch(i -> isSelected(i))) {
+            return;
+        }
+
+        updateSelection(set -> set.removeAll(items), userOriginated);
+    }
+
+    /**
+     * Selects the given item. Depending on the implementation, may cause other
+     * items to be deselected. If the item is already selected, does nothing.
+     *
+     * @param item
+     *            the item to select, not null
+     * @param userOriginated
+     *            {@code true} if this was used originated, {@code false} if not
+     */
+    protected void select(T item, boolean userOriginated) {
+        if (selection.contains(item)) {
+            return;
+        }
+
+        updateSelection(set -> set.add(item), userOriginated);
+    }
+
+    private void updateSelection(Consumer<Set<T>> handler,
+            boolean userOriginated) {
+        LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
+        handler.accept(selection);
+
+        fireEvent(new MultiSelectionEvent<>(AbstractMultiSelect.this,
+                oldSelection, userOriginated));
+
+        getDataCommunicator().reset();
     }
 }

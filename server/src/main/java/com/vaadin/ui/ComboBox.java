@@ -56,24 +56,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
     /**
-     * Custom single selection model for ComboBox.
-     */
-    protected class ComboBoxSelectionModel extends SimpleSingleSelection {
-        @Override
-        protected void doSetSelectedKey(String key) {
-            super.doSetSelectedKey(key);
-
-            String selectedCaption = null;
-            T value = getDataCommunicator().getKeyMapper().get(key);
-            if (value != null) {
-                selectedCaption = getItemCaptionGenerator().apply(value);
-            }
-            getState().selectedItemCaption = selectedCaption;
-        }
-
-    }
-
-    /**
      * Handler that adds a new item based on user input when the new items
      * allowed mode is active.
      */
@@ -158,7 +140,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
                 };
             }
         });
-        setSelectionModel(new ComboBoxSelectionModel());
 
         init();
     }
@@ -540,24 +521,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
         this.filter = filter;
     }
 
-    /**
-     * Sets the value of this object. If the new value is not equal to
-     * {@code getValue()}, fires a {@link ValueChangeEvent}.
-     *
-     * @param value
-     *            the new value, may be {@code null}
-     */
-    @Override
-    public void setValue(T value) {
-        getSelectionModel().setSelectedFromServer(value);
-
-    }
-
-    @Override
-    public T getValue() {
-        return getSelectionModel().getSelectedItem().orElse(null);
-    }
-
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
@@ -575,6 +538,18 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     @Override
     protected ComboBoxState getState(boolean markAsDirty) {
         return (ComboBoxState) super.getState(markAsDirty);
+    }
+
+    @Override
+    protected void doSetSelectedKey(String key) {
+        super.doSetSelectedKey(key);
+
+        String selectedCaption = null;
+        T value = getDataCommunicator().getKeyMapper().get(key);
+        if (value != null) {
+            selectedCaption = getItemCaptionGenerator().apply(value);
+        }
+        getState().selectedItemCaption = selectedCaption;
     }
 
 }

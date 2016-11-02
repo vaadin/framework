@@ -8,7 +8,7 @@ import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractListing;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public abstract class AbstractListingTestUI<T extends AbstractListing<Object, ?>>
+public abstract class AbstractListingTestUI<T extends AbstractListing<Object>>
         extends AbstractComponentTest<T> {
 
     @Override

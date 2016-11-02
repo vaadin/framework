@@ -22,10 +22,6 @@ public class AbstractListingTest {
 
     private final class TestListing extends AbstractSingleSelect<String> {
 
-        protected TestListing() {
-            setSelectionModel(new SimpleSingleSelection());
-        }
-
         /**
          * Used to execute data generation
          */

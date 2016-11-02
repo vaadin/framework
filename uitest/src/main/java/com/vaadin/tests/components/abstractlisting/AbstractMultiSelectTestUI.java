@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.ui.AbstractMultiSelect;
 import com.vaadin.ui.ItemCaptionGenerator;
 
@@ -38,10 +37,8 @@ public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMult
     }
 
     protected void createSelectionMenu() {
-        createClickAction(
-                "Clear selection", selectionCategory, (component, item,
-                        data) -> component.getSelectionModel().deselectAll(),
-                "");
+        createClickAction("Clear selection", selectionCategory,
+                (component, item, data) -> component.deselectAll(), "");
 
         Command<MULTISELECT, String> toggleSelection = (component, item,
                 data) -> toggleSelection(item);
@@ -59,20 +56,18 @@ public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMult
     }
 
     private void toggleSelection(String item) {
-        Multi<Object> selectionModel = getComponent().getSelectionModel();
-        if (selectionModel.isSelected(item)) {
-            selectionModel.deselect(item);
+        if (getComponent().isSelected(item)) {
+            getComponent().deselect(item);
         } else {
-            selectionModel.select(item);
+            getComponent().select(item);
         }
     }
 
     private void toggleMultiSelection(boolean add, List<String> items) {
-        Multi<Object> selectionModel = getComponent().getSelectionModel();
         if (add) {
-            selectionModel.selectItems(items.toArray());
+            getComponent().select(items.toArray());
         } else {
-            selectionModel.deselectItems(items.toArray());
+            getComponent().deselect(items.toArray());
         }
     }
 
