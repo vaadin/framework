@@ -104,6 +104,7 @@ import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.event.SelectionEvent.SelectionNotifier;
 import com.vaadin.v7.server.communication.data.DataGenerator;
 import com.vaadin.v7.server.communication.data.RpcDataProviderExtension;
+import com.vaadin.v7.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.v7.shared.ui.grid.EditorClientRpc;
 import com.vaadin.v7.shared.ui.grid.EditorServerRpc;
 import com.vaadin.v7.shared.ui.grid.GridClientRpc;
@@ -5319,6 +5320,27 @@ public class Grid extends AbstractComponent
     @Override
     protected GridState getState(boolean markAsDirty) {
         return (GridState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @param mode
+     *            a ColumnResizeMode value
+     */
+    public void setColumnResizeMode(ColumnResizeMode mode) {
+        getState().columnResizeMode = mode;
+    }
+
+    /**
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @return a ColumnResizeMode value
+     */
+    public ColumnResizeMode getColumnResizeMode() {
+        return getState(false).columnResizeMode;
     }
 
     /**

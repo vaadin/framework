@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid.basicfeatures;
+package com.vaadin.v7.tests.components.grid.basicfeatures;
 
 import java.util.List;
 
@@ -26,10 +26,9 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.components.grid.basics.GridBasicsTest;
 
 @TestCategory("grid")
-public class GridColumnResizeModeTest extends GridBasicsTest {
+public class GridColumnResizeModeTest extends GridBasicFeaturesTest {
 
     @Before
     public void before() {
@@ -74,8 +73,8 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
 
         // See that we got a resize event
         sleep(500);
-        Assert.assertTrue("Log shows resize event", getLogRow(0)
-                .contains("ColumnResizeEvent: isUserOriginated? true"));
+        Assert.assertEquals("Log shows resize event", getLogRow(0),
+                "3. ColumnResizeEvent: isUserOriginated? true");
 
     }
 
