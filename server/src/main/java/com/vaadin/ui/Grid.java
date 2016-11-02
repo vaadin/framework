@@ -85,6 +85,7 @@ import com.vaadin.server.communication.data.DataGenerator;
 import com.vaadin.server.communication.data.RpcDataProviderExtension;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.EditorClientRpc;
 import com.vaadin.shared.ui.grid.EditorServerRpc;
 import com.vaadin.shared.ui.grid.GridClientRpc;
@@ -4544,6 +4545,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     private Object editedItemId = null;
     private boolean editorActive = false;
+
     /**
      * True while the editor is storing the field values, i.e. commiting the
      * field group.
@@ -4789,7 +4791,6 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 if (column != null && column.isResizable()) {
                     column.getState().width = pixels;
                     fireColumnResizeEvent(column, true);
-                    markAsDirty();
                 }
             }
         });
@@ -5258,6 +5259,24 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     @Override
     protected GridState getState(boolean markAsDirty) {
         return (GridState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the column resize mode to use. The default mode is {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @param mode a ColumnResizeMode value
+     */
+    public void setColumnResizeMode(ColumnResizeMode mode) {
+        getState().columnResizeMode = mode;
+    }
+
+    /**
+     * Returns the current column resize mode. The default mode is {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @return a ColumnResizeMode value
+     */
+    public ColumnResizeMode getColumnResizeMode() {
+        return getState(false).columnResizeMode;
     }
 
     /**

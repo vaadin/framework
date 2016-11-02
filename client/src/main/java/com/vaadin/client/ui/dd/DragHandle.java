@@ -44,7 +44,7 @@ public class DragHandle {
         /**
          * Called when dragging starts
          */
-        public void onStart();
+        void onStart();
 
         /**
          * Called when the drag handle has moved.
@@ -54,18 +54,18 @@ public class DragHandle {
          * @param deltaY
          *            change in Y direction since start
          */
-        public void onUpdate(double deltaX, double deltaY);
+        void onUpdate(double deltaX, double deltaY);
 
         /**
          * Called when the drag operation has been cancelled (usually by
          * pressing ESC)
          */
-        public void onCancel();
+        void onCancel();
 
         /**
          * Called when the drag operation completes successfully
          */
-        public void onComplete();
+        void onComplete();
 
     }
 
@@ -77,6 +77,20 @@ public class DragHandle {
     private DragAndDropCallback dndCallback;
 
     private DragHandleCallback userCallback;
+
+    /**
+     * Creates a new DragHandle.
+     *
+     * @param baseName
+     *            CSS style name to use for this DragHandle element. This
+     *            parameter is supplied to the constructor (rather than added
+     *            later) both to provide the "-dragged" style and to make sure
+     *            that the drag handle can be properly styled (it's otherwise
+     *            invisible)
+     */
+    public DragHandle(String baseName) {
+        this(baseName,null);
+    }
 
     /**
      * Creates a new DragHandle.
@@ -106,22 +120,28 @@ public class DragHandle {
             @Override
             public void onDrop() {
                 removeDraggingStyle();
-                userCallback.onComplete();
+                if(userCallback != null) {
+                    userCallback.onComplete();
+                }
             }
 
             @Override
             public void onDragUpdate(Event e) {
-                double dx = WidgetUtil.getTouchOrMouseClientX(e) - startX;
-                double dy = WidgetUtil.getTouchOrMouseClientY(e) - startY;
-                userCallback.onUpdate(dx, dy);
+                if(userCallback != null) {
+                    double dx = WidgetUtil.getTouchOrMouseClientX(e) - startX;
+                    double dy = WidgetUtil.getTouchOrMouseClientY(e) - startY;
+                    userCallback.onUpdate(dx, dy);
+                }
             }
 
             @Override
             public boolean onDragStart(Event e) {
                 addDraggingStyle();
-                startX = WidgetUtil.getTouchOrMouseClientX(e);
-                startY = WidgetUtil.getTouchOrMouseClientY(e);
-                userCallback.onStart();
+                if(userCallback != null) {
+                    startX = WidgetUtil.getTouchOrMouseClientX(e);
+                    startY = WidgetUtil.getTouchOrMouseClientY(e);
+                    userCallback.onStart();
+                }
                 return true;
             }
 
@@ -133,7 +153,9 @@ public class DragHandle {
             @Override
             public void onDragCancel() {
                 removeDraggingStyle();
-                userCallback.onCancel();
+                if(userCallback != null) {
+                    userCallback.onCancel();
+                }
             }
 
             private void addDraggingStyle() {
@@ -154,6 +176,17 @@ public class DragHandle {
                 event.stopPropagation();
             }
         });
+    }
+
+    /**
+     * Sets the user-facing drag handle callback method. This allows
+     * code using the DragHandle to react to the situations where a
+     * drag handle first touched, when it's moved and when it's released.
+     *
+     * @param dragHandleCallback the callback object to use (can be null)
+     */
+    public void setCallback(DragHandleCallback dragHandleCallback) {
+        userCallback = dragHandleCallback;
     }
 
     /**

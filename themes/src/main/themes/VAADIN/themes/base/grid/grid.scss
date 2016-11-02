@@ -283,6 +283,22 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     user-select: none;
   }
 
+  .#{$primaryStyleName}-column-resize-simple-indicator {
+    position: absolute;
+    width: 3px;
+    top: 0px;
+    left: $v-grid-cell-padding-horizontal;
+    z-index: 9001;
+    background: #fff;
+    box-shadow: 0px 0px 5px #000;
+
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
   // Footer
 
   .#{$primaryStyleName}-footer {

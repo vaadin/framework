@@ -839,6 +839,11 @@ public class GridConnector extends AbstractHasComponentsConnector
             }
         }
 
+        // Column resize mode
+        if (stateChangeEvent.hasPropertyChanged("columnResizeMode")) {
+            getWidget().setColumnResizeMode(getState().columnResizeMode);
+        }
+
         // Header and footer
         if (stateChangeEvent.hasPropertyChanged("header")) {
             updateHeaderFromState(getState().header);

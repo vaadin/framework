@@ -44,6 +44,7 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractComponentTest;
@@ -1266,6 +1267,13 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         grid.getColumns().get(0).setMaximumWidth(30);
                     }
                 }, null);
+
+        createBooleanAction("Simple resize mode", "Columns", false, new Command<Grid, Boolean>() {
+            @Override
+            public void execute(Grid g, Boolean value, Object data) {
+                g.setColumnResizeMode(value ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED);
+            }
+        });
     }
 
     private static String getColumnProperty(int c) {
