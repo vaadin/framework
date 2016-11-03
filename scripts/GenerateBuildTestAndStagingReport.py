@@ -1,5 +1,5 @@
 from BuildDemos import demos
-import argparse, requests, json, subprocess, re
+import argparse, requests, json, subprocess, re, pickle
 
 parser = argparse.ArgumentParser()
 parser.add_argument("version", type=str, help="Vaadin version that was just built")
@@ -22,6 +22,12 @@ def createTableRow(*columns):
     for column in columns:
         html += "<td>" + column + "</td>"
     return html + "</tr>"
+
+def getHtmlList(array):
+    html = "<ul>"
+    for item in array:
+        html += "<li>" + item + "</li>"
+    return html + "</ul>"
 
 def getBuildStatusHtml():
     build_steps_request_string = "http://{}/app/rest/problemOccurrences?locator=build:{}".format(args.teamcityUrl, args.buildId)
@@ -47,16 +53,20 @@ def getTestStatusHtml():
         else:
             return createTableRow(traffic_light.format(color="red"), "Test status: there are " + str(test_failures_json["count"]) + " failing tests, <a href=\"http://r2d2.devnet.vaadin.com/viewLog.html?buildId={}&buildTypeId=Vaadin80_Releases_BuildTestAndStageRelease&tab=testsInfo\">see report</a>.".format(args.buildId))
 
+def getDemoValidationStatusHtml():
+    status = pickle.load(open("result/demo_validation_status.pickle", "rb"))
+    if status["error"]:
+        return createTableRow(traffic_light.format(color="red"), getHtmlList(status["messages"]))
+    else:
+        return createTableRow(traffic_light.format(color="green"), getHtmlList(status["messages"]))
+
 def getDemoLinksHtml():
     demos_html = "Try demos"
-    demos_html += "<ul>"
-    for demo in demos:
-        demos_html += "<li><a href='{url}/{demoName}-{version}'>{demoName}</a></li>".format(url=args.deployUrl, demoName=demo, version=args.version)
-    return demos_html + "</ul>"
+    link_list = list(map(lambda demo: "<a href='{url}/{demoName}-{version}'>{demoName}</a>".format(url=args.deployUrl, demoName=demo, version=args.version), demos))
+    return demos_html + getHtmlList(link_list)
 
 def getApiDiffHtml():
     apidiff_html = "Check API diff"
-    apidiff_html += "<ul>"
     modules = [
         "client", "client-compiler",
         "compatibility-client",
@@ -64,9 +74,8 @@ def getApiDiffHtml():
         "compatibility-shared",
         "server", "shared"
     ]
-    for module in modules:
-        apidiff_html += "<li><a href='http://r2d2.devnet.vaadin.com/repository/download/Vaadin80_Releases_BuildTestAndStageRelease/{}:id/apidiff/{}/japicmp.html'>{}</a></li>".format(args.buildId, module, module)
-    return apidiff_html + "</ul>"
+    link_list = list(map(lambda module: "<li><a href='http://r2d2.devnet.vaadin.com/repository/download/Vaadin80_Releases_BuildTestAndStageRelease/{}:id/apidiff/{}/japicmp.html'>{}</a></li>".format(args.buildId, module, module), modules))
+    return apidiff_html + getHtmlList(link_list)
 
 def getDirs(url):
     page = requests.get(url)
