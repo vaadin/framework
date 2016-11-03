@@ -97,8 +97,10 @@ public class AbstractComponentDeclarativeTest
         Boolean[] explicitImmediate = { null, Boolean.FALSE, Boolean.TRUE,
                 Boolean.TRUE };
         boolean[] immediate = { true, false, true, true };
-        for (String designElements : design) {
-            component = (AbstractComponent) Design.read(new ByteArrayInputStream(designElements.getBytes(Charset.forName("UTF-8"))));
+        for (int i = 0; i < design.length; i++) {
+            component = (AbstractComponent) Design
+                    .read(new ByteArrayInputStream(
+                            design[i].getBytes(Charset.forName("UTF-8"))));
         }
     }
 

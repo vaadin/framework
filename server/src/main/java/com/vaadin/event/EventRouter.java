@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
-import java.util.stream.Stream;
 
 /**
  * <code>EventRouter</code> class implementing the inheritable event listening
@@ -125,10 +124,15 @@ public class EventRouter implements MethodEventSource {
 
         // Find the correct method
         final Method[] methods = target.getClass().getMethods();
-        
-        final Method method = Stream.of(methods)
-            .filter(m -> methodName.equals(m.getName()))
-            .findAny().orElseThrow(IllegalArgumentException::new);        
+        Method method = null;
+        for (int i = 0; i < methods.length; i++) {
+            if (methods[i].getName().equals(methodName)) {
+                method = methods[i];
+            }
+        }
+        if (method == null) {
+            throw new IllegalArgumentException();
+        }
 
         // Remove the listeners
         if (listenerList != null) {
@@ -187,8 +191,8 @@ public class EventRouter implements MethodEventSource {
             // Send the event to all listeners. The listeners themselves
             // will filter out unwanted events.
             final Object[] listeners = listenerList.toArray();
-            for (Object listener : listeners) {
-                ListenerMethod listenerMethod = (ListenerMethod) listener;
+            for (int i = 0; i < listeners.length; i++) {
+                ListenerMethod listenerMethod = (ListenerMethod) listeners[i];
                 if (null != errorHandler) {
                     try {
                         listenerMethod.receiveEvent(event);

@@ -235,15 +235,14 @@ public class BinderConverterValidatorTest
                     throw new IllegalArgumentException(
                             "Value must be OK or NOTOK");
                 }, model -> {
-            switch (model) {
-                case "1":
-                    return "OK";
-                case "2":
-                    return "NOTOK";
-                default:
-                    throw new IllegalArgumentException(
-                        "Value in model must be 1 or 2");
-            }
+                    if (model.equals("1")) {
+                        return "OK";
+                    } else if (model.equals("2")) {
+                        return "NOTOK";
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Value in model must be 1 or 2");
+                    }
                 });
         binding.bind(StatusBean::getStatus, StatusBean::setStatus);
         binder.setBean(bean);

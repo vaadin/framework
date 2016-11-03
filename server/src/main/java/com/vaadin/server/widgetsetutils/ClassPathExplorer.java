@@ -203,42 +203,45 @@ public class ClassPathExplorer {
         if (directory.exists() && !directory.isHidden()) {
             // Get the list of the files contained in the directory
             String[] files = directory.list();
-            for (String file : files) {
+            for (int i = 0; i < files.length; i++) {
                 // we are only interested in .gwt.xml files
-                if (!file.endsWith(".gwt.xml")) {
+                if (!files[i].endsWith(".gwt.xml")) {
                     continue;
                 }
+
                 // remove the .gwt.xml extension
-                String classname = file.substring(0, file.length() - 8);
+                String classname = files[i].substring(0, files[i].length() - 8);
                 String packageName = locationString
                     .substring(locationString.lastIndexOf('/') + 1);
                 classname = packageName + "." + classname;
+
                 if (!WidgetSetBuilder.isWidgetset(classname)) {
                     // Only return widgetsets and not GWT modules to avoid
                     // comparing modules and widgetsets
                     continue;
                 }
+
                 if (!widgetsets.containsKey(classname)) {
                     String packagePath = packageName.replaceAll("\\.", "/");
 
                     String basePath = location.getFile();
                     if (basePath.endsWith("/" + packagePath)) {
                         basePath = basePath.replaceAll("/" + packagePath + "$",
-                            "");
+                                "");
                     } else if (basePath.endsWith("/" + packagePath + "/")) {
                         basePath = basePath.replaceAll("/" + packagePath + "/$",
-                            "");
+                                "");
                     } else {
                         throw new IllegalStateException(
-                            "Error trying to find base path, location ("
-                                + location.getFile()
-                                + ") does not end in expected '/"
-                                + packagePath + "'");
+                                "Error trying to find base path, location ("
+                                        + location.getFile()
+                                        + ") does not end in expected '/"
+                                        + packagePath + "'");
                     }
                     try {
                         URL url = new URL(location.getProtocol(),
-                            location.getHost(), location.getPort(),
-                            basePath);
+                                location.getHost(), location.getPort(),
+                                basePath);
                         widgetsets.put(classname, url);
                     } catch (MalformedURLException e) {
                         // should never happen as based on an existing URL,
@@ -270,8 +273,8 @@ public class ClassPathExplorer {
                             .getValue("Vaadin-Widgetsets");
                     if (value != null) {
                         String[] widgetsetNames = value.split(",");
-                        for (String widgetsetName : widgetsetNames) {
-                            String widgetsetname = widgetsetName.trim();
+                        for (int i = 0; i < widgetsetNames.length; i++) {
+                            String widgetsetname = widgetsetNames[i].trim();
                             if (!widgetsetname.equals("")) {
                                 widgetsets.put(widgetsetname, location);
                             }
@@ -283,8 +286,8 @@ public class ClassPathExplorer {
                             .getValue("Vaadin-Stylesheets");
                     if (value != null) {
                         String[] stylesheets = value.split(",");
-                        for (String untrimmedStylesheet : stylesheets) {
-                            String stylesheet = untrimmedStylesheet.trim();
+                        for (int i = 0; i < stylesheets.length; i++) {
+                            String stylesheet = stylesheets[i].trim();
                             if (!stylesheet.equals("")) {
                                 addonStyles.put(stylesheet, location);
                             }
@@ -323,7 +326,8 @@ public class ClassPathExplorer {
         debug("Classpath: " + classpath);
 
         String[] split = classpath.split(pathSep);
-        for (String classpathEntry : split) {
+        for (int i = 0; i < split.length; i++) {
+            String classpathEntry = split[i];
             if (acceptClassPathEntry(classpathEntry)) {
                 locations.add(classpathEntry);
             }
@@ -455,18 +459,20 @@ public class ClassPathExplorer {
 
         // add all directories recursively
         File[] dirs = file.listFiles(DIRECTORIES_ONLY);
-        for (File dir : dirs) {
+        for (int i = 0; i < dirs.length; i++) {
             try {
                 // add the present directory
-                if (!dir.isHidden() && !dir.getPath().contains(File.separator + ".")) {
-                    String key = dir.getCanonicalPath() + "/" + name + dir.getName();
-                    URL url = dir.getCanonicalFile().toURI().toURL();
+                if (!dirs[i].isHidden()
+                        && !dirs[i].getPath().contains(File.separator + ".")) {
+                    String key = dirs[i].getCanonicalPath() + "/" + name
+                            + dirs[i].getName();
+                    URL url = dirs[i].getCanonicalFile().toURI().toURL();
                     locations.put(key, url);
                 }
-            }catch (Exception ioe) {
+            } catch (Exception ioe) {
                 return;
             }
-            include(name + dir.getName(), dir, locations);
+            include(name + dirs[i].getName(), dirs[i], locations);
         }
     }
 

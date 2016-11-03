@@ -318,11 +318,11 @@ public class DesignAttributeHandler implements Serializable {
         propertyName = removeSubsequentUppercase(propertyName);
         String[] words = propertyName.split("(?<!^)(?=[A-Z])");
         StringBuilder builder = new StringBuilder();
-        for (String word : words) {
+        for (int i = 0; i < words.length; i++) {
             if (builder.length() > 0) {
                 builder.append("-");
             }
-            builder.append(word.toLowerCase());
+            builder.append(words[i].toLowerCase());
         }
         return builder.toString();
     }

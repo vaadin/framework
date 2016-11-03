@@ -398,19 +398,16 @@ public class JsonCodec implements Serializable {
                     connectorTracker);
         }
 
-        if (null != transportType) // Collections
-        switch (transportType) {
-            case JsonConstants.VTYPE_LIST:
-                return decodeList(targetType, restrictToInternalTypes,
+        // Collections
+        if (JsonConstants.VTYPE_LIST.equals(transportType)) {
+            return decodeList(targetType, restrictToInternalTypes,
                     (JsonArray) encodedJsonValue, connectorTracker);
-            case JsonConstants.VTYPE_SET:
-                return decodeSet(targetType, restrictToInternalTypes,
+        } else if (JsonConstants.VTYPE_SET.equals(transportType)) {
+            return decodeSet(targetType, restrictToInternalTypes,
                     (JsonArray) encodedJsonValue, connectorTracker);
-            case JsonConstants.VTYPE_MAP:
-                return decodeMap(targetType, restrictToInternalTypes,
+        } else if (JsonConstants.VTYPE_MAP.equals(transportType)) {
+            return decodeMap(targetType, restrictToInternalTypes,
                     encodedJsonValue, connectorTracker);
-            default:
-                break;
         }
 
         // Arrays
@@ -430,23 +427,20 @@ public class JsonCodec implements Serializable {
             return connectorTracker.getConnector(encodedJsonValue.asString());
         }
 
+        // Legacy types
 
-        if (null != transportType) // Legacy types
-        switch (transportType) {
-            case JsonConstants.VTYPE_STRING:
-                return encodedJsonValue.asString();
-            case JsonConstants.VTYPE_INTEGER:
-                return (int) encodedJsonValue.asNumber();
-            case JsonConstants.VTYPE_LONG:
-                return (long) encodedJsonValue.asNumber();
-            case JsonConstants.VTYPE_FLOAT:
-                return (float) encodedJsonValue.asNumber();
-            case JsonConstants.VTYPE_DOUBLE:
-                return encodedJsonValue.asNumber();
-            case JsonConstants.VTYPE_BOOLEAN:
-                return encodedJsonValue.asBoolean();
-            default:
-                break;
+        if (JsonConstants.VTYPE_STRING.equals(transportType)) {
+            return encodedJsonValue.asString();
+        } else if (JsonConstants.VTYPE_INTEGER.equals(transportType)) {
+            return (int) encodedJsonValue.asNumber();
+        } else if (JsonConstants.VTYPE_LONG.equals(transportType)) {
+            return (long) encodedJsonValue.asNumber();
+        } else if (JsonConstants.VTYPE_FLOAT.equals(transportType)) {
+            return (float) encodedJsonValue.asNumber();
+        } else if (JsonConstants.VTYPE_DOUBLE.equals(transportType)) {
+            return encodedJsonValue.asNumber();
+        } else if (JsonConstants.VTYPE_BOOLEAN.equals(transportType)) {
+            return encodedJsonValue.asBoolean();
         }
 
         throw new JsonException("Unknown type " + transportType);

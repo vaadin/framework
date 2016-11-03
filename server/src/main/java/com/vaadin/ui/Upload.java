@@ -840,7 +840,9 @@ public class Upload extends AbstractComponent
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (ProgressListener l : progressListeners) {
+            for (Iterator<ProgressListener> it = progressListeners
+                    .iterator(); it.hasNext();) {
+                ProgressListener l = it.next();
                 l.updateProgress(totalBytes, contentLength);
             }
         }
