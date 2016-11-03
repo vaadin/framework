@@ -54,6 +54,20 @@ def getDemoLinksHtml():
         demos_html += "<li><a href='{url}/{demoName}-{version}'>{demoName}</a></li>".format(url=args.deployUrl, demoName=demo, version=args.version)
     return demos_html + "</ul>"
 
+def getApiDiffHtml():
+    apidiff_html = "Check API diff"
+    apidiff_html += "<ul>"
+    modules = [
+        "client", "client-compiler",
+        "compatibility-client",
+        "compatibility-server",
+        "compatibility-shared",
+        "server", "shared"
+    ]
+    for module in modules:
+        apidiff_html += "<li><a href='http://r2d2.devnet.vaadin.com/repository/download/Vaadin80_Releases_BuildTestAndStageRelease/{}:id/apidiff/{}/japicmp.html'>{}</a></li>".format(args.buildId, module, module)
+    return apidiff_html + "</ul>"
+
 def getDirs(url):
     page = requests.get(url)
     files = re.findall('<a href=.*>(.*)</a>', page.text)
@@ -87,9 +101,9 @@ def checkStagingContents(url, allowedArtifacts):
 
 def getStagingContentsHtml(repoUrl, allowedArtifacts, name):
     if checkStagingContents(repoUrl, allowedArtifacts):
-        return createTableRow(traffic_light.format(color="green"), "No extra artifacts found in the {} staging repository".format(name))
+        return createTableRow(traffic_light.format(color="green"), "No extra artifacts found in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
     else:
-        return createTableRow(traffic_light.format(color="red"), "Extra artifacts found in the {} staging repository".format(name))
+        return createTableRow(traffic_light.format(color="red"), "Extra artifacts found in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
 
 def completeArtifactName(artifactId, version):
     return 'com/vaadin/' + artifactId + '/' + version
@@ -115,7 +129,7 @@ content += getTestStatusHtml()
 try:
     p1 = subprocess.Popen(['find', '.', '-name', '*.java'], stdout=subprocess.PIPE)
     p2 = subprocess.Popen(['xargs', 'egrep', '-n', '@since ?$'], stdin=p1.stdout, stdout=subprocess.PIPE)
-    missing = subprocess.check_output(['egrep', '-v', '/(test|tests|target)/'], stdin=p2.stdout)
+    missing = subprocess.check_output(['egrep', '-v', '/(testbench|test|tests|target)/'], stdin=p2.stdout)
     content += createTableRow(traffic_light.format(color="red"), "Empty @since:<br><pre>%s</pre>" % (missing))
 
 except subprocess.CalledProcessError as e:
@@ -136,7 +150,7 @@ content += createTableRow("", getDemoLinksHtml())
 # link to release notes
 content += createTableRow("", "<a href=\"http://r2d2.devnet.vaadin.com/repository/download/Vaadin80_Releases_BuildTestAndStageRelease/{}:id/release-notes/release-notes.html\">Check release notes</a>".format(args.buildId))
 # link to api diff
-content += createTableRow("", "<a href=\"http://r2d2.devnet.vaadin.com/repository/download/Vaadin80_Releases_BuildTestAndStageRelease/{}:id/apidiff/\">Check API diff</a>".format(args.buildId))
+content += createTableRow("", getApiDiffHtml())
 
 # closed fixed tickets without a milestone
 content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=closed&component=Core+Framework&resolution=fixed&milestone=!Vaadin {version}&col=id&col=summary&col=component&col=status&col=type&col=priority&col=milestone&order=priority\">Closed fixed tickets without milestone {version}</a>".format(version=args.version))
@@ -149,7 +163,7 @@ content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=pen
 
 content += createTableRow("", "<h2>Preparations before publishing</h2>")
 # create milestone for next release
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone?action=new\">Create milestone for nex release</a>")
+content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone?action=new\">Create milestone for next release</a>")
 # close trac milestone
 content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone/Vaadin {version}\">Close Trac Milestone</a>".format(version=args.version))
 # verify pending release tickets still have milestone
