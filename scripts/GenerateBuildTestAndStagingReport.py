@@ -4,18 +4,20 @@ import argparse, requests, json, subprocess, re, pickle
 parser = argparse.ArgumentParser()
 parser.add_argument("version", type=str, help="Vaadin version that was just built")
 parser.add_argument("deployUrl", type=str, help="Base url of the deployment server")
-parser.add_argument("buildResultUrl", type=str, help="URL for the build result page")
 
 parser.add_argument("teamcityUser", type=str, help="Teamcity username to use")
 parser.add_argument("teamcityPassword", type=str, help="Password for given teamcity username")
 
 parser.add_argument("teamcityUrl", type=str, help="Address to the teamcity server")
+parser.add_argument("buildTypeId", type=str, help="The ID of this build step")
 parser.add_argument("buildId", type=str, help="ID of the build to generate this report for")
 
 parser.add_argument("frameworkRepoUrl", type=str, help="URL to the framework staging repository")
 parser.add_argument("archetypeRepoUrl", type=str, help="URL to the archetype staging repository")
 parser.add_argument("pluginRepoUrl", type=str, help="URL to the plugin staging repository")
 args = parser.parse_args()
+
+buildResultUrl = "http://{}/viewLog.html?buildId={}&tab=buildResultsDiv&buildTypeId={}".format(args.teamcityUrl, args.buildId, args.buildTypeId)
 
 def createTableRow(*columns):
     html = "<tr>"
@@ -39,7 +41,7 @@ def getBuildStatusHtml():
         if build_steps_json["count"] == 0:
             return createTableRow(traffic_light.format(color="green"), "Build status: all build steps successful")
         else:
-            return createTableRow(traffic_light.format(color="red"), "Build status: there are failing build steps, <a href={}>check the build report</a>".format(args.buildResultUrl))
+            return createTableRow(traffic_light.format(color="red"), "Build status: there are failing build steps, <a href={}>check the build report</a>".format(buildResultUrl))
 
 def getTestStatusHtml():
     test_failures_request_string = "http://{}/app/rest/testOccurrences?locator=build:{},status:FAILURE".format(args.teamcityUrl, args.buildId)
@@ -51,7 +53,7 @@ def getTestStatusHtml():
         if test_failures_json["count"] == 0:
             return createTableRow(traffic_light.format(color="green"), "Test status: all tests passing")
         else:
-            return createTableRow(traffic_light.format(color="red"), "Test status: there are " + str(test_failures_json["count"]) + " failing tests, <a href=\"http://r2d2.devnet.vaadin.com/viewLog.html?buildId={}&buildTypeId=Vaadin80_Releases_BuildTestAndStageRelease&tab=testsInfo\">see report</a>.".format(args.buildId))
+            return createTableRow(traffic_light.format(color="red"), "Test status: there are " + str(test_failures_json["count"]) + " failing tests, <a href={}>check the build report</a>".format(buildResultUrl))
 
 def getDemoValidationStatusHtml():
     status = pickle.load(open("result/demo_validation_status.pickle", "rb"))
@@ -74,7 +76,7 @@ def getApiDiffHtml():
         "compatibility-shared",
         "server", "shared"
     ]
-    link_list = list(map(lambda module: "<li><a href='http://r2d2.devnet.vaadin.com/repository/download/Vaadin80_Releases_BuildTestAndStageRelease/{}:id/apidiff/{}/japicmp.html'>{}</a></li>".format(args.buildId, module, module), modules))
+    link_list = list(map(lambda module: "<a href='http://{}/repository/download/{}/{}:id/apidiff/{}/japicmp.html'>{}</a>".format(args.teamcityUrl, args.buildTypeId, args.buildId, module, module), modules))
     return apidiff_html + getHtmlList(link_list)
 
 def getDirs(url):
@@ -157,28 +159,22 @@ content += createTableRow("", "<h2>Manual checks before publishing</h2>")
 content += createTableRow("", getDemoLinksHtml())
 
 # link to release notes
-content += createTableRow("", "<a href=\"http://r2d2.devnet.vaadin.com/repository/download/Vaadin80_Releases_BuildTestAndStageRelease/{}:id/release-notes/release-notes.html\">Check release notes</a>".format(args.buildId))
+content += createTableRow("", "<a href=\"http://{}/repository/download/{}/{}:id/release-notes/release-notes.html\">Check release notes</a>".format(args.teamcityUrl, args.buildTypeId, args.buildId))
 # link to api diff
 content += createTableRow("", getApiDiffHtml())
 
-# closed fixed tickets without a milestone
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=closed&component=Core+Framework&resolution=fixed&milestone=!Vaadin {version}&col=id&col=summary&col=component&col=status&col=type&col=priority&col=milestone&order=priority\">Closed fixed tickets without milestone {version}</a>".format(version=args.version))
-# closed tickets with milestone
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=closed&component=Core+Framework&resolution=fixed&milestone=Vaadin {version}&col=id&col=summary&col=component&col=milestone&col=status&col=type\">Closed tickets with milestone {version}</a>".format(version=args.version))
-# pending release tickets with milestone
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&milestone=Vaadin {version}&col=id&col=summary&col=component&col=milestone&col=status&col=type\">Pending-release tickets with milestone {version}</a>".format(version=args.version))
+# check that trac tickets are in the correct status
+content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=closed&status=pending-release&component=Core+Framework&resolution=fixed&group=milestone&col=id&col=summary&col=component&col=status&col=type&col=priority&col=milestone&order=priority\">Check that trac tickets have correct status</a>")
 # pending release tickets without milestone
 content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=pending-release&milestone=\">Pending-release tickets without milestone</a>")
 
 content += createTableRow("", "<h2>Preparations before publishing</h2>")
-# create milestone for next release
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone?action=new\">Create milestone for next release</a>")
 # close trac milestone
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone/Vaadin {version}\">Close Trac Milestone</a>".format(version=args.version))
+content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone/Vaadin {version}\">Close Trac Milestone (deselect \"retarget tickets\")</a>".format(version=args.version))
 # verify pending release tickets still have milestone
 content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&col=id&col=summary&col=component&col=milestone&col=status&col=type\">Verify pending release tickets still have milestone {version}</a>".format(version=args.version))
-# add version to trac
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/admin/ticket/versions\">Add version {version} to Trac".format(version=args.version))
+# link to build dependencies tab to initiate publish step
+content += createTableRow("", "<a href=\"http://{}/viewLog.html?buildId={}&buildTypeId={}&tab=dependencies\"><h2>Start Publish Release from dependencies tab</h2></a>".format(args.teamcityUrl, args.buildId, args.buildTypeId))
 
 content += "</table></body></html>"
 f = open("result/report.html", 'w')

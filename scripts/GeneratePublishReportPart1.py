@@ -19,8 +19,9 @@ metadataChecks = {
 
 parser = argparse.ArgumentParser(description="Post-publish report generator")
 parser.add_argument("version", type=str, help="Vaadin version that was just built")
-parser.add_argument("buildResultUrl", type=str, help="URL for the build result page")
-
+parser.add_argument("teamcityUrl", type=str, help="Address to the teamcity server")
+parser.add_argument("buildTypeId", type=str, help="The ID of this build step")
+parser.add_argument("buildId", type=str, help="ID of the build to generate this report for")
 args = parser.parse_args()
 
 traffic_light = "<svg width=\"20px\" height=\"20px\" style=\"padding-right:5px\"><circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"{color}\"/></svg>"
@@ -68,11 +69,15 @@ content = """<html>
 <tr><td>{downloadPageOk}</td><td>Download folder on vaadin.com contains the version</td></tr>
 """.format(metadataOk=getTrafficLight(metadataOk), tagOk=getTrafficLight(tagOk), downloadPageOk=getTrafficLight(downloadPageOk))
 
+mavenUrl = ""
 if not prerelease:
-	content += "<tr><td></td><td><a href='http://repo1.maven.org/maven2/com/vaadin/vaadin-server/{ver}'>Check {ver} is published to maven.org (might take a while)</td></tr>".format(ver=args.version)
+	mavenUrl = "http://repo1.maven.org/maven2/com/vaadin/vaadin-server/{ver}".format(ver=args.version)
+	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published to maven.org (might take a while)</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 else:
-	content += "<tr><td></td><td><a href='http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/{ver}'>Check {ver} is published as prerelease to maven.vaadin.com</td></tr>".format(ver=args.version)
+	mavenUrl = "http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/{ver}".format(ver=args.version)
+	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published as prerelease to maven.vaadin.com</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 
+content += "<tr><td></td><td><a href=\"https://dev.vaadin.com/admin/ticket/versions\">Add version {version} to Trac</a></td></tr>".format(version=args.version)
 
 if not prerelease:
 	content += '<tr><td></td><td><a href="https://dev.vaadin.com/admin/ticket/versions">Set latest version to default</a></td></tr>'
@@ -85,11 +90,10 @@ if not prerelease:
 	content += '<tr><td></td><td><a href="http://vaadin.com/api">Verify API version list updated</a></td></tr>'
 
 content += """
-<tr><td></td><td><a href="https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&milestone=Vaadin {version}&col=id&col=summary&col=component&col=milestone&col=status&col=type">Batch update tickets in Trac</a></td></tr>
-<tr><td></td><td><a href="{url}">Publish result page (See test results, pin and tag build and dependencies)</a></td></tr>
+<tr><td></td><td><a href="http://{teamcityUrl}/viewLog.html?buildId={buildId}&buildTypeId={buildTypeId}&tab=dependencies"><h2>Start Post-Publish Release from dependencies tab</a></td></tr>
 </table>
 </body>
-</html>""".format(url=args.buildResultUrl, version=args.version)
+</html>""".format(teamcityUrl=args.teamcityUrl, buildTypeId=args.buildTypeId, buildId=args.buildId, version=args.version)
 
 f = open("result/report.html", 'w')
 f.write(content)
