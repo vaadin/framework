@@ -178,8 +178,8 @@ with CustomComponent">>.
 [[application.architecture.navigation]]
 == View Navigation
 
-While the most simple applications have just a single __view__ (or __screen__),
-perhaps most have many. Even in a single view, you often want to have sub-views,
+While the simplest applications have just one __view__ (or __screen__), most of them often require several.
+Even in a single view, you often want to have sub-views,
 for example to display different content.
 <<figure.application.architecture.navigation>> illustrates a typical navigation
 between different top-level views of an application, and a main view with
