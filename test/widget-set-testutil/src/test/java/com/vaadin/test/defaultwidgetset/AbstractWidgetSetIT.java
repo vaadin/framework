@@ -1,5 +1,7 @@
 package com.vaadin.test.defaultwidgetset;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,7 +28,16 @@ public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
     }
 
     protected void testAppStartsUserCanInteract(String expectedWidgetSet) {
-        getDriver().get("http://localhost:8080");
+        testAppStartsUserCanInteract(expectedWidgetSet, false);
+    }
+
+    protected void testAppStartsUserCanInteract(String expectedWidgetSet,
+            boolean debug) {
+        String url = "http://localhost:8080";
+        if (debug) {
+            url += "?debug";
+        }
+        getDriver().get(url);
 
         TextFieldElement nameInput = $(TextFieldElement.class).first();
         nameInput.setValue("John Dåe");
@@ -54,6 +65,21 @@ public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
                 By.className("vaadin-unknown-caption"));
         Assert.assertTrue(unknownComponentCaption.getText().contains(
                 "does not contain implementation for " + componentClass));
+    }
+
+    protected void assertHasDebugMessage(String message) {
+        List<WebElement> elements = getDriver().findElements(
+                By.xpath("//span[@class='v-debugwindow-message']"));
+        boolean found = false;
+        for (WebElement element : elements) {
+            if (element.getText().contains(message)) {
+                found = true;
+                break;
+            }
+        }
+        Assert.assertTrue(
+                "Cannot find debug message containing '" + message + "'",
+                found);
     }
 
 }
