@@ -8,8 +8,9 @@ public class AddonUsingInitParamWidgetSetIT extends AbstractWidgetSetIT {
 
     @Test
     public void appStartsUserCanInteract() {
-        testAppStartsUserCanInteract("com.vaadin.DefaultWidgetSet");
-        assertUnknownComponentShown("com.vaadin.addon.contextmenu.ContextMenu");
+        testAppStartsUserCanInteract("com.vaadin.DefaultWidgetSet", true);
+        assertHasDebugMessage(
+                "does not contain an implementation for com.vaadin.addon.contextmenu.ContextMenu");
     }
 
 }
