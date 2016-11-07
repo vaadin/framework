@@ -29,7 +29,7 @@ public class NativeSelectInit extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         NativeSelect<String> select = new NativeSelect<>();
         select.setItems("Foo", "Bar");
-        select.select("Bar");
+        select.setValue("Bar");
         addComponent(select);
     }
 

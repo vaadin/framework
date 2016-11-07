@@ -42,16 +42,16 @@ public class RadioButtonGroupTest {
     public void apiSelectionChange_notUserOriginated() {
         AtomicInteger listenerCount = new AtomicInteger(0);
 
-        radioButtonGroup.addSelectionListener(event -> {
+        radioButtonGroup.addSelectionChangeListener(event -> {
             listenerCount.incrementAndGet();
             Assert.assertFalse(event.isUserOriginated());
         });
 
-        radioButtonGroup.select("First");
-        radioButtonGroup.select("Second");
+        radioButtonGroup.setValue("First");
+        radioButtonGroup.setValue("Second");
 
-        radioButtonGroup.deselect("Second");
-        radioButtonGroup.deselect("Second");
+        radioButtonGroup.setValue(null);
+        radioButtonGroup.setValue(null);
 
         Assert.assertEquals(3, listenerCount.get());
     }
@@ -60,7 +60,7 @@ public class RadioButtonGroupTest {
     public void rpcSelectionChange_userOriginated() {
         AtomicInteger listenerCount = new AtomicInteger(0);
 
-        radioButtonGroup.addSelectionListener(event -> {
+        radioButtonGroup.addSelectionChangeListener(event -> {
             listenerCount.incrementAndGet();
             Assert.assertTrue(event.isUserOriginated());
         });

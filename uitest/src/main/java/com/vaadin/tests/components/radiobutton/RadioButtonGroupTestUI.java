@@ -51,7 +51,7 @@ public class RadioButtonGroupTestUI
     protected void createSelectionMenu() {
         createClickAction("Clear selection", selectionCategory,
                 (component, item, data) -> component.getSelectedItem()
-                        .ifPresent(component::deselect),
+                        .ifPresent(value -> component.setValue(null)),
                 "");
 
         Command<RadioButtonGroup<Object>, String> toggleSelection = (component,
@@ -94,15 +94,15 @@ public class RadioButtonGroupTestUI
 
     private void toggleSelection(String item) {
         if (getComponent().isSelected(item)) {
-            getComponent().deselect(item);
+            getComponent().setValue(null);
         } else {
-            getComponent().select(item);
+            getComponent().setValue(item);
         }
     }
 
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners",
-                c -> c.addSelectionListener(
+                c -> c.addSelectionChangeListener(
                         e -> log("Selected: " + e.getSelectedItem())));
     }
 

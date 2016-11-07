@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.gwt.dom.client.Element;
@@ -40,7 +39,6 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.data.SelectionModel;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
@@ -58,8 +56,6 @@ import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -204,33 +200,6 @@ public class GridConnector extends AbstractListingConnector
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
-        getWidget().setSelectionModel(new SelectionModel<JsonObject>() {
-
-            @Override
-            public void select(JsonObject item) {
-                getRpcProxy(SelectionServerRpc.class)
-                        .select(item.getString(DataCommunicatorConstants.KEY));
-            }
-
-            @Override
-            public void deselect(JsonObject item) {
-                getRpcProxy(SelectionServerRpc.class).deselect(
-                        item.getString(DataCommunicatorConstants.KEY));
-            }
-
-            @Override
-            public Set<JsonObject> getSelectedItems() {
-                throw new UnsupportedOperationException(
-                        "Selected item not known on the client side");
-            }
-
-            @Override
-            public boolean isSelected(JsonObject item) {
-                return item.hasKey(DataCommunicatorConstants.SELECTED)
-                        && item.getBoolean(DataCommunicatorConstants.SELECTED);
-            }
-
-        });
 
         layout();
     }

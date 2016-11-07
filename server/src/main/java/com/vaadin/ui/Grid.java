@@ -30,19 +30,19 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.SelectionModel.Single;
+import com.vaadin.data.Binder;
+import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.EventListener;
-import com.vaadin.event.selection.SingleSelectionChangeEvent;
 import com.vaadin.server.EncodeResult;
+import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
@@ -50,7 +50,6 @@ import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
-import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -65,6 +64,7 @@ import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
+import com.vaadin.ui.components.grid.SingleSelectionModel;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -83,7 +83,7 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
+public class Grid<T> extends AbstractListing<T> implements HasComponents {
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
@@ -118,6 +118,27 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
          *            An event providing more information
          */
         void columnReorder(ColumnReorderEvent event);
+    }
+
+    /**
+     * The server-side interface that controls Grid's selection state.
+     * SelectionModel should extend {@link AbstractGridExtension}.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    public interface GridSelectionModel<T>
+            extends SelectionModel<T>, Extension {
+
+        /**
+         * Removes this selection model from the grid.
+         * <p>
+         * Must call super {@link Extension#remove()} to detach the extension,
+         * and fire an selection change event for the selection model (with an
+         * empty selection).
+         */
+        @Override
+        void remove();
     }
 
     /**
@@ -602,8 +623,8 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
                         .hasKey(diffStateKey) : "Field name has changed";
                 Type type = null;
                 try {
-                    type = (getState(false).getClass()
-                            .getDeclaredField(diffStateKey).getGenericType());
+                    type = getState(false).getClass()
+                            .getDeclaredField(diffStateKey).getGenericType();
                 } catch (NoSuchFieldException | SecurityException e) {
                     e.printStackTrace();
                 }
@@ -1488,163 +1509,6 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
         }
     }
 
-    private final class SingleSelection implements Single<T> {
-        private T selectedItem = null;
-
-        SingleSelection() {
-            addDataGenerator((item, json) -> {
-                if (isSelected(item)) {
-                    json.put(DataCommunicatorConstants.SELECTED, true);
-                }
-            });
-            registerRpc(new SelectionServerRpc() {
-
-                @Override
-                public void select(String key) {
-                    setSelectedFromClient(key);
-                }
-
-                @Override
-                public void deselect(String key) {
-                    if (isKeySelected(key)) {
-                        setSelectedFromClient(null);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public Optional<T> getSelectedItem() {
-            return Optional.ofNullable(selectedItem);
-        }
-
-        @Override
-        public void deselect(T item) {
-            Objects.requireNonNull(item, "deselected item cannot be null");
-            if (isSelected(item)) {
-                setSelectedFromServer(null);
-            }
-        }
-
-        @Override
-        public void select(T item) {
-            Objects.requireNonNull(item, "selected item cannot be null");
-            setSelectedFromServer(item);
-        }
-
-        /**
-         * Returns whether the given key maps to the currently selected item.
-         *
-         * @param key
-         *            the key to test or {@code null} to test whether nothing is
-         *            selected
-         * @return {@code true} if the key equals the key of the currently
-         *         selected item (or {@code null} if no selection),
-         *         {@code false} otherwise.
-         */
-        protected boolean isKeySelected(String key) {
-            return Objects.equals(key, getSelectedKey());
-        }
-
-        /**
-         * Returns the communication key of the selected item or {@code null} if
-         * no item is selected.
-         *
-         * @return the key of the selected item if any, {@code null} otherwise.
-         */
-        protected String getSelectedKey() {
-            return itemToKey(selectedItem);
-        }
-
-        /**
-         * Sets the selected item based on the given communication key. If the
-         * key is {@code null}, clears the current selection if any.
-         *
-         * @param key
-         *            the key of the selected item or {@code null} to clear
-         *            selection
-         */
-        protected void doSetSelectedKey(String key) {
-            if (selectedItem != null) {
-                getDataCommunicator().refresh(selectedItem);
-            }
-            selectedItem = keyToItem(key);
-            if (selectedItem != null) {
-                getDataCommunicator().refresh(selectedItem);
-            }
-        }
-
-        /**
-         * Sets the selection based on a client request. Does nothing if the
-         * select component is {@linkplain Component#isReadOnly()} or if the
-         * selection would not change. Otherwise updates the selection and fires
-         * a selection change event with {@code isUserOriginated == true}.
-         *
-         * @param key
-         *            the key of the item to select or {@code null} to clear
-         *            selection
-         */
-        protected void setSelectedFromClient(String key) {
-            if (isReadOnly()) {
-                return;
-            }
-            if (isKeySelected(key)) {
-                return;
-            }
-
-            doSetSelectedKey(key);
-            fireEvent(new SingleSelectionChangeEvent<>(Grid.this, true));
-        }
-
-        /**
-         * Sets the selection based on server API call. Does nothing if the
-         * selection would not change; otherwise updates the selection and fires
-         * a selection change event with {@code isUserOriginated == false}.
-         *
-         * @param item
-         *            the item to select or {@code null} to clear selection
-         */
-        protected void setSelectedFromServer(T item) {
-            // TODO creates a key if item not in data source
-            String key = itemToKey(item);
-
-            if (isKeySelected(key) || isSelected(item)) {
-                return;
-            }
-
-            doSetSelectedKey(key);
-            fireEvent(new SingleSelectionChangeEvent<>(Grid.this, false));
-        }
-
-        /**
-         * Returns the communication key assigned to the given item.
-         *
-         * @param item
-         *            the item whose key to return
-         * @return the assigned key
-         */
-        protected String itemToKey(T item) {
-            if (item == null) {
-                return null;
-            } else {
-                // TODO creates a key if item not in data source
-                return getDataCommunicator().getKeyMapper().key(item);
-            }
-        }
-
-        /**
-         * Returns the item that the given key is assigned to, or {@code null}
-         * if there is no such item.
-         *
-         * @param key
-         *            the key whose item to return
-         * @return the associated item if any, {@code null} otherwise.
-         */
-        protected T keyToItem(String key) {
-            return getDataCommunicator().getKeyMapper().get(key);
-        }
-    }
-
     /**
      * A header row in a Grid.
      */
@@ -1835,16 +1699,17 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
 
     private int counter = 0;
 
-    private Single<T> selectionModel;
+    private GridSelectionModel<T> selectionModel;
 
     /**
      * Constructor for the {@link Grid} component.
      */
     public Grid() {
-        setSelectionModel(new SingleSelection());
         registerRpc(new GridServerRpcImpl());
 
         setDefaultHeaderRow(appendHeaderRow());
+
+        selectionModel = new SingleSelectionModel<>(this);
 
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
@@ -2690,30 +2555,40 @@ public class Grid<T> extends AbstractSingleSelect<T> implements HasComponents {
      *
      * @return the selection model, not null
      */
-    public Single<T> getSelectionModel() {
+    public GridSelectionModel<T> getSelectionModel() {
         assert selectionModel != null : "No selection model set by "
                 + getClass().getName() + " constructor";
         return selectionModel;
     }
 
-    @Override
-    public Optional<T> getSelectedItem() {
-        return getSelectionModel().getSelectedItem();
+    /**
+     * Use this grid as a single select in {@link Binder}.
+     * <p>
+     * Sets the grid to single select mode, if not yet so.
+     *
+     * @return the single select wrapper that can be used in binder
+     */
+    public SingleSelect<T> asSingleSelect() {
+        GridSelectionModel<T> model = getSelectionModel();
+        if (!(model instanceof SingleSelectionModel)) {
+            model = new SingleSelectionModel<>(this);
+            setSelectionModel(model);
+        }
+
+        return ((SingleSelectionModel<T>) model).asSingleSelect();
     }
 
     /**
      * Sets the selection model for this listing.
+     * <p>
+     * The default selection model is {@link SingleSelectionModel}.
      *
      * @param model
-     *            the selection model to use, not null
+     *            the selection model to use, not {@code null}
      */
-    protected void setSelectionModel(Single<T> model) {
-        if (selectionModel != null) {
-            throw new IllegalStateException(
-                    "A selection model can't be changed.");
-        }
-
+    protected void setSelectionModel(GridSelectionModel<T> model) {
         Objects.requireNonNull(model, "selection model cannot be null");
+        selectionModel.remove();
         selectionModel = model;
     }
 

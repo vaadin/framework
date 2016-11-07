@@ -32,7 +32,7 @@ public abstract class AbstractSingleSelectTestUI<T extends AbstractSingleSelect<
 
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners", c -> c
-                .addSelectionListener(e -> log("Selected: " + e.getValue())));
+                .addSelectionChangeListener(e -> log("Selected: " + e.getValue())));
     }
 
     protected void createSelectionMenu() {
@@ -46,12 +46,7 @@ public abstract class AbstractSingleSelectTestUI<T extends AbstractSingleSelect<
 
         createSelectAction("Select", "Selection", options, "None",
                 (component, selected, data) -> {
-                    if (selected != null) {
-                        component.select(selected);
-                    } else {
-                        component.getSelectedItem()
-                                .ifPresent(component::deselect);
-                    }
+                    component.setValue(selected);
                 });
     }
 

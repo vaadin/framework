@@ -31,7 +31,7 @@ public class ComboBoxSelectingWithNewItemsAllowed extends ComboBoxSelecting {
         comboBox.setNewItemHandler(text -> {
             items.add(text);
             comboBox.setItems(items);
-            comboBox.select(text);
+            comboBox.setValue(text);
             label.setValue(String.valueOf(items.size()));
         });
 

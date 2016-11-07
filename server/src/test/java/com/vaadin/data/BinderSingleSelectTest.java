@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -76,7 +76,7 @@ public class BinderSingleSelectTest
     public void bound_setSelection_beanValueUpdated() {
         bindSex();
 
-        select.select(Sex.MALE);
+        select.setValue(Sex.MALE);
 
         assertSame(Sex.MALE, item.getSex());
     }
@@ -86,7 +86,7 @@ public class BinderSingleSelectTest
         item.setSex(Sex.MALE);
         bindSex();
 
-        select.deselect(Sex.MALE);
+        select.setValue(null);
 
         assertNull(item.getSex());
     }
@@ -97,7 +97,7 @@ public class BinderSingleSelectTest
         bindSex();
         binder.removeBean();
 
-        select.select(Sex.FEMALE);
+        select.setValue(Sex.FEMALE);
 
         assertSame(Sex.UNKNOWN, item.getSex());
     }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,33 +18,50 @@ package com.vaadin.event.selection;
 import java.util.Optional;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.AbstractSingleSelect;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.SingleSelect;
 
 /**
  * Fired when the selection changes in a listing component.
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @param <T>
  *            the type of the selected item
  * @since 8.0
  */
-public class SingleSelectionChangeEvent<T> extends ValueChangeEvent<T>
+public class SingleSelectionEvent<T> extends ValueChangeEvent<T>
         implements SelectionEvent<T> {
 
     /**
      * Creates a new selection change event.
-     * 
+     *
      * @param source
      *            the listing that fired the event
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      */
-    public SingleSelectionChangeEvent(AbstractSingleSelect<T> source,
+    public SingleSelectionEvent(AbstractSingleSelect<T> source,
             boolean userOriginated) {
         super(source, userOriginated);
+    }
+
+    /**
+     * Creates a new selection change event in a component.
+     *
+     * @param component
+     *            the component where the event originated
+     * @param source
+     *            the single select source
+     * @param userOriginated
+     *            {@code true} if this event originates from the client,
+     *            {@code false} otherwise.
+     */
+    public SingleSelectionEvent(Component component, SingleSelect<T> source,
+            boolean userOriginated) {
+        super(component, source, userOriginated);
     }
 
     /**
@@ -54,9 +71,9 @@ public class SingleSelectionChangeEvent<T> extends ValueChangeEvent<T>
      * The result is the current selection of the source
      * {@link AbstractSingleSelect} object. So it's always exactly the same as
      * optional describing {@link AbstractSingleSelect#getValue()}.
-     * 
+     *
      * @see #getValue()
-     * 
+     *
      * @return the selected item or an empty optional if deselected
      *
      * @see SelectionModel.Single#getSelectedItem()
@@ -65,10 +82,14 @@ public class SingleSelectionChangeEvent<T> extends ValueChangeEvent<T>
         return Optional.ofNullable(getValue());
     }
 
+    /**
+     * The single select on which the Event initially occurred.
+     *
+     * @return The single select on which the Event initially occurred.
+     */
     @Override
-    @SuppressWarnings("unchecked")
-    public AbstractListing<T> getComponent() {
-        return (AbstractListing<T>) super.getComponent();
+    public SingleSelect<T> getSource() {
+        return (SingleSelect<T>) super.getSource();
     }
 
     @Override

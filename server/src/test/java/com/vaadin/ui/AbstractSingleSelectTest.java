@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,10 +21,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Assert;
@@ -33,7 +31,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.event.selection.SingleSelectionChangeEvent;
+import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.datasource.bov.Person;
 import com.vaadin.shared.Registration;
@@ -56,7 +54,8 @@ public class AbstractSingleSelectTest {
         listing = new PersonListing();
         listing.setItems(PERSON_A, PERSON_B, PERSON_C);
         selectionChanges = new ArrayList<>();
-        listing.addSelectionListener(e -> selectionChanges.add(e.getValue()));
+        listing.addSelectionChangeListener(
+                e -> selectionChanges.add(e.getValue()));
     }
 
     public static final Person PERSON_C = new Person("c", 3);
@@ -69,7 +68,7 @@ public class AbstractSingleSelectTest {
     @Test
     public void select() {
 
-        listing.select(PERSON_B);
+        listing.setValue(PERSON_B);
 
         assertTrue(listing.getSelectedItem().isPresent());
 
@@ -87,8 +86,8 @@ public class AbstractSingleSelectTest {
     @Test
     public void selectDeselect() {
 
-        listing.select(PERSON_B);
-        listing.deselect(PERSON_B);
+        listing.setValue(PERSON_B);
+        listing.setValue(null);
 
         assertFalse(listing.getSelectedItem().isPresent());
 
@@ -104,8 +103,8 @@ public class AbstractSingleSelectTest {
     @Test
     public void reselect() {
 
-        listing.select(PERSON_B);
-        listing.select(PERSON_C);
+        listing.setValue(PERSON_B);
+        listing.setValue(PERSON_C);
 
         assertEquals(PERSON_C, listing.getSelectedItem().orElse(null));
 
@@ -119,27 +118,10 @@ public class AbstractSingleSelectTest {
     }
 
     @Test
-    public void deselectNoOp() {
-
-        listing.select(PERSON_C);
-        listing.deselect(PERSON_B);
-
-        assertEquals(PERSON_C, listing.getSelectedItem().orElse(null));
-
-        assertFalse(listing.isSelected(PERSON_A));
-        assertFalse(listing.isSelected(PERSON_B));
-        assertTrue(listing.isSelected(PERSON_C));
-
-        assertEquals(Optional.of(PERSON_C), listing.getSelectedItem());
-
-        assertEquals(Arrays.asList(PERSON_C), selectionChanges);
-    }
-
-    @Test
     public void selectTwice() {
 
-        listing.select(PERSON_C);
-        listing.select(PERSON_C);
+        listing.setValue(PERSON_C);
+        listing.setValue(PERSON_C);
 
         assertEquals(PERSON_C, listing.getSelectedItem().orElse(null));
 
@@ -155,9 +137,9 @@ public class AbstractSingleSelectTest {
     @Test
     public void deselectTwice() {
 
-        listing.select(PERSON_C);
-        listing.deselect(PERSON_C);
-        listing.deselect(PERSON_C);
+        listing.setValue(PERSON_C);
+        listing.setValue(null);
+        listing.setValue(null);
 
         assertFalse(listing.getSelectedItem().isPresent());
 
@@ -176,7 +158,7 @@ public class AbstractSingleSelectTest {
 
         Assert.assertEquals(PERSON_B, listing.getValue());
 
-        listing.deselect(PERSON_B);
+        listing.setValue(null);
         Assert.assertNull(listing.getValue());
     }
 
@@ -220,7 +202,7 @@ public class AbstractSingleSelectTest {
         Mockito.verify(select).setSelectedItem(null);
     }
 
-    @SuppressWarnings({ "unchecked", "serial" })
+    @SuppressWarnings("serial")
     @Test
     public void addValueChangeListener() {
         AtomicReference<SingleSelectionListener<String>> selectionListener = new AtomicReference<>();
@@ -228,7 +210,7 @@ public class AbstractSingleSelectTest {
         String value = "foo";
         AbstractSingleSelect<String> select = new AbstractSingleSelect<String>() {
             @Override
-            public Registration addSelectionListener(
+            public Registration addSelectionChangeListener(
                     SingleSelectionListener<String> listener) {
                 selectionListener.set(listener);
                 return registration;
@@ -248,32 +230,11 @@ public class AbstractSingleSelectTest {
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get()
-                .accept(new SingleSelectionChangeEvent<>(select, true));
+                .accept(new SingleSelectionEvent<>(select, true));
 
         Assert.assertEquals(select, event.get().getComponent());
         Assert.assertEquals(value, event.get().getValue());
         Assert.assertTrue(event.get().isUserOriginated());
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void setValue_isDelegatedToDeselectAndUpdateSelection() {
-        AbstractMultiSelect<String> select = Mockito
-                .mock(AbstractMultiSelect.class);
-
-        Set set = new LinkedHashSet<>();
-        set.add("foo1");
-        set.add("foo");
-        Set selected = new LinkedHashSet<>();
-        selected.add("bar1");
-        selected.add("bar");
-        selected.add("bar2");
-        Mockito.when(select.getSelectedItems()).thenReturn(selected);
-        Mockito.doCallRealMethod().when(select).setValue(Mockito.anySet());
-
-        select.setValue(set);
-
-        Mockito.verify(select).updateSelection(set, selected);
     }
 
 }

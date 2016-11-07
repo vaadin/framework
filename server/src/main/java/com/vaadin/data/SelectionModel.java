@@ -90,6 +90,11 @@ public interface SelectionModel<T> extends Serializable {
             return getSelectedItem().map(Collections::singleton)
                     .orElse(Collections.emptySet());
         }
+
+        @Override
+        default Optional<T> getFirstSelectedItem() {
+            return getSelectedItem();
+        }
     }
 
     /**
@@ -173,6 +178,11 @@ public interface SelectionModel<T> extends Serializable {
          *            the items to remove, not {@code null}
          */
         public void updateSelection(Set<T> addedItems, Set<T> removedItems);
+
+        @Override
+        default Optional<T> getFirstSelectedItem() {
+            return getSelectedItems().stream().findFirst();
+        }
     }
 
     /**
@@ -186,6 +196,17 @@ public interface SelectionModel<T> extends Serializable {
      * @return the items in the current selection, not null
      */
     public Set<T> getSelectedItems();
+
+    /**
+     * Get first selected data item.
+     * <p>
+     * This is the same as {@link Single#getSelectedItem()} in case of single
+     * selection and the first selected item from
+     * {@link Multi#getSelectedItems()} in case of multiselection.
+     *
+     * @return the first selected item.
+     */
+    Optional<T> getFirstSelectedItem();
 
     /**
      * Selects the given item. Depending on the implementation, may cause other

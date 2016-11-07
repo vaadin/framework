@@ -22,7 +22,7 @@ import java.util.Optional;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Single;
-import com.vaadin.event.selection.SingleSelectionChangeEvent;
+import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.shared.Registration;
@@ -49,7 +49,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Deprecated
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SingleSelectionListener.class, "accept",
-                    SingleSelectionChangeEvent.class);
+                    SingleSelectionEvent.class);
 
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
@@ -92,11 +92,11 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      *            the value change listener, not null
      * @return a registration for the listener
      */
-    public Registration addSelectionListener(
+    public Registration addSelectionChangeListener(
             SingleSelectionListener<T> listener) {
-        addListener(SingleSelectionChangeEvent.class, listener,
+        addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
-        return () -> removeListener(SingleSelectionChangeEvent.class, listener);
+        return () -> removeListener(SingleSelectionEvent.class, listener);
     }
 
     /**
@@ -158,7 +158,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> listener.accept(
+        return addSelectionChangeListener(event -> listener.accept(
                 new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 
@@ -190,18 +190,6 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public boolean isReadOnly() {
         return super.isReadOnly();
-    }
-
-    public void deselect(T item) {
-        Objects.requireNonNull(item, "deselected item cannot be null");
-        if (isSelected(item)) {
-            setSelectedFromServer(null);
-        }
-    }
-
-    public void select(T item) {
-        Objects.requireNonNull(item, "selected item cannot be null");
-        setSelectedFromServer(item);
     }
 
     /**
@@ -245,7 +233,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionChangeEvent<>(AbstractSingleSelect.this,
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
                 true));
     }
 
@@ -266,7 +254,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionChangeEvent<>(AbstractSingleSelect.this,
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
                 false));
     }
 

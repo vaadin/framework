@@ -26,14 +26,14 @@ import java.util.function.Consumer;
  * @param <T>
  *            the type of the selected item
  * 
- * @see SingleSelectionChangeEvent
+ * @see SingleSelectionEvent
  * 
  * @since 8.0
  */
 @FunctionalInterface
 public interface SingleSelectionListener<T>
-        extends Consumer<SingleSelectionChangeEvent<T>>, Serializable {
+        extends Consumer<SingleSelectionEvent<T>>, Serializable {
 
     @Override
-    public void accept(SingleSelectionChangeEvent<T> event);
+    public void accept(SingleSelectionEvent<T> event);
 }

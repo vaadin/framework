@@ -33,7 +33,7 @@ public class DummyData extends AbstractTestUIWithLog {
 
         @Override
         public Stream<String> fetch(Query query) {
-            log("Backend request #" + (count++));
+            log("Backend request #" + count++);
             return super.fetch(query);
         }
     }
@@ -61,7 +61,7 @@ public class DummyData extends AbstractTestUIWithLog {
         }
 
         @Override
-        public void select(String item) {
+        public void setValue(String item) {
             if (selected != null) {
                 getDataCommunicator().refresh(selected);
             }
@@ -71,12 +71,6 @@ public class DummyData extends AbstractTestUIWithLog {
             }
         }
 
-        @Override
-        public void deselect(String item) {
-            if (item == selected) {
-                select(null);
-            }
-        }
     }
 
     @Override
@@ -87,12 +81,12 @@ public class DummyData extends AbstractTestUIWithLog {
             items.add("Foo " + i);
         }
         dummy.setDataSource(new LoggingDataSource(items));
-        dummy.select("Foo 200");
+        dummy.setValue("Foo 200");
 
         HorizontalLayout controls = new HorizontalLayout();
         addComponent(controls);
         controls.addComponent(new Button("Select Foo 20", e -> {
-            dummy.select("Foo " + 20);
+            dummy.setValue("Foo " + 20);
         }));
         controls.addComponent(new Button("Reset data source", e -> {
             dummy.setDataSource(new LoggingDataSource(items));

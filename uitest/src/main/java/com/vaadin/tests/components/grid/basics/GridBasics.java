@@ -30,6 +30,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.grid.SingleSelectionModel;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
@@ -150,7 +151,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .put("\"Watching\"",
                         dataObj -> new Label("You are watching item id "
                                 + dataObj.getRowNumber() + " ("
-                                + (watchingCount++) + ")"));
+                                + watchingCount++ + ")"));
         persistingDetails = new PersistingDetailsGenerator();
         generators.put("Persisting", persistingDetails);
     }
@@ -185,7 +186,8 @@ public class GridBasics extends AbstractTestUIWithLog {
         grid.addColumn(data -> data.getSmallRandom() / 5d,
                 new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7]);
 
-        grid.addSelectionListener(e -> log("Selected: " + e.getValue()));
+        ((SingleSelectionModel<DataObject>) grid.getSelectionModel())
+                .addSelectionChangeListener(e -> log("Selected: " + e.getValue()));
 
         layout.addComponent(createMenu());
         layout.addComponent(grid);

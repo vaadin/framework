@@ -62,7 +62,7 @@ public class ColorPickerSelect extends CustomField<Color> {
         range.setWidth("100%");
         range.addValueChangeListener(this::valueChange);
 
-        range.select(ColorRange.ALL);
+        range.setValue(ColorRange.ALL);
 
         layout.addComponent(range);
 
@@ -90,20 +90,20 @@ public class ColorPickerSelect extends CustomField<Color> {
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
-                if (row < (rows - 1)) {
+                if (row < rows - 1) {
                     // Create the color grid by varying the saturation and value
 
                     // Calculate new hue value
-                    float hue = ((float) col / (float) columns);
+                    float hue = (float) col / (float) columns;
                     float saturation = 1f;
                     float value = 1f;
 
                     // For the upper half use value=1 and variable
                     // saturation
-                    if (row < (rows / 2)) {
-                        saturation = ((row + 1f) / (rows / 2f));
+                    if (row < rows / 2) {
+                        saturation = (row + 1f) / (rows / 2f);
                     } else {
-                        value = 1f - ((row - (rows / 2f)) / (rows / 2f));
+                        value = 1f - (row - rows / 2f) / (rows / 2f);
                     }
 
                     colors[row][col] = new Color(
@@ -112,7 +112,7 @@ public class ColorPickerSelect extends CustomField<Color> {
                     // The last row should have the black&white gradient
                     float hue = 0f;
                     float saturation = 0f;
-                    float value = 1f - ((float) col / (float) columns);
+                    float value = 1f - (float) col / (float) columns;
 
                     colors[row][col] = new Color(
                             Color.HSVtoRGB(hue, saturation, value));
@@ -151,13 +151,11 @@ public class ColorPickerSelect extends CustomField<Color> {
                 saturation = 1f;
                 value = 1f;
 
-                if (index <= ((rows * columns) / 2)) {
-                    saturation = index
-                            / (((float) rows * (float) columns) / 2f);
+                if (index <= rows * columns / 2) {
+                    saturation = index / ((float) rows * (float) columns / 2f);
                 } else {
-                    index -= ((rows * columns) / 2);
-                    value = 1f
-                            - index / (((float) rows * (float) columns) / 2f);
+                    index -= rows * columns / 2;
+                    value = 1f - index / ((float) rows * (float) columns / 2f);
                 }
 
                 colors[row][col] = new Color(

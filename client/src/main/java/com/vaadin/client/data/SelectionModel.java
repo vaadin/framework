@@ -17,6 +17,10 @@ package com.vaadin.client.data;
 
 import java.util.Set;
 
+import com.vaadin.shared.data.DataCommunicatorConstants;
+
+import elemental.json.JsonObject;
+
 /**
  * Models the selection logic of a {@code Grid} component. Determines how items
  * can be selected and deselected.
@@ -32,7 +36,7 @@ public interface SelectionModel<T> {
     /**
      * Selects the given item. If another item was already selected, that item
      * is deselected.
-     * 
+     *
      * @param item
      *            the item to select, not null
      */
@@ -50,7 +54,7 @@ public interface SelectionModel<T> {
     /**
      * Returns a set of the currently selected items. It is safe to invoke other
      * {@code SelectionModel} methods while iterating over the set.
-     * 
+     *
      * @return the items in the current selection, not null
      */
     Set<T> getSelectedItems();
@@ -70,4 +74,19 @@ public interface SelectionModel<T> {
     default void deselectAll() {
         getSelectedItems().forEach(this::deselect);
     }
+
+    /**
+     * Gets the selected state from a given grid row json object. This is a
+     * helper method for grid selection models.
+     *
+     * @param item
+     *            a json object
+     * @return {@code true} if the json object is marked as selected;
+     *         {@code false} if not
+     */
+    public static boolean isItemSelected(JsonObject item) {
+        return item.hasKey(DataCommunicatorConstants.SELECTED)
+                && item.getBoolean(DataCommunicatorConstants.SELECTED);
+    }
+
 }
