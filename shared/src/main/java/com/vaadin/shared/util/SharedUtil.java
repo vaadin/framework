@@ -136,7 +136,7 @@ public class SharedUtil implements Serializable {
      * {@literal AWESOME_URL_FACTORY} becomes {@literal Awesome Url Factory}
      * {@literal SOMETHING} becomes {@literal Something}
      *
-     * @since
+     * @since 7.7.4
      * @param upperCaseUnderscoreString
      *            The input string in UPPER_CASE_UNDERSCORE format
      * @return A human friendly version of the input
