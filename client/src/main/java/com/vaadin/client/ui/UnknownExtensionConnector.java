@@ -22,7 +22,7 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
  * Connector used as a placeholder for extensions that are not present in the
  * widgetset.
  * 
- * @since
+ * @since 7.7.4
  * @author Vaadin Ltd
  */
 public class UnknownExtensionConnector extends AbstractExtensionConnector {
