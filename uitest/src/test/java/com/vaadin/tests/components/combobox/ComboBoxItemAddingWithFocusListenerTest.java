@@ -22,8 +22,8 @@ import org.junit.Test;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 public class ComboBoxItemAddingWithFocusListenerTest extends MultiBrowserTest {
 

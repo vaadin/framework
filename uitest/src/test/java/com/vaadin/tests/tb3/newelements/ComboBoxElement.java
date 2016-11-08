@@ -2,6 +2,7 @@ package com.vaadin.tests.tb3.newelements;
 
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.BrowserType;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elementsbase.ServerClass;
@@ -36,6 +37,16 @@ public class ComboBoxElement
         sendKeys(50, keysToSend);
     }
 
+    @Override
+    public void openPopup() {
+        if (isFirefox()) {
+            getTestBenchCommandExecutor().executeScript("arguments[0].click();",
+                    findElement(By.vaadin("#button")));
+        } else {
+            super.openPopup();
+        }
+    }
+
     /**
      * Use this method to simulate typing into an element, which may set its
      * value.
@@ -57,5 +68,9 @@ public class ComboBoxElement
                 Assert.fail(e.getMessage());
             }
         }
+    }
+
+    public boolean isFirefox() {
+        return BrowserType.FIREFOX.equals(getCapabilities().getBrowserName());
     }
 }

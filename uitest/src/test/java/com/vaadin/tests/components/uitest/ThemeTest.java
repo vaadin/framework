@@ -9,11 +9,11 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 import com.vaadin.tests.tb3.newelements.FixedNotificationElement;
 import com.vaadin.tests.tb3.newelements.WindowElement;
 

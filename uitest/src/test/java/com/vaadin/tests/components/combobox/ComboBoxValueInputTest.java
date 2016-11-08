@@ -15,18 +15,19 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.VerticalLayoutElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.VerticalLayoutElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 /**
  * Tests ComboBox inputs and selections.

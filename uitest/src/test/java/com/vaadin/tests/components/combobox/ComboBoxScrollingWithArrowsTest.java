@@ -15,19 +15,20 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import com.vaadin.testbench.By;
+import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 /**
  * When pressed down key, while positioned on the last item - should show next
