@@ -15,7 +15,7 @@ public class FlashIsVisibleTest extends MultiBrowserTest {
         // FF and PhantomJS fail at Flash and ShiftClick
         List<DesiredCapabilities> capabilities = getBrowsersSupportingShiftClick();
         // Flash support in Chrome is disabled
-        capabilities.remove(Browser.CHROME);
+        capabilities.removeAll(getBrowserCapabilities(Browser.CHROME));
         return capabilities;
     }
 

@@ -31,8 +31,9 @@ public class EmbeddedWithNullSourceTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // No Flash on PhantomJS, IE 11 has a timeout issue, looks like a
         // IEDriver problem, not reproduced running locally.
+        // Flash is disabled in Chrome.
         return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
-                Browser.CHROME, Browser.FIREFOX);
+                Browser.FIREFOX);
     }
 
     @Test
