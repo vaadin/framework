@@ -25,7 +25,7 @@ API documentation for add-ons is available at:
 * Vaadin Spring Boot API at link:https://vaadin.com/api/vaadin-spring-boot[vaadin.com/api/vaadin-spring-boot]
 
 To learn more about Vaadin Spring, the
-link:https://vaadin.com/wiki/-/wiki/Main/Vaadin+Spring[Vaadin Spring Tutorial]
+link:https://vaadin.github.io/spring-tutorial/[Vaadin Spring Tutorial]
 gives a hands-on introduction. The source code of the Spring Tutorial demo is
 available for browsing or cloning at
 link:https://github.com/Vaadin/spring-tutorial[github.com/Vaadin/spring-tutorial].
@@ -58,7 +58,7 @@ Framework Reference Documentation].
 
 * link:http://projects.spring.io/spring-framework/[Spring Project]
 
-* link:https://vaadin.com/wiki/-/wiki/Main/Vaadin+Spring[Vaadin Spring Tutorial]
+* link:https://vaadin.github.io/spring-tutorial/[Vaadin Spring Tutorial]
 
 endif::web[]
 
@@ -177,13 +177,12 @@ enables general Spring functionalities in a web application.
 
 You can use the Spring Initializr at
 link:https://start.spring.io/[start.spring.io] website to generate a project,
-which you can then download as a package and import in your IDE. The generated
-project is a Spring application stub; you need to add at least Vaadin
-dependencies ( [literal]#++vaadin-spring-boot++#, [literal]#++vaadin-themes++#,
-and [literal]#++vaadin-client-compiled++#) and a UI class to the generated
-project, as well as a theme, and so forth.
+which you can then download as a package and import in your IDE. Pick Vaadin as
+a dependency on the site to include all the required Vaadin Spring dependencies
+and auto-configuration.The generated project is a Spring application stub; you
+need to add at least a UI class to the generated project.
 
-See the link:https://vaadin.com/wiki/-/wiki/Main/Vaadin+Spring[Vaadin Spring
+See the link:https://vaadin.github.io/spring-tutorial/[Vaadin Spring
 Tutorial] for detailed instructions for using Spring Boot.
 
 
@@ -198,9 +197,9 @@ up the Development Environment">>.
 
 To install the Vaadin Spring and/or Vaadin Spring Boot add-ons, either define
 them as an Ivy or Maven dependency or download from the Vaadin Directory add-on
-page at <<,vaadin.com/directory#addon/vaadin-spring>> or
-<<,vaadin.com/directory#addon/vaadin-spring-boot>>. See
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
+page at link:https://vaadin.com/directory#addon/vaadin-spring[vaadin.com/directory#addon/vaadin-spring]
+or link:https://vaadin.com/directory#addon/vaadin-spring-boot[vaadin.com/directory#addon/vaadin-spring-boot].
+See <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
 Vaadin Add-ons">> for general instructions for installing and using Vaadin
 add-ons.
 
@@ -222,11 +221,17 @@ The Maven dependency is as follows:
     &lt;/dependency&gt;
 ----
 
+For Vaadin Spring Boot, depending on [literal]#++vaadin-spring-boot-starter++# will
+include all the required Vaadin dependencies.
+
+
 [[advanced.spring.preparing]]
 == Preparing Application for Spring
 
 A Vaadin application that uses Spring must have a file named
 [filename]#applicationContext.xml# in the [filename]#WEB-INF# directory.
+Using Spring Initializr automatically generates a suitable file, but if
+you configure Vaadin Spring manually, you can follow the model below.
 
 [subs="verbatim,replacements,quotes"]
 ----
@@ -249,7 +254,7 @@ A Vaadin application that uses Spring must have a file named
 &lt;/beans&gt;
 ----
 The application should not have a servlet extending [classname]#VaadinServlet#,
-as Vaadin servlet has its own [classname]#VaadinSpringServlet# that is deployed
+as Vaadin servlet has its own [classname]#SpringVaadinServlet# that is deployed
 automatically. If you need multiple servlets or need to customize the Vaadin
 Spring servlet, see <<advanced.spring.deployment>>.
 
@@ -345,7 +350,7 @@ that scope.
 === [classname]#@UIScope#
 
 UI-scoped beans are uniquely identified within a UI instance, that is, a browser
-window or tab. The lifecycle of UI-scoped beans is bound between to the
+window or tab. The lifecycle of UI-scoped beans is bound between the
 initialization and closing of a UI. Whenever you inject a bean, as long as you
 are within the same UI, you will get the same instance.
 
@@ -374,36 +379,36 @@ ifdef::web[]
 Vaadin Spring extends the navigation framework in Vaadin, described in
 <<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
 in an Application">>. It manages Spring views with a special view provider and
-enables view scoping.
+enables view scoping. Furthermore, Vaadin Spring provides a customized navigator class
+[classname]#SpringNavigator# that supports the scope functionality.
+
 
 [[advanced.spring.navigation.ui]]
 === Preparing the UI
 
-You can define navigation for any single-component container, as described in
+You can define navigation for any single-component container, component container or bean
+implementing [classname]#ViewDisplay#, as described in
 <<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.navigating,"Setting
 Up for Navigation">>, but typically you set up navigation for the entire UI
-content. To use Vaadin Spring views, you need to inject a
-[classname]#SpringViewProvider# in the UI and add it as a provider for the
-navigator.
+content. The easiest way to set up navigation is to use the annotation
+[classname]#@SpringViewDisplay# on the UI (in which case the whole contents of the UI are
+replaced on navigation) or on any UI scoped bean implementing one of the above mentioned
+interfaces.
 
 
 [source, java]
 ----
 @SpringUI(path="/myspringui")
+@SpringViewDisplay
 public class MySpringUI extends UI {
-    @Autowired
-    SpringViewProvider viewProvider;
-
     @Override
     protected void init(VaadinRequest request) {
-        Navigator navigator = new Navigator(this, this);
-        navigator.addProvider(viewProvider);
-
-        // Navigate to start view
-        navigator.navigateTo("");
     }
 }
 ----
+
+If not using Spring Boot, auto-configuration of navigation can be enabled with the annotation
+@EnableVaadinNavigation on a configuration class.
 
 
 [[advanced.spring.navigation.view]]
@@ -445,20 +450,8 @@ It is a recommended pattern to have the view name in a static member constant in
 the view class, as was done in the example previously, so that the name can be
 referred to safely.
 
-supportsParameters:: Specifies whether view parameters can be passed to the view as a suffix to the
-name in the navigation state, that is, in the form of
-[literal]#++viewname+viewparameters++#. The view name is merely a prefix and
-there is no separator nor format for the parameters, but those are left for the
-view to handle. The parameter support mode is disabled by default.
-
-
 +
-[source, java]
-----
-@SpringView(name="myview", supportsParameters=true)
-----
-+
-You could then navigate to the state with a URI fragment such as
+You can also navigate to a view with a URI fragment such as
 [literal]#++#!myview/someparameter++# or programmatically with:
 
 
@@ -470,12 +463,6 @@ getUI().getNavigator().navigateTo("myview/someparameter");
 +
 The [methodname]#enter()# method of the view gets the URI fragment as parameter
 as is and can interpret it in any application-defined way.
-
-+
-Note that in this mode, matching a navigation state to a view is done by the
-prefix of the fragment! Thereby, no other views may start with the name of the
-view as prefix. For example, if the view name is " [literal]#++main++#", you
-must not have a view named " [literal]#++maintenance++#".
 
 uis:: If the application has multiple UIs that use [classname]#SpringViewProvider#,
 you can use this parameter to specify which UIs can show the view.
@@ -556,33 +543,40 @@ by additional unofficial add-ons on top of Vaadin Spring.
 [[advanced.spring.accesscontrol.accessdenied]]
 === Access Denied View
 
-By default, the view provider acts as if a denied view didn't exist. You can set
+If access to a view is denied by an access control bean, the access denied view
+is shown for it. For non-existing views, the error view is shown. You can set
 up an "Access Denied" view that is shown if the access is denied with
-[methodname]#setAccessDeniedView()# in [classname]#SpringViewProvider#.
+[methodname]#setAccessDeniedViewClass()# in [classname]#SpringViewProvider#,
+and an error view with [methodname]#setErrorView()# in [classname]#SpringNavigator#.
+The same view can also be used both as an access denied view and as an error
+view to hide the existence of views the user is not allowed to access.
 
 
 [source, java]
 ----
 @Autowired
 SpringViewProvider viewProvider;
+@Autowired
+SpringNavigator navigator;
 
 @Override
 protected void init(VaadinRequest request) {
-    Navigator navigator = new Navigator(this, this);
-    navigator.addProvider(viewProvider);
-
     // Set up access denied view
     viewProvider.setAccessDeniedViewClass(
         MyAccessDeniedView.class);
+    // Set up error view
+    navigator.setErrorView(MyErrorView.class);
 ----
 
+Note that the error view can also be a class with which an error view bean is
+found. In this case, the error view must be UI scoped.
 
 
 [[advanced.spring.deployment]]
 == Deploying Spring UIs and Servlets
 
 Vaadin Spring hooks into Vaadin framework by using a special
-[classname]#VaadinSpringServlet#. As described earlier, you do not need to map
+[classname]#SpringVaadinServlet#. As described earlier, you do not need to map
 an URL path to a UI, as it is handled by Vaadin Spring. However, in the
 following, we go through some cases where you need to customize the servlet or
 use Spring with non-Spring servlets and UIs in a web application.
@@ -593,7 +587,7 @@ use Spring with non-Spring servlets and UIs in a web application.
 When customizing the Vaadin servlet, as outlined in
 <<dummy/../../../framework/application/application-lifecycle#application.lifecycle.servlet-service,"Vaadin
 Servlet, Portlet, and Service">>, you simply need to extend
-[classname]#com.vaadin.spring.internal.VaadinSpringServlet# instead of
+[classname]#com.vaadin.spring.server.SpringVaadinServlet# instead of
 [classname]#com.vaadin.servlet.VaadinServlet#.
 
 [subs="normal"]
@@ -611,7 +605,7 @@ an Application">>.
 [[advanced.spring.deployment.urlmapping]]
 === Defining Servlet Root
 
-Spring UIs are managed by a Spring servlet ( [classname]#VaadinSpringServlet#),
+Spring UIs are managed by a Spring servlet ( [classname]#SpringVaadinServlet#),
 which is by default mapped to the root of the application context. For example,
 if the name of a Spring UI is " [literal]#++my-spring-ui++#" and application
 context is [literal]#++/myproject++#, the UI would by default have URL "
@@ -648,7 +642,7 @@ You can also map the Spring servlet to another URL in servlet definition in
 [[advanced.spring.servlets.mixing]]
 === Mixing With Other Servlets
 
-The [classname]#VaadinSpringServlet# is normally used as the default servlet,
+The [classname]#SpringVaadinServlet# is normally used as the default servlet,
 but if you have other servlets in the application, such as for non-Spring UIs,
 you need to define the Spring servlet explicitly in the [filename]#web.xml#. You
 can map the servlet to any URL path, but perhaps typically, you define it as the
@@ -661,7 +655,7 @@ default servlet as follows, and map the other servlets to other URL paths:
   &lt;servlet&gt;
     &lt;servlet-name&gt;Default&lt;/servlet-name&gt;
     &lt;servlet-class&gt;
-      com.vaadin.spring.internal.VaadinSpringServlet
+      com.vaadin.spring.server.SpringVaadinServlet
     &lt;/servlet-class&gt;
   &lt;/servlet&gt;
 
