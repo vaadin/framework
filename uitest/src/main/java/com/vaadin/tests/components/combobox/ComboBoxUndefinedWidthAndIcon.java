@@ -2,13 +2,13 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.util.ItemDataSource;
+import com.vaadin.tests.util.ItemDataProvider;
 import com.vaadin.ui.ComboBox;
 
 public class ComboBoxUndefinedWidthAndIcon extends TestBase {
     @Override
     protected void setup() {
-        ComboBox<String> cb = new ComboBox<>(null, new ItemDataSource(200));
+        ComboBox<String> cb = new ComboBox<>(null, new ItemDataProvider(200));
         cb.setItemIconGenerator(
                 item -> new ThemeResource("../runo/icons/16/users.png"));
 

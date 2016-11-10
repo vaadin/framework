@@ -3,7 +3,7 @@ package com.vaadin.tests.components.combobox;
 import java.util.Date;
 
 import com.vaadin.server.ThemeResource;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 
@@ -22,7 +22,7 @@ public class ComboBoxLargeIcons extends TestBase {
     @Override
     protected void setup() {
         ComboBox<String> cb = new ComboBox<String>(null,
-                DataSource.create("folder-add", "folder-delete", "arrow-down",
+                DataProvider.create("folder-add", "folder-delete", "arrow-down",
                         "arrow-left", "arrow-right", "arrow-up", "document-add",
                         "document-delete", "document-doc", "document-edit",
                         "document-image", "document-pdf", "document-ppt",

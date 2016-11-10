@@ -23,7 +23,7 @@ public class StateGetDoesNotMarkDirtyTest {
 
     @Before
     public void setUp() {
-        excludedMethods.add(Label.class.getName() + "getDataSourceValue");
+        excludedMethods.add(Label.class.getName() + "getDataProviderValue");
         excludedMethods.add("getConnectorId");
     }
 

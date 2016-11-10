@@ -52,7 +52,7 @@ import elemental.json.JsonObject;
  */
 public class DataCommunicator<T> extends AbstractExtension {
 
-    private Registration dataSourceUpdateRegistration;
+    private Registration dataProviderUpdateRegistration;
 
     /**
      * Simple implementation of collection data provider communication. All data
@@ -180,7 +180,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
-    private DataSource<T> dataSource = DataSource.create();
+    private DataProvider<T> dataProvider = DataProvider.create();
     private final DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
@@ -202,13 +202,13 @@ public class DataCommunicator<T> extends AbstractExtension {
     @Override
     public void attach() {
         super.attach();
-        attachDataSourceListener();
+        attachDataProviderListener();
     }
 
     @Override
     public void detach() {
         super.detach();
-        detachDataSourceListener();
+        detachDataProviderListener();
     }
 
     /**
@@ -219,7 +219,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
-        if (getDataSource() == null) {
+        if (getDataProvider() == null) {
             return;
         }
 
@@ -227,14 +227,14 @@ public class DataCommunicator<T> extends AbstractExtension {
         Set<Object> filters = Collections.emptySet();
 
         if (initial || reset) {
-            int dataSourceSize;
-            if (getDataSource().isInMemory() && inMemoryFilter != null) {
-                dataSourceSize = (int) getDataSource().fetch(new Query())
+            int dataProviderSize;
+            if (getDataProvider().isInMemory() && inMemoryFilter != null) {
+                dataProviderSize = (int) getDataProvider().fetch(new Query())
                         .filter(inMemoryFilter).count();
             } else {
-                dataSourceSize = getDataSource().size(new Query(filters));
+                dataProviderSize = getDataProvider().size(new Query(filters));
             }
-            rpc.reset(dataSourceSize);
+            rpc.reset(dataProviderSize);
         }
 
         if (!pushRows.isEmpty()) {
@@ -243,9 +243,9 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             Stream<T> rowsToPush;
 
-            if (getDataSource().isInMemory()) {
+            if (getDataProvider().isInMemory()) {
                 // We can safely request all the data when in memory
-                rowsToPush = getDataSource().fetch(new Query());
+                rowsToPush = getDataProvider().fetch(new Query());
                 if (inMemoryFilter != null) {
                     rowsToPush = rowsToPush.filter(inMemoryFilter);
                 }
@@ -255,7 +255,7 @@ public class DataCommunicator<T> extends AbstractExtension {
                 rowsToPush = rowsToPush.skip(offset).limit(limit);
             } else {
                 Query query = new Query(offset, limit, backEndSorting, filters);
-                rowsToPush = getDataSource().fetch(query);
+                rowsToPush = getDataProvider().fetch(query);
             }
             pushData(offset, rowsToPush);
         }
@@ -458,39 +458,39 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Gets the current data source from this DataCommunicator.
+     * Gets the current data provider from this DataCommunicator.
      *
-     * @return the data source
+     * @return the data provider
      */
-    public DataSource<T> getDataSource() {
-        return dataSource;
+    public DataProvider<T> getDataProvider() {
+        return dataProvider;
     }
 
     /**
-     * Sets the current data source for this DataCommunicator.
+     * Sets the current data provider for this DataCommunicator.
      *
-     * @param dataSource
-     *            the data source to set, not null
+     * @param dataProvider
+     *            the data provider to set, not null
      */
-    public void setDataSource(DataSource<T> dataSource) {
-        Objects.requireNonNull(dataSource, "data source cannot be null");
-        this.dataSource = dataSource;
-        detachDataSourceListener();
+    public void setDataProvider(DataProvider<T> dataProvider) {
+        Objects.requireNonNull(dataProvider, "data provider cannot be null");
+        this.dataProvider = dataProvider;
+        detachDataProviderListener();
         if (isAttached()) {
-            attachDataSourceListener();
+            attachDataProviderListener();
         }
         reset();
     }
 
-    private void attachDataSourceListener() {
-        dataSourceUpdateRegistration = getDataSource()
-                .addDataSourceListener(event -> reset());
+    private void attachDataProviderListener() {
+        dataProviderUpdateRegistration = getDataProvider()
+                .addDataProviderListener(event -> reset());
     }
 
-    private void detachDataSourceListener() {
-        if (dataSourceUpdateRegistration != null) {
-            dataSourceUpdateRegistration.remove();
-            dataSourceUpdateRegistration = null;
+    private void detachDataProviderListener() {
+        if (dataProviderUpdateRegistration != null) {
+            dataProviderUpdateRegistration.remove();
+            dataProviderUpdateRegistration = null;
         }
     }
 }

@@ -19,12 +19,12 @@ import java.io.Serializable;
 
 /**
  * Interface for listening for a data change events fired by a
- * {@link DataSource}.
+ * {@link DataProvider}.
  * 
  * @author Vaadin Ltd
  * @since 8.0
  */
-public interface DataSourceListener extends Serializable {
+public interface DataProviderListener extends Serializable {
 
     /**
      * Invoked when this listener receives a data change event from a data

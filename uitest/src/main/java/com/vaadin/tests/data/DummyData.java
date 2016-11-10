@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.ListDataSource;
+import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.server.data.Query;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -22,12 +22,12 @@ import com.vaadin.ui.HorizontalLayout;
 public class DummyData extends AbstractTestUIWithLog {
 
     /**
-     * DataSource that keeps track on how often the data is requested.
+     * DataProvider that keeps track on how often the data is requested.
      */
-    private class LoggingDataSource extends ListDataSource<String> {
+    private class LoggingDataProvider extends ListDataProvider<String> {
         private int count = 0;
 
-        private LoggingDataSource(Collection<String> collection) {
+        private LoggingDataProvider(Collection<String> collection) {
             super(collection);
         }
 
@@ -80,7 +80,7 @@ public class DummyData extends AbstractTestUIWithLog {
         for (int i = 0; i < 300; ++i) {
             items.add("Foo " + i);
         }
-        dummy.setDataSource(new LoggingDataSource(items));
+        dummy.setDataProvider(new LoggingDataProvider(items));
         dummy.setValue("Foo 200");
 
         HorizontalLayout controls = new HorizontalLayout();
@@ -88,11 +88,11 @@ public class DummyData extends AbstractTestUIWithLog {
         controls.addComponent(new Button("Select Foo 20", e -> {
             dummy.setValue("Foo " + 20);
         }));
-        controls.addComponent(new Button("Reset data source", e -> {
-            dummy.setDataSource(new LoggingDataSource(items));
+        controls.addComponent(new Button("Reset data provider", e -> {
+            dummy.setDataProvider(new LoggingDataProvider(items));
         }));
         controls.addComponent(new Button("Remove all data", e -> {
-            dummy.setDataSource(new LoggingDataSource(Collections.emptyList()));
+            dummy.setDataProvider(new LoggingDataProvider(Collections.emptyList()));
         }));
         addComponent(dummy);
     }

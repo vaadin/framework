@@ -27,9 +27,9 @@ import com.vaadin.shared.Registration;
  * @author Vaadin Ltd
  *
  */
-public class AbstractDataSourceTest {
+public class AbstractDataProviderTest {
 
-    private static class TestDataSource extends AbstractDataSource<Object> {
+    private static class TestDataProvider extends AbstractDataProvider<Object> {
         @Override
         public Stream<Object> fetch(Query t) {
             return null;
@@ -48,25 +48,25 @@ public class AbstractDataSourceTest {
 
     @Test
     public void refreshAll_notifyListeners() {
-        AbstractDataSource<Object> dataSource = new TestDataSource();
+        AbstractDataProvider<Object> dataProvider = new TestDataProvider();
         AtomicReference<DataChangeEvent> event = new AtomicReference<>();
-        dataSource.addDataSourceListener(ev -> {
+        dataProvider.addDataProviderListener(ev -> {
             Assert.assertNull(event.get());
             event.set(ev);
         });
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
         Assert.assertNotNull(event.get());
-        Assert.assertEquals(dataSource, event.get().getSource());
+        Assert.assertEquals(dataProvider, event.get().getSource());
     }
 
     @Test
     public void removeListener_listenerIsNotNotified() {
-        AbstractDataSource<Object> dataSource = new TestDataSource();
+        AbstractDataProvider<Object> dataProvider = new TestDataProvider();
         AtomicReference<DataChangeEvent> event = new AtomicReference<>();
-        Registration registration = dataSource
-                .addDataSourceListener(ev -> event.set(ev));
+        Registration registration = dataProvider
+                .addDataProviderListener(ev -> event.set(ev));
         registration.remove();
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
         Assert.assertNull(event.get());
     }
 }

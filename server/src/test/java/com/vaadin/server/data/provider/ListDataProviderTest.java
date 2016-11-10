@@ -1,4 +1,4 @@
-package com.vaadin.server.data.datasource;
+package com.vaadin.server.data.provider;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,33 +7,33 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.vaadin.server.data.DataProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.server.data.DataSource;
-import com.vaadin.server.data.ListDataSource;
+import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.server.data.Query;
 
-public class ListDataSourceTest {
+public class ListDataProviderTest {
 
-    private ListDataSource<StrBean> dataSource;
+    private ListDataProvider<StrBean> dataProvider;
     private List<StrBean> data;
 
     @Before
     public void setUp() {
         data = StrBean.generateRandomBeans(100);
-        dataSource = DataSource.create(data);
+        dataProvider = DataProvider.create(data);
     }
 
     @Test
     public void testListContainsAllData() {
         List<StrBean> list = new LinkedList<>(data);
-        dataSource.fetch(new Query())
+        dataProvider.fetch(new Query())
                 .forEach(str -> assertTrue(
-                        "Data source contained values not in original data",
+                        "Data provider contained values not in original data",
                         list.remove(str)));
-        assertTrue("Not all values from original data were in data source",
+        assertTrue("Not all values from original data were in data provider",
                 list.isEmpty());
     }
 
@@ -42,7 +42,7 @@ public class ListDataSourceTest {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(StrBean::getRandomNumber)
                 .thenComparing(StrBean::getId);
-        List<StrBean> list = dataSource.sortingBy(comp).fetch(new Query())
+        List<StrBean> list = dataProvider.sortingBy(comp).fetch(new Query())
                 .collect(Collectors.toList());
 
         // First value in data is { Xyz, 10, 100 } which should be last in list
@@ -63,7 +63,7 @@ public class ListDataSourceTest {
     public void testDefatulSortWithSpecifiedPostSort() {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(Comparator.comparing(StrBean::getId).reversed());
-        List<StrBean> list = dataSource.sortingBy(comp).fetch(new Query())
+        List<StrBean> list = dataProvider.sortingBy(comp).fetch(new Query())
                 // The sort here should come e.g from a Component
                 .sorted(Comparator.comparing(StrBean::getRandomNumber))
                 .collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class ListDataSourceTest {
 
     @Test
     public void testDefatulSortWithFunction() {
-        List<StrBean> list = dataSource.sortingBy(StrBean::getValue)
+        List<StrBean> list = dataProvider.sortingBy(StrBean::getValue)
                 .fetch(new Query()).collect(Collectors.toList());
 
         Assert.assertEquals("Sorted data and original data sizes don't match",
@@ -109,47 +109,47 @@ public class ListDataSourceTest {
     public void refreshAll_changeBeanInstance() {
         StrBean bean = new StrBean("foo", -1, hashCode());
         Query query = new Query();
-        int size = dataSource.size(query);
+        int size = dataProvider.size(query);
 
         data.set(0, bean);
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
 
-        List<StrBean> list = dataSource.fetch(query)
+        List<StrBean> list = dataProvider.fetch(query)
                 .collect(Collectors.toList());
         StrBean first = list.get(0);
         Assert.assertEquals(bean.getValue(), first.getValue());
         Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
         Assert.assertEquals(bean.getId(), first.getId());
 
-        Assert.assertEquals(size, dataSource.size(query));
+        Assert.assertEquals(size, dataProvider.size(query));
     }
 
     @Test
     public void refreshAll_updateBean() {
         Query query = new Query();
-        int size = dataSource.size(query);
+        int size = dataProvider.size(query);
 
         StrBean bean = data.get(0);
         bean.setValue("foo");
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
 
-        List<StrBean> list = dataSource.fetch(query)
+        List<StrBean> list = dataProvider.fetch(query)
                 .collect(Collectors.toList());
         StrBean first = list.get(0);
         Assert.assertEquals("foo", first.getValue());
 
-        Assert.assertEquals(size, dataSource.size(query));
+        Assert.assertEquals(size, dataProvider.size(query));
     }
 
     @Test
     public void refreshAll_sortingBy_changeBeanInstance() {
         StrBean bean = new StrBean("foo", -1, hashCode());
         Query query = new Query();
-        int size = dataSource.size(query);
+        int size = dataProvider.size(query);
 
         data.set(0, bean);
 
-        ListDataSource<StrBean> dSource = dataSource
+        ListDataProvider<StrBean> dSource = dataProvider
                 .sortingBy(Comparator.comparing(StrBean::getId));
         dSource.refreshAll();
 
@@ -159,7 +159,7 @@ public class ListDataSourceTest {
         Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
         Assert.assertEquals(bean.getId(), first.getId());
 
-        Assert.assertEquals(size, dataSource.size(query));
+        Assert.assertEquals(size, dataProvider.size(query));
     }
 
     @Test
@@ -167,29 +167,29 @@ public class ListDataSourceTest {
         StrBean bean = new StrBean("foo", -1, hashCode());
 
         Query query = new Query();
-        int size = dataSource.size(query);
+        int size = dataProvider.size(query);
 
         data.add(0, bean);
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
 
-        List<StrBean> list = dataSource.fetch(query)
+        List<StrBean> list = dataProvider.fetch(query)
                 .collect(Collectors.toList());
         StrBean first = list.get(0);
         Assert.assertEquals(bean.getValue(), first.getValue());
         Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
         Assert.assertEquals(bean.getId(), first.getId());
 
-        Assert.assertEquals(size + 1, dataSource.size(query));
+        Assert.assertEquals(size + 1, dataProvider.size(query));
     }
 
     @Test
     public void refreshAll_removeBeanInstance() {
         Query query = new Query();
-        int size = dataSource.size(query);
+        int size = dataProvider.size(query);
 
         data.remove(0);
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
 
-        Assert.assertEquals(size - 1, dataSource.size(query));
+        Assert.assertEquals(size - 1, dataProvider.size(query));
     }
 }

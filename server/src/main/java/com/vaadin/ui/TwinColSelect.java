@@ -18,7 +18,7 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
 
 /**
@@ -50,16 +50,16 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T> {
     }
 
     /**
-     * Constructs a new TwinColSelect with caption and data source for options.
+     * Constructs a new TwinColSelect with caption and data provider for options.
      *
      * @param caption
      *            the caption to set, can be {@code null}
-     * @param dataSource
-     *            the data source, not {@code null}
+     * @param dataProvider
+     *            the data provider, not {@code null}
      */
-    public TwinColSelect(String caption, DataSource<T> dataSource) {
+    public TwinColSelect(String caption, DataProvider<T> dataProvider) {
         this(caption);
-        setDataSource(dataSource);
+        setDataProvider(dataProvider);
     }
 
     /**
@@ -71,7 +71,7 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T> {
      *            the options, cannot be {@code null}
      */
     public TwinColSelect(String caption, Collection<T> options) {
-        this(caption, DataSource.create(options));
+        this(caption, DataProvider.create(options));
     }
 
     /**

@@ -18,10 +18,10 @@ package com.vaadin.server.data;
 import java.util.EventObject;
 
 /**
- * An event fired when the data of a {@code DataSource} changes.
+ * An event fired when the data of a {@code DataProvider} changes.
  * 
  * 
- * @see DataSourceListener
+ * @see DataProviderListener
  * 
  * @author Vaadin Ltd
  * @since 8.0
@@ -31,18 +31,18 @@ public class DataChangeEvent extends EventObject {
 
     /**
      * Creates a new {@code DataChangeEvent} event originating from the given
-     * data source.
+     * data provider.
      *
      * @param source
-     *            the data source, not null
+     *            the data provider, not null
      */
-    public DataChangeEvent(DataSource<?> source) {
+    public DataChangeEvent(DataProvider<?> source) {
         super(source);
     }
 
     @Override
-    public DataSource<?> getSource() {
-        return (DataSource<?>) super.getSource();
+    public DataProvider<?> getSource() {
+        return (DataProvider<?>) super.getSource();
     }
 
 }

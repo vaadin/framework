@@ -6,13 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.vaadin.server.data.BackEndDataProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.server.data.BackEndDataSource;
-import com.vaadin.server.data.DataSource;
-import com.vaadin.server.data.ListDataSource;
+import com.vaadin.server.data.DataProvider;
+import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.server.data.Query;
 import com.vaadin.ui.AbstractListing.AbstractListingExtension;
 
@@ -66,38 +66,38 @@ public class AbstractListingTest {
     public void testSetItemsWithCollection() {
         listing.setItems(items);
         List<String> list = new LinkedList<>(items);
-        listing.getDataSource().fetch(new Query()).forEach(
-                str -> Assert.assertTrue("Unexpected item in data source",
+        listing.getDataProvider().fetch(new Query()).forEach(
+                str -> Assert.assertTrue("Unexpected item in data provider",
                         list.remove(str)));
-        Assert.assertTrue("Not all items from list were in data source",
+        Assert.assertTrue("Not all items from list were in data provider",
                 list.isEmpty());
     }
 
     @Test
     public void testSetItemsWithVarargs() {
         listing.setItems(ITEM_ARRAY);
-        listing.getDataSource().fetch(new Query()).forEach(
-                str -> Assert.assertTrue("Unexpected item in data source",
+        listing.getDataProvider().fetch(new Query()).forEach(
+                str -> Assert.assertTrue("Unexpected item in data provider",
                         items.remove(str)));
-        Assert.assertTrue("Not all items from list were in data source",
+        Assert.assertTrue("Not all items from list were in data provider",
                 items.isEmpty());
     }
 
     @Test
-    public void testSetDataSource() {
-        ListDataSource<String> dataSource = DataSource.create(items);
-        listing.setDataSource(dataSource);
-        Assert.assertEquals("setDataSource did not set data source", dataSource,
-                listing.getDataSource());
-        listing.setDataSource(new BackEndDataSource<>(q -> Stream.of(ITEM_ARRAY)
+    public void testSetDataProvider() {
+        ListDataProvider<String> dataProvider = DataProvider.create(items);
+        listing.setDataProvider(dataProvider);
+        Assert.assertEquals("setDataProvider did not set data provider", dataProvider,
+                listing.getDataProvider());
+        listing.setDataProvider(new BackEndDataProvider<>(q -> Stream.of(ITEM_ARRAY)
                 .skip(q.getOffset()).limit(q.getLimit()),
                 q -> ITEM_ARRAY.length));
-        Assert.assertNotEquals("setDataSource did not replace data source",
-                dataSource, listing.getDataSource());
+        Assert.assertNotEquals("setDataProvider did not replace data provider",
+                dataProvider, listing.getDataProvider());
     }
 
     @Test
-    public void testAddDataGeneratorBeforeDataSource() {
+    public void testAddDataGeneratorBeforeDataProvider() {
         CountGenerator generator = new CountGenerator();
         generator.extend(listing);
         listing.setItems("Foo");
@@ -107,7 +107,7 @@ public class AbstractListingTest {
     }
 
     @Test
-    public void testAddDataGeneratorAfterDataSource() {
+    public void testAddDataGeneratorAfterDataProvider() {
         CountGenerator generator = new CountGenerator();
         listing.setItems("Foo");
         generator.extend(listing);

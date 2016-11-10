@@ -175,7 +175,7 @@ public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
     private Component createMenu(T component) {
         MenuBar menu = new MenuBar();
         createContainerSizeMenu(menu.addItem("Size", null), component);
-        createContainerMenu(menu.addItem("Data source", null), component);
+        createContainerMenu(menu.addItem("Data provider", null), component);
         menu.addItem("Create only data",
                 item -> toggleDataOnly(item, component)).setCheckable(true);
 
@@ -208,7 +208,7 @@ public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
 
     private MenuItem addContainerSizeMenu(int size, MenuItem menu,
             T component) {
-        MenuItem item = menu.addItem("Set data source size to " + size,
+        MenuItem item = menu.addItem("Set data provider size to " + size,
                 itm -> setData(itm, size, component, isInMemory));
         item.setCheckable(true);
         return item;

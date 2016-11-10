@@ -753,7 +753,7 @@ public class DesignContext implements Serializable {
     /**
      * Determines whether the container data of a component should be written
      * out by delegating to a {@link ShouldWriteDataDelegate}. The default
-     * delegate assumes that all component data is provided by a data source
+     * delegate assumes that all component data is provided by a data provider
      * connected to a back end system and that the data should thus not be
      * written.
      *

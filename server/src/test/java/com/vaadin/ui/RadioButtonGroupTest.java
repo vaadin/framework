@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.SelectionModel.Multi;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 
 public class RadioButtonGroupTest {
@@ -35,7 +35,7 @@ public class RadioButtonGroupTest {
         radioButtonGroup = new RadioButtonGroup<>();
         // Intentional deviation from upcoming selection order
         radioButtonGroup
-                .setDataSource(DataSource.create("Third", "Second", "First"));
+                .setDataProvider(DataProvider.create("Third", "Second", "First"));
     }
 
     @Test

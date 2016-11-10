@@ -35,7 +35,7 @@ public interface DataGenerator<T> extends Serializable {
 
     /**
      * Adds custom data for the given item to its serialized {@code JsonObject}
-     * representation. This JSON object will be sent to client-side DataSource.
+     * representation. This JSON object will be sent to client-side DataProvider.
      *
      * @param item
      *            the data item being serialized

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data.datasource.bov;
+package com.vaadin.server.data.provider.bov;
 
 import java.io.Serializable;
 import java.util.Collection;

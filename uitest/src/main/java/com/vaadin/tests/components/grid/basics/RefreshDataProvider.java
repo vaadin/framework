@@ -18,8 +18,8 @@ package com.vaadin.tests.components.grid.basics;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataSource;
-import com.vaadin.server.data.ListDataSource;
+import com.vaadin.server.data.DataProvider;
+import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -28,52 +28,52 @@ import com.vaadin.ui.Grid;
  * @author Vaadin Ltd
  *
  */
-public class RefreshDataSource extends AbstractReindeerTestUI {
+public class RefreshDataProvider extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         Grid<DataObject> grid = new Grid<>();
         List<DataObject> data = DataObject.generateObjects();
 
-        ListDataSource<DataObject> dataSource = DataSource.create(data);
-        grid.setDataSource(dataSource);
+        ListDataProvider<DataObject> dataProvider = DataProvider.create(data);
+        grid.setDataProvider(dataProvider);
 
-        grid.setDataSource(dataSource);
+        grid.setDataProvider(dataProvider);
         grid.addColumn("Coordinates", DataObject::getCoordinates);
         addComponent(grid);
 
         Button update = new Button("Update data",
-                event -> updateData(dataSource, data));
+                event -> updateData(dataProvider, data));
         update.setId("update");
         addComponent(update);
 
-        Button add = new Button("Add data", event -> addData(dataSource, data));
+        Button add = new Button("Add data", event -> addData(dataProvider, data));
         add.setId("add");
         addComponent(add);
 
         Button remove = new Button("Remove data",
-                event -> removeData(dataSource, data));
+                event -> removeData(dataProvider, data));
         remove.setId("remove");
         addComponent(remove);
     }
 
-    private void updateData(DataSource<DataObject> dataSource,
+    private void updateData(DataProvider<DataObject> dataProvider,
             List<DataObject> data) {
         data.get(0).setCoordinates("Updated coordinates");
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
     }
 
-    private void addData(DataSource<DataObject> dataSource,
+    private void addData(DataProvider<DataObject> dataProvider,
             List<DataObject> data) {
         DataObject dataObject = new DataObject();
         dataObject.setCoordinates("Added");
         data.add(0, dataObject);
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
     }
 
-    private void removeData(DataSource<DataObject> dataSource,
+    private void removeData(DataProvider<DataObject> dataProvider,
             List<DataObject> data) {
         data.remove(0);
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
     }
 }

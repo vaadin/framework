@@ -57,10 +57,10 @@ public class DummyDataTest extends SingleBrowserTest {
     }
 
     @Test
-    public void testDataSourceChangeOnlyOneRequest() {
-        // Change to a new logging data source
+    public void testDataProviderChangeOnlyOneRequest() {
+        // Change to a new logging data provider
         $(ButtonElement.class).get(1).click();
-        assertEquals("DataSource change should only cause 1 request",
+        assertEquals("DataProvider change should only cause 1 request",
                 "3. Backend request #0", getLogRow(0));
     }
 
@@ -69,12 +69,12 @@ public class DummyDataTest extends SingleBrowserTest {
         assertEquals("Unexpected amount of content on init.", 300,
                 $(DummyElement.class).first()
                         .findElements(By.className("v-label")).size());
-        // Change to an empty data source
+        // Change to an empty data provider
         $(ButtonElement.class).get(2).click();
-        assertEquals("Empty data source did not work as expected.", 0,
+        assertEquals("Empty data provider did not work as expected.", 0,
                 $(DummyElement.class).first()
                         .findElements(By.className("v-label")).size());
-        // Change back to logging data source
+        // Change back to logging data provider
         $(ButtonElement.class).get(1).click();
         assertEquals("Data was not correctly restored.", 300,
                 $(DummyElement.class).first()

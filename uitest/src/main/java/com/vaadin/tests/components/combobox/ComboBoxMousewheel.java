@@ -17,7 +17,7 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.tests.util.ItemDataSource;
+import com.vaadin.tests.util.ItemDataProvider;
 import com.vaadin.ui.ComboBox;
 
 /**
@@ -37,7 +37,7 @@ public class ComboBoxMousewheel extends AbstractReindeerTestUI {
     }
 
     private ComboBox<String> createComboBox(String caption) {
-        ComboBox<String> cb = new ComboBox<>(caption, new ItemDataSource(100));
+        ComboBox<String> cb = new ComboBox<>(caption, new ItemDataProvider(100));
         cb.setId(caption);
         return cb;
     }

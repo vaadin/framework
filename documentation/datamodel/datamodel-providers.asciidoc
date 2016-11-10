@@ -4,7 +4,7 @@ order: 4
 layout: page
 ---
 
-[[datamodel.datasources]]
+[[datamodel.dataproviders]]
 = Showing Many Items in a Listing
 
 A common pattern in applications is that the user is first presented with a list of items, from which she selects one or several items to continue working with.
@@ -77,24 +77,24 @@ comboBox.setFilter((filterText, item) ->
   item.getCaption().equalsIgnoreCase(filterText));
 ----
 
-Instead of directly assigning the item collection as the items that a component should be using, we can instead create a [classname]#ListDataSource# that contains the items.
+Instead of directly assigning the item collection as the items that a component should be using, we can instead create a [classname]#ListDataProvider# that contains the items.
 The list data source can be shared between different components in the same [classname]#VaadinSession# since it is stateless.
 We can also apply different sorting options for each component, without affecting how data is shown in the other components.
 
 [source, java]
 ----
-ListDataSource<Person> dataSource =
-  new ListDataSource<>(persons);
+ListDataProvider<Person> dataProvider =
+  new ListDataProvider<>(persons);
 
 ComboBox<Person> comboBox = new ComboBox<>();
 // The combo box shows the person sorted by name
-comboBox.setDataSource(
-  dataSource.sortedBy(Person::getName));
+comboBox.setDataProvider(
+  dataProvider.sortedBy(Person::getName));
 
 Grid<Person> grid = new Grid<>();
 // The grid shows the same persons sorted by year of birth
-grid.setDataSource(
-  dataSource.sortedBy(Person::getYearOfBirth));
+grid.setDataProvider(
+  dataProvider.sortedBy(Person::getYearOfBirth));
 ----
 
 The [classname]#Listing# component cannot automatically know about changes to the list of items or to any individual item.
@@ -102,8 +102,8 @@ We must notify the data source when items are changed, added or removed so that 
 
 [source, java]
 ----
-ListDataSource<Person> dataSource =
-  new ListDataSource<>(persons);
+ListDataProvider<Person> dataProvider =
+  new ListDataProvider<>(persons);
 
 Button addPersonButton = new Button("Add person",
   clickEvent -> {
@@ -112,7 +112,7 @@ Button addPersonButton = new Button("Add person",
 
     persons.add(new Person("James Monroe", 1758));
 
-    dataSource.notifyAdd(addIndex);
+    dataProvider.notifyAdd(addIndex);
 });
 
 Button modifyPersonButton = new Button("Modify person",
@@ -121,7 +121,7 @@ Button modifyPersonButton = new Button("Modify person",
 
     personToChange.setName("Changed person");
 
-    dataSource.refresh(0);
+    dataProvider.refresh(0);
 });
 ----
 
@@ -152,7 +152,7 @@ Information about which items to fetch as well as some additional details are ma
 
 [source, java]
 ----
-DataSource<Person> dataSource = new BackendDataSource<>(
+DataProvider<Person> dataProvider = new BackendDataProvider<>(
   // First callback fetches items based on a query
   query -> {
     // The index of the first item to load
@@ -170,7 +170,7 @@ DataSource<Person> dataSource = new BackendDataSource<>(
 );
 
 Grid<Person> grid = new Grid<>();
-grid.setDataSource(dataSource);
+grid.setDataProvider(dataProvider);
 
 // Columns are configured in the same way as before
 ...
@@ -208,7 +208,7 @@ The sorting options set through the component will be available through [interfa
 
 [source, java]
 ----
-DataSource<Person> dataSource = new BackEndDataSource<>(
+DataProvider<Person> dataProvider = new BackEndDataProvider<>(
   query -> {
     List<PersonSort> sortOrders = new ArrayList<>();
     for(SortOrder<String> queryOrder : query.getSortOrders()) {
@@ -238,7 +238,7 @@ When a data source that does lazy loading is used, [classname]#Grid# and other s
 ----
 Grid<Person> grid = new Grid<>();
 
-grid.setDataSource(dataSource);
+grid.setDataProvider(dataProvider);
 
 // Will be sortable by the user
 // When sorting by this column, the query will have a SortOrder
@@ -329,7 +329,7 @@ We can create a helper method for handling the filter since the same logic is ne
 
 [source, java]
 ----
-DataSource<Person> dataSource = new BackEndDataSource<>(
+DataProvider<Person> dataProvider = new BackEndDataProvider<>(
   query -> {
 
     BackendFilter filter = query.getFilter();
@@ -361,20 +361,20 @@ public static String filterToNamePrefix(BackendFilter filter) {
 ----
 
 [TIP]
-If the amount of data in the backend is small enough, it might be better to load all the items into a list and use a [classname]#ListDataSource# instead of implementing filtering or sorting support in a custom [classname]#DataSource# class and configuring the components accordingly.
+If the amount of data in the backend is small enough, it might be better to load all the items into a list and use a [classname]#ListDataProvider# instead of implementing filtering or sorting support in a custom [classname]#DataProvider# class and configuring the components accordingly.
 
-We can also create a base data source and then use different variations for different components, similarly to the previous examples with [classname]#ListDataSource#.
+We can also create a base data source and then use different variations for different components, similarly to the previous examples with [classname]#ListDataProvider#.
 
 [source, java]
 ----
-DataSource<Person> dataSource = ...
+DataProvider<Person> dataProvider = ...
 
-grid.setDataSource(dataSource
+grid.setDataProvider(dataProvider
   .filteredBy(new Like("name", "Ge%"))
   .sortedBy(new SortOrder(
     "yearOfBirth", SortDirection.ASCENDING)));
 
-comboBox.setDataSource(dataSource
+comboBox.setDataProvider(dataProvider
   .sortedBy(new SortOrder(
     "name", SortOrder.DESCENDING)));
 
@@ -382,7 +382,7 @@ comboBox.setDataSource(dataSource
 
 === Special Fetching Cases
 
-In some cases it might be necessary directly extend [classname]#BackendDataSource# instead of constructing an instance based the two simple callback methods shown above.
+In some cases it might be necessary directly extend [classname]#BackendDataProvider# instead of constructing an instance based the two simple callback methods shown above.
 
 One such case is if the backend loads items based on a page index and a page size so that the start index in the query always needs to be a multiple of the page size. As an example, our service interface made for paging could look like this.
 
@@ -401,8 +401,8 @@ Components using this data source will take the information into account when qu
 
 [source, java]
 ----
-public class PersonDataSource
-        extends BackendDataSource<Person> {
+public class PersonDataProvider
+        extends BackendDataProvider<Person> {
 
   @Override
   public boolean alignQueries() {
@@ -435,8 +435,8 @@ While our data source implementation could deal with that limitation internally 
 
 [source, java]
 ----
-public class PersonDataSource
-        extends BackendDataSource<Person> {
+public class PersonDataProvider
+        extends BackendDataProvider<Person> {
 
   @Override
   public int getMaxLimit() {

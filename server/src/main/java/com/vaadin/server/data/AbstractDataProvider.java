@@ -17,27 +17,26 @@ package com.vaadin.server.data;
 
 import java.lang.reflect.Method;
 import java.util.EventObject;
-import java.util.Objects;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 
 /**
- * Abstract data source implementation which takes care of refreshing data from
+ * Abstract data provider implementation which takes care of refreshing data from
  * the underlying data provider.
  * 
  * @author Vaadin Ltd
  * @since 8.0
  *
  */
-public abstract class AbstractDataSource<T> implements DataSource<T> {
+public abstract class AbstractDataProvider<T> implements DataProvider<T> {
 
     private EventRouter eventRouter;
 
     @Override
-    public Registration addDataSourceListener(DataSourceListener listener) {
+    public Registration addDataProviderListener(DataProviderListener listener) {
         addListener(DataChangeEvent.class, listener,
-                DataSourceListener.class.getMethods()[0]);
+                DataProviderListener.class.getMethods()[0]);
         return () -> removeListener(DataChangeEvent.class, listener);
     }
 
@@ -61,7 +60,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
      *            the activation method.
      *
      */
-    protected void addListener(Class<?> eventType, DataSourceListener listener,
+    protected void addListener(Class<?> eventType, DataProviderListener listener,
             Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
@@ -83,7 +82,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
      *            type <code>eventType</code> with one or more methods.
      */
     protected void removeListener(Class<?> eventType,
-            DataSourceListener listener) {
+            DataProviderListener listener) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, listener);
         }

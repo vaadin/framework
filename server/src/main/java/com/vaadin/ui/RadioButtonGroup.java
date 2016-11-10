@@ -31,7 +31,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataGenerator;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
@@ -40,7 +40,7 @@ import elemental.json.JsonObject;
 
 /**
  * A group of RadioButtons. Individual radiobuttons are made from items supplied
- * by a {@link DataSource}. RadioButtons may have captions and icons.
+ * by a {@link DataProvider}. RadioButtons may have captions and icons.
  *
  * @param <T>
  *            item type
@@ -61,7 +61,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      *
      * @param caption
      *            caption text
-     * @see Listing#setDataSource(DataSource)
+     * @see Listing#setDataProvider(DataProvider)
      */
     public RadioButtonGroup(String caption) {
         this();
@@ -69,37 +69,37 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
     }
 
     /**
-     * Constructs a new RadioButtonGroup with caption and DataSource.
+     * Constructs a new RadioButtonGroup with caption and DataProvider.
      *
      * @param caption
      *            the caption text
-     * @param dataSource
-     *            the data source, not null
-     * @see Listing#setDataSource(DataSource)
+     * @param dataProvider
+     *            the data provider, not null
+     * @see Listing#setDataProvider(DataProvider)
      */
-    public RadioButtonGroup(String caption, DataSource<T> dataSource) {
+    public RadioButtonGroup(String caption, DataProvider<T> dataProvider) {
         this(caption);
-        setDataSource(dataSource);
+        setDataProvider(dataProvider);
     }
 
     /**
-     * Constructs a new RadioButtonGroup with caption and DataSource containing
+     * Constructs a new RadioButtonGroup with caption and DataProvider containing
      * given items.
      *
      * @param caption
      *            the caption text
      * @param items
      *            the data items to use, not null
-     * @see Listing#setDataSource(DataSource)
+     * @see Listing#setDataProvider(DataProvider)
      */
     public RadioButtonGroup(String caption, Collection<T> items) {
-        this(caption, DataSource.create(items));
+        this(caption, DataProvider.create(items));
     }
 
     /**
      * Constructs a new RadioButtonGroup.
      *
-     * @see Listing#setDataSource(DataSource)
+     * @see Listing#setDataProvider(DataProvider)
      */
     public RadioButtonGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));

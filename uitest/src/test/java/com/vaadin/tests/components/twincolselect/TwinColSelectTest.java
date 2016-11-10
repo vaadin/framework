@@ -32,19 +32,19 @@ public class TwinColSelectTest extends MultiBrowserTest {
 
     @Test
     public void initialItems_reduceItemCount_containsCorrectItems() {
-        selectMenuPath("Component", "Data source", "Items", "5");
+        selectMenuPath("Component", "Data provider", "Items", "5");
         assertItems(5);
     }
 
     @Test
     public void initialItems_increaseItemCount_containsCorrectItems() {
-        selectMenuPath("Component", "Data source", "Items", "100");
+        selectMenuPath("Component", "Data provider", "Items", "100");
         assertItems(100);
     }
 
     @Test
     public void itemsMovedFromLeftToRight() {
-        selectMenuPath("Component", "Data source", "Items", "5");
+        selectMenuPath("Component", "Data provider", "Items", "5");
         assertItems(5);
 
         selectItems("Item 1", "Item 2", "Item 4");

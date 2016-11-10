@@ -23,18 +23,18 @@ import java.util.stream.Stream;
 import com.vaadin.server.SerializableFunction;
 
 /**
- * A {@link DataSource} for any back end.
+ * A {@link DataProvider} for any back end.
  *
  * @param <T>
- *            data source data type
+ *            data provider data type
  */
-public class BackEndDataSource<T> extends AbstractDataSource<T> {
+public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
 
     private final SerializableFunction<Query, Stream<T>> request;
     private final SerializableFunction<Query, Integer> sizeCallback;
 
     /**
-     * Constructs a new DataSource to request data from an arbitrary back end
+     * Constructs a new DataProvider to request data from an arbitrary back end
      * request function.
      *
      * @param request
@@ -42,8 +42,8 @@ public class BackEndDataSource<T> extends AbstractDataSource<T> {
      * @param sizeCallback
      *            function that return the amount of data in back end for query
      */
-    public BackEndDataSource(SerializableFunction<Query, Stream<T>> request,
-            SerializableFunction<Query, Integer> sizeCallback) {
+    public BackEndDataProvider(SerializableFunction<Query, Stream<T>> request,
+                               SerializableFunction<Query, Integer> sizeCallback) {
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
         this.request = request;
@@ -61,15 +61,15 @@ public class BackEndDataSource<T> extends AbstractDataSource<T> {
     }
 
     /**
-     * Sets a default sorting order to the data source.
+     * Sets a default sorting order to the data provider.
      *
      * @param sortOrders
      *            a list of sorting information containing field ids and
      *            directions
-     * @return new data source with modified sorting
+     * @return new data provider with modified sorting
      */
-    public BackEndDataSource<T> sortingBy(List<SortOrder<String>> sortOrders) {
-        return new BackEndDataSource<>(query -> {
+    public BackEndDataProvider<T> sortingBy(List<SortOrder<String>> sortOrders) {
+        return new BackEndDataProvider<>(query -> {
             List<SortOrder<String>> queryOrder = new ArrayList<>(
                     query.getSortOrders());
             queryOrder.addAll(sortOrders);

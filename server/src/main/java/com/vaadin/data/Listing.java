@@ -18,7 +18,7 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 
 /**
  * A generic interface for components that show a list of data.
@@ -34,18 +34,18 @@ public interface Listing<T> extends Serializable {
     /**
      * Returns the source of data items used by this listing.
      *
-     * @return the data source, not null
+     * @return the data provider, not null
      */
-    DataSource<T> getDataSource();
+    DataProvider<T> getDataProvider();
 
     /**
-     * Sets the source of data items used by this listing. The data source is
+     * Sets the source of data items used by this listing. The data provider is
      * queried for displayed items as needed.
      *
-     * @param dataSource
-     *            the data source, not null
+     * @param dataProvider
+     *            the data provider, not null
      */
-    void setDataSource(DataSource<T> dataSource);
+    void setDataProvider(DataProvider<T> dataProvider);
 
     /**
      * Sets the collection of data items of this listing.
@@ -55,7 +55,7 @@ public interface Listing<T> extends Serializable {
      *
      */
     default void setItems(Collection<T> items) {
-        setDataSource(DataSource.create(items));
+        setDataProvider(DataProvider.create(items));
     }
 
     /**
@@ -65,7 +65,7 @@ public interface Listing<T> extends Serializable {
      *            the data items to display
      */
     default void setItems(@SuppressWarnings("unchecked") T... items) {
-        setDataSource(DataSource.create(items));
+        setDataProvider(DataProvider.create(items));
     }
 
 }

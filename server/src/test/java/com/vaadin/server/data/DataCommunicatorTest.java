@@ -52,18 +52,18 @@ public class DataCommunicatorTest {
         }
     }
 
-    private static class TestDataSource extends ListDataSource<Object>
+    private static class TestDataProvider extends ListDataProvider<Object>
             implements Registration {
 
         private Registration registration;
 
-        public TestDataSource() {
+        public TestDataProvider() {
             super(Collections.singleton(new Object()));
         }
 
         @Override
-        public Registration addDataSourceListener(DataSourceListener listener) {
-            registration = super.addDataSourceListener(listener);
+        public Registration addDataProviderListener(DataProviderListener listener) {
+            registration = super.addDataProviderListener(listener);
             return this;
         }
 
@@ -89,41 +89,41 @@ public class DataCommunicatorTest {
             Mockito.mock(VaadinService.class));
 
     @Test
-    public void attach_dataSourceListenerIsNotAddedBeforeAttachAndAddedAfter() {
+    public void attach_dataProviderListenerIsNotAddedBeforeAttachAndAddedAfter() {
         session.lock();
 
         UI ui = new TestUI(session);
 
         TestDataCommunicator communicator = new TestDataCommunicator();
 
-        TestDataSource dataSource = new TestDataSource();
-        communicator.setDataSource(dataSource);
+        TestDataProvider dataProvider = new TestDataProvider();
+        communicator.setDataProvider(dataProvider);
 
-        Assert.assertFalse(dataSource.isListenerAdded());
+        Assert.assertFalse(dataProvider.isListenerAdded());
 
         communicator.extend(ui);
 
-        Assert.assertTrue(dataSource.isListenerAdded());
+        Assert.assertTrue(dataProvider.isListenerAdded());
     }
 
     @Test
-    public void detach_dataSourceListenerIsRemovedAfterDetach() {
+    public void detach_dataProviderListenerIsRemovedAfterDetach() {
         session.lock();
 
         UI ui = new TestUI(session);
 
         TestDataCommunicator communicator = new TestDataCommunicator();
 
-        TestDataSource dataSource = new TestDataSource();
-        communicator.setDataSource(dataSource);
+        TestDataProvider dataProvider = new TestDataProvider();
+        communicator.setDataProvider(dataProvider);
 
         communicator.extend(ui);
 
-        Assert.assertTrue(dataSource.isListenerAdded());
+        Assert.assertTrue(dataProvider.isListenerAdded());
 
         communicator.detach();
 
-        Assert.assertFalse(dataSource.isListenerAdded());
+        Assert.assertFalse(dataProvider.isListenerAdded());
     }
 
 }

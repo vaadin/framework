@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.util.ItemDataSource;
+import com.vaadin.tests.util.ItemDataProvider;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.v7.data.util.ObjectProperty;
@@ -16,7 +16,7 @@ public class ComboFocusBlurEvents extends TestBase {
     protected void setup() {
 
         ComboBox<String> cb = new ComboBox<>("Combobox",
-                new ItemDataSource(100));
+                new ItemDataProvider(100));
         cb.setPlaceholder("Enter text");
         cb.setDescription("Some Combobox");
         addComponent(cb);

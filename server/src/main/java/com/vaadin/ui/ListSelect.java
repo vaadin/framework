@@ -17,7 +17,7 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.ui.listselect.ListSelectState;
 
 /**
@@ -54,16 +54,16 @@ public class ListSelect<T> extends AbstractMultiSelect<T> {
     }
 
     /**
-     * Constructs a new ListSelect with caption and data source for options.
+     * Constructs a new ListSelect with caption and data provider for options.
      *
      * @param caption
      *            the caption to set, can be {@code null}
-     * @param dataSource
-     *            the data source, not {@code null}
+     * @param dataProvider
+     *            the data provider, not {@code null}
      */
-    public ListSelect(String caption, DataSource<T> dataSource) {
+    public ListSelect(String caption, DataProvider<T> dataProvider) {
         this(caption);
-        setDataSource(dataSource);
+        setDataProvider(dataProvider);
     }
 
     /**
@@ -75,7 +75,7 @@ public class ListSelect<T> extends AbstractMultiSelect<T> {
      *            the options, cannot be {@code null}
      */
     public ListSelect(String caption, Collection<T> options) {
-        this(caption, DataSource.create(options));
+        this(caption, DataProvider.create(options));
     }
 
     /**

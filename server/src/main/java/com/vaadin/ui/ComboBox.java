@@ -34,7 +34,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataKeyMapper;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
@@ -124,7 +124,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
 
     /**
      * Constructs an empty combo box without a caption. The content of the combo
-     * box can be set with {@link #setDataSource(DataSource)} or
+     * box can be set with {@link #setDataProvider(DataProvider)} or
      * {@link #setItems(Collection)}
      */
     public ComboBox() {
@@ -146,7 +146,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
 
     /**
      * Constructs an empty combo box, whose content can be set with
-     * {@link #setDataSource(DataSource)} or {@link #setItems(Collection)}.
+     * {@link #setDataProvider(DataProvider)} or {@link #setItems(Collection)}.
      *
      * @param caption
      *            the caption to show in the containing layout, null for no
@@ -158,7 +158,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     /**
-     * Constructs a combo box with a static in-memory data source with the given
+     * Constructs a combo box with a static in-memory data provider with the given
      * options.
      *
      * @param caption
@@ -168,21 +168,21 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      *            collection of options, not null
      */
     public ComboBox(String caption, Collection<T> options) {
-        this(caption, DataSource.create(options));
+        this(caption, DataProvider.create(options));
     }
 
     /**
-     * Constructs a combo box with the given data source.
+     * Constructs a combo box with the given data provider.
      *
      * @param caption
      *            the caption to show in the containing layout, null for no
      *            caption
-     * @param dataSource
-     *            the data source to use, not null
+     * @param dataProvider
+     *            the data provider to use, not null
      */
-    public ComboBox(String caption, DataSource<T> dataSource) {
+    public ComboBox(String caption, DataProvider<T> dataProvider) {
         this(caption);
-        setDataSource(dataSource);
+        setDataProvider(dataProvider);
     }
 
     /**
@@ -489,7 +489,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
 
     /**
      * Returns the handler called when the user enters a new item (not present
-     * in the data source).
+     * in the data provider).
      *
      * @return new item handler or null if none specified
      */

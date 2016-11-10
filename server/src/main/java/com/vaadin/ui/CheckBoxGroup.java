@@ -27,13 +27,13 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.SerializablePredicate;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
 
 /**
  * A group of Checkboxes. Individual checkboxes are made from items supplied by
- * a {@link DataSource}. Checkboxes may have captions and icons.
+ * a {@link DataProvider}. Checkboxes may have captions and icons.
  *
  * @param <T>
  *            item type
@@ -48,7 +48,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      *
      * @param caption
      *            caption text
-     * @see Listing#setDataSource(DataSource)
+     * @see Listing#setDataProvider(DataProvider)
      */
     public CheckBoxGroup(String caption) {
         this();
@@ -56,37 +56,37 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
     }
 
     /**
-     * Constructs a new CheckBoxGroup with caption and DataSource.
+     * Constructs a new CheckBoxGroup with caption and DataProvider.
      *
      * @param caption
      *            the caption text
-     * @param dataSource
-     *            the data source, not null
-     * @see Listing#setDataSource(DataSource)
+     * @param dataProvider
+     *            the data provider, not null
+     * @see Listing#setDataProvider(DataProvider)
      */
-    public CheckBoxGroup(String caption, DataSource<T> dataSource) {
+    public CheckBoxGroup(String caption, DataProvider<T> dataProvider) {
         this(caption);
-        setDataSource(dataSource);
+        setDataProvider(dataProvider);
     }
 
     /**
-     * Constructs a new CheckBoxGroup with caption and DataSource containing
+     * Constructs a new CheckBoxGroup with caption and DataProvider containing
      * given items.
      *
      * @param caption
      *            the caption text
      * @param items
      *            the data items to use, not null
-     * @see Listing#setDataSource(DataSource)
+     * @see Listing#setDataProvider(DataProvider)
      */
     public CheckBoxGroup(String caption, Collection<T> items) {
-        this(caption, DataSource.create(items));
+        this(caption, DataProvider.create(items));
     }
 
     /**
      * Constructs a new CheckBoxGroup.
      *
-     * @see Listing#setDataSource(DataSource)
+     * @see Listing#setDataProvider(DataProvider)
      */
     public CheckBoxGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));

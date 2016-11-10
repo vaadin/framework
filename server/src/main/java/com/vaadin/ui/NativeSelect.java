@@ -25,7 +25,7 @@ import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.nativeselect.NativeSelectState;
@@ -81,16 +81,16 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
 
     /**
      * Creates a new {@code NativeSelect} with the given caption, using the
-     * given {@code DataSource} as the source of data items.
+     * given {@code DataProvider} as the source of data items.
      * 
      * @param caption
      *            the component caption to set, null for no caption
-     * @param dataSource
+     * @param dataProvider
      *            the source of data items to use, not null
      */
-    public NativeSelect(String caption, DataSource<T> dataSource) {
+    public NativeSelect(String caption, DataProvider<T> dataProvider) {
         this(caption);
-        setDataSource(dataSource);
+        setDataProvider(dataProvider);
     }
 
     @Override

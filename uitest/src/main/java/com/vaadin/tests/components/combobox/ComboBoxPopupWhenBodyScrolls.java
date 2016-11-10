@@ -17,7 +17,7 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.tests.util.ItemDataSource;
+import com.vaadin.tests.util.ItemDataProvider;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 
@@ -29,7 +29,7 @@ public class ComboBoxPopupWhenBodyScrolls extends AbstractReindeerTestUI {
                 .add("body.v-generated-body { overflow: auto;height:auto;}");
         getPage().getStyles().add(
                 "body.v-generated-body .v-ui.v-scrollable{ overflow: visible;height:auto !important;}");
-        ComboBox<String> cb = new ComboBox<>(null, new ItemDataSource(10));
+        ComboBox<String> cb = new ComboBox<>(null, new ItemDataProvider(10));
 
         Label spacer = new Label("foo");
         spacer.setHeight("2000px");

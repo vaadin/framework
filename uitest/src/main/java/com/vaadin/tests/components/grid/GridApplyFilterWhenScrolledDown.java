@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -28,15 +28,15 @@ public class GridApplyFilterWhenScrolledDown extends AbstractTestUI {
 
         addComponent(grid);
         Button button = new Button("Filter Test item",
-                event -> filter(grid.getDataSource(), data));
+                event -> filter(grid.getDataProvider(), data));
         addComponent(button);
     }
 
-    private void filter(DataSource<String> dataSource, List<String> data) {
+    private void filter(DataProvider<String> dataProvider, List<String> data) {
         String last = data.get(data.size() - 1);
         data.clear();
         data.add(last);
-        dataSource.refreshAll();
+        dataProvider.refreshAll();
     }
 
 }

@@ -22,7 +22,7 @@ import com.vaadin.data.SelectionModel;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataGenerator;
-import com.vaadin.server.data.DataSource;
+import com.vaadin.server.data.DataProvider;
 
 /**
  * A base class for listing components. Provides common handling for fetching
@@ -133,13 +133,13 @@ public abstract class AbstractListing<T> extends AbstractComponent
     }
 
     @Override
-    public void setDataSource(DataSource<T> dataSource) {
-        getDataCommunicator().setDataSource(dataSource);
+    public void setDataProvider(DataProvider<T> dataProvider) {
+        getDataCommunicator().setDataProvider(dataProvider);
     }
 
     @Override
-    public DataSource<T> getDataSource() {
-        return getDataCommunicator().getDataSource();
+    public DataProvider<T> getDataProvider() {
+        return getDataCommunicator().getDataProvider();
     }
 
     /**

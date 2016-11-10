@@ -14,7 +14,7 @@ include::datamodel-fields.asciidoc[leveloffset=+2]
 
 include::datamodel-forms.asciidoc[leveloffset=+2]
 
-include::datamodel-datasources.asciidoc[leveloffset=+2]
+include::datamodel-providers.asciidoc[leveloffset=+2]
 
 include::datamodel-selection.asciidoc[leveloffset=+2]
 (((range="endofrange", startref="term.datamodel")))

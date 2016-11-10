@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import com.vaadin.shared.Registration;
 
 /**
- * Minimal DataSource API for communication between the DataProvider and a back
+ * Minimal DataProvider API for communication between the DataProvider and a back
  * end service.
  *
  * @author Vaadin Ltd.
@@ -31,15 +31,15 @@ import com.vaadin.shared.Registration;
  * @param <T>
  *            data type
  *
- * @see ListDataSource
- * @see BackEndDataSource
+ * @see ListDataProvider
+ * @see BackEndDataProvider
  *
  * @since 8.0
  */
-public interface DataSource<T> extends Serializable {
+public interface DataProvider<T> extends Serializable {
 
     /**
-     * Gets whether the DataSource content all available in memory or does it
+     * Gets whether the DataProvider content all available in memory or does it
      * use some external backend.
      *
      * @return {@code true} if all data is in memory; {@code false} if not
@@ -47,16 +47,16 @@ public interface DataSource<T> extends Serializable {
     boolean isInMemory();
 
     /**
-     * Gets the amount of data in this DataSource.
+     * Gets the amount of data in this DataProvider.
      *
      * @param t
      *            query with sorting and filtering
-     * @return the size of the data source
+     * @return the size of the data provider
      */
     int size(Query t);
 
     /**
-     * Fetches data from this DataSource using given {@code query}.
+     * Fetches data from this DataProvider using given {@code query}.
      * 
      * @param query
      *            given query to request data
@@ -72,7 +72,7 @@ public interface DataSource<T> extends Serializable {
     void refreshAll();
 
     /**
-     * Adds a data source listener. The listener is called when some piece of
+     * Adds a data provider listener. The listener is called when some piece of
      * data is updated.
      * <p>
      * The {@link #refreshAll()} method fires {@link DataChangeEvent} each time
@@ -84,36 +84,36 @@ public interface DataSource<T> extends Serializable {
      *            the data change listener, not null
      * @return a registration for the listener
      */
-    Registration addDataSourceListener(DataSourceListener listener);
+    Registration addDataProviderListener(DataProviderListener listener);
 
     /**
-     * This method creates a new {@link ListDataSource} from a given Collection.
-     * The ListDataSource creates a protective List copy of all the contents in
+     * This method creates a new {@link ListDataProvider} from a given Collection.
+     * The ListDataProvider creates a protective List copy of all the contents in
      * the Collection.
      * 
      * @param <T>
      *            the data item type
      * @param items
      *            the collection of data, not null
-     * @return a new list data source
+     * @return a new list data provider
      */
-    public static <T> ListDataSource<T> create(Collection<T> items) {
-        return new ListDataSource<>(items);
+    public static <T> ListDataProvider<T> create(Collection<T> items) {
+        return new ListDataProvider<>(items);
     }
 
     /**
-     * This method creates a new {@link ListDataSource} from given objects.The
-     * ListDataSource creates a protective List copy of all the contents in the
+     * This method creates a new {@link ListDataProvider} from given objects.The
+     * ListDataProvider creates a protective List copy of all the contents in the
      * array.
      * 
      * @param <T>
      *            the data item type
      * @param items
      *            the data items
-     * @return a new list data source
+     * @return a new list data provider
      */
     @SafeVarargs
-    public static <T> ListDataSource<T> create(T... items) {
-        return new ListDataSource<>(Arrays.asList(items));
+    public static <T> ListDataProvider<T> create(T... items) {
+        return new ListDataProvider<>(Arrays.asList(items));
     }
 }

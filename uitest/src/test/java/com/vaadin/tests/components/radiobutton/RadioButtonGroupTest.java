@@ -50,13 +50,13 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
     @Test
     public void initialItems_reduceItemCount_containsCorrectItems() {
-        selectMenuPath("Component", "Data source", "Items", "5");
+        selectMenuPath("Component", "Data provider", "Items", "5");
         assertItems(5);
     }
 
     @Test
     public void initialItems_increaseItemCount_containsCorrectItems() {
-        selectMenuPath("Component", "Data source", "Items", "100");
+        selectMenuPath("Component", "Data provider", "Items", "100");
         assertItems(100);
     }
 

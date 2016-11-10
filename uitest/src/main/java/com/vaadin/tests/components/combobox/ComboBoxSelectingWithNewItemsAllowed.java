@@ -36,7 +36,7 @@ public class ComboBoxSelectingWithNewItemsAllowed extends ComboBoxSelecting {
         });
 
         comboBox.addValueChangeListener(event -> label.setValue(
-                String.valueOf(comboBox.getDataSource().size(new Query()))));
+                String.valueOf(comboBox.getDataProvider().size(new Query()))));
         addComponent(label);
     }
 

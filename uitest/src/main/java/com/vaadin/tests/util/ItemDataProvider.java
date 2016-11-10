@@ -2,16 +2,16 @@ package com.vaadin.tests.util;
 
 import java.util.stream.IntStream;
 
-import com.vaadin.server.data.BackEndDataSource;
+import com.vaadin.server.data.BackEndDataProvider;
 
 /**
- * A data source for tests that creates "Item n" strings on the fly.
+ * A data provider for tests that creates "Item n" strings on the fly.
  *
  * @author Vaadin Ltd
  */
-public class ItemDataSource extends BackEndDataSource<String> {
+public class ItemDataProvider extends BackEndDataProvider<String> {
 
-    public ItemDataSource(int size) {
+    public ItemDataProvider(int size) {
         super(q -> IntStream
                 .range(q.getOffset(),
                         Math.max(q.getOffset() + q.getLimit() + 1, size))

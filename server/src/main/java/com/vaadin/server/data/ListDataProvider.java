@@ -22,42 +22,42 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * {@link DataSource} wrapper for {@link Collection}s. This class does not
+ * {@link DataProvider} wrapper for {@link Collection}s. This class does not
  * actually handle the {@link Query} parameters.
  *
  * @param <T>
  *            data type
  */
-public class ListDataSource<T> extends AbstractDataSource<T> {
+public class ListDataProvider<T> extends AbstractDataProvider<T> {
 
     private Comparator<T> sortOrder;
     private final Collection<T> backend;
 
     /**
-     * Constructs a new ListDataSource. This method makes a protective copy of
+     * Constructs a new ListDataProvider. This method makes a protective copy of
      * the contents of the Collection.
      *
      * @param items
      *            the initial data, not null
      */
-    public ListDataSource(Collection<T> items) {
+    public ListDataProvider(Collection<T> items) {
         Objects.requireNonNull(items, "items cannot be null");
         backend = items;
         sortOrder = null;
     }
 
     /**
-     * Chaining constructor for making modified {@link ListDataSource}s. This
+     * Chaining constructor for making modified {@link ListDataProvider}s. This
      * Constructor is used internally for making sorted and filtered variants of
-     * a base data source with actual data.
+     * a base data provider with actual data.
      * 
      * @param items
-     *            the backend data from the original list data source
+     *            the backend data from the original list data provider
      * @param sortOrder
      *            a {@link Comparator} providing the needed sorting order
      *
      */
-    protected ListDataSource(Collection<T> items, Comparator<T> sortOrder) {
+    protected ListDataProvider(Collection<T> items, Comparator<T> sortOrder) {
         this(items);
         this.sortOrder = sortOrder;
     }
@@ -72,24 +72,24 @@ public class ListDataSource<T> extends AbstractDataSource<T> {
     }
 
     /**
-     * Creates a new list data source based on this list data source with the
+     * Creates a new list data provider based on this list data provider with the
      * given sort order.
      * <p>
-     * <b>NOTE</b>: this data source is not modified in any way.
+     * <b>NOTE</b>: this data provider is not modified in any way.
      *
      * @param sortOrder
      *            a {@link Comparator} providing the needed sorting order
-     * @return new data source with modified sorting
+     * @return new data provider with modified sorting
      */
-    public ListDataSource<T> sortingBy(Comparator<T> sortOrder) {
-        return new ListDataSource<>(backend, sortOrder);
+    public ListDataProvider<T> sortingBy(Comparator<T> sortOrder) {
+        return new ListDataProvider<>(backend, sortOrder);
     }
 
     /**
-     * Creates a new list data source based on this list data source with the
+     * Creates a new list data provider based on this list data provider with the
      * given sort order.
      * <p>
-     * <b>NOTE</b>: this data source is not modified in any way.
+     * <b>NOTE</b>: this data provider is not modified in any way.
      * <p>
      * This method is a short-hand for
      * {@code sortingBy(Comparator.comparing(sortOrder))}.
@@ -98,9 +98,9 @@ public class ListDataSource<T> extends AbstractDataSource<T> {
      *            function to sort by
      * @param <U>
      *            the type of the Comparable sort key
-     * @return new data source with modified sorting
+     * @return new data provider with modified sorting
      */
-    public <U extends Comparable<? super U>> ListDataSource<T> sortingBy(
+    public <U extends Comparable<? super U>> ListDataProvider<T> sortingBy(
             Function<T, U> sortOrder) {
         return sortingBy(Comparator.comparing(sortOrder));
     }
@@ -113,7 +113,7 @@ public class ListDataSource<T> extends AbstractDataSource<T> {
     /**
      * {@inheritDoc}
      * <p>
-     * For in-memory data source the query is not handled, and it will always
+     * For in-memory data provider the query is not handled, and it will always
      * return the full size.
      */
     @Override

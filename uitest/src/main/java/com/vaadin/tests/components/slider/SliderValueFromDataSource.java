@@ -47,7 +47,7 @@ public class SliderValueFromDataSource extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "Slider and ProgressBar do not properly pass a value from data source to the client";
+        return "Slider and ProgressBar do not properly pass a value from data provider to the client";
     }
 
     @Override

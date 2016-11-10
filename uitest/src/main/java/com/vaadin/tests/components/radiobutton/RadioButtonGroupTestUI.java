@@ -75,7 +75,7 @@ public class RadioButtonGroupTestUI
         } else {
             group.setItemIconGenerator(item -> null);
         }
-        group.getDataSource().refreshAll();
+        group.getDataProvider().refreshAll();
     }
 
     private void createItemCaptionGeneratorMenu() {
@@ -88,7 +88,7 @@ public class RadioButtonGroupTestUI
         createSelectAction("Item Caption Generator", "Item Caption Generator",
                 options, "None", (radioButtonGroup, captionGenerator, data) -> {
                     radioButtonGroup.setItemCaptionGenerator(captionGenerator);
-                    radioButtonGroup.getDataSource().refreshAll();
+                    radioButtonGroup.getDataProvider().refreshAll();
                 }, true);
     }
 

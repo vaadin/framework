@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.server.data.DataProvider;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +40,6 @@ import org.mockito.Mockito;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
-import com.vaadin.server.data.DataSource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 
@@ -63,8 +63,8 @@ public class AbstractMultiSelectTest {
     public void setUp() {
         selectToTest.deselectAll();
         // Intentional deviation from upcoming selection order
-        selectToTest.setDataSource(
-                DataSource.create("3", "2", "1", "5", "8", "7", "4", "6"));
+        selectToTest.setDataProvider(
+                DataProvider.create("3", "2", "1", "5", "8", "7", "4", "6"));
         rpc = ComponentTest.getRpcProxy(selectToTest,
                 MultiSelectServerRpc.class);
     }

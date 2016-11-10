@@ -246,7 +246,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      *            the item to select or {@code null} to clear selection
      */
     protected void setSelectedFromServer(T item) {
-        // TODO creates a key if item not in data source
+        // TODO creates a key if item not in data provider
         String key = itemToKey(item);
 
         if (isKeySelected(key) || isSelected(item)) {
@@ -282,7 +282,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         if (item == null) {
             return null;
         } else {
-            // TODO creates a key if item not in data source
+            // TODO creates a key if item not in data provider
             return getDataCommunicator().getKeyMapper().key(item);
         }
     }

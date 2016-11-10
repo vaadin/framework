@@ -26,7 +26,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  *
  */
-public class RefreshDataSourceTest extends MultiBrowserTest {
+public class RefreshDataProviderTest extends MultiBrowserTest {
 
     @Test
     public void updateFirstRow() {

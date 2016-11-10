@@ -138,7 +138,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     private SerializablePredicate<T> itemEnabledProvider = item -> true;
 
     /**
-     * Creates a new multi select with an empty data source.
+     * Creates a new multi select with an empty data provider.
      */
     protected AbstractMultiSelect() {
         registerRpc(new MultiSelectServerRpcImpl());

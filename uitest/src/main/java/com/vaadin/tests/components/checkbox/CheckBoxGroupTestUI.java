@@ -64,7 +64,7 @@ public class CheckBoxGroupTestUI
         } else {
             group.setItemIconGenerator(DEFAULT_ICON_GENERATOR);
         }
-        group.getDataSource().refreshAll();
+        group.getDataProvider().refreshAll();
     }
 
     private int getIndex(Object item) {

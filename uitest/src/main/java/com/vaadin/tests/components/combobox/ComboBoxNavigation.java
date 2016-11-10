@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.util.ItemDataSource;
+import com.vaadin.tests.util.ItemDataProvider;
 import com.vaadin.ui.ComboBox;
 
 public class ComboBoxNavigation extends TestBase {
@@ -18,7 +18,7 @@ public class ComboBoxNavigation extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox<String> cb = new ComboBox<>(null, new ItemDataSource(100));
+        ComboBox<String> cb = new ComboBox<>(null, new ItemDataProvider(100));
 
         addComponent(cb);
 

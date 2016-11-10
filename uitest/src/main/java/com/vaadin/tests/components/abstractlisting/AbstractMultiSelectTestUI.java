@@ -32,7 +32,7 @@ public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMult
                 "None", (abstractMultiSelect, captionGenerator, data) -> {
                     abstractMultiSelect
                             .setItemCaptionGenerator(captionGenerator);
-                    abstractMultiSelect.getDataSource().refreshAll();
+                    abstractMultiSelect.getDataProvider().refreshAll();
                 }, true);
     }
 

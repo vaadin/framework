@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data.datasource.bov;
+package com.vaadin.server.data.provider.bov;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.server.data.BackEndDataProvider;
+import com.vaadin.server.data.DataProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.server.data.BackEndDataSource;
-import com.vaadin.server.data.DataSource;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 
@@ -35,7 +35,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  *
  * @author Vaadin Ltd
  */
-public class DataSourceBoVTest {
+public class DataProviderBoVTest {
 
     private PersonServiceImpl personService;
 
@@ -96,13 +96,13 @@ public class DataSourceBoVTest {
 
     @Test
     public void testPersons() {
-        DataSource<Person> dataSource = createUnsortedDatasource();
-        // TODO test if the datasource contains all defined Persons in
+        DataProvider<Person> dataProvider = createUnsortedDataProvider();
+        // TODO test if the provider contains all defined Persons in
         // correct(unchanged) order
     }
 
-    private DataSource<Person> createUnsortedDatasource() {
-        DataSource<Person> dataSource = new BackEndDataSource<>(
+    private DataProvider<Person> createUnsortedDataProvider() {
+        DataProvider<Person> dataProvider = new BackEndDataProvider<>(
                 // First callback fetches items based on a query
                 query -> {
                     // The index of the first item to load
@@ -118,19 +118,19 @@ public class DataSourceBoVTest {
                 },
                 // Second callback fetches the number of items for a query
                 query -> getPersonService().getPersonCount());
-        return dataSource;
+        return dataProvider;
     }
 
     @Test
     public void testSortedPersons() {
 
-        DataSource<Person> dataSource = createSortedDataSource();
-        // TODO test if datasource contains all defined Persons in correct order
+        DataProvider<Person> dataProvider = createSortedDataProvider();
+        // TODO test if provider contains all defined Persons in correct order
         // TODO test Query.sortOrders correctness
     }
 
-    private DataSource<Person> createSortedDataSource() {
-        DataSource<Person> dataSource = new BackEndDataSource<>(
+    private DataProvider<Person> createSortedDataProvider() {
+        DataProvider<Person> dataProvider = new BackEndDataProvider<>(
                 // First callback fetches items based on a query
                 query -> {
                     List<PersonService.PersonSort> sortOrders = new ArrayList<>();
@@ -149,7 +149,7 @@ public class DataSourceBoVTest {
                 },
                 // Second callback fetches the number of items for a query
                 query -> getPersonService().getPersonCount());
-        return dataSource;
+        return dataProvider;
     }
 
     public PersonServiceImpl getPersonService() {
