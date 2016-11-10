@@ -45,7 +45,7 @@ public class DeprecatedTest {
                                     + " is in compatability package and it's not deprecated",
                             cls.getAnnotation(Deprecated.class));
                 });
-        Assert.assertTrue(count.get() > 0);
+        Assert.assertNotEquals("Total number of checked classes", 0, count.get());
     }
 
 }

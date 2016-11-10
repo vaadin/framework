@@ -21,12 +21,13 @@ import java.util.stream.Stream;
  * <p>
  * The methods in the class return all real (not anonymous and not private)
  * classes from the filtered classpath.
- * 
+ *
  * @author Vaadin Ltd
  *
  */
 class ClasspathHelper {
 
+    public static final String COM_VAADIN_FILE_PREFIX = "com" + File.separatorChar + "vaadin" + File.separatorChar;
     private final Predicate<String> skipClassesFilter;
 
     ClasspathHelper(Predicate<String> skipClassesFilter) {
@@ -57,7 +58,7 @@ class ClasspathHelper {
                         .filter(path -> path.toFile().getName()
                                 .endsWith(".class"))
                         .filter(path -> classesRoot.toPath().relativize(path)
-                                .toString().contains("com/vaadin/"))
+                                .toString().contains(COM_VAADIN_FILE_PREFIX))
                         .map(path -> getClassFromFile(path,
                                 classesRoot.toPath()))
                         .filter(Objects::nonNull).collect(Collectors.toList());
@@ -66,12 +67,12 @@ class ClasspathHelper {
                 URI uri = URI.create("jar:file:" + classesRoot.getPath());
                 Path root = FileSystems
                         .newFileSystem(uri, Collections.emptyMap())
-                        .getPath("/");
+                        .getPath(File.separator);
                 return Files.walk(root).filter(Files::isRegularFile)
                         .filter(path -> path.toUri().getSchemeSpecificPart()
                                 .endsWith(".class"))
                         .filter(path -> root.relativize(path).toString()
-                                .contains("com/vaadin/"))
+                                .contains(COM_VAADIN_FILE_PREFIX))
                         .map(path -> getClassFromFile(path, root))
                         .filter(Objects::nonNull).collect(Collectors.toList());
             }
@@ -85,7 +86,7 @@ class ClasspathHelper {
         Path relative = root.relativize(path);
         String name = relative.toString();
         name = name.substring(0, name.length() - ".class".length());
-        name = name.replace('/', '.');
+        name = name.replace(File.separatorChar, '.');
         if (skipClassesFilter.test(name)) {
             return null;
         }
