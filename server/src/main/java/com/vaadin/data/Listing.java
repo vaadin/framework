@@ -39,7 +39,7 @@ public interface Listing<T> extends Serializable {
     DataProvider<T> getDataProvider();
 
     /**
-     * Sets the source of data items used by this listing. The data provider is
+     * Sets the data provider for this listing. The data provider is
      * queried for displayed items as needed.
      *
      * @param dataProvider
