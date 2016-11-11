@@ -15,11 +15,9 @@
  */
 package com.vaadin.client.connectors.grid;
 
-import java.util.Set;
-
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.data.SelectionModel;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -33,7 +31,7 @@ import elemental.json.JsonObject;
  *
  * @since 8.0
  */
-@Connect(com.vaadin.ui.components.grid.SingleSelectionModel.class)
+@Connect(com.vaadin.ui.components.grid.SingleSelectionModelImpl.class)
 public class SingleSelectionModelConnector extends AbstractExtensionConnector {
 
     @Override
@@ -54,14 +52,13 @@ public class SingleSelectionModelConnector extends AbstractExtensionConnector {
                     }
 
                     @Override
-                    public Set<JsonObject> getSelectedItems() {
-                        throw new UnsupportedOperationException(
-                                "Selected item not known on the client side");
+                    public boolean isSelected(JsonObject item) {
+                        return SelectionModel.isItemSelected(item);
                     }
 
                     @Override
-                    public boolean isSelected(JsonObject item) {
-                        return SelectionModel.isItemSelected(item);
+                    public void deselectAll() {
+                        getRpcProxy(SelectionServerRpc.class).select(null);
                     }
 
                 });

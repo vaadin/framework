@@ -13,9 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.data;
-
-import java.util.Set;
+package com.vaadin.client.widget.grid.selection;
 
 import com.vaadin.shared.data.DataCommunicatorConstants;
 
@@ -52,14 +50,6 @@ public interface SelectionModel<T> {
     void deselect(T item);
 
     /**
-     * Returns a set of the currently selected items. It is safe to invoke other
-     * {@code SelectionModel} methods while iterating over the set.
-     *
-     * @return the items in the current selection, not null
-     */
-    Set<T> getSelectedItems();
-
-    /**
      * Returns whether the given item is currently selected.
      *
      * @param item
@@ -71,9 +61,7 @@ public interface SelectionModel<T> {
     /**
      * Deselects all currently selected items.
      */
-    default void deselectAll() {
-        getSelectedItems().forEach(this::deselect);
-    }
+    void deselectAll();
 
     /**
      * Gets the selected state from a given grid row json object. This is a

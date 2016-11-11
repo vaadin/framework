@@ -21,6 +21,8 @@ import java.util.Set;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.ui.AbstractMultiSelect;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.MultiSelect;
 
 /**
  * Event fired when the the selection changes in a
@@ -56,12 +58,31 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
     }
 
     /**
+     * Creates a new selection change event in a multiselect component.
+     *
+     * @param component
+     *            the component
+     * @param source
+     *            the multiselect source
+     * @param oldSelection
+     *            the old set of selected items
+     * @param userOriginated
+     *            {@code true} if this event originates from the client,
+     *            {@code false} otherwise.
+     */
+    public MultiSelectionEvent(Component component, MultiSelect<T> source,
+            Set<T> oldSelection, boolean userOriginated) {
+        super(component, source, userOriginated);
+        this.oldSelection = oldSelection;
+    }
+
+    /**
      * Gets the new selection.
      * <p>
      * The result is the current selection of the source
      * {@link AbstractMultiSelect} object. So it's always exactly the same as
      * {@link AbstractMultiSelect#getValue()}
-     * 
+     *
      * @see #getValue()
      *
      * @return a set of items selected after the selection was changed
@@ -82,5 +103,15 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
     @Override
     public Optional<T> getFirstSelected() {
         return getValue().stream().findFirst();
+    }
+
+    /**
+     * The multiselect on which the Event initially occurred.
+     *
+     * @return the multiselect on which the Event initially occurred.
+     */
+    @Override
+    public MultiSelect<T> getSource() {
+        return (MultiSelect<T>) super.getSource();
     }
 }

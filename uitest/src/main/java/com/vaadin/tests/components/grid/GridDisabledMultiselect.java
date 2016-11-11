@@ -1,24 +1,24 @@
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.Grid;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 
 public class GridDisabledMultiselect extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
-        grid.addColumn("foo", String.class);
-        grid.addRow("bar");
-        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        final Grid<String> grid = new Grid<>();
+        grid.addColumn(string -> string);
+        grid.setItems("bar");
         addComponent(grid);
 
         addButton("Multi", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                grid.setSelectionMode(Grid.SelectionMode.MULTI);
+                grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
             }
         });
 

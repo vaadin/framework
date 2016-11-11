@@ -13,22 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.v7.ui.Grid;
+import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 
-public class GridMultiSelectionScrollBar extends AbstractReindeerTestUI {
+public class GridMultiSelectionOnInit extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
-        grid.addColumn("X").setWidth(39.25d);
-        grid.addColumn("Hello");
-        grid.addColumn("World");
-        grid.setFrozenColumnCount(1);
+        final Grid<String> grid = new Grid<>();
+        grid.setItems("Foo 1", "Foo 2");
+        grid.addColumn(item -> item);
+        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
         addComponent(grid);
-    }
 
+        addComponent(new Button("Select rows",
+                event -> grid.getSelectionModel().select("Foo 1")));
+        if (request.getParameter("initialSelection") != null) {
+            grid.getSelectionModel().select("Foo 2");
+        }
+    }
 }

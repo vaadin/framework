@@ -26,6 +26,8 @@ import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest.C
  */
 public abstract class GridBasicsTest extends MultiBrowserTest {
 
+    public static final int ROWS = 1000;
+
     /* Identical List of test data */
     private List<DataObject> testData;
 
@@ -131,7 +133,7 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
             return 5;
         } else {
             int half = columnHeader.getSize().getWidth() / 2;
-            return half + (half / 2);
+            return half + half / 2;
         }
     }
 
@@ -197,8 +199,7 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
         List<WebElement> elements = sidebar
                 .findElements(By.className("column-hiding-toggle"));
         for (WebElement e : elements) {
-            if ((e.getText().toLowerCase())
-                    .startsWith("column " + columnIndex)) {
+            if (e.getText().toLowerCase().startsWith("column " + columnIndex)) {
                 return e;
             }
         }
@@ -213,5 +214,18 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
         return ((Number) executeScript("return arguments[0].scrollTop",
                 getGridVerticalScrollbar())).intValue();
     }
+
+    protected void setSelectionModelMulti() {
+        selectMenuPath("Component", "State", "Selection model", "multi");
+    }
+
+    protected void setSelectionModelSingle() {
+        selectMenuPath("Component", "State", "Selection model", "single");
+    }
+
+    // TODO enable once select all is added
+    // protected void setSelectionModelNone() {
+    // selectMenuPath("Component", "State", "Selection model", "none");
+    // }
 
 }

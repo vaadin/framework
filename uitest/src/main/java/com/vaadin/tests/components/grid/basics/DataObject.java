@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-class DataObject {
+public class DataObject {
 
     private static final int ROWS = 1000;
 
@@ -69,7 +69,7 @@ class DataObject {
         return "DataObject[" + rowNumber + "]";
     }
 
-    static List<DataObject> generateObjects() {
+    public static List<DataObject> generateObjects() {
         List<DataObject> data = new ArrayList<>();
 
         {

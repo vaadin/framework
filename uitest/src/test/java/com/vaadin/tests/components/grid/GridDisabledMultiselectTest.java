@@ -1,4 +1,4 @@
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -39,7 +39,7 @@ public class GridDisabledMultiselectTest extends MultiBrowserTest {
     }
 
     private WebElement getFirstSelectCheckBox() {
-        return findCheckBoxes().get(1);
+        return findCheckBoxes().get(0);
     }
 
     @Test
@@ -48,20 +48,22 @@ public class GridDisabledMultiselectTest extends MultiBrowserTest {
 
         setMultiselect();
 
-        assertThat(getSelectAllCheckBox().isEnabled(), is(false));
+        // TODO enable once select all is added back
+        // assertThat(getSelectAllCheckBox().isEnabled(), is(false));
         assertThat(getFirstSelectCheckBox().isEnabled(), is(false));
     }
 
     @Test
     public void checkBoxesAreDisabledAfterDisabled() {
         setMultiselect();
-
-        assertThat(getSelectAllCheckBox().isEnabled(), is(true));
+        // TODO enable once select all is added back
+        // assertThat(getSelectAllCheckBox().isEnabled(), is(true));
         assertThat(getFirstSelectCheckBox().isEnabled(), is(true));
 
         disable();
 
-        assertThat(getSelectAllCheckBox().isEnabled(), is(false));
+        // TODO enable once select all is added back
+        // assertThat(getSelectAllCheckBox().isEnabled(), is(false));
         assertThat(getFirstSelectCheckBox().isEnabled(), is(false));
     }
 

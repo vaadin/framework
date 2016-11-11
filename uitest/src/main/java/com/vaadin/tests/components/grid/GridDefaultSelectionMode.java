@@ -13,20 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.util.BeanItemContainer;
-import com.vaadin.v7.ui.Grid;
 
-public class GridDefaultSelectionMode extends AbstractReindeerTestUI {
+public class GridDefaultSelectionMode extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -42,11 +41,11 @@ public class GridDefaultSelectionMode extends AbstractReindeerTestUI {
         items.add(person1);
         items.add(person2);
 
-        final BeanItemContainer<Person> container = new BeanItemContainer<>(
-                Person.class, items);
-
-        final Grid grid = new Grid();
-        grid.setContainerDataSource(container);
+        final Grid<Person> grid = new Grid<>();
+        grid.setItems(items);
+        grid.addColumn(person -> person.getFirstName())
+                .setCaption("First Name");
+        grid.addColumn(person -> person.getLastName()).setCaption("Last Name");
 
         VerticalLayout v = new VerticalLayout();
 
@@ -54,7 +53,7 @@ public class GridDefaultSelectionMode extends AbstractReindeerTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                grid.select(null);
+                grid.getSelectionModel().deselectAll();
             }
         }));
 
@@ -62,7 +61,7 @@ public class GridDefaultSelectionMode extends AbstractReindeerTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                grid.select(person1);
+                grid.getSelectionModel().select(person1);
             }
         }));
         v.addComponent(grid);

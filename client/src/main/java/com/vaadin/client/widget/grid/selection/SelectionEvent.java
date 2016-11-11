@@ -137,15 +137,6 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     }
 
     /**
-     * Gets currently selected rows.
-     *
-     * @return a non-null collection containing all currently selected rows.
-     */
-    public Collection<T> getSelected() {
-        return grid.getSelectedRows();
-    }
-
-    /**
      * Gets a type identifier for this event.
      *
      * @return a {@link Type} identifier.

@@ -72,7 +72,7 @@ import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
-import com.vaadin.ui.components.grid.SingleSelectionModel;
+import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
@@ -133,9 +133,12 @@ public class Grid<T> extends AbstractListing<T>
     /**
      * The server-side interface that controls Grid's selection state.
      * SelectionModel should extend {@link AbstractGridExtension}.
+     * <p>
      *
      * @param <T>
      *            the grid bean type
+     * @see SingleSelectionModel
+     * @see MultiSelectionModel
      */
     public interface GridSelectionModel<T>
             extends SelectionModel<T>, Extension {
@@ -149,6 +152,42 @@ public class Grid<T> extends AbstractListing<T>
          */
         @Override
         void remove();
+    }
+
+    /**
+     * Single selection model interface for Grid.
+     *
+     * @param <T>
+     *            the type of items in grid
+     */
+    public interface SingleSelectionModel<T> extends GridSelectionModel<T>,
+            com.vaadin.data.SelectionModel.Single<T> {
+
+        /**
+         * Gets a wrapper to use this single selection model as a single select
+         * in {@link Binder}.
+         *
+         * @return the single select wrapper
+         */
+        SingleSelect<T> asSingleSelect();
+    }
+
+    /**
+     * Multiselection model interface for Grid.
+     *
+     * @param <T>
+     *            the type of items in grid
+     */
+    public interface MultiSelectionModel<T> extends GridSelectionModel<T>,
+            com.vaadin.data.SelectionModel.Multi<T> {
+
+        /**
+         * Gets a wrapper to use this multiselection model as a multiselect in
+         * {@link Binder}.
+         *
+         * @return the multiselect wrapper
+         */
+        MultiSelect<T> asMultiSelect();
     }
 
     /**
@@ -2030,7 +2069,7 @@ public class Grid<T> extends AbstractListing<T>
 
         setDefaultHeaderRow(appendHeaderRow());
 
-        selectionModel = new SingleSelectionModel<>(this);
+        selectionModel = new SingleSelectionModelImpl<>(this);
 
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
@@ -2896,15 +2935,18 @@ public class Grid<T> extends AbstractListing<T>
     /**
      * Use this grid as a single select in {@link Binder}.
      * <p>
-     * Sets the grid to single select mode, if not yet so.
+     * Throws {@link IllegalStateException} if the grid is not using a
+     * {@link SingleSelectionModel}.
      *
      * @return the single select wrapper that can be used in binder
+     * @throws IllegalStateException
+     *             if not using a single selection model
      */
     public SingleSelect<T> asSingleSelect() {
         GridSelectionModel<T> model = getSelectionModel();
         if (!(model instanceof SingleSelectionModel)) {
-            model = new SingleSelectionModel<>(this);
-            setSelectionModel(model);
+            throw new IllegalStateException(
+                    "Grid is not in single select mode, it needs to be explicitly set to such with setSelectionModel(SingleSelectionModel) before being able to use single selection features.");
         }
 
         return ((SingleSelectionModel<T>) model).asSingleSelect();
@@ -2915,14 +2957,33 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
+     * User this grid as a multiselect in {@link Binder}.
+     * <p>
+     * Throws {@link IllegalStateException} if the grid is not using a
+     * {@link MultiSelectionModel}.
+     *
+     * @return the multiselect wrapper that can be used in binder
+     * @throws IllegalStateException
+     *             if not using a multiselection model
+     */
+    public MultiSelect<T> asMultiSelect() {
+        GridSelectionModel<T> model = getSelectionModel();
+        if (!(model instanceof MultiSelectionModel)) {
+            throw new IllegalStateException(
+                    "Grid is not in multiselect mode, it needs to be explicitly set to such with setSelectionModel(MultiSelectionModel) before being able to use multiselection features.");
+        }
+        return ((MultiSelectionModel<T>) model).asMultiSelect();
+    }
+
+    /**
      * Sets the selection model for this listing.
      * <p>
-     * The default selection model is {@link SingleSelectionModel}.
+     * The default selection model is {@link SingleSelectionModelImpl}.
      *
      * @param model
      *            the selection model to use, not {@code null}
      */
-    protected void setSelectionModel(GridSelectionModel<T> model) {
+    public void setSelectionModel(GridSelectionModel<T> model) {
         Objects.requireNonNull(model, "selection model cannot be null");
         selectionModel.remove();
         selectionModel = model;

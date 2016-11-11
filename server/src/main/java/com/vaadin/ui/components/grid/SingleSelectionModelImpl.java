@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import com.vaadin.data.SelectionModel;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.shared.Registration;
@@ -32,7 +31,7 @@ import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
-import com.vaadin.ui.Grid.GridSelectionModel;
+import com.vaadin.ui.Grid.SingleSelectionModel;
 import com.vaadin.ui.SingleSelect;
 import com.vaadin.util.ReflectTools;
 
@@ -47,8 +46,8 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the type of the selected item in grid.
  */
-public class SingleSelectionModel<T> extends AbstractGridExtension<T>
-        implements GridSelectionModel<T>, SelectionModel.Single<T> {
+public class SingleSelectionModelImpl<T> extends AbstractGridExtension<T>
+        implements SingleSelectionModel<T> {
 
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SingleSelectionListener.class, "accept",
@@ -63,7 +62,7 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
      * @param grid
      *            the grid to bind the selection model into
      */
-    public SingleSelectionModel(Grid<T> grid) {
+    public SingleSelectionModelImpl(Grid<T> grid) {
         this.grid = grid;
         extend(grid);
         registerRpc(new SelectionServerRpc() {
@@ -83,15 +82,14 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
     }
 
     /**
-     * Adds a selection change listener to this select. The listener is called
-     * when the value of this select is changed either by the user or
-     * programmatically.
+     * Adds a selection listener to this select. The listener is called when the
+     * value of this select is changed either by the user or programmatically.
      *
      * @param listener
      *            the value change listener, not null
      * @return a registration for the listener
      */
-    public Registration addSelectionChangeListener(
+    public Registration addSelectionListener(
             SingleSelectionListener<T> listener) {
         return addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
@@ -148,6 +146,11 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
      *            selection
      */
     protected void doSetSelectedKey(String key) {
+        if (getParent() == null) {
+            throw new IllegalStateException(
+                    "Trying to update selection for grid selection model that has been detached from the grid.");
+        }
+
         if (selectedItem != null) {
             grid.getDataCommunicator().refresh(selectedItem);
         }
@@ -233,8 +236,7 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
         // when selection model changes, firing an event for selection change
         // event fired before removing so that parent is still intact (in case
         // needed)
-        selectedItem = null;
-        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), false));
+        setSelectedFromServer(null);
 
         super.remove();
     }
@@ -244,24 +246,26 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
      *
      * @return a single select wrapper for grid
      */
+    @Override
     public SingleSelect<T> asSingleSelect() {
         return new SingleSelect<T>() {
 
             @Override
             public void setValue(T value) {
-                SingleSelectionModel.this.setSelectedFromServer(value);
+                SingleSelectionModelImpl.this.setSelectedFromServer(value);
             }
 
             @Override
             public T getValue() {
-                return SingleSelectionModel.this.getSelectedItem().orElse(null);
+                return SingleSelectionModelImpl.this.getSelectedItem()
+                        .orElse(null);
             }
 
             @Override
             public Registration addValueChangeListener(
                     com.vaadin.data.HasValue.ValueChangeListener<T> listener) {
-                return SingleSelectionModel.this.addSelectionChangeListener(
-                        event -> listener.accept(event));
+                return SingleSelectionModelImpl.this
+                        .addSelectionListener(event -> listener.accept(event));
             }
 
             @Override

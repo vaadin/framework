@@ -13,28 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.connectors.grid.MultiSelectionModelConnector;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.client.connectors.MultiSelectionModelConnector;
-import com.vaadin.v7.client.renderers.ComplexRenderer;
-import com.vaadin.v7.client.widget.grid.selection.ClickSelectHandler;
-import com.vaadin.v7.client.widget.grid.selection.SelectionModel.Multi;
-import com.vaadin.v7.client.widgets.Grid;
-import com.vaadin.v7.tests.components.grid.GridCustomSelectionModel.MySelectionModel;
 
 import elemental.json.JsonObject;
 
-@Connect(MySelectionModel.class)
+@Connect(com.vaadin.tests.components.grid.GridCustomSelectionModel.MySelectionModel.class)
 public class MySelectionModelConnector extends MultiSelectionModelConnector {
+
+    protected class MyMultiSelectionModel extends MultiSelectionModel {
+        @Override
+        public Renderer<Boolean> getRenderer() {
+            return null;
+        }
+    }
 
     private ClickSelectHandler<JsonObject> handler;
 
     @Override
     protected void extend(ServerConnector target) {
-        super.extend(target);
         handler = new ClickSelectHandler<>(getGrid());
+        getGrid().setSelectionModel(new MyMultiSelectionModel());
     }
 
     @Override
@@ -44,18 +48,4 @@ public class MySelectionModelConnector extends MultiSelectionModelConnector {
         handler = null;
     }
 
-    @Override
-    protected Multi<JsonObject> createSelectionModel() {
-        return new MySelectionModel();
-    }
-
-    public class MySelectionModel extends MultiSelectionModel {
-
-        @Override
-        protected ComplexRenderer<Boolean> createSelectionColumnRenderer(
-                Grid<JsonObject> grid) {
-            // No Selection Column.
-            return null;
-        }
-    }
 }

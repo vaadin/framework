@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -16,6 +17,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.event.selection.MultiSelectionEvent;
+import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -36,7 +39,8 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.grid.SingleSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
@@ -149,6 +153,8 @@ public class GridBasics extends AbstractTestUIWithLog {
     private List<DataObject> data;
     private int watchingCount = 0;
     private PersistingDetailsGenerator persistingDetails;
+    private List<Column<DataObject, ?>> initialColumnOrder;
+    private Registration selectionListenerRegistration;
 
     public GridBasics() {
         generators.put("NULL", null);
@@ -215,13 +221,31 @@ public class GridBasics extends AbstractTestUIWithLog {
                 new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7])
                 .setEditorComponent(smallRandom);
 
-        ((SingleSelectionModel<DataObject>) grid.getSelectionModel())
-                .addSelectionChangeListener(
-                        e -> log("Selected: " + e.getValue()));
+        selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
+                .getSelectionModel())
+                        .addSelectionListener(this::onSingleSelect);
 
         layout.addComponent(createMenu());
         layout.addComponent(grid);
         addComponent(layout);
+    }
+
+    private void onSingleSelect(SingleSelectionEvent<DataObject> event) {
+        log("SingleSelectionEvent: Selected: "
+                + (event.getSelectedItem().isPresent()
+                        ? event.getSelectedItem().get().toString() : "none"));
+    }
+
+    private void onMultiSelect(MultiSelectionEvent<DataObject> event) {
+        Optional<DataObject> firstAdded = event.getNewSelection().stream()
+                .findFirst();
+        Optional<DataObject> firstRemoved = event.getOldSelection().stream()
+                .findFirst();
+        String addedRow = firstAdded.isPresent() ? firstAdded.toString()
+                : "none";
+        String removedRow = firstRemoved.isPresent() ? firstRemoved.toString()
+                : "none";
+        log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
     }
 
     private Component createMenu() {
@@ -388,6 +412,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                 e -> grid.setEnabled(e.isChecked()));
         enableItem.setCheckable(true);
         enableItem.setChecked(true);
+
+        createSelectionMenu(stateMenu);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
@@ -448,6 +474,28 @@ public class GridBasics extends AbstractTestUIWithLog {
             } else {
                 grid.getSelectionModel().select(item);
             }
+        });
+        rowMenu.addItem("Deselect all", menuItem -> {
+            grid.getSelectionModel().deselectAll();
+        });
+    }
+
+    private void createSelectionMenu(MenuItem stateItem) {
+        MenuItem selectionModelItem = stateItem.addItem("Selection model",
+                null);
+        selectionModelItem.addItem("single", menuItem -> {
+            selectionListenerRegistration.remove();
+            grid.setSelectionModel(new SingleSelectionModelImpl<>(grid));
+            selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
+                    .getSelectionModel())
+                            .addSelectionListener(this::onSingleSelect);
+        });
+        selectionModelItem.addItem("multi", menuItem -> {
+            selectionListenerRegistration.remove();
+            grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+            selectionListenerRegistration = ((MultiSelectionModelImpl<DataObject>) grid
+                    .getSelectionModel())
+                            .addSelectionListener(this::onMultiSelect);
         });
     }
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,10 +22,10 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridCustomSelectionModelTest extends MultiBrowserTest {
@@ -38,7 +38,7 @@ public class GridCustomSelectionModelTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         GridCellElement cell = grid.getCell(0, 0);
         assertTrue("First column of Grid should not have an input element",
-                cell.findElements(By.className("input")).isEmpty());
+                cell.findElements(By.tagName("input")).isEmpty());
 
         assertFalse("Row should not be selected initially",
                 grid.getRow(0).isSelected());

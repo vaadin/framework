@@ -72,8 +72,13 @@ public interface SelectionModel<T> extends Serializable {
             if (item != null) {
                 select(item);
             } else {
-                deselectAll();
+                getSelectedItem().ifPresent(this::deselect);
             }
+        }
+
+        @Override
+        public default void deselectAll() {
+            setSelectedItem(null);
         }
 
         /**
@@ -145,6 +150,12 @@ public interface SelectionModel<T> extends Serializable {
                     Collections.emptySet());
         }
 
+        @SuppressWarnings("unchecked")
+        @Override
+        public default void deselect(T item) {
+            deselectItems(item);
+        }
+
         /**
          * Removes the given items from the set of currently selected items.
          * <p>
@@ -182,6 +193,14 @@ public interface SelectionModel<T> extends Serializable {
         @Override
         default Optional<T> getFirstSelectedItem() {
             return getSelectedItems().stream().findFirst();
+        }
+
+        /**
+         * Deselects all currently selected items.
+         */
+        @Override
+        public default void deselectAll() {
+            updateSelection(Collections.emptySet(), getSelectedItems());
         }
     }
 
@@ -227,11 +246,9 @@ public interface SelectionModel<T> extends Serializable {
     public void deselect(T item);
 
     /**
-     * Deselects all currently selected items.
+     * Deselects all currently selected items, if any.
      */
-    public default void deselectAll() {
-        getSelectedItems().forEach(this::deselect);
-    }
+    public void deselectAll();
 
     /**
      * Returns whether the given item is currently selected.

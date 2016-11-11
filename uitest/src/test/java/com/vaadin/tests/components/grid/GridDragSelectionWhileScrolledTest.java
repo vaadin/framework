@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -24,11 +24,9 @@ import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@TestCategory("grid")
 public class GridDragSelectionWhileScrolledTest extends MultiBrowserTest {
 
     @Override

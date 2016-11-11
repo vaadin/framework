@@ -6,7 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,59 +22,121 @@ import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.GridSelectionModel;
-import com.vaadin.ui.components.grid.SingleSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+
+import elemental.json.JsonObject;
 
 public class GridSingleSelectionModelTest {
 
     public static final Person PERSON_C = new Person("c", 3);
     public static final Person PERSON_B = new Person("b", 2);
     public static final Person PERSON_A = new Person("a", 1);
-    public static final String RPC_INTERFACE = DataCommunicatorClientRpc.class
-            .getName();
 
-    private class CustomSelectionModelGrid extends Grid<String> {
-        public void switchSelectionModel() {
-            // just switch selection model to cause event
-            setSelectionModel(new SingleSelectionModel(this));
+    public static class CustomSingleSelectionModel
+            extends SingleSelectionModelImpl<String> {
+        public final Map<String, Boolean> generatedData = new LinkedHashMap<>();
+
+        public CustomSingleSelectionModel(Grid<String> grid) {
+            super(grid);
         }
+
+        @Override
+        public void generateData(String item, JsonObject jsonObject) {
+            super.generateData(item, jsonObject);
+            // capture updated row
+            generatedData.put(item, isSelected(item));
+        }
+
     }
 
     private List<Person> selectionChanges;
     private Grid<Person> grid;
-    private SingleSelectionModel<Person> selectionModel;
+    private SingleSelectionModelImpl<Person> selectionModel;
 
     @Before
     public void setUp() {
         grid = new Grid<>();
         grid.setItems(PERSON_A, PERSON_B, PERSON_C);
-        selectionModel = (SingleSelectionModel<Person>) grid
+        selectionModel = (SingleSelectionModelImpl<Person>) grid
                 .getSelectionModel();
 
         selectionChanges = new ArrayList<>();
-        selectionModel.addSelectionChangeListener(
-                e -> selectionChanges.add(e.getValue()));
+        selectionModel
+                .addSelectionListener(e -> selectionChanges.add(e.getValue()));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void selectionModelChanged_usingPreviousSelectionModel_throws() {
+        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+
+        selectionModel.select(PERSON_A);
     }
 
     @Test
-    public void testGridChangingSelectionModel_firesSelectionChangeEvent() {
-        CustomSelectionModelGrid customGrid = new CustomSelectionModelGrid();
+    public void gridChangingSelectionModel_firesSelectionChangeEvent() {
+        Grid<String> customGrid = new Grid<>();
         customGrid.setItems("Foo", "Bar", "Baz");
 
         List<String> selectionChanges = new ArrayList<>();
-        ((SingleSelectionModel<String>) customGrid.getSelectionModel())
-                .addSelectionChangeListener(
-                        e -> selectionChanges.add(e.getValue()));
+        ((SingleSelectionModelImpl<String>) customGrid.getSelectionModel())
+                .addSelectionListener(e -> selectionChanges.add(e.getValue()));
 
         customGrid.getSelectionModel().select("Foo");
         assertEquals("Foo",
                 customGrid.getSelectionModel().getFirstSelectedItem().get());
         assertEquals(Arrays.asList("Foo"), selectionChanges);
 
-        customGrid.switchSelectionModel();
+        customGrid
+                .setSelectionModel(new CustomSingleSelectionModel(customGrid));
         assertEquals(Arrays.asList("Foo", null), selectionChanges);
+    }
+
+    @Test
+    public void serverSideSelection_GridChangingSelectionModel_sendsUpdatedRowsToClient() {
+        Grid<String> customGrid = new Grid<>();
+        customGrid.setItems("Foo", "Bar", "Baz");
+
+        CustomSingleSelectionModel customModel = new CustomSingleSelectionModel(
+                customGrid);
+        customGrid.setSelectionModel(customModel);
+
+        customGrid.getDataCommunicator().beforeClientResponse(true);
+
+        Assert.assertFalse("Item should have been updated as selected",
+                customModel.generatedData.get("Foo"));
+        Assert.assertFalse("Item should have been updated as NOT selected",
+                customModel.generatedData.get("Bar"));
+        Assert.assertFalse("Item should have been updated as NOT selected",
+                customModel.generatedData.get("Baz"));
+
+        customModel.generatedData.clear();
+
+        customGrid.getSelectionModel().select("Foo");
+        customGrid.getDataCommunicator().beforeClientResponse(false);
+
+        Assert.assertTrue("Item should have been updated as selected",
+                customModel.generatedData.get("Foo"));
+        Assert.assertFalse("Item should have NOT been updated",
+                customModel.generatedData.containsKey("Bar"));
+        Assert.assertFalse("Item should have NOT been updated",
+                customModel.generatedData.containsKey("Baz"));
+
+        // switch to another selection model to cause event
+        customModel.generatedData.clear();
+        customGrid.setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
+        customGrid.getDataCommunicator().beforeClientResponse(false);
+
+        // since the selection model has been removed, it is no longer a data
+        // generator for the data communicator, would need to verify somehow
+        // that row is not marked as selected anymore ? (done in UI tests)
+        Assert.assertTrue(customModel.generatedData.isEmpty()); // at least
+                                                                // removed
+                                                                // selection
+                                                                // model is not
+                                                                // triggered
     }
 
     @Test
@@ -210,10 +274,10 @@ public class GridSingleSelectionModelTest {
         Grid<String> grid = new Grid<>();
         grid.setItems("foo", "bar");
         String value = "foo";
-        SingleSelectionModel<String> select = new SingleSelectionModel<String>(
+        SingleSelectionModelImpl<String> select = new SingleSelectionModelImpl<String>(
                 grid) {
             @Override
-            public Registration addSelectionChangeListener(
+            public Registration addSelectionListener(
                     SingleSelectionListener<String> listener) {
                 selectionListener.set(listener);
                 return registration;
@@ -226,11 +290,10 @@ public class GridSingleSelectionModelTest {
         };
 
         AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
-        Registration actualRegistration = select
-                .addSelectionChangeListener(evt -> {
-                    Assert.assertNull(event.get());
-                    event.set(evt);
-                });
+        Registration actualRegistration = select.addSelectionListener(evt -> {
+            Assert.assertNull(event.get());
+            event.set(evt);
+        });
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get().accept(new SingleSelectionEvent<>(grid,
