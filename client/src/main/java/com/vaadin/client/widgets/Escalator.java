@@ -457,15 +457,6 @@ public class Escalator extends Widget
                 }
 
                 int pagePosition(CustomTouchEvent event) {
-                    // Use native event's screen x and y for IEs and Edge
-                    // since there is no touches for these browsers (#18737)
-                    if (BrowserInfo.get().isIEOrEdge()) {
-                        return vertical
-                                ? event.getNativeEvent().getClientY()
-                                        + Window.getScrollTop()
-                                : event.getNativeEvent().getClientX()
-                                        + Window.getScrollLeft();
-                    }
                     JsArray<Touch> a = event.getNativeEvent().getTouches();
                     return vertical ? a.get(0).getPageY() : a.get(0).getPageX();
                 }
@@ -505,7 +496,7 @@ public class Escalator extends Widget
             };
 
             public void touchStart(final CustomTouchEvent event) {
-                if (allowTouch(event)) {
+                if (event.getNativeEvent().getTouches().length() == 1) {
                     if (yMov == null) {
                         yMov = new Movement(true);
                         xMov = new Movement(false);
@@ -551,15 +542,6 @@ public class Escalator extends Widget
                     double delta = Math.abs((vert ? yMov : xMov).offset);
                     animation.run((int) (3 * DURATION * easingOutExp(delta)));
                 }
-            }
-
-            // Allow touchStart for IE and Edge even though there is no touch
-            // (#18737),
-            // otherwise allow touch only if there is a single touch in the
-            // event
-            private boolean allowTouch(final CustomTouchEvent event) {
-                return BrowserInfo.get().isIEOrEdge()
-                        || event.getNativeEvent().getTouches().length() == 1;
             }
 
             private double easingInOutCos(double val, double max) {
@@ -976,7 +958,7 @@ public class Escalator extends Widget
 
         public native void attachTouchListeners(Element element)
         /*
-         * Attaching events with JSNI instead of the GWT event mechanism because
+         * Detaching events with JSNI instead of the GWT event mechanism because
          * GWT didn't provide enough details in events, or triggering the event
          * handlers with GWT bindings was unsuccessful. Maybe, with more time
          * and skill, it could be done with better success. JavaScript overlay
@@ -1012,48 +994,6 @@ public class Escalator extends Widget
             } else {
                 // this would be IE8, but we don't support it with touch
             }
-        }-*/;
-
-        /**
-         * Using mousedown, mousemove, and mouseup for IE and Edge instead of
-         * touch* listeners (#18737)
-         * 
-         * @param element
-         */
-        public native void attachMouseDragListeners(Element element)
-        /*
-         * Attaching events with JSNI instead of the GWT event mechanism because
-         * GWT didn't provide enough details in events, or triggering the event
-         * handlers with GWT bindings was unsuccessful. Maybe, with more time
-         * and skill, it could be done with better success. JavaScript overlay
-         * types might work. This might also get rid of the JsniWorkaround
-         * class.
-         */
-        /*-{
-            element.addEventListener("mousedown", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
-            element.addEventListener("mousemove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
-            element.addEventListener("mouseup", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
-        }-*/;
-
-        /**
-         * Using mousedown, mousemove, and mouseup for IE and Edge instead of
-         * touch* listeners (#18737)
-         * 
-         * @param element
-         */
-        public native void detachMouseDragListeners(Element element)
-        /*
-         * Detaching events with JSNI instead of the GWT event mechanism because
-         * GWT didn't provide enough details in events, or triggering the event
-         * handlers with GWT bindings was unsuccessful. Maybe, with more time
-         * and skill, it could be done with better success. JavaScript overlay
-         * types might work. This might also get rid of the JsniWorkaround
-         * class.
-         */
-        /*-{
-            element.removeEventListener("mousedown", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
-            element.removeEventListener("mousemove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
-            element.removeEventListener("mouseup", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
         }-*/;
 
         public void scrollToColumn(final int columnIndex,
@@ -5832,13 +5772,7 @@ public class Escalator extends Widget
         scroller.attachScrollListener(verticalScrollbar.getElement());
         scroller.attachScrollListener(horizontalScrollbar.getElement());
         scroller.attachMousewheelListener(getElement());
-
-        if (BrowserInfo.get().isIEOrEdge()) {
-            // Touch listeners doesn't work for IE and Edge (#18737)
-            scroller.attachMouseDragListeners(getElement());
-        } else {
-            scroller.attachTouchListeners(getElement());
-        }
+        scroller.attachTouchListeners(getElement());
     }
 
     @Override
@@ -5847,13 +5781,7 @@ public class Escalator extends Widget
         scroller.detachScrollListener(verticalScrollbar.getElement());
         scroller.detachScrollListener(horizontalScrollbar.getElement());
         scroller.detachMousewheelListener(getElement());
-
-        if (BrowserInfo.get().isIEOrEdge()) {
-            // Touch listeners doesn't work for IE and Edge (#18737)
-            scroller.detachMouseDragListeners(getElement());
-        } else {
-            scroller.detachTouchListeners(getElement());
-        }
+        scroller.detachTouchListeners(getElement());
 
         /*
          * We can call paintRemoveRows here, because static ranges are simple to

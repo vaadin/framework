@@ -245,10 +245,6 @@ public class BrowserInfo {
         return browserDetails.isEdge();
     }
 
-    public boolean isIEOrEdge() {
-        return browserDetails.isIE() || browserDetails.isEdge();
-    }
-
     public boolean isFirefox() {
         return browserDetails.isFirefox();
     }
