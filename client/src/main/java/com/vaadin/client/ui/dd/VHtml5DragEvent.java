@@ -90,8 +90,11 @@ public class VHtml5DragEvent extends NativeEvent {
         // Chrome >= v21 and Opera >= v?
         if (this.dataTransfer.items) {
             var item = this.dataTransfer.items[fileIndex];
-            if (item.webkitGetAsEntry) {
-                return item.webkitGetAsEntry().isFile;
+            if (typeof item.webkitGetAsEntry == "function") {
+                var entry = item.webkitGetAsEntry();
+                if (typeof entry !== "undefined" && entry !== null) {
+                    return entry.isFile;
+                }
             }
         }
 
