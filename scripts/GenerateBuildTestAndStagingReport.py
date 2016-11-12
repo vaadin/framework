@@ -70,7 +70,7 @@ def getDemoLinksHtml():
 
 def getArchetypeLinksHtml():
     archetypes_html = "Try archetypes"
-    link_list = list(map(lambda archetype: "<a href='{url}/{archetypeName}-{version}'>{demoName}</a>".format(url=args.deployUrl, archetypeName=archetype, version=args.version), archetypes))
+    link_list = list(map(lambda archetype: "<a href='{url}/{archetypeName}-{version}'>{archetypeName}</a>".format(url=args.deployUrl, archetypeName=archetype, version=args.version), archetypes))
     return archetypes_html + getHtmlList(link_list)
 
 def getDirs(url):
