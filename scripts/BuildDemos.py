@@ -30,7 +30,7 @@ def dump_status(error_occurred):
 	pickle.dump(status_dump, open("result/demo_validation_status.pickle", "wb"))
 
 def log_status(log_string):
-	status_dump["messages"].add(log_string)
+	status_dump["messages"].append(log_string)
 	print(log_string)
 
 def checkout(folder, url, repoBranch = "master"):
