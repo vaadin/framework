@@ -75,6 +75,8 @@
   }
 
   .#{$primaryStyleName}-body {
+    -ms-touch-action: none;
+    touch-action: none;
     z-index: 0;
     top: 0;
 
