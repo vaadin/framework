@@ -1,5 +1,5 @@
 from BuildDemos import demos
-from BuildArchetypes import archetypes
+from BuildArchetypes import archetypes, getDeploymentContext
 import argparse, requests, json, subprocess, re, pickle
 
 parser = argparse.ArgumentParser()
@@ -70,7 +70,7 @@ def getDemoLinksHtml():
 
 def getArchetypeLinksHtml():
     archetypes_html = "Try archetypes"
-    link_list = list(map(lambda archetype: "<a href='{url}/{archetypeName}-{version}'>{archetypeName}</a>".format(url=args.deployUrl, archetypeName=archetype, version=args.version), archetypes))
+    link_list = list(map(lambda archetype: "<a href='{url}/{context}'>{archetypeName}</a>".format(url=args.deployUrl, archetypeName=archetype, context=getDeploymentContext(archetype, args.version)), archetypes))
     return archetypes_html + getHtmlList(link_list)
 
 def getDirs(url):
@@ -156,7 +156,7 @@ content += createTableRow("", getArchetypeLinksHtml())
 # link to release notes
 content += createTableRow("", "<a href=\"http://{}/repository/download/{}/{}:id/release-notes/release-notes.html\">Check release notes</a>".format(args.teamcityUrl, args.buildTypeId, args.buildId))
 # link to api diff
-content += createTableRow("", "<a href=\"http://{}/repository/download/{}/{}:id/apidiff/changes.html\">API Diff</a>")
+content += createTableRow("", "<a href=\"http://{}/repository/download/{}/{}:id/apidiff/changes.html\">API Diff</a>".format(args.teamcityUrl, args.buildTypeId, args.buildId))
 
 # check that trac tickets are in the correct status
 content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=closed&status=pending-release&component=Core+Framework&resolution=fixed&group=milestone&col=id&col=summary&col=component&col=status&col=type&col=priority&col=milestone&order=priority\">Check that trac tickets have correct status</a>")
