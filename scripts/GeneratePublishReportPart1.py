@@ -14,7 +14,7 @@ metadataChecks = {
 	'https://vaadin.com/download/VERSIONS_7': '^7\..*',
 	'https://vaadin.com/download/release/7.7/LATEST': '^7\..*',
 	'https://vaadin.com/download/LATEST': '^6\..*',
-	'https://vaadin.com/download/PRERELEASES': '^{ver}'
+	'https://vaadin.com/download/PRERELEASES': '^8\..*'
 }
 
 parser = argparse.ArgumentParser(description="Post-publish report generator")
