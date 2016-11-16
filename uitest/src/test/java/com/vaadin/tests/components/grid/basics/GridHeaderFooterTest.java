@@ -138,9 +138,8 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         assertFooterTexts(1, GridBasics.COLUMN_CAPTIONS);
     }
 
-    public void testDynamicallyChangingCellType() throws Exception {
-        openTestURL();
-
+    @Test
+    public void testDynamicallyChangingHeaderCellType() throws Exception {
         selectMenuPath("Component", "Columns", "Column 0", "Header Type",
                 "Widget Header");
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
@@ -163,8 +162,6 @@ public class GridHeaderFooterTest extends GridBasicsTest {
 
     @Test
     public void testButtonInHeader() throws Exception {
-        openTestURL();
-
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
                 "Widget Header");
 
@@ -176,7 +173,6 @@ public class GridHeaderFooterTest extends GridBasicsTest {
 
     @Test
     public void testRemoveComponentFromHeader() throws Exception {
-        openTestURL();
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
                 "Widget Header");
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
@@ -198,6 +194,67 @@ public class GridHeaderFooterTest extends GridBasicsTest {
 
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
                 "Widget Header");
+
+        getSidebarOpenButton().click();
+        assertEquals("Column 1", getColumnHidingToggle(1).getText());
+    }
+
+    @Test
+    public void testDynamicallyChangingFooterCellType() throws Exception {
+        selectMenuPath("Component", "Columns", "Column 0", "Footer Type",
+                "Widget Footer");
+        GridCellElement widgetCell = getGridElement().getFooterCell(0, 0);
+        assertTrue(widgetCell.isElementPresent(By.className("v-button")));
+
+        selectMenuPath("Component", "Columns", "Column 1", "Footer Type",
+                "HTML Footer");
+        GridCellElement htmlCell = getGridElement().getFooterCell(0, 1);
+        assertEquals("<b>HTML Footer</b>",
+                htmlCell.findElement(
+                        By.className("v-grid-column-footer-content"))
+                        .getAttribute("innerHTML"));
+
+        selectMenuPath("Component", "Columns", "Column 2", "Footer Type",
+                "Text Footer");
+        GridCellElement textCell = getGridElement().getFooterCell(0, 2);
+
+        assertEquals("text footer", textCell.getText().toLowerCase());
+    }
+
+    @Test
+    public void testButtonInFooter() throws Exception {
+        selectMenuPath("Component", "Columns", "Column 1", "Footer Type",
+                "Widget Footer");
+
+        getGridElement().findElements(By.className("v-button")).get(0).click();
+
+        assertTrue("Button click should be logged",
+                logContainsText("Button clicked!"));
+    }
+
+    @Test
+    public void testRemoveComponentFromFooter() throws Exception {
+        selectMenuPath("Component", "Columns", "Column 1", "Footer Type",
+                "Widget Footer");
+        selectMenuPath("Component", "Columns", "Column 1", "Footer Type",
+                "Text Footer");
+        assertTrue("No notifications should've been shown",
+                !$(NotificationElement.class).exists());
+        assertEquals("Footer should've been reverted back to text footer",
+                "text footer",
+                getGridElement().getFooterCell(0, 1).getText().toLowerCase());
+    }
+
+    @Test
+    public void testColumnHidingToggleCaption_settingWidgetToFooter_toggleCaptionStays() {
+        toggleColumnHidable(1);
+        getSidebarOpenButton().click();
+        assertEquals("column 1",
+                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
+        assertEquals("Column 1", getColumnHidingToggle(1).getText());
+
+        selectMenuPath("Component", "Columns", "Column 1", "Footer Type",
+                "Widget Footer");
 
         getSidebarOpenButton().click();
         assertEquals("Column 1", getColumnHidingToggle(1).getText());

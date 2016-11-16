@@ -52,6 +52,7 @@ import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.client.widgets.Grid.FooterCell;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.client.widgets.Grid.HeaderRow;
@@ -279,9 +280,36 @@ public class GridConnector extends AbstractListingConnector
             FooterRow row = grid.appendFooterRow();
 
             rowState.cells.forEach((columnId, cellState) -> {
-                row.getCell(getColumn(columnId)).setText(cellState.text);
+                updateFooterCellFromState(row.getCell(getColumn(columnId)),
+                        cellState);
             });
         }
+    }
+
+    private void updateFooterCellFromState(FooterCell cell,
+            CellState cellState) {
+        switch (cellState.type) {
+        case TEXT:
+            cell.setText(cellState.text);
+            break;
+        case HTML:
+            cell.setHtml(cellState.html);
+            break;
+        case WIDGET:
+            ComponentConnector connector = (ComponentConnector) cellState.connector;
+            if (connector != null) {
+                cell.setWidget(connector.getWidget());
+            } else {
+                // This happens if you do setVisible(false) on the component on
+                // the server side
+                cell.setWidget(null);
+            }
+            break;
+        default:
+            throw new IllegalStateException(
+                    "unexpected cell type: " + cellState.type);
+        }
+        cell.setStyleName(cellState.styleName);
     }
 
     @Override

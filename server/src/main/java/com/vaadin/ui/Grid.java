@@ -1647,6 +1647,44 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
          *            the footer caption to set, not null
          */
         public void setText(String text);
+
+        /**
+         * Returns the HTML content displayed in this cell.
+         *
+         * @return the html
+         *
+         */
+        public String getHtml();
+
+        /**
+         * Sets the HTML content displayed in this cell.
+         *
+         * @param html
+         *            the html to set
+         */
+        public void setHtml(String html);
+
+        /**
+         * Returns the component displayed in this cell.
+         *
+         * @return the component
+         */
+        public Component getComponent();
+
+        /**
+         * Sets the component displayed in this cell.
+         *
+         * @param component
+         *            the component to set
+         */
+        public void setComponent(Component component);
+
+        /**
+         * Returns the type of content stored in this cell.
+         *
+         * @return cell content type
+         */
+        public GridStaticCellType getCellType();
     }
 
     private class HeaderImpl extends Header {
@@ -1927,6 +1965,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
             HeaderRow row = header.getRow(i);
             getColumns().forEach(column -> {
                 HeaderCell cell = row.getCell(column);
+                if (cell.getCellType() == GridStaticCellType.WIDGET) {
+                    componentSet.add(cell.getComponent());
+                }
+            });
+        }
+        Footer footer = getFooter();
+        for (int i = 0; i < footer.getRowCount(); ++i) {
+            FooterRow row = footer.getRow(i);
+            getColumns().forEach(column -> {
+                FooterCell cell = row.getCell(column);
                 if (cell.getCellType() == GridStaticCellType.WIDGET) {
                     componentSet.add(cell.getComponent());
                 }

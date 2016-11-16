@@ -187,7 +187,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                 new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7]);
 
         ((SingleSelectionModel<DataObject>) grid.getSelectionModel())
-                .addSelectionChangeListener(e -> log("Selected: " + e.getValue()));
+                .addSelectionChangeListener(
+                        e -> log("Selected: " + e.getValue()));
 
         layout.addComponent(createMenu());
         layout.addComponent(grid);
@@ -242,6 +243,18 @@ public class GridBasics extends AbstractTestUIWithLog {
                 final Button button = new Button("Button Header");
                 button.addClickListener(clickEvent -> log("Button clicked!"));
                 grid.getDefaultHeaderRow().getCell(col).setComponent(button);
+            });
+
+            MenuItem footerTypeMenu = columnMenu.addItem("Footer Type", null);
+            footerTypeMenu.addItem("Text Footer", selectedItem -> grid
+                    .getFooterRow(0).getCell(col).setText("Text Footer"));
+            footerTypeMenu.addItem("HTML Footer",
+                    selectedItem -> grid.getFooterRow(0).getCell(col)
+                            .setHtml("<b>HTML Footer</b>"));
+            footerTypeMenu.addItem("Widget Footer", selectedItem -> {
+                final Button button = new Button("Button Footer");
+                button.addClickListener(clickEvent -> log("Button clicked!"));
+                grid.getFooterRow(0).getCell(col).setComponent(button);
             });
 
             columnMenu
