@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBoxBase;
+import com.vaadin.client.DeferredWorker;
 
 /**
  * This class represents a basic text input field with one row.
@@ -30,8 +31,8 @@ import com.google.gwt.user.client.ui.TextBoxBase;
  * @author Vaadin Ltd.
  *
  */
-public class VTextField extends TextBoxBase
-        implements Field, FocusHandler, BlurHandler, AbstractTextFieldWidget {
+public class VTextField extends TextBoxBase implements Field, FocusHandler,
+        BlurHandler, AbstractTextFieldWidget{
 
     public static final String CLASSNAME = "v-textfield";
     public static final String CLASSNAME_FOCUS = "focus";
