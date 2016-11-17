@@ -1073,6 +1073,6 @@ public class ValoTheme {
      */
     public static final String MENU_APPEAR_ON_HOVER = "valo-menu-hover";
 
-    private ValoTheme() {
+    protected ValoTheme() {
     }
 }
