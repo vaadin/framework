@@ -34,6 +34,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.textfield.TextFieldConstants;
@@ -45,7 +46,7 @@ import com.vaadin.shared.ui.textfield.TextFieldConstants;
  *
  */
 public class VTextField extends TextBoxBase implements Field, ChangeHandler,
-        FocusHandler, BlurHandler, KeyDownHandler {
+        FocusHandler, BlurHandler, KeyDownHandler, DeferredWorker {
 
     /**
      * The input node CSS classname.
@@ -527,5 +528,10 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             setText("");
         }
         possibleInputError = false;
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return scheduled;
     }
 }

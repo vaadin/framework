@@ -47,6 +47,12 @@ public class TextChangeEvents extends TestBase {
         ta.addListener(inputEventListener);
         getLayout().addComponent(ta);
 
+        TextArea tat = new TextArea("Timeout 3s");
+        tat.addListener(inputEventListener);
+        tat.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
+        tat.setTextChangeTimeout(3000);
+        getLayout().addComponent(tat);
+
         VaadinDeveloperNameField vd = new VaadinDeveloperNameField();
         vd.addListener(inputEventListener);
         getLayout().addComponent(vd);
