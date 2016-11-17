@@ -1152,9 +1152,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         @Override
-        public void failure(String errorMessage,
-                Collection<Grid.Column<?, T>> errorColumns) {
-            complete(errorMessage, errorColumns);
+        public void failure() {
+            complete("", null);
             if (callback != null) {
                 callback.onError(this);
             }

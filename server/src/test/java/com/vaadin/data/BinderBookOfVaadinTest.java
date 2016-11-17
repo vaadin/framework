@@ -637,7 +637,7 @@ public class BinderBookOfVaadinTest {
     public void withBinderStatusHandlerExample() {
         Label formStatusLabel = new Label();
 
-        BinderValidationStatusHandler defaultHandler = binder
+        BinderValidationStatusHandler<BookPerson> defaultHandler = binder
                 .getValidationStatusHandler();
 
         binder.setValidationStatusHandler(status -> {

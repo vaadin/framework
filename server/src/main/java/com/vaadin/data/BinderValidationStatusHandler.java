@@ -23,8 +23,8 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Handler for {@link BinderValidationStatus} changes.
  * <p>
- * {{@link Binder#setValidationStatusHandler(BinderStatusHandler) Register} an instance of
- * this class to be able to customize validation status handling.
+ * {{@link Binder#setValidationStatusHandler(BinderStatusHandler) Register} an
+ * instance of this class to be able to customize validation status handling.
  * <p>
  * The default handler will show
  * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
@@ -39,9 +39,12 @@ import com.vaadin.ui.AbstractComponent;
  * @see Binder#validate()
  * @see ValidationStatus
  *
+ * @param <BEAN>
+ *            the bean type of binder
+ *
  * @since 8.0
  */
-public interface BinderValidationStatusHandler
-        extends Consumer<BinderValidationStatus<?>>, Serializable {
+public interface BinderValidationStatusHandler<BEAN>
+        extends Consumer<BinderValidationStatus<BEAN>>, Serializable {
 
 }

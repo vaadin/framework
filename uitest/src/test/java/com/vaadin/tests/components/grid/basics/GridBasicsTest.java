@@ -16,6 +16,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest.CellSide;
@@ -202,6 +203,15 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
             }
         }
         return null;
+    }
+
+    protected GridEditorElement getEditor() {
+        return getGridElement().getEditor();
+    }
+
+    protected int getGridVerticalScrollPos() {
+        return ((Number) executeScript("return arguments[0].scrollTop",
+                getGridVerticalScrollbar())).intValue();
     }
 
 }

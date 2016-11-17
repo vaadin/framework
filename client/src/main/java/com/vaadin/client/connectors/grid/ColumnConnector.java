@@ -132,6 +132,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setExpandRatio(getState().expandRatio);
     }
 
+    @OnStateChange("editable")
+    void updateEditable() {
+        column.setEditable(getState().editable);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();

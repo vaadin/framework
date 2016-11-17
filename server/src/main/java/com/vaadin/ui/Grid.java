@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ import java.util.stream.Stream;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
@@ -48,6 +50,7 @@ import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -63,6 +66,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
@@ -587,6 +591,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
                             .getSortOrder(order.getDirection()))
                     .forEach(s -> s.forEach(sortProperties::add));
             getDataCommunicator().setBackEndSorting(sortProperties);
+
+            // Close grid editor if it's open.
+            if (getEditor().isOpen()) {
+                getEditor().cancel();
+            }
         }
 
         @Override
@@ -794,6 +803,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
+
+        private SerializableFunction<T, Component> componentGenerator;
 
         /**
          * Constructs a new Column configuration with given header caption,
@@ -1498,8 +1509,85 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
         }
 
         /**
+         * Sets whether this Column has a component displayed in Editor or not.
+         *
+         * @param editable
+         *            {@code true} if column is editable; {@code false} if not
+         * @return this column
+         *
+         * @see #setEditorComponent(Component)
+         * @see #setEditorComponentGenerator(SerializableFunction)
+         */
+        public Column<T, V> setEditable(boolean editable) {
+            Objects.requireNonNull(componentGenerator,
+                    "Column has no editor component defined");
+            getState().editable = editable;
+            return this;
+        }
+
+        /**
+         * Gets whether this Column has a component displayed in Editor or not.
+         *
+         * @return {@code true} if the column displays an editor component;
+         *         {@code false} if not
+         */
+        public boolean isEditable() {
+            return getState(false).editable;
+        }
+
+        /**
+         * Sets a static editor component for this column.
+         * <p>
+         * <strong>Note:</strong> The same component cannot be used for multiple
+         * columns.
+         *
+         * @param component
+         *            the editor component
+         * @return this column
+         *
+         * @see Editor#getBinder()
+         * @see Editor#setBinder(Binder)
+         * @see #setEditorComponentGenerator(SerializableFunction)
+         */
+        public Column<T, V> setEditorComponent(Component component) {
+            Objects.requireNonNull(component,
+                    "null is not a valid editor field");
+            return setEditorComponentGenerator(t -> component);
+        }
+
+        /**
+         * Sets a component generator to provide editor component for this
+         * Column. This method can be used to generate any dynamic component to
+         * be displayed in the editor row.
+         * <p>
+         * <strong>Note:</strong> The same component cannot be used for multiple
+         * columns.
+         *
+         * @param componentGenerator
+         *            the editor component generator
+         * @return this column
+         *
+         * @see #setEditorComponent(Component)
+         */
+        public Column<T, V> setEditorComponentGenerator(
+                SerializableFunction<T, Component> componentGenerator) {
+            Objects.requireNonNull(componentGenerator);
+            this.componentGenerator = componentGenerator;
+            return setEditable(true);
+        }
+
+        /**
+         * Gets the editor component generator for this Column.
+         *
+         * @return editor component generator
+         */
+        public SerializableFunction<T, Component> getEditorComponentGenerator() {
+            return componentGenerator;
+        }
+
+        /**
          * Checks if column is attached and throws an
-         * {@link IllegalStateException} if it is not
+         * {@link IllegalStateException} if it is not.
          *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
@@ -1557,7 +1645,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
          *            The cells to merge. Must be from the same row.
          * @return The remaining visible cell after the merge
          */
-        HeaderCell join(HeaderCell ... cellsToMerge);
+        HeaderCell join(HeaderCell... cellsToMerge);
 
     }
 
@@ -1716,6 +1804,167 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
         public GridStaticCellType getCellType();
     }
 
+    /**
+     * Generator for creating editor validation and conversion error messages.
+     *
+     * @param <T>
+     *            the bean type
+     */
+    public interface EditorErrorGenerator<T> extends Serializable,
+            BiFunction<Map<Component, Column<T, ?>>, BinderValidationStatus<T>, String> {
+
+        /**
+         * Generates an error message from given validation status object.
+         *
+         * @param fieldToColumn
+         *            the map of failed fields and corresponding columns
+         * @param status
+         *            the binder status object with all failures
+         *
+         * @return error message string
+         */
+        @Override
+        public String apply(Map<Component, Column<T, ?>> fieldToColumn,
+                BinderValidationStatus<T> status);
+    }
+
+    /**
+     * An editor in a Grid.
+     *
+     * @param <T>
+     */
+    public interface Editor<T> extends Serializable {
+
+        /**
+         * Sets the underlying Binder to this Editor.
+         *
+         * @param binder
+         *            the binder for updating editor fields; not {@code null}
+         * @return this editor
+         */
+        public Editor<T> setBinder(Binder<T> binder);
+
+        /**
+         * Returns the underlying Binder from Editor.
+         *
+         * @return the binder; not {@code null}
+         */
+        public Binder<T> getBinder();
+
+        /**
+         * Sets the Editor buffered mode. When the editor is in buffered mode,
+         * edits are only committed when the user clicks the save button. In
+         * unbuffered mode valid changes are automatically committed.
+         *
+         * @param buffered
+         *            {@code true} if editor should be buffered; {@code false}
+         *            if not
+         * @return this editor
+         */
+        public Editor<T> setBuffered(boolean buffered);
+
+        /**
+         * Enables or disabled the Editor. A disabled editor cannot be opened.
+         *
+         * @param enabled
+         *            {@code true} if editor should be enabled; {@code false} if
+         *            not
+         * @return this editor
+         */
+        public Editor<T> setEnabled(boolean enabled);
+
+        /**
+         * Returns whether Editor is buffered or not.
+         *
+         * @see #setBuffered(boolean)
+         *
+         * @return {@code true} if editor is buffered; {@code false} if not
+         */
+        public boolean isBuffered();
+
+        /**
+         * Returns whether Editor is enabled or not.
+         *
+         * @return {@code true} if editor is enabled; {@code false} if not
+         */
+        public boolean isEnabled();
+
+        /**
+         * Returns whether Editor is open or not.
+         *
+         * @return {@code true} if editor is open; {@code false} if not
+         */
+        public boolean isOpen();
+
+        /**
+         * Saves any changes from the Editor fields to the edited bean.
+         *
+         * @return {@code true} if save succeeded; {@code false} if not
+         */
+        public boolean save();
+
+        /**
+         * Close the editor discarding any unsaved changes.
+         */
+        public void cancel();
+
+        /**
+         * Sets the caption of the save button in buffered mode.
+         *
+         * @param saveCaption
+         *            the save button caption
+         * @return this editor
+         */
+        public Editor<T> setSaveCaption(String saveCaption);
+
+        /**
+         * Sets the caption of the cancel button in buffered mode.
+         *
+         * @param cancelCaption
+         *            the cancel button caption
+         * @return this editor
+         */
+        public Editor<T> setCancelCaption(String cancelCaption);
+
+        /**
+         * Gets the caption of the save button in buffered mode.
+         *
+         * @return the save button caption
+         */
+        public String getSaveCaption();
+
+        /**
+         * Gets the caption of the cancel button in buffered mode.
+         *
+         * @return the cancel button caption
+         */
+        public String getCancelCaption();
+
+        /**
+         * Sets the error message generator for this editor.
+         * <p>
+         * The default message is a concatenation of column field validation
+         * failures and bean validation failures.
+         *
+         * @param errorGenerator
+         *            the function to generate error messages; not {@code null}
+         * @return this editor
+         *
+         * @see EditorErrorGenerator
+         */
+        public Editor<T> setErrorGenerator(
+                EditorErrorGenerator<T> errorGenerator);
+
+        /**
+         * Gets the error message generator of this editor.
+         *
+         * @return the function that generates error messages; not {@code null}
+         *
+         * @see EditorErrorGenerator
+         */
+        public EditorErrorGenerator<T> getErrorGenerator();
+    }
+
     private class HeaderImpl extends Header {
 
         @Override
@@ -1768,6 +2017,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
 
     private GridSelectionModel<T> selectionModel;
 
+    private Editor<T> editor;
+
     /**
      * Constructor for the {@link Grid} component.
      */
@@ -1781,6 +2032,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
         addDataGenerator(detailsManager);
+
+        editor = createEditor();
+        if (editor instanceof Extension) {
+            addExtension((Extension) editor);
+        }
 
         addDataGenerator((item, json) -> {
             String styleName = styleGenerator.apply(item);
@@ -2651,6 +2907,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
         return ((SingleSelectionModel<T>) model).asSingleSelect();
     }
 
+    public Editor<T> getEditor() {
+        return editor;
+    }
+
     /**
      * Sets the selection model for this listing.
      * <p>
@@ -2673,6 +2933,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
     @Override
     protected GridState getState(boolean markAsDirty) {
         return (GridState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Creates a new Editor instance. Can be overridden to create a custom
+     * Editor. If the Editor is a {@link AbstractGridExtension}, it will be
+     * automatically added to {@link DataCommunicator}.
+     *
+     * @return editor
+     */
+    protected Editor<T> createEditor() {
+        return new EditorImpl<>();
     }
 
     private void addExtensionComponent(Component c) {

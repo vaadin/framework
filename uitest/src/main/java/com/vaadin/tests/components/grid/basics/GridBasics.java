@@ -1,6 +1,21 @@
 package com.vaadin.tests.components.grid.basics;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
+import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.Binder;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -19,6 +34,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.StyleGenerator;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.SingleSelectionModel;
 import com.vaadin.ui.renderers.DateRenderer;
@@ -26,19 +42,8 @@ import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.ProgressBarRenderer;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-
 @Widgetset("com.vaadin.DefaultWidgetSet")
+@Theme("tests-valo-disabled-animations")
 public class GridBasics extends AbstractTestUIWithLog {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
@@ -52,9 +57,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     public static final String CELL_STYLE_GENERATOR_EMPTY = "Empty string";
     public static final String CELL_STYLE_GENERATOR_NULL = "Null";
 
-    public static final String[] COLUMN_CAPTIONS = {"Column 0", "Column 1",
+    public static final String[] COLUMN_CAPTIONS = { "Column 0", "Column 1",
             "Column 2", "Row Number", "Date", "HTML String", "Big Random",
-            "Small Random"};
+            "Small Random" };
 
     private final Command toggleReorderListenerCommand = new Command() {
         private Registration registration = null;
@@ -144,7 +149,6 @@ public class GridBasics extends AbstractTestUIWithLog {
     private List<DataObject> data;
     private int watchingCount = 0;
     private PersistingDetailsGenerator persistingDetails;
-    private List<Column<DataObject, ?>> initialColumnOrder;
 
     public GridBasics() {
         generators.put("NULL", null);
@@ -169,24 +173,47 @@ public class GridBasics extends AbstractTestUIWithLog {
         // Create grid
         grid = new Grid<>();
         grid.setItems(data);
+        grid.setSizeFull();
 
-        grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 0)")
-                .setCaption(COLUMN_CAPTIONS[0]);
+        Binder<DataObject> binder = grid.getEditor().getBinder();
+
+        TextField html = new TextField();
+        TextField smallRandom = new TextField();
+        TextField coordinates = new TextField();
+        TextField rowNumber = new TextField();
+
+        binder.bind(html, DataObject::getHtmlString, DataObject::setHtmlString);
+        binder.forField(smallRandom)
+                .withConverter(new StringToIntegerConverter(
+                        "Could not convert value to Integer"))
+                .withValidator(i -> i >= 0 && i < 5,
+                        "Small random needs to be in range [0..5)")
+                .bind(DataObject::getSmallRandom, DataObject::setSmallRandom);
+        binder.bind(coordinates, DataObject::getCoordinates,
+                DataObject::setCoordinates);
+        binder.forField(rowNumber)
+                .withConverter(new StringToIntegerConverter(
+                        "Could not convert value to Integer"))
+                .bind(DataObject::getRowNumber, DataObject::setRowNumber);
+
+        grid.addColumn(DataObject::getCoordinates)
+                .setCaption(COLUMN_CAPTIONS[0]).setEditorComponent(coordinates);
         grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 1)")
                 .setCaption(COLUMN_CAPTIONS[1]);
         grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 2)")
                 .setCaption(COLUMN_CAPTIONS[2]);
 
         grid.addColumn(DataObject::getRowNumber, new NumberRenderer())
-                .setCaption(COLUMN_CAPTIONS[3]);
+                .setCaption(COLUMN_CAPTIONS[3]).setEditorComponent(rowNumber);
         grid.addColumn(DataObject::getDate, new DateRenderer())
                 .setCaption(COLUMN_CAPTIONS[4]);
         grid.addColumn(DataObject::getHtmlString, new HtmlRenderer())
-                .setCaption(COLUMN_CAPTIONS[5]);
+                .setCaption(COLUMN_CAPTIONS[5]).setEditorComponent(html);
         grid.addColumn(DataObject::getBigRandom, new NumberRenderer())
                 .setCaption(COLUMN_CAPTIONS[6]);
         grid.addColumn(data -> data.getSmallRandom() / 5d,
-                new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7]);
+                new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7])
+                .setEditorComponent(smallRandom);
 
         ((SingleSelectionModel<DataObject>) grid.getSelectionModel())
                 .addSelectionChangeListener(
@@ -199,6 +226,9 @@ public class GridBasics extends AbstractTestUIWithLog {
 
     private Component createMenu() {
         MenuBar menu = new MenuBar();
+        menu.setErrorHandler(error -> log("Exception occured, "
+                + error.getThrowable().getClass().getName() + ": "
+                + error.getThrowable().getMessage()));
         MenuItem componentMenu = menu.addItem("Component", null);
         createStateMenu(componentMenu.addItem("State", null));
         createSizeMenu(componentMenu.addItem("Size", null));
@@ -207,6 +237,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         createHeaderMenu(componentMenu.addItem("Header", null));
         createFooterMenu(componentMenu.addItem("Footer", null));
         createColumnsMenu(componentMenu.addItem("Columns", null));
+        createEditorMenu(componentMenu.addItem("Editor", null));
         return menu;
     }
 
@@ -274,9 +305,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                             selectedItem -> col
                                     .setHidden(selectedItem.isChecked()))
                     .setCheckable(true);
-            columnMenu
-                    .addItem("Remove",
-                            selectedItem -> grid.removeColumn(col));
+            columnMenu.addItem("Remove",
+                    selectedItem -> grid.removeColumn(col));
         }
     }
 
@@ -353,6 +383,11 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .addItem("Column Reordering", selectedItem -> grid
                         .setColumnReorderingAllowed(selectedItem.isChecked()))
                 .setCheckable(true);
+
+        MenuItem enableItem = stateMenu.addItem("Enabled",
+                e -> grid.setEnabled(e.isChecked()));
+        enableItem.setCheckable(true);
+        enableItem.setChecked(true);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
@@ -401,7 +436,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private <T> void addGridMethodMenu(MenuItem parent, String name, T value,
-                                       Consumer<T> method) {
+            Consumer<T> method) {
         parent.addItem(name, menuItem -> method.accept(value));
     }
 
@@ -453,7 +488,8 @@ public class GridBasics extends AbstractTestUIWithLog {
         });
     }
 
-    private void mergeHeaderСells(int rowIndex, String jointCellText, int... columnIndexes) {
+    private void mergeHeaderСells(int rowIndex, String jointCellText,
+            int... columnIndexes) {
         HeaderRow headerRow = grid.getHeaderRow(rowIndex);
         List<Column<DataObject, ?>> columns = grid.getColumns();
         Set<Grid.HeaderCell> toMerge = new HashSet<>();
@@ -522,8 +558,27 @@ public class GridBasics extends AbstractTestUIWithLog {
         });
     }
 
+    private void createEditorMenu(MenuItem editorMenu) {
+        editorMenu
+                .addItem("Enabled",
+                        i -> grid.getEditor().setEnabled(i.isChecked()))
+                .setCheckable(true);
+        MenuItem bufferedMode = editorMenu.addItem("Buffered mode",
+                i -> grid.getEditor().setBuffered(i.isChecked()));
+        bufferedMode.setCheckable(true);
+        bufferedMode.setChecked(true);
+
+        editorMenu.addItem("Save", i -> grid.getEditor().save());
+        editorMenu.addItem("Cancel edit", i -> grid.getEditor().cancel());
+
+        editorMenu.addItem("Change save caption",
+                e -> grid.getEditor().setSaveCaption("ǝʌɐS"));
+        editorMenu.addItem("Change cancel caption",
+                e -> grid.getEditor().setCancelCaption("ʃǝɔuɐↃ"));
+
+    }
+
     private void openOrCloseDetails(DataObject dataObj) {
         grid.setDetailsVisible(dataObj, !grid.isDetailsVisible(dataObj));
     }
-
 }

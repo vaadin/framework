@@ -23,6 +23,7 @@ public class ColumnState extends SharedState {
     public String caption;
     public String id;
     public boolean sortable;
+    public boolean editable = false;
 
     /** The caption for the column hiding toggle. */
     public String hidingToggleCaption;
@@ -58,4 +59,5 @@ public class ColumnState extends SharedState {
     public boolean resizable = true;
 
     public Connector renderer;
+
 }

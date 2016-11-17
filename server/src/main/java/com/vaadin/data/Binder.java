@@ -884,7 +884,7 @@ public class Binder<BEAN> implements Serializable {
 
     private Label statusLabel;
 
-    private BinderValidationStatusHandler statusHandler;
+    private BinderValidationStatusHandler<BEAN> statusHandler;
 
     private boolean hasChanges = false;
 
@@ -1356,7 +1356,7 @@ public class Binder<BEAN> implements Serializable {
      * @see Binding#withValidationStatusHandler(ValidationStatusHandler)
      */
     public void setValidationStatusHandler(
-            BinderValidationStatusHandler statusHandler) {
+            BinderValidationStatusHandler<BEAN> statusHandler) {
         Objects.requireNonNull(statusHandler, "Cannot set a null "
                 + BinderValidationStatusHandler.class.getSimpleName());
         if (statusLabel != null) {
@@ -1377,7 +1377,7 @@ public class Binder<BEAN> implements Serializable {
      * @return the status handler used, never <code>null</code>
      * @see #setValidationStatusHandler(BinderStatusHandler)
      */
-    public BinderValidationStatusHandler getValidationStatusHandler() {
+    public BinderValidationStatusHandler<BEAN> getValidationStatusHandler() {
         return Optional.ofNullable(statusHandler)
                 .orElse(this::handleBinderValidationStatus);
     }
@@ -1509,7 +1509,7 @@ public class Binder<BEAN> implements Serializable {
      *            validators
      */
     protected void handleBinderValidationStatus(
-            BinderValidationStatus<?> binderStatus) {
+            BinderValidationStatus<BEAN> binderStatus) {
         // let field events go to binding status handlers
         binderStatus.getFieldValidationStatuses()
                 .forEach(status -> ((BindingImpl<?, ?, ?>) status.getBinding())

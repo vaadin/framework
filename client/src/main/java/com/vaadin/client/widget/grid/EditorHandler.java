@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.Editor;
 
 /**
  * An interface for binding widgets and data to the grid row editor. Used by the
@@ -93,6 +94,15 @@ public interface EditorHandler<T> {
          * Informs Grid that an error occurred while trying to process the
          * request.
          *
+         * @see Editor#setEditorError(String, Collection)
+         */
+        public void failure();
+
+        /**
+         * Informs Grid that an error occurred while trying to process the
+         * request. This method is a short-hand for calling {@link #failure()}
+         * and {@link Editor#setEditorError(String, Collection)}
+         *
          * @param errorMessage
          *            and error message to show to the user, or
          *            <code>null</code> to not show any message.
@@ -100,9 +110,14 @@ public interface EditorHandler<T> {
          *            a collection of columns for which an error indicator
          *            should be shown, or <code>null</code> if no columns should
          *            be marked as erroneous.
+         *
+         * @see Editor#setEditorError(String, Collection)
          */
-        public void failure(String errorMessage,
-                Collection<Grid.Column<?, T>> errorColumns);
+        public default void failure(String errorMessage,
+                Collection<Grid.Column<?, T>> errorColumns) {
+            failure();
+            getGrid().getEditor().setEditorError(errorMessage, errorColumns);
+        }
 
         /**
          * Checks whether the request is completed or not.
