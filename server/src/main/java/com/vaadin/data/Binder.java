@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.converter.ValueContext;
@@ -525,8 +526,10 @@ public class Binder<BEAN> implements Serializable {
 
             this.getter = getter;
             this.setter = setter;
+            onValueChange = getField()
+                    .addValueChangeListener(this::handleFieldValueChange);
             getBinder().bindings.add(this);
-            getBinder().getBean().ifPresent(this::bind);
+            getBinder().getBean().ifPresent(this::initFieldValue);
             getBinder().fireStatusChangeEvent(false);
         }
 
@@ -655,12 +658,6 @@ public class Binder<BEAN> implements Serializable {
             return l;
         }
 
-        private void bind(BEAN bean) {
-            setFieldValue(bean);
-            onValueChange = getField()
-                    .addValueChangeListener(e -> handleFieldValueChange(bean));
-        }
-
         @Override
         public ValidationStatus<TARGET> validate() {
             ValidationStatus<TARGET> status = doValidation();
@@ -675,9 +672,9 @@ public class Binder<BEAN> implements Serializable {
          * Returns the field value run through all converters and validators,
          * but doesn't pass the {@link ValidationStatus} to any status handler.
          *
-         * @return the conversation result
+         * @return the result of the conversion
          */
-        private Result<TARGET> doConversation() {
+        private Result<TARGET> doConversion() {
             FIELDVALUE fieldValue = field.getValue();
             return converterValidatorChain.convertToModel(fieldValue,
                     createValueContext());
@@ -698,7 +695,7 @@ public class Binder<BEAN> implements Serializable {
          * @return the validation status
          */
         private ValidationStatus<TARGET> doValidation() {
-            return toValidationStatus(doConversation());
+            return toValidationStatus(doConversion());
         }
 
         /**
@@ -714,20 +711,24 @@ public class Binder<BEAN> implements Serializable {
             return new ValueContext(findLocale());
         }
 
-        private void reset() {
-            onValueChange.remove();
-        }
-
         /**
          * Sets the field value by invoking the getter function on the given
-         * bean.
+         * bean. The default listener attached to the field will be removed for
+         * the duration of this update.
          *
          * @param bean
          *            the bean to fetch the property value from
          */
-        private void setFieldValue(BEAN bean) {
+        private void initFieldValue(BEAN bean) {
             assert bean != null;
-            getField().setValue(convertDataToFieldType(bean));
+            assert onValueChange != null;
+            onValueChange.remove();
+            try {
+                getField().setValue(convertDataToFieldType(bean));
+            } finally {
+                onValueChange = getField()
+                        .addValueChangeListener(this::handleFieldValueChange);
+            }
         }
 
         private FIELDVALUE convertDataToFieldType(BEAN bean) {
@@ -741,21 +742,29 @@ public class Binder<BEAN> implements Serializable {
          * @param bean
          *            the new value
          */
-        private void handleFieldValueChange(BEAN bean) {
+        private void handleFieldValueChange(
+                ValueChangeEvent<FIELDVALUE> event) {
             getBinder().setHasChanges(true);
-            // store field value if valid
-            ValidationStatus<TARGET> fieldValidationStatus = writeFieldValue(
-                    bean);
-            List<ValidationResult> binderValidationResults;
-            // if all field level validations pass, run bean level validation
-            if (!getBinder().bindings.stream().map(BindingImpl::doValidation)
-                    .anyMatch(ValidationStatus::isError)) {
-                binderValidationResults = getBinder().validateBean(bean);
+            List<ValidationResult> binderValidationResults = Collections
+                    .emptyList();
+            ValidationStatus<TARGET> fieldValidationStatus;
+            if (getBinder().getBean().isPresent()) {
+                BEAN bean = getBinder().getBean().get();
+                fieldValidationStatus = writeFieldValue(bean);
+                if (!getBinder().bindings.stream()
+                        .map(BindingImpl::doValidation)
+                        .anyMatch(ValidationStatus::isError)) {
+                    binderValidationResults = getBinder().validateBean(bean);
+                    if (!binderValidationResults.stream()
+                            .anyMatch(ValidationResult::isError)) {
+                        getBinder().setHasChanges(false);
+                    }
+                }
             } else {
-                binderValidationResults = Collections.emptyList();
+                fieldValidationStatus = doValidation();
             }
             BinderValidationStatus<BEAN> status = new BinderValidationStatus<>(
-                    binder, Arrays.asList(fieldValidationStatus),
+                    getBinder(), Arrays.asList(fieldValidationStatus),
                     binderValidationResults);
             getBinder().getValidationStatusHandler().accept(status);
             getBinder().fireStatusChangeEvent(status.hasErrors());
@@ -771,7 +780,7 @@ public class Binder<BEAN> implements Serializable {
         private ValidationStatus<TARGET> writeFieldValue(BEAN bean) {
             assert bean != null;
 
-            Result<TARGET> result = doConversation();
+            Result<TARGET> result = doConversion();
             if (setter != null) {
                 result.ifOk(value -> setter.accept(bean, value));
             }
@@ -1008,7 +1017,7 @@ public class Binder<BEAN> implements Serializable {
         } else {
             doRemoveBean(false);
             this.bean = bean;
-            bindings.forEach(b -> b.bind(bean));
+            bindings.forEach(b -> b.initFieldValue(bean));
             // if there has been field value change listeners that trigger
             // validation, need to make sure the validation errors are cleared
             getValidationStatusHandler().accept(
@@ -1045,7 +1054,7 @@ public class Binder<BEAN> implements Serializable {
     public void readBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
         setHasChanges(false);
-        bindings.forEach(binding -> binding.setFieldValue(bean));
+        bindings.forEach(binding -> binding.initFieldValue(bean));
 
         getValidationStatusHandler()
                 .accept(BinderValidationStatus.createUnresolvedStatus(this));
@@ -1530,12 +1539,43 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Check whether any of the bound fields' values have changed since last
-     * explicit call to {@link #setBean(Object)}, {@link #writeBean(Object)} or
-     * {@link #readBean(Object)}. Unsuccessful write operations will not affect
-     * this value.
+     * explicit call to {@link #setBean(Object)}, {@link #readBean(Object)},
+     * {@link #removeBean()}, {@link #writeBean(Object)} or
+     * {@link #writeBeanIfValid(Object)}. Unsuccessful write operations will not
+     * affect this value. Return values for each case are compiled into the
+     * following table:
+     *
+     * <p>
+     *
+     * <table>
+     * <tr>
+     * <td></td>
+     * <td>After readBean, setBean or removeBean</td>
+     * <td>After valid user changes</td>
+     * <td>After invalid user changes</td>
+     * <td>After successful writeBean or writeBeanIfValid</td>
+     * <td>After unsuccessful writeBean or writeBeanIfValid</td>
+     * </tr>
+     * <tr>
+     * <td>A bean is currently bound</td>
+     * <td>{@code false}</td>
+     * <td>{@code false}</td>
+     * <td>{@code true}</td>
+     * <td>{@code false}</td>
+     * <td>no change</td>
+     * </tr>
+     * <tr>
+     * <td>No bean is currently bound</td>
+     * <td>{@code false}</td>
+     * <td>{@code true}</td>
+     * <td>{@code true}</td>
+     * <td>{@code false}</td>
+     * <td>no change</td>
+     * </tr>
+     * </table>
      *
      * @return whether any bound field's value has changed since last call to
-     *         setBean, writeBean or readBean
+     *         setBean, readBean, writeBean or writeBeanIfValid
      */
     public boolean hasChanges() {
         return hasChanges;
@@ -1557,7 +1597,6 @@ public class Binder<BEAN> implements Serializable {
         setHasChanges(false);
         if (bean != null) {
             bean = null;
-            bindings.forEach(BindingImpl::reset);
         }
         getValidationStatusHandler()
                 .accept(BinderValidationStatus.createUnresolvedStatus(this));

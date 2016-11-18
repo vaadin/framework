@@ -385,4 +385,45 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Assert.assertNull(textField.getErrorMessage());
         Assert.assertTrue(textField.isRequiredIndicatorVisible());
     }
+
+    @Test
+    public void validationStatusHandler_onlyRunForChangedField() {
+        TextField firstNameField = new TextField();
+        TextField lastNameField = new TextField();
+
+        AtomicInteger invokes = new AtomicInteger();
+
+        binder.forField(firstNameField)
+                .withValidator(new NotEmptyValidator<>(""))
+                .withValidationStatusHandler(
+                        validationStatus -> invokes.addAndGet(1))
+                .bind(Person::getFirstName, Person::setFirstName);
+        binder.forField(lastNameField)
+                .withValidator(new NotEmptyValidator<>(""))
+                .bind(Person::getLastName, Person::setLastName);
+
+        binder.setBean(item);
+        // setting the bean causes 2:
+        Assert.assertEquals(2, invokes.get());
+
+        lastNameField.setValue("");
+        Assert.assertEquals(2, invokes.get());
+
+        firstNameField.setValue("");
+        Assert.assertEquals(3, invokes.get());
+
+        binder.removeBean();
+        Person person = new Person();
+        person.setFirstName("a");
+        person.setLastName("a");
+        binder.readBean(person);
+        // reading from a bean causes 2:
+        Assert.assertEquals(5, invokes.get());
+
+        lastNameField.setValue("");
+        Assert.assertEquals(5, invokes.get());
+
+        firstNameField.setValue("");
+        Assert.assertEquals(6, invokes.get());
+    }
 }

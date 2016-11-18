@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
@@ -713,7 +712,6 @@ public class BinderBookOfVaadinTest {
     }
 
     @Test
-    @Ignore
     public void statusChangeListener_binderIsNotBound() {
         Button saveButton = new Button();
         Button resetButton = new Button();
@@ -803,8 +801,6 @@ public class BinderBookOfVaadinTest {
 
         field.setValue("a");
         // there are valid changes
-        Assert.assertTrue(saveButton.isEnabled());
-        Assert.assertTrue(resetButton.isEnabled());
         verifyEventIsFired(eventIsFired);
 
         field.setValue("");

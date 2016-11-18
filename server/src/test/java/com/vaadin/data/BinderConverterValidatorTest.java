@@ -387,19 +387,42 @@ public class BinderConverterValidatorTest
         binder.setBean(item);
         assertFalse(binder.hasChanges());
 
+        // Bound binder + valid user changes: hasChanges == false
         nameField.setValue("foo");
-        assertTrue(binder.hasChanges());
-        binder.readBean(item);
         assertFalse(binder.hasChanges());
 
         nameField.setValue("bar");
         binder.writeBeanIfValid(new Person());
         assertFalse(binder.hasChanges());
 
-        nameField.setValue("baz");
-        binder.writeBean(new Person());
+        // Bound binder + invalid user changes: hasChanges() == true
+        nameField.setValue("");
+        binder.writeBeanIfValid(new Person());
+        assertTrue(binder.hasChanges());
+
+        // Read bean resets hasChanges
+        binder.readBean(item);
         assertFalse(binder.hasChanges());
 
+        // Removing a bound bean resets hasChanges
+        nameField.setValue("");
+        assertTrue(binder.hasChanges());
+        binder.removeBean();
+        assertFalse(binder.hasChanges());
+
+        // Unbound binder + valid user changes: hasChanges() == true
+        nameField.setValue("foo");
+        assertTrue(binder.hasChanges());
+
+        // successful writeBean resets hasChanges to false
+        binder.writeBeanIfValid(new Person());
+        assertFalse(binder.hasChanges());
+
+        // Unbound binder + invalid user changes: hasChanges() == true
+        nameField.setValue("");
+        assertTrue(binder.hasChanges());
+
+        // unsuccessful writeBean doesn't affect hasChanges
         nameField.setValue("");
         binder.writeBeanIfValid(new Person());
         assertTrue(binder.hasChanges());

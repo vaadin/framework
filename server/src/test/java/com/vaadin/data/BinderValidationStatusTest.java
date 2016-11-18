@@ -67,6 +67,7 @@ public class BinderValidationStatusTest
         Assert.assertEquals(EMPTY_ERROR_MESSAGE, evt.getMessage().get());
         Assert.assertEquals(nameField, evt.getField());
 
+        statusCapture.set(null);
         nameField.setValue("foo");
 
         statusCapture.set(null);
