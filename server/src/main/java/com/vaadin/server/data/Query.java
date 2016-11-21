@@ -52,7 +52,8 @@ public class Query<F> implements Serializable {
      * filtering.
      *
      * @param filter
-     *            back end filter of a suitable type for the data provider
+     *            back end filter of a suitable type for the data provider; can
+     *            be null
      */
     public Query(F filter) {
         offset = 0;
@@ -72,7 +73,7 @@ public class Query<F> implements Serializable {
      * @param sortOrders
      *            sorting order for fetching
      * @param filter
-     *            filtering for fetching
+     *            filtering for fetching; can be null
      */
     public Query(int offset, int limit, List<SortOrder<String>> sortOrders,
             F filter) {

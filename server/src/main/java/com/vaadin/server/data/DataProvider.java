@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
 /**
@@ -87,6 +88,39 @@ public interface DataProvider<T, F> extends Serializable {
      * @return a registration for the listener
      */
     Registration addDataProviderListener(DataProviderListener listener);
+
+    /**
+     * Convert the data provider to use a different filter type. It is used for
+     * adapting this data provider to a filter type provided by a Component such
+     * as ComboBox.
+     * <p>
+     * For example receiving a String from ComboBox and making a Predicate based
+     * on it:
+     *
+     * <pre>
+     * DataProvider&lt;Person, Predicate&lt;Person&gt;&gt; dataProvider;
+     * // ComboBox uses String as the filter type
+     * DataProvider&lt;Person, String&gt; wrappedProvider = dataProvider
+     *         .convertFilter(filterText -> {
+     *             Predicate&lt;Person&gt; predicate = person -> person.getName()
+     *                     .startsWith(filterText);
+     *             return predicate;
+     *         });
+     * comboBox.setDataProvider(wrappedProvider);
+     * </pre>
+     *
+     * @param mapper
+     *            the mapper from new filter type to old filter type
+     *
+     * @param <M>
+     *            the filter type to map from; typically provided by a Component
+     *
+     * @return wrapped data provider
+     */
+    default <M> DataProvider<T, M> convertFilter(
+            SerializableFunction<M, F> mapper) {
+        return new FilteringDataProviderWrapper<>(this, mapper);
+    }
 
     /**
      * This method creates a new {@link ListDataProvider} from a given

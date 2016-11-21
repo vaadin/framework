@@ -66,8 +66,9 @@ public class ListDataProvider<T>
     }
 
     @Override
-    public Stream<T> fetch(Query query) {
-        Stream<T> stream = backend.stream();
+    public Stream<T> fetch(Query<SerializablePredicate<T>> query) {
+        Stream<T> stream = backend.stream()
+                .filter(t -> query.getFilter().orElse(p -> true).test(t));
         if (sortOrder != null) {
             stream = stream.sorted(sortOrder);
         }
@@ -113,15 +114,11 @@ public class ListDataProvider<T>
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * For in-memory data provider the query is not handled, and it will always
-     * return the full size.
-     */
     @Override
-    public int size(Query query) {
-        return backend.size();
+    public int size(Query<SerializablePredicate<T>> query) {
+        return (int) backend.stream()
+                .filter(t -> query.getFilter().orElse(p -> true).test(t))
+                .count();
     }
 
 }

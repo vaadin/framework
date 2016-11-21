@@ -18,7 +18,6 @@ package com.vaadin.server.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -223,16 +222,14 @@ public class DataCommunicator<T> extends AbstractExtension {
             return;
         }
 
-        // FIXME: Sorting and Filtering with Backend
-        Set<Object> filters = Collections.emptySet();
-
         if (initial || reset) {
             int dataProviderSize;
             if (getDataProvider().isInMemory() && inMemoryFilter != null) {
-                dataProviderSize = (int) getDataProvider().fetch(new Query())
+                dataProviderSize = (int) getDataProvider().fetch(new Query<>())
                         .filter(inMemoryFilter).count();
             } else {
-                dataProviderSize = getDataProvider().size(new Query(filters));
+                // TODO: Apply filter
+                dataProviderSize = getDataProvider().size(new Query<>());
             }
             rpc.reset(dataProviderSize);
         }
@@ -245,7 +242,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             if (getDataProvider().isInMemory()) {
                 // We can safely request all the data when in memory
-                rowsToPush = getDataProvider().fetch(new Query());
+                rowsToPush = getDataProvider().fetch(new Query<>());
                 if (inMemoryFilter != null) {
                     rowsToPush = rowsToPush.filter(inMemoryFilter);
                 }
@@ -254,8 +251,8 @@ public class DataCommunicator<T> extends AbstractExtension {
                 }
                 rowsToPush = rowsToPush.skip(offset).limit(limit);
             } else {
-                Query query = new Query(offset, limit, backEndSorting, filters);
-                rowsToPush = getDataProvider().fetch(query);
+                rowsToPush = getDataProvider().fetch(
+                        new Query<>(offset, limit, backEndSorting, null));
             }
             pushData(offset, rowsToPush);
         }
