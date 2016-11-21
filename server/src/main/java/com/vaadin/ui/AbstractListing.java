@@ -133,12 +133,12 @@ public abstract class AbstractListing<T> extends AbstractComponent
     }
 
     @Override
-    public void setDataProvider(DataProvider<T> dataProvider) {
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
         getDataCommunicator().setDataProvider(dataProvider);
     }
 
     @Override
-    public DataProvider<T> getDataProvider() {
+    public DataProvider<T, ?> getDataProvider() {
         return getDataCommunicator().getDataProvider();
     }
 

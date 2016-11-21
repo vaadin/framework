@@ -24,7 +24,7 @@ import com.vaadin.server.data.DataProvider;
  * A generic interface for components that show a list of data.
  *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <T>
  *            the item data type
  * @since 8.0
@@ -36,16 +36,16 @@ public interface Listing<T> extends Serializable {
      *
      * @return the data provider, not null
      */
-    DataProvider<T> getDataProvider();
+    DataProvider<T, ?> getDataProvider();
 
     /**
-     * Sets the data provider for this listing. The data provider is
-     * queried for displayed items as needed.
+     * Sets the data provider for this listing. The data provider is queried for
+     * displayed items as needed.
      *
      * @param dataProvider
      *            the data provider, not null
      */
-    void setDataProvider(DataProvider<T> dataProvider);
+    void setDataProvider(DataProvider<T, ?> dataProvider);
 
     /**
      * Sets the collection of data items of this listing.

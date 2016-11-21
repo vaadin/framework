@@ -27,11 +27,13 @@ import com.vaadin.server.SerializableFunction;
  *
  * @param <T>
  *            data provider data type
+ * @param <F>
+ *            data provider filter type
  */
-public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
+public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
 
-    private final SerializableFunction<Query<?>, Stream<T>> request;
-    private final SerializableFunction<Query<?>, Integer> sizeCallback;
+    private final SerializableFunction<Query<F>, Stream<T>> request;
+    private final SerializableFunction<Query<F>, Integer> sizeCallback;
 
     /**
      * Constructs a new DataProvider to request data from an arbitrary back end
@@ -43,8 +45,8 @@ public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
      *            function that return the amount of data in back end for query
      */
     public BackEndDataProvider(
-            SerializableFunction<Query<?>, Stream<T>> request,
-            SerializableFunction<Query<?>, Integer> sizeCallback) {
+            SerializableFunction<Query<F>, Stream<T>> request,
+            SerializableFunction<Query<F>, Integer> sizeCallback) {
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
         this.request = request;
@@ -52,12 +54,12 @@ public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
     }
 
     @Override
-    public Stream<T> fetch(Query query) {
+    public Stream<T> fetch(Query<F> query) {
         return request.apply(query);
     }
 
     @Override
-    public int size(Query query) {
+    public int size(Query<F> query) {
         return sizeCallback.apply(query);
     }
 
@@ -69,14 +71,15 @@ public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
      *            directions
      * @return new data provider with modified sorting
      */
-    public BackEndDataProvider<T> sortingBy(
+    public BackEndDataProvider<T, F> sortingBy(
             List<SortOrder<String>> sortOrders) {
         return new BackEndDataProvider<>(query -> {
             List<SortOrder<String>> queryOrder = new ArrayList<>(
                     query.getSortOrders());
             queryOrder.addAll(sortOrders);
-            return request.apply(new Query<>(query.getLimit(),
-                    query.getOffset(), queryOrder, query.getFilter()));
+            return request
+                    .apply(new Query<>(query.getLimit(), query.getOffset(),
+                            queryOrder, query.getFilter().orElse(null)));
         }, sizeCallback);
     }
 

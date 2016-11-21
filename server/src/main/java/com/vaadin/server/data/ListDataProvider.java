@@ -21,6 +21,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import com.vaadin.server.SerializablePredicate;
+
 /**
  * {@link DataProvider} wrapper for {@link Collection}s. This class does not
  * actually handle the {@link Query} parameters.
@@ -28,7 +30,8 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class ListDataProvider<T> extends AbstractDataProvider<T> {
+public class ListDataProvider<T>
+        extends AbstractDataProvider<T, SerializablePredicate<T>> {
 
     private Comparator<T> sortOrder;
     private final Collection<T> backend;
@@ -50,7 +53,7 @@ public class ListDataProvider<T> extends AbstractDataProvider<T> {
      * Chaining constructor for making modified {@link ListDataProvider}s. This
      * Constructor is used internally for making sorted and filtered variants of
      * a base data provider with actual data.
-     * 
+     *
      * @param items
      *            the backend data from the original list data provider
      * @param sortOrder
@@ -72,8 +75,8 @@ public class ListDataProvider<T> extends AbstractDataProvider<T> {
     }
 
     /**
-     * Creates a new list data provider based on this list data provider with the
-     * given sort order.
+     * Creates a new list data provider based on this list data provider with
+     * the given sort order.
      * <p>
      * <b>NOTE</b>: this data provider is not modified in any way.
      *
@@ -86,8 +89,8 @@ public class ListDataProvider<T> extends AbstractDataProvider<T> {
     }
 
     /**
-     * Creates a new list data provider based on this list data provider with the
-     * given sort order.
+     * Creates a new list data provider based on this list data provider with
+     * the given sort order.
      * <p>
      * <b>NOTE</b>: this data provider is not modified in any way.
      * <p>

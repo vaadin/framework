@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.server.data.BackEndDataProvider;
-import com.vaadin.server.data.DataProvider;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.data.BackEndDataProvider;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 
@@ -96,13 +96,13 @@ public class DataProviderBoVTest {
 
     @Test
     public void testPersons() {
-        DataProvider<Person> dataProvider = createUnsortedDataProvider();
+        DataProvider<Person, ?> dataProvider = createUnsortedDataProvider();
         // TODO test if the provider contains all defined Persons in
         // correct(unchanged) order
     }
 
-    private DataProvider<Person> createUnsortedDataProvider() {
-        DataProvider<Person> dataProvider = new BackEndDataProvider<>(
+    private DataProvider<Person, ?> createUnsortedDataProvider() {
+        DataProvider<Person, ?> dataProvider = new BackEndDataProvider<>(
                 // First callback fetches items based on a query
                 query -> {
                     // The index of the first item to load
@@ -124,13 +124,13 @@ public class DataProviderBoVTest {
     @Test
     public void testSortedPersons() {
 
-        DataProvider<Person> dataProvider = createSortedDataProvider();
+        DataProvider<Person, ?> dataProvider = createSortedDataProvider();
         // TODO test if provider contains all defined Persons in correct order
         // TODO test Query.sortOrders correctness
     }
 
-    private DataProvider<Person> createSortedDataProvider() {
-        DataProvider<Person> dataProvider = new BackEndDataProvider<>(
+    private DataProvider<Person, ?> createSortedDataProvider() {
+        DataProvider<Person, ?> dataProvider = new BackEndDataProvider<>(
                 // First callback fetches items based on a query
                 query -> {
                     List<PersonService.PersonSort> sortOrders = new ArrayList<>();

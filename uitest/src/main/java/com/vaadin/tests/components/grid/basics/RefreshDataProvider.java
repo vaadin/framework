@@ -47,7 +47,8 @@ public class RefreshDataProvider extends AbstractReindeerTestUI {
         update.setId("update");
         addComponent(update);
 
-        Button add = new Button("Add data", event -> addData(dataProvider, data));
+        Button add = new Button("Add data",
+                event -> addData(dataProvider, data));
         add.setId("add");
         addComponent(add);
 
@@ -57,13 +58,13 @@ public class RefreshDataProvider extends AbstractReindeerTestUI {
         addComponent(remove);
     }
 
-    private void updateData(DataProvider<DataObject> dataProvider,
+    private void updateData(DataProvider<DataObject, ?> dataProvider,
             List<DataObject> data) {
         data.get(0).setCoordinates("Updated coordinates");
         dataProvider.refreshAll();
     }
 
-    private void addData(DataProvider<DataObject> dataProvider,
+    private void addData(DataProvider<DataObject, ?> dataProvider,
             List<DataObject> data) {
         DataObject dataObject = new DataObject();
         dataObject.setCoordinates("Added");
@@ -71,7 +72,7 @@ public class RefreshDataProvider extends AbstractReindeerTestUI {
         dataProvider.refreshAll();
     }
 
-    private void removeData(DataProvider<DataObject> dataProvider,
+    private void removeData(DataProvider<DataObject, ?> dataProvider,
             List<DataObject> data) {
         data.remove(0);
         dataProvider.refreshAll();

@@ -50,14 +50,15 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T> {
     }
 
     /**
-     * Constructs a new TwinColSelect with caption and data provider for options.
+     * Constructs a new TwinColSelect with caption and data provider for
+     * options.
      *
      * @param caption
      *            the caption to set, can be {@code null}
      * @param dataProvider
      *            the data provider, not {@code null}
      */
-    public TwinColSelect(String caption, DataProvider<T> dataProvider) {
+    public TwinColSelect(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
         setDataProvider(dataProvider);
     }

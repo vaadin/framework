@@ -9,7 +9,7 @@ import com.vaadin.server.data.BackEndDataProvider;
  *
  * @author Vaadin Ltd
  */
-public class ItemDataProvider extends BackEndDataProvider<String> {
+public class ItemDataProvider extends BackEndDataProvider<String, Object> {
 
     public ItemDataProvider(int size) {
         super(q -> IntStream

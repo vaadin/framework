@@ -22,14 +22,19 @@ import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 
 /**
- * Abstract data provider implementation which takes care of refreshing data from
- * the underlying data provider.
- * 
+ * Abstract data provider implementation which takes care of refreshing data
+ * from the underlying data provider.
+ *
+ * @param <T>
+ *            data type
+ * @param <F>
+ *            filter type
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *
  */
-public abstract class AbstractDataProvider<T> implements DataProvider<T> {
+public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
 
     private EventRouter eventRouter;
 
@@ -60,8 +65,8 @@ public abstract class AbstractDataProvider<T> implements DataProvider<T> {
      *            the activation method.
      *
      */
-    protected void addListener(Class<?> eventType, DataProviderListener listener,
-            Method method) {
+    protected void addListener(Class<?> eventType,
+            DataProviderListener listener, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }

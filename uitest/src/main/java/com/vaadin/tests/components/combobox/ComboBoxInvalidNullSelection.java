@@ -8,9 +8,8 @@ import com.vaadin.ui.ComboBox;
 
 public class ComboBoxInvalidNullSelection extends TestBase {
 
-    private static final Object CAPTION = "C";
-    private DataProvider<String> ds1;
-    private DataProvider<String> ds2;
+    private DataProvider<String, ?> ds1;
+    private DataProvider<String, ?> ds2;
     private ComboBox<String> combo;
     private Log log = new Log(5);
 

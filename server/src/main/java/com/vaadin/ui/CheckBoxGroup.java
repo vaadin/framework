@@ -64,7 +64,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      *            the data provider, not null
      * @see Listing#setDataProvider(DataProvider)
      */
-    public CheckBoxGroup(String caption, DataProvider<T> dataProvider) {
+    public CheckBoxGroup(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
         setDataProvider(dataProvider);
     }

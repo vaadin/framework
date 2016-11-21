@@ -32,7 +32,8 @@ public class GridApplyFilterWhenScrolledDown extends AbstractTestUI {
         addComponent(button);
     }
 
-    private void filter(DataProvider<String> dataProvider, List<String> data) {
+    private void filter(DataProvider<String, ?> dataProvider,
+            List<String> data) {
         String last = data.get(data.size() - 1);
         data.clear();
         data.add(last);

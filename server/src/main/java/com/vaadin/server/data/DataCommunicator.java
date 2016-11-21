@@ -180,7 +180,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
-    private DataProvider<T> dataProvider = DataProvider.create();
+    private DataProvider<T, ?> dataProvider = DataProvider.create();
     private final DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
@@ -462,7 +462,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @return the data provider
      */
-    public DataProvider<T> getDataProvider() {
+    public DataProvider<T, ?> getDataProvider() {
         return dataProvider;
     }
 
@@ -472,7 +472,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param dataProvider
      *            the data provider to set, not null
      */
-    public void setDataProvider(DataProvider<T> dataProvider) {
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         this.dataProvider = dataProvider;
         detachDataProviderListener();

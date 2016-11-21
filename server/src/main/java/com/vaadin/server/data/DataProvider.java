@@ -23,20 +23,22 @@ import java.util.stream.Stream;
 import com.vaadin.shared.Registration;
 
 /**
- * Minimal DataProvider API for communication between the DataProvider and a back
- * end service.
+ * Minimal DataProvider API for communication between the DataProvider and a
+ * back end service.
  *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <T>
  *            data type
+ * @param <F>
+ *            filter type
  *
  * @see ListDataProvider
  * @see BackEndDataProvider
  *
  * @since 8.0
  */
-public interface DataProvider<T> extends Serializable {
+public interface DataProvider<T, F> extends Serializable {
 
     /**
      * Gets whether the DataProvider content all available in memory or does it
@@ -53,17 +55,17 @@ public interface DataProvider<T> extends Serializable {
      *            query with sorting and filtering
      * @return the size of the data provider
      */
-    int size(Query t);
+    int size(Query<F> t);
 
     /**
      * Fetches data from this DataProvider using given {@code query}.
-     * 
+     *
      * @param query
      *            given query to request data
      * @return the result of the query request: a stream of data objects, not
      *         {@code null}
      */
-    Stream<T> fetch(Query query);
+    Stream<T> fetch(Query<F> query);
 
     /**
      * Refreshes all data based on currently available data in the underlying
@@ -87,10 +89,10 @@ public interface DataProvider<T> extends Serializable {
     Registration addDataProviderListener(DataProviderListener listener);
 
     /**
-     * This method creates a new {@link ListDataProvider} from a given Collection.
-     * The ListDataProvider creates a protective List copy of all the contents in
-     * the Collection.
-     * 
+     * This method creates a new {@link ListDataProvider} from a given
+     * Collection. The ListDataProvider creates a protective List copy of all
+     * the contents in the Collection.
+     *
      * @param <T>
      *            the data item type
      * @param items
@@ -103,9 +105,9 @@ public interface DataProvider<T> extends Serializable {
 
     /**
      * This method creates a new {@link ListDataProvider} from given objects.The
-     * ListDataProvider creates a protective List copy of all the contents in the
-     * array.
-     * 
+     * ListDataProvider creates a protective List copy of all the contents in
+     * the array.
+     *
      * @param <T>
      *            the data item type
      * @param items

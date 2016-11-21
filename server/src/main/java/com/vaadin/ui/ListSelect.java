@@ -61,7 +61,7 @@ public class ListSelect<T> extends AbstractMultiSelect<T> {
      * @param dataProvider
      *            the data provider, not {@code null}
      */
-    public ListSelect(String caption, DataProvider<T> dataProvider) {
+    public ListSelect(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
         setDataProvider(dataProvider);
     }

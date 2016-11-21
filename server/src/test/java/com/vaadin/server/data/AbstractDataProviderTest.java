@@ -29,14 +29,15 @@ import com.vaadin.shared.Registration;
  */
 public class AbstractDataProviderTest {
 
-    private static class TestDataProvider extends AbstractDataProvider<Object> {
+    private static class TestDataProvider
+            extends AbstractDataProvider<Object, Object> {
         @Override
-        public Stream<Object> fetch(Query t) {
+        public Stream<Object> fetch(Query<Object> t) {
             return null;
         }
 
         @Override
-        public int size(Query t) {
+        public int size(Query<Object> t) {
             return 0;
         }
 
@@ -48,7 +49,7 @@ public class AbstractDataProviderTest {
 
     @Test
     public void refreshAll_notifyListeners() {
-        AbstractDataProvider<Object> dataProvider = new TestDataProvider();
+        TestDataProvider dataProvider = new TestDataProvider();
         AtomicReference<DataChangeEvent> event = new AtomicReference<>();
         dataProvider.addDataProviderListener(ev -> {
             Assert.assertNull(event.get());
@@ -61,7 +62,7 @@ public class AbstractDataProviderTest {
 
     @Test
     public void removeListener_listenerIsNotNotified() {
-        AbstractDataProvider<Object> dataProvider = new TestDataProvider();
+        TestDataProvider dataProvider = new TestDataProvider();
         AtomicReference<DataChangeEvent> event = new AtomicReference<>();
         Registration registration = dataProvider
                 .addDataProviderListener(ev -> event.set(ev));

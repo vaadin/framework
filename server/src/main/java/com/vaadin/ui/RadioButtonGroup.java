@@ -77,14 +77,14 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      *            the data provider, not null
      * @see Listing#setDataProvider(DataProvider)
      */
-    public RadioButtonGroup(String caption, DataProvider<T> dataProvider) {
+    public RadioButtonGroup(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
         setDataProvider(dataProvider);
     }
 
     /**
-     * Constructs a new RadioButtonGroup with caption and DataProvider containing
-     * given items.
+     * Constructs a new RadioButtonGroup with caption and DataProvider
+     * containing given items.
      *
      * @param caption
      *            the caption text

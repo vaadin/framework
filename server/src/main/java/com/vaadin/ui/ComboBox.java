@@ -158,8 +158,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     /**
-     * Constructs a combo box with a static in-memory data provider with the given
-     * options.
+     * Constructs a combo box with a static in-memory data provider with the
+     * given options.
      *
      * @param caption
      *            the caption to show in the containing layout, null for no
@@ -180,7 +180,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      * @param dataProvider
      *            the data provider to use, not null
      */
-    public ComboBox(String caption, DataProvider<T> dataProvider) {
+    public ComboBox(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
         setDataProvider(dataProvider);
     }

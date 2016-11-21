@@ -34,12 +34,12 @@ import com.vaadin.shared.ui.nativeselect.NativeSelectState;
  * A simple drop-down select component. Represented on the client side by a
  * "native" HTML {@code <select>} element. Lacks advanced features such as lazy
  * loading, filtering, and adding new items.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  * @param <T>
  *            the data item type
- * 
+ *
  * @see com.vaadin.ui.ComboBox
  */
 public class NativeSelect<T> extends AbstractSingleSelect<T>
@@ -56,7 +56,7 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
 
     /**
      * Creates a new {@code NativeSelect} with the given caption and no items.
-     * 
+     *
      * @param caption
      *            the component caption to set, null for no caption
      */
@@ -68,7 +68,7 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
     /**
      * Creates a new {@code NativeSelect} with the given caption, containing the
      * data items in the given collection.
-     * 
+     *
      * @param caption
      *            the component caption to set, null for no caption
      * @param items
@@ -82,13 +82,13 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
     /**
      * Creates a new {@code NativeSelect} with the given caption, using the
      * given {@code DataProvider} as the source of data items.
-     * 
+     *
      * @param caption
      *            the component caption to set, null for no caption
      * @param dataProvider
      *            the source of data items to use, not null
      */
-    public NativeSelect(String caption, DataProvider<T> dataProvider) {
+    public NativeSelect(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
         setDataProvider(dataProvider);
     }

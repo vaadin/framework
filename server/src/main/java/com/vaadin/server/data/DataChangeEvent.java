@@ -19,10 +19,10 @@ import java.util.EventObject;
 
 /**
  * An event fired when the data of a {@code DataProvider} changes.
- * 
- * 
+ *
+ *
  * @see DataProviderListener
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *
@@ -36,13 +36,13 @@ public class DataChangeEvent extends EventObject {
      * @param source
      *            the data provider, not null
      */
-    public DataChangeEvent(DataProvider<?> source) {
+    public DataChangeEvent(DataProvider<?, ?> source) {
         super(source);
     }
 
     @Override
-    public DataProvider<?> getSource() {
-        return (DataProvider<?>) super.getSource();
+    public DataProvider<?, ?> getSource() {
+        return (DataProvider<?, ?>) super.getSource();
     }
 
 }
