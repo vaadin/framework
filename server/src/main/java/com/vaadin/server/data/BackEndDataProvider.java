@@ -30,8 +30,8 @@ import com.vaadin.server.SerializableFunction;
  */
 public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
 
-    private final SerializableFunction<Query, Stream<T>> request;
-    private final SerializableFunction<Query, Integer> sizeCallback;
+    private final SerializableFunction<Query<?>, Stream<T>> request;
+    private final SerializableFunction<Query<?>, Integer> sizeCallback;
 
     /**
      * Constructs a new DataProvider to request data from an arbitrary back end
@@ -42,8 +42,9 @@ public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
      * @param sizeCallback
      *            function that return the amount of data in back end for query
      */
-    public BackEndDataProvider(SerializableFunction<Query, Stream<T>> request,
-                               SerializableFunction<Query, Integer> sizeCallback) {
+    public BackEndDataProvider(
+            SerializableFunction<Query<?>, Stream<T>> request,
+            SerializableFunction<Query<?>, Integer> sizeCallback) {
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
         this.request = request;
@@ -68,13 +69,14 @@ public class BackEndDataProvider<T> extends AbstractDataProvider<T> {
      *            directions
      * @return new data provider with modified sorting
      */
-    public BackEndDataProvider<T> sortingBy(List<SortOrder<String>> sortOrders) {
+    public BackEndDataProvider<T> sortingBy(
+            List<SortOrder<String>> sortOrders) {
         return new BackEndDataProvider<>(query -> {
             List<SortOrder<String>> queryOrder = new ArrayList<>(
                     query.getSortOrders());
             queryOrder.addAll(sortOrders);
-            return request.apply(new Query(query.getLimit(), query.getOffset(),
-                    queryOrder, query.getFilters()));
+            return request.apply(new Query<>(query.getLimit(),
+                    query.getOffset(), queryOrder, query.getFilter()));
         }, sizeCallback);
     }
 

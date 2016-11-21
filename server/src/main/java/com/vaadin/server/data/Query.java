@@ -18,20 +18,23 @@ package com.vaadin.server.data;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 /**
- * Query object used to request data from a backend. Contains index limits,
- * sorting and filtering information.
+ * Immutable query object used to request data from a backend. Contains index
+ * limits, sorting and filtering information.
+ *
+ * @param <F>
+ *            filter type
  *
  * @since 8.0
  */
-public class Query implements Serializable {
+public class Query<F> implements Serializable {
 
     private final int offset;
     private final int limit;
     private final List<SortOrder<String>> sortOrders;
-    private final Set<Object> filters;
+    private final F filter;
 
     /**
      * Constructs a Query for all rows from 0 to {@link Integer#MAX_VALUE}
@@ -41,21 +44,21 @@ public class Query implements Serializable {
         offset = 0;
         limit = Integer.MAX_VALUE;
         sortOrders = Collections.emptyList();
-        filters = Collections.emptySet();
+        filter = null;
     }
 
     /**
      * Constructs a Query for all rows from 0 to {@link Integer#MAX_VALUE} with
      * filtering.
      *
-     * @param filters
-     *            set of back end filters
+     * @param filter
+     *            back end filter of a suitable type for the data provider
      */
-    public Query(Set<Object> filters) {
+    public Query(F filter) {
         offset = 0;
         limit = Integer.MAX_VALUE;
         sortOrders = Collections.emptyList();
-        this.filters = filters;
+        this.filter = filter;
     }
 
     /**
@@ -68,15 +71,15 @@ public class Query implements Serializable {
      *            fetched item count
      * @param sortOrders
      *            sorting order for fetching
-     * @param filters
+     * @param filter
      *            filtering for fetching
      */
     public Query(int offset, int limit, List<SortOrder<String>> sortOrders,
-            Set<Object> filters) {
+            F filter) {
         this.offset = offset;
         this.limit = limit;
         this.sortOrders = sortOrders;
-        this.filters = filters;
+        this.filter = filter;
     }
 
     /**
@@ -110,11 +113,11 @@ public class Query implements Serializable {
     }
 
     /**
-     * Gets the filters for items to fetch.
+     * Gets the filter for items to fetch.
      *
-     * @return set of filters
+     * @return optional filter
      */
-    public Set<Object> getFilters() {
-        return filters;
+    public Optional<F> getFilter() {
+        return Optional.ofNullable(filter);
     }
 }
