@@ -13,24 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.selection;
+package com.vaadin.shared.ui.grid;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
+import com.vaadin.shared.communication.SharedState;
 
 /**
- * Listens to changes from a {@link com.vaadin.data.SelectionModel.Multi}.
- *
- * @author Vaadin Ltd
+ * SharedState object for MultiSelectionModel.
  *
  * @since 8.0
- *
- * @param <T>
- *            the data type of the selection model
+ * @author Vaadin Ltd
  */
-public interface MultiSelectionListener<T>
-        extends Consumer<MultiSelectionEvent<T>>, Serializable {
-    @Override
-    // Explicitly defined to make reflection logic happy
-    void accept(MultiSelectionEvent<T> event);
+public class MultiSelectionModelState extends SharedState {
+
+    /** Is the select all checkbox visible. */
+    public boolean selectAllCheckBoxVisible;
+    /** Select All -checkbox status. */
+    public boolean allSelected;
+
 }

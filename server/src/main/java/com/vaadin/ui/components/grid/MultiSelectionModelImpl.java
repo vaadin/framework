@@ -23,12 +23,16 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
+import com.vaadin.server.data.DataProvider;
+import com.vaadin.server.data.Query;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
+import com.vaadin.shared.ui.grid.MultiSelectionModelState;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.MultiSelectionModel;
@@ -42,6 +46,9 @@ import elemental.json.JsonObject;
  * <p>
  * Shows a column of checkboxes as the first column of grid. Each checkbox
  * triggers the selection for that row.
+ * <p>
+ * Implementation detail: The Grid selection is updated immediately after user
+ * selection on client side, without waiting for the server response.
  *
  * @author Vaadin Ltd.
  * @since 8.0
@@ -51,6 +58,39 @@ import elemental.json.JsonObject;
  */
 public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
         implements MultiSelectionModel<T> {
+
+    /**
+     * State for showing the select all checkbox in the grid's default header
+     * row for the selection column.
+     * <p>
+     * Default value is {@link #DEFAULT}, which means that the select all is
+     * only visible if an in-memory data provider is used
+     * {@link DataSource#isInMemory()}.
+     */
+    public enum SelectAllCheckBoxVisible {
+        /**
+         * Shows the select all checkbox, regardless of data provider used.
+         * <p>
+         * <b>For a lazy data provider, selecting all will result in to all rows
+         * being fetched from backend to application memory!</b>
+         */
+        VISIBLE,
+        /**
+         * Never shows the select all checkbox, regardless of data provider
+         * used.
+         */
+        HIDDEN,
+        /**
+         * By default select all checkbox depends on the grid's dataprovider.
+         * <ul>
+         * <li>Visible, if the data provider is in-memory</li>
+         * <li>Hidden, if the data provider is NOT in-memory (lazy)</li>
+         * </ul>
+         *
+         * @see DataProvider#isInMemory()}.
+         */
+        DEFAULT;
+    }
 
     private class GridMultiSelectServerRpcImpl
             implements GridMultiSelectServerRpc {
@@ -64,21 +104,25 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
 
         @Override
         public void deselect(String key) {
+            if (getState(false).allSelected) {
+                // updated right away on client side
+                getState(false).allSelected = false;
+                getUI().getConnectorTracker()
+                        .getDiffState(MultiSelectionModelImpl.this)
+                        .put("allSelected", false);
+            }
             MultiSelectionModelImpl.this.updateSelection(Collections.emptySet(),
                     new LinkedHashSet<>(Arrays.asList(getData(key))), true);
         }
 
         @Override
         public void selectAll() {
-            // TODO will be added in another patch
-            throw new UnsupportedOperationException("Select all not supported");
+            onSelectAll(true);
         }
 
         @Override
         public void deselectAll() {
-            // TODO will be added in another patch
-            throw new UnsupportedOperationException(
-                    "Deelect all not supported");
+            onDeselectAll(true);
         }
     }
 
@@ -91,6 +135,8 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
 
     private Set<T> selection = new LinkedHashSet<>();
 
+    private SelectAllCheckBoxVisible selectAllCheckBoxVisible = SelectAllCheckBoxVisible.DEFAULT;
+
     /**
      * Constructs a new multiselection model for the given grid.
      *
@@ -102,6 +148,113 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
         extend(grid);
 
         registerRpc(new GridMultiSelectServerRpcImpl());
+    }
+
+    @Override
+    protected MultiSelectionModelState getState() {
+        return (MultiSelectionModelState) super.getState();
+    }
+
+    @Override
+    protected MultiSelectionModelState getState(boolean markAsDirty) {
+        return (MultiSelectionModelState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the select all checkbox visibility mode.
+     * <p>
+     * The default value is {@link SelectAllCheckBoxVisible#DEFAULT}, which
+     * means that the checkbox is only visible if the grid's data provider is
+     * in- memory.
+     *
+     * @param selectAllCheckBoxVisible
+     *            the mode to use
+     * @see SelectAllCheckBoxVisible
+     */
+    public void setSelectAllCheckBoxVisible(
+            SelectAllCheckBoxVisible selectAllCheckBoxVisible) {
+        if (this.selectAllCheckBoxVisible != selectAllCheckBoxVisible) {
+            this.selectAllCheckBoxVisible = selectAllCheckBoxVisible;
+            markAsDirty();
+        }
+    }
+
+    /**
+     * Gets the current mode for the select all checkbox visibility.
+     *
+     * @return the select all checkbox visibility state
+     * @see SelectAllCheckBoxVisible
+     * @see #isSelectAllCheckBoxVisible()
+     */
+    public SelectAllCheckBoxVisible getSelectAllCheckBoxVisible() {
+        return selectAllCheckBoxVisible;
+    }
+
+    /**
+     * Returns whether the select all checkbox will be visible with the current
+     * setting of
+     * {@link #setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible)}.
+     *
+     * @return {@code true} if the checkbox will be visible with the current
+     *         settings
+     * @see SelectAllCheckBoxVisible
+     * @see #setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible)
+     */
+    public boolean isSelectAllCheckBoxVisible() {
+        updateCanSelectAll();
+        return getState(false).selectAllCheckBoxVisible;
+    }
+
+    /**
+     * Returns whether all items are selected or not.
+     * <p>
+     * This is only {@code true} if user has selected all rows with the select
+     * all checkbox on client side, or if {@link #selectAll()} has been used
+     * from server side.
+     *
+     * @return {@code true} if all selected, {@code false} if not
+     */
+    public boolean isAllSelected() {
+        return getState(false).allSelected;
+    }
+
+    @Override
+    public boolean isSelected(T item) {
+        return isAllSelected()
+                || com.vaadin.ui.Grid.MultiSelectionModel.super.isSelected(
+                        item);
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+        updateCanSelectAll();
+    }
+
+    /**
+     * Controls whether the select all checkbox is visible in the grid default
+     * header, or not.
+     * <p>
+     * This is updated as a part of {@link #beforeClientResponse(boolean)},
+     * since the data provider for grid can be changed on the fly.
+     *
+     * @see SelectAllCheckBoxVisible
+     */
+    protected void updateCanSelectAll() {
+        switch (selectAllCheckBoxVisible) {
+        case VISIBLE:
+            getState(false).selectAllCheckBoxVisible = true;
+            break;
+        case HIDDEN:
+            getState(false).selectAllCheckBoxVisible = false;
+            break;
+        case DEFAULT:
+            getState(false).selectAllCheckBoxVisible = grid.getDataProvider()
+                    .isInMemory();
+            break;
+        default:
+            break;
+        }
     }
 
     @Override
@@ -143,6 +296,16 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
     @Override
     public void updateSelection(Set<T> addedItems, Set<T> removedItems) {
         updateSelection(addedItems, removedItems, false);
+    }
+
+    @Override
+    public void selectAll() {
+        onSelectAll(false);
+    }
+
+    @Override
+    public void deselectAll() {
+        onDeselectAll(false);
     }
 
     /**
@@ -225,6 +388,59 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
     }
 
     /**
+     * Triggered when the user checks the select all checkbox.
+     *
+     * @param userOriginated
+     *            {@code true} if originated from client side by user
+     */
+    protected void onSelectAll(boolean userOriginated) {
+        if (userOriginated) {
+            verifyUserCanSelectAll();
+            // all selected state has been updated in client side already
+            getState(false).allSelected = true;
+            getUI().getConnectorTracker().getDiffState(this).put("allSelected",
+                    true);
+        } else {
+            getState().allSelected = true;
+        }
+
+        DataProvider<T, ?> dataSource = grid.getDataProvider();
+        // this will fetch everything from backend
+        Stream<T> stream = dataSource.fetch(new Query<>());
+        LinkedHashSet<T> allItems = new LinkedHashSet<>();
+        stream.forEach(allItems::add);
+        updateSelection(allItems, Collections.emptySet(), userOriginated);
+    }
+
+    /**
+     * Triggered when the user unchecks the select all checkbox.
+     *
+     * @param userOriginated
+     *            {@code true} if originated from client side by user
+     */
+    protected void onDeselectAll(boolean userOriginated) {
+        if (userOriginated) {
+            verifyUserCanSelectAll();
+            // all selected state has been update in client side already
+            getState(false).allSelected = false;
+            getUI().getConnectorTracker().getDiffState(this).put("allSelected",
+                    false);
+        } else {
+            getState().allSelected = false;
+        }
+
+        updateSelection(Collections.emptySet(), new LinkedHashSet<>(selection),
+                userOriginated);
+    }
+
+    private void verifyUserCanSelectAll() {
+        if (!getState(false).selectAllCheckBoxVisible) {
+            throw new IllegalStateException(
+                    "Cannot select all from client since select all checkbox should not be visible");
+        }
+    }
+
+    /**
      * Updates the selection by adding and removing the given items.
      * <p>
      * All selection updates should go through this method, since it handles
@@ -252,10 +468,18 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
             return;
         }
 
+        // update allSelected for server side selection updates
+        if (getState(false).allSelected && !removedItems.isEmpty()
+                && !userOriginated) {
+            getState().allSelected = false;
+        }
+
         doUpdateSelection(set -> {
             // order of add / remove does not matter since no duplicates
             set.removeAll(removedItems);
             set.addAll(addedItems);
+
+            // refresh method is NOOP for items that are not present client side
             removedItems.forEach(grid.getDataCommunicator()::refresh);
             addedItems.forEach(grid.getDataCommunicator()::refresh);
         }, userOriginated);

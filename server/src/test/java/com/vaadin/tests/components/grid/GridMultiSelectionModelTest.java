@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.IntStream;
 
 import org.easymock.Capture;
 import org.junit.Assert;
@@ -23,14 +24,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.event.selection.SingleSelectionEvent;
-import com.vaadin.event.selection.SingleSelectionListener;
+import com.vaadin.event.selection.MultiSelectionEvent;
+import com.vaadin.event.selection.MultiSelectionListener;
+import com.vaadin.server.data.BackEndDataProvider;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
+import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.GridSelectionModel;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 
 import elemental.json.JsonObject;
@@ -116,7 +120,8 @@ public class GridMultiSelectionModelTest {
         assertEquals(Arrays.asList("Foo", "Bar"), selectionChanges);
         selectionChanges.clear();
 
-        customGrid.setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
+        customGrid
+                .setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
         assertFalse(customGrid.getSelectionModel().getFirstSelectedItem()
                 .isPresent());
         assertEquals(Arrays.asList(), selectionChanges);
@@ -167,7 +172,8 @@ public class GridMultiSelectionModelTest {
 
         // switch to single to cause event
         customModel.generatedData.clear();
-        customGrid.setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
+        customGrid
+                .setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
         customGrid.getDataCommunicator().beforeClientResponse(false);
 
         // changing selection model should trigger row updates, but the old
@@ -178,8 +184,8 @@ public class GridMultiSelectionModelTest {
     @Test
     public void select_gridWithStrings() {
         Grid<String> gridWithStrings = new Grid<>();
-        gridWithStrings
-                .setSelectionModel(new MultiSelectionModelImpl<>(gridWithStrings));
+        gridWithStrings.setSelectionModel(
+                new MultiSelectionModelImpl<>(gridWithStrings));
         gridWithStrings.setItems("Foo", "Bar", "Baz");
 
         GridSelectionModel<String> model = gridWithStrings.getSelectionModel();
@@ -390,6 +396,39 @@ public class GridMultiSelectionModelTest {
     }
 
     @Test
+    public void selectAll() {
+        selectionModel.selectAll();
+
+        assertTrue(selectionModel.isAllSelected());
+        assertTrue(selectionModel.isSelected(PERSON_A));
+        assertTrue(selectionModel.isSelected(PERSON_B));
+        assertTrue(selectionModel.isSelected(PERSON_C));
+        assertEquals(Arrays.asList(PERSON_A, PERSON_B, PERSON_C),
+                currentSelectionCapture.getValue());
+        assertEquals(1, events.get());
+
+        selectionModel.deselectItems(PERSON_A, PERSON_C);
+
+        assertFalse(selectionModel.isAllSelected());
+        assertFalse(selectionModel.isSelected(PERSON_A));
+        assertTrue(selectionModel.isSelected(PERSON_B));
+        assertFalse(selectionModel.isSelected(PERSON_C));
+        assertEquals(Arrays.asList(PERSON_A, PERSON_B, PERSON_C),
+                oldSelectionCapture.getValue());
+
+        selectionModel.selectAll();
+
+        assertTrue(selectionModel.isAllSelected());
+        assertTrue(selectionModel.isSelected(PERSON_A));
+        assertTrue(selectionModel.isSelected(PERSON_B));
+        assertTrue(selectionModel.isSelected(PERSON_C));
+        assertEquals(Arrays.asList(PERSON_B, PERSON_A, PERSON_C),
+                currentSelectionCapture.getValue());
+        assertEquals(Arrays.asList(PERSON_B), oldSelectionCapture.getValue());
+        assertEquals(3, events.get());
+    }
+
+    @Test
     public void updateSelection() {
         selectionModel.updateSelection(asSet(PERSON_A), Collections.emptySet());
 
@@ -506,38 +545,129 @@ public class GridMultiSelectionModelTest {
     @SuppressWarnings({ "serial" })
     @Test
     public void addValueChangeListener() {
-        AtomicReference<SingleSelectionListener<String>> selectionListener = new AtomicReference<>();
+        AtomicReference<MultiSelectionListener<String>> selectionListener = new AtomicReference<>();
         Registration registration = Mockito.mock(Registration.class);
         Grid<String> grid = new Grid<>();
         grid.setItems("foo", "bar");
         String value = "foo";
-        SingleSelectionModelImpl<String> select = new SingleSelectionModelImpl<String>(
+        MultiSelectionModelImpl<String> select = new MultiSelectionModelImpl<String>(
                 grid) {
             @Override
             public Registration addSelectionListener(
-                    SingleSelectionListener<String> listener) {
+                    MultiSelectionListener<String> listener) {
                 selectionListener.set(listener);
                 return registration;
             }
 
             @Override
-            public Optional<String> getSelectedItem() {
-                return Optional.of(value);
+            public Set<String> getSelectedItems() {
+                return new LinkedHashSet<>(Arrays.asList(value));
             }
         };
 
-        AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
+        AtomicReference<MultiSelectionEvent<String>> event = new AtomicReference<>();
         Registration actualRegistration = select.addSelectionListener(evt -> {
             Assert.assertNull(event.get());
             event.set(evt);
         });
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().accept(new SingleSelectionEvent<>(grid,
-                select.asSingleSelect(), true));
+        selectionListener.get().accept(new MultiSelectionEvent<>(grid,
+                select.asMultiSelect(), Collections.emptySet(), true));
 
         Assert.assertEquals(grid, event.get().getComponent());
-        Assert.assertEquals(value, event.get().getValue());
+        Assert.assertEquals(new LinkedHashSet<>(Arrays.asList(value)),
+                event.get().getValue());
         Assert.assertTrue(event.get().isUserOriginated());
+    }
+
+    @Test
+    public void selectAllCheckboxVisible__inMemoryDataProvider() {
+        Grid<String> grid = new Grid<>();
+        UI ui = new MockUI();
+        ui.setContent(grid);
+
+        MultiSelectionModelImpl<String> model = new MultiSelectionModelImpl<>(
+                grid);
+        grid.setSelectionModel(model);
+
+        // no items yet, default data provider is empty not in memory one
+        Assert.assertFalse(model.isSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
+                model.getSelectAllCheckBoxVisible());
+
+        grid.setItems("Foo", "Bar", "Baz");
+
+        // in-memory container keeps default
+        Assert.assertTrue(model.isSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
+                model.getSelectAllCheckBoxVisible());
+
+        // change to explicit NO
+        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.HIDDEN);
+
+        Assert.assertEquals(SelectAllCheckBoxVisible.HIDDEN,
+                model.getSelectAllCheckBoxVisible());
+        Assert.assertFalse(model.isSelectAllCheckBoxVisible());
+
+        // change to explicit YES
+        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.VISIBLE);
+
+        Assert.assertEquals(SelectAllCheckBoxVisible.VISIBLE,
+                model.getSelectAllCheckBoxVisible());
+        Assert.assertTrue(model.isSelectAllCheckBoxVisible());
+    }
+
+    @Test
+    public void selectAllCheckboxVisible__lazyDataProvider() {
+        Grid<String> grid = new Grid<>();
+        UI ui = new MockUI();
+        ui.setContent(grid);
+
+        MultiSelectionModelImpl<String> model = new MultiSelectionModelImpl<>(
+                grid);
+        grid.setSelectionModel(model);
+
+        // no items yet, default data provider is empty not in memory one
+        Assert.assertFalse(model.isSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
+                model.getSelectAllCheckBoxVisible());
+
+        grid.setDataProvider(
+                new BackEndDataProvider<String, String>(
+                        q -> IntStream
+                                .range(q.getOffset(),
+                                        Math.max(q.getOffset() + q.getLimit()
+                                                + 1, 1000))
+                                .mapToObj(i -> "Item " + i),
+                        q -> 1000));
+
+        // not in-memory -> checkbox is hidden
+        Assert.assertFalse(model.isSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
+                model.getSelectAllCheckBoxVisible());
+
+        // change to explicit YES
+        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.VISIBLE);
+
+        Assert.assertEquals(SelectAllCheckBoxVisible.VISIBLE,
+                model.getSelectAllCheckBoxVisible());
+        Assert.assertTrue(model.isSelectAllCheckBoxVisible());
+
+        // change to explicit NO
+        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.HIDDEN);
+
+        Assert.assertEquals(SelectAllCheckBoxVisible.HIDDEN,
+                model.getSelectAllCheckBoxVisible());
+        Assert.assertFalse(model.isSelectAllCheckBoxVisible());
+
+        // change back to depends on data provider
+        model.setSelectAllCheckBoxVisible(
+                SelectAllCheckBoxVisible.DEFAULT);
+
+        Assert.assertFalse(model.isSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
+                model.getSelectAllCheckBoxVisible());
+
     }
 }

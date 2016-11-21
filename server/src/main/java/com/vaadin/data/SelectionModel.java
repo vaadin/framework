@@ -196,12 +196,9 @@ public interface SelectionModel<T> extends Serializable {
         }
 
         /**
-         * Deselects all currently selected items.
+         * Selects all available the items.
          */
-        @Override
-        public default void deselectAll() {
-            updateSelection(Collections.emptySet(), getSelectedItems());
-        }
+        public void selectAll();
     }
 
     /**

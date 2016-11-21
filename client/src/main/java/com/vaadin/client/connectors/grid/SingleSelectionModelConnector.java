@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.grid;
 
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
@@ -33,6 +34,8 @@ import elemental.json.JsonObject;
  */
 @Connect(com.vaadin.ui.components.grid.SingleSelectionModelImpl.class)
 public class SingleSelectionModelConnector extends AbstractExtensionConnector {
+
+    private ClickSelectHandler clickSelectHandler;
 
     @Override
     protected void extend(ServerConnector target) {
@@ -62,6 +65,15 @@ public class SingleSelectionModelConnector extends AbstractExtensionConnector {
                     }
 
                 });
+        clickSelectHandler = new ClickSelectHandler<>(getParent().getWidget());
+    }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        if (clickSelectHandler != null) {
+            clickSelectHandler.removeHandler();
+        }
     }
 
     @Override

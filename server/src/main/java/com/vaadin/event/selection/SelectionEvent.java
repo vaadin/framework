@@ -35,7 +35,7 @@ public interface SelectionEvent<T> extends Serializable {
      * <p>
      * This is the same as {@link SingleSelectionChange#getSelectedItem()} in
      * case of single selection and the first selected item from
-     * {@link MultiSelectionEvent#getNewSelection()} in case of multi selection.
+     * {@link MultiSelectionChangeEvent#getNewSelection()} in case of multi selection.
      * 
      * @return the first selected item.
      */

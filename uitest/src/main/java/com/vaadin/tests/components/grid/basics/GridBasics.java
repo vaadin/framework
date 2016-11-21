@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -30,6 +30,7 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -40,6 +41,7 @@ import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -237,14 +239,14 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void onMultiSelect(MultiSelectionEvent<DataObject> event) {
-        Optional<DataObject> firstAdded = event.getNewSelection().stream()
+        Optional<DataObject> firstAdded = event.getAddedSelection().stream()
                 .findFirst();
-        Optional<DataObject> firstRemoved = event.getOldSelection().stream()
+        Optional<DataObject> firstRemoved = event.getRemovedSelection().stream()
                 .findFirst();
-        String addedRow = firstAdded.isPresent() ? firstAdded.toString()
+        String addedRow = firstAdded.isPresent() ? firstAdded.get().toString()
                 : "none";
-        String removedRow = firstRemoved.isPresent() ? firstRemoved.toString()
-                : "none";
+        String removedRow = firstRemoved.isPresent()
+                ? firstRemoved.get().toString() : "none";
         log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
     }
 
@@ -491,12 +493,48 @@ public class GridBasics extends AbstractTestUIWithLog {
                             .addSelectionListener(this::onSingleSelect);
         });
         selectionModelItem.addItem("multi", menuItem -> {
-            selectionListenerRegistration.remove();
-            grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
-            selectionListenerRegistration = ((MultiSelectionModelImpl<DataObject>) grid
-                    .getSelectionModel())
-                            .addSelectionListener(this::onMultiSelect);
+            switchToMultiSelect();
         });
+
+        selectionModelItem.addItem("Select All", menuItem -> {
+            switchToMultiSelect();
+            ((MultiSelectionModel<DataObject>) grid.getSelectionModel())
+                    .selectAll();
+        });
+        selectionModelItem.addItem("Deselect All", menuItem -> {
+            switchToMultiSelect();
+            ((MultiSelectionModel<DataObject>) grid.getSelectionModel())
+                    .deselectAll();
+        });
+        selectionModelItem.addItem("SelectAllCheckbox: Visible", menuItem -> {
+            switchToMultiSelect();
+            ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
+                    .setSelectAllCheckBoxVisible(
+                            SelectAllCheckBoxVisible.VISIBLE);
+        });
+        selectionModelItem.addItem("SelectAllCheckbox: Hidden", menuItem -> {
+            switchToMultiSelect();
+            ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
+                    .setSelectAllCheckBoxVisible(
+                            SelectAllCheckBoxVisible.HIDDEN);
+        });
+        selectionModelItem.addItem("SelectAllCheckbox: Default", menuItem -> {
+            switchToMultiSelect();
+            ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
+                    .setSelectAllCheckBoxVisible(
+                            SelectAllCheckBoxVisible.DEFAULT);
+        });
+    }
+
+    private void switchToMultiSelect() {
+        if (!(grid.getSelectionModel() instanceof MultiSelectionModel)) {
+            selectionListenerRegistration.remove();
+            MultiSelectionModelImpl<DataObject> model = new MultiSelectionModelImpl<>(
+                    grid);
+            grid.setSelectionModel(model);
+            selectionListenerRegistration = model
+                    .addSelectionListener(this::onMultiSelect);
+        }
     }
 
     private void createHeaderMenu(MenuItem headerMenu) {
@@ -547,7 +585,8 @@ public class GridBasics extends AbstractTestUIWithLog {
         headerRow.join(toMerge).setText(jointCellText);
     }
 
-    private void mergeFooterСells(int rowIndex, String jointCellText, int... columnIndexes) {
+    private void mergeFooterСells(int rowIndex, String jointCellText,
+            int... columnIndexes) {
         FooterRow footerRow = grid.getFooterRow(rowIndex);
         List<Column<DataObject, ?>> columns = grid.getColumns();
         Set<Grid.FooterCell> toMerge = new HashSet<>();

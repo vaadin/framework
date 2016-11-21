@@ -127,9 +127,8 @@ public class GridSelectionTest extends GridBasicsTest {
                 "SingleSelectionEvent: Selected: DataObject[0]"));
     }
 
-    // TODO enable once select with space key is added
-    // @Test
-    public void testKeyboardSelection() {
+    @Test
+    public void testKeyboardWithMultiSelection() {
         openTestURL();
         setSelectionModelMulti();
 
@@ -153,8 +152,7 @@ public class GridSelectionTest extends GridBasicsTest {
                 grid.getRow(3).isSelected());
     }
 
-    // TODO enable once select with space key is added
-    // @Test
+    @Test
     public void testKeyboardWithSingleSelection() {
         openTestURL();
         setSelectionModelSingle();
@@ -189,7 +187,7 @@ public class GridSelectionTest extends GridBasicsTest {
 
         setSelectionModelMulti();
 
-        getGridElement().getCell(5, 1).click();
+        getGridElement().getCell(5, 0).click();
         assertTrue("Row should be selected after clicking",
                 getRow(5).isSelected());
 
@@ -210,40 +208,36 @@ public class GridSelectionTest extends GridBasicsTest {
                         .getAttribute("class")
                         .contains("v-grid-selection-checkbox"));
 
-        // TODO enable once select all is added
-        // GridCellElement header = getGridElement().getHeaderCell(0, 0);
-        // assertTrue("Select all CheckBox should have the proper style name
-        // set",
-        // header.findElement(By.tagName("span")).getAttribute("class")
-        // .contains("v-grid-select-all-checkbox"));
+        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+        assertTrue("Select all CheckBox should have the proper style name set",
+                header.findElement(By.tagName("span")).getAttribute("class")
+                        .contains("v-grid-select-all-checkbox"));
     }
 
-    // TODO enable once select all is added
-    // @Test
+    @Test
     public void testServerSideSelectTogglesSelectAllCheckBox() {
         openTestURL();
 
         setSelectionModelMulti();
-        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+        assertFalse("Select all CheckBox should not be selected",
+                getSelectAllCheckbox().isSelected());
 
-        WebElement selectAll = header.findElement(By.tagName("input"));
-
-        selectMenuPath("Component", "State", "Select all");
-        waitUntilCheckBoxValue(selectAll, true);
+        selectAll();
+        waitUntilCheckBoxValue(getSelectAllCheckbox(), true);
         assertTrue("Select all CheckBox wasn't selected as expected",
-                selectAll.isSelected());
+                getSelectAllCheckbox().isSelected());
 
-        selectMenuPath("Component", "State", "Select none");
-        waitUntilCheckBoxValue(selectAll, false);
+        deselectAll();
+        waitUntilCheckBoxValue(getSelectAllCheckbox(), false);
         assertFalse("Select all CheckBox was selected unexpectedly",
-                selectAll.isSelected());
+                getSelectAllCheckbox().isSelected());
 
-        selectMenuPath("Component", "State", "Select all");
-        waitUntilCheckBoxValue(selectAll, true);
+        selectAll();
+        waitUntilCheckBoxValue(getSelectAllCheckbox(), true);
         getGridElement().getCell(5, 0).click();
-        waitUntilCheckBoxValue(selectAll, false);
+        waitUntilCheckBoxValue(getSelectAllCheckbox(), false);
         assertFalse("Select all CheckBox was selected unexpectedly",
-                selectAll.isSelected());
+                getSelectAllCheckbox().isSelected());
     }
 
     @Test
@@ -270,10 +264,6 @@ public class GridSelectionTest extends GridBasicsTest {
                         : !checkBoxElememnt.isSelected();
             }
         }, 5);
-    }
-
-    private void toggleFirstRowSelection() {
-        selectMenuPath("Component", "Body rows", "Toggle first row selection");
     }
 
     private GridRowElement getRow(int i) {

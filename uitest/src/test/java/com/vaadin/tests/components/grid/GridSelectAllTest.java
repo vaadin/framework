@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -12,18 +13,7 @@ import com.vaadin.tests.components.grid.basics.GridBasicsTest;
 
 public class GridSelectAllTest extends GridBasicsTest {
 
-    // TODO remove once select all is added
     @Test
-    public void testSelectAllCheckBoxNotVisble() {
-        setSelectionModelMulti();
-        GridCellElement header = getGridElement().getHeaderCell(0, 0);
-
-        assertFalse("Checkbox visible",
-                header.isElementPresent(By.tagName("input")));
-    }
-
-    // TODO enable once select all is added
-    // @Test
     public void testSelectAllCheckbox() {
         setSelectionModelMulti();
         GridCellElement header = getGridElement().getHeaderCell(0, 0);
@@ -41,8 +31,7 @@ public class GridSelectAllTest extends GridBasicsTest {
                 getGridElement().getRow(100).isSelected());
     }
 
-    // TODO enable once select all is added
-    // @Test
+    @Test
     public void testSelectAllAndSort() {
         setSelectionModelMulti();
         GridCellElement header = getGridElement().getHeaderCell(0, 0);
@@ -60,13 +49,12 @@ public class GridSelectAllTest extends GridBasicsTest {
                 "Exception occured, java.lang.IllegalStateException: No item id for key 101 found."));
     }
 
-    // TODO enable once select all is added
-    // @Test
+    @Test
     public void testSelectAllCheckboxWhenChangingModels() {
         GridCellElement header;
         header = getGridElement().getHeaderCell(0, 0);
         assertFalse(
-                "Check box shouldn't have been in header for None Selection Model",
+                "Check box shouldn't have been in header for Single Selection Model",
                 header.isElementPresent(By.tagName("input")));
 
         setSelectionModelMulti();
@@ -93,16 +81,189 @@ public class GridSelectAllTest extends GridBasicsTest {
                 header.isElementPresent(By.tagName("input")));
     }
 
-    // TODO enable once select all is added
-    // @Test
+    @Test
     public void testSelectAllCheckboxWithHeaderOperations() {
         setSelectionModelMulti();
-        selectMenuPath("Component", "Header", "Prepend row");
-        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Prepend header row");
+        assertEquals(2, getGridElement().getHeaderCount());
+        selectMenuPath("Component", "Header", "Append header row");
+        assertEquals(3, getGridElement().getHeaderCount());
 
         GridCellElement header = getGridElement().getHeaderCell(1, 0);
         assertTrue("Multi Selection Model should have select all checkbox",
                 header.isElementPresent(By.tagName("input")));
+    }
+
+    @Test
+    public void testSelectAllCheckboxAfterPrependHeaderOperations() {
+        selectMenuPath("Component", "Header", "Prepend header row");
+        assertEquals(2, getGridElement().getHeaderCount());
+
+        setSelectionModelMulti();
+        GridCellElement header = getGridElement().getHeaderCell(1, 0);
+        assertTrue("Multi Selection Model should have select all checkbox",
+                header.isElementPresent(By.tagName("input")));
+
+        setSelectionModelSingle();
+        header = getGridElement().getHeaderCell(1, 0);
+        assertFalse(
+                "Check box shouldn't have been in header for Single Selection Model",
+                header.isElementPresent(By.tagName("input")));
+
+        selectMenuPath("Component", "Header", "Append header row");
+        assertEquals(3, getGridElement().getHeaderCount());
+
+        setSelectionModelMulti();
+        header = getGridElement().getHeaderCell(1, 0);
+        assertTrue("Multi Selection Model should have select all checkbox",
+                header.isElementPresent(By.tagName("input")));
+    }
+
+    @Test
+    public void testSelectAllCheckbox_selectedAllFromClient_afterDeselectingOnClientSide_notSelected() {
+        setSelectionModelMulti();
+
+        verifyAllSelected(false);
+
+        getSelectAllCheckbox().click();
+
+        verifyAllSelected(true);
+
+        getGridElement().getCell(5, 0).click();
+
+        verifyAllSelected(false);
+
+        getGridElement().getCell(5, 0).click();
+
+        verifyAllSelected(false); // EXPECTED since multiselection model can't
+                                  // verify that all have been selected
+    }
+
+    @Test
+    public void testSelectAllCheckbox_selectedAllFromClient_afterDeselectingOnServerSide_notSelected() {
+        setSelectionModelMulti();
+
+        verifyAllSelected(false);
+
+        getSelectAllCheckbox().click();
+
+        verifyAllSelected(true);
+
+        toggleFirstRowSelection();
+
+        verifyAllSelected(false);
+
+        toggleFirstRowSelection();
+
+        verifyAllSelected(false); // EXPECTED since multiselection model can't
+                                  // verify that all have been selected
+    }
+
+    @Test
+    public void testSelectAllCheckbox_selectedAllFromServer_afterDeselectingOnClientSide_notSelected() {
+        selectAll(); // triggers selection model change
+
+        verifyAllSelected(true);
+
+        getGridElement().getCell(5, 0).click();
+
+        verifyAllSelected(false);
+
+        getGridElement().getCell(5, 0).click();
+
+        verifyAllSelected(false); // EXPECTED since multiselection model can't
+                                  // verify that all have been selected
+    }
+
+    @Test
+    public void testSelectAllCheckbox_selectedAllFromServer_afterDeselectingOnServerSide_notSelected() {
+        selectAll(); // triggers selection model change
+
+        verifyAllSelected(true);
+
+        toggleFirstRowSelection();
+
+        verifyAllSelected(false);
+
+        toggleFirstRowSelection();
+
+        verifyAllSelected(false); // EXPECTED since multiselection model can't
+                                  // verify that all have been selected
+    }
+
+    @Test
+    public void testSelectAllCheckbox_triggerVisibility() {
+        verifySelectAllNotVisible();
+
+        setSelectionModelMulti();
+
+        verifySelectAllVisible();
+
+        setSelectAllCheckBoxHidden();
+
+        verifySelectAllNotVisible();
+
+        setSelectAllCheckBoxDefault();
+
+        verifySelectAllVisible(); // visible because in memory data provider
+
+        setSelectAllCheckBoxHidden();
+
+        verifySelectAllNotVisible();
+
+        setSelectAllCheckBoxVisible();
+
+        verifySelectAllVisible();
+    }
+
+    @Test
+    public void testSelectAllCheckboxNotVisible_selectAllFromServer_staysHidden() {
+        setSelectionModelMulti();
+
+        verifySelectAllVisible();
+
+        setSelectAllCheckBoxHidden();
+
+        verifySelectAllNotVisible();
+
+        selectAll();
+
+        verifySelectAllNotVisible();
+    }
+
+    @Test
+    public void testSelectAll_immediatelyWhenSettingSelectionModel() {
+        verifySelectAllNotVisible();
+
+        selectAll(); // changes selection model too
+
+        verifyAllSelected(true);
+    }
+
+    @Test
+    public void testSelectAllCheckBoxHidden_immediatelyWhenChaningModel() {
+        verifySelectAllNotVisible();
+
+        setSelectAllCheckBoxHidden(); // changes selection model
+
+        verifySelectAllNotVisible();
+    }
+
+    private void verifyAllSelected(boolean selected) {
+        verifySelectAllVisible();
+        assertEquals("Select all checkbox selection state wrong", selected,
+                getSelectAllCheckbox().isSelected());
+    }
+
+    private void verifySelectAllVisible() {
+        assertTrue("Select all checkbox should be displayed",
+                getSelectAllCheckbox().isDisplayed());
+    }
+
+    private void verifySelectAllNotVisible() {
+        assertEquals("Select all checkbox should not be displayed", 0,
+                getGridElement().getHeaderCell(0, 0)
+                        .findElements(By.tagName("input")).size());
     }
 
 }

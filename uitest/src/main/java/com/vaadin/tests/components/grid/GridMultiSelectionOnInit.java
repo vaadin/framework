@@ -15,11 +15,15 @@
  */
 package com.vaadin.tests.components.grid;
 
+import java.util.Arrays;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
 
 public class GridMultiSelectionOnInit extends AbstractTestUI {
 
@@ -28,7 +32,9 @@ public class GridMultiSelectionOnInit extends AbstractTestUI {
         final Grid<String> grid = new Grid<>();
         grid.setItems("Foo 1", "Foo 2");
         grid.addColumn(item -> item);
-        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+        MultiSelectionModelImpl<String> model = new MultiSelectionModelImpl<>(
+                grid);
+        grid.setSelectionModel(model);
         addComponent(grid);
 
         addComponent(new Button("Select rows",
@@ -36,5 +42,15 @@ public class GridMultiSelectionOnInit extends AbstractTestUI {
         if (request.getParameter("initialSelection") != null) {
             grid.getSelectionModel().select("Foo 2");
         }
+
+        RadioButtonGroup<SelectAllCheckBoxVisible> rbg = new RadioButtonGroup<>(
+                "Select All Visible",
+                Arrays.asList(SelectAllCheckBoxVisible.VISIBLE,
+                        SelectAllCheckBoxVisible.HIDDEN,
+                        SelectAllCheckBoxVisible.DEFAULT));
+        rbg.setValue(model.getSelectAllCheckBoxVisible());
+        rbg.addValueChangeListener(
+                event -> model.setSelectAllCheckBoxVisible(event.getValue()));
+        addComponent(rbg);
     }
 }

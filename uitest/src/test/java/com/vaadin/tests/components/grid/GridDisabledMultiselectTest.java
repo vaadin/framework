@@ -48,22 +48,20 @@ public class GridDisabledMultiselectTest extends MultiBrowserTest {
 
         setMultiselect();
 
-        // TODO enable once select all is added back
-        // assertThat(getSelectAllCheckBox().isEnabled(), is(false));
+        assertThat(getSelectAllCheckBox().isEnabled(), is(false));
         assertThat(getFirstSelectCheckBox().isEnabled(), is(false));
     }
 
     @Test
     public void checkBoxesAreDisabledAfterDisabled() {
         setMultiselect();
-        // TODO enable once select all is added back
-        // assertThat(getSelectAllCheckBox().isEnabled(), is(true));
+
+        assertThat(getSelectAllCheckBox().isEnabled(), is(true));
         assertThat(getFirstSelectCheckBox().isEnabled(), is(true));
 
         disable();
 
-        // TODO enable once select all is added back
-        // assertThat(getSelectAllCheckBox().isEnabled(), is(false));
+        assertThat(getSelectAllCheckBox().isEnabled(), is(false));
         assertThat(getFirstSelectCheckBox().isEnabled(), is(false));
     }
 

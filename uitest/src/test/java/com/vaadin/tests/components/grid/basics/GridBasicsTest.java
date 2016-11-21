@@ -215,6 +215,18 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
                 getGridVerticalScrollbar())).intValue();
     }
 
+    protected void toggleFirstRowSelection() {
+        selectMenuPath("Component", "Body rows", "Toggle first row selection");
+    }
+
+    protected void selectAll() {
+        selectMenuPath("Component", "State", "Selection model", "Select All");
+    }
+
+    protected void deselectAll() {
+        selectMenuPath("Component", "State", "Selection model", "Deselect All");
+    }
+
     protected void setSelectionModelMulti() {
         selectMenuPath("Component", "State", "Selection model", "multi");
     }
@@ -223,7 +235,28 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Selection model", "single");
     }
 
-    // TODO enable once select all is added
+    protected void setSelectAllCheckBoxVisible() {
+        selectMenuPath("Component", "State", "Selection model",
+                "SelectAllCheckbox: Visible");
+    }
+
+    protected void setSelectAllCheckBoxHidden() {
+        selectMenuPath("Component", "State", "Selection model",
+                "SelectAllCheckbox: Hidden");
+    }
+
+    protected void setSelectAllCheckBoxDefault() {
+        selectMenuPath("Component", "State", "Selection model",
+                "SelectAllCheckbox: Default");
+    }
+
+    protected WebElement getSelectAllCheckbox() {
+        GridCellElement header = getGridElement().getHeaderCell(0, 0);
+
+        return header.findElement(By.tagName("input"));
+    }
+
+    // TODO enable once select model none is added
     // protected void setSelectionModelNone() {
     // selectMenuPath("Component", "State", "Selection model", "none");
     // }

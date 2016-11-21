@@ -16,6 +16,7 @@
 package com.vaadin.event.selection;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -98,6 +99,36 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
      */
     public Set<T> getOldSelection() {
         return Collections.unmodifiableSet(oldSelection);
+    }
+
+    /**
+     * Gets the items that were removed from selection.
+     * <p>
+     * This is just a convenience method for checking what was previously
+     * selected in {@link #getOldSelection()} but not selected anymore in
+     * {@link #getNewSelection()}.
+     *
+     * @return the items that were removed from selection
+     */
+    public Set<T> getRemovedSelection() {
+        LinkedHashSet<T> copy = new LinkedHashSet<>(oldSelection);
+        copy.removeAll(getNewSelection());
+        return copy;
+    }
+
+    /**
+     * Gets the items that were added to selection.
+     * <p>
+     * This is just a convenience method for checking what is new selected in
+     * {@link #getNewSelection()} and wasn't selected in
+     * {@link #getOldSelection()}.
+     *
+     * @return the items that were removed from selection
+     */
+    public Set<T> getAddedSelection() {
+        LinkedHashSet<T> copy = new LinkedHashSet<>(getValue());
+        copy.removeAll(oldSelection);
+        return copy;
     }
 
     @Override

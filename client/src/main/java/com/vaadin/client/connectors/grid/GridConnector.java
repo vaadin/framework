@@ -151,7 +151,6 @@ public class GridConnector extends AbstractListingConnector
 
         // Default selection style is space key.
         spaceSelectHandler = new SpaceSelectHandler<>(getWidget());
-        clickSelectHandler = new ClickSelectHandler<>(getWidget());
         getWidget().addSortHandler(this::handleSortEvent);
         getWidget().setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();

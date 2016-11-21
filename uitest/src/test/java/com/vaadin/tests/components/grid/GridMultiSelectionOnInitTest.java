@@ -35,8 +35,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
 
-    // TODO enable when select all is added back
-    // @Test
+    @Test
     public void testSelectAllCheckBoxExists() {
         openTestURL();
         assertTrue("The select all checkbox was missing.",
@@ -44,9 +43,10 @@ public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
                         .isElementPresent(By.tagName("input")));
     }
 
-    // TODO enable when select all is added back
-    // @Test
+    @Test
     public void selectAllCellCanBeClicked() throws IOException {
+        openTestURL();
+
         GridElement.GridCellElement selectAllCell = $(GridElement.class).first()
                 .getHeaderCell(0, 0);
 

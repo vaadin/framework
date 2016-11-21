@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -56,8 +57,6 @@ import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
@@ -549,10 +548,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 return join(columns);
             }
 
-            private CELLTYPE getMergedCellForColumn(
-                    Column<?, ?> column) {
-                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups.entrySet()) {
-                    if (entry.getValue().contains(column)) return entry.getKey();
+            private CELLTYPE getMergedCellForColumn(Column<?, ?> column) {
+                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups
+                        .entrySet()) {
+                    if (entry.getValue().contains(column)) {
+                        return entry.getKey();
+                    }
                 }
                 return null;
             }
@@ -563,7 +564,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     cell.setColspan(1);
                 }
                 // Set colspan for grouped cells
-                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups.entrySet()) {
+                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups
+                        .entrySet()) {
                     CELLTYPE mergedCell = entry.getKey();
                     if (!checkMergedCellIsContinuous(entry.getValue())) {
                         // on error simply break the merged cell
@@ -2835,6 +2837,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private boolean initDone = false;
         private boolean selected = false;
         private CheckBox selectAllCheckBox;
+        private boolean selectAllCheckBoxVisible;
+        private HeaderCell selectionCell;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
@@ -2853,68 +2857,27 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         @Override
         protected void setDefaultHeaderContent(HeaderCell selectionCell) {
-            final SelectionModel<T> model = getSelectionModel();
-            final boolean shouldSelectAllCheckBoxBeShown = getHandlerCount(
-                    SelectAllEvent.getType()) > 0;
+            this.selectionCell = selectionCell;
 
-            if (selectAllCheckBox == null && shouldSelectAllCheckBoxBeShown) {
+            // there is no checkbox yet -> create it
+            if (selectAllCheckBox == null) {
                 selectAllCheckBox = GWT.create(CheckBox.class);
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
-                selectAllCheckBox.addValueChangeHandler(
-                        new ValueChangeHandler<Boolean>() {
-
-                            @Override
-                            public void onValueChange(
-                                    ValueChangeEvent<Boolean> event) {
-                                if (event.getValue()) {
-                                    fireEvent(new SelectAllEvent<>(model));
-                                    selected = true;
-                                } else {
-                                    model.deselectAll();
-                                    selected = false;
-                                }
-                            }
-                        });
+                selectAllCheckBox.addValueChangeHandler(event -> {
+                    selected = event.getValue();
+                    fireEvent(new SelectAllEvent<>(getSelectionModel(),
+                            selected));
+                });
                 selectAllCheckBox.setValue(selected);
 
-                addHeaderClickHandler(new HeaderClickHandler() {
-                    @Override
-                    public void onClick(GridClickEvent event) {
-                        CellReference<?> targetCell = event.getTargetCell();
-                        int defaultRowIndex = getHeader().getRows()
-                                .indexOf(getDefaultHeaderRow());
-
-                        if (targetCell.getColumnIndex() == 0 && targetCell
-                                .getRowIndex() == defaultRowIndex) {
-                            selectAllCheckBox.setValue(
-                                    !selectAllCheckBox.getValue(), true);
-                        }
-                    }
-                });
+                addHeaderClickHandler(this::onHeaderClickEvent);
 
                 // Select all with space when "select all" cell is active
-                addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
-                    @Override
-                    public void onKeyUp(GridKeyUpEvent event) {
-                        if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
-                            return;
-                        }
-                        HeaderRow targetHeaderRow = getHeader()
-                                .getRow(event.getFocusedCell().getRowIndex());
-                        if (!targetHeaderRow.isDefault()) {
-                            return;
-                        }
-                        if (event.getFocusedCell()
-                                .getColumn() == SelectionColumn.this) {
-                            // Send events to ensure state is updated
-                            selectAllCheckBox.setValue(
-                                    !selectAllCheckBox.getValue(), true);
-                        }
-                    }
-                });
-            } else if (selectAllCheckBox != null
-                    && !shouldSelectAllCheckBoxBeShown) {
+                addHeaderKeyUpHandler(this::onHeaderKeyUpEvent);
+
+            } else { // checkbox exists, but default header row has changed ->
+                     // clear rows
                 for (HeaderRow row : header.getRows()) {
                     if (row.getCell(this)
                             .getType() == GridStaticCellType.WIDGET) {
@@ -2924,7 +2887,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
             }
 
-            selectionCell.setWidget(selectAllCheckBox);
+            // attach the checkbox to default row depending on visibility
+            doSetSelectAllCheckBoxVisible();
         }
 
         @Override
@@ -3005,6 +2969,87 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         public void onEnabled(boolean enabled) {
             setEnabled(enabled);
         }
+
+        /**
+         * Sets the select all checkbox visible in the default header row for
+         * selection column.
+         *
+         * @param selectAllCheckBoxVisible
+         *            {@code true} for visible, {@code false} for not
+         */
+        public void setSelectAllCheckBoxVisible(
+                boolean selectAllCheckBoxVisible) {
+            if (this.selectAllCheckBoxVisible != selectAllCheckBoxVisible) {
+                this.selectAllCheckBoxVisible = selectAllCheckBoxVisible;
+                doSetSelectAllCheckBoxVisible();
+            }
+        }
+
+        /**
+         * Returns whether the select all checkbox is visible or not.
+         *
+         * @return {@code true} for visible, {@code false} for not
+         */
+        public boolean isSelectAllCheckBoxVisible() {
+            return selectAllCheckBoxVisible;
+        }
+
+        /**
+         * Returns the select all checkbox, which is present in the default
+         * header if the used selection model is of type
+         * {@link SelectionModelWithSelectionColumn}.
+         *
+         * To handle select all, add {@link SelectAllHandler} the grid with
+         * {@link #addSelectAllHandler(SelectAllHandler)}.
+         *
+         * @return the select all checkbox, or an empty optional if not in use
+         */
+        public Optional<CheckBox> getSelectAllCheckBox() {
+            return Optional.ofNullable(selectionColumn == null ? null
+                    : selectionColumn.selectAllCheckBox);
+        }
+
+        /**
+         * Sets the select all checkbox visible or hidden.
+         */
+        protected void doSetSelectAllCheckBoxVisible() {
+            assert selectAllCheckBox != null : "Select All Checkbox has not been created for selection column.";
+            assert selectionCell != null : "Default header cell for selection column not been set.";
+
+            if (selectAllCheckBoxVisible) {
+                selectionCell.setWidget(selectAllCheckBox);
+            } else {
+                selectAllCheckBox.removeFromParent();
+                selectionCell.setText("");
+            }
+        }
+
+        private void onHeaderClickEvent(GridClickEvent event) {
+            CellReference<?> targetCell = event.getTargetCell();
+            int defaultRowIndex = getHeader().getRows()
+                    .indexOf(getDefaultHeaderRow());
+
+            if (targetCell.getColumnIndex() == 0
+                    && targetCell.getRowIndex() == defaultRowIndex) {
+                selectAllCheckBox.setValue(!selectAllCheckBox.getValue(), true);
+            }
+        }
+
+        private void onHeaderKeyUpEvent(GridKeyUpEvent event) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
+                return;
+            }
+            HeaderRow targetHeaderRow = getHeader()
+                    .getRow(event.getFocusedCell().getRowIndex());
+            if (!targetHeaderRow.isDefault()) {
+                return;
+            }
+            if (event.getFocusedCell().getColumn() == SelectionColumn.this) {
+                // Send events to ensure state is updated
+                selectAllCheckBox.setValue(!selectAllCheckBox.getValue(), true);
+            }
+        }
+
     }
 
     /**
@@ -7557,8 +7602,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Sets the current selection model.
-     * <p>
-     * This function will call {@link SelectionModel#setGrid(Grid)}.
      *
      * @param selectionModel
      *            a selection model implementation.
@@ -7755,6 +7798,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Register a GWT event handler for a select all event. This handler gets
      * called whenever Grid needs all rows selected.
+     * <p>
+     * In case the select all checkbox is not visible in the
+     * {@link SelectionColumn}, it will be come visible after adding the
+     * handler.
      *
      * @param handler
      *            a select all event handler
@@ -7762,7 +7809,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     public HandlerRegistration addSelectAllHandler(
             SelectAllHandler<T> handler) {
-        return addHandler(handler, SelectAllEvent.getType());
+        HandlerRegistration registration = addHandler(handler,
+                SelectAllEvent.getType());
+        return registration;
     }
 
     /**
@@ -7775,7 +7824,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param handler
      *            a data available event handler
-     * @return the registartion for the event
+     * @return the registration for the event
      */
     public HandlerRegistration addDataAvailableHandler(
             final DataAvailableHandler handler) {
@@ -8845,4 +8894,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return null;
     }
 
+    /**
+     * Returns the selection column for the grid if the selection model is of
+     * type {@link SelectionModelWithSelectionColumn}.
+     *
+     * @return the select all checkbox, or an empty optional if not in use
+     */
+    public Optional<SelectionColumn> getSelectionColumn() {
+        return Optional.ofNullable(selectionColumn);
+    }
 }
