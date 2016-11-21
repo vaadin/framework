@@ -90,6 +90,19 @@ public interface DataProvider<T, F> extends Serializable {
     Registration addDataProviderListener(DataProviderListener listener);
 
     /**
+     * Returns a new wrapped data provider with given default filter. Default
+     * filter will apply to each query and further filtering will not be
+     * supported in the wrapped data provider.
+     *
+     * @param filter
+     *            the default filter
+     * @return wrapped data provider with provided filter
+     */
+    public default DataProvider<T, Void> setFilter(F filter) {
+        return new FilteringDataProviderWrapper<>(this, filter);
+    }
+
+    /**
      * Convert the data provider to use a different filter type. It is used for
      * adapting this data provider to a filter type provided by a Component such
      * as ComboBox.
@@ -117,7 +130,7 @@ public interface DataProvider<T, F> extends Serializable {
      *
      * @return wrapped data provider
      */
-    default <M> DataProvider<T, M> convertFilter(
+    public default <M> DataProvider<T, M> convertFilter(
             SerializableFunction<M, F> mapper) {
         return new FilteringDataProviderWrapper<>(this, mapper);
     }

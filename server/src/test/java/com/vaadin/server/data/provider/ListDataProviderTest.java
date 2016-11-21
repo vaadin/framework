@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.server.data.Query;
@@ -215,5 +216,21 @@ public class ListDataProviderTest {
         Assert.assertEquals("Unexpected number of matches for 'Foo'", 36,
                 dataProvider.size(new Query<>(
                         strBean -> strBean.getValue().contains("Foo"))));
+    }
+
+    @Test
+    public void filteringListDataProvider_defaultFilter() {
+        SerializablePredicate<StrBean> filter = s -> s.getRandomNumber() > 4;
+        // Intentionally lost filter type. Not actually filterable anymore.
+        DataProvider<StrBean, ?> filtered = dataProvider.setFilter(filter);
+
+        Assert.assertEquals("Filter not applied, unexpected item count",
+                dataProvider.size(new Query<>(filter)),
+                filtered.size(new Query<>()));
+
+        Assert.assertEquals("Further filtering succeeded",
+                filtered.size(new Query<>()),
+                filtered.size((Query) new Query<SerializablePredicate<StrBean>>(
+                        s -> s.getValue().equals("Foo"))));
     }
 }

@@ -38,7 +38,32 @@ public class FilteringDataProviderWrapper<T, F, M>
 
     private DataProvider<T, M> dataProvider;
     private SerializableFunction<F, M> mapper;
+    private M staticFilter = null;
 
+    /**
+     * Constructs a filtering wrapper for a data provider with always applied
+     * static filter.
+     *
+     * @param dataProvider
+     *            the wrapped data provider
+     * @param filter
+     *            the static filter
+     */
+    public FilteringDataProviderWrapper(DataProvider<T, M> dataProvider,
+            M filter) {
+        this.dataProvider = dataProvider;
+        this.staticFilter = filter;
+    }
+
+    /**
+     * Constructs a filtering wrapper for a data provider with a mapping from
+     * one filter type to another.
+     *
+     * @param dataProvider
+     *            the wrapped data provider
+     * @param mapper
+     *            the filter mapping function
+     */
     public FilteringDataProviderWrapper(DataProvider<T, M> dataProvider,
             SerializableFunction<F, M> mapper) {
         this.dataProvider = dataProvider;
@@ -63,13 +88,19 @@ public class FilteringDataProviderWrapper<T, F, M>
     @Override
     public int size(Query<F> t) {
         return dataProvider.size(new Query<M>(t.getOffset(), t.getLimit(),
-                t.getSortOrders(), t.getFilter().map(mapper).orElse(null)));
+                t.getSortOrders(), getFilter(t)));
     }
 
     @Override
     public Stream<T> fetch(Query<F> t) {
         return dataProvider.fetch(new Query<M>(t.getOffset(), t.getLimit(),
-                t.getSortOrders(), t.getFilter().map(mapper).orElse(null)));
+                t.getSortOrders(), getFilter(t)));
     }
 
+    private M getFilter(Query<F> query) {
+        if (staticFilter != null) {
+            return staticFilter;
+        }
+        return query.getFilter().map(mapper).orElse(null);
+    }
 }
