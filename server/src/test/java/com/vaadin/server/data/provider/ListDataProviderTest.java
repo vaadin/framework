@@ -20,6 +20,10 @@ public class ListDataProviderTest {
 
     private ListDataProvider<StrBean> dataProvider;
     private List<StrBean> data;
+    private SerializablePredicate<StrBean> fooFilter = s -> s.getValue()
+            .equals("Foo");
+    private SerializablePredicate<StrBean> gt5Filter = s -> s
+            .getRandomNumber() > 5;
 
     @Before
     public void setUp() {
@@ -214,23 +218,79 @@ public class ListDataProviderTest {
         Assert.assertEquals("No item should match 'Zyx'", 0, dataProvider.size(
                 new Query<>(strBean -> strBean.getValue().contains("Zyx"))));
         Assert.assertEquals("Unexpected number of matches for 'Foo'", 36,
-                dataProvider.size(new Query<>(
-                        strBean -> strBean.getValue().contains("Foo"))));
+                dataProvider.size(new Query<>(fooFilter)));
     }
 
     @Test
     public void filteringListDataProvider_defaultFilter() {
-        SerializablePredicate<StrBean> filter = s -> s.getRandomNumber() > 4;
         // Intentionally lost filter type. Not actually filterable anymore.
-        DataProvider<StrBean, ?> filtered = dataProvider.setFilter(filter);
+        DataProvider<StrBean, ?> filtered = dataProvider.setFilter(gt5Filter);
 
         Assert.assertEquals("Filter not applied, unexpected item count",
-                dataProvider.size(new Query<>(filter)),
+                dataProvider.size(new Query<>(gt5Filter)),
                 filtered.size(new Query<>()));
 
         Assert.assertEquals("Further filtering succeeded",
                 filtered.size(new Query<>()),
-                filtered.size((Query) new Query<SerializablePredicate<StrBean>>(
-                        s -> s.getValue().equals("Foo"))));
+                filtered.size((Query) new Query<>(fooFilter)));
     }
+
+    public void filteringListDataProvider_appliedFilters() {
+        Assert.assertEquals("Filtering result differ",
+                data.stream().filter(fooFilter).count(),
+                dataProvider.applyFilter(fooFilter).size(new Query<>()));
+
+        Assert.assertEquals("Chained filtering result differ",
+                data.stream().filter(fooFilter.and(gt5Filter)).count(),
+                dataProvider.applyFilter(fooFilter)
+                        .size(new Query<>(gt5Filter)));
+    }
+
+    @Test
+    public void filteringListDataProvider_chainedFilters() {
+        Assert.assertEquals("Chained filtering result differ",
+                data.stream().filter(fooFilter.and(gt5Filter)).count(),
+                dataProvider.applyFilter(fooFilter).applyFilter(gt5Filter)
+                        .size(new Query<>()));
+    }
+
+    @Test
+    public void filteringListDataProvider_chainedFiltersWithOrInsteadOfAnd() {
+        ListDataProvider<StrBean> orFilteredDataProvider = new ListDataProvider<StrBean>(
+                data) {
+
+            @Override
+            public SerializablePredicate<StrBean> combineFilters(
+                    SerializablePredicate<StrBean> filter1,
+                    SerializablePredicate<StrBean> filter2) {
+                return t -> filter1.test(t) || filter2.test(t);
+            }
+        };
+
+        Assert.assertEquals("Chained filtering result differ",
+                data.stream().filter(fooFilter.or(gt5Filter)).count(),
+                orFilteredDataProvider.applyFilter(fooFilter)
+                        .applyFilter(gt5Filter).size(new Query<>()));
+    }
+
+    @Test
+    public void filteringListDataProvider_appliedFilterAndConverter() {
+        Assert.assertEquals("Filtering result differ with 'Foo'",
+                data.stream().filter(gt5Filter.and(fooFilter)).count(),
+                dataProvider.applyFilter(gt5Filter).convertFilter(
+                        text -> strBean -> strBean.getValue().equals(text))
+                        .size(new Query<>("Foo")));
+
+        Assert.assertEquals("Filtering result differ with 'Xyz'", data.stream()
+                .filter(gt5Filter.and(s -> s.getValue().equals("Xyz"))).count(),
+                dataProvider.applyFilter(gt5Filter).convertFilter(
+                        text -> strBean -> strBean.getValue().equals(text))
+                        .size(new Query<>("Xyz")));
+
+        Assert.assertEquals("No results should've been found", 0,
+                dataProvider.applyFilter(gt5Filter).convertFilter(
+                        text -> strBean -> strBean.getValue().equals(text))
+                        .size(new Query<>("Zyx")));
+    }
+
 }

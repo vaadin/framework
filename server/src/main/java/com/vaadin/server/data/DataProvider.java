@@ -18,6 +18,7 @@ package com.vaadin.server.data;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializableFunction;
@@ -99,7 +100,8 @@ public interface DataProvider<T, F> extends Serializable {
      * @return wrapped data provider with provided filter
      */
     public default DataProvider<T, Void> setFilter(F filter) {
-        return new FilteringDataProviderWrapper<>(this, filter);
+        Objects.requireNonNull(filter, "Filter can't be null");
+        return FilteringDataProviderWrapper.filter(this, filter);
     }
 
     /**
@@ -114,8 +116,8 @@ public interface DataProvider<T, F> extends Serializable {
      * DataProvider&lt;Person, Predicate&lt;Person&gt;&gt; dataProvider;
      * // ComboBox uses String as the filter type
      * DataProvider&lt;Person, String&gt; wrappedProvider = dataProvider
-     *         .convertFilter(filterText -> {
-     *             Predicate&lt;Person&gt; predicate = person -> person.getName()
+     *         .convertFilter(filterText -&gt; {
+     *             Predicate&lt;Person&gt; predicate = person -&gt; person.getName()
      *                     .startsWith(filterText);
      *             return predicate;
      *         });
@@ -123,7 +125,7 @@ public interface DataProvider<T, F> extends Serializable {
      * </pre>
      *
      * @param mapper
-     *            the mapper from new filter type to old filter type
+     *            the mapper from new filter type to old filter type; not null
      *
      * @param <M>
      *            the filter type to map from; typically provided by a Component
@@ -132,7 +134,8 @@ public interface DataProvider<T, F> extends Serializable {
      */
     public default <M> DataProvider<T, M> convertFilter(
             SerializableFunction<M, F> mapper) {
-        return new FilteringDataProviderWrapper<>(this, mapper);
+        Objects.requireNonNull(mapper, "Filter mapper can't be null");
+        return FilteringDataProviderWrapper.convert(this, mapper);
     }
 
     /**

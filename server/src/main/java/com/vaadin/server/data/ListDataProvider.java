@@ -31,7 +31,8 @@ import com.vaadin.server.SerializablePredicate;
  *            data type
  */
 public class ListDataProvider<T>
-        extends AbstractDataProvider<T, SerializablePredicate<T>> {
+        extends AbstractDataProvider<T, SerializablePredicate<T>>
+        implements AppendableFilterDataProvider<T, SerializablePredicate<T>> {
 
     private Comparator<T> sortOrder;
     private final Collection<T> backend;
@@ -121,4 +122,10 @@ public class ListDataProvider<T>
                 .count();
     }
 
+    @Override
+    public SerializablePredicate<T> combineFilters(
+            SerializablePredicate<T> filter1,
+            SerializablePredicate<T> filter2) {
+        return t -> filter1.test(t) && filter2.test(t);
+    }
 }
