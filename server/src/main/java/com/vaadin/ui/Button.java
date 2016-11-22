@@ -38,6 +38,8 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.util.ReflectTools;
 
+import elemental.json.Json;
+
 /**
  * A generic button component.
  *
@@ -61,8 +63,7 @@ public class Button extends AbstractFocusable
             // Makes sure the enabled=false state is noticed at once - otherwise
             // a following setEnabled(true) call might have no effect. see
             // ticket #10030
-            getUI().getConnectorTracker().getDiffState(Button.this)
-                    .put("enabled", false);
+            updateDiffstate("enabled", Json.create(false));
         }
     };
 

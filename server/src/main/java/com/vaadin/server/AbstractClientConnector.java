@@ -47,6 +47,7 @@ import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
 
 import elemental.json.JsonObject;
+import elemental.json.JsonValue;
 
 /**
  * An abstract base class for ClientConnector implementations. This class
@@ -1082,5 +1083,33 @@ public abstract class AbstractClientConnector
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    /**
+     * Sets the expected value of a state property so that changes can be
+     * properly sent to the client. This needs to be done in cases where a state
+     * change originates from the client, since otherwise the server-side would
+     * fail to recognize if the value is changed back to its previous value.
+     *
+     * @param propertyName
+     *            the name of the shared state property to update
+     * @param newValue
+     *            the new diffstate reference value
+     */
+    protected void updateDiffstate(String propertyName, JsonValue newValue) {
+        if (!isAttached()) {
+            return;
+        }
+
+        JsonObject diffState = getUI().getConnectorTracker().getDiffState(this);
+        if (diffState == null) {
+            return;
+        }
+
+        assert diffState.hasKey(propertyName) : "Diffstate for "
+                + getClass().getName() + " has no property named "
+                + propertyName;
+
+        diffState.put(propertyName, newValue);
     }
 }

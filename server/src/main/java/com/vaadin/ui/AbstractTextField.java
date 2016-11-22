@@ -35,6 +35,8 @@ import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
+import elemental.json.Json;
+
 /**
  * Abstract base class for text input components.
  *
@@ -49,8 +51,8 @@ public abstract class AbstractTextField extends AbstractField<String>
 
         @Override
         public void setText(String text, int cursorPosition) {
-            getUI().getConnectorTracker().getDiffState(AbstractTextField.this)
-                    .put("text", text);
+            updateDiffstate("text", Json.create(text));
+
             lastKnownCursorPosition = cursorPosition;
             setValue(text, true);
         }

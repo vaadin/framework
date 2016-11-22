@@ -26,6 +26,8 @@ import com.vaadin.shared.ui.richtextarea.RichTextAreaServerRpc;
 import com.vaadin.shared.ui.richtextarea.RichTextAreaState;
 import com.vaadin.ui.declarative.DesignContext;
 
+import elemental.json.Json;
+
 /**
  * A simple RichTextArea to edit HTML format text.
  */
@@ -35,8 +37,7 @@ public class RichTextArea extends AbstractField<String>
     private class RichTextAreaServerRpcImpl implements RichTextAreaServerRpc {
         @Override
         public void setText(String text) {
-            getUI().getConnectorTracker().getDiffState(RichTextArea.this)
-                    .put("value", text);
+            updateDiffstate("value", Json.create(text));
             if (!setValue(text, true)) {
                 // The value was not updated, this could happen if the field has
                 // been set to readonly on the server and the client does not
@@ -106,7 +107,7 @@ public class RichTextArea extends AbstractField<String>
      * Sets the value of this object. If the new value is not equal to
      * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
      * {@code NullPointerException} if the value is null.
-     * 
+     *
      * @param value
      *            the new value, not {@code null}
      * @throws NullPointerException
