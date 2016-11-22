@@ -52,6 +52,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 
+import elemental.json.Json;
 import elemental.json.JsonObject;
 
 /**
@@ -669,5 +670,22 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // Not actually an unsafe cast. DataCommunicator is final and set by
         // ComboBox.
         return (DataCommunicator<T, String>) super.getDataCommunicator();
+    }
+
+    @Override
+    protected void setSelectedFromClient(String key) {
+        super.setSelectedFromClient(key);
+
+        /*
+         * The client side for combo box always expects a state change for
+         * selectedItemKey after it has sent a selection change. This means that
+         * we must store a value in the diffstate that guarantees that a new
+         * value will be sent, regardless of what the value actually is at the
+         * time when changes are sent.
+         *
+         * Keys are always strings (or null), so using a non-string type will
+         * always trigger a diff mismatch and a resend.
+         */
+        updateDiffstate("selectedItemKey", Json.create(0));
     }
 }

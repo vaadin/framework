@@ -39,6 +39,8 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
 
+import elemental.json.Json;
+
 /**
  * An abstract base class for listing components that only support single
  * selection and no lazy loading of data items.
@@ -241,6 +243,12 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         }
 
         doSetSelectedKey(key);
+
+        // Update diffstate so that a change will be sent to the client if the
+        // selection is changed to its original value
+        updateDiffstate("selectedItemKey",
+                key == null ? Json.createNull() : Json.create(key));
+
         fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this, true));
     }
 
