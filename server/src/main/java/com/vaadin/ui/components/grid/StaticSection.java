@@ -19,10 +19,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.SectionState;
@@ -56,7 +58,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         private final RowState rowState = new RowState();
         private final StaticSection<?> section;
-        private final Map<Object, CELL> cells = new LinkedHashMap<>();
+        private final Map<String, CELL> cells = new LinkedHashMap<>();
 
         /**
          * Creates a new row belonging to the given section.
@@ -102,10 +104,17 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * @param columnId
          *            the id of the column from which to remove the cell
          */
-        protected void removeCell(Object columnId) {
+        protected void removeCell(String columnId) {
             CELL cell = cells.remove(columnId);
             if (cell != null) {
-                rowState.cells.remove(cell.getCellState());
+                rowState.cells.remove(columnId);
+                for (Iterator<Set<String>> iterator = rowState.cellGroups.values().iterator(); iterator.hasNext(); ) {
+                    Set<String> group = iterator.next();
+                    group.remove(columnId);
+                    if(group.size() < 2) {
+                        iterator.remove();
+                    }
+                }
             }
         }
 
@@ -143,6 +152,23 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                 cell.detach();
             }
         }
+
+        void checkIfAlreadyMerged(String columnId) {
+            for (Set<String> cellGroup : getRowState().cellGroups.values()) {
+                if (cellGroup.contains(columnId)) {
+                    throw new IllegalArgumentException(
+                            "Cell " + columnId + " is already merged");
+                }
+            }
+            if (!cells.containsKey(columnId)) {
+                throw new IllegalArgumentException(
+                        "Cell " + columnId + " does not exist on this row");
+            }
+        }
+
+        void addMergedCell(CELL newCell, Set<String> columnGroup) {
+            rowState.cellGroups.put(newCell.getCellState(), columnGroup);
+        }
     }
 
     /**
@@ -161,7 +187,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
             cellState.columnId = id;
         }
 
-        String getColumnId() {
+        public String getColumnId() {
             return cellState.columnId;
         }
 
@@ -411,6 +437,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         for (ROW row : rows) {
             row.removeCell(columnId);
         }
+        markAsDirty();
     }
 
     /**

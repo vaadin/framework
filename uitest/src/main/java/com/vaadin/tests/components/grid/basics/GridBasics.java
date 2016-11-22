@@ -1,15 +1,5 @@
 package com.vaadin.tests.components.grid.basics;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
@@ -36,6 +26,18 @@ import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.ProgressBarRenderer;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridBasics extends AbstractTestUIWithLog {
 
@@ -50,9 +52,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     public static final String CELL_STYLE_GENERATOR_EMPTY = "Empty string";
     public static final String CELL_STYLE_GENERATOR_NULL = "Null";
 
-    public static final String[] COLUMN_CAPTIONS = { "Column 0", "Column 1",
+    public static final String[] COLUMN_CAPTIONS = {"Column 0", "Column 1",
             "Column 2", "Row Number", "Date", "HTML String", "Big Random",
-            "Small Random" };
+            "Small Random"};
 
     private final Command toggleReorderListenerCommand = new Command() {
         private Registration registration = null;
@@ -272,6 +274,9 @@ public class GridBasics extends AbstractTestUIWithLog {
                             selectedItem -> col
                                     .setHidden(selectedItem.isChecked()))
                     .setCheckable(true);
+            columnMenu
+                    .addItem("Remove",
+                            selectedItem -> grid.removeColumn(col));
         }
     }
 
@@ -396,7 +401,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private <T> void addGridMethodMenu(MenuItem parent, String name, T value,
-            Consumer<T> method) {
+                                       Consumer<T> method) {
         parent.addItem(name, menuItem -> method.accept(value));
     }
 
@@ -437,6 +442,25 @@ public class GridBasics extends AbstractTestUIWithLog {
         headerMenu.addItem("Set no default row", menuItem -> {
             grid.setDefaultHeaderRow(null);
         });
+        headerMenu.addItem("Merge Header Cells [0,0..1]", menuItem -> {
+            mergeHeaderСells(0, "0+1", 0, 1);
+        });
+        headerMenu.addItem("Merge Header Cells [1,1..3]", menuItem -> {
+            mergeHeaderСells(1, "1+2+3", 1, 2, 3);
+        });
+        headerMenu.addItem("Merge Header Cells [0,6..7]", menuItem -> {
+            mergeHeaderСells(0, "6+7", 6, 7);
+        });
+    }
+
+    private void mergeHeaderСells(int rowIndex, String jointCellText, int... columnIndexes) {
+        HeaderRow headerRow = grid.getHeaderRow(rowIndex);
+        List<Column<DataObject, ?>> columns = grid.getColumns();
+        Set<Grid.HeaderCell> toMerge = new HashSet<>();
+        for (int columnIndex : columnIndexes) {
+            toMerge.add(headerRow.getCell(columns.get(columnIndex)));
+        }
+        headerRow.join(toMerge).setText(jointCellText);
     }
 
     private void createFooterMenu(MenuItem footerMenu) {

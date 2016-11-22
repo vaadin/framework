@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.shared.Connector;
 
@@ -36,6 +37,9 @@ public class SectionState implements Serializable {
 
         /** The map from column ids to the cells in this row. */
         public Map<String, CellState> cells = new HashMap<>();
+
+        /** The map from a joint cell to column id sets in this row. */
+        public Map<CellState, Set<String>> cellGroups = new HashMap<>();
 
         /**
          * Whether this row is the default header row. Always false for footer

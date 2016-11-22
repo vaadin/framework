@@ -442,9 +442,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             private StaticSection<?> section;
 
             /**
-             * Map from set of spanned columns to cell meta data.
+             * Map from cell meta data to sets of spanned columns .
              */
-            private Map<Set<Column<?, ?>>, CELLTYPE> cellGroups = new HashMap<>();
+            private Map<CELLTYPE, Set<Column<?, ?>>> cellGroups = new HashMap<>();
 
             /**
              * A custom style name for the row or null if none is set.
@@ -461,9 +461,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *         null if not found
              */
             public CELLTYPE getCell(Column<?, ?> column) {
-                Set<Column<?, ?>> cellGroup = getCellGroupForColumn(column);
-                if (cellGroup != null) {
-                    return cellGroups.get(cellGroup);
+                CELLTYPE cell = getMergedCellForColumn(column);
+                if (cell != null) {
+                    return cell;
                 }
                 return cells.get(column);
             }
@@ -500,7 +500,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         throw new IllegalArgumentException(
                                 "Given column does not exists on row "
                                         + column);
-                    } else if (getCellGroupForColumn(column) != null) {
+                    } else if (getMergedCellForColumn(column) != null) {
                         throw new IllegalStateException(
                                 "Column is already in a group.");
                     }
@@ -508,7 +508,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
 
                 CELLTYPE joinedCell = createCell();
-                cellGroups.put(columnGroup, joinedCell);
+                cellGroups.put(joinedCell, columnGroup);
                 joinedCell.setSection(getSection());
 
                 calculateColspans();
@@ -549,12 +549,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 return join(columns);
             }
 
-            private Set<Column<?, ?>> getCellGroupForColumn(
+            private CELLTYPE getMergedCellForColumn(
                     Column<?, ?> column) {
-                for (Set<Column<?, ?>> group : cellGroups.keySet()) {
-                    if (group.contains(column)) {
-                        return group;
-                    }
+                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups.entrySet()) {
+                    if (entry.getValue().contains(column)) return entry.getKey();
                 }
                 return null;
             }
@@ -565,22 +563,22 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     cell.setColspan(1);
                 }
                 // Set colspan for grouped cells
-                for (Set<Column<?, ?>> group : cellGroups.keySet()) {
-                    if (!checkMergedCellIsContinuous(group)) {
+                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups.entrySet()) {
+                    CELLTYPE mergedCell = entry.getKey();
+                    if (!checkMergedCellIsContinuous(entry.getValue())) {
                         // on error simply break the merged cell
-                        cellGroups.get(group).setColspan(1);
+                        mergedCell.setColspan(1);
                     } else {
                         int colSpan = 0;
-                        for (Column<?, ?> column : group) {
+                        for (Column<?, ?> column : entry.getValue()) {
                             if (!column.isHidden()) {
                                 colSpan++;
                             }
                         }
                         // colspan can't be 0
-                        cellGroups.get(group).setColspan(Math.max(1, colSpan));
+                        mergedCell.setColspan(Math.max(1, colSpan));
                     }
                 }
-
             }
 
             private boolean checkMergedCellIsContinuous(
@@ -2399,7 +2397,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * An initial height that is given to new details rows before rendering the
      * appropriate widget that we then can be measure
      *
-     * @see GridSpacerUpdater
+     * @see Grid.GridSpacerUpdater
      */
     private static final double DETAILS_ROW_INITIAL_HEIGHT = 50;
 

@@ -17,11 +17,15 @@ package com.vaadin.ui.components.grid;
 
 import com.vaadin.ui.Grid;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Represents the header section of a Grid.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  * @since 8.0
  */
 public abstract class Header extends StaticSection<Header.Row> {
@@ -64,7 +68,7 @@ public abstract class Header extends StaticSection<Header.Row> {
 
         /**
          * Returns whether this row is the default header row.
-         * 
+         *
          * @return {@code true} if this row is the default row, {@code false}
          *         otherwise.
          */
@@ -74,13 +78,52 @@ public abstract class Header extends StaticSection<Header.Row> {
 
         /**
          * Sets whether this row is the default header row.
-         * 
+         *
          * @param defaultHeader
          *            {@code true} to set to default, {@code false} otherwise.
          */
         protected void setDefault(boolean defaultHeader) {
             getRowState().defaultHeader = defaultHeader;
         }
+
+        /**
+         * Merges columns cells in a row
+         *
+         * @param cellsToMerge
+         *            the cells which should be merged
+         * @return the remaining visible cell after the merge
+         */
+        @Override
+        public Grid.HeaderCell join(Set<Grid.HeaderCell> cellsToMerge) {
+            for (Grid.HeaderCell cell : cellsToMerge) {
+                checkIfAlreadyMerged(cell.getColumnId());
+            }
+
+            // Create new cell data for the group
+            Cell newCell = createCell();
+
+            Set<String> columnGroup = new HashSet<>();
+            for (Grid.HeaderCell cell : cellsToMerge) {
+                columnGroup.add(cell.getColumnId());
+            }
+            addMergedCell(newCell, columnGroup);
+            markAsDirty();
+            return newCell;
+        }
+
+        /**
+         * Merges columns cells in a row
+         *
+         * @param cellsToMerge
+         *            the cells which should be merged
+         * @return the remaining visible cell after the merge
+         */
+        @Override
+        public Grid.HeaderCell join(Grid.HeaderCell... cellsToMerge) {
+            Set<Grid.HeaderCell> headerCells = new HashSet<>(Arrays.asList(cellsToMerge));
+            return join(headerCells);
+        }
+
     }
 
     @Override
@@ -99,7 +142,7 @@ public abstract class Header extends StaticSection<Header.Row> {
     /**
      * Returns the default row of this header. The default row displays column
      * captions and sort indicators.
-     * 
+     *
      * @return the default row, or {@code null} if there is no default row
      */
     public Row getDefaultRow() {

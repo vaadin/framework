@@ -1540,6 +1540,25 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
         public default HeaderCell getCell(Column<?, ?> column) {
             return getCell(column.getId());
         }
+
+        /**
+         * Merges columns cells in a row
+         *
+         * @param cells
+         *            The cells to merge. Must be from the same row.
+         * @return The remaining visible cell after the merge
+         */
+        HeaderCell join(Set<HeaderCell> cellsToMerge);
+
+        /**
+         * Merges columns cells in a row
+         *
+         * @param cells
+         *            The cells to merge. Must be from the same row.
+         * @return The remaining visible cell after the merge
+         */
+        HeaderCell join(HeaderCell ... cellsToMerge);
+
     }
 
     /**
@@ -1599,6 +1618,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
          * @return cell content type
          */
         public GridStaticCellType getCellType();
+
+        /**
+         * Gets the column id where this cell is.
+         *
+         * @return column id for this cell
+         */
+        public String getColumnId();
     }
 
     /**
@@ -1894,11 +1920,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
      */
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
-            columnKeys.remove(column.getId());
-            removeDataGenerator(column);
-            getHeader().removeColumn(column.getId());
+            String columnId = column.getId();
+            columnKeys.remove(columnId);
             column.remove();
-
+            getHeader().removeColumn(columnId);
+            getFooter().removeColumn(columnId);
+            getState(true).columnOrder.remove(columnId);
         }
     }
 

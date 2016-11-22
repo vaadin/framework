@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.gwt.dom.client.Element;
@@ -235,6 +236,14 @@ public class GridConnector extends AbstractListingConnector
                 updateHeaderCellFromState(row.getCell(getColumn(columnId)),
                         cellState);
             });
+            for (Map.Entry<CellState, Set<String>> cellGroupEntry : rowState.cellGroups.entrySet()) {
+                Set<String> group = cellGroupEntry.getValue();
+
+                Grid.Column<?, ?>[] columns =
+                        group.stream().map(idToColumn::get).toArray(size->new Grid.Column<?, ?>[size]);
+                // Set state to be the same as first in group.
+                updateHeaderCellFromState(row.join(columns), cellGroupEntry.getKey());
+            }
         }
     }
 
