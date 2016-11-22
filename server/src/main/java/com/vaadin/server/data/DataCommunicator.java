@@ -481,7 +481,8 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     private void attachDataProviderListener() {
         dataProviderUpdateRegistration = getDataProvider()
-                .addDataProviderListener(event -> reset());
+                .addDataProviderListener(
+                        event -> getUI().access(() -> reset()));
     }
 
     private void detachDataProviderListener() {
