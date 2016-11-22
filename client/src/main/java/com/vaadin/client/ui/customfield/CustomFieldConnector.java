@@ -30,7 +30,6 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VCustomField;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.customfield.CustomFieldState;
 import com.vaadin.ui.CustomField;
 
 @Connect(value = CustomField.class)
@@ -44,11 +43,6 @@ public class CustomFieldConnector extends AbstractFieldConnector
      */
     public CustomFieldConnector() {
         addConnectorHierarchyChangeHandler(this);
-    }
-
-    @Override
-    public CustomFieldState getState() {
-        return (CustomFieldState) super.getState();
     }
 
     @Override

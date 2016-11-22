@@ -29,4 +29,13 @@ public class AbstractFieldState extends TabIndexState {
     public boolean hideErrors = false;
     public boolean required = false;
     public boolean modified = false;
+
+    /**
+     * The component which should receive focus events instead of the custom
+     * field wrapper.
+     * <p>
+     * This is not used in all fields, but needs to be here for the time being
+     * (#20468).
+     */
+    public Connector focusDelegate;
 }

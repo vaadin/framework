@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import com.vaadin.data.Property;
-import com.vaadin.shared.ui.customfield.CustomFieldState;
 
 /**
  * A {@link Field} whose UI content can be constructed by the user, enabling the
@@ -128,7 +127,7 @@ public abstract class CustomField<T> extends AbstractField<T>
 
     private class ComponentIterator
             implements Iterator<Component>, Serializable {
-        boolean first = (root != null);
+        boolean first = root != null;
 
         @Override
         public boolean hasNext() {
@@ -152,16 +151,6 @@ public abstract class CustomField<T> extends AbstractField<T>
         return new ComponentIterator();
     }
 
-    @Override
-    protected CustomFieldState getState() {
-        return (CustomFieldState) super.getState();
-    }
-
-    @Override
-    protected CustomFieldState getState(boolean markAsDirty) {
-        return (CustomFieldState) super.getState(markAsDirty);
-    }
-
     /**
      * Sets the component to which all methods from the {@link Focusable}
      * interface should be delegated.
@@ -172,7 +161,7 @@ public abstract class CustomField<T> extends AbstractField<T>
      * <p>
      * By default, {@link Focusable} events are handled by the super class and
      * ultimately ignored.
-     * 
+     *
      * @param focusDelegate
      *            the focusable component to which focus events are redirected
      */
