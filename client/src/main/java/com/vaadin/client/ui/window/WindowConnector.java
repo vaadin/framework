@@ -38,7 +38,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -497,8 +496,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void onWindowMove(WindowMoveEvent event) {
-        RpcProxy.create(WindowServerRpc.class, this)
-                .windowMoved(event.getNewX(), event.getNewY());
-
+        getRpcProxy(WindowServerRpc.class).windowMoved(event.getNewX(),
+                event.getNewY());
     }
 }

@@ -16,6 +16,11 @@
 package com.vaadin.client.ui.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -75,14 +80,19 @@ import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
+import com.vaadin.client.ui.window.WindowOrderEvent;
+import com.vaadin.client.ui.window.WindowOrderHandler;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.WindowOrderRpc;
 import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.PageClientRpc;
@@ -103,6 +113,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     private String activeTheme = null;
 
+    private HandlerRegistration windowOrderRegistration;
+
     private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
         @Override
         public void onStateChanged(StateChangeEvent stateChangeEvent) {
@@ -112,9 +124,33 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     };
 
+    private WindowOrderHandler windowOrderHandler = new WindowOrderHandler() {
+
+        @Override
+        public void onWindowOrderChange(WindowOrderEvent event) {
+            VWindow[] windows = event.getWindows();
+            HashMap<Integer, Connector> orders = new HashMap<>();
+            boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
+            for (VWindow window : windows) {
+                Connector connector = Util.findConnectorFor(window);
+                orders.put(window.getWindowOrder(), connector);
+                if (connector instanceof AbstractConnector
+                        && ((AbstractConnector) connector)
+                                .hasEventListener(EventId.WINDOW_ORDER)) {
+                    hasEventListener = true;
+                }
+            }
+            if (hasEventListener) {
+                getRpcProxy(WindowOrderRpc.class).windowOrderChanged(orders);
+            }
+        }
+    };
+
     @Override
     protected void init() {
         super.init();
+        windowOrderRegistration = VWindow
+                .addWindowOrderHandler(windowOrderHandler);
         registerRpc(PageClientRpc.class, new PageClientRpc() {
 
             @Override
@@ -703,6 +739,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             }
         }
 
+        setWindowOrderAndPosition();
+
         // Close removed sub windows
         for (ComponentConnector c : event.getOldChildren()) {
             if (c.getParent() != this && c instanceof WindowConnector) {
@@ -1124,4 +1162,50 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         getRpcProxy(UIServerRpc.class).acknowledge();
 
     }
+
+    private void setWindowOrderAndPosition() {
+        if (windowOrderRegistration != null) {
+            windowOrderRegistration.removeHandler();
+        }
+        WindowOrderCollector collector = new WindowOrderCollector();
+        HandlerRegistration registration = VWindow
+                .addWindowOrderHandler(collector);
+        for (ComponentConnector c : getChildComponents()) {
+            if (c instanceof WindowConnector) {
+                WindowConnector wc = (WindowConnector) c;
+                wc.setWindowOrderAndPosition();
+            }
+        }
+        windowOrderHandler.onWindowOrderChange(
+                new WindowOrderEvent(collector.getWindows()));
+        registration.removeHandler();
+        windowOrderRegistration = VWindow
+                .addWindowOrderHandler(windowOrderHandler);
+    }
+
+    private static class WindowOrderCollector
+            implements WindowOrderHandler, Comparator<VWindow> {
+
+        private HashSet<VWindow> windows = new HashSet<>();
+
+        @Override
+        public void onWindowOrderChange(WindowOrderEvent event) {
+            windows.addAll(Arrays.asList(event.getWindows()));
+        }
+
+        @Override
+        public int compare(VWindow window1, VWindow window2) {
+            if (window1.getWindowOrder() == window2.getWindowOrder()) {
+                return 0;
+            }
+            return window1.getWindowOrder() > window2.getWindowOrder() ? 1 : -1;
+        }
+
+        ArrayList<VWindow> getWindows() {
+            ArrayList<VWindow> result = new ArrayList<>();
+            result.addAll(windows);
+            Collections.sort(result, this);
+            return result;
+        }
+    };
 }

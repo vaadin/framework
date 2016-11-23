@@ -28,6 +28,7 @@ import java.util.Map;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
@@ -42,6 +43,7 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.window.WindowMode;
@@ -108,6 +110,15 @@ public class Window extends Panel
      * Holds registered CloseShortcut instances for query and later removal
      */
     private List<CloseShortcut> closeShortcuts = new ArrayList<>(4);
+
+    /**
+     * Used to keep the window order position. Order position for unattached
+     * window is {@code -1}.
+     * <p>
+     * Window with greatest order position value is on the top and window with 0
+     * position value is on the bottom.
+     */
+    private int orderPosition = -1;
 
     /**
      * Creates a new, empty window
@@ -318,6 +329,24 @@ public class Window extends Panel
     }
 
     /**
+     * Returns the position of this window in the order of all open windows for
+     * this UI.
+     * <p>
+     * Window with position 0 is on the bottom, and window with greatest
+     * position is at the top. If window has no position (it's not yet attached
+     * or hidden) then position is {@code -1}.
+     * 
+     * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
+     * 
+     * @since 8.0.0
+     * 
+     * @return window order position.
+     */
+    public int getOrderPosition() {
+        return orderPosition;
+    }
+
+    /**
      * Sets the distance of Window top border in pixels from top border of the
      * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
      * mode.
@@ -362,6 +391,96 @@ public class Window extends Panel
          */
         public Window getWindow() {
             return (Window) getSource();
+        }
+    }
+
+    /**
+     * Event which is fired when the window order position is changed.
+     * 
+     * @see UI.WindowOrderUpdateEvent
+     * 
+     * @author Vaadin Ltd
+     * 
+     */
+    public static class WindowOrderChangeEvent extends Component.Event {
+
+        private final int order;
+
+        public WindowOrderChangeEvent(Component source, int order) {
+            super(source);
+            this.order = order;
+        }
+
+        /**
+         * Gets the Window.
+         * 
+         * @return the window
+         */
+        public Window getWindow() {
+            return (Window) getSource();
+        }
+
+        /**
+         * Gets the new window order position.
+         * 
+         * @return the new order position
+         */
+        public int getOrder() {
+            return order;
+        }
+    }
+
+    /**
+     * An interface used for listening to Window order change events.
+     * 
+     * @see UI.WindowOrderUpdateListener
+     */
+    public interface WindowOrderChangeListener extends ConnectorEventListener {
+
+        public static final Method windowOrderChangeMethod = ReflectTools
+                .findMethod(WindowOrderChangeListener.class,
+                        "windowOrderChanged", WindowOrderChangeEvent.class);
+
+        /**
+         * Called when the window order position is changed. Use
+         * {@link WindowOrderChangeEvent#getWindow()} to get a reference to the
+         * {@link Window} whose order position is changed. Use
+         * {@link WindowOrderChangeEvent#getOrder()} to get a new order
+         * position.
+         * 
+         * @param event
+         */
+        public void windowOrderChanged(WindowOrderChangeEvent event);
+    }
+
+    /**
+     * Adds a WindowOrderChangeListener to the window.
+     * <p>
+     * The WindowOrderChangeEvent is fired when the order position is changed.
+     * It can happen when some window (this or other) is brought to front or
+     * detached.
+     * <p>
+     * The other way to listen positions of all windows in UI is
+     * {@link UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)}
+     * 
+     * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
+     * 
+     * @param listener
+     *            the WindowModeChangeListener to add.
+     */
+    public Registration addWindowOrderChangeListener(
+            WindowOrderChangeListener listener) {
+        addListener(EventId.WINDOW_ORDER, WindowOrderChangeEvent.class,
+                listener, WindowOrderChangeListener.windowOrderChangeMethod);
+        return () -> removeListener(EventId.WINDOW_ORDER,
+                WindowOrderChangeEvent.class, listener);
+    }
+
+    protected void fireWindowOrderChange(Integer order) {
+        if (order == null || this.orderPosition != order) {
+            this.orderPosition = (order == null) ? -1 : order;
+            fireEvent(new Window.WindowOrderChangeEvent(this,
+                    getOrderPosition()));
         }
     }
 
