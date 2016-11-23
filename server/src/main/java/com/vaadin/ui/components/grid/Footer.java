@@ -17,6 +17,10 @@ package com.vaadin.ui.components.grid;
 
 import com.vaadin.ui.Grid;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Represents the footer section of a Grid.
  *
@@ -61,6 +65,56 @@ public abstract class Footer extends StaticSection<Footer.Row> {
         protected String getCellTagName() {
             return "td";
         }
+
+        /**
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
+         *
+         * @param cellsToMerge
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         * @return the remaining visible cell after the merge
+         *
+         * @see #join(Grid.FooterCell...)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+         */
+        @Override
+        public Grid.FooterCell join(Set<Grid.FooterCell> cellsToMerge) {
+            for (Grid.FooterCell cell : cellsToMerge) {
+                checkIfAlreadyMerged(cell.getColumnId());
+            }
+
+            // Create new cell data for the group
+            Cell newCell = createCell();
+
+            Set<String> columnGroup = new HashSet<>();
+            for (Grid.FooterCell cell : cellsToMerge) {
+                columnGroup.add(cell.getColumnId());
+            }
+            addMergedCell(newCell, columnGroup);
+            markAsDirty();
+            return newCell;
+        }
+
+        /**
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
+         *
+         * @param cellsToMerge
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         * @return the remaining visible cell after the merge
+         *
+         * @see #join(Set)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+         */
+        @Override
+        public Grid.FooterCell join(Grid.FooterCell... cellsToMerge) {
+            Set<Grid.FooterCell> footerCells = new HashSet<>(Arrays.asList(cellsToMerge));
+            return join(footerCells);
+        }
+
+
     }
 
     @Override

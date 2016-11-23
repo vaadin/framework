@@ -232,22 +232,26 @@ public class GridConnector extends AbstractListingConnector
                 grid.setDefaultHeaderRow(row);
             }
 
-            rowState.cells.forEach((columnId, cellState) -> {
-                updateHeaderCellFromState(row.getCell(getColumn(columnId)),
-                        cellState);
-            });
-            for (Map.Entry<CellState, Set<String>> cellGroupEntry : rowState.cellGroups.entrySet()) {
-                Set<String> group = cellGroupEntry.getValue();
-
-                Grid.Column<?, ?>[] columns =
-                        group.stream().map(idToColumn::get).toArray(size->new Grid.Column<?, ?>[size]);
-                // Set state to be the same as first in group.
-                updateHeaderCellFromState(row.join(columns), cellGroupEntry.getKey());
-            }
+            updateStaticRow(rowState, row);
         }
     }
 
-    private void updateHeaderCellFromState(HeaderCell cell,
+    private void updateStaticRow(RowState rowState, Grid.StaticSection.StaticRow row) {
+        rowState.cells.forEach((columnId, cellState) -> {
+            updateStaticCellFromState(row.getCell(getColumn(columnId)),
+                    cellState);
+        });
+        for (Map.Entry<CellState, Set<String>> cellGroupEntry : rowState.cellGroups.entrySet()) {
+            Set<String> group = cellGroupEntry.getValue();
+
+            Grid.Column<?, ?>[] columns =
+                    group.stream().map(idToColumn::get).toArray(size->new Grid.Column<?, ?>[size]);
+            // Set state to be the same as first in group.
+            updateStaticCellFromState(row.join(columns), cellGroupEntry.getKey());
+        }
+    }
+
+    private void updateStaticCellFromState(Grid.StaticSection.StaticCell cell,
             CellState cellState) {
         switch (cellState.type) {
         case TEXT:
@@ -288,37 +292,8 @@ public class GridConnector extends AbstractListingConnector
         for (RowState rowState : state.rows) {
             FooterRow row = grid.appendFooterRow();
 
-            rowState.cells.forEach((columnId, cellState) -> {
-                updateFooterCellFromState(row.getCell(getColumn(columnId)),
-                        cellState);
-            });
+            updateStaticRow(rowState, row);
         }
-    }
-
-    private void updateFooterCellFromState(FooterCell cell,
-            CellState cellState) {
-        switch (cellState.type) {
-        case TEXT:
-            cell.setText(cellState.text);
-            break;
-        case HTML:
-            cell.setHtml(cellState.html);
-            break;
-        case WIDGET:
-            ComponentConnector connector = (ComponentConnector) cellState.connector;
-            if (connector != null) {
-                cell.setWidget(connector.getWidget());
-            } else {
-                // This happens if you do setVisible(false) on the component on
-                // the server side
-                cell.setWidget(null);
-            }
-            break;
-        default:
-            throw new IllegalStateException(
-                    "unexpected cell type: " + cellState.type);
-        }
-        cell.setStyleName(cellState.styleName);
     }
 
     @Override

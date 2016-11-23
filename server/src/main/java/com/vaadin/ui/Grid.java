@@ -1672,20 +1672,30 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         /**
-         * Merges columns cells in a row
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
          *
-         * @param cells
-         *            The cells to merge. Must be from the same row.
-         * @return The remaining visible cell after the merge
+         * @param cellsToMerge
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         * @return the remaining visible cell after the merge
+         *
+         *  @see #join(Grid.HeaderCell...)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         HeaderCell join(Set<HeaderCell> cellsToMerge);
 
         /**
-         * Merges columns cells in a row
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
          *
-         * @param cells
-         *            The cells to merge. Must be from the same row.
-         * @return The remaining visible cell after the merge
+         * @param cellsToMerge
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         * @return the remaining visible cell after the merge
+         *
+         *  @see #join(Set)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         HeaderCell join(HeaderCell... cellsToMerge);
 
@@ -1785,6 +1795,34 @@ public class Grid<T> extends AbstractListing<T>
         public default FooterCell getCell(Column<?, ?> column) {
             return getCell(column.getId());
         }
+
+        /**
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
+         *
+         * @param cellsToMerge
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         * @return the remaining visible cell after the merge
+         *
+         * @see #join(Grid.FooterCell...)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+         */
+        FooterCell join(Set<FooterCell> cellsToMerge);
+
+        /**
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
+         *
+         * @param cellsToMerge
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         * @return the remaining visible cell after the merge
+         *
+         * @see #join(Set)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+         */
+        FooterCell join(FooterCell ... cellsToMerge);
     }
 
     /**
@@ -1844,6 +1882,13 @@ public class Grid<T> extends AbstractListing<T>
          * @return cell content type
          */
         public GridStaticCellType getCellType();
+
+        /**
+         * Gets the column id where this cell is.
+         *
+         * @return column id for this cell
+         */
+        public String getColumnId();
     }
 
     /**

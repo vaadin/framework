@@ -547,6 +547,16 @@ public class GridBasics extends AbstractTestUIWithLog {
         headerRow.join(toMerge).setText(jointCellText);
     }
 
+    private void mergeFooterСells(int rowIndex, String jointCellText, int... columnIndexes) {
+        FooterRow footerRow = grid.getFooterRow(rowIndex);
+        List<Column<DataObject, ?>> columns = grid.getColumns();
+        Set<Grid.FooterCell> toMerge = new HashSet<>();
+        for (int columnIndex : columnIndexes) {
+            toMerge.add(footerRow.getCell(columns.get(columnIndex)));
+        }
+        footerRow.join(toMerge).setText(jointCellText);
+    }
+
     private void createFooterMenu(MenuItem footerMenu) {
         footerMenu.addItem("Add default footer row", menuItem -> {
             FooterRow defaultFooter = grid.appendFooterRow();
@@ -573,6 +583,15 @@ public class GridBasics extends AbstractTestUIWithLog {
         });
         footerMenu.addItem("Remove first footer row", menuItem -> {
             grid.removeFooterRow(0);
+        });
+        footerMenu.addItem("Merge Footer Cells [0,0..1]", menuItem -> {
+            mergeFooterСells(0, "0+1", 0, 1);
+        });
+        footerMenu.addItem("Merge Footer Cells [1,1..3]", menuItem -> {
+            mergeFooterСells(1, "1+2+3", 1, 2, 3);
+        });
+        footerMenu.addItem("Merge Footer Cells [0,6..7]", menuItem -> {
+            mergeFooterСells(0, "6+7", 6, 7);
         });
     }
 

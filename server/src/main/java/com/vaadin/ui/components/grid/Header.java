@@ -87,11 +87,16 @@ public abstract class Header extends StaticSection<Header.Row> {
         }
 
         /**
-         * Merges columns cells in a row
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
          * @return the remaining visible cell after the merge
+         *
+         * @see #join(Grid.HeaderCell...)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         @Override
         public Grid.HeaderCell join(Set<Grid.HeaderCell> cellsToMerge) {
@@ -112,11 +117,16 @@ public abstract class Header extends StaticSection<Header.Row> {
         }
 
         /**
-         * Merges columns cells in a row
+         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
+         * The cell has a width of all merged cells together, inherits styles of the first merged cell
+         * but has empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged
+         *            the cells which should be merged. The cells should not be merged to any other cell set.
          * @return the remaining visible cell after the merge
+         *
+         * @see #join(Set)
+         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         @Override
         public Grid.HeaderCell join(Grid.HeaderCell... cellsToMerge) {
