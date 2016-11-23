@@ -2461,8 +2461,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
      */
     public Registration addColumnReorderListener(
             ColumnReorderListener listener) {
-        addListener(ColumnReorderEvent.class, listener, COLUMN_REORDER_METHOD);
-        return () -> removeListener(ColumnReorderEvent.class, listener,
+        return addListener(ColumnReorderEvent.class, listener,
                 COLUMN_REORDER_METHOD);
     }
 
@@ -2474,8 +2473,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
      * @return a registration for the listener
      */
     public Registration addColumnResizeListener(ColumnResizeListener listener) {
-        addListener(ColumnResizeEvent.class, listener, COLUMN_RESIZE_METHOD);
-        return () -> removeListener(ColumnResizeEvent.class, listener,
+        return addListener(ColumnResizeEvent.class, listener,
                 COLUMN_RESIZE_METHOD);
     }
 
@@ -2489,9 +2487,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
      */
     public Registration addItemClickListener(
             ItemClickListener<? super T> listener) {
-        addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClick.class,
+        return addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClick.class,
                 listener, ITEM_CLICK_METHOD);
-        return () -> removeListener(ItemClick.class, listener);
     }
 
     /**
@@ -2503,9 +2500,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
      */
     public Registration addColumnVisibilityChangeListener(
             ColumnVisibilityChangeListener listener) {
-        addListener(ColumnVisibilityChangeEvent.class, listener,
-                COLUMN_VISIBILITY_METHOD);
-        return () -> removeListener(ColumnVisibilityChangeEvent.class, listener,
+        return addListener(ColumnVisibilityChangeEvent.class, listener,
                 COLUMN_VISIBILITY_METHOD);
     }
 

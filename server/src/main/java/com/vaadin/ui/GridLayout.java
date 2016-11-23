@@ -76,9 +76,10 @@ public class GridLayout extends AbstractLayout
         implements Layout.AlignmentHandler, Layout.SpacingHandler,
         Layout.MarginHandler, LayoutClickNotifier {
 
-    private GridLayoutServerRpc rpc = (MouseEventDetails mouseDetails, Connector clickedConnector) -> {
-        fireEvent(LayoutClickEvent.createEvent(GridLayout.this,
-            mouseDetails, clickedConnector));
+    private GridLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
+            Connector clickedConnector) -> {
+        fireEvent(LayoutClickEvent.createEvent(GridLayout.this, mouseDetails,
+                clickedConnector));
     };
     /**
      * Cursor X position: this is where the next component with unspecified x,y
@@ -1157,11 +1158,9 @@ public class GridLayout extends AbstractLayout
 
     @Override
     public Registration addLayoutClickListener(LayoutClickListener listener) {
-        addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+        return addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
-        return () -> removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
-                LayoutClickEvent.class, listener);
     }
 
     @Override

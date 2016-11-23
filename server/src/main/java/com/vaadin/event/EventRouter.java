@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
+import com.vaadin.shared.Registration;
 
 /**
  * <code>EventRouter</code> class implementing the inheritable event listening
@@ -51,12 +52,16 @@ public class EventRouter implements MethodEventSource {
      * use the default documentation from implemented interface.
      */
     @Override
-    public void addListener(Class<?> eventType, Object object, Method method) {
+    public Registration addListener(Class<?> eventType, Object object,
+            Method method) {
         Objects.requireNonNull(object, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
-        listenerList.add(new ListenerMethod(eventType, object, method));
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, object,
+                method);
+        listenerList.add(listenerMethod);
+        return () -> listenerList.remove(listenerMethod);
     }
 
     /*
@@ -65,13 +70,16 @@ public class EventRouter implements MethodEventSource {
      * here, we use the default documentation from implemented interface.
      */
     @Override
-    public void addListener(Class<?> eventType, Object object,
+    public Registration addListener(Class<?> eventType, Object object,
             String methodName) {
         Objects.requireNonNull(object, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
-        listenerList.add(new ListenerMethod(eventType, object, methodName));
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, object,
+                methodName);
+        listenerList.add(listenerMethod);
+        return () -> listenerList.remove(listenerMethod);
     }
 
     /*

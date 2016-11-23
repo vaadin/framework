@@ -100,9 +100,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     @Override
     public Registration addComponentAttachListener(
             ComponentAttachListener listener) {
-        addListener(ComponentAttachEvent.class, listener,
-                ComponentAttachListener.attachMethod);
-        return () -> removeListener(ComponentAttachEvent.class, listener,
+        return addListener(ComponentAttachEvent.class, listener,
                 ComponentAttachListener.attachMethod);
     }
 
@@ -119,9 +117,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     @Override
     public Registration addComponentDetachListener(
             ComponentDetachListener listener) {
-        addListener(ComponentDetachEvent.class, listener,
-                ComponentDetachListener.detachMethod);
-        return () -> removeListener(ComponentDetachEvent.class, listener,
+        return addListener(ComponentDetachEvent.class, listener,
                 ComponentDetachListener.detachMethod);
     }
 

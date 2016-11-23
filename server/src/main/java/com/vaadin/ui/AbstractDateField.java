@@ -569,10 +569,8 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
 
     @Override
     public Registration addFocusListener(FocusListener listener) {
-        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+        return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
-        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
-                listener);
     }
 
     @Override
@@ -583,10 +581,8 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
 
     @Override
     public Registration addBlurListener(BlurListener listener) {
-        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+        return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
-        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
-                listener);
     }
 
     @Override

@@ -94,9 +94,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      */
     public Registration addSelectionChangeListener(
             SingleSelectionListener<T> listener) {
-        addListener(SingleSelectionEvent.class, listener,
+        return addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
-        return () -> removeListener(SingleSelectionEvent.class, listener);
     }
 
     /**
@@ -233,8 +232,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
-                true));
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this, true));
     }
 
     /**
@@ -254,8 +252,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
-                false));
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this, false));
     }
 
     /**

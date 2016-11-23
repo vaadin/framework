@@ -40,9 +40,8 @@ public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
 
     @Override
     public Registration addDataProviderListener(DataProviderListener listener) {
-        addListener(DataChangeEvent.class, listener,
+        return addListener(DataChangeEvent.class, listener,
                 DataProviderListener.class.getMethods()[0]);
-        return () -> removeListener(DataChangeEvent.class, listener);
     }
 
     @Override
@@ -63,14 +62,14 @@ public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
-     *
+     * @return a registration for the listener
      */
-    protected void addListener(Class<?> eventType,
+    protected Registration addListener(Class<?> eventType,
             DataProviderListener listener, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, listener, method);
+        return eventRouter.addListener(eventType, listener, method);
     }
 
     /**

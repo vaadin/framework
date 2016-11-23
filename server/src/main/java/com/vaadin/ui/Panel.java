@@ -273,10 +273,8 @@ public class Panel extends AbstractSingleComponentContainer
      * @return a registration object for removing the listener
      */
     public Registration addClickListener(ClickListener listener) {
-        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
-                ClickListener.clickMethod);
-        return () -> removeListener(EventId.CLICK_EVENT_IDENTIFIER,
-                ClickEvent.class, listener);
+        return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener, ClickListener.clickMethod);
     }
 
     /**

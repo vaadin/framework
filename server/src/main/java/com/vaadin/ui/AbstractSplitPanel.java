@@ -578,10 +578,9 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     public Registration addSplitterClickListener(
             SplitterClickListener listener) {
-        addListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
-                listener, SplitterClickListener.clickMethod);
-        return () -> removeListener(EventId.CLICK_EVENT_IDENTIFIER,
-                SplitterClickEvent.class, listener);
+        return addListener(EventId.CLICK_EVENT_IDENTIFIER,
+                SplitterClickEvent.class, listener,
+                SplitterClickListener.clickMethod);
     }
 
     @Deprecated
@@ -599,9 +598,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      */
     public Registration addSplitPositionChangeListener(
             SplitPositionChangeListener listener) {
-        addListener(SplitPositionChangeEvent.class, listener,
+        return addListener(SplitPositionChangeEvent.class, listener,
                 SplitPositionChangeListener.moveMethod);
-        return () -> removeListener(SplitPositionChangeEvent.class, listener);
     }
 
     /**
@@ -707,8 +705,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         super.writeDesign(design, designContext);
         // handle custom attributes (write only if a value is not the
         // default value)
-        AbstractSplitPanel def = designContext
-                .getDefaultInstance(this);
+        AbstractSplitPanel def = designContext.getDefaultInstance(this);
         if (getSplitPosition() != def.getSplitPosition()
                 || !def.getSplitPositionUnit().equals(getSplitPositionUnit())) {
             String splitPositionString = asString(getSplitPosition())

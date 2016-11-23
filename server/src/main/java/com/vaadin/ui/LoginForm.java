@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.StreamResource;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
 import com.vaadin.shared.ui.loginform.LoginFormState;
@@ -362,9 +363,10 @@ public class LoginForm extends AbstractSingleComponentContainer {
      *
      * @param listener
      *            the listener to add
+     * @return a registration object for removing the listener
      */
-    public void addLoginListener(LoginListener listener) {
-        addListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
+    public Registration addLoginListener(LoginListener listener) {
+        return addListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
     }
 
     /**
@@ -372,7 +374,11 @@ public class LoginForm extends AbstractSingleComponentContainer {
      *
      * @param listener
      *            the listener to remove
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addLoginListener(LoginListener)}.
      */
+    @Deprecated
     public void removeLoginListener(LoginListener listener) {
         removeListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
     }

@@ -93,9 +93,8 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
      */
     public Registration addSelectionChangeListener(
             SingleSelectionListener<T> listener) {
-        addListener(SingleSelectionEvent.class, listener,
+        return addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
-        return () -> removeListener(SingleSelectionEvent.class, listener);
     }
 
     @Override
@@ -174,8 +173,7 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(
-                new SingleSelectionEvent<>(grid, asSingleSelect(), true));
+        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), true));
     }
 
     /**
@@ -195,8 +193,7 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(),
-                false));
+        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), false));
     }
 
     /**
@@ -237,8 +234,7 @@ public class SingleSelectionModel<T> extends AbstractGridExtension<T>
         // event fired before removing so that parent is still intact (in case
         // needed)
         selectedItem = null;
-        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(),
-                false));
+        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), false));
 
         super.remove();
     }

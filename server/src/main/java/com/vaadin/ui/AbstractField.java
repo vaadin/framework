@@ -89,8 +89,8 @@ public abstract class AbstractField<T> extends AbstractComponent
     @Override
     public Registration addValueChangeListener(
             ValueChangeListener<T> listener) {
-        addListener(ValueChangeEvent.class, listener, VALUE_CHANGE_METHOD);
-        return () -> removeListener(ValueChangeEvent.class, listener);
+        return addListener(ValueChangeEvent.class, listener,
+                VALUE_CHANGE_METHOD);
     }
 
     @Override

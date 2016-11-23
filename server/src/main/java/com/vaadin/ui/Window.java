@@ -336,8 +336,8 @@ public class Window extends Panel
     private static final Method WINDOW_CLOSE_METHOD;
     static {
         try {
-            WINDOW_CLOSE_METHOD = CloseListener.class.getDeclaredMethod(
-                    "windowClose", CloseEvent.class);
+            WINDOW_CLOSE_METHOD = CloseListener.class
+                    .getDeclaredMethod("windowClose", CloseEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
@@ -409,9 +409,7 @@ public class Window extends Panel
      *            the CloseListener to add, not null
      */
     public Registration addCloseListener(CloseListener listener) {
-        addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
-        return () -> removeListener(CloseEvent.class, listener,
-                WINDOW_CLOSE_METHOD);
+        return addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
     }
 
     /**
@@ -510,9 +508,7 @@ public class Window extends Panel
      */
     public Registration addWindowModeChangeListener(
             WindowModeChangeListener listener) {
-        addListener(WindowModeChangeEvent.class, listener,
-                WindowModeChangeListener.windowModeChangeMethod);
-        return () -> removeListener(WindowModeChangeEvent.class, listener,
+        return addListener(WindowModeChangeEvent.class, listener,
                 WindowModeChangeListener.windowModeChangeMethod);
     }
 
@@ -540,8 +536,8 @@ public class Window extends Panel
     private static final Method WINDOW_RESIZE_METHOD;
     static {
         try {
-            WINDOW_RESIZE_METHOD = ResizeListener.class.getDeclaredMethod(
-                    "windowResized", ResizeEvent.class);
+            WINDOW_RESIZE_METHOD = ResizeListener.class
+                    .getDeclaredMethod("windowResized", ResizeEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
@@ -593,8 +589,7 @@ public class Window extends Panel
      * @return a registration object for removing the listener
      */
     public Registration addResizeListener(ResizeListener listener) {
-        addListener(ResizeEvent.class, listener, WINDOW_RESIZE_METHOD);
-        return () -> removeListener(ResizeEvent.class, listener);
+        return addListener(ResizeEvent.class, listener, WINDOW_RESIZE_METHOD);
     }
 
     /**
@@ -1052,10 +1047,8 @@ public class Window extends Panel
      */
     @Override
     public Registration addFocusListener(FocusListener listener) {
-        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+        return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
-        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
-                listener);
     }
 
     @Override
@@ -1073,10 +1066,8 @@ public class Window extends Panel
      */
     @Override
     public Registration addBlurListener(BlurListener listener) {
-        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+        return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
-        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
-                listener);
     }
 
     @Override
@@ -1381,7 +1372,8 @@ public class Window extends Panel
             }
         }
         super.readDesignChildren(content, context);
-        setAssistiveDescription(descriptions.toArray(new Component[descriptions.size()]));
+        setAssistiveDescription(
+                descriptions.toArray(new Component[descriptions.size()]));
     }
 
     @Override

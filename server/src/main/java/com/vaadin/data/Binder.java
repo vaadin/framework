@@ -1415,10 +1415,8 @@ public class Binder<BEAN> implements Serializable {
      * @return a registration for the listener
      */
     public Registration addStatusChangeListener(StatusChangeListener listener) {
-        getEventRouter().addListener(StatusChangeEvent.class, listener,
+        return getEventRouter().addListener(StatusChangeEvent.class, listener,
                 StatusChangeListener.class.getDeclaredMethods()[0]);
-        return () -> getEventRouter().removeListener(StatusChangeEvent.class,
-                listener);
     }
 
     /**

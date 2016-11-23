@@ -831,9 +831,7 @@ public class TabSheet extends AbstractComponentContainer
      */
     public Registration addSelectedTabChangeListener(
             SelectedTabChangeListener listener) {
-        addListener(SelectedTabChangeEvent.class, listener,
-                SELECTED_TAB_CHANGE_METHOD);
-        return () -> removeListener(SelectedTabChangeEvent.class, listener,
+        return addListener(SelectedTabChangeEvent.class, listener,
                 SELECTED_TAB_CHANGE_METHOD);
     }
 
@@ -1366,10 +1364,8 @@ public class TabSheet extends AbstractComponentContainer
 
     @Override
     public Registration addBlurListener(BlurListener listener) {
-        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+        return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
-        return () -> removeListener(BlurEvent.EVENT_ID, BlurEvent.class,
-                listener);
     }
 
     @Override
@@ -1380,10 +1376,8 @@ public class TabSheet extends AbstractComponentContainer
 
     @Override
     public Registration addFocusListener(FocusListener listener) {
-        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+        return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
-        return () -> removeListener(FocusEvent.EVENT_ID, FocusEvent.class,
-                listener);
     }
 
     @Override

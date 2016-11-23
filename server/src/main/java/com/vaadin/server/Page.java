@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EventObject;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -486,11 +485,12 @@ public class Page implements Serializable {
         this.state = state;
     }
 
-    private void addListener(Class<?> eventType, Object target, Method method) {
+    private Registration addListener(Class<?> eventType, Object target,
+            Method method) {
         if (!hasEventRouter()) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, target, method);
+        return eventRouter.addListener(eventType, target, method);
     }
 
     private void removeListener(Class<?> eventType, Object target,
@@ -516,9 +516,7 @@ public class Page implements Serializable {
      */
     public Registration addUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
-        addListener(UriFragmentChangedEvent.class, listener,
-                URI_FRAGMENT_CHANGED_METHOD);
-        return () -> removeListener(UriFragmentChangedEvent.class, listener,
+        return addListener(UriFragmentChangedEvent.class, listener,
                 URI_FRAGMENT_CHANGED_METHOD);
     }
 
@@ -745,12 +743,11 @@ public class Page implements Serializable {
      */
     public Registration addBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
-        addListener(BrowserWindowResizeEvent.class, resizeListener,
-                BROWSER_RESIZE_METHOD);
+        Registration registration = addListener(BrowserWindowResizeEvent.class,
+                resizeListener, BROWSER_RESIZE_METHOD);
         getState(true).hasResizeListeners = true;
         return () -> {
-            removeListener(BrowserWindowResizeEvent.class, resizeListener,
-                    BROWSER_RESIZE_METHOD);
+            registration.remove();
             getState(true).hasResizeListeners = hasEventRouter()
                     && eventRouter.hasListeners(BrowserWindowResizeEvent.class);
         };

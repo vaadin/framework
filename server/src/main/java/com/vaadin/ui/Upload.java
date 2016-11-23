@@ -632,9 +632,7 @@ public class Upload extends AbstractComponent
      *            the Listener to be added, not null
      */
     public Registration addStartedListener(StartedListener listener) {
-        addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
-        return () -> removeListener(StartedEvent.class, listener,
-                UPLOAD_STARTED_METHOD);
+        return addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
     }
 
     /**
@@ -655,8 +653,7 @@ public class Upload extends AbstractComponent
      *            the Listener to be added, not null
      */
     public Registration addFinishedListener(FinishedListener listener) {
-        addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
-        return () -> removeListener(FinishedEvent.class, listener,
+        return addListener(FinishedEvent.class, listener,
                 UPLOAD_FINISHED_METHOD);
     }
 
@@ -678,9 +675,7 @@ public class Upload extends AbstractComponent
      *            the Listener to be added, not null
      */
     public Registration addFailedListener(FailedListener listener) {
-        addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
-        return () -> removeListener(FailedEvent.class, listener,
-                UPLOAD_FAILED_METHOD);
+        return addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
     }
 
     /**
@@ -701,8 +696,7 @@ public class Upload extends AbstractComponent
      *            the Listener to be added, not null
      */
     public Registration addSucceededListener(SucceededListener listener) {
-        addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
-        return () -> removeListener(SucceededEvent.class, listener,
+        return addListener(SucceededEvent.class, listener,
                 UPLOAD_SUCCEEDED_METHOD);
     }
 
@@ -756,10 +750,8 @@ public class Upload extends AbstractComponent
      *            the Listener to add, not null
      */
     public Registration addChangeListener(ChangeListener listener) {
-        super.addListener(EventId.CHANGE, ChangeEvent.class, listener,
+        return addListener(EventId.CHANGE, ChangeEvent.class, listener,
                 ChangeListener.FILENAME_CHANGED);
-        return () -> super.removeListener(EventId.CHANGE, ChangeEvent.class,
-                listener);
     }
 
     /**

@@ -85,10 +85,8 @@ public class Image extends AbstractEmbedded {
      * @return a registration object for removing the listener
      */
     public Registration addClickListener(ClickListener listener) {
-        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
-                ClickListener.clickMethod);
-        return () -> removeListener(EventId.CLICK_EVENT_IDENTIFIER,
-                ClickEvent.class, listener);
+        return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener, ClickListener.clickMethod);
     }
 
     /**
@@ -97,7 +95,7 @@ public class Image extends AbstractEmbedded {
      *
      * @param listener
      *            The listener to remove
-     * 
+     *
      * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
      *             registration object returned from
      *             {@link #addClickListener(ClickListener)}.

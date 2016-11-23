@@ -362,11 +362,9 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
 
     @Override
     public Registration addLayoutClickListener(LayoutClickListener listener) {
-        addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+        return addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
-        return () -> removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
-                LayoutClickEvent.class, listener);
     }
 
     @Override

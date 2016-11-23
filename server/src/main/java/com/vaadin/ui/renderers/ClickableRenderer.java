@@ -126,13 +126,14 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
     protected ClickableRenderer(Class<V> presentationType,
             String nullRepresentation) {
         super(presentationType, nullRepresentation);
-        registerRpc((RendererClickRpc) (String rowKey, String columnId, MouseEventDetails mouseDetails) -> {
+        registerRpc((RendererClickRpc) (String rowKey, String columnId,
+                MouseEventDetails mouseDetails) -> {
             Grid<T> grid = getParentGrid();
             T item = grid.getDataCommunicator().getKeyMapper().get(rowKey);
             Column column = grid.getColumn(columnId);
-            
-            fireEvent(new RendererClickEvent<>(grid, item, column,
-                mouseDetails));
+
+            fireEvent(
+                    new RendererClickEvent<>(grid, item, column, mouseDetails));
         });
     }
 
@@ -144,9 +145,8 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
      *            the click listener to be added, not null
      */
     public Registration addClickListener(RendererClickListener<T> listener) {
-        addListener(RendererClickEvent.class, listener,
+        return addListener(RendererClickEvent.class, listener,
                 RendererClickListener.CLICK_METHOD);
-        return () -> removeListener(RendererClickEvent.class, listener);
     }
 
     /**

@@ -112,9 +112,8 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     public Registration addValueChangeListener(
             ValueChangeListener<Color> listener) {
         Objects.requireNonNull(listener, "listener cannot be null");
-        addListener(ValueChangeEvent.class, listener,
+        return addListener(ValueChangeEvent.class, listener,
                 ValueChangeListener.VALUE_CHANGE_METHOD);
-        return () -> removeListener(ValueChangeEvent.class, listener);
     }
 
     private void valueChange(ValueChangeEvent<String> event) {

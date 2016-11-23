@@ -17,7 +17,6 @@ package com.vaadin.ui;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Objects;
 
 import org.jsoup.nodes.Element;
 
@@ -75,9 +74,10 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
-    private CssLayoutServerRpc rpc = (MouseEventDetails mouseDetails, Connector clickedConnector) -> {
+    private CssLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
+            Connector clickedConnector) -> {
         fireEvent(LayoutClickEvent.createEvent(CssLayout.this, mouseDetails,
-            clickedConnector));
+                clickedConnector));
     };
     /**
      * Custom layout slots containing the components.
@@ -298,11 +298,9 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
     @Override
     public Registration addLayoutClickListener(LayoutClickListener listener) {
-        addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+        return addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
-        return () -> removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
-                LayoutClickEvent.class, listener);
     }
 
     @Override

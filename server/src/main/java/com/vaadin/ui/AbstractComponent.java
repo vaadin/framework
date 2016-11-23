@@ -730,8 +730,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public Registration addListener(Component.Listener listener) {
-        addListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
-        return () -> removeListener(Component.Event.class, listener,
+        return addListener(Component.Event.class, listener,
                 COMPONENT_EVENT_METHOD);
     }
 
@@ -1375,15 +1374,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // connector can override this and use a different RPC channel.
         if (getRpcManager(ContextClickRpc.class.getName()) == null) {
             registerRpc((ContextClickRpc) (MouseEventDetails details) -> {
-                fireEvent(new ContextClickEvent(AbstractComponent.this,
-                    details));
+                fireEvent(
+                        new ContextClickEvent(AbstractComponent.this, details));
             });
         }
 
-        addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class, listener,
-                ContextClickEvent.CONTEXT_CLICK_METHOD);
-        return () -> removeListener(EventId.CONTEXT_CLICK,
-                ContextClickEvent.class, listener);
+        return addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,
+                listener, ContextClickEvent.CONTEXT_CLICK_METHOD);
     }
 
     @Override

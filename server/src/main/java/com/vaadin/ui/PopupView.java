@@ -338,9 +338,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      */
     public Registration addPopupVisibilityListener(
             PopupVisibilityListener listener) {
-        addListener(PopupVisibilityEvent.class, listener,
-                POPUP_VISIBILITY_METHOD);
-        return () -> removeListener(PopupVisibilityEvent.class, listener,
+        return addListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
     }
 

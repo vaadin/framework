@@ -917,10 +917,8 @@ public abstract class UI extends AbstractSingleComponentContainer
      * @return a registration object for removing the listener
      */
     public Registration addClickListener(ClickListener listener) {
-        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
-                ClickListener.clickMethod);
-        return () -> removeListener(EventId.CLICK_EVENT_IDENTIFIER,
-                ClickEvent.class, listener);
+        return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener, ClickListener.clickMethod);
     }
 
     /**
@@ -1621,9 +1619,8 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     @Override
     public Registration addPollListener(PollListener listener) {
-        addListener(EventId.POLL, PollEvent.class, listener,
+        return addListener(EventId.POLL, PollEvent.class, listener,
                 PollListener.POLL_METHOD);
-        return () -> removeListener(EventId.POLL, PollEvent.class, listener);
     }
 
     @Override

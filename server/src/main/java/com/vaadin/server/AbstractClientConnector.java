@@ -97,10 +97,8 @@ public abstract class AbstractClientConnector
 
     @Override
     public Registration addAttachListener(AttachListener listener) {
-        addListener(AttachEvent.ATTACH_EVENT_IDENTIFIER, AttachEvent.class,
-                listener, AttachListener.attachMethod);
-        return () -> removeListener(AttachEvent.ATTACH_EVENT_IDENTIFIER,
-                AttachEvent.class, listener);
+        return addListener(AttachEvent.ATTACH_EVENT_IDENTIFIER,
+                AttachEvent.class, listener, AttachListener.attachMethod);
     }
 
     @Override
@@ -111,10 +109,8 @@ public abstract class AbstractClientConnector
 
     @Override
     public Registration addDetachListener(DetachListener listener) {
-        addListener(DetachEvent.DETACH_EVENT_IDENTIFIER, DetachEvent.class,
-                listener, DetachListener.detachMethod);
-        return () -> removeListener(DetachEvent.DETACH_EVENT_IDENTIFIER,
-                DetachEvent.class, listener);
+        return addListener(DetachEvent.DETACH_EVENT_IDENTIFIER,
+                DetachEvent.class, listener, DetachListener.detachMethod);
     }
 
     @Override
@@ -537,13 +533,13 @@ public abstract class AbstractClientConnector
                 .iterator();
         final Iterator<Extension> extensionsIterator = extensions.iterator();
         Iterable<? extends ClientConnector> combinedIterable = () -> new Iterator<ClientConnector>() {
-            
+
             @Override
             public boolean hasNext() {
                 return componentsIterator.hasNext()
-                    || extensionsIterator.hasNext();
+                        || extensionsIterator.hasNext();
             }
-            
+
             @Override
             public ClientConnector next() {
                 if (componentsIterator.hasNext()) {
@@ -554,12 +550,12 @@ public abstract class AbstractClientConnector
                 }
                 throw new NoSuchElementException();
             }
-            
+
             @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
-            
+
         };
         return combinedIterable;
     }
@@ -751,21 +747,24 @@ public abstract class AbstractClientConnector
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
-     *
+     * @return a registration object for removing the listener
      * @since 6.2
      */
-    protected void addListener(String eventIdentifier, Class<?> eventType,
-            Object target, Method method) {
+    protected Registration addListener(String eventIdentifier,
+            Class<?> eventType, Object target, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
         boolean needRepaint = !eventRouter.hasListeners(eventType);
-        eventRouter.addListener(eventType, target, method);
+        Registration registration = eventRouter.addListener(eventType, target,
+                method);
 
         if (needRepaint) {
             ComponentStateUtil.addRegisteredEventListener(getState(),
                     eventIdentifier);
         }
+
+        return registration;
     }
 
     /**
@@ -838,14 +837,15 @@ public abstract class AbstractClientConnector
      *            the object instance who owns the activation method.
      * @param method
      *            the activation method.
-     *
+     * @return a registration object for removing the listener
      */
     @Override
-    public void addListener(Class<?> eventType, Object target, Method method) {
+    public Registration addListener(Class<?> eventType, Object target,
+            Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, target, method);
+        return eventRouter.addListener(eventType, target, method);
     }
 
     /**
@@ -881,18 +881,19 @@ public abstract class AbstractClientConnector
      *            the object instance who owns the activation method.
      * @param methodName
      *            the name of the activation method.
+     * @return a registration object for removing the listener
      * @deprecated As of 7.0. This method should be avoided. Use
      *             {@link #addListener(Class, Object, Method)} or
      *             {@link #addListener(String, Class, Object, Method)} instead.
      */
     @Override
     @Deprecated
-    public void addListener(Class<?> eventType, Object target,
+    public Registration addListener(Class<?> eventType, Object target,
             String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, target, methodName);
+        return eventRouter.addListener(eventType, target, methodName);
     }
 
     /**

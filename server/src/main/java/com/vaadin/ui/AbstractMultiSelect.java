@@ -159,9 +159,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     @Override
     public Registration addSelectionListener(
             MultiSelectionListener<T> listener) {
-        addListener(MultiSelectionEvent.class, listener,
+        return addListener(MultiSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
-        return () -> removeListener(MultiSelectionEvent.class, listener);
     }
 
     /**
