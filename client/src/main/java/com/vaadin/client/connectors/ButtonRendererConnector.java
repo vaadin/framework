@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.connectors;
 
-import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.renderers.ButtonRenderer;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.Connect;

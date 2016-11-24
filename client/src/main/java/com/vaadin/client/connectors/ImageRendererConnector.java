@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.connectors;
 
-import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
