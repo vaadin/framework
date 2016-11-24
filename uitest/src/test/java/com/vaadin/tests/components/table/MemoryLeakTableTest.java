@@ -86,7 +86,7 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
     private void scrollTable(TableElement tbl, int value) {
         WebElement actualElement = tbl
                 .findElement(By.className("v-table-body-wrapper"));
-        JavascriptExecutor js = tbl.getCommandExecutor();
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("arguments[0].scrollTop = " + value, actualElement);
     }
 }

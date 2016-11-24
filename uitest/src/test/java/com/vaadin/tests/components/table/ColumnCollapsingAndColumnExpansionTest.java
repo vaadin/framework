@@ -26,6 +26,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement.ContextMenuElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
@@ -62,8 +63,8 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
     }
 
     private void contextClick(TestBenchElement e) {
-        if (e.isPhantomJS()) {
-            JavascriptExecutor js = e.getCommandExecutor();
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            JavascriptExecutor js = (JavascriptExecutor) getDriver();
             String scr = "var element=arguments[0];"
                     + "var ev = document.createEvent('HTMLEvents');"
                     + "ev.initEvent('contextmenu', true, false);"

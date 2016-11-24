@@ -59,7 +59,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBenchDriverProxy;
@@ -833,14 +832,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     public void hitButton(String id) {
-        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
-            driver.findElement(By.id(id)).click();
-        } else {
-            WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(
-                    driver, driver.getCurrentUrl());
-
-            selenium.keyPress("id=" + id, "\\13");
-        }
+        driver.findElement(By.id(id)).click();
     }
 
     protected void openDebugLogTab() {

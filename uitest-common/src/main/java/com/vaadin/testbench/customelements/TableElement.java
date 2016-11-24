@@ -11,7 +11,8 @@ public class TableElement extends com.vaadin.testbench.elements.TableElement {
         getCollapseMenuToggle().click();
         WebElement cm = getDriver()
                 .findElement(By.xpath("//*[@id='PID_VAADIN_CM']"));
-        return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenu.class);
+        return wrapElement(cm, getTestBenchCommandExecutor())
+                .wrap(CollapseMenu.class);
     }
 
     public static class CollapseMenu extends ContextMenuElement {
