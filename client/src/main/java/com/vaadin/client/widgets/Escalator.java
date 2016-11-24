@@ -5791,40 +5791,6 @@ public class Escalator extends Widget
         header.paintInsertRows(0, header.getRowCount());
         footer.paintInsertRows(0, footer.getRowCount());
 
-        // recalculateElementSizes();
-
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                /*
-                 * Not a faintest idea why we have to defer this call, but
-                 * unless it is deferred, the size of the escalator will be 0x0
-                 * after it is first detached and then reattached to the DOM.
-                 * This only applies to a bare Escalator; inside a Grid
-                 * everything works fine either way.
-                 *
-                 * The three autodetectRowHeightLater calls above seem obvious
-                 * suspects at first. However, they don't seem to have anything
-                 * to do with the issue, as they are no-ops in the
-                 * detach-reattach case.
-                 */
-                recalculateElementSizes();
-            }
-        });
-
-        /*
-         * Note: There's no need to explicitly insert rows into the body.
-         *
-         * recalculateElementSizes will recalculate the height of the body. This
-         * has the side-effect that as the body's size grows bigger (i.e. from 0
-         * to its actual height), more escalator rows are populated. Those
-         * escalator rows are then immediately rendered. This, in effect, is the
-         * same thing as inserting those rows.
-         *
-         * In fact, having an extra paintInsertRows here would lead to duplicate
-         * rows.
-         */
-
         boolean columnsChanged = false;
         for (ColumnConfigurationImpl.Column column : columnConfiguration.columns) {
             boolean columnChanged = column.measureAndSetWidthIfNeeded();
@@ -5851,6 +5817,20 @@ public class Escalator extends Widget
         } else {
             scroller.attachTouchListeners(getElement());
         }
+
+        /*
+         * Note: There's no need to explicitly insert rows into the body.
+         *
+         * recalculateElementSizes will recalculate the height of the body. This
+         * has the side-effect that as the body's size grows bigger (i.e. from 0
+         * to its actual height), more escalator rows are populated. Those
+         * escalator rows are then immediately rendered. This, in effect, is the
+         * same thing as inserting those rows.
+         *
+         * In fact, having an extra paintInsertRows here would lead to duplicate
+         * rows.
+         */
+        recalculateElementSizes();
     }
 
     @Override

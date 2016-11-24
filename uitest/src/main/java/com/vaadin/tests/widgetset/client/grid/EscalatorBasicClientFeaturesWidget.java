@@ -379,9 +379,25 @@ public class EscalatorBasicClientFeaturesWidget
         String[] menupath = { GENERAL_MENU };
 
         addMenuCommand("Detach Escalator", new ScheduledCommand() {
+
             @Override
             public void execute() {
+                // DockLayoutPanel removes height and width definitions on
+                // detach, so store them and restore them in attach to keep
+                // Escalator the same size
+                String detachHeight = escalator.getElement().getStyle()
+                        .getHeight();
+                String detachWidth = escalator.getElement().getStyle()
+                        .getWidth();
                 escalator.removeFromParent();
+                if (detachHeight != null) {
+                    escalator.getElement().getStyle().setProperty("height",
+                            detachHeight);
+                }
+                if (detachWidth != null) {
+                    escalator.getElement().getStyle().setProperty("width",
+                            detachWidth);
+                }
             }
         }, menupath);
 
