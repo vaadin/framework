@@ -58,4 +58,9 @@ public class Accordion extends TabSheet {
         return (AccordionState) super.getState();
     }
 
+    @Override
+    protected AccordionState getState(boolean markAsDirty) {
+        return (AccordionState) super.getState(markAsDirty);
+    }
+
 }

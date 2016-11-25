@@ -51,11 +51,6 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 public class Video extends AbstractMedia {
 
-    @Override
-    protected VideoState getState() {
-        return (VideoState) super.getState();
-    }
-
     public Video() {
         this("", null);
     }
@@ -128,4 +123,15 @@ public class Video extends AbstractMedia {
         result.add("poster");
         return result;
     }
+
+    @Override
+    protected VideoState getState() {
+        return (VideoState) super.getState();
+    }
+
+    @Override
+    protected VideoState getState(boolean markAsDirty) {
+        return (VideoState) super.getState(markAsDirty);
+    }
+
 }

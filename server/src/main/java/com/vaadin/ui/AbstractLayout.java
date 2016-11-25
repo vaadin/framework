@@ -38,6 +38,11 @@ public abstract class AbstractLayout extends AbstractComponentContainer
         return (AbstractLayoutState) super.getState();
     }
 
+    @Override
+    protected AbstractLayoutState getState(boolean markAsDirty) {
+        return (AbstractLayoutState) super.getState(markAsDirty);
+    }
+
     /**
      * Reads margin attributes from a design into a MarginInfo object. This
      * helper method should be called from the

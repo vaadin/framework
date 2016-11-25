@@ -109,4 +109,9 @@ public class ColorPickerGradient extends AbstractField<Color> {
     protected ColorPickerGradientState getState() {
         return (ColorPickerGradientState) super.getState();
     }
+
+    @Override
+    protected ColorPickerGradientState getState(boolean markAsDirty) {
+        return (ColorPickerGradientState) super.getState(markAsDirty);
+    }
 }

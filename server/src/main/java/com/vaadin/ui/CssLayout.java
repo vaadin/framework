@@ -232,6 +232,11 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         return (CssLayoutState) super.getState();
     }
 
+    @Override
+    protected CssLayoutState getState(boolean markAsDirty) {
+        return (CssLayoutState) super.getState(markAsDirty);
+    }
+
     /**
      * Returns styles to be applied to given component. Override this method to
      * inject custom style rules to components.

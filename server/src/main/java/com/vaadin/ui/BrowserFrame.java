@@ -62,4 +62,9 @@ public class BrowserFrame extends AbstractEmbedded {
     protected BrowserFrameState getState() {
         return (BrowserFrameState) super.getState();
     }
+
+    @Override
+    protected BrowserFrameState getState(boolean markAsDirty) {
+        return (BrowserFrameState) super.getState(markAsDirty);
+    }
 }

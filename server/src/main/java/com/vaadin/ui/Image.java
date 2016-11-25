@@ -73,6 +73,11 @@ public class Image extends AbstractEmbedded {
         return (ImageState) super.getState();
     }
 
+    @Override
+    protected ImageState getState(boolean markAsDirty) {
+        return (ImageState) super.getState(markAsDirty);
+    }
+
     /**
      * Add a click listener to the component. The listener is called whenever
      * the user clicks inside the component. Depending on the content the event

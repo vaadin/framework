@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.splitpanel.HorizontalSplitPanelState;
  *      | The first component || The second component |
  *      |                     ||                      |
  *      +---------------------++----------------------+
- *                              
+ *
  *                            ^
  *                            |
  *                      the splitter
@@ -65,5 +65,10 @@ public class HorizontalSplitPanel extends AbstractSplitPanel {
     @Override
     protected HorizontalSplitPanelState getState() {
         return (HorizontalSplitPanelState) super.getState();
+    }
+
+    @Override
+    protected HorizontalSplitPanelState getState(boolean markAsDirty) {
+        return (HorizontalSplitPanelState) super.getState(markAsDirty);
     }
 }

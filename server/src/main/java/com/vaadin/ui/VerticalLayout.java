@@ -55,4 +55,9 @@ public class VerticalLayout extends AbstractOrderedLayout {
     protected VerticalLayoutState getState() {
         return (VerticalLayoutState) super.getState();
     }
+
+    @Override
+    protected VerticalLayoutState getState(boolean markAsDirty) {
+        return (VerticalLayoutState) super.getState(markAsDirty);
+    }
 }

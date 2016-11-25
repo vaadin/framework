@@ -70,4 +70,9 @@ public class Audio extends AbstractMedia {
     protected AudioState getState() {
         return (AudioState) super.getState();
     }
+
+    @Override
+    protected AudioState getState(boolean markAsDirty) {
+        return (AudioState) super.getState(markAsDirty);
+    }
 }

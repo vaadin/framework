@@ -74,6 +74,11 @@ public class AbsoluteLayout extends AbstractLayout
         return (AbsoluteLayoutState) super.getState();
     }
 
+    @Override
+    protected AbsoluteLayoutState getState(boolean markAsDirty) {
+        return (AbsoluteLayoutState) super.getState(markAsDirty);
+    }
+
     /**
      * Gets an iterator for going through all components enclosed in the
      * absolute layout.

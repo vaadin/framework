@@ -76,4 +76,9 @@ public class FormLayout extends AbstractOrderedLayout {
     protected FormLayoutState getState() {
         return (FormLayoutState) super.getState();
     }
+
+    @Override
+    protected FormLayoutState getState(boolean markAsDirty) {
+        return (FormLayoutState) super.getState(markAsDirty);
+    }
 }

@@ -55,4 +55,9 @@ public class HorizontalLayout extends AbstractOrderedLayout {
         return (HorizontalLayoutState) super.getState();
     }
 
+    @Override
+    protected HorizontalLayoutState getState(boolean markAsDirty) {
+        return (HorizontalLayoutState) super.getState(markAsDirty);
+    }
+
 }

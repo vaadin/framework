@@ -70,6 +70,11 @@ public class TextField extends AbstractTextField {
     }
 
     @Override
+    protected TextFieldState getState(boolean markAsDirty) {
+        return (TextFieldState) super.getState(markAsDirty);
+    }
+
+    @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         Attributes attr = design.attributes();
@@ -83,8 +88,7 @@ public class TextField extends AbstractTextField {
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractTextField def = designContext
-                .getDefaultInstance(this);
+        AbstractTextField def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
                 def.getValue(), String.class, designContext);

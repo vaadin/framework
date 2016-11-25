@@ -60,4 +60,9 @@ public class VerticalSplitPanel extends AbstractSplitPanel {
     protected VerticalSplitPanelState getState() {
         return (VerticalSplitPanelState) super.getState();
     }
+
+    @Override
+    protected VerticalSplitPanelState getState(boolean markAsDirty) {
+        return (VerticalSplitPanelState) super.getState(markAsDirty);
+    }
 }
