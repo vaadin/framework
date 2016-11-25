@@ -18,11 +18,11 @@ package com.vaadin.shared.ui.tabsheet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.annotations.NoLayout;
+import com.vaadin.shared.ui.AbstractComponentContainerState;
 
-public class TabsheetState extends AbstractComponentState {
+public class TabsheetState extends AbstractComponentContainerState {
     public static final String PRIMARY_STYLE_NAME = "v-tabsheet";
 
     {

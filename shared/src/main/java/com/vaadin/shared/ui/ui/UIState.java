@@ -21,10 +21,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
 
-public class UIState extends TabIndexState {
+public class UIState extends AbstractSingleComponentContainerState {
+    /**
+     * The <i>tabulator index</i> of the field.
+     */
+    @NoLayout
+    public int tabIndex = 0;
+
     public TooltipConfigurationState tooltipConfiguration = new TooltipConfigurationState();
     public LoadingIndicatorConfigurationState loadingIndicatorConfiguration = new LoadingIndicatorConfigurationState();
     public int pollInterval = -1;

@@ -16,10 +16,10 @@
 
 package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
 
 public class UseStateFromHierachyChangeConnectorState
-        extends AbstractComponentState {
+        extends AbstractSingleComponentContainerState {
     public Connector child;
 }

@@ -14,15 +14,15 @@
  * the License.
  */
 
-package com.vaadin.shared.ui.loginform;
+package com.vaadin.shared.ui;
 
-import com.vaadin.shared.Connector;
-import com.vaadin.shared.communication.URLReference;
-import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
+import com.vaadin.shared.AbstractComponentState;
 
-public class LoginFormState extends AbstractSingleComponentContainerState {
-    public Connector userNameFieldConnector;
-    public Connector passwordFieldConnector;
-    public Connector loginButtonConnector;
-    public URLReference loginResource;
+/**
+ * Default shared state implementation for AbstractSingleComponentContainer.
+ *
+ * @since 8.0
+ */
+public class AbstractSingleComponentContainerState
+        extends AbstractComponentState {
 }

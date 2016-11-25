@@ -25,6 +25,7 @@ import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 
@@ -352,4 +353,17 @@ public abstract class AbstractSingleComponentContainer extends AbstractComponent
             design.appendChild(childNode);
         }
     }
+
+    @Override
+    protected AbstractSingleComponentContainerState getState() {
+        return (AbstractSingleComponentContainerState) super.getState();
+    }
+
+    @Override
+    protected AbstractSingleComponentContainerState getState(
+            boolean markAsDirty) {
+        return (AbstractSingleComponentContainerState) super.getState(
+                markAsDirty);
+    }
+
 }

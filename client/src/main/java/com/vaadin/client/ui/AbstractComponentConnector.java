@@ -60,6 +60,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.ui.UIState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector, HasErrorIndicator {
@@ -437,6 +438,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 // + Util.getSimpleName(getWidget())
                 // + " which does not implement Focusable");
             }
+        } else if (getState() instanceof UIState
+                && getWidget() instanceof Focusable) {
+            // UI behaves like a component with TabIndexState
+            ((Focusable) getWidget())
+                    .setTabIndex(((UIState) getState()).tabIndex);
         }
         Profiler.leave(
                 "AbstractComponentConnector.onStateChanged update tab index");

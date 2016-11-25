@@ -15,10 +15,10 @@
  */
 package com.vaadin.shared.ui.panel;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.NoLayout;
+import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
 
-public class PanelState extends AbstractComponentState {
+public class PanelState extends AbstractSingleComponentContainerState {
     {
         primaryStyleName = "v-panel";
     }
