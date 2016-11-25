@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Listing;
 import com.vaadin.server.data.BackEndDataProvider;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.ListDataProvider;
@@ -22,7 +23,8 @@ import elemental.json.JsonObject;
 
 public class AbstractListingTest {
 
-    private final class TestListing extends AbstractSingleSelect<String> {
+    private final class TestListing extends AbstractSingleSelect<String>
+            implements Listing<String, DataProvider<String, ?>> {
 
         /**
          * Used to execute data generation
@@ -38,7 +40,19 @@ public class AbstractListingTest {
         }
 
         @Override
-        protected void readItems(Element design, DesignContext context) {
+        protected List<String> readItems(Element design,
+                DesignContext context) {
+            return null;
+        }
+
+        @Override
+        public DataProvider<String, ?> getDataProvider() {
+            return internalGetDataProvider();
+        }
+
+        @Override
+        public void setDataProvider(DataProvider<String, ?> dataProvider) {
+            internalSetDataProvider(dataProvider);
         }
     }
 

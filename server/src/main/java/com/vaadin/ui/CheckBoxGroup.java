@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
@@ -46,7 +47,7 @@ import com.vaadin.ui.declarative.DesignFormatter;
  * @since 8.0
  */
 public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
-        implements FocusNotifier, BlurNotifier {
+        implements FocusNotifier, BlurNotifier, Listing<T, DataProvider<T, ?>> {
 
     /**
      * Constructs a new CheckBoxGroup with caption.
@@ -178,9 +179,9 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
     }
 
     @Override
-    protected void readItems(Element design, DesignContext context) {
+    protected List<T> readItems(Element design, DesignContext context) {
         setItemEnabledProvider(new DeclarativeItemEnabledProvider<>());
-        super.readItems(design, context);
+        return super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -221,5 +222,15 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
         }
 
         return elem;
+    }
+
+    @Override
+    public DataProvider<T, ?> getDataProvider() {
+        return internalGetDataProvider();
+    }
+
+    @Override
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+        internalSetDataProvider(dataProvider);
     }
 }

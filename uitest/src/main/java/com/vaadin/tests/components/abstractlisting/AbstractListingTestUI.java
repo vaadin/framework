@@ -4,11 +4,12 @@ import java.util.LinkedHashMap;
 import java.util.stream.IntStream;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.Listing;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractListing;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public abstract class AbstractListingTestUI<T extends AbstractListing<Object>>
+public abstract class AbstractListingTestUI<T extends AbstractListing<Object> & Listing<Object, ?>>
         extends AbstractComponentTest<T> {
 
     @Override

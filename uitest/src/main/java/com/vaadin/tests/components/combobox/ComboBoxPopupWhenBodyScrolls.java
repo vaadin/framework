@@ -29,7 +29,8 @@ public class ComboBoxPopupWhenBodyScrolls extends AbstractReindeerTestUI {
                 .add("body.v-generated-body { overflow: auto;height:auto;}");
         getPage().getStyles().add(
                 "body.v-generated-body .v-ui.v-scrollable{ overflow: visible;height:auto !important;}");
-        ComboBox<String> cb = new ComboBox<>(null, new ItemDataProvider(10));
+        ComboBox<String> cb = new ComboBox<>();
+        cb.setDataProvider(new ItemDataProvider(10));
 
         Label spacer = new Label("foo");
         spacer.setHeight("2000px");

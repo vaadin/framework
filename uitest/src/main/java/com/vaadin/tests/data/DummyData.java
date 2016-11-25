@@ -8,7 +8,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.Listing;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.server.data.Query;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -42,7 +44,8 @@ public class DummyData extends AbstractTestUIWithLog {
      * Simplified server only selection model. Selection state passed in data,
      * shown as bold text.
      */
-    public static class DummyComponent extends AbstractSingleSelect<String> {
+    public static class DummyComponent extends AbstractSingleSelect<String>
+            implements Listing<String, DataProvider<String, ?>> {
 
         private String selected;
 
@@ -71,6 +74,16 @@ public class DummyData extends AbstractTestUIWithLog {
             }
         }
 
+        @Override
+        public DataProvider<String, ?> getDataProvider() {
+            return internalGetDataProvider();
+        }
+
+        @Override
+        public void setDataProvider(DataProvider<String, ?> dataProvider) {
+            internalSetDataProvider(dataProvider);
+        }
+
     }
 
     @Override
@@ -92,7 +105,8 @@ public class DummyData extends AbstractTestUIWithLog {
             dummy.setDataProvider(new LoggingDataProvider(items));
         }));
         controls.addComponent(new Button("Remove all data", e -> {
-            dummy.setDataProvider(new LoggingDataProvider(Collections.emptyList()));
+            dummy.setDataProvider(
+                    new LoggingDataProvider(Collections.emptyList()));
         }));
         addComponent(dummy);
     }

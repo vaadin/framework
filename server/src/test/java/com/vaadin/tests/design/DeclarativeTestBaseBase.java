@@ -102,11 +102,11 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
     protected void assertEquals(String message, Object o1, Object o2) {
         if (o1 == null) {
-            Assert.assertEquals(message, null, o2);
+            Assert.assertNull(message, o2);
             return;
         }
         if (o2 == null) {
-            Assert.assertEquals(message, null, o1);
+            Assert.assertNull(message, o1);
             return;
         }
 

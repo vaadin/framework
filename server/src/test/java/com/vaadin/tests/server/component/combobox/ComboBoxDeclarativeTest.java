@@ -31,9 +31,9 @@ import com.vaadin.ui.StyleGenerator;
  * <p>
  * There are only ComboBox specific properties explicit tests. All other tests
  * are in the super class ( {@link AbstractSingleSelectDeclarativeTest}).
- * 
+ *
  * @see AbstractSingleSelectDeclarativeTest
- * 
+ *
  * @author Vaadin Ltd
  *
  */

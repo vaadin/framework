@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataProvider;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -30,8 +29,9 @@ public class ComboboxStyleChangeWidth extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final ComboBox<String> cbFoo = new ComboBox<>(null, DataProvider.create(
-                "A really long string that causes an inline width to be set"));
+        final ComboBox<String> cbFoo = new ComboBox<>();
+        cbFoo.setItems(
+                "A really long string that causes an inline width to be set");
         cbFoo.setSizeUndefined();
 
         Button btn = new Button("Click to break CB",

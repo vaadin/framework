@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.vaadin.data.Listing;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
@@ -45,9 +46,9 @@ import com.vaadin.ui.ItemCaptionGenerator;
  * <p>
  * Common {@link AbstractComponent} properties are tested in
  * {@link AbstractComponentDeclarativeTestBase}
- * 
+ *
  * @see AbstractComponentDeclarativeTestBase
- * 
+ *
  * @author Vaadin Ltd
  *
  *
@@ -55,7 +56,7 @@ import com.vaadin.ui.ItemCaptionGenerator;
  *            a component type
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public abstract class AbstractListingDeclarativeTest<T extends AbstractListing>
+public abstract class AbstractListingDeclarativeTest<T extends AbstractListing & Listing>
         extends AbstractComponentDeclarativeTestBase<T> {
 
     private static final String EXTERNAL_URL = "http://example.com/example.gif";

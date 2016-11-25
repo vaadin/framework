@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.vaadin.data.Listing;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.ItemCaptionGenerator;
@@ -31,7 +32,7 @@ import com.vaadin.ui.ItemCaptionGenerator;
  * <p>
  * Test inherits test methods from a {@link AbstractListingDeclarativeTest}
  * class providing here only common cases for {@link AbstractSingleSelect}s.
- * 
+ *
  * @author Vaadin Ltd
  *
  *
@@ -39,7 +40,7 @@ import com.vaadin.ui.ItemCaptionGenerator;
  *            a component type
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSingleSelect>
+public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSingleSelect & Listing>
         extends AbstractListingDeclarativeTest<T> {
 
     @Override

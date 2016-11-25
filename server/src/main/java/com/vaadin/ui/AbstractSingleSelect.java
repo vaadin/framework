@@ -18,9 +18,11 @@ package com.vaadin.ui;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
 
@@ -326,12 +328,13 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     }
 
     @Override
-    protected void readItems(Element design, DesignContext context) {
-        super.readItems(design, context);
+    protected List<T> readItems(Element design, DesignContext context) {
         Set<T> selected = new HashSet<>();
-        design.children().stream()
-                .forEach(child -> readItem(child, selected, context));
+        List<T> items = design.children().stream()
+                .map(child -> readItem(child, selected, context))
+                .collect(Collectors.toList());
         selected.forEach(this::setValue);
+        return items;
     }
 
     /**

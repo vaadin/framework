@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
-        implements FocusNotifier, BlurNotifier {
+        implements FocusNotifier, BlurNotifier, Listing<T, DataProvider<T, ?>> {
 
     private SerializablePredicate<T> itemEnabledProvider = item -> true;
 
@@ -247,9 +248,9 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected void readItems(Element design, DesignContext context) {
+    protected List<T> readItems(Element design, DesignContext context) {
         setItemEnabledProvider(new DeclarativeItemEnabledProvider<>());
-        super.readItems(design, context);
+        return super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -290,5 +291,15 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         }
 
         return elem;
+    }
+
+    @Override
+    public DataProvider<T, ?> getDataProvider() {
+        return internalGetDataProvider();
+    }
+
+    @Override
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+        internalSetDataProvider(dataProvider);
     }
 }

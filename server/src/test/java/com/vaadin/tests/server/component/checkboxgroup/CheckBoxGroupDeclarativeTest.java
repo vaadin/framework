@@ -29,9 +29,9 @@ import com.vaadin.ui.CheckBoxGroup;
  * Only {@link CheckBoxGroup#setHtmlContentAllowed(boolean)} is tested here
  * explicitly. All other tests are in the super class (
  * {@link AbstractMultiSelectDeclarativeTest}).
- * 
+ *
  * @see AbstractMultiSelectDeclarativeTest
- * 
+ *
  * @author Vaadin Ltd
  *
  */

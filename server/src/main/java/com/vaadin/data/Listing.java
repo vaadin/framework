@@ -27,16 +27,19 @@ import com.vaadin.server.data.DataProvider;
  *
  * @param <T>
  *            the item data type
+ * @param <D>
+ *            the data provider type; used to provide constraints on the data
+ *            provider and filter
  * @since 8.0
  */
-public interface Listing<T> extends Serializable {
+public interface Listing<T, D extends DataProvider<T, ?>> extends Serializable {
 
     /**
      * Returns the source of data items used by this listing.
      *
      * @return the data provider, not null
      */
-    DataProvider<T, ?> getDataProvider();
+    D getDataProvider();
 
     /**
      * Sets the data provider for this listing. The data provider is queried for
@@ -45,27 +48,39 @@ public interface Listing<T> extends Serializable {
      * @param dataProvider
      *            the data provider, not null
      */
-    void setDataProvider(DataProvider<T, ?> dataProvider);
+    void setDataProvider(D dataProvider);
 
     /**
      * Sets the collection of data items of this listing.
+     * <p>
+     * <strong>Note for component developers: </strong> If the component
+     * implementing this interface uses a custom data provider and/or filter
+     * types, this method should be overridden to provide the same functionality
+     * with the correct data provider type. This might require filter conversion
+     * or a completely custom implementation.
      *
      * @param items
      *            the data items to display, not null
      *
      */
     default void setItems(Collection<T> items) {
-        setDataProvider(DataProvider.create(items));
+        setDataProvider((D) DataProvider.create(items));
     }
 
     /**
      * Sets the data items of this listing.
+     * <p>
+     * <strong>Note for component developers: </strong> If the component
+     * implementing this interface uses a custom data provider and/or filter
+     * types, this method should be overridden to provide the same functionality
+     * with the correct data provider type. This might require filter conversion
+     * or a completely custom implementation.
      *
      * @param items
      *            the data items to display
      */
     default void setItems(@SuppressWarnings("unchecked") T... items) {
-        setDataProvider(DataProvider.create(items));
+        setDataProvider((D) DataProvider.create(items));
     }
 
 }

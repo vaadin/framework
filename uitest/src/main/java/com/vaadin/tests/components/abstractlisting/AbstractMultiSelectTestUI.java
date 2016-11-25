@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.vaadin.data.Listing;
 import com.vaadin.ui.AbstractMultiSelect;
 import com.vaadin.ui.ItemCaptionGenerator;
 
-public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMultiSelect<Object>>
+public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMultiSelect<Object> & Listing<Object, ?>>
         extends AbstractListingTestUI<MULTISELECT> {
 
     protected final String selectionCategory = "Selection";

@@ -18,7 +18,8 @@ public class ComboBoxNavigation extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox<String> cb = new ComboBox<>(null, new ItemDataProvider(100));
+        ComboBox<String> cb = new ComboBox<>();
+        cb.setDataProvider(new ItemDataProvider(100));
 
         addComponent(cb);
 

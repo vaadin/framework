@@ -41,6 +41,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.BinderValidationStatus;
+import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
@@ -51,6 +52,7 @@ import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.data.DataCommunicator;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -90,7 +92,8 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T> implements HasComponents {
+public class Grid<T> extends AbstractListing<T>
+        implements HasComponents, Listing<T, DataProvider<T, ?>> {
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
@@ -2976,8 +2979,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents {
     }
 
     @Override
-    protected void readItems(Element design, DesignContext context) {
+    protected List<T> readItems(Element design, DesignContext context) {
         // TODO see vaadin/framework8-issues#390
+        return Collections.emptyList();
+    }
+
+    @Override
+    public DataProvider<T, ?> getDataProvider() {
+        return internalGetDataProvider();
+    }
+
+    @Override
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+        internalSetDataProvider(dataProvider);
     }
 
 }

@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,16 +37,19 @@ import com.vaadin.ui.declarative.DesignFormatter;
 /**
  * A base class for listing components. Provides common handling for fetching
  * backend data items, selection logic, and server-client communication.
+ * <p>
+ * <strong>Note: </strong> concrete component implementations should implement
+ * the {@link Listing} interface.
  *
  * @author Vaadin Ltd.
+ * @since 8.0
  *
  * @param <T>
  *            the item data type
  *
- * @since 8.0
+ * @see Listing
  */
-public abstract class AbstractListing<T> extends AbstractComponent
-        implements Listing<T> {
+public abstract class AbstractListing<T> extends AbstractComponent {
     /**
      * The item icon caption provider.
      */
@@ -153,13 +155,11 @@ public abstract class AbstractListing<T> extends AbstractComponent
         addExtension(dataCommunicator);
     }
 
-    @Override
-    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+    protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
         getDataCommunicator().setDataProvider(dataProvider);
     }
 
-    @Override
-    public DataProvider<T, ?> getDataProvider() {
+    protected DataProvider<T, ?> internalGetDataProvider() {
         return getDataCommunicator().getDataProvider();
     }
 
@@ -277,7 +277,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
      *            the DesignContext instance used in writing
      */
     protected void writeItems(Element design, DesignContext context) {
-        getDataProvider().fetch(new Query<>())
+        internalGetDataProvider().fetch(new Query<>())
                 .forEach(item -> writeItem(design, item, context));
     }
 
@@ -321,21 +321,27 @@ public abstract class AbstractListing<T> extends AbstractComponent
             setReadOnly(DesignAttributeHandler.readAttribute("readonly", attr,
                     Boolean.class));
         }
-        readItems(design, context);
+
+        setItemCaptionGenerator(new DeclarativeCaptionGenerator<>());
+        setItemIconGenerator(new DeclarativeIconGenerator<>());
+
+        List<T> readItems = readItems(design, context);
+        if (!readItems.isEmpty() && this instanceof Listing) {
+            ((Listing<T, ?>) this).setItems(readItems);
+        }
     }
 
     /**
      * Reads the data source items from the {@code design}.
-     * 
+     *
      * @param design
      *            The element to obtain the state from
      * @param context
      *            The DesignContext instance used for parsing the design
+     *
+     * @return the items read from the design
      */
-    protected void readItems(Element design, DesignContext context) {
-        setItemCaptionGenerator(new DeclarativeCaptionGenerator<>());
-        setItemIconGenerator(new DeclarativeIconGenerator<>());
-    }
+    protected abstract List<T> readItems(Element design, DesignContext context);
 
     /**
      * Reads an Item from a design and inserts it into the data source.
@@ -361,13 +367,11 @@ public abstract class AbstractListing<T> extends AbstractComponent
 
         String serializedItem = "";
         String caption = DesignFormatter.decodeFromTextNode(child.html());
-        List<T> items = new ArrayList<>();
         if (child.hasAttr("item")) {
             serializedItem = child.attr("item");
         }
 
         T item = deserializeDeclarativeRepresentation(serializedItem);
-        items.add(item);
 
         ItemCaptionGenerator<T> captionGenerator = getItemCaptionGenerator();
         if (captionGenerator instanceof DeclarativeCaptionGenerator) {
@@ -403,9 +407,9 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * Default implementation is able to handle only {@link String} as an item
      * type. There will be a {@link ClassCastException} if {@code T } is not a
      * {@link String}.
-     * 
+     *
      * @see #serializeDeclarativeRepresentation(Object)
-     * 
+     *
      * @param item
      *            string to deserialize
      * @throws ClassCastException
@@ -420,9 +424,9 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * Serializes an {@code item} to a string for saving declarative format.
      * <p>
      * Default implementation delegates a call to {@code item.toString()}.
-     * 
+     *
      * @see #serializeDeclarativeRepresentation(Object)
-     * 
+     *
      * @param item
      *            a data item
      * @return string representation of the {@code item}.

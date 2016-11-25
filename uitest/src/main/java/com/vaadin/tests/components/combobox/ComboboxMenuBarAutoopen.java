@@ -17,7 +17,6 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataProvider;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -37,8 +36,8 @@ public class ComboboxMenuBarAutoopen extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
-        ComboBox<String> combo = new ComboBox<>(null,
-                DataProvider.create("1", "2", "3"));
+        ComboBox<String> combo = new ComboBox<>();
+        combo.setItems("1", "2", "3");
         layout.addComponent(combo);
 
         MenuBar menubar = getMenubar();

@@ -18,6 +18,7 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 
+import com.vaadin.data.Listing;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
 
@@ -30,7 +31,8 @@ import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
  * @param <T>
  *            item type
  */
-public class TwinColSelect<T> extends AbstractMultiSelect<T> {
+public class TwinColSelect<T> extends AbstractMultiSelect<T>
+        implements Listing<T, DataProvider<T, ?>> {
 
     /**
      * Constructs a new TwinColSelect.
@@ -154,6 +156,16 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T> {
     @Override
     protected TwinColSelectState getState(boolean markAsDirty) {
         return (TwinColSelectState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public DataProvider<T, ?> getDataProvider() {
+        return internalGetDataProvider();
+    }
+
+    @Override
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+        internalSetDataProvider(dataProvider);
     }
 
 }

@@ -10,11 +10,11 @@ public class ComboBoxEnablesComboBox extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox<String> cb = new ComboBox<>("Always enabled",
-                new ItemDataProvider(10));
+        ComboBox<String> cb = new ComboBox<>("Always enabled");
+        cb.setDataProvider(new ItemDataProvider(10));
         cb.addValueChangeListener(event -> cb2.setEnabled(true));
-        cb2 = new ComboBox<String>("Initially disabled",
-                new ItemDataProvider(10));
+        cb2 = new ComboBox<String>("Initially disabled");
+        cb.setDataProvider(new ItemDataProvider(10));
         cb2.setEnabled(false);
 
         addComponent(cb);

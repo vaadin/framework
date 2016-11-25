@@ -8,7 +8,8 @@ import com.vaadin.ui.ComboBox;
 public class ComboBoxUndefinedWidthAndIcon extends TestBase {
     @Override
     protected void setup() {
-        ComboBox<String> cb = new ComboBox<>(null, new ItemDataProvider(200));
+        ComboBox<String> cb = new ComboBox<>();
+        cb.setDataProvider(new ItemDataProvider(200));
         cb.setItemIconGenerator(
                 item -> new ThemeResource("../runo/icons/16/users.png"));
 

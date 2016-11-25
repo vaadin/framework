@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.server.data.DataProvider;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,22 +37,24 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.Listing;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 
 @RunWith(Parameterized.class)
-public class AbstractMultiSelectTest {
+public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Listing<String, DataProvider<String, ?>>> {
 
     @Parameters(name = "{0}")
-    public static Iterable<AbstractMultiSelect<String>> multiSelects() {
+    public static Iterable<?> multiSelects() {
         return Arrays.asList(new CheckBoxGroup<>(), new TwinColSelect<>(),
                 new ListSelect<>());
     }
 
     @Parameter
-    public AbstractMultiSelect<String> selectToTest;
+    public S selectToTest;
 
     private MultiSelectServerRpc rpc;
 

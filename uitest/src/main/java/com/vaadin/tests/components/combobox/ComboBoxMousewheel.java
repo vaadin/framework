@@ -37,7 +37,8 @@ public class ComboBoxMousewheel extends AbstractReindeerTestUI {
     }
 
     private ComboBox<String> createComboBox(String caption) {
-        ComboBox<String> cb = new ComboBox<>(caption, new ItemDataProvider(100));
+        ComboBox<String> cb = new ComboBox<>(caption);
+        cb.setDataProvider(new ItemDataProvider(100));
         cb.setId(caption);
         return cb;
     }

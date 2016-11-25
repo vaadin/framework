@@ -17,7 +17,6 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataProvider;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 
@@ -30,8 +29,8 @@ public class ComboBoxClickIcon extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final ComboBox<String> combo = new ComboBox<>(null,
-                DataProvider.create("A", "B", "C"));
+        final ComboBox<String> combo = new ComboBox<>();
+        combo.setItems("A", "B", "C");
         combo.setItemIconGenerator(item -> FontAwesome.ALIGN_CENTER);
         combo.setTextInputAllowed(false);
         addComponent(combo);

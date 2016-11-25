@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -28,6 +29,7 @@ import java.util.function.Consumer;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.data.Listing;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -60,8 +62,9 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+public class ComboBox<T> extends AbstractSingleSelect<T>
+        implements HasValue<T>, FieldEvents.BlurNotifier,
+        FieldEvents.FocusNotifier, Listing<T, DataProvider<T, String>> {
 
     /**
      * Handler that adds a new item based on user input when the new items
@@ -90,7 +93,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
 
         /**
          * Sets a {@code style} for the {@code item}.
-         * 
+         *
          * @param item
          *            a data item
          * @param style
@@ -203,21 +206,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
      *            collection of options, not null
      */
     public ComboBox(String caption, Collection<T> options) {
-        this(caption, DataProvider.create(options));
-    }
-
-    /**
-     * Constructs a combo box with the given data provider.
-     *
-     * @param caption
-     *            the caption to show in the containing layout, null for no
-     *            caption
-     * @param dataProvider
-     *            the data provider to use, not null
-     */
-    public ComboBox(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
-        setDataProvider(dataProvider);
+
+        setItems(options);
     }
 
     /**
@@ -242,6 +233,22 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
                 jsonObject.put(ComboBoxConstants.ICON, iconUrl);
             }
         });
+    }
+
+    @Override
+    public void setItems(Collection<T> items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> getFilter()
+                        .apply(filterText, item));
+        setDataProvider(provider);
+    }
+
+    @Override
+    public void setItems(@SuppressWarnings("unchecked") T... items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> getFilter()
+                        .apply(filterText, item));
+        setDataProvider(provider);
     }
 
     /**
@@ -577,9 +584,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
     }
 
     @Override
-    protected void readItems(Element design, DesignContext context) {
+    protected List<T> readItems(Element design, DesignContext context) {
         setStyleGenerator(new DeclarativeStyleGenerator<>());
-        super.readItems(design, context);
+        return super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -601,6 +608,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T> implements HasValue<T>,
             }
         }
         return item;
+    }
+
+    @Override
+    public DataProvider<T, String> getDataProvider() {
+        return (DataProvider<T, String>) internalGetDataProvider();
+    }
+
+    @Override
+    public void setDataProvider(DataProvider<T, String> dataProvider) {
+        internalSetDataProvider(dataProvider);
     }
 
 }

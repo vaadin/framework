@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.vaadin.data.Listing;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.AbstractMultiSelect;
 
@@ -30,17 +31,17 @@ import com.vaadin.ui.AbstractMultiSelect;
  * <p>
  * Test inherits test methods from a {@link AbstractListingDeclarativeTest}
  * class providing here only common cases for {@link AbstractMultiSelect}s.
- * 
+ *
  * @see AbstractListingDeclarativeTest
- * 
+ *
  * @author Vaadin Ltd
  *
  *
  * @param <T>
  *            a component type
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMultiSelect>
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMultiSelect & Listing>
         extends AbstractListingDeclarativeTest<T> {
 
     @Override

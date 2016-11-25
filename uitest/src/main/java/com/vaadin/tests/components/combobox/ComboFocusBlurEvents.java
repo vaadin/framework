@@ -15,8 +15,8 @@ public class ComboFocusBlurEvents extends TestBase {
     @Override
     protected void setup() {
 
-        ComboBox<String> cb = new ComboBox<>("Combobox",
-                new ItemDataProvider(100));
+        ComboBox<String> cb = new ComboBox<>("Combobox");
+        cb.setDataProvider(new ItemDataProvider(100));
         cb.setPlaceholder("Enter text");
         cb.setDescription("Some Combobox");
         addComponent(cb);

@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -429,13 +430,14 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     }
 
     @Override
-    protected void readItems(Element design, DesignContext context) {
-        super.readItems(design, context);
+    protected List<T> readItems(Element design, DesignContext context) {
         Set<T> selected = new HashSet<>();
-        design.children().stream()
-                .forEach(child -> readItem(child, selected, context));
+        List<T> items = design.children().stream()
+                .map(child -> readItem(child, selected, context))
+                .collect(Collectors.toList());
         deselectAll();
         selected.forEach(this::select);
+        return items;
     }
 
     /**

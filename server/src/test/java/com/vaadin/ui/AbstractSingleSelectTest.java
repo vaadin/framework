@@ -32,8 +32,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.Listing;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
+import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
@@ -48,7 +50,8 @@ public class AbstractSingleSelectTest {
 
     private List<Person> selectionChanges;
 
-    private static class PersonListing extends AbstractSingleSelect<Person> {
+    private static class PersonListing extends AbstractSingleSelect<Person>
+            implements Listing<Person, DataProvider<Person, ?>> {
 
         @Override
         protected Element writeItem(Element design, Person item,
@@ -57,7 +60,19 @@ public class AbstractSingleSelectTest {
         }
 
         @Override
-        protected void readItems(Element design, DesignContext context) {
+        protected List<Person> readItems(Element design,
+                DesignContext context) {
+            return null;
+        }
+
+        @Override
+        public DataProvider<Person, ?> getDataProvider() {
+            return internalGetDataProvider();
+        }
+
+        @Override
+        public void setDataProvider(DataProvider<Person, ?> dataProvider) {
+            internalSetDataProvider(dataProvider);
         }
     }
 
@@ -240,7 +255,9 @@ public class AbstractSingleSelectTest {
             }
 
             @Override
-            protected void readItems(Element design, DesignContext context) {
+            protected List<String> readItems(Element design,
+                    DesignContext context) {
+                return null;
             }
         };
 

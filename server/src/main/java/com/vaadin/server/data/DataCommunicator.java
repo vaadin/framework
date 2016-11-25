@@ -47,6 +47,9 @@ import elemental.json.JsonObject;
  * {@link JsonObject}s representing each data object to be sent to the
  * client-side.
  *
+ * @param <T>
+ *            the bean type
+ *
  * @since 8.0
  */
 public class DataCommunicator<T> extends AbstractExtension {
@@ -179,7 +182,9 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
-    private DataProvider<T, ?> dataProvider = DataProvider.create();
+    /** Empty default data provider */
+    private DataProvider<T, ?> dataProvider = new BackEndDataProvider<>(
+            q -> Stream.of(), q -> 0);
     private final DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;
@@ -506,7 +511,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * When component is disabled then client cannot communicate to the server
      * side (by design, because of security reasons). It means that client will
      * get <b>only</b> initial chunk of data whose size is set here.
-     * 
+     *
      * @param size
      *            the size of initial data to send to the client
      */
@@ -520,9 +525,9 @@ public class DataCommunicator<T> extends AbstractExtension {
     /**
      * Get minimum size of data which will be sent to the client when data
      * source is set.
-     * 
+     *
      * @see #setMinPushSize(int)
-     * 
+     *
      * @return current minimum push size of initial data chunk which is sent to
      *         the client when data source is set
      */
