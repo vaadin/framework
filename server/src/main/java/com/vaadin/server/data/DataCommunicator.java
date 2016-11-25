@@ -24,13 +24,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
@@ -49,10 +47,12 @@ import elemental.json.JsonObject;
  *
  * @param <T>
  *            the bean type
+ * @param <F>
+ *            the filter type
  *
  * @since 8.0
  */
-public class DataCommunicator<T> extends AbstractExtension {
+public class DataCommunicator<T, F> extends AbstractExtension {
 
     private Registration dataProviderUpdateRegistration;
 
@@ -183,7 +183,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
     /** Empty default data provider */
-    private DataProvider<T, ?> dataProvider = new BackEndDataProvider<>(
+    private DataProvider<T, F> dataProvider = new BackEndDataProvider<>(
             q -> Stream.of(), q -> 0);
     private final DataKeyMapper<T> keyMapper;
 
@@ -192,8 +192,8 @@ public class DataCommunicator<T> extends AbstractExtension {
     private int minPushSize = 40;
     private Range pushRows = Range.withLength(0, minPushSize);
 
+    private F filter;
     private Comparator<T> inMemorySorting;
-    private SerializablePredicate<T> inMemoryFilter;
     private final List<SortOrder<String>> backEndSorting = new ArrayList<>();
     private final DataCommunicatorClientRpc rpc;
 
@@ -229,14 +229,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         if (initial || reset) {
-            int dataProviderSize;
-            if (getDataProvider().isInMemory() && inMemoryFilter != null) {
-                dataProviderSize = (int) getDataProvider().fetch(new Query<>())
-                        .filter(inMemoryFilter).count();
-            } else {
-                // TODO: Apply filter
-                dataProviderSize = getDataProvider().size(new Query<>());
-            }
+            int dataProviderSize = getDataProvider().size(new Query<>(filter));
             rpc.reset(dataProviderSize);
         }
 
@@ -247,18 +240,16 @@ public class DataCommunicator<T> extends AbstractExtension {
             Stream<T> rowsToPush;
 
             if (getDataProvider().isInMemory()) {
+                // TODO: Move in-memory sorting to Query.
                 // We can safely request all the data when in memory
-                rowsToPush = getDataProvider().fetch(new Query<>());
-                if (inMemoryFilter != null) {
-                    rowsToPush = rowsToPush.filter(inMemoryFilter);
-                }
+                rowsToPush = getDataProvider().fetch(new Query<>(filter));
                 if (inMemorySorting != null) {
                     rowsToPush = rowsToPush.sorted(inMemorySorting);
                 }
                 rowsToPush = rowsToPush.skip(offset).limit(limit);
             } else {
                 rowsToPush = getDataProvider().fetch(
-                        new Query<>(offset, limit, backEndSorting, null));
+                        new Query<>(offset, limit, backEndSorting, filter));
             }
             pushData(offset, rowsToPush);
         }
@@ -405,13 +396,13 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Sets the {@link Predicate} to use with in-memory filtering.
+     * Sets the filter to use.
      *
-     * @param predicate
-     *            predicate used to filter data
+     * @param filter
+     *            the filter
      */
-    public void setInMemoryFilter(SerializablePredicate<T> predicate) {
-        inMemoryFilter = predicate;
+    public void setFilter(F filter) {
+        this.filter = filter;
         reset();
     }
 
@@ -465,7 +456,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @return the data provider
      */
-    public DataProvider<T, ?> getDataProvider() {
+    public DataProvider<T, F> getDataProvider() {
         return dataProvider;
     }
 
@@ -475,7 +466,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param dataProvider
      *            the data provider to set, not null
      */
-    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+    public void setDataProvider(DataProvider<T, F> dataProvider) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         this.dataProvider = dataProvider;
         detachDataProviderListener();

@@ -132,15 +132,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         @Override
         public void setFilter(String filterText) {
             filterstring = filterText;
-            if (filterText != null) {
-                getDataCommunicator().setInMemoryFilter(
-                        item -> filter.apply(filterstring, item));
-            } else {
-                getDataCommunicator().setInMemoryFilter(null);
-            }
+            getDataCommunicator().setFilter(filterText);
         }
     };
 
+    // TODO: Check if this can be removed.
     private String filterstring;
 
     /**
@@ -166,7 +162,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * {@link #setItems(Collection)}
      */
     public ComboBox() {
-        super(new DataCommunicator<T>() {
+        super(new DataCommunicator<T, String>() {
             @Override
             protected DataKeyMapper<T> createKeyMapper() {
                 return new KeyMapper<T>() {
@@ -611,6 +607,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DataProvider<T, String> getDataProvider() {
         return (DataProvider<T, String>) internalGetDataProvider();
     }
@@ -620,4 +617,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         internalSetDataProvider(dataProvider);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public DataCommunicator<T, String> getDataCommunicator() {
+        // Not actually an unsafe cast. DataCommunicator is final and set by
+        // ComboBox.
+        return (DataCommunicator<T, String>) super.getDataCommunicator();
+    }
 }

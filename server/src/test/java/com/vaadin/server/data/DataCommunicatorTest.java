@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.server.MockVaadinSession;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
@@ -62,7 +63,8 @@ public class DataCommunicatorTest {
         }
 
         @Override
-        public Registration addDataProviderListener(DataProviderListener listener) {
+        public Registration addDataProviderListener(
+                DataProviderListener listener) {
             registration = super.addDataProviderListener(listener);
             return this;
         }
@@ -79,7 +81,8 @@ public class DataCommunicatorTest {
 
     }
 
-    private static class TestDataCommunicator extends DataCommunicator<Object> {
+    private static class TestDataCommunicator
+            extends DataCommunicator<Object, SerializablePredicate<Object>> {
         protected void extend(UI ui) {
             super.extend(ui);
         }

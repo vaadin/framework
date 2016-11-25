@@ -119,7 +119,7 @@ public abstract class AbstractListing<T> extends AbstractComponent {
         }
     }
 
-    private final DataCommunicator<T> dataCommunicator;
+    private final DataCommunicator<T, ?> dataCommunicator;
 
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
@@ -147,7 +147,7 @@ public abstract class AbstractListing<T> extends AbstractComponent {
      * @param dataCommunicator
      *            the data communicator to use, not null
      */
-    protected AbstractListing(DataCommunicator<T> dataCommunicator) {
+    protected AbstractListing(DataCommunicator<T, ?> dataCommunicator) {
         Objects.requireNonNull(dataCommunicator,
                 "dataCommunicator cannot be null");
 
@@ -155,8 +155,10 @@ public abstract class AbstractListing<T> extends AbstractComponent {
         addExtension(dataCommunicator);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
-        getDataCommunicator().setDataProvider(dataProvider);
+        // cast needed by compiler
+        getDataCommunicator().setDataProvider((DataProvider) dataProvider);
     }
 
     protected DataProvider<T, ?> internalGetDataProvider() {
@@ -248,7 +250,7 @@ public abstract class AbstractListing<T> extends AbstractComponent {
      *
      * @return the data communicator, not null
      */
-    public DataCommunicator<T> getDataCommunicator() {
+    public DataCommunicator<T, ?> getDataCommunicator() {
         return dataCommunicator;
     }
 
