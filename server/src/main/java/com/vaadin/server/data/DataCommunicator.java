@@ -237,20 +237,9 @@ public class DataCommunicator<T, F> extends AbstractExtension {
             int offset = pushRows.getStart();
             int limit = pushRows.length();
 
-            Stream<T> rowsToPush;
+            Stream<T> rowsToPush = getDataProvider().fetch(new Query<>(offset,
+                    limit, backEndSorting, inMemorySorting, filter));
 
-            if (getDataProvider().isInMemory()) {
-                // TODO: Move in-memory sorting to Query.
-                // We can safely request all the data when in memory
-                rowsToPush = getDataProvider().fetch(new Query<>(filter));
-                if (inMemorySorting != null) {
-                    rowsToPush = rowsToPush.sorted(inMemorySorting);
-                }
-                rowsToPush = rowsToPush.skip(offset).limit(limit);
-            } else {
-                rowsToPush = getDataProvider().fetch(
-                        new Query<>(offset, limit, backEndSorting, filter));
-            }
             pushData(offset, rowsToPush);
         }
 

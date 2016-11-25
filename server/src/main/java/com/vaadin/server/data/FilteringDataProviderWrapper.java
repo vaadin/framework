@@ -100,15 +100,15 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
     }
 
     @Override
-    public int size(Query<F> t) {
-        return dataProvider.size(new Query<M>(t.getOffset(), t.getLimit(),
-                t.getSortOrders(), getFilter(t)));
+    public int size(Query<T, F> t) {
+        return dataProvider.size(new Query<>(t.getOffset(), t.getLimit(),
+                t.getSortOrders(), t.getInMemorySorting(), getFilter(t)));
     }
 
     @Override
-    public Stream<T> fetch(Query<F> t) {
-        return dataProvider.fetch(new Query<M>(t.getOffset(), t.getLimit(),
-                t.getSortOrders(), getFilter(t)));
+    public Stream<T> fetch(Query<T, F> t) {
+        return dataProvider.fetch(new Query<>(t.getOffset(), t.getLimit(),
+                t.getSortOrders(), t.getInMemorySorting(), getFilter(t)));
     }
 
     /**
@@ -118,7 +118,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
      *            the current query
      * @return filter for the modified Query
      */
-    protected abstract M getFilter(Query<F> query);
+    protected abstract M getFilter(Query<T, F> query);
 
     /**
      * Creates a data provider wrapper with a static filter set to each Query.
@@ -144,7 +144,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
         return new FilteringDataProviderWrapper<T, Void, F>(dataProvider) {
 
             @Override
-            protected F getFilter(Query<Void> query) {
+            protected F getFilter(Query<T, Void> query) {
                 return filter;
             }
         };
@@ -176,7 +176,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
         return new FilteringDataProviderWrapper<T, F, M>(dataProvider) {
 
             @Override
-            protected M getFilter(Query<F> query) {
+            protected M getFilter(Query<T, F> query) {
                 return query.getFilter().map(mapper).orElse(null);
             }
         };
@@ -203,7 +203,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
         return new AppendableFilterDataProviderWrapper<T, F>(dataProvider) {
 
             @Override
-            protected F getFilter(Query<F> query) {
+            protected F getFilter(Query<T, F> query) {
                 return combineFilters(filter, query.getFilter());
             }
         };

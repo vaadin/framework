@@ -156,16 +156,15 @@ public class ComboBoxFilteringTest {
 
         Assert.assertEquals(
                 "ComboBox filtered out results with no filter applied",
-                totalMatches, dataProvider.size(new Query<String>()));
+                totalMatches, dataProvider.size(new Query<>()));
         Assert.assertEquals(
                 "ComboBox filtered out results with empty filter string",
-                totalMatches, dataProvider.size(new Query<String>("")));
+                totalMatches, dataProvider.size(new Query<>("")));
         Assert.assertEquals("ComboBox filtered out wrong number of results",
-                matchingResults,
-                dataProvider.size(new Query<String>(filterText)));
+                matchingResults, dataProvider.size(new Query<>(filterText)));
         Assert.assertEquals(
                 "ComboBox should have no results with a non-matching filter", 0,
-                dataProvider.size(new Query<String>(nonMatchingFilterText)));
+                dataProvider.size(new Query<>(nonMatchingFilterText)));
     }
 
     private List<Person> getPersonCollection() {

@@ -17,6 +17,7 @@ package com.vaadin.server.data;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,16 +25,19 @@ import java.util.Optional;
  * Immutable query object used to request data from a backend. Contains index
  * limits, sorting and filtering information.
  *
+ * @param <T>
+ *            bean type
  * @param <F>
  *            filter type
  *
  * @since 8.0
  */
-public class Query<F> implements Serializable {
+public class Query<T, F> implements Serializable {
 
     private final int offset;
     private final int limit;
     private final List<SortOrder<String>> sortOrders;
+    private final Comparator<T> inMemorySorting;
     private final F filter;
 
     /**
@@ -44,6 +48,7 @@ public class Query<F> implements Serializable {
         offset = 0;
         limit = Integer.MAX_VALUE;
         sortOrders = Collections.emptyList();
+        inMemorySorting = null;
         filter = null;
     }
 
@@ -59,6 +64,7 @@ public class Query<F> implements Serializable {
         offset = 0;
         limit = Integer.MAX_VALUE;
         sortOrders = Collections.emptyList();
+        inMemorySorting = null;
         this.filter = filter;
     }
 
@@ -71,15 +77,18 @@ public class Query<F> implements Serializable {
      * @param limit
      *            fetched item count
      * @param sortOrders
-     *            sorting order for fetching
+     *            sorting order for fetching; used for sorting backends
+     * @param inMemorySorting
+     *            comparator for sorting in-memory data
      * @param filter
      *            filtering for fetching; can be null
      */
     public Query(int offset, int limit, List<SortOrder<String>> sortOrders,
-            F filter) {
+            Comparator<T> inMemorySorting, F filter) {
         this.offset = offset;
         this.limit = limit;
         this.sortOrders = sortOrders;
+        this.inMemorySorting = inMemorySorting;
         this.filter = filter;
     }
 
@@ -105,7 +114,12 @@ public class Query<F> implements Serializable {
     }
 
     /**
-     * Gets the sorting for items to fetch.
+     * Gets the sorting for items to fetch. This list of sort orders is used for
+     * sorting backends.
+     * <p>
+     * <strong>Note: </strong> Sort orders and in-memory sorting are mutually
+     * exclusive. If the {@link DataProvider} handles one, it should ignore the
+     * other.
      *
      * @return list of sort orders
      */
@@ -120,5 +134,18 @@ public class Query<F> implements Serializable {
      */
     public Optional<F> getFilter() {
         return Optional.ofNullable(filter);
+    }
+
+    /**
+     * Gets the comparator for sorting in-memory data.
+     * <p>
+     * <strong>Note: </strong> Sort orders and in-memory sorting are mutually
+     * exclusive. If the {@link DataProvider} handles one, it should ignore the
+     * other.
+     *
+     * @return sorting comparator
+     */
+    public Comparator<T> getInMemorySorting() {
+        return inMemorySorting;
     }
 }

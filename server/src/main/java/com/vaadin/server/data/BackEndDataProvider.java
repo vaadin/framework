@@ -32,8 +32,8 @@ import com.vaadin.server.SerializableFunction;
  */
 public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
 
-    private final SerializableFunction<Query<F>, Stream<T>> request;
-    private final SerializableFunction<Query<F>, Integer> sizeCallback;
+    private final SerializableFunction<Query<T, F>, Stream<T>> request;
+    private final SerializableFunction<Query<T, F>, Integer> sizeCallback;
 
     /**
      * Constructs a new DataProvider to request data from an arbitrary back end
@@ -45,8 +45,8 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
      *            function that return the amount of data in back end for query
      */
     public BackEndDataProvider(
-            SerializableFunction<Query<F>, Stream<T>> request,
-            SerializableFunction<Query<F>, Integer> sizeCallback) {
+            SerializableFunction<Query<T, F>, Stream<T>> request,
+            SerializableFunction<Query<T, F>, Integer> sizeCallback) {
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
         this.request = request;
@@ -54,12 +54,12 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
     }
 
     @Override
-    public Stream<T> fetch(Query<F> query) {
+    public Stream<T> fetch(Query<T, F> query) {
         return request.apply(query);
     }
 
     @Override
-    public int size(Query<F> query) {
+    public int size(Query<T, F> query) {
         return sizeCallback.apply(query);
     }
 
@@ -77,9 +77,9 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
             List<SortOrder<String>> queryOrder = new ArrayList<>(
                     query.getSortOrders());
             queryOrder.addAll(sortOrders);
-            return request
-                    .apply(new Query<>(query.getLimit(), query.getOffset(),
-                            queryOrder, query.getFilter().orElse(null)));
+            return request.apply(new Query<>(query.getLimit(),
+                    query.getOffset(), queryOrder, query.getInMemorySorting(),
+                    query.getFilter().orElse(null)));
         }, sizeCallback);
     }
 

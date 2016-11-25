@@ -19,7 +19,8 @@ public class ItemDataProvider extends BackEndDataProvider<String, String> {
                 q -> size(q, size));
     }
 
-    private static Stream<String> itemStream(Query<String> q, int size) {
+    private static Stream<String> itemStream(Query<String, String> q,
+            int size) {
         Stream<String> stream = IntStream.range(0, size)
                 .mapToObj(i -> "Item " + i);
         String filterText = q.getFilter().orElse("").toLowerCase(Locale.US);
@@ -32,7 +33,7 @@ public class ItemDataProvider extends BackEndDataProvider<String, String> {
                 text -> text.toLowerCase(Locale.US).contains(filterText));
     }
 
-    private static int size(Query<String> q, int size) {
+    private static int size(Query<String, String> q, int size) {
         if (!q.getFilter().orElse("").isEmpty()) {
             return (int) itemStream(q, size).count();
         }

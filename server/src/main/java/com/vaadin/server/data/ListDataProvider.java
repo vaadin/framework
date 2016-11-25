@@ -18,6 +18,7 @@ package com.vaadin.server.data;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -34,7 +35,7 @@ public class ListDataProvider<T>
         extends AbstractDataProvider<T, SerializablePredicate<T>>
         implements AppendableFilterDataProvider<T, SerializablePredicate<T>> {
 
-    private Comparator<T> sortOrder;
+    private Comparator<T> sortOrder = null;
     private final Collection<T> backend;
 
     /**
@@ -67,13 +68,20 @@ public class ListDataProvider<T>
     }
 
     @Override
-    public Stream<T> fetch(Query<SerializablePredicate<T>> query) {
+    public Stream<T> fetch(Query<T, SerializablePredicate<T>> query) {
         Stream<T> stream = backend.stream()
                 .filter(t -> query.getFilter().orElse(p -> true).test(t));
-        if (sortOrder != null) {
-            stream = stream.sorted(sortOrder);
+
+        Optional<Comparator<T>> comparing = Stream
+                .of(sortOrder, query.getInMemorySorting())
+                .filter(c -> c != null)
+                .reduce((c1, c2) -> c1.thenComparing(c2));
+
+        if (comparing.isPresent()) {
+            stream = stream.sorted(comparing.get());
         }
-        return stream;
+
+        return stream.skip(query.getOffset()).limit(query.getLimit());
     }
 
     /**
@@ -116,7 +124,7 @@ public class ListDataProvider<T>
     }
 
     @Override
-    public int size(Query<SerializablePredicate<T>> query) {
+    public int size(Query<T, SerializablePredicate<T>> query) {
         return (int) backend.stream()
                 .filter(t -> query.getFilter().orElse(p -> true).test(t))
                 .count();

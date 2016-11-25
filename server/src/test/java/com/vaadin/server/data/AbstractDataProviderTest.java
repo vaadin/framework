@@ -32,12 +32,12 @@ public class AbstractDataProviderTest {
     private static class TestDataProvider
             extends AbstractDataProvider<Object, Object> {
         @Override
-        public Stream<Object> fetch(Query<Object> t) {
+        public Stream<Object> fetch(Query<Object, Object> t) {
             return null;
         }
 
         @Override
-        public int size(Query<Object> t) {
+        public int size(Query<Object, Object> t) {
             return 0;
         }
 

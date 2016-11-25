@@ -57,7 +57,7 @@ public interface DataProvider<T, F> extends Serializable {
      *            query with sorting and filtering
      * @return the size of the data provider
      */
-    int size(Query<F> t);
+    int size(Query<T, F> t);
 
     /**
      * Fetches data from this DataProvider using given {@code query}.
@@ -67,7 +67,7 @@ public interface DataProvider<T, F> extends Serializable {
      * @return the result of the query request: a stream of data objects, not
      *         {@code null}
      */
-    Stream<T> fetch(Query<F> query);
+    Stream<T> fetch(Query<T, F> query);
 
     /**
      * Refreshes all data based on currently available data in the underlying
