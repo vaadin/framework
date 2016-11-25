@@ -60,6 +60,7 @@ import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -165,8 +166,8 @@ public abstract class VaadinService implements Serializable {
                         .loadClass(classLoaderName);
                 final Constructor<?> c = classLoaderClass
                         .getConstructor(ClassLoader.class);
-                setClassLoader((ClassLoader) c.newInstance(
-                        getClass().getClassLoader()));
+                setClassLoader((ClassLoader) c
+                        .newInstance(getClass().getClassLoader()));
             } catch (final Exception e) {
                 throw new RuntimeException(
                         "Could not find specified class loader: "
@@ -411,10 +412,13 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the Vaadin service session initialization listener
+     * @return a registration object for removing the listener
      */
-    public void addSessionInitListener(SessionInitListener listener) {
+    public Registration addSessionInitListener(SessionInitListener listener) {
         eventRouter.addListener(SessionInitEvent.class, listener,
                 SESSION_INIT_METHOD);
+        return () -> eventRouter.removeListener(SessionInitEvent.class,
+                listener, SESSION_INIT_METHOD);
     }
 
     /**
@@ -425,7 +429,11 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the Vaadin service session initialization listener to remove.
+     * @deprecated use the {@link Registration} object returned by
+     *             {@link #addSessionInitListener(SessionInitListener)} to
+     *             remove the listener
      */
+    @Deprecated
     public void removeSessionInitListener(SessionInitListener listener) {
         eventRouter.removeListener(SessionInitEvent.class, listener,
                 SESSION_INIT_METHOD);
@@ -442,10 +450,14 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the vaadin service session destroy listener
+     * @return a registration object for removing the listener
      */
-    public void addSessionDestroyListener(SessionDestroyListener listener) {
+    public Registration addSessionDestroyListener(
+            SessionDestroyListener listener) {
         eventRouter.addListener(SessionDestroyEvent.class, listener,
                 SESSION_DESTROY_METHOD);
+        return () -> eventRouter.removeListener(SessionInitEvent.class,
+                listener, SESSION_DESTROY_METHOD);
     }
 
     /**
@@ -468,11 +480,11 @@ public abstract class VaadinService implements Serializable {
             for (final UI ui : uis) {
                 ui.accessSynchronously(() -> {
                     /*
-                    * close() called here for consistency so that it is
-                    * always called before a UI is removed.
-                    * UI.isClosing() is thus always true in UI.detach()
-                    * and associated detach listeners.
-                    */
+                     * close() called here for consistency so that it is always
+                     * called before a UI is removed. UI.isClosing() is thus
+                     * always true in UI.detach() and associated detach
+                     * listeners.
+                     */
                     if (!ui.isClosing()) {
                         ui.close();
                     }
@@ -483,8 +495,8 @@ public abstract class VaadinService implements Serializable {
             // have an API for using some other handler for session init and
             // destroy listeners
             eventRouter.fireEvent(
-                new SessionDestroyEvent(VaadinService.this, session),
-                session.getErrorHandler());
+                    new SessionDestroyEvent(VaadinService.this, session),
+                    session.getErrorHandler());
             session.setState(State.CLOSED);
         });
     }
@@ -496,7 +508,11 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the vaadin service session destroy listener
+     * @deprecated use the {@link Registration} object returned by
+     *             {@link #addSessionDestroyListener(SessionDestroyListener)} to
+     *             remove the listener
      */
+    @Deprecated
     public void removeSessionDestroyListener(SessionDestroyListener listener) {
         eventRouter.removeListener(SessionDestroyEvent.class, listener,
                 SESSION_DESTROY_METHOD);
@@ -1188,7 +1204,7 @@ public abstract class VaadinService implements Serializable {
             if (ui.isClosing()) {
                 ui.accessSynchronously(() -> {
                     getLogger().log(Level.FINER, "Removing closed UI {0}",
-                        ui.getUIId());
+                            ui.getUIId());
                     session.removeUI(ui);
                 });
             }
@@ -1207,8 +1223,8 @@ public abstract class VaadinService implements Serializable {
             if (!isUIActive(ui) && !ui.isClosing()) {
                 ui.accessSynchronously(() -> {
                     getLogger().log(Level.FINE,
-                        "Closing inactive UI #{0} in session {1}",
-                        new Object[] { ui.getUIId(), sessionId });
+                            "Closing inactive UI #{0} in session {1}",
+                            new Object[] { ui.getUIId(), sessionId });
                     ui.close();
                 });
             }
@@ -1487,7 +1503,7 @@ public abstract class VaadinService implements Serializable {
 
         final OutputStream out = response.getOutputStream();
         try (PrintWriter outWriter = new PrintWriter(
-            new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
             outWriter.print(reponseString);
         }
     }
@@ -1857,10 +1873,14 @@ public abstract class VaadinService implements Serializable {
      * @see #destroy()
      * @see #removeServiceDestroyListener(ServiceDestroyListener)
      * @see ServiceDestroyListener
+     * @return a registration object for removing the listener
      */
-    public void addServiceDestroyListener(ServiceDestroyListener listener) {
+    public Registration addServiceDestroyListener(
+            ServiceDestroyListener listener) {
         eventRouter.addListener(ServiceDestroyEvent.class, listener,
                 SERVICE_DESTROY_METHOD);
+        return () -> eventRouter.removeListener(ServiceDestroyEvent.class,
+                listener, SERVICE_DESTROY_METHOD);
     }
 
     /**
@@ -1870,7 +1890,11 @@ public abstract class VaadinService implements Serializable {
      * @since 7.2
      * @param listener
      *            the service destroy listener to remove
+     * @deprecated use the {@link Registration} object returned by
+     *             {@link #addServiceDestroyListener(ServiceDestroyListener)} to
+     *             remove the listener
      */
+    @Deprecated
     public void removeServiceDestroyListener(ServiceDestroyListener listener) {
         eventRouter.removeListener(ServiceDestroyEvent.class, listener,
                 SERVICE_DESTROY_METHOD);
