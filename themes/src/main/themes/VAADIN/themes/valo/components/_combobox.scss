@@ -388,6 +388,10 @@
     @include valo-selection-item-selected-style;
   }
 
+  .gwt-MenuItem-disabled {
+    opacity: 0.4;
+  }
+
   [class$="status"] {
     position: absolute;
     right: $v-border-radius;

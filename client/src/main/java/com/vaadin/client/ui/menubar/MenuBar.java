@@ -238,7 +238,7 @@ public class MenuBar extends Widget implements PopupListener {
         switch (DOM.eventGetType(event)) {
         case Event.ONCLICK: {
             // Fire an item's command when the user clicks on it.
-            if (item != null) {
+            if (item != null && !item.isDisabled()) {
                 doItemAction(item, true);
             }
             break;
