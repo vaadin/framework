@@ -106,6 +106,8 @@ public class FieldGroup implements Serializable {
 
     /**
      * Binds all fields to the properties in the item in use.
+     * 
+     * @since 7.7.5
      */
     protected void bindFields() {
         for (Field<?> f : fieldToPropertyId.keySet()) {
@@ -279,6 +281,8 @@ public class FieldGroup implements Serializable {
      *
      * @param field
      *         The field to be cleared
+     *         
+     * @since 7.7.5
      */
     protected void clearField(Field<?> field) {
         // Clear any possible existing binding to clear the field

@@ -36,6 +36,8 @@ public class AbstractFieldState extends TabIndexState {
      * <p>
      * This is not used in all fields, but needs to be here for the time being
      * (#20468).
+     * 
+     * @since 7.7.5
      */
     public Connector focusDelegate;
 }

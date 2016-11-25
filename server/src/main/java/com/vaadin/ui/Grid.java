@@ -5265,6 +5265,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Sets the column resize mode to use. The default mode is {@link ColumnResizeMode#ANIMATED}.
      *
      * @param mode a ColumnResizeMode value
+
+     * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
         getState().columnResizeMode = mode;
@@ -5274,6 +5276,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * Returns the current column resize mode. The default mode is {@link ColumnResizeMode#ANIMATED}.
      *
      * @return a ColumnResizeMode value
+     * 
+     * @since 7.7.5
      */
     public ColumnResizeMode getColumnResizeMode() {
         return getState(false).columnResizeMode;
