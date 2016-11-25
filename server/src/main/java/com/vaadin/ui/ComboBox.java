@@ -39,6 +39,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
+import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataKeyMapper;
 import com.vaadin.server.data.DataProvider;
@@ -251,6 +252,50 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         DataProvider<T, String> provider = DataProvider.create(items)
                 .convertFilter(filterText -> item -> getFilter()
                         .apply(filterText, item));
+        setDataProvider(provider);
+    }
+
+    /**
+     * Sets the data items of this listing and a simple string filter with which
+     * the item string and the text the user has input are compared.
+     * <p>
+     * Note that unlike {@link #setItems(Collection)}, no automatic case
+     * conversion is performed before the comparison.
+     *
+     * @param filterPredicate
+     *            predicate for comparing the item string (first parameter) and
+     *            the filter string (second parameter)
+     * @param items
+     *            the data items to display
+     */
+    public void setItems(
+            SerializableBiPredicate<String, String> filterPredicate,
+            Collection<T> items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> filterPredicate.test(
+                        getItemCaptionGenerator().apply(item), filterText));
+        setDataProvider(provider);
+    }
+
+    /**
+     * Sets the data items of this listing and a simple string filter with which
+     * the item string and the text the user has input are compared.
+     * <p>
+     * Note that unlike {@link #setItems(Collection)}, no automatic case
+     * conversion is performed before the comparison.
+     *
+     * @param filterPredicate
+     *            predicate for comparing the item string (first parameter) and
+     *            the filter string (second parameter)
+     * @param items
+     *            the data items to display
+     */
+    public void setItems(
+            SerializableBiPredicate<String, String> filterPredicate,
+            @SuppressWarnings("unchecked") T... items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> filterPredicate.test(
+                        getItemCaptionGenerator().apply(item), filterText));
         setDataProvider(provider);
     }
 
