@@ -41,6 +41,7 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
+import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperState;
 import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
@@ -501,5 +502,15 @@ public class DragAndDropWrapper extends CustomComponent
             child.attr(":drag-image", true);
             design.appendChild(child);
         }
+    }
+
+    @Override
+    protected DragAndDropWrapperState getState() {
+        return (DragAndDropWrapperState) super.getState();
+    }
+
+    @Override
+    protected DragAndDropWrapperState getState(boolean markAsDirty) {
+        return (DragAndDropWrapperState) super.getState(markAsDirty);
     }
 }

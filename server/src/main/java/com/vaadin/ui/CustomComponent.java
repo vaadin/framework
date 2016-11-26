@@ -19,6 +19,8 @@ package com.vaadin.ui;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.vaadin.shared.customcomponent.CustomComponentState;
+
 /**
  * Custom component provides a simple implementation of the {@link Component}
  * interface to allow creating new UI components by composition of existing
@@ -145,6 +147,16 @@ public class CustomComponent extends AbstractComponent
      */
     public int getComponentCount() {
         return (root != null ? 1 : 0);
+    }
+
+    @Override
+    protected CustomComponentState getState() {
+        return (CustomComponentState) super.getState();
+    }
+
+    @Override
+    protected CustomComponentState getState(boolean markAsDirty) {
+        return (CustomComponentState) super.getState(markAsDirty);
     }
 
 }
