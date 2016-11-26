@@ -30,6 +30,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
+import com.vaadin.shared.ui.embedded.EmbeddedState;
 
 /**
  * A component for embedding external objects.
@@ -555,4 +556,13 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
         // TODO Remove once LegacyComponent is no longer implemented
     }
 
+    @Override
+    protected EmbeddedState getState() {
+        return (EmbeddedState) super.getState();
+    }
+
+    @Override
+    protected EmbeddedState getState(boolean markAsDirty) {
+        return (EmbeddedState) super.getState(markAsDirty);
+    }
 }

@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.button.NativeButtonState;
+
 @SuppressWarnings("serial")
 public class NativeButton extends Button {
 
@@ -28,6 +30,16 @@ public class NativeButton extends Button {
 
     public NativeButton(String caption, ClickListener listener) {
         super(caption, listener);
+    }
+
+    @Override
+    protected NativeButtonState getState() {
+        return (NativeButtonState) super.getState();
+    }
+
+    @Override
+    protected NativeButtonState getState(boolean markAsDirty) {
+        return (NativeButtonState) super.getState(markAsDirty);
     }
 
 }

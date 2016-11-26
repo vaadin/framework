@@ -17,6 +17,8 @@ package com.vaadin.ui;
 
 import java.time.LocalDate;
 
+import com.vaadin.shared.ui.datefield.InlineDateFieldState;
+
 /**
  * A date entry component, which displays the actual date selector inline.
  *
@@ -55,6 +57,16 @@ public class InlineDateField extends AbstractDateField {
      */
     public InlineDateField(String caption) {
         super(caption);
+    }
+
+    @Override
+    protected InlineDateFieldState getState() {
+        return (InlineDateFieldState) super.getState();
+    }
+
+    @Override
+    protected InlineDateFieldState getState(boolean markAsDirty) {
+        return (InlineDateFieldState) super.getState(markAsDirty);
     }
 
 }
