@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Objects;
 
 import com.vaadin.server.NoInputStreamException;
 import com.vaadin.server.NoOutputStreamException;
@@ -30,7 +29,6 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.util.ReflectTools;
@@ -647,10 +645,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be added, not null
      */
-    public Registration addStartedListener(StartedListener listener) {
+    public void addStartedListener(StartedListener listener) {
         addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
-        return () -> removeListener(StartedEvent.class, listener,
-                UPLOAD_STARTED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #addStartedListener(StartedListener)}
+     **/
+    @Deprecated
+    public void addListener(StartedListener listener) {
+        addStartedListener(listener);
     }
 
     /**
@@ -659,9 +664,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be removed.
      */
-    @Deprecated
     public void removeStartedListener(StartedListener listener) {
         removeListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #removeStartedListener(StartedListener)}
+     **/
+    @Deprecated
+    public void removeListener(StartedListener listener) {
+        removeStartedListener(listener);
     }
 
     /**
@@ -670,10 +683,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be added, not null
      */
-    public Registration addFinishedListener(FinishedListener listener) {
+    public void addFinishedListener(FinishedListener listener) {
         addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
-        return () -> removeListener(FinishedEvent.class, listener,
-                UPLOAD_FINISHED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #addFinishedListener(FinishedListener)}
+     **/
+    @Deprecated
+    public void addListener(FinishedListener listener) {
+        addFinishedListener(listener);
     }
 
     /**
@@ -682,9 +702,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be removed.
      */
-    @Deprecated
     public void removeFinishedListener(FinishedListener listener) {
         removeListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #removeFinishedListener(FinishedListener)}
+     **/
+    @Deprecated
+    public void removeListener(FinishedListener listener) {
+        removeFinishedListener(listener);
     }
 
     /**
@@ -693,10 +721,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be added, not null
      */
-    public Registration addFailedListener(FailedListener listener) {
+    public void addFailedListener(FailedListener listener) {
         addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
-        return () -> removeListener(FailedEvent.class, listener,
-                UPLOAD_FAILED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #addFailedListener(FailedListener)}
+     **/
+    @Deprecated
+    public void addListener(FailedListener listener) {
+        addFailedListener(listener);
     }
 
     /**
@@ -705,9 +740,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be removed.
      */
-    @Deprecated
     public void removeFailedListener(FailedListener listener) {
         removeListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #removeFailedListener(FailedListener)}
+     **/
+    @Deprecated
+    public void removeListener(FailedListener listener) {
+        removeFailedListener(listener);
     }
 
     /**
@@ -716,10 +759,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be added, not null
      */
-    public Registration addSucceededListener(SucceededListener listener) {
+    public void addSucceededListener(SucceededListener listener) {
         addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
-        return () -> removeListener(SucceededEvent.class, listener,
-                UPLOAD_SUCCEEDED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #addSucceededListener(SucceededListener)}
+     **/
+    @Deprecated
+    public void addListener(SucceededListener listener) {
+        addSucceededListener(listener);
     }
 
     /**
@@ -728,9 +778,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to be removed.
      */
-    @Deprecated
     public void removeSucceededListener(SucceededListener listener) {
         removeListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #removeSucceededListener(SucceededListener)}
+     **/
+    @Deprecated
+    public void removeListener(SucceededListener listener) {
+        removeSucceededListener(listener);
     }
 
     /**
@@ -739,17 +797,20 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the progress listener to be added
      */
-    public Registration addProgressListener(ProgressListener listener) {
-        Objects.requireNonNull(listener, "Listener must not be null.");
+    public void addProgressListener(ProgressListener listener) {
         if (progressListeners == null) {
             progressListeners = new LinkedHashSet<>();
         }
         progressListeners.add(listener);
-        return () -> {
-            if (progressListeners != null) {
-                progressListeners.remove(listener);
-            }
-        };
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #addProgressListener(ProgressListener)}
+     **/
+    @Deprecated
+    public void addListener(ProgressListener listener) {
+        addProgressListener(listener);
     }
 
     /**
@@ -758,7 +819,6 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the progress listener to be removed
      */
-    @Deprecated
     public void removeProgressListener(ProgressListener listener) {
         if (progressListeners != null) {
             progressListeners.remove(listener);
@@ -771,11 +831,9 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the Listener to add, not null
      */
-    public Registration addChangeListener(ChangeListener listener) {
+    public void addChangeListener(ChangeListener listener) {
         super.addListener(EventId.CHANGE, ChangeEvent.class, listener,
                 ChangeListener.FILENAME_CHANGED);
-        return () -> super.removeListener(EventId.CHANGE, ChangeEvent.class,
-                listener);
     }
 
     /**
@@ -784,9 +842,17 @@ public class Upload extends AbstractLegacyComponent
      * @param listener
      *            the listener to be removed
      */
-    @Deprecated
     public void removeChangeListener(ChangeListener listener) {
         super.removeListener(EventId.CHANGE, ChangeEvent.class, listener);
+    }
+
+    /**
+     * @deprecated As of 7.0, replaced by
+     *             {@link #removeProgressListener(ProgressListener)}
+     **/
+    @Deprecated
+    public void removeListener(ProgressListener listener) {
+        removeProgressListener(listener);
     }
 
     /**
