@@ -30,16 +30,22 @@ import com.vaadin.server.Resource;
  */
 class DeclarativeIconGenerator<T> implements IconGenerator<T> {
 
+    private IconGenerator<T> fallback;
     private Map<T, Resource> captions = new HashMap<>();
+
+    public DeclarativeIconGenerator(IconGenerator<T> fallback) {
+        this.fallback = fallback;
+    }
 
     @Override
     public Resource apply(T item) {
-        return captions.get(item);
+        return captions.containsKey(item) ? captions.get(item)
+                : fallback.apply(item);
     }
 
     /**
      * Sets an {@code icon} for the {@code item}.
-     * 
+     *
      * @param item
      *            a data item
      * @param icon

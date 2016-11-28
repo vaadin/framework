@@ -324,8 +324,10 @@ public abstract class AbstractListing<T> extends AbstractComponent {
                     Boolean.class));
         }
 
-        setItemCaptionGenerator(new DeclarativeCaptionGenerator<>());
-        setItemIconGenerator(new DeclarativeIconGenerator<>());
+        setItemCaptionGenerator(
+                new DeclarativeCaptionGenerator<>(getItemCaptionGenerator()));
+        setItemIconGenerator(
+                new DeclarativeIconGenerator<>(getItemIconGenerator()));
 
         List<T> readItems = readItems(design, context);
         if (!readItems.isEmpty() && this instanceof Listing) {

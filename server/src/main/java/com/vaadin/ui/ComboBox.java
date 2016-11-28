@@ -84,11 +84,18 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      */
     protected static class DeclarativeStyleGenerator<T>
             implements StyleGenerator<T> {
+
+        private StyleGenerator<T> fallback;
         private Map<T, String> styles = new HashMap<>();
+
+        public DeclarativeStyleGenerator(StyleGenerator<T> fallback) {
+            this.fallback = fallback;
+        }
 
         @Override
         public String apply(T item) {
-            return styles.get(item);
+            return styles.containsKey(item) ? styles.get(item)
+                    : fallback.apply(item);
         }
 
         /**
@@ -581,7 +588,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     @Override
     protected List<T> readItems(Element design, DesignContext context) {
-        setStyleGenerator(new DeclarativeStyleGenerator<>());
+        setStyleGenerator(new DeclarativeStyleGenerator<>(getStyleGenerator()));
         return super.readItems(design, context);
     }
 

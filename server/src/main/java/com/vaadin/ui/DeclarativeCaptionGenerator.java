@@ -28,16 +28,22 @@ import java.util.Map;
  */
 class DeclarativeCaptionGenerator<T> implements ItemCaptionGenerator<T> {
 
+    private ItemCaptionGenerator<T> fallback;
     private Map<T, String> captions = new HashMap<>();
+
+    public DeclarativeCaptionGenerator(ItemCaptionGenerator<T> fallback) {
+        this.fallback = fallback;
+    }
 
     @Override
     public String apply(T item) {
-        return captions.get(item);
+        return captions.containsKey(item) ? captions.get(item)
+                : fallback.apply(item);
     }
 
     /**
      * Sets a {@code caption} for the {@code item}.
-     * 
+     *
      * @param item
      *            a data item
      * @param caption

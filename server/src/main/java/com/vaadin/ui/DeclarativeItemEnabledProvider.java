@@ -39,7 +39,7 @@ class DeclarativeItemEnabledProvider<T> implements SerializablePredicate<T> {
 
     /**
      * Adds the {@code item} to disabled items list.
-     * 
+     *
      * @param item
      *            a data item
      * @param caption
