@@ -141,7 +141,10 @@ public interface MethodEventSource extends Serializable {
      * @param method
      *            the method owned by the target that's registered to listen to
      *            events of type eventType.
+     * @deprecated use a {@link Registration} returned by
+     *             {@link #addListener(Class, Object, Method)}
      */
+    @Deprecated
     public void removeListener(Class<?> eventType, Object target,
             Method method);
 
@@ -172,7 +175,10 @@ public interface MethodEventSource extends Serializable {
      * @param methodName
      *            the name of the method owned by <code>target</code> that's
      *            registered to listen to events of type <code>eventType</code>.
+     * @deprecated use a {@link Registration} returned by
+     *             {@link #addListener(Class, Object, String)}
      */
+    @Deprecated
     public void removeListener(Class<?> eventType, Object target,
             String methodName);
 }

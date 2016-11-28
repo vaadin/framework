@@ -48,6 +48,7 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.event.EventRouter;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -822,13 +823,20 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *
      * @param listener
      *            the bootstrap listener to add
+     * @return a registration object for removing the listener
      */
-    public void addBootstrapListener(BootstrapListener listener) {
+    public Registration addBootstrapListener(BootstrapListener listener) {
         assert hasLock();
         eventRouter.addListener(BootstrapFragmentResponse.class, listener,
                 BOOTSTRAP_FRAGMENT_METHOD);
         eventRouter.addListener(BootstrapPageResponse.class, listener,
                 BOOTSTRAP_PAGE_METHOD);
+        return () -> {
+            eventRouter.removeListener(BootstrapFragmentResponse.class,
+                    listener, BOOTSTRAP_FRAGMENT_METHOD);
+            eventRouter.removeListener(BootstrapPageResponse.class, listener,
+                    BOOTSTRAP_PAGE_METHOD);
+        };
     }
 
     /**
@@ -838,7 +846,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *
      * @param listener
      *            the bootstrap listener to remove
+     * @deprecated Use a {@link Registration} object returned by
+     *             {@link #addBootstrapListener(BootstrapListener)} to remove a
+     *             listener
      */
+    @Deprecated
     public void removeBootstrapListener(BootstrapListener listener) {
         assert hasLock();
         eventRouter.removeListener(BootstrapFragmentResponse.class, listener,

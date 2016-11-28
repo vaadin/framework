@@ -182,8 +182,21 @@ public class ColorPickerSelect extends CustomField<Color> {
         }
     }
 
+    /**
+     * Returns the selected value.
+     * <p>
+     * Value can be {@code null} if component is not yet initialized via
+     * {@link #initContent()}
+     * 
+     * @see ColorPickerSelect#initContent()
+     * 
+     * @return the selected color, may be {@code null}
+     */
     @Override
     public Color getValue() {
+        if (grid == null) {
+            return null;
+        }
         return grid.getValue();
     }
 

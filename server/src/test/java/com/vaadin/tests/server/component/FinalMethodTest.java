@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.VaadinClasses;
@@ -23,35 +24,39 @@ public class FinalMethodTest {
     @Test
     public void testThatComponentsHaveNoFinalMethods() {
         HashSet<Class<?>> tested = new HashSet<>();
+        int count = 0;
         for (Class<? extends Component> c : VaadinClasses.getComponents()) {
             ensureNoFinalMethods(c, tested);
+            count++;
         }
+        Assert.assertTrue(count > 0);
     }
 
-    private void ensureNoFinalMethods(Class<?> c, HashSet<Class<?>> tested) {
-        if (tested.contains(c)) {
+    private void ensureNoFinalMethods(Class<?> clazz,
+            HashSet<Class<?>> tested) {
+        if (tested.contains(clazz)) {
             return;
         }
 
-        tested.add(c);
+        tested.add(clazz);
 
-        if (c == Object.class) {
+        if (clazz == null || clazz.equals(Object.class)) {
             return;
         }
-        System.out.println("Checking " + c.getName());
-        for (Method m : c.getDeclaredMethods()) {
+        System.out.println("Checking " + clazz.getName());
+        for (Method m : clazz.getDeclaredMethods()) {
             if (isPrivate(m)) {
                 continue;
             }
             if (isFinal(m)) {
-                String error = "Class " + c.getName() + " contains a "
+                String error = "Class " + clazz.getName() + " contains a "
                         + (isPublic(m) ? "public" : "non-public")
                         + " final method: " + m.getName();
                 // System.err.println(error);
                 throw new RuntimeException(error);
             }
         }
-        ensureNoFinalMethods(c.getSuperclass(), tested);
+        ensureNoFinalMethods(clazz.getSuperclass(), tested);
 
     }
 

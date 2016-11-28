@@ -74,6 +74,8 @@ public class ComponentDesignWriterUtility {
         WHITE_LIST_FQNS
                 .add("com.vaadin.server.communication.PushAtmosphereHandler");
         WHITE_LIST_FQNS
+                .add("com.vaadin.server.communication.PushRequestHandler$1");
+        WHITE_LIST_FQNS
                 .add("com.vaadin.server.communication.PushRequestHandler$2");
         WHITE_LIST_FQNS.add("com.vaadin.server.LegacyVaadinPortlet");
         WHITE_LIST_FQNS.add("com.vaadin.server.RestrictedRenderResponse");

@@ -33,6 +33,7 @@ import com.vaadin.annotations.DesignRoot;
 import com.vaadin.server.Constants;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.VaadinService;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.declarative.Design.ComponentFactory;
@@ -628,10 +629,12 @@ public class DesignContext implements Serializable {
      *
      * @param listener
      *            the component creation listener to be added
+     * @return a registration object for removing the listener
      */
-    public void addComponentCreationListener(
+    public Registration addComponentCreationListener(
             ComponentCreationListener listener) {
         listeners.add(listener);
+        return () -> listeners.remove(listener);
     }
 
     /**
@@ -639,7 +642,11 @@ public class DesignContext implements Serializable {
      *
      * @param listener
      *            the component creation listener to be removed
+     * @deprecated Use a {@link Registration} object returned by
+     *             {@link #addComponentCreationListener(ComponentCreationListener)}
+     *             a listener
      */
+    @Deprecated
     public void removeComponentCreationListener(
             ComponentCreationListener listener) {
         listeners.remove(listener);

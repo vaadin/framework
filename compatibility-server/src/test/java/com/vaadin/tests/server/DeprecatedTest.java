@@ -34,7 +34,7 @@ public class DeprecatedTest {
 
         File testRoot = new File(DeprecatedTest.class.getResource("/").toURI());
 
-        new ClasspathHelper(fqn -> false)
+        new ClasspathHelper()
                 .getVaadinClassesFromClasspath(
                         entry -> entry.contains("compatibility-server")
                                 && !testRoot.equals(new File(entry)))
@@ -45,7 +45,8 @@ public class DeprecatedTest {
                                     + " is in compatability package and it's not deprecated",
                             cls.getAnnotation(Deprecated.class));
                 });
-        Assert.assertNotEquals("Total number of checked classes", 0, count.get());
+        Assert.assertNotEquals("Total number of checked classes", 0,
+                count.get());
     }
 
 }

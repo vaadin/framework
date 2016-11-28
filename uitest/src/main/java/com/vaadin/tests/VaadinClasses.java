@@ -68,21 +68,6 @@ public class VaadinClasses {
         return classes;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static List<Class<?>> getBasicComponentTests() {
-        try {
-            // Given as name to avoid dependencies on testbench source folder
-            return (List) findClasses(
-                    Class.forName(
-                            "com.vaadin.tests.components.AbstractComponentTest"),
-                    "com.vaadin.tests.components");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
     private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
             String basePackage) throws IOException {
         return findClasses(baseClass, basePackage, new String[] {});

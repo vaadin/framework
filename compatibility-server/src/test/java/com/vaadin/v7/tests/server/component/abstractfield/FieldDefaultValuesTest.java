@@ -21,9 +21,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.ui.Slider;
 import com.vaadin.v7.tests.VaadinClasses;
 import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.Slider;
 
 public class FieldDefaultValuesTest {
 
@@ -45,7 +45,9 @@ public class FieldDefaultValuesTest {
 
     @Test
     public void testFieldsAreEmptyAfterClear() throws Exception {
+        int count = 0;
         for (Field<?> field : createFields()) {
+            count++;
             field.clear();
 
             if (field instanceof Slider) {
@@ -60,12 +62,13 @@ public class FieldDefaultValuesTest {
                         field.isEmpty());
             }
         }
+        Assert.assertTrue(count > 0);
     }
 
     @SuppressWarnings("rawtypes")
     private static List<Field<?>> createFields()
             throws InstantiationException, IllegalAccessException {
-        List<Field<?>> fieldInstances = new ArrayList<Field<?>>();
+        List<Field<?>> fieldInstances = new ArrayList<>();
 
         for (Class<? extends Field> fieldType : VaadinClasses.getFields()) {
             fieldInstances.add(fieldType.newInstance());

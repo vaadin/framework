@@ -41,6 +41,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -345,7 +346,7 @@ public class Navigator implements Serializable {
                     throw new RuntimeException(e);
                 }
                 // TODO error handling
-                
+
             }
             return null;
         }
@@ -975,8 +976,9 @@ public class Navigator implements Serializable {
      * @param listener
      *            Listener to invoke during a view change.
      */
-    public void addViewChangeListener(ViewChangeListener listener) {
+    public Registration addViewChangeListener(ViewChangeListener listener) {
         listeners.add(listener);
+        return () -> listeners.remove(listener);
     }
 
     /**
@@ -984,7 +986,11 @@ public class Navigator implements Serializable {
      *
      * @param listener
      *            Listener to remove.
+     * @deprecated use a {@link Registration} object returned by
+     *             {@link #addViewChangeListener(ViewChangeListener)} to remove
+     *             a listener
      */
+    @Deprecated
     public void removeViewChangeListener(ViewChangeListener listener) {
         listeners.remove(listener);
     }

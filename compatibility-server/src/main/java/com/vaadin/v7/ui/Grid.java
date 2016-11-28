@@ -57,6 +57,7 @@ import com.vaadin.server.JsonCodec;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.AbstractFocusable;
@@ -89,9 +90,9 @@ import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
 import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
+import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.event.SelectionEvent.SelectionNotifier;
 import com.vaadin.v7.server.communication.data.DataGenerator;
@@ -6155,8 +6156,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            the sort order change listener to add
      */
     @Override
-    public void addSortListener(SortListener listener) {
+    public Registration addSortListener(SortListener listener) {
         addListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
+        return () -> removeListener(SortEvent.class, listener,
+                SORT_ORDER_CHANGE_METHOD);
     }
 
     /**

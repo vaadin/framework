@@ -304,7 +304,7 @@ public class Slider extends AbstractField<Double> {
 
     @Override
     public Double getValue() {
-        return getState().value;
+        return getState(false).value;
     }
 
     @Override

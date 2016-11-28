@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.vaadin.data.sort.SortOrder;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 
 /**
@@ -95,8 +96,9 @@ public class SortEvent extends Component.Event {
          *
          * @param listener
          *            the sort order change listener to add
+         * @return a registration object for removing the listener
          */
-        public void addSortListener(SortListener listener);
+        public Registration addSortListener(SortListener listener);
 
         /**
          * Removes a sort order change listener previously added using
@@ -104,7 +106,10 @@ public class SortEvent extends Component.Event {
          *
          * @param listener
          *            the sort order change listener to remove
+         * @deprecated use a {@link Registration} returned by
+         *             {@link #addSortListener(SortListener)}
          */
+        @Deprecated
         public void removeSortListener(SortListener listener);
     }
 }

@@ -326,17 +326,17 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
     private TextField getUsernameField() {
         assert initialized;
-        return (TextField) getState().userNameFieldConnector;
+        return (TextField) getState(false).userNameFieldConnector;
     }
 
     private PasswordField getPasswordField() {
         assert initialized;
-        return (PasswordField) getState().passwordFieldConnector;
+        return (PasswordField) getState(false).passwordFieldConnector;
     }
 
     private Button getLoginButton() {
         assert initialized;
-        return (Button) getState().loginButtonConnector;
+        return (Button) getState(false).loginButtonConnector;
     }
 
     /**

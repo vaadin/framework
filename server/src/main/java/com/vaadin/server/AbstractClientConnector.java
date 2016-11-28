@@ -103,6 +103,7 @@ public abstract class AbstractClientConnector
     }
 
     @Override
+    @Deprecated
     public void removeAttachListener(AttachListener listener) {
         removeListener(AttachEvent.ATTACH_EVENT_IDENTIFIER, AttachEvent.class,
                 listener);
@@ -115,6 +116,7 @@ public abstract class AbstractClientConnector
     }
 
     @Override
+    @Deprecated
     public void removeDetachListener(DetachListener listener) {
         removeListener(DetachEvent.DETACH_EVENT_IDENTIFIER, DetachEvent.class,
                 listener);
@@ -940,8 +942,12 @@ public abstract class AbstractClientConnector
      * @param method
      *            the method owned by <code>target</code> that's registered to
      *            listen to events of type <code>eventType</code>.
+     * @deprecated use a {@link Registration} from
+     *             {@link #addListener(Class, Object, Method)} to remove a
+     *             listener
      */
     @Override
+    @Deprecated
     public void removeListener(Class<?> eventType, Object target,
             Method method) {
         if (eventRouter != null) {

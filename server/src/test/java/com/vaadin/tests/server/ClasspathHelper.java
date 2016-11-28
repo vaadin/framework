@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,16 +27,21 @@ import java.util.stream.Stream;
  * @author Vaadin Ltd
  *
  */
-class ClasspathHelper {
+public class ClasspathHelper {
 
-    public static final String COM_VAADIN_FILE_PREFIX = "com" + File.separatorChar + "vaadin" + File.separatorChar;
+    public static final String COM_VAADIN_FILE_PREFIX = "com"
+            + File.separatorChar + "vaadin" + File.separatorChar;
     private final Predicate<String> skipClassesFilter;
 
-    ClasspathHelper(Predicate<String> skipClassesFilter) {
+    public ClasspathHelper(Predicate<String> skipClassesFilter) {
         this.skipClassesFilter = skipClassesFilter;
     }
 
-    Stream<Class<?>> getVaadinClassesFromClasspath(
+    public ClasspathHelper() {
+        this(fqn -> false);
+    }
+
+    public Stream<Class<?>> getVaadinClassesFromClasspath(
             Predicate<String> classpathFilter,
             Predicate<Class<?>> classFilter) {
         return getRawClasspathEntries().stream().filter(classpathFilter)
@@ -45,7 +52,7 @@ class ClasspathHelper {
 
     }
 
-    Stream<Class<?>> getVaadinClassesFromClasspath(
+    public Stream<Class<?>> getVaadinClassesFromClasspath(
             Predicate<String> classpathFilter) {
         return getVaadinClassesFromClasspath(classpathFilter, cls -> true);
     }
@@ -65,9 +72,17 @@ class ClasspathHelper {
             } else if (classesRoot.getName().toLowerCase(Locale.ENGLISH)
                     .endsWith(".jar")) {
                 URI uri = URI.create("jar:file:" + classesRoot.getPath());
-                Path root = FileSystems
-                        .newFileSystem(uri, Collections.emptyMap())
-                        .getPath(File.separator);
+                FileSystem fileSystem;
+                try {
+                    fileSystem = FileSystems.getFileSystem(uri);
+                } catch (FileSystemNotFoundException e) {
+                    fileSystem = null;
+                }
+                if (fileSystem == null) {
+                    fileSystem = FileSystems.newFileSystem(uri,
+                            Collections.emptyMap());
+                }
+                Path root = fileSystem.getPath(File.separator);
                 return Files.walk(root).filter(Files::isRegularFile)
                         .filter(path -> path.toUri().getSchemeSpecificPart()
                                 .endsWith(".class"))

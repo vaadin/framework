@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 import com.vaadin.data.HasValue;
@@ -22,6 +23,7 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.TextField;
 
 /**
@@ -43,6 +45,8 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     /** The old value. */
     private String oldValue;
     private Registration valueChangeListenerRegistration = null;
+
+    private boolean readOnly;
 
     private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
@@ -187,21 +191,39 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     @Override
     public void setRequiredIndicatorVisible(boolean visible) {
-        super.setRequiredIndicatorVisible(visible);
+        field.setRequiredIndicatorVisible(visible);
     }
 
     @Override
     public boolean isRequiredIndicatorVisible() {
-        return super.isRequiredIndicatorVisible();
+        return field.isRequiredIndicatorVisible();
     }
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        super.setReadOnly(readOnly);
+        this.readOnly = readOnly;
+        updateColorComponents();
     }
 
     @Override
     public boolean isReadOnly() {
-        return super.isReadOnly();
+        return readOnly;
+    }
+
+    private void updateColorComponents() {
+        iterator().forEachRemaining(this::updateColorComponents);
+    }
+
+    private void updateColorComponents(Component component) {
+        if (component instanceof HasValue<?>) {
+            ((HasValue<?>) component).setReadOnly(isReadOnly());
+        }
+        if (component instanceof HasComponents) {
+            Iterator<Component> iterator = ((HasComponents) component)
+                    .iterator();
+            while (iterator.hasNext()) {
+                updateColorComponents(iterator.next());
+            }
+        }
     }
 }
