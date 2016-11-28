@@ -3,11 +3,15 @@ package com.vaadin.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.BeanBinder.BeanBinding;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.tests.data.bean.BeanToValidate;
 
 public class BeanBinderTest
@@ -170,5 +174,25 @@ public class BeanBinderTest
         assertEquals(1, errors.size());
         assertSame(field, errors.get(0).getField());
         assertEquals(message, errors.get(0).getMessage().get());
+    }
+
+    @Test
+    public void beanBindingChainingMethods() {
+        Method[] methods = BeanBinding.class.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            try {
+                Method actualMethod = BeanBinding.class.getMethod(
+                        method.getName(), method.getParameterTypes());
+
+                Assert.assertNotSame(
+                        actualMethod + " should be overridden in "
+                                + BeanBinding.class
+                                + " with more specific return type ",
+                        Binding.class, actualMethod.getReturnType());
+            } catch (NoSuchMethodException | SecurityException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

@@ -40,6 +40,7 @@ import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.SerializableBiConsumer;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.ui.Label;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -80,6 +81,32 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @Override
+        default BeanBinding<BEAN, TARGET> withValidator(
+                SerializablePredicate<? super TARGET> predicate,
+                ErrorMessageProvider errorMessageProvider) {
+            return (BeanBinding<BEAN, TARGET>) Binding.super.withValidator(
+                    predicate, errorMessageProvider);
+        }
+
+        @Override
+        default BeanBinding<BEAN, TARGET> withNullRepresentation(
+                TARGET nullRepresentation) {
+            return (BeanBinding<BEAN, TARGET>) Binding.super.withNullRepresentation(
+                    nullRepresentation);
+        }
+
+        @Override
+        public BeanBinding<BEAN, TARGET> setRequired(
+                ErrorMessageProvider errorMessageProvider);
+
+        @Override
+        public default BeanBinding<BEAN, TARGET> setRequired(
+                String errorMessage) {
+            return (BeanBinding<BEAN, TARGET>) Binding.super.setRequired(
+                    errorMessage);
+        }
+
+        @Override
         public <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter);
 
@@ -98,6 +125,16 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                 String errorMessage) {
             return (BeanBinding<BEAN, NEWTARGET>) Binding.super.withConverter(
                     toModel, toPresentation, errorMessage);
+        }
+
+        @Override
+        public BeanBinding<BEAN, TARGET> withValidationStatusHandler(
+                ValidationStatusHandler handler);
+
+        @Override
+        public default BeanBinding<BEAN, TARGET> withStatusLabel(Label label) {
+            return (BeanBinding<BEAN, TARGET>) Binding.super.withStatusLabel(
+                    label);
         }
 
         /**
@@ -173,6 +210,20 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                 Converter<TARGET, NEWTARGET> converter) {
             return (BeanBinding<BEAN, NEWTARGET>) super.withConverter(
                     converter);
+        }
+
+        @Override
+        public BeanBinding<BEAN, TARGET> withValidationStatusHandler(
+                ValidationStatusHandler handler) {
+            return (BeanBinding<BEAN, TARGET>) super.withValidationStatusHandler(
+                    handler);
+        }
+
+        @Override
+        public BeanBinding<BEAN, TARGET> setRequired(
+                ErrorMessageProvider errorMessageProvider) {
+            return (BeanBinding<BEAN, TARGET>) super.setRequired(
+                    errorMessageProvider);
         }
 
         @Override
