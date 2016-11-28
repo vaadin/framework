@@ -73,7 +73,7 @@ public class BinderConverterValidatorTest
 
     @Test
     public void bound_validatorsAreOK_noErrors() {
-        Binding<Person, String, String> binding = binder.forField(nameField);
+        Binding<Person, String> binding = binder.forField(nameField);
         binding.withValidator(Validator.alwaysPass()).bind(Person::getFirstName,
                 Person::setFirstName);
 
@@ -87,7 +87,7 @@ public class BinderConverterValidatorTest
     @SuppressWarnings("serial")
     @Test
     public void bound_validatorsFail_errors() {
-        Binding<Person, String, String> binding = binder.forField(nameField);
+        Binding<Person, String> binding = binder.forField(nameField);
         binding.withValidator(Validator.alwaysPass());
         String msg1 = "foo";
         String msg2 = "bar";
@@ -221,7 +221,7 @@ public class BinderConverterValidatorTest
         bean.setStatus("1");
         Binder<StatusBean> binder = new Binder<>();
 
-        Binding<StatusBean, String, String> binding = binder.forField(field)
+        Binding<StatusBean, String> binding = binder.forField(field)
                 .withConverter(presentation -> {
                     if (presentation.equals("OK")) {
                         return "1";
@@ -266,7 +266,7 @@ public class BinderConverterValidatorTest
     public void validate_failedBeanValidatorWithFieldValidator() {
         String msg = "foo";
 
-        Binding<Person, String, String> binding = binder.forField(nameField)
+        Binding<Person, String> binding = binder.forField(nameField)
                 .withValidator(new NotEmptyValidator<>(msg));
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -286,7 +286,7 @@ public class BinderConverterValidatorTest
     public void validate_failedBothBeanValidatorAndFieldValidator() {
         String msg1 = "foo";
 
-        Binding<Person, String, String> binding = binder.forField(nameField)
+        Binding<Person, String> binding = binder.forField(nameField)
                 .withValidator(new NotEmptyValidator<>(msg1));
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -322,7 +322,7 @@ public class BinderConverterValidatorTest
     @Test
     public void binder_saveIfValid() {
         String msg1 = "foo";
-        Binding<Person, String, String> binding = binder.forField(nameField)
+        Binding<Person, String> binding = binder.forField(nameField)
                 .withValidator(new NotEmptyValidator<>(msg1));
         binding.bind(Person::getFirstName, Person::setFirstName);
 
@@ -554,11 +554,11 @@ public class BinderConverterValidatorTest
     public void save_validationErrors_exceptionContainsErrors()
             throws ValidationException {
         String msg = "foo";
-        Binding<Person, String, String> nameBinding = binder.forField(nameField)
+        Binding<Person, String> nameBinding = binder.forField(nameField)
                 .withValidator(new NotEmptyValidator<>(msg));
         nameBinding.bind(Person::getFirstName, Person::setFirstName);
 
-        Binding<Person, String, Integer> ageBinding = binder.forField(ageField)
+        Binding<Person, Integer> ageBinding = binder.forField(ageField)
                 .withConverter(stringToInteger).withValidator(notNegative);
         ageBinding.bind(Person::getAge, Person::setAge);
 
@@ -585,7 +585,7 @@ public class BinderConverterValidatorTest
 
     @Test
     public void binderBindAndLoad_clearsErrors() {
-        Binding<Person, String, String> binding = binder.forField(nameField)
+        Binding<Person, String> binding = binder.forField(nameField)
                 .withValidator(notEmpty);
         binding.bind(Person::getFirstName, Person::setFirstName);
         binder.withValidator(bean -> !bean.getFirstName().contains("error"),
@@ -621,8 +621,8 @@ public class BinderConverterValidatorTest
         // bind a new field that has invalid value in bean
         TextField lastNameField = new TextField();
         person.setLastName("");
-        Binding<Person, String, String> binding2 = binder
-                .forField(lastNameField).withValidator(notEmpty);
+        Binding<Person, String> binding2 = binder.forField(lastNameField)
+                .withValidator(notEmpty);
         binding2.bind(Person::getLastName, Person::setLastName);
 
         // should not have error shown
@@ -663,12 +663,11 @@ public class BinderConverterValidatorTest
         final SerializablePredicate<String> lengthPredicate = v -> v
                 .length() > 2;
 
-        Binding<Person, String, String> firstNameBinding = binder
-                .forField(nameField).withValidator(lengthPredicate, "length");
+        Binding<Person, String> firstNameBinding = binder.forField(nameField)
+                .withValidator(lengthPredicate, "length");
         firstNameBinding.bind(Person::getFirstName, Person::setFirstName);
 
-        Binding<Person, String, String> lastNameBinding = binder
-                .forField(lastNameField)
+        Binding<Person, String> lastNameBinding = binder.forField(lastNameField)
                 .withValidator(v -> !nameField.getValue().isEmpty()
                         || lengthPredicate.test(v), "err")
                 .withValidator(lengthPredicate, "length");

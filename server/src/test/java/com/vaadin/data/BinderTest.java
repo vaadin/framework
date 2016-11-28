@@ -331,7 +331,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         TextField textField = new TextField();
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
 
-        Binding<Person, String, String> binding = binder.forField(textField);
+        Binding<Person, String> binding = binder.forField(textField);
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
 
         binding.setRequired("foobar");
@@ -357,7 +357,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         textField.setLocale(Locale.CANADA);
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
 
-        Binding<Person, String, String> binding = binder.forField(textField);
+        Binding<Person, String> binding = binder.forField(textField);
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
         AtomicInteger invokes = new AtomicInteger();
 

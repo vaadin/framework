@@ -92,15 +92,13 @@ public class Binder<BEAN> implements Serializable {
      *
      * @param <BEAN>
      *            the bean type
-     * @param <FIELDVALUE>
-     *            the value type of the field
      * @param <TARGET>
      *            the target data type of the binding, matches the field type
      *            until a converter has been set
      *
      * @see Binder#forField(HasValue)
      */
-    public interface Binding<BEAN, FIELDVALUE, TARGET> extends Serializable {
+    public interface Binding<BEAN, TARGET> extends Serializable {
 
         /**
          * Completes this binding using the given getter and setter functions
@@ -159,7 +157,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public Binding<BEAN, FIELDVALUE, TARGET> withValidator(
+        public Binding<BEAN, TARGET> withValidator(
                 Validator<? super TARGET> validator);
 
         /**
@@ -182,7 +180,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public default Binding<BEAN, FIELDVALUE, TARGET> withValidator(
+        public default Binding<BEAN, TARGET> withValidator(
                 SerializablePredicate<? super TARGET> predicate,
                 String message) {
             return withValidator(Validator.from(predicate, message));
@@ -209,7 +207,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public default Binding<BEAN, FIELDVALUE, TARGET> withValidator(
+        public default Binding<BEAN, TARGET> withValidator(
                 SerializablePredicate<? super TARGET> predicate,
                 ErrorMessageProvider errorMessageProvider) {
             return withValidator(
@@ -239,7 +237,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public <NEWTARGET> Binding<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter);
 
         /**
@@ -269,7 +267,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public default <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public default <NEWTARGET> Binding<BEAN, NEWTARGET> withConverter(
                 SerializableFunction<TARGET, NEWTARGET> toModel,
                 SerializableFunction<NEWTARGET, TARGET> toPresentation) {
             return withConverter(Converter.from(toModel, toPresentation,
@@ -307,7 +305,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        public default <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public default <NEWTARGET> Binding<BEAN, NEWTARGET> withConverter(
                 SerializableFunction<TARGET, NEWTARGET> toModel,
                 SerializableFunction<NEWTARGET, TARGET> toPresentation,
                 String errorMessage) {
@@ -323,7 +321,7 @@ public class Binder<BEAN> implements Serializable {
          *            the value to use instead of {@code null}
          * @return a new binding with null representation handling.
          */
-        public default Binding<BEAN, FIELDVALUE, TARGET> withNullRepresentation(
+        public default Binding<BEAN, TARGET> withNullRepresentation(
                 TARGET nullRepresentation) {
             return withConverter(
                     fieldValue -> Objects.equals(fieldValue, nullRepresentation)
@@ -337,7 +335,7 @@ public class Binder<BEAN> implements Serializable {
          *
          * @return the field for the binding
          */
-        public HasValue<FIELDVALUE> getField();
+        public HasValue<?> getField();
 
         /**
          * Sets the given {@code label} to show an error message if validation
@@ -371,8 +369,7 @@ public class Binder<BEAN> implements Serializable {
          *            label to show validation status for the field
          * @return this binding, for chaining
          */
-        public default Binding<BEAN, FIELDVALUE, TARGET> withStatusLabel(
-                Label label) {
+        public default Binding<BEAN, TARGET> withStatusLabel(Label label) {
             return withValidationStatusHandler(status -> {
                 label.setValue(status.getMessage().orElse(""));
                 // Only show the label when validation has failed
@@ -409,7 +406,7 @@ public class Binder<BEAN> implements Serializable {
          *            status change handler
          * @return this binding, for chaining
          */
-        public Binding<BEAN, FIELDVALUE, TARGET> withValidationStatusHandler(
+        public Binding<BEAN, TARGET> withValidationStatusHandler(
                 ValidationStatusHandler handler);
 
         /**
@@ -442,8 +439,7 @@ public class Binder<BEAN> implements Serializable {
          *            the error message to show for the invalid value
          * @return this binding, for chaining
          */
-        public default Binding<BEAN, FIELDVALUE, TARGET> setRequired(
-                String errorMessage) {
+        public default Binding<BEAN, TARGET> setRequired(String errorMessage) {
             return setRequired(context -> errorMessage);
         }
 
@@ -462,7 +458,7 @@ public class Binder<BEAN> implements Serializable {
          *            the provider for localized validation error message
          * @return this binding, for chaining
          */
-        public Binding<BEAN, FIELDVALUE, TARGET> setRequired(
+        public Binding<BEAN, TARGET> setRequired(
                 ErrorMessageProvider errorMessageProvider);
     }
 
@@ -478,7 +474,7 @@ public class Binder<BEAN> implements Serializable {
      *            until a converter has been set
      */
     protected static class BindingImpl<BEAN, FIELDVALUE, TARGET>
-            implements Binding<BEAN, FIELDVALUE, TARGET> {
+            implements Binding<BEAN, TARGET> {
 
         private final Binder<BEAN> binder;
 
@@ -534,7 +530,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public Binding<BEAN, FIELDVALUE, TARGET> withValidator(
+        public Binding<BEAN, TARGET> withValidator(
                 Validator<? super TARGET> validator) {
             checkUnbound();
             Objects.requireNonNull(validator, "validator cannot be null");
@@ -545,13 +541,13 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public <NEWTARGET> Binding<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter) {
             return withConverter(converter, true);
         }
 
         @Override
-        public Binding<BEAN, FIELDVALUE, TARGET> withValidationStatusHandler(
+        public Binding<BEAN, TARGET> withValidationStatusHandler(
                 ValidationStatusHandler handler) {
             checkUnbound();
             Objects.requireNonNull(handler, "handler cannot be null");
@@ -566,7 +562,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public Binding<BEAN, FIELDVALUE, TARGET> setRequired(
+        public Binding<BEAN, TARGET> setRequired(
                 ErrorMessageProvider errorMessageProvider) {
             checkUnbound();
 
@@ -601,7 +597,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called
          */
-        protected <NEWTARGET> Binding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        protected <NEWTARGET> Binding<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter,
                 boolean resetNullRepresentation) {
             checkUnbound();
@@ -920,7 +916,7 @@ public class Binder<BEAN> implements Serializable {
      *
      * @see #bind(HasValue, SerializableFunction, SerializableBiConsumer)
      */
-    public <FIELDVALUE> Binding<BEAN, FIELDVALUE, FIELDVALUE> forField(
+    public <FIELDVALUE> Binding<BEAN, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
         Objects.requireNonNull(field, "field cannot be null");
         // clear previous errors for this field and any bean level validation
@@ -1139,7 +1135,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         // Store old bean values so we can restore them if validators fail
-        Map<Binding<BEAN, ?, ?>, Object> oldValues = new HashMap<>();
+        Map<Binding<BEAN, ?>, Object> oldValues = new HashMap<>();
         bindings.forEach(
                 binding -> oldValues.put(binding, binding.getter.apply(bean)));
 
@@ -1435,7 +1431,7 @@ public class Binder<BEAN> implements Serializable {
      *            the handler to notify of status changes, not null
      * @return the new incomplete binding
      */
-    protected <FIELDVALUE, TARGET> Binding<BEAN, FIELDVALUE, TARGET> createBinding(
+    protected <FIELDVALUE, TARGET> Binding<BEAN, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             ValidationStatusHandler handler) {
         return new BindingImpl<>(this, field, converter, handler);

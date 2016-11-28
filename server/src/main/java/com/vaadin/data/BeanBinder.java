@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +41,6 @@ import com.vaadin.server.SerializableBiConsumer;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.util.ReflectTools;
-import java.util.Arrays;
 
 /**
  * A {@code Binder} subclass specialized for binding <em>beans</em>: classes
@@ -62,44 +62,41 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      *
      * @param <BEAN>
      *            the bean type
-     * @param <FIELDVALUE>
-     *            the field value type
      * @param <TARGET>
      *            the target property type
      */
-    public interface BeanBinding<BEAN, FIELDVALUE, TARGET>
-            extends Binding<BEAN, FIELDVALUE, TARGET> {
+    public interface BeanBinding<BEAN, TARGET> extends Binding<BEAN, TARGET> {
 
         @Override
-        public BeanBinding<BEAN, FIELDVALUE, TARGET> withValidator(
+        public BeanBinding<BEAN, TARGET> withValidator(
                 Validator<? super TARGET> validator);
 
         @Override
-        public default BeanBinding<BEAN, FIELDVALUE, TARGET> withValidator(
+        public default BeanBinding<BEAN, TARGET> withValidator(
                 SerializablePredicate<? super TARGET> predicate,
                 String message) {
-            return (BeanBinding<BEAN, FIELDVALUE, TARGET>) Binding.super.withValidator(
+            return (BeanBinding<BEAN, TARGET>) Binding.super.withValidator(
                     predicate, message);
         }
 
         @Override
-        public <NEWTARGET> BeanBinding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter);
 
         @Override
-        public default <NEWTARGET> BeanBinding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public default <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
                 SerializableFunction<TARGET, NEWTARGET> toModel,
                 SerializableFunction<NEWTARGET, TARGET> toPresentation) {
-            return (BeanBinding<BEAN, FIELDVALUE, NEWTARGET>) Binding.super.withConverter(
+            return (BeanBinding<BEAN, NEWTARGET>) Binding.super.withConverter(
                     toModel, toPresentation);
         }
 
         @Override
-        public default <NEWTARGET> BeanBinding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public default <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
                 SerializableFunction<TARGET, NEWTARGET> toModel,
                 SerializableFunction<NEWTARGET, TARGET> toPresentation,
                 String errorMessage) {
-            return (BeanBinding<BEAN, FIELDVALUE, NEWTARGET>) Binding.super.withConverter(
+            return (BeanBinding<BEAN, NEWTARGET>) Binding.super.withConverter(
                     toModel, toPresentation, errorMessage);
         }
 
@@ -141,7 +138,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      */
     protected static class BeanBindingImpl<BEAN, FIELDVALUE, TARGET>
             extends BindingImpl<BEAN, FIELDVALUE, TARGET>
-            implements BeanBinding<BEAN, FIELDVALUE, TARGET> {
+            implements BeanBinding<BEAN, TARGET> {
 
         private Method getter;
         private Method setter;
@@ -166,16 +163,15 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @Override
-        public BeanBinding<BEAN, FIELDVALUE, TARGET> withValidator(
+        public BeanBinding<BEAN, TARGET> withValidator(
                 Validator<? super TARGET> validator) {
-            return (BeanBinding<BEAN, FIELDVALUE, TARGET>) super.withValidator(
-                    validator);
+            return (BeanBinding<BEAN, TARGET>) super.withValidator(validator);
         }
 
         @Override
-        public <NEWTARGET> BeanBinding<BEAN, FIELDVALUE, NEWTARGET> withConverter(
+        public <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter) {
-            return (BeanBinding<BEAN, FIELDVALUE, NEWTARGET>) super.withConverter(
+            return (BeanBinding<BEAN, NEWTARGET>) super.withConverter(
                     converter);
         }
 
@@ -183,7 +179,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         public void bind(String propertyName) {
             checkUnbound();
 
-            Binding<BEAN, FIELDVALUE, Object> finalBinding;
+            Binding<BEAN, Object> finalBinding;
 
             finalBinding = withConverter(createConverter(), false);
 
@@ -281,10 +277,9 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     }
 
     @Override
-    public <FIELDVALUE> BeanBinding<BEAN, FIELDVALUE, FIELDVALUE> forField(
+    public <FIELDVALUE> BeanBinding<BEAN, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
-        return (BeanBinding<BEAN, FIELDVALUE, FIELDVALUE>) super.forField(
-                field);
+        return (BeanBinding<BEAN, FIELDVALUE>) super.forField(field);
     }
 
     /**
@@ -481,7 +476,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         ArrayList<Field> memberFieldInOrder = new ArrayList<>();
 
         while (searchClass != null) {
-            memberFieldInOrder.addAll(Arrays.asList(searchClass.getDeclaredFields()));
+            memberFieldInOrder
+                    .addAll(Arrays.asList(searchClass.getDeclaredFields()));
             searchClass = searchClass.getSuperclass();
         }
         return memberFieldInOrder;

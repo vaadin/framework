@@ -69,7 +69,7 @@ public class ValidationStatus<TARGET> implements Serializable {
 
     private final Status status;
     private final ValidationResult result;
-    private final Binding<?, ?, TARGET> binding;
+    private final Binding<?, TARGET> binding;
 
     /**
      * Convenience method for creating a {@link Status#UNRESOLVED} validation
@@ -83,7 +83,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      *            status was reset
      */
     public static <TARGET> ValidationStatus<TARGET> createUnresolvedStatus(
-            Binding<?, ?, TARGET> source) {
+            Binding<?, TARGET> source) {
         return new ValidationStatus<>(source, Status.UNRESOLVED, null);
     }
 
@@ -96,7 +96,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      * @param result
      *            the result of the validation
      */
-    public ValidationStatus(Binding<?, ?, TARGET> source,
+    public ValidationStatus(Binding<?, TARGET> source,
             ValidationResult result) {
         this(source, result.isError() ? Status.ERROR : Status.OK, result);
     }
@@ -114,7 +114,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      * @param result
      *            the related result, may be {@code null}
      */
-    public ValidationStatus(Binding<?, ?, TARGET> source, Status status,
+    public ValidationStatus(Binding<?, TARGET> source, Status status,
             ValidationResult result) {
         Objects.requireNonNull(source, "Event source may not be null");
         Objects.requireNonNull(status, "Status may not be null");
@@ -177,7 +177,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      *
      * @return the source binding
      */
-    public Binding<?, ?, TARGET> getBinding() {
+    public Binding<?, TARGET> getBinding() {
         return binding;
     }
 

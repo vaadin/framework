@@ -45,7 +45,7 @@ public class BinderStatusChangeTest
     public void bindBinding_unbound_eventWhenBoundEndnoEventsBeforeBound() {
         binder.addStatusChangeListener(this::statusChanged);
 
-        Binding<Person, String, String> binding = binder.forField(nameField);
+        Binding<Person, String> binding = binder.forField(nameField);
 
         nameField.setValue("");
         Assert.assertNull(event.get());
@@ -377,7 +377,7 @@ public class BinderStatusChangeTest
 
     @Test
     public void validateBinding_noValidationErrors_statusEventWithoutErrors() {
-        Binding<Person, String, String> binding = binder.forField(nameField);
+        Binding<Person, String> binding = binder.forField(nameField);
         binding.bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField)
                 .withConverter(new StringToIntegerConverter(""))
@@ -393,7 +393,7 @@ public class BinderStatusChangeTest
 
     @Test
     public void validateBinding_validationErrors_statusEventWithError() {
-        Binding<Person, String, String> binding = binder.forField(nameField)
+        Binding<Person, String> binding = binder.forField(nameField)
                 .withValidator(name -> false, "");
         binding.bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField)

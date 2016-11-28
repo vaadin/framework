@@ -249,15 +249,14 @@ public class BinderBookOfVaadinTest {
         // Slider for integers between 1 and 10
         Slider salaryLevelField = new Slider("Salary level", 1, 10);
 
-        Binding<BookPerson, String, String> b1 = binder
-                .forField(yearOfBirthField);
-        Binding<BookPerson, String, Integer> b2 = b1.withConverter(
+        Binding<BookPerson, String> b1 = binder.forField(yearOfBirthField);
+        Binding<BookPerson, Integer> b2 = b1.withConverter(
                 new StringToIntegerConverter("Must enter a number"));
         b2.bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
 
-        Binding<BookPerson, Double, Double> salaryBinding1 = binder
+        Binding<BookPerson, Double> salaryBinding1 = binder
                 .forField(salaryLevelField);
-        Binding<BookPerson, Double, Integer> salaryBinding2 = salaryBinding1
+        Binding<BookPerson, Integer> salaryBinding2 = salaryBinding1
                 .withConverter(Double::intValue, Integer::doubleValue);
         salaryBinding2.bind(BookPerson::getSalaryLevel,
                 BookPerson::setSalaryLevel);
@@ -305,8 +304,8 @@ public class BinderBookOfVaadinTest {
         DateField departing = new DateField("Departing");
         DateField returning = new DateField("Returning");
 
-        Binding<Trip, LocalDate, LocalDate> returnBinding = binder
-                .forField(returning).withValidator(
+        Binding<Trip, LocalDate> returnBinding = binder.forField(returning)
+                .withValidator(
                         returnDate -> !returnDate
                                 .isBefore(departing.getValue()),
                         "Cannot return before departing");
@@ -358,8 +357,8 @@ public class BinderBookOfVaadinTest {
         DateField departing = new DateField("Departing");
         DateField returning = new DateField("Returning");
 
-        Binding<Trip, LocalDate, LocalDate> returnBinding = binder
-                .forField(returning).withValidator(
+        Binding<Trip, LocalDate> returnBinding = binder.forField(returning)
+                .withValidator(
                         returnDate -> !returnDate
                                 .isBefore(departing.getValue()),
                         "Cannot return before departing");
