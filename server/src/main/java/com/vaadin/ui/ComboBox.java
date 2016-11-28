@@ -132,20 +132,14 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             if (getNewItemHandler() != null && itemValue != null
                     && itemValue.length() > 0) {
                 getNewItemHandler().accept(itemValue);
-                // rebuild list
-                filterstring = null;
             }
         }
 
         @Override
         public void setFilter(String filterText) {
-            filterstring = filterText;
             getDataCommunicator().setFilter(filterText);
         }
     };
-
-    // TODO: Check if this can be removed.
-    private String filterstring;
 
     /**
      * Handler for new items entered by the user.
