@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import org.jsoup.nodes.Element;
@@ -113,19 +112,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         }
     }
 
-    /**
-     * Filter can be used to customize the filtering of items based on user
-     * input.
-     *
-     * @see ComboBox#setFilter(ItemFilter)
-     * @param <T>
-     *            item type in the combo box
-     */
-    @FunctionalInterface
-    public interface ItemFilter<T>
-            extends BiFunction<String, T, Boolean>, Serializable {
-    }
-
     private ComboBoxServerRpc rpc = new ComboBoxServerRpc() {
         @Override
         public void createNewItem(String itemValue) {
@@ -149,15 +135,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private StyleGenerator<T> itemStyleGenerator = item -> null;
 
-    private ItemFilter<T> filter = (filterText, item) -> {
-        if (filterText == null) {
-            return true;
-        } else {
-            return getItemCaptionGenerator().apply(item)
+    private final SerializableBiPredicate<String, T> defaultFilterMethod = (
+            text, item) -> getItemCaptionGenerator().apply(item)
                     .toLowerCase(getLocale())
-                    .contains(filterText.toLowerCase(getLocale()));
-        }
-    };
+                    .contains(text.toLowerCase(getLocale()));
 
     /**
      * Constructs an empty combo box without a caption. The content of the combo
@@ -237,16 +218,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public void setItems(Collection<T> items) {
         DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> getFilter()
-                        .apply(filterText, item));
+                .convertFilter(filterText -> item -> defaultFilterMethod
+                        .test(filterText, item));
         setDataProvider(provider);
     }
 
     @Override
     public void setItems(@SuppressWarnings("unchecked") T... items) {
         DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> getFilter()
-                        .apply(filterText, item));
+                .convertFilter(filterText -> item -> defaultFilterMethod
+                        .test(filterText, item));
         setDataProvider(provider);
     }
 
@@ -542,28 +523,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     // HasValue methods delegated to the selection model
-
-    /**
-     * Returns the filter used to customize the list based on user input.
-     *
-     * @return the current filter, not null
-     */
-    public ItemFilter<T> getFilter() {
-        return filter;
-    }
-
-    /**
-     * Sets the filter used to customize the list based on user input. The
-     * default filter checks case-insensitively that the input string is
-     * contained in the item caption.
-     *
-     * @param filter
-     *            the filter function to use, not null
-     */
-    public void setFilter(ItemFilter<T> filter) {
-        Objects.requireNonNull(filter, "Item filter must not be null");
-        this.filter = filter;
-    }
 
     @Override
     public Registration addValueChangeListener(
