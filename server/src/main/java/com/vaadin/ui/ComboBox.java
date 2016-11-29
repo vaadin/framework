@@ -402,6 +402,43 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     /**
+     * Returns the empty selection caption.
+     * <p>
+     * The empty string {@code ""} is the default empty selection caption.
+     * 
+     * @see #setEmptySelectionAllowed(boolean)
+     * @see #isEmptySelectionAllowed()
+     * @see #setEmptySelectionCaption(String)
+     * @see #isSelected(Object)
+     * @see #select(Object)
+     * 
+     * @return the empty selection caption, not {@code null}
+     */
+    public String getEmptySelectionCaption() {
+        return getState(false).emptySelectionCaption;
+    }
+
+    /**
+     * Sets the empty selection caption.
+     * <p>
+     * The empty string {@code ""} is the default empty selection caption.
+     * <p>
+     * If empty selection is allowed via the
+     * {@link #setEmptySelectionAllowed(boolean)} method (it is by default) then
+     * the empty item will be shown with the given caption.
+     *
+     * @param caption
+     *            the caption to set, not {@code null}
+     * @see #getNullSelectionItemId()
+     * @see #isSelected(Object)
+     * @see #select(Object)
+     */
+    public void setEmptySelectionCaption(String caption) {
+        Objects.nonNull(caption);
+        getState().emptySelectionCaption = caption;
+    }
+
+    /**
      * Sets the suggestion pop-up's width as a CSS string. By using relative
      * units (e.g. "50%") it's possible to set the popup's width relative to the
      * ComboBox itself.

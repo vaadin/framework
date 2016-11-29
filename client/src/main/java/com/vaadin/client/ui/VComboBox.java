@@ -1592,7 +1592,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public final List<ComboBoxSuggestion> currentSuggestions = new ArrayList<ComboBoxSuggestion>();
+    public final List<ComboBoxSuggestion> currentSuggestions = new ArrayList<>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public String serverSelectedKey;
@@ -2067,7 +2067,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 Unit.PX);
     }
 
-    private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();
+    private static Set<Integer> navigationKeyCodes = new HashSet<>();
     static {
         navigationKeyCodes.add(KeyCodes.KEY_DOWN);
         navigationKeyCodes.add(KeyCodes.KEY_UP);

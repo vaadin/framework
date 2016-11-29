@@ -88,4 +88,9 @@ public class ComboBoxState extends AbstractSingleSelectState {
      */
     public String selectedItemCaption;
 
+    /**
+     * Caption for item which represents empty selection.
+     */
+    public String emptySelectionCaption = "";
+
 }
