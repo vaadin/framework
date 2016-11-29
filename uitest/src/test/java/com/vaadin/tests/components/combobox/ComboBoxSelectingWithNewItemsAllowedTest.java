@@ -65,6 +65,14 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
     }
 
     @Test
+    public void itemIsAddedWhenClickingOutside() {
+        clearInputAndType("foo");
+        findElement(By.tagName("body")).click();
+        assertOneMoreThanInitial();
+        assertThatSelectedValueIs("foo");
+    }
+
+    @Test
     public void matchingSuggestionIsSelectedWithEnter() {
         typeInputAndHitEnter("a0");
 
@@ -122,14 +130,14 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
     }
 
     @Test
-    public void noSelectionAfterMouseOut() {
+    public void selectionOnMouseOut() {
         typeInputAndHitEnter("a20");
         comboBoxElement.sendKeys(Keys.ARROW_DOWN, Keys.ARROW_DOWN);
 
         findElement(By.className("v-app")).click();
 
         assertInitialItemCount();
-        assertThatSelectedValueIs("a20");
+        assertThatSelectedValueIs("a21");
     }
 
     @Test
