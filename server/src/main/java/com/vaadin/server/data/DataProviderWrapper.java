@@ -21,9 +21,9 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
 /**
- * Wrapper class for modifying, chaining and replacing filters in a query. Used
- * to create a suitable {@link Query} for the underlying data provider with
- * correct filters.
+ * Wrapper class for modifying, chaining and replacing filters and sorting in a
+ * query. Used to create a suitable {@link Query} for the underlying data
+ * provider with correct filters and sorting.
  *
  * @author Vaadin Ltd.
  * @since
@@ -35,7 +35,7 @@ import com.vaadin.shared.Registration;
  * @param <M>
  *            underlying data provider filter type
  */
-public abstract class FilteringDataProviderWrapper<T, F, M>
+public abstract class DataProviderWrapper<T, F, M>
         implements DataProvider<T, F> {
 
     /**
@@ -47,7 +47,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
      *            the data provider filter type
      */
     protected abstract static class AppendableFilterDataProviderWrapper<T, F>
-            extends FilteringDataProviderWrapper<T, F, F>
+            extends DataProviderWrapper<T, F, F>
             implements AppendableFilterDataProvider<T, F> {
 
         /**
@@ -80,7 +80,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
      * @param dataProvider
      *            the wrapped data provider
      */
-    protected FilteringDataProviderWrapper(DataProvider<T, M> dataProvider) {
+    protected DataProviderWrapper(DataProvider<T, M> dataProvider) {
         this.dataProvider = dataProvider;
     }
 
@@ -141,7 +141,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
      */
     public static <T, F> DataProvider<T, Void> filter(
             DataProvider<T, F> dataProvider, F filter) {
-        return new FilteringDataProviderWrapper<T, Void, F>(dataProvider) {
+        return new DataProviderWrapper<T, Void, F>(dataProvider) {
 
             @Override
             protected F getFilter(Query<T, Void> query) {
@@ -173,7 +173,7 @@ public abstract class FilteringDataProviderWrapper<T, F, M>
     public static <T, F, M> DataProvider<T, F> convert(
             DataProvider<T, M> dataProvider,
             SerializableFunction<F, M> mapper) {
-        return new FilteringDataProviderWrapper<T, F, M>(dataProvider) {
+        return new DataProviderWrapper<T, F, M>(dataProvider) {
 
             @Override
             protected M getFilter(Query<T, F> query) {

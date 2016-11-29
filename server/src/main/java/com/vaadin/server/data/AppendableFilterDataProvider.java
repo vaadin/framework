@@ -40,7 +40,7 @@ public interface AppendableFilterDataProvider<T, F> extends DataProvider<T, F> {
      */
     public default AppendableFilterDataProvider<T, F> applyFilter(F filter) {
         Objects.requireNonNull(filter, "The applied filter can't be null");
-        return FilteringDataProviderWrapper.chain(this, filter);
+        return DataProviderWrapper.chain(this, filter);
     }
 
     /**

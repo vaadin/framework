@@ -101,7 +101,7 @@ public interface DataProvider<T, F> extends Serializable {
      */
     public default DataProvider<T, Void> setFilter(F filter) {
         Objects.requireNonNull(filter, "Filter can't be null");
-        return FilteringDataProviderWrapper.filter(this, filter);
+        return DataProviderWrapper.filter(this, filter);
     }
 
     /**
@@ -135,7 +135,7 @@ public interface DataProvider<T, F> extends Serializable {
     public default <M> DataProvider<T, M> convertFilter(
             SerializableFunction<M, F> mapper) {
         Objects.requireNonNull(mapper, "Filter mapper can't be null");
-        return FilteringDataProviderWrapper.convert(this, mapper);
+        return DataProviderWrapper.convert(this, mapper);
     }
 
     /**
