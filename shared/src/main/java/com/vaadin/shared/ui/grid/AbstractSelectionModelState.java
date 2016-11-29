@@ -15,18 +15,14 @@
  */
 package com.vaadin.shared.ui.grid;
 
+import com.vaadin.shared.communication.SharedState;
+
 /**
- * SharedState object for MultiSelectionModelImpl.
+ * Shared state for grid's abstract selection model.
  *
  * @author Vaadin Ltd
  *
  * @since 8.0
  */
-public class MultiSelectionModelState extends AbstractSelectionModelState {
-
-    /** Is the select all checkbox visible. */
-    public boolean selectAllCheckBoxVisible;
-    /** Select All -checkbox status. */
-    public boolean allSelected;
-
+public class AbstractSelectionModelState extends SharedState {
 }

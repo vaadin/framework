@@ -18,11 +18,9 @@ package com.vaadin.client.connectors.grid;
 import java.util.Optional;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
-import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
 import com.vaadin.client.widget.grid.selection.MultiSelectionRenderer;
@@ -53,7 +51,8 @@ import elemental.json.JsonObject;
  *
  */
 @Connect(com.vaadin.ui.components.grid.MultiSelectionModelImpl.class)
-public class MultiSelectionModelConnector extends AbstractExtensionConnector {
+public class MultiSelectionModelConnector
+        extends AbstractSelectionModelConnector {
 
     private HandlerRegistration selectAllHandler;
     private HandlerRegistration dataAvailable;
@@ -110,7 +109,7 @@ public class MultiSelectionModelConnector extends AbstractExtensionConnector {
     }
 
     @Override
-    protected void extend(ServerConnector target) {
+    protected void initSelectionModel() {
         getGrid().setSelectionModel(new MultiSelectionModel());
         // capture current rows so that can show selection update immediately
         dataAvailable = getGrid().addDataAvailableHandler(
@@ -128,22 +127,8 @@ public class MultiSelectionModelConnector extends AbstractExtensionConnector {
     }
 
     @Override
-    public GridConnector getParent() {
-        return (GridConnector) super.getParent();
-    }
-
-    @Override
     public MultiSelectionModelState getState() {
         return (MultiSelectionModelState) super.getState();
-    }
-
-    /**
-     * Shorthand for fetching the grid this selection model is bound to.
-     *
-     * @return the grid
-     */
-    protected Grid<JsonObject> getGrid() {
-        return getParent().getWidget();
     }
 
     @OnStateChange({ "selectAllCheckBoxVisible", "allSelected" })
@@ -232,15 +217,9 @@ public class MultiSelectionModelConnector extends AbstractExtensionConnector {
         }
     }
 
-    /**
-     * Returns whether the given item selected in grid or not.
-     *
-     * @param item
-     *            the item to check
-     * @return {@code true} if selected {@code false} if not
-     */
+    @Override
     protected boolean isSelected(JsonObject item) {
-        return getState().allSelected || SelectionModel.isItemSelected(item);
+        return getState().allSelected || super.isSelected(item);
     }
 
     /**

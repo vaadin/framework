@@ -30,16 +30,12 @@ import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.Query;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
 import com.vaadin.shared.ui.grid.MultiSelectionModelState;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.MultiSelect;
 import com.vaadin.util.ReflectTools;
-
-import elemental.json.JsonObject;
 
 /**
  * Multiselection model for grid.
@@ -56,7 +52,7 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the type of the selected item in grid.
  */
-public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
+public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         implements MultiSelectionModel<T> {
 
     /**
@@ -257,13 +253,6 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
         }
     }
 
-    @Override
-    public void remove() {
-        updateSelection(Collections.emptySet(), getSelectedItems(), false);
-
-        super.remove();
-    }
-
     /**
      * Adds a selection listener that will be called when the selection is
      * changed either by the user or programmatically.
@@ -277,15 +266,6 @@ public class MultiSelectionModelImpl<T> extends AbstractGridExtension<T>
         addListener(MultiSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
         return () -> removeListener(MultiSelectionEvent.class, listener);
-    }
-
-    @Override
-    public void generateData(T item, JsonObject jsonObject) {
-        // in case of all items selected, don't write individual items as
-        // seleted
-        if (isSelected(item)) {
-            jsonObject.put(DataCommunicatorConstants.SELECTED, true);
-        }
     }
 
     @Override

@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.connectors.grid;
 
-import com.vaadin.client.ServerConnector;
-import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -33,38 +31,43 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 @Connect(com.vaadin.ui.components.grid.SingleSelectionModelImpl.class)
-public class SingleSelectionModelConnector extends AbstractExtensionConnector {
+public class SingleSelectionModelConnector
+        extends AbstractSelectionModelConnector {
 
-    private ClickSelectHandler clickSelectHandler;
+    private ClickSelectHandler<JsonObject> clickSelectHandler;
+
+    /**
+     * Single selection model for grid.
+     */
+    protected class SingleSelectionModel implements SelectionModel<JsonObject> {
+
+        @Override
+        public void select(JsonObject item) {
+            getRpcProxy(SelectionServerRpc.class)
+                    .select(item.getString(DataCommunicatorConstants.KEY));
+        }
+
+        @Override
+        public void deselect(JsonObject item) {
+            getRpcProxy(SelectionServerRpc.class)
+                    .deselect(item.getString(DataCommunicatorConstants.KEY));
+        }
+
+        @Override
+        public boolean isSelected(JsonObject item) {
+            return SingleSelectionModelConnector.this.isSelected(item);
+        }
+
+        @Override
+        public void deselectAll() {
+            getRpcProxy(SelectionServerRpc.class).select(null);
+        }
+    }
 
     @Override
-    protected void extend(ServerConnector target) {
-        getParent().getWidget()
-                .setSelectionModel(new SelectionModel<JsonObject>() {
+    protected void initSelectionModel() {
+        getGrid().setSelectionModel(new SingleSelectionModel());
 
-                    @Override
-                    public void select(JsonObject item) {
-                        getRpcProxy(SelectionServerRpc.class).select(
-                                item.getString(DataCommunicatorConstants.KEY));
-                    }
-
-                    @Override
-                    public void deselect(JsonObject item) {
-                        getRpcProxy(SelectionServerRpc.class).deselect(
-                                item.getString(DataCommunicatorConstants.KEY));
-                    }
-
-                    @Override
-                    public boolean isSelected(JsonObject item) {
-                        return SelectionModel.isItemSelected(item);
-                    }
-
-                    @Override
-                    public void deselectAll() {
-                        getRpcProxy(SelectionServerRpc.class).select(null);
-                    }
-
-                });
         clickSelectHandler = new ClickSelectHandler<>(getParent().getWidget());
     }
 
@@ -74,11 +77,6 @@ public class SingleSelectionModelConnector extends AbstractExtensionConnector {
         if (clickSelectHandler != null) {
             clickSelectHandler.removeHandler();
         }
-    }
-
-    @Override
-    public GridConnector getParent() {
-        return (GridConnector) super.getParent();
     }
 
 }

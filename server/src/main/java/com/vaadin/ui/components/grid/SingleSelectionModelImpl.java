@@ -26,16 +26,13 @@ import java.util.Set;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
+import com.vaadin.shared.ui.grid.SingleSelectionModelState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.SingleSelectionModel;
 import com.vaadin.ui.SingleSelect;
 import com.vaadin.util.ReflectTools;
-
-import elemental.json.JsonObject;
 
 /**
  * Single selection model for grid.
@@ -46,7 +43,7 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the type of the selected item in grid.
  */
-public class SingleSelectionModelImpl<T> extends AbstractGridExtension<T>
+public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         implements SingleSelectionModel<T> {
 
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
@@ -79,6 +76,16 @@ public class SingleSelectionModelImpl<T> extends AbstractGridExtension<T>
                 }
             }
         });
+    }
+
+    @Override
+    protected SingleSelectionModelState getState() {
+        return (SingleSelectionModelState) super.getState();
+    }
+
+    @Override
+    protected SingleSelectionModelState getState(boolean markAsDirty) {
+        return (SingleSelectionModelState) super.getState(markAsDirty);
     }
 
     /**
@@ -222,23 +229,6 @@ public class SingleSelectionModelImpl<T> extends AbstractGridExtension<T>
         } else {
             return Collections.emptySet();
         }
-    }
-
-    @Override
-    public void generateData(T item, JsonObject jsonObject) {
-        if (isSelected(item)) {
-            jsonObject.put(DataCommunicatorConstants.SELECTED, true);
-        }
-    }
-
-    @Override
-    public void remove() {
-        // when selection model changes, firing an event for selection change
-        // event fired before removing so that parent is still intact (in case
-        // needed)
-        setSelectedFromServer(null);
-
-        super.remove();
     }
 
     /**
