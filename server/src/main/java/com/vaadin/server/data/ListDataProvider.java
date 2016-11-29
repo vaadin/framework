@@ -23,6 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.Registration;
 
 /**
  * {@link DataProvider} wrapper for {@link Collection}s. This class does not
@@ -73,7 +74,7 @@ public class ListDataProvider<T>
                 .filter(t -> query.getFilter().orElse(p -> true).test(t));
 
         Optional<Comparator<T>> comparing = Stream
-                .of(sortOrder, query.getInMemorySorting())
+                .of(query.getInMemorySorting(), sortOrder)
                 .filter(c -> c != null)
                 .reduce((c1, c2) -> c1.thenComparing(c2));
 
@@ -94,8 +95,22 @@ public class ListDataProvider<T>
      *            a {@link Comparator} providing the needed sorting order
      * @return new data provider with modified sorting
      */
+    @SuppressWarnings("serial")
     public ListDataProvider<T> sortingBy(Comparator<T> sortOrder) {
-        return new ListDataProvider<>(backend, sortOrder);
+        ListDataProvider<T> parent = this;
+        return new ListDataProvider<T>(backend, sortOrder) {
+
+            @Override
+            public Registration addDataProviderListener(
+                    DataProviderListener listener) {
+                return parent.addDataProviderListener(listener);
+            }
+
+            @Override
+            public void refreshAll() {
+                parent.refreshAll();
+            }
+        };
     }
 
     /**

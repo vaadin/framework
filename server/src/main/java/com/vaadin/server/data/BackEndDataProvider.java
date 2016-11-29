@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.shared.Registration;
 
 /**
  * A {@link DataProvider} for any back end.
@@ -71,16 +72,30 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
      *            directions
      * @return new data provider with modified sorting
      */
+    @SuppressWarnings("serial")
     public BackEndDataProvider<T, F> sortingBy(
             List<SortOrder<String>> sortOrders) {
-        return new BackEndDataProvider<>(query -> {
+        BackEndDataProvider<T, F> parent = this;
+        return new BackEndDataProvider<T, F>(query -> {
             List<SortOrder<String>> queryOrder = new ArrayList<>(
                     query.getSortOrders());
             queryOrder.addAll(sortOrders);
-            return request.apply(new Query<>(query.getLimit(),
-                    query.getOffset(), queryOrder, query.getInMemorySorting(),
+            return parent.fetch(new Query<>(query.getOffset(), query.getLimit(),
+                    queryOrder, query.getInMemorySorting(),
                     query.getFilter().orElse(null)));
-        }, sizeCallback);
+        }, sizeCallback) {
+
+            @Override
+            public Registration addDataProviderListener(
+                    DataProviderListener listener) {
+                return parent.addDataProviderListener(listener);
+            }
+
+            @Override
+            public void refreshAll() {
+                parent.refreshAll();
+            }
+        };
     }
 
     @Override
