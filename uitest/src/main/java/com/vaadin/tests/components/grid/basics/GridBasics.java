@@ -42,6 +42,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
+import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -494,6 +495,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         });
         selectionModelItem.addItem("multi", menuItem -> {
             switchToMultiSelect();
+        });
+        selectionModelItem.addItem("none", menuItem -> {
+            selectionListenerRegistration.remove();
+            grid.setSelectionModel(new NoSelectionModel<>(grid));
         });
 
         selectionModelItem.addItem("Select All", menuItem -> {

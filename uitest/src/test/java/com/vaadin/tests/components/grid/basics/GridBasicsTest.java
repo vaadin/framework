@@ -235,6 +235,10 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Selection model", "single");
     }
 
+    protected void setSelectionModelNone() {
+        selectMenuPath("Component", "State", "Selection model", "none");
+    }
+
     protected void setSelectAllCheckBoxVisible() {
         selectMenuPath("Component", "State", "Selection model",
                 "SelectAllCheckbox: Visible");
@@ -255,10 +259,4 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
 
         return header.findElement(By.tagName("input"));
     }
-
-    // TODO enable once select model none is added
-    // protected void setSelectionModelNone() {
-    // selectMenuPath("Component", "State", "Selection model", "none");
-    // }
-
 }
