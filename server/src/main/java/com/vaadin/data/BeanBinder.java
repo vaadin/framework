@@ -66,74 +66,76 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * @param <TARGET>
      *            the target property type
      */
-    public interface BeanBinding<BEAN, TARGET> extends Binding<BEAN, TARGET> {
+    public interface BeanBindingBuilder<BEAN, TARGET>
+            extends BindingBuilder<BEAN, TARGET> {
 
         @Override
-        public BeanBinding<BEAN, TARGET> withValidator(
+        public BeanBindingBuilder<BEAN, TARGET> withValidator(
                 Validator<? super TARGET> validator);
 
         @Override
-        public default BeanBinding<BEAN, TARGET> withValidator(
+        public default BeanBindingBuilder<BEAN, TARGET> withValidator(
                 SerializablePredicate<? super TARGET> predicate,
                 String message) {
-            return (BeanBinding<BEAN, TARGET>) Binding.super.withValidator(
+            return (BeanBindingBuilder<BEAN, TARGET>) BindingBuilder.super.withValidator(
                     predicate, message);
         }
 
         @Override
-        default BeanBinding<BEAN, TARGET> withValidator(
+        default BeanBindingBuilder<BEAN, TARGET> withValidator(
                 SerializablePredicate<? super TARGET> predicate,
                 ErrorMessageProvider errorMessageProvider) {
-            return (BeanBinding<BEAN, TARGET>) Binding.super.withValidator(
+            return (BeanBindingBuilder<BEAN, TARGET>) BindingBuilder.super.withValidator(
                     predicate, errorMessageProvider);
         }
 
         @Override
-        default BeanBinding<BEAN, TARGET> withNullRepresentation(
+        default BeanBindingBuilder<BEAN, TARGET> withNullRepresentation(
                 TARGET nullRepresentation) {
-            return (BeanBinding<BEAN, TARGET>) Binding.super.withNullRepresentation(
+            return (BeanBindingBuilder<BEAN, TARGET>) BindingBuilder.super.withNullRepresentation(
                     nullRepresentation);
         }
 
         @Override
-        public BeanBinding<BEAN, TARGET> setRequired(
+        public BeanBindingBuilder<BEAN, TARGET> setRequired(
                 ErrorMessageProvider errorMessageProvider);
 
         @Override
-        public default BeanBinding<BEAN, TARGET> setRequired(
+        public default BeanBindingBuilder<BEAN, TARGET> setRequired(
                 String errorMessage) {
-            return (BeanBinding<BEAN, TARGET>) Binding.super.setRequired(
+            return (BeanBindingBuilder<BEAN, TARGET>) BindingBuilder.super.setRequired(
                     errorMessage);
         }
 
         @Override
-        public <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
+        public <NEWTARGET> BeanBindingBuilder<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter);
 
         @Override
-        public default <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
+        public default <NEWTARGET> BeanBindingBuilder<BEAN, NEWTARGET> withConverter(
                 SerializableFunction<TARGET, NEWTARGET> toModel,
                 SerializableFunction<NEWTARGET, TARGET> toPresentation) {
-            return (BeanBinding<BEAN, NEWTARGET>) Binding.super.withConverter(
+            return (BeanBindingBuilder<BEAN, NEWTARGET>) BindingBuilder.super.withConverter(
                     toModel, toPresentation);
         }
 
         @Override
-        public default <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
+        public default <NEWTARGET> BeanBindingBuilder<BEAN, NEWTARGET> withConverter(
                 SerializableFunction<TARGET, NEWTARGET> toModel,
                 SerializableFunction<NEWTARGET, TARGET> toPresentation,
                 String errorMessage) {
-            return (BeanBinding<BEAN, NEWTARGET>) Binding.super.withConverter(
+            return (BeanBindingBuilder<BEAN, NEWTARGET>) BindingBuilder.super.withConverter(
                     toModel, toPresentation, errorMessage);
         }
 
         @Override
-        public BeanBinding<BEAN, TARGET> withValidationStatusHandler(
+        public BeanBindingBuilder<BEAN, TARGET> withValidationStatusHandler(
                 ValidationStatusHandler handler);
 
         @Override
-        public default BeanBinding<BEAN, TARGET> withStatusLabel(Label label) {
-            return (BeanBinding<BEAN, TARGET>) Binding.super.withStatusLabel(
+        public default BeanBindingBuilder<BEAN, TARGET> withStatusLabel(
+                Label label) {
+            return (BeanBindingBuilder<BEAN, TARGET>) BindingBuilder.super.withStatusLabel(
                     label);
         }
 
@@ -152,19 +154,21 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          *
          * @param propertyName
          *            the name of the property to bind, not null
+         * @return the newly created binding
          *
          * @throws IllegalArgumentException
          *             if the property name is invalid
          * @throws IllegalArgumentException
          *             if the property has no accessible getter
          *
-         * @see Binding#bind(SerializableFunction, SerializableBiConsumer)
+         * @see BindingBuilder#bind(SerializableFunction,
+         *      SerializableBiConsumer)
          */
-        public void bind(String propertyName);
+        public Binding<BEAN, TARGET> bind(String propertyName);
     }
 
     /**
-     * An internal implementation of {@link BeanBinding}.
+     * An internal implementation of {@link BeanBindingBuilder}.
      *
      * @param <BEAN>
      *            the bean type
@@ -174,11 +178,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      *            the target property type
      */
     protected static class BeanBindingImpl<BEAN, FIELDVALUE, TARGET>
-            extends BindingImpl<BEAN, FIELDVALUE, TARGET>
-            implements BeanBinding<BEAN, TARGET> {
-
-        private Method getter;
-        private Method setter;
+            extends BindingBuilderImpl<BEAN, FIELDVALUE, TARGET>
+            implements BeanBindingBuilder<BEAN, TARGET> {
 
         /**
          * Creates a new bean binding.
@@ -200,50 +201,60 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @Override
-        public BeanBinding<BEAN, TARGET> withValidator(
+        public BeanBindingBuilder<BEAN, TARGET> withValidator(
                 Validator<? super TARGET> validator) {
-            return (BeanBinding<BEAN, TARGET>) super.withValidator(validator);
+            return (BeanBindingBuilder<BEAN, TARGET>) super.withValidator(
+                    validator);
         }
 
         @Override
-        public <NEWTARGET> BeanBinding<BEAN, NEWTARGET> withConverter(
+        public <NEWTARGET> BeanBindingBuilder<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter) {
-            return (BeanBinding<BEAN, NEWTARGET>) super.withConverter(
+            return (BeanBindingBuilder<BEAN, NEWTARGET>) super.withConverter(
                     converter);
         }
 
         @Override
-        public BeanBinding<BEAN, TARGET> withValidationStatusHandler(
+        public BeanBindingBuilder<BEAN, TARGET> withValidationStatusHandler(
                 ValidationStatusHandler handler) {
-            return (BeanBinding<BEAN, TARGET>) super.withValidationStatusHandler(
+            return (BeanBindingBuilder<BEAN, TARGET>) super.withValidationStatusHandler(
                     handler);
         }
 
         @Override
-        public BeanBinding<BEAN, TARGET> setRequired(
+        public BeanBindingBuilder<BEAN, TARGET> setRequired(
                 ErrorMessageProvider errorMessageProvider) {
-            return (BeanBinding<BEAN, TARGET>) super.setRequired(
+            return (BeanBindingBuilder<BEAN, TARGET>) super.setRequired(
                     errorMessageProvider);
         }
 
         @Override
-        public void bind(String propertyName) {
+        public Binding<BEAN, TARGET> bind(String propertyName) {
             checkUnbound();
 
-            Binding<BEAN, Object> finalBinding;
+            BindingBuilder<BEAN, Object> finalBinding;
 
-            finalBinding = withConverter(createConverter(), false);
+            PropertyDescriptor descriptor = getDescriptor(propertyName);
+
+            Method getter = descriptor.getReadMethod();
+            Method setter = descriptor.getWriteMethod();
+
+            finalBinding = withConverter(
+                    createConverter(getter.getReturnType()), false);
 
             if (BeanUtil.checkBeanValidationAvailable()) {
                 finalBinding = finalBinding.withValidator(
                         new BeanValidator(getBinder().beanType, propertyName));
             }
 
-            PropertyDescriptor descriptor = getDescriptor(propertyName);
-            getter = descriptor.getReadMethod();
-            setter = descriptor.getWriteMethod();
-            finalBinding.bind(this::getValue, this::setValue);
-            getBinder().boundProperties.add(propertyName);
+            try {
+                return (Binding<BEAN, TARGET>) finalBinding.bind(
+                        bean -> invokeWrapExceptions(getter, bean),
+                        (bean, value) -> invokeWrapExceptions(setter, bean,
+                                value));
+            } finally {
+                getBinder().boundProperties.add(propertyName);
+            }
         }
 
         @Override
@@ -251,19 +262,13 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             return (BeanBinder<BEAN>) super.getBinder();
         }
 
-        private void setValue(BEAN bean, Object value) {
-            try {
-                if (setter != null) {
-                    setter.invoke(bean, value);
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+        private static Object invokeWrapExceptions(Method method, Object target,
+                Object... parameters) {
+            if (method == null) {
+                return null;
             }
-        }
-
-        private Object getValue(BEAN bean) {
             try {
-                return getter.invoke(bean);
+                return method.invoke(target, parameters);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
@@ -295,9 +300,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @SuppressWarnings("unchecked")
-        private Converter<TARGET, Object> createConverter() {
-            return Converter.from(
-                    fieldValue -> cast(fieldValue, getter.getReturnType()),
+        private Converter<TARGET, Object> createConverter(Class<?> getterType) {
+            return Converter.from(fieldValue -> cast(fieldValue, getterType),
                     propertyValue -> (TARGET) propertyValue, exception -> {
                         throw new RuntimeException(exception);
                     });
@@ -328,9 +332,9 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     }
 
     @Override
-    public <FIELDVALUE> BeanBinding<BEAN, FIELDVALUE> forField(
+    public <FIELDVALUE> BeanBindingBuilder<BEAN, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
-        return (BeanBinding<BEAN, FIELDVALUE>) super.forField(field);
+        return (BeanBindingBuilder<BEAN, FIELDVALUE>) super.forField(field);
     }
 
     /**
@@ -351,6 +355,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      *            the field to bind, not null
      * @param propertyName
      *            the name of the property to bind, not null
+     * @return the newly created binding
      *
      * @throws IllegalArgumentException
      *             if the property name is invalid
@@ -359,9 +364,9 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      *
      * @see #bind(HasValue, SerializableFunction, SerializableBiConsumer)
      */
-    public <FIELDVALUE> void bind(HasValue<FIELDVALUE> field,
-            String propertyName) {
-        forField(field).bind(propertyName);
+    public <FIELDVALUE> Binding<BEAN, FIELDVALUE> bind(
+            HasValue<FIELDVALUE> field, String propertyName) {
+        return forField(field).bind(propertyName);
     }
 
     @Override

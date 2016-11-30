@@ -13,7 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.ErrorMessage;
@@ -331,7 +331,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         TextField textField = new TextField();
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
 
-        Binding<Person, String> binding = binder.forField(textField);
+        BindingBuilder<Person, String> binding = binder.forField(textField);
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
 
         binding.setRequired("foobar");
@@ -357,7 +357,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         textField.setLocale(Locale.CANADA);
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
 
-        Binding<Person, String> binding = binder.forField(textField);
+        BindingBuilder<Person, String> binding = binder.forField(textField);
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
         AtomicInteger invokes = new AtomicInteger();
 

@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.ValidationStatus.Status;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
@@ -249,14 +250,15 @@ public class BinderBookOfVaadinTest {
         // Slider for integers between 1 and 10
         Slider salaryLevelField = new Slider("Salary level", 1, 10);
 
-        Binding<BookPerson, String> b1 = binder.forField(yearOfBirthField);
-        Binding<BookPerson, Integer> b2 = b1.withConverter(
+        BindingBuilder<BookPerson, String> b1 = binder
+                .forField(yearOfBirthField);
+        BindingBuilder<BookPerson, Integer> b2 = b1.withConverter(
                 new StringToIntegerConverter("Must enter a number"));
         b2.bind(BookPerson::getYearOfBirth, BookPerson::setYearOfBirth);
 
-        Binding<BookPerson, Double> salaryBinding1 = binder
+        BindingBuilder<BookPerson, Double> salaryBinding1 = binder
                 .forField(salaryLevelField);
-        Binding<BookPerson, Integer> salaryBinding2 = salaryBinding1
+        BindingBuilder<BookPerson, Integer> salaryBinding2 = salaryBinding1
                 .withConverter(Double::intValue, Integer::doubleValue);
         salaryBinding2.bind(BookPerson::getSalaryLevel,
                 BookPerson::setSalaryLevel);
@@ -308,9 +310,9 @@ public class BinderBookOfVaadinTest {
                 .withValidator(
                         returnDate -> !returnDate
                                 .isBefore(departing.getValue()),
-                        "Cannot return before departing");
+                        "Cannot return before departing")
+                .bind(Trip::getReturnDate, Trip::setReturnDate);
 
-        returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
         departing.addValueChangeListener(event -> returnBinding.validate());
 
         LocalDate past = LocalDate.now();
@@ -361,9 +363,9 @@ public class BinderBookOfVaadinTest {
                 .withValidator(
                         returnDate -> !returnDate
                                 .isBefore(departing.getValue()),
-                        "Cannot return before departing");
+                        "Cannot return before departing")
+                .bind(Trip::getReturnDate, Trip::setReturnDate);
 
-        returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
         departing.addValueChangeListener(event -> returnBinding.validate());
 
         LocalDate past = LocalDate.now();
