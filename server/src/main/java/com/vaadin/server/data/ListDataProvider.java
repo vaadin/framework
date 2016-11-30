@@ -40,8 +40,11 @@ public class ListDataProvider<T>
     private final Collection<T> backend;
 
     /**
-     * Constructs a new ListDataProvider. This method makes a protective copy of
-     * the contents of the Collection.
+     * Constructs a new ListDataProvider.
+     * <p>
+     * No protective copy is made of the list, and changes in the provided
+     * backing Collection will be visible via this data provider. The caller
+     * should copy the list if necessary.
      *
      * @param items
      *            the initial data, not null
@@ -56,6 +59,10 @@ public class ListDataProvider<T>
      * Chaining constructor for making modified {@link ListDataProvider}s. This
      * Constructor is used internally for making sorted and filtered variants of
      * a base data provider with actual data.
+     * <p>
+     * No protective copy is made of the list, and changes in the provided
+     * backing Collection will be visible via this data provider. The caller
+     * should copy the list if necessary.
      *
      * @param items
      *            the backend data from the original list data provider
@@ -123,7 +130,7 @@ public class ListDataProvider<T>
      * {@code sortingBy(Comparator.comparing(sortOrder))}.
      *
      * @param sortOrder
-     *            function to sort by
+     *            function to sort by, not {@code null}
      * @param <U>
      *            the type of the Comparable sort key
      * @return new data provider with modified sorting
