@@ -56,7 +56,7 @@ public class NativeSelectFocusBlurTest extends MultiBrowserTest {
         // Focus event is fired
         Assert.assertTrue(logContainsText("3. Focus Event"));
 
-        options.get(1).sendKeys(Keys.ARROW_UP, Keys.ENTER);
+        nativeSelect.sendKeys(Keys.ARROW_UP, Keys.ENTER);
         // No any new event
         Assert.assertFalse(logContainsText("4."));
     }

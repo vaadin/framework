@@ -49,12 +49,14 @@ public class CheckBoxGroupFocusBlurTest extends MultiBrowserTest {
         // click on the second checkbox doesn't fire anything
         Assert.assertFalse(logContainsText("2."));
 
-        // click in the middle between the first and the second (inside group).
-        WebElement first = checkBoxes.get(0);
-        int middle = (first.getLocation().y + first.getSize().height
-                + checkBoxes.get(1).getLocation().y) / 2;
-        new Actions(getDriver()).moveByOffset(first.getLocation().x, middle)
+        // move the cursor to the middle of the first element,
+        // offset to the middle of the two and perform click
+        new Actions(getDriver()).moveToElement(checkBoxes.get(0))
+                .moveByOffset(0,
+                        (checkBoxes.get(1).getLocation().y
+                                - checkBoxes.get(0).getLocation().y) / 2)
                 .click().build().perform();
+
         // no new events
         Assert.assertFalse(logContainsText("2."));
 

@@ -49,11 +49,12 @@ public class RadioButtonGroupFocusBlurTest extends MultiBrowserTest {
         // click on the second radio button doesn't fire anything
         Assert.assertFalse(logContainsText("2."));
 
-        // click in the middle between the first and the second (inside group).
-        WebElement first = radioButtons.get(0);
-        int middle = (first.getLocation().y + first.getSize().height
-                + radioButtons.get(1).getLocation().y) / 2;
-        new Actions(getDriver()).moveByOffset(first.getLocation().x, middle)
+        // move the cursor to the middle of the first element,
+        // offset to the middle of the two and perform click
+        new Actions(getDriver()).moveToElement(radioButtons.get(0))
+                .moveByOffset(0,
+                        (radioButtons.get(1).getLocation().y
+                                - radioButtons.get(0).getLocation().y) / 2)
                 .click().build().perform();
         // no new events
         Assert.assertFalse(logContainsText("2."));
