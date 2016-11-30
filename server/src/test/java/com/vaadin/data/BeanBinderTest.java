@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.BeanBinder.BeanBinding;
-import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.BeanBinder.BeanBindingBuilder;
+import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.tests.data.bean.BeanToValidate;
 
 public class BeanBinderTest
@@ -178,18 +178,18 @@ public class BeanBinderTest
 
     @Test
     public void beanBindingChainingMethods() {
-        Method[] methods = BeanBinding.class.getMethods();
+        Method[] methods = BeanBindingBuilder.class.getMethods();
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
             try {
-                Method actualMethod = BeanBinding.class.getMethod(
+                Method actualMethod = BeanBindingBuilder.class.getMethod(
                         method.getName(), method.getParameterTypes());
 
                 Assert.assertNotSame(
                         actualMethod + " should be overridden in "
-                                + BeanBinding.class
+                                + BeanBindingBuilder.class
                                 + " with more specific return type ",
-                        Binding.class, actualMethod.getReturnType());
+                        BindingBuilder.class, actualMethod.getReturnType());
             } catch (NoSuchMethodException | SecurityException e) {
                 throw new RuntimeException(e);
             }

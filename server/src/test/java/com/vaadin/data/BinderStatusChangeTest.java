@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.Person;
 
@@ -45,7 +46,7 @@ public class BinderStatusChangeTest
     public void bindBinding_unbound_eventWhenBoundEndnoEventsBeforeBound() {
         binder.addStatusChangeListener(this::statusChanged);
 
-        Binding<Person, String> binding = binder.forField(nameField);
+        BindingBuilder<Person, String> binding = binder.forField(nameField);
 
         nameField.setValue("");
         Assert.assertNull(event.get());
@@ -377,8 +378,8 @@ public class BinderStatusChangeTest
 
     @Test
     public void validateBinding_noValidationErrors_statusEventWithoutErrors() {
-        Binding<Person, String> binding = binder.forField(nameField);
-        binding.bind(Person::getFirstName, Person::setFirstName);
+        Binding<Person, String> binding = binder.forField(nameField)
+                .bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField)
                 .withConverter(new StringToIntegerConverter(""))
                 .bind(Person::getAge, Person::setAge);
@@ -394,8 +395,8 @@ public class BinderStatusChangeTest
     @Test
     public void validateBinding_validationErrors_statusEventWithError() {
         Binding<Person, String> binding = binder.forField(nameField)
-                .withValidator(name -> false, "");
-        binding.bind(Person::getFirstName, Person::setFirstName);
+                .withValidator(name -> false, "")
+                .bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField)
                 .withConverter(new StringToIntegerConverter(""))
                 .bind(Person::getAge, Person::setAge);
