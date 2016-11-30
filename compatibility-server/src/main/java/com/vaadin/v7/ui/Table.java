@@ -5191,7 +5191,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Concrete implementation of {@link DataBoundTransferable} for data
      * transferred from a table.
      *
-     * @see {@link DataBoundTransferable}.
+     * @see DataBoundTransferable
      *
      * @since 6.3
      */

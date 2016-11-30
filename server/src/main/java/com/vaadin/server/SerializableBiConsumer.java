@@ -21,7 +21,7 @@ import java.util.function.BiConsumer;
 /**
  * A {@link BiConsumer} that is also {@link Serializable}.
  * 
- * @see {@link BiConsumer}
+ * @see BiConsumer
  * @param <T>
  *            the type of the first argument to the operation
  * @param <U>

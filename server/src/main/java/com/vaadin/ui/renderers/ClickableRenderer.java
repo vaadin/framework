@@ -45,7 +45,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
      * An interface for listening to {@link RendererClickEvent renderer click
      * events}.
      *
-     * @see {@link ButtonRenderer#addClickListener(RendererClickListener)}
+     * @see ButtonRenderer#addClickListener(RendererClickListener)
      */
     public interface RendererClickListener<T> extends ConnectorEventListener {
 

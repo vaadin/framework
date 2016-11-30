@@ -2162,7 +2162,7 @@ public class Grid<T> extends AbstractListing<T>
      * @throws IllegalArgumentException
      *             if the same identifier is used for multiple columns
      *
-     * @see {@link AbstractRenderer}
+     * @see AbstractRenderer
      */
     public <V> Column<T, V> addColumn(String identifier,
             SerializableFunction<T, ? extends V> valueProvider,
@@ -2227,7 +2227,7 @@ public class Grid<T> extends AbstractListing<T>
      *
      * @return the new column
      *
-     * @see {@link AbstractRenderer}
+     * @see AbstractRenderer
      */
     public <V> Column<T, V> addColumn(
             SerializableFunction<T, ? extends V> valueProvider,

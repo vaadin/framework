@@ -7639,7 +7639,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param mode
      *            a selection mode value
-     * @see {@link SelectionMode}.
+     * @see SelectionMode
      */
     public void setSelectionMode(SelectionMode mode) {
         SelectionModel<T> model = mode.createModel();

@@ -1402,7 +1402,7 @@ public class Binder<BEAN> implements Serializable {
      * @see #removeBean()
      * @see #forField(HasValue)
      * @see #forSelect(AbstractMultiSelect)
-     * @See {@link #validate()}
+     * @see #validate()
      * @see Binding#validate()
      * @see Binding#bind(Object)
      *

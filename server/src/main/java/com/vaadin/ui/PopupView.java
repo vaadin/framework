@@ -407,8 +407,8 @@ public class PopupView extends AbstractComponent implements HasComponents {
          * @param event
          *            the event
          *
-         * @see {@link PopupVisibilityEvent}
-         * @see {@link PopupView#addListener(PopupVisibilityListener)}
+         * @see PopupVisibilityEvent
+         * @see PopupView#addListener(PopupVisibilityListener)
          */
         public void popupVisibilityChange(PopupVisibilityEvent event);
     }

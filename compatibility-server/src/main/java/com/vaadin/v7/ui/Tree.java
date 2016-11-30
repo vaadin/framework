@@ -1589,7 +1589,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Concrete implementation of {@link DataBoundTransferable} for data
      * transferred from a tree.
      *
-     * @see {@link DataBoundTransferable}.
+     * @see DataBoundTransferable
      *
      * @since 6.3
      */

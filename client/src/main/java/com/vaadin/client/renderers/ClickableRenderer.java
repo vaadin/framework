@@ -58,7 +58,7 @@ public abstract class ClickableRenderer<T, W extends Widget>
      * @param <R>
      *            the row type of the containing Grid
      *
-     * @see {@link ButtonRenderer#addClickHandler(RendererClickHandler)}
+     * @see ButtonRenderer#addClickHandler(RendererClickHandler)
      */
     public interface RendererClickHandler<R> extends EventHandler {
 

@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 /**
  * A {@link Consumer} that is also {@link Serializable}.
  * 
- * @see {@link Consumer}
+ * @see Consumer
  * @param <T>
  *            the type of the first argument to the operation
  * 
