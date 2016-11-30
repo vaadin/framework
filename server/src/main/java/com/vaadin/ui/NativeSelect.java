@@ -51,8 +51,11 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
      */
     public NativeSelect() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
-        addDataGenerator((item, json) -> json
-                .put(DataCommunicatorConstants.DATA, String.valueOf(item)));
+        addDataGenerator(
+                (item, json) -> json.put(DataCommunicatorConstants.DATA,
+                        getItemCaptionGenerator().apply(item)));
+
+        setItemCaptionGenerator(String::valueOf);
     }
 
     /**
@@ -136,5 +139,16 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         internalSetDataProvider(dataProvider);
+    }
+
+    @Override
+    public void setItemCaptionGenerator(
+            ItemCaptionGenerator<T> itemCaptionGenerator) {
+        super.setItemCaptionGenerator(itemCaptionGenerator);
+    }
+
+    @Override
+    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+        return super.getItemCaptionGenerator();
     }
 }
