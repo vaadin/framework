@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.vaadin.server.AbstractExtension;
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.GridSelectionModel;
 
 /**
@@ -35,16 +34,6 @@ import com.vaadin.ui.Grid.GridSelectionModel;
  */
 public class NoSelectionModel<T> extends AbstractExtension
         implements GridSelectionModel<T> {
-
-    /**
-     * Creates a new no selection model and attaches it for the given grid.
-     *
-     * @param grid
-     *            the grid to bind the selection model into
-     */
-    public NoSelectionModel(Grid<T> grid) {
-        extend(grid);
-    }
 
     @Override
     public Set<T> getSelectedItems() {

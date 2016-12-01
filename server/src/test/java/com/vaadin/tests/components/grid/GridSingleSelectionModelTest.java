@@ -24,7 +24,7 @@ import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.GridSelectionModel;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 
 import elemental.json.JsonObject;
@@ -38,10 +38,6 @@ public class GridSingleSelectionModelTest {
     public static class CustomSingleSelectionModel
             extends SingleSelectionModelImpl<String> {
         public final Map<String, Boolean> generatedData = new LinkedHashMap<>();
-
-        public CustomSingleSelectionModel(Grid<String> grid) {
-            super(grid);
-        }
 
         @Override
         public void generateData(String item, JsonObject jsonObject) {
@@ -70,7 +66,7 @@ public class GridSingleSelectionModelTest {
 
     @Test(expected = IllegalStateException.class)
     public void selectionModelChanged_usingPreviousSelectionModel_throws() {
-        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+        grid.setSelectionMode(SelectionMode.MULTI);
 
         selectionModel.select(PERSON_A);
     }
@@ -89,19 +85,20 @@ public class GridSingleSelectionModelTest {
                 customGrid.getSelectionModel().getFirstSelectedItem().get());
         assertEquals(Arrays.asList("Foo"), selectionChanges);
 
-        customGrid
-                .setSelectionModel(new CustomSingleSelectionModel(customGrid));
+        customGrid.setSelectionMode(SelectionMode.MULTI);
         assertEquals(Arrays.asList("Foo", null), selectionChanges);
     }
 
     @Test
     public void serverSideSelection_GridChangingSelectionModel_sendsUpdatedRowsToClient() {
-        Grid<String> customGrid = new Grid<>();
-        customGrid.setItems("Foo", "Bar", "Baz");
 
-        CustomSingleSelectionModel customModel = new CustomSingleSelectionModel(
-                customGrid);
-        customGrid.setSelectionModel(customModel);
+        CustomSingleSelectionModel customModel = new CustomSingleSelectionModel();
+        Grid<String> customGrid = new Grid<String>() {
+            {
+                setSelectionModel(customModel);
+            }
+        };
+        customGrid.setItems("Foo", "Bar", "Baz");
 
         customGrid.getDataCommunicator().beforeClientResponse(true);
 
@@ -126,7 +123,7 @@ public class GridSingleSelectionModelTest {
 
         // switch to another selection model to cause event
         customModel.generatedData.clear();
-        customGrid.setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
+        customGrid.setSelectionMode(SelectionMode.MULTI);
         customGrid.getDataCommunicator().beforeClientResponse(false);
 
         // since the selection model has been removed, it is no longer a data
@@ -274,8 +271,7 @@ public class GridSingleSelectionModelTest {
         Grid<String> grid = new Grid<>();
         grid.setItems("foo", "bar");
         String value = "foo";
-        SingleSelectionModelImpl<String> select = new SingleSelectionModelImpl<String>(
-                grid) {
+        SingleSelectionModelImpl<String> select = new SingleSelectionModelImpl<String>() {
             @Override
             public Registration addSelectionListener(
                     SingleSelectionListener<String> listener) {

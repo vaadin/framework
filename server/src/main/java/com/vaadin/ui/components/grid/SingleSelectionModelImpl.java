@@ -29,7 +29,6 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.grid.SingleSelectionModelState;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SingleSelectionModel;
 import com.vaadin.ui.SingleSelect;
 import com.vaadin.util.ReflectTools;
@@ -50,18 +49,10 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             .findMethod(SingleSelectionListener.class, "accept",
                     SingleSelectionEvent.class);
 
-    private final Grid<T> grid;
     private T selectedItem = null;
 
-    /**
-     * Constructs a new single selection model for the given grid.
-     *
-     * @param grid
-     *            the grid to bind the selection model into
-     */
-    public SingleSelectionModelImpl(Grid<T> grid) {
-        this.grid = grid;
-        extend(grid);
+    @Override
+    protected void init() {
         registerRpc(new SelectionServerRpc() {
 
             @Override
@@ -159,11 +150,11 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
 
         if (selectedItem != null) {
-            grid.getDataCommunicator().refresh(selectedItem);
+            getGrid().getDataCommunicator().refresh(selectedItem);
         }
         selectedItem = getData(key);
         if (selectedItem != null) {
-            grid.getDataCommunicator().refresh(selectedItem);
+            getGrid().getDataCommunicator().refresh(selectedItem);
         }
     }
 
@@ -183,7 +174,8 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), true));
+        fireEvent(
+                new SingleSelectionEvent<>(getGrid(), asSingleSelect(), true));
     }
 
     /**
@@ -203,7 +195,8 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), false));
+        fireEvent(
+                new SingleSelectionEvent<>(getGrid(), asSingleSelect(), false));
     }
 
     /**
@@ -218,7 +211,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             return null;
         } else {
             // TODO creates a key if item not in data provider
-            return grid.getDataCommunicator().getKeyMapper().key(item);
+            return getGrid().getDataCommunicator().getKeyMapper().key(item);
         }
     }
 
