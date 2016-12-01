@@ -39,6 +39,9 @@ public class ApplicationConstants implements Serializable {
     public static final String PUBLISHED_PROTOCOL_NAME = "published";
     public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";
+
+    public static final String REFRESH_PATH = APP_PATH + '/' + "REFRESH/";
+
     /**
      * Prefix used for theme resource URLs
      *

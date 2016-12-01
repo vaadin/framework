@@ -420,6 +420,9 @@ public class ApplicationConnection implements HasHandlers {
                 getUIConnector().getState().overlayContainerLabel);
         Roles.getAlertRole().setAriaRelevantProperty(overlayContainer,
                 RelevantValue.ADDITIONS);
+        if (ApplicationConfiguration.isDebugMode()) {
+            new RefreshRequestHandler(this).startRefreshRequest();
+        }
     }
 
     /**
