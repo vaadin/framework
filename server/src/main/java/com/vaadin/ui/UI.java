@@ -817,7 +817,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * @see ThreadLocal
      */
     public static void setCurrent(UI ui) {
-        CurrentInstance.setInheritable(UI.class, ui);
+        CurrentInstance.set(UI.class, ui);
     }
 
     /**
@@ -1434,12 +1434,10 @@ public abstract class UI extends AbstractSingleComponentContainer
      * <p>
      * Please note that the runnable might be invoked on a different thread or
      * later on the current thread, which means that custom thread locals might
-     * not have the expected values when the runnable is executed. Inheritable
-     * values in {@link CurrentInstance} will have the same values as when this
-     * method was invoked. {@link UI#getCurrent()},
-     * {@link VaadinSession#getCurrent()} and {@link VaadinService#getCurrent()}
-     * are set according to this UI before executing the runnable.
-     * Non-inheritable CurrentInstance values including
+     * not have the expected values when the command is executed.
+     * {@link UI#getCurrent()}, {@link VaadinSession#getCurrent()} and
+     * {@link VaadinService#getCurrent()} are set according to this UI before
+     * executing the command. Other standard CurrentInstance values such as
      * {@link VaadinService#getCurrentRequest()} and
      * {@link VaadinService#getCurrentResponse()} will not be defined.
      * </p>

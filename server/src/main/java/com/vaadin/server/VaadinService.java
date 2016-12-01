@@ -922,11 +922,10 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Gets the currently used Vaadin service. The current service is
-     * automatically defined when processing requests related to the service and
-     * in threads started at a point when the current service is defined (see
-     * {@link InheritableThreadLocal}). In other cases, (e.g. from background
-     * threads started in some other way), the current service is not
-     * automatically defined.
+     * automatically defined when processing requests related to the service
+     * (see {@link ThreadLocal}) and in {@link VaadinSession#access(Command)}
+     * and {@link UI#access(Command)}. In other cases, (e.g. from background
+     * threads, the current service is not automatically defined.
      *
      * @return the current Vaadin service instance if available, otherwise
      *         <code>null</code>
@@ -973,7 +972,7 @@ public abstract class VaadinService implements Serializable {
      * @param service
      */
     public static void setCurrent(VaadinService service) {
-        CurrentInstance.setInheritable(VaadinService.class, service);
+        CurrentInstance.set(VaadinService.class, service);
     }
 
     /**
@@ -1860,18 +1859,13 @@ public abstract class VaadinService implements Serializable {
             return;
         }
 
-        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
-                .getInstances(false);
-
         FutureAccess pendingAccess;
+        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
+                .setCurrent(session);
         try {
             while ((pendingAccess = session.getPendingAccessQueue()
                     .poll()) != null) {
                 if (!pendingAccess.isCancelled()) {
-                    CurrentInstance.clearAll();
-                    CurrentInstance.restoreInstances(
-                            pendingAccess.getCurrentInstances());
-                    CurrentInstance.setCurrent(session);
                     pendingAccess.run();
 
                     try {

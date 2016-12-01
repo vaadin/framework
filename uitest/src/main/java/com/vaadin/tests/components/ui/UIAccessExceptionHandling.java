@@ -96,7 +96,7 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
                                         .getCurrent() == UIAccessExceptionHandling.this;
 
                                 Map<Class<?>, CurrentInstance> instances = CurrentInstance
-                                        .getInstances(false);
+                                        .getInstances();
                                 CurrentInstance.clearAll();
 
                                 assert UI.getCurrent() == null;

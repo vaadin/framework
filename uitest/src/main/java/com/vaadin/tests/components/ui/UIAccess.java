@@ -257,7 +257,7 @@ public class UIAccess extends AbstractTestUIWithLog {
                     public void buttonClick(ClickEvent event) {
                         log.clear();
                         // accessSynchronously should maintain values
-                        CurrentInstance.setInheritable(
+                        CurrentInstance.set(
                                 CurrentInstanceTestType.class,
                                 new CurrentInstanceTestType(
                                         "Set before access"));
@@ -269,13 +269,13 @@ public class UIAccess extends AbstractTestUIWithLog {
                                 log.log("Test value in access: "
                                         + CurrentInstance.get(
                                                 CurrentInstanceTestType.class));
-                                CurrentInstance.setInheritable(
+                                CurrentInstance.set(
                                         CurrentInstanceTestType.class,
                                         new CurrentInstanceTestType(
                                                 "Set in access"));
                             }
                         });
-                        CurrentInstance.setInheritable(
+                        CurrentInstance.set(
                                 CurrentInstanceTestType.class,
                                 new CurrentInstanceTestType(
                                         "Set before run pending"));

@@ -297,14 +297,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Gets the currently used Vaadin servlet. The current servlet is
      * automatically defined when initializing the servlet and when processing
-     * requests to the server and in threads started at a point when the current
-     * servlet is defined (see {@link InheritableThreadLocal}). In other cases,
-     * (e.g. from background threads started in some other way), the current
-     * servlet is not automatically defined.
-     * <p>
-     * The current servlet is derived from the current service using
-     * {@link VaadinService#getCurrent()}
-     *
+     * requests to the server (see {@link ThreadLocal}) and in
+     * {@link VaadinSession#access(Command)} and {@link UI#access(Command)}. In
+     * other cases, (e.g. from background threads), the current servlet is not
+     * automatically defined.
      * @return the current Vaadin servlet instance if available, otherwise
      *         <code>null</code>
      *
