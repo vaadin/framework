@@ -31,6 +31,7 @@ import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.MultiSelectionModel;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -42,7 +43,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
-import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -488,7 +488,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                 null);
         selectionModelItem.addItem("single", menuItem -> {
             selectionListenerRegistration.remove();
-            grid.setSelectionModel(new SingleSelectionModelImpl<>(grid));
+            grid.setSelectionMode(SelectionMode.SINGLE);
             selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
                     .getSelectionModel())
                             .addSelectionListener(this::onSingleSelect);
@@ -498,7 +498,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         });
         selectionModelItem.addItem("none", menuItem -> {
             selectionListenerRegistration.remove();
-            grid.setSelectionModel(new NoSelectionModel<>(grid));
+            grid.setSelectionMode(SelectionMode.NONE);
         });
 
         selectionModelItem.addItem("Select All", menuItem -> {
@@ -534,11 +534,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void switchToMultiSelect() {
         if (!(grid.getSelectionModel() instanceof MultiSelectionModel)) {
             selectionListenerRegistration.remove();
-            MultiSelectionModelImpl<DataObject> model = new MultiSelectionModelImpl<>(
-                    grid);
-            grid.setSelectionModel(model);
-            selectionListenerRegistration = model
-                    .addSelectionListener(this::onMultiSelect);
+            ((MultiSelectionModelImpl<DataObject>) grid
+                    .setSelectionMode(SelectionMode.MULTI))
+                            .addSelectionListener(this::onMultiSelect);
         }
     }
 

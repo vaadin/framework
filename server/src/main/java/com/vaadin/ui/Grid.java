@@ -68,10 +68,13 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.renderers.AbstractRenderer;
@@ -131,12 +134,72 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
+     * Selection mode representing the built-in selection models in grid.
+     * <p>
+     * These enums can be used in {@link Grid#setSelectionMode(SelectionMode)}
+     * to easily switch between the build-in selection models.
+     *
+     * @see Grid#setSelectionMode(SelectionMode)
+     * @see Grid#setSelectionModel(GridSelectionModel)
+     */
+    public enum SelectionMode {
+
+        /**
+         * Single selection mode that maps to build-in
+         * {@link SingleSelectionModel}.
+         *
+         * @see SingleSelectionModelImpl
+         */
+        SINGLE {
+            @Override
+            protected <T> GridSelectionModel<T> createModel() {
+                return new SingleSelectionModelImpl<>();
+            }
+        },
+
+        /**
+         * Multiselection mode that maps to build-in
+         * {@link MultiSelectionModel}.
+         *
+         * @see MultiSelectionModelImpl
+         */
+        MULTI {
+            @Override
+            protected <T> GridSelectionModel<T> createModel() {
+                return new MultiSelectionModelImpl<>();
+            }
+        },
+
+        /**
+         * Selection model that doesn't allow selection.
+         *
+         * @see NoSelectionModel
+         */
+        NONE {
+            @Override
+            protected <T> GridSelectionModel<T> createModel() {
+                return new NoSelectionModel<>();
+            }
+        };
+
+        /**
+         * Creates the selection model to use with this enum.
+         *
+         * @param <T>
+         *            the type of items in the grid
+         * @return the selection model
+         */
+        protected abstract <T> GridSelectionModel<T> createModel();
+    }
+
+    /**
      * The server-side interface that controls Grid's selection state.
      * SelectionModel should extend {@link AbstractGridExtension}.
      * <p>
      *
      * @param <T>
      *            the grid bean type
+     * @see AbstractSelectionModel
      * @see SingleSelectionModel
      * @see MultiSelectionModel
      */
@@ -151,7 +214,7 @@ public class Grid<T> extends AbstractListing<T>
          * empty selection).
          */
         @Override
-        void remove();
+        public void remove();
     }
 
     /**
@@ -1672,29 +1735,33 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
-         *  @see #join(Grid.HeaderCell...)
+         * @see #join(Grid.HeaderCell...)
          * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         HeaderCell join(Set<HeaderCell> cellsToMerge);
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
-         *  @see #join(Set)
+         * @see #join(Set)
          * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         HeaderCell join(HeaderCell... cellsToMerge);
@@ -1797,12 +1864,14 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
          * @see #join(Grid.FooterCell...)
@@ -1811,18 +1880,20 @@ public class Grid<T> extends AbstractListing<T>
         FooterCell join(Set<FooterCell> cellsToMerge);
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
          * @see #join(Set)
          * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
-        FooterCell join(FooterCell ... cellsToMerge);
+        FooterCell join(FooterCell... cellsToMerge);
     }
 
     /**
@@ -2114,7 +2185,7 @@ public class Grid<T> extends AbstractListing<T>
 
         setDefaultHeaderRow(appendHeaderRow());
 
-        selectionModel = new SingleSelectionModelImpl<>(this);
+        setSelectionModel(new SingleSelectionModelImpl<>());
 
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
@@ -2967,7 +3038,7 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * Returns the selection model for this listing.
+     * Returns the selection model for this grid.
      *
      * @return the selection model, not null
      */
@@ -3021,17 +3092,68 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * Sets the selection model for this listing.
+     * Sets the selection model for the grid.
+     * <p>
+     * This method is for setting a custom selection model, and is
+     * {@code protected} because {@link #setSelectionMode(SelectionMode)} should
+     * be used for easy switching between built-in selection models.
      * <p>
      * The default selection model is {@link SingleSelectionModelImpl}.
+     * <p>
+     * To use a custom selection model, you can e.g. extend the grid call this
+     * method with your custom selection model.
      *
      * @param model
      *            the selection model to use, not {@code null}
+     *
+     * @see #setSelectionMode(SelectionMode)
      */
-    public void setSelectionModel(GridSelectionModel<T> model) {
+    @SuppressWarnings("unchecked")
+    protected void setSelectionModel(GridSelectionModel<T> model) {
         Objects.requireNonNull(model, "selection model cannot be null");
-        selectionModel.remove();
+        if (selectionModel != null) { // null when called from constructor
+            selectionModel.remove();
+        }
         selectionModel = model;
+
+        if (selectionModel instanceof AbstractListingExtension) {
+            ((AbstractListingExtension<T>) selectionModel).extend(this);
+        } else {
+            addExtension(selectionModel);
+        }
+    }
+
+    /**
+     * Sets the grid's selection mode.
+     * <p>
+     * The built-in selection models are:
+     * <ul>
+     * <li>{@link SelectionMode#SINGLE} -> {@link SingleSelectionModelImpl},
+     * <b>the default model</b></li>
+     * <li>{@link SelectionMode#MULTI} -> {@link MultiSelectionModelImpl}, with
+     * checkboxes in the first column for selection</li>
+     * <li>{@link SelectionMode#NONE} -> {@link NoSelectionModel}, preventing
+     * selection</li>
+     * </ul>
+     * <p>
+     * To use your custom selection model, you can use
+     * {@link #setSelectionModel(GridSelectionModel)}, see existing selection
+     * model implementations for example.
+     *
+     * @param selectionMode
+     *            the selection mode to switch to, not {@code null}
+     * @return the used selection model
+     *
+     * @see SelectionMode
+     * @see GridSelectionModel
+     * @see #setSelectionModel(GridSelectionModel)
+     */
+    public GridSelectionModel<T> setSelectionMode(SelectionMode selectionMode) {
+        Objects.requireNonNull(selectionMode, "Selection mode cannot be null.");
+        GridSelectionModel<T> model = selectionMode.createModel();
+        setSelectionModel(model);
+
+        return model;
     }
 
     @Override

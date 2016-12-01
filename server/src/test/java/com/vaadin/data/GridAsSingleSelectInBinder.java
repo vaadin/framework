@@ -15,8 +15,8 @@ import org.junit.Test;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.SingleSelect;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 
 public class GridAsSingleSelectInBinder
@@ -30,11 +30,8 @@ public class GridAsSingleSelectInBinder
         }
     }
 
-    private class CustomSingleSelectModel extends SingleSelectionModelImpl<Sex> {
-
-        public CustomSingleSelectModel(Grid<Sex> grid) {
-            super(grid);
-        }
+    private class CustomSingleSelectModel
+            extends SingleSelectionModelImpl<Sex> {
 
         public void setSelectedFromClient(Sex item) {
             setSelectedFromClient(itemToKey(item));
@@ -55,7 +52,7 @@ public class GridAsSingleSelectInBinder
 
     @Test(expected = IllegalStateException.class)
     public void boundGridInBinder_selectionModelChanged_throws() {
-        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+        grid.setSelectionMode(SelectionMode.MULTI);
 
         select.setValue(Sex.MALE);
     }
@@ -126,7 +123,7 @@ public class GridAsSingleSelectInBinder
     @Test
     public void addValueChangeListener_selectionUpdated_eventTriggeredForSelect() {
         GridWithCustomSingleSelectionModel grid = new GridWithCustomSingleSelectionModel();
-        CustomSingleSelectModel model = new CustomSingleSelectModel(grid);
+        CustomSingleSelectModel model = new CustomSingleSelectModel();
         grid.setSelectionModel(model);
         grid.setItems(Sex.values());
         select = grid.asSingleSelect();
