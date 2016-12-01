@@ -20,11 +20,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Listing;
+import com.vaadin.tests.design.DeclarativeTestBaseBase;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.AbstractMultiSelect;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * {@link AbstractMultiSelect} component declarative test.
@@ -50,19 +53,29 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
             IllegalAccessException, InvocationTargetException {
         List<String> items = Arrays.asList("foo", "bar", "foobar");
 
+        String type = "com.vaadin.SomeType";
+        String attribute = "data-type";
+
         String design = String.format(
-                "<%s>\n" + "<option item='foo' selected>foo1</option>\n"
+                "<%s %s='%s'>\n" + "<option item='foo' selected>foo1</option>\n"
                         + "<option item='bar'>bar1</option>"
                         + "<option item='foobar' selected>foobar1</option></%s>",
-                getComponentTag(), getComponentTag());
+                getComponentTag(), attribute, type, getComponentTag());
         T component = getComponentClass().newInstance();
         component.setItems(items);
         component.select("foo");
         component.select("foobar");
         component.setItemCaptionGenerator(item -> item + "1");
 
-        testRead(design, component);
-        testWrite(design, component, true);
+        DesignContext context = readComponentAndCompare(design, component);
+        Assert.assertEquals(type,
+                context.getCustomAttributes(context.getRootComponent())
+                        .get(attribute));
+        context = new DesignContext();
+        context.setCustomAttribute(component, attribute, type);
+        context.setShouldWriteDataDelegate(
+                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        testWrite(component, design, context);
     }
 
     @Override
@@ -71,18 +84,28 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
             IllegalAccessException, InvocationTargetException {
         List<String> items = Arrays.asList("foo", "bar", "foobar");
 
+        String type = "com.vaadin.SomeType";
+        String attribute = "data-type";
+
         String design = String.format(
-                "<%s>\n" + "<option item='foo' selected>foo1</option>\n"
+                "<%s %s='%s'>\n" + "<option item='foo' selected>foo1</option>\n"
                         + "<option item='bar'>bar1</option>"
                         + "<option item='foobar' selected>foobar1</option></%s>",
-                getComponentTag(), getComponentTag());
+                getComponentTag(), attribute, type, getComponentTag());
         T component = getComponentClass().newInstance();
         component.setItems(items);
         component.setValue(new HashSet<>(Arrays.asList("foo", "foobar")));
         component.setItemCaptionGenerator(item -> item + "1");
 
-        testRead(design, component);
-        testWrite(design, component, true);
+        DesignContext context = readComponentAndCompare(design, component);
+        Assert.assertEquals(type,
+                context.getCustomAttributes(context.getRootComponent())
+                        .get(attribute));
+        context = new DesignContext();
+        context.setCustomAttribute(component, attribute, type);
+        context.setShouldWriteDataDelegate(
+                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        testWrite(component, design, context);
     }
 
     @Override
