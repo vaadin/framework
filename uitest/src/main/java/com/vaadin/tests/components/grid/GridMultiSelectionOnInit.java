@@ -21,8 +21,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.RadioButtonGroup;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
 
 public class GridMultiSelectionOnInit extends AbstractTestUI {
@@ -32,9 +32,8 @@ public class GridMultiSelectionOnInit extends AbstractTestUI {
         final Grid<String> grid = new Grid<>();
         grid.setItems("Foo 1", "Foo 2");
         grid.addColumn(item -> item);
-        MultiSelectionModelImpl<String> model = new MultiSelectionModelImpl<>(
-                grid);
-        grid.setSelectionModel(model);
+        grid.setSelectionMode(SelectionMode.MULTI);
+
         addComponent(grid);
 
         addComponent(new Button("Select rows",
@@ -48,9 +47,9 @@ public class GridMultiSelectionOnInit extends AbstractTestUI {
                 Arrays.asList(SelectAllCheckBoxVisible.VISIBLE,
                         SelectAllCheckBoxVisible.HIDDEN,
                         SelectAllCheckBoxVisible.DEFAULT));
-        rbg.setValue(model.getSelectAllCheckBoxVisible());
+        rbg.setValue(grid.getSelectAllCheckBoxVisible());
         rbg.addValueChangeListener(
-                event -> model.setSelectAllCheckBoxVisible(event.getValue()));
+                event -> grid.setSelectAllCheckBoxVisible(event.getValue()));
         addComponent(rbg);
     }
 }

@@ -36,16 +36,6 @@ import com.vaadin.ui.Grid.GridSelectionModel;
 public class NoSelectionModel<T> extends AbstractExtension
         implements GridSelectionModel<T> {
 
-    /**
-     * Creates a new no selection model and attaches it for the given grid.
-     *
-     * @param grid
-     *            the grid to bind the selection model into
-     */
-    public NoSelectionModel(Grid<T> grid) {
-        extend(grid);
-    }
-
     @Override
     public Set<T> getSelectedItems() {
         return Collections.emptySet();
@@ -66,6 +56,11 @@ public class NoSelectionModel<T> extends AbstractExtension
 
     @Override
     public void deselectAll() {
+    }
+
+    @Override
+    public void extend(Grid<T> grid) {
+        super.extend(grid);
     }
 
 }

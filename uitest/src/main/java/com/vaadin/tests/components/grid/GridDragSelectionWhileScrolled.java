@@ -20,10 +20,10 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.grid.basics.DataObject;
 import com.vaadin.tests.components.grid.basics.GridBasics;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
@@ -55,8 +55,7 @@ public class GridDragSelectionWhileScrolled extends AbstractTestUI {
                 .setCaption(GridBasics.COLUMN_CAPTIONS[5]);
         grid.addColumn(DataObject::getBigRandom, new NumberRenderer())
                 .setCaption(GridBasics.COLUMN_CAPTIONS[6]);
-
-        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+        grid.setSelectionMode(SelectionMode.MULTI);
 
         layout.addComponent(grid);
 

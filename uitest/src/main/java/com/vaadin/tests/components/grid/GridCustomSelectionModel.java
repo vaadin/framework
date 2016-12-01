@@ -32,9 +32,6 @@ public class GridCustomSelectionModel extends AbstractTestUI {
     public static class MySelectionModel
             extends MultiSelectionModelImpl<DataObject> {
 
-        public MySelectionModel(Grid<DataObject> grid) {
-            super(grid);
-        }
     }
 
     private Grid<DataObject> grid;
@@ -47,9 +44,7 @@ public class GridCustomSelectionModel extends AbstractTestUI {
         // Create grid
         grid = new Grid<DataObject>() {
             {
-                MySelectionModel model = new MySelectionModel(this);
-                setSelectionModel(model);
-                model.extend(this);
+                setSelectionModel(new MySelectionModel());
             }
         };
         grid.setItems(data);
