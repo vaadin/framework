@@ -26,13 +26,13 @@ Getting in touch with us early will also help us co-ordinate efforts so that not
 
 # Obtain a current source tree
 
-The Vaadin repository can be cloned using `git clone https://github.com/vaadin/vaadin.git` or using your favorite Git tool.
+The Vaadin repository can be cloned using `git clone https://github.com/vaadin/framework.git` or using your favorite Git tool.
 
 Remember to do `git checkout master` and `git pull` to make sure you are creating your commits on top of a recent enough version. 
 
 ## Set up your development environment
 
-To set up the project to your IDE, follow the instructions in the [README.md](https://github.com/vaadin/vaadin).
+To set up the project to your IDE, follow the instructions in the [README.md](https://github.com/vaadin/framework).
 
 # Describe your changes
 
@@ -72,7 +72,7 @@ When dividing your change into a series of patches, take special care to ensure 
 
 # Style-check your changes
 
-Check your patch for basic style violations. If you use eclipse, use the formatting rules preconfigured in the project to make life easier for all involved, and configure save actions as described in [README.md](https://github.com/vaadin/vaadin/blob/master/README.md). 
+Check your patch for basic style violations. If you use eclipse, use the formatting rules preconfigured in the project to make life easier for all involved, and configure save actions as described in [README.md](https://github.com/vaadin/framework/blob/master/README.md). 
 
 Patches causing unnecessary style/whitespace changes are messy and will likely be bounced back. 
 
