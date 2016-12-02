@@ -1,0 +1,4 @@
+[submodule "screenshots"]
+	path = vaadin-screenshots
+	url = https://github.com/vaadin/vaadin-screenshots.git
+	branch = 7.7
