@@ -4,7 +4,7 @@
 
 For instructions about _using_ Vaadin to develop applications, please refer to [Vaadin tutorial](https://vaadin.com/docs/-/part/framework/tutorial.html) and other [documentation](https://vaadin.com/docs/).
 
-To contribute, first refer to [Contributing Code](https://github.com/vaadin/vaadin/blob/master/CONTRIBUTING.md)
+To contribute, first refer to [Contributing Code](https://github.com/vaadin/framework/blob/master/CONTRIBUTING.md)
 for general instructions and requirements for contributing code to the Vaadin framework.
 
 Instructions on how to set up a working environment for developing the Vaadin Framework follow below.
@@ -16,7 +16,7 @@ The distribution files can be built by running the standard Maven goal `mvn inst
 ## Eclipse Quick Setup
 
 1. Run
-<code>git clone https://github.com/vaadin/vaadin.git</code>
+<code>git clone https://github.com/vaadin/framework.git</code>
 command or clone the repository your favorite Git tool.
 If using Windows, you might want to add these Git settings: `core.autocrlf=false` and `core.fileMode=false`.
 1. Run <code>mvn install</code> in the project root.
@@ -65,7 +65,7 @@ The following preferences need to be set to keep the project consistent. You nee
 
 1. Intall and run IDEA. Ultimate Edition is better but Community Edition should also work.
 1. Ensure if Git and Maven plugins are installed, properly configured and enabled.
-1. Clone the repository, using menu VCS -> Checkout from Version Control -> Git -> Git Repository URL -> https://github.com/vaadin/vaadin.git.
+1. Clone the repository, using menu VCS -> Checkout from Version Control -> Git -> Git Repository URL -> https://github.com/vaadin/framework.git.
   When the repository is cloned, do **NOT** open it as a project.
 1. Open cloned repository as a maven object. Use File -> Open and choose root _pom.xml_ file
 1. Have a coffee break while IDEA is loading dependencies and indexing the project

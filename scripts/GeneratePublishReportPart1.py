@@ -53,7 +53,7 @@ metadataOk = True
 for url in metadataChecks:
 	metadataOk = metadataOk and checkUrlContents(url, metadataChecks[url].format(ver=args.version))
 
-tagOk = checkUrlStatus("https://github.com/vaadin/vaadin/releases/tag/{ver}".format(ver=args.version))
+tagOk = checkUrlStatus("https://github.com/vaadin/framework/releases/tag/{ver}".format(ver=args.version))
 
 if not prerelease:
 	downloadPageOk = checkUrlStatus("https://vaadin.com/download/release/{maj}.{min}/{ver}/".format(maj=major, min=minor, ver=args.version))

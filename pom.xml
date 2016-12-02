@@ -80,9 +80,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:https:https://github.com/vaadin/vaadin.git</connection>
-        <developerConnection>scm:https:https://github.com/vaadin/vaadin.git</developerConnection>
-        <url>https://github.com/vaadin/vaadin</url>
+        <connection>scm:https:https://github.com/vaadin/framework.git</connection>
+        <developerConnection>scm:https:https://github.com/vaadin/framework.git</developerConnection>
+        <url>https://github.com/vaadin/framework</url>
     </scm>
 
 
