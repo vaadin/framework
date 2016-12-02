@@ -42,8 +42,8 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
-import com.vaadin.client.widget.grid.events.GridEnabledEvent;
 import com.vaadin.client.widget.grid.events.GridEnabledHandler;
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedHandler;
 import com.vaadin.client.widgets.Grid;
 
 /**
@@ -76,8 +76,9 @@ public class MultiSelectionRenderer<T>
      *
      * @since 7.5
      */
-    private final class CheckBoxEventHandler implements MouseDownHandler,
-            TouchStartHandler, ClickHandler, GridEnabledHandler {
+    private final class CheckBoxEventHandler
+            implements MouseDownHandler, TouchStartHandler, ClickHandler,
+            GridEnabledHandler, GridSelectionAllowedHandler {
         private final CheckBox checkBox;
 
         /**
@@ -114,7 +115,17 @@ public class MultiSelectionRenderer<T>
 
         @Override
         public void onEnabled(boolean enabled) {
-            checkBox.setEnabled(enabled);
+            updateEnable();
+        }
+
+        @Override
+        public void onSelectionAllowed(boolean selectionAllowed) {
+            updateEnable();
+        }
+
+        private void updateEnable() {
+            checkBox.setEnabled(grid.isEnabled()
+                    && grid.getSelectionModel().isSelectionAllowed());
         }
     }
 
@@ -607,9 +618,8 @@ public class MultiSelectionRenderer<T>
         checkBox.addMouseDownHandler(handler);
         checkBox.addTouchStartHandler(handler);
         checkBox.addClickHandler(handler);
-        grid.addHandler(handler, GridEnabledEvent.TYPE);
-
-        checkBox.setEnabled(grid.isEnabled());
+        grid.addEnabledHandler(handler);
+        grid.addSelectionAllowedHandler(handler);
 
         return checkBox;
     }
@@ -618,7 +628,8 @@ public class MultiSelectionRenderer<T>
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
-        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
+        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive()
+                && grid.getSelectionModel().isSelectionAllowed());
         checkBox.getElement().setPropertyInt(LOGICAL_ROW_PROPERTY_INT,
                 cell.getRowIndex());
     }

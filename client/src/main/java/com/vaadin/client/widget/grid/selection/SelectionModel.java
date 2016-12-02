@@ -31,6 +31,35 @@ import elemental.json.JsonObject;
  */
 public interface SelectionModel<T> {
 
+    public static class NoSelectionModel<T> implements SelectionModel<T> {
+
+        @Override
+        public void select(T item) {
+        }
+
+        @Override
+        public void deselect(T item) {
+        }
+
+        @Override
+        public boolean isSelected(T item) {
+            return false;
+        }
+
+        @Override
+        public void deselectAll() {
+        }
+
+        @Override
+        public void setSelectionAllowed(boolean selectionAllowed) {
+        }
+
+        @Override
+        public boolean isSelectionAllowed() {
+            return false;
+        }
+    }
+
     /**
      * Selects the given item. If another item was already selected, that item
      * is deselected.
@@ -62,6 +91,29 @@ public interface SelectionModel<T> {
      * Deselects all currently selected items.
      */
     void deselectAll();
+
+    /**
+     * Sets whether the user is allowed to change the selection.
+     * <p>
+     * The check is done only for the client side actions. It doesn't affect
+     * selection requests sent from the server side.
+     * 
+     * @param selectionAllowed
+     *            <code>true</code> if the user is allowed to change the
+     *            selection, <code>false</code> otherwise
+     */
+    void setSelectionAllowed(boolean selectionAllowed);
+
+    /**
+     * Checks if the user is allowed to change the selection.
+     * <p>
+     * The check is done only for the client side actions. It doesn't affect
+     * selection requests sent from the server side.
+     * 
+     * @return <code>true</code> if the user is allowed to change the selection,
+     *         <code>false</code> otherwise
+     */
+    boolean isSelectionAllowed();
 
     /**
      * Gets the selected state from a given grid row json object. This is a
