@@ -76,6 +76,21 @@ public class GridMultiSelectionModelTest {
         }
     }
 
+    private static class TestMultiSelectionModel
+            extends MultiSelectionModelImpl<Object> {
+
+        public TestMultiSelectionModel() {
+            getState(false).selectionAllowed = false;
+        }
+
+        @Override
+        protected void updateSelection(Set<Object> addedItems,
+                Set<Object> removedItems, boolean userOriginated) {
+            super.updateSelection(addedItems, removedItems, userOriginated);
+        }
+
+    }
+
     @Before
     public void setUp() {
         grid = new Grid<>();
@@ -95,6 +110,13 @@ public class GridMultiSelectionModelTest {
                     .setValue(new ArrayList<>(event.getOldSelection()));
             events.incrementAndGet();
         });
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void throwExcpetionWhenSelectionIsDisallowed() {
+        TestMultiSelectionModel model = new TestMultiSelectionModel();
+        model.updateSelection(Collections.emptySet(), Collections.emptySet(),
+                true);
     }
 
     @Test(expected = IllegalStateException.class)
