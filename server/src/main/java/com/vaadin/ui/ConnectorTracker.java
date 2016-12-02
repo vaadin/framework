@@ -785,6 +785,12 @@ public class ConnectorTracker implements Serializable {
         }
         String seckey = streamVariableToSeckey.get(variable);
         if (seckey == null) {
+            /*
+             * Despite section 6 of RFC 4122, this particular use of UUID *is*
+             * adequate for security capabilities. Type 4 UUIDs contain 122 bits
+             * of random data, and UUID.randomUUID() is defined to use a
+             * cryptographically secure random generator.
+             */
             seckey = UUID.randomUUID().toString();
             streamVariableToSeckey.put(variable, seckey);
         }
