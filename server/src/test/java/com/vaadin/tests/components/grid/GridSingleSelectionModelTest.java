@@ -52,6 +52,20 @@ public class GridSingleSelectionModelTest {
 
     }
 
+    private static class TestSingleSelectionModel
+            extends SingleSelectionModelImpl<Object> {
+
+        public TestSingleSelectionModel() {
+            super(new Grid<>());
+            getState(false).selectionAllowed = false;
+        }
+
+        @Override
+        protected void setSelectedFromClient(String key) {
+            super.setSelectedFromClient(key);
+        }
+    }
+
     private List<Person> selectionChanges;
     private Grid<Person> grid;
     private SingleSelectionModelImpl<Person> selectionModel;
@@ -66,6 +80,12 @@ public class GridSingleSelectionModelTest {
         selectionChanges = new ArrayList<>();
         selectionModel
                 .addSelectionListener(e -> selectionChanges.add(e.getValue()));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void throwExceptionWhenSelectionIsDisallowed() {
+        TestSingleSelectionModel model = new TestSingleSelectionModel();
+        model.setSelectedFromClient("foo");
     }
 
     @Test(expected = IllegalStateException.class)
@@ -126,7 +146,8 @@ public class GridSingleSelectionModelTest {
 
         // switch to another selection model to cause event
         customModel.generatedData.clear();
-        customGrid.setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
+        customGrid
+                .setSelectionModel(new SingleSelectionModelImpl<>(customGrid));
         customGrid.getDataCommunicator().beforeClientResponse(false);
 
         // since the selection model has been removed, it is no longer a data

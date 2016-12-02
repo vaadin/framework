@@ -145,6 +145,8 @@ import com.vaadin.client.widget.grid.events.GridEnabledHandler;
 import com.vaadin.client.widget.grid.events.GridKeyDownEvent;
 import com.vaadin.client.widget.grid.events.GridKeyPressEvent;
 import com.vaadin.client.widget.grid.events.GridKeyUpEvent;
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedEvent;
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedHandler;
 import com.vaadin.client.widget.grid.events.HeaderClickHandler;
 import com.vaadin.client.widget.grid.events.HeaderDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.HeaderKeyDownHandler;
@@ -1870,15 +1872,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                                 grid.isSelected(pinnedRowHandle.getRow()));
                         checkBox.sinkEvents(Event.ONCLICK);
 
-                        checkBox.addClickHandler(new ClickHandler() {
-                            @Override
-                            public void onClick(ClickEvent event) {
-                                T row = pinnedRowHandle.getRow();
-                                if (grid.isSelected(row)) {
-                                    grid.deselect(row);
-                                } else {
-                                    grid.select(row);
-                                }
+                        checkBox.addClickHandler(event -> {
+                            T row = pinnedRowHandle.getRow();
+                            if (grid.isSelected(row)) {
+                                grid.deselect(row);
+                            } else {
+                                grid.select(row);
                             }
                         });
                         grid.attachWidget(checkBox, cell);
@@ -2832,7 +2831,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     public final class SelectionColumn extends Column<Boolean, T>
-            implements GridEnabledHandler {
+            implements GridEnabledHandler, GridSelectionAllowedHandler {
 
         private boolean initDone = false;
         private boolean selected = false;
@@ -2844,6 +2843,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             super(selectColumnRenderer);
 
             addEnabledHandler(this);
+            addSelectionAllowedHandler(this);
         }
 
         void initDone() {
@@ -2851,6 +2851,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             setEditable(false);
             setResizable(false);
+            updateEnable();
 
             initDone = true;
         }
@@ -2951,23 +2952,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             return this;
         }
 
-        /**
-         * Sets whether the selection column is enabled.
-         *
-         * @since 7.7
-         * @param enabled
-         *            <code>true</code> to enable the column, <code>false</code>
-         *            to disable it.
-         */
-        public void setEnabled(boolean enabled) {
-            if (selectAllCheckBox != null) {
-                selectAllCheckBox.setEnabled(enabled);
-            }
-        }
-
         @Override
         public void onEnabled(boolean enabled) {
-            setEnabled(enabled);
+            updateEnable();
         }
 
         /**
@@ -3024,19 +3011,30 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         }
 
-        private void onHeaderClickEvent(GridClickEvent event) {
-            CellReference<?> targetCell = event.getTargetCell();
-            int defaultRowIndex = getHeader().getRows()
-                    .indexOf(getDefaultHeaderRow());
+        private void updateEnable() {
+            if (selectAllCheckBox != null) {
+                selectAllCheckBox.setEnabled(isEnabled()
+                        && getSelectionModel().isSelectionAllowed());
+            }
+        }
 
-            if (targetCell.getColumnIndex() == 0
-                    && targetCell.getRowIndex() == defaultRowIndex) {
-                selectAllCheckBox.setValue(!selectAllCheckBox.getValue(), true);
+        private void onHeaderClickEvent(GridClickEvent event) {
+            if (selectAllCheckBox.isEnabled()) {
+                CellReference<?> targetCell = event.getTargetCell();
+                int defaultRowIndex = getHeader().getRows()
+                        .indexOf(getDefaultHeaderRow());
+
+                if (targetCell.getColumnIndex() == 0
+                        && targetCell.getRowIndex() == defaultRowIndex) {
+                    selectAllCheckBox.setValue(!selectAllCheckBox.getValue(),
+                            true);
+                }
             }
         }
 
         private void onHeaderKeyUpEvent(GridKeyUpEvent event) {
-            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE
+                    || !selectAllCheckBox.isEnabled()) {
                 return;
             }
             HeaderRow targetHeaderRow = getHeader()
@@ -3048,6 +3046,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // Send events to ensure state is updated
                 selectAllCheckBox.setValue(!selectAllCheckBox.getValue(), true);
             }
+        }
+
+        @Override
+        public void onSelectionAllowed(boolean selectionAllowed) {
+            updateEnable();
         }
 
     }
@@ -5906,26 +5909,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         editor.setGrid(this);
 
-        setSelectionModel(new SelectionModel<T>() {
-
-            @Override
-            public void select(T item) {
-            }
-
-            @Override
-            public void deselect(T item) {
-            }
-
-            @Override
-            public boolean isSelected(T item) {
-                return false;
-            }
-
-            @Override
-            public void deselectAll() {
-            }
-
-        });
+        setSelectionModel(new SelectionModel.NoSelectionModel<>());
 
         escalator.getBody().setSpacerUpdater(gridSpacerUpdater);
 
@@ -7590,7 +7574,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             addColumnSkipSelectionColumnCheck(selectionColumn, 0);
 
-            selectionColumn.setEnabled(isEnabled());
             selectionColumn.initDone();
         } else {
             selectionColumn = null;
@@ -7662,7 +7645,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
     public void select(T row) {
-        getSelectionModel().select(row);
+        if (getSelectionModel().isSelectionAllowed()) {
+            getSelectionModel().select(row);
+        }
     }
 
     /**
@@ -7679,7 +7664,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
      */
     public void deselect(T row) {
-        getSelectionModel().deselect(row);
+        if (getSelectionModel().isSelectionAllowed()) {
+            getSelectionModel().deselect(row);
+        }
     }
 
     /**
@@ -8099,6 +8086,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     public HandlerRegistration addEnabledHandler(GridEnabledHandler handler) {
         return addHandler(handler, GridEnabledEvent.TYPE);
+    }
+
+    /**
+     * Register a selection allowed status change handler to this Grid. The
+     * event for this handler is fired when the Grid changes selection allowed
+     * state.
+     *
+     * @param handler
+     *            the handler for the event
+     * @return the registration for the event
+     */
+    public HandlerRegistration addSelectionAllowedHandler(
+            GridSelectionAllowedHandler handler) {
+        return addHandler(handler, GridSelectionAllowedEvent.TYPE);
     }
 
     public HandlerRegistration addRowHeightChangedHandler(

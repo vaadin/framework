@@ -20,8 +20,6 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.shared.ui.Connect;
 
-import elemental.json.JsonObject;
-
 /**
  * Connector for grids selection model that doesn't allow selecting anything.
  *
@@ -37,25 +35,7 @@ public class NoSelectionModelConnector extends AbstractExtensionConnector {
         assert target instanceof GridConnector : "NoSelectionModelConnector cannot extend anything else than Grid.";
 
         ((GridConnector) target).getWidget()
-                .setSelectionModel(new SelectionModel<JsonObject>() {
-
-                    @Override
-                    public void select(JsonObject item) {
-                    }
-
-                    @Override
-                    public void deselect(JsonObject item) {
-                    }
-
-                    @Override
-                    public boolean isSelected(JsonObject item) {
-                        return false;
-                    }
-
-                    @Override
-                    public void deselectAll() {
-                    }
-                });
+                .setSelectionModel(new SelectionModel.NoSelectionModel<>());
     }
 
 }

@@ -334,16 +334,12 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                // TODO support read only in grid ?
-                throw new UnsupportedOperationException(
-                        "Read only mode is not supported for grid.");
+                getState().selectionAllowed = readOnly;
             }
 
             @Override
             public boolean isReadOnly() {
-                // TODO support read only in grid ?
-                throw new UnsupportedOperationException(
-                        "Read only mode is not supported for grid.");
+                return isUserSelectionAllowed();
             }
 
             @Override
@@ -439,6 +435,11 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         Objects.requireNonNull(addedItems);
         Objects.requireNonNull(removedItems);
 
+        if (userOriginated && !isUserSelectionAllowed()) {
+            throw new IllegalStateException("Client tried to update selection"
+                    + " although user selection is disallowed");
+        }
+
         // if there are duplicates, some item is both added & removed, just
         // discard that and leave things as was before
         addedItems.removeIf(item -> removedItems.remove(item));
@@ -463,6 +464,10 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             removedItems.forEach(grid.getDataCommunicator()::refresh);
             addedItems.forEach(grid.getDataCommunicator()::refresh);
         }, userOriginated);
+    }
+
+    private boolean isUserSelectionAllowed() {
+        return getState(false).selectionAllowed;
     }
 
     private void doUpdateSelection(Consumer<Set<T>> handler,

@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.connectors.grid;
 
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedEvent;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -41,6 +42,8 @@ public class SingleSelectionModelConnector
      */
     protected class SingleSelectionModel implements SelectionModel<JsonObject> {
 
+        private boolean isSelectionAllowed = true;
+
         @Override
         public void select(JsonObject item) {
             getRpcProxy(SelectionServerRpc.class)
@@ -61,6 +64,18 @@ public class SingleSelectionModelConnector
         @Override
         public void deselectAll() {
             getRpcProxy(SelectionServerRpc.class).select(null);
+        }
+
+        @Override
+        public void setSelectionAllowed(boolean selectionAllowed) {
+            isSelectionAllowed = selectionAllowed;
+            getGrid()
+                    .fireEvent(new GridSelectionAllowedEvent(selectionAllowed));
+        }
+
+        @Override
+        public boolean isSelectionAllowed() {
+            return isSelectionAllowed;
         }
     }
 

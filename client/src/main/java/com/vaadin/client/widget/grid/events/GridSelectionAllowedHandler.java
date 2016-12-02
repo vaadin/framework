@@ -13,21 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.grid;
+package com.vaadin.client.widget.grid.events;
 
-import com.vaadin.shared.communication.SharedState;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Shared state for grid's abstract selection model.
- *
+ * Handler for a Grid {@link GridSelectionAllowedEvent}, called when the Grid is
+ * becomes allowed for selection or disallowed.
+ * 
+ * @see GridSelectionAllowedEvent
  * @author Vaadin Ltd
- *
  * @since 8.0
+ *
  */
-public class AbstractSelectionModelState extends SharedState {
+public interface GridSelectionAllowedHandler extends EventHandler {
 
     /**
-     * Whether the selection model allows selection from the client side.
+     * Called when Grid selection is allowed value changes.
+     *
+     * @param allowed
+     *            {@code true} if selection allowed, {@code false} otherwise
      */
-    public boolean selectionAllowed = true;
+    public void onSelectionAllowed(boolean allowed);
 }
