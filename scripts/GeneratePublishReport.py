@@ -49,7 +49,7 @@ if not prerelease:
 
 content += """
 <tr><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
-<tr><td><a href="https://github.com/vaadin/vaadin/tags">Verify tags pushed to GitHub</a></td></tr>""".format(version=args.version)
+<tr><td><a href="https://github.com/vaadin/framework/tags">Verify tags pushed to GitHub</a></td></tr>""".format(version=args.version)
 
 if not prerelease:
 	content += '<tr><td><a href="http://vaadin.com/api">Verify API version list updated</a></td></tr>'
