@@ -31,9 +31,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -191,10 +193,38 @@ public abstract class VaadinService implements Serializable {
      */
     public void init() throws ServiceException {
         List<RequestHandler> handlers = createRequestHandlers();
+
+        ServiceInitEvent event = new ServiceInitEvent(this);
+
+        Iterator<VaadinServiceInitListener> initListeners = getServiceInitListeners();
+        while (initListeners.hasNext()) {
+            initListeners.next().serviceInit(event);
+        }
+
+        handlers.addAll(event.getAddedRequestHandlers());
+
         Collections.reverse(handlers);
+
         requestHandlers = Collections.unmodifiableCollection(handlers);
 
         initialized = true;
+    }
+
+    /**
+     * Gets all available service init listeners. A custom Vaadin service
+     * implementation can override this method to discover init listeners in
+     * some other way in addition to the default implementation that uses
+     * {@link ServiceLoader}. This could for example be used to allow defining
+     * an init listener as an OSGi service or as a Spring bean.
+     *
+     * @since
+     *
+     * @return an iterator of available service init listeners
+     */
+    protected Iterator<VaadinServiceInitListener> getServiceInitListeners() {
+        ServiceLoader<VaadinServiceInitListener> loader = ServiceLoader
+                .load(VaadinServiceInitListener.class, getClassLoader());
+        return loader.iterator();
     }
 
     /**
