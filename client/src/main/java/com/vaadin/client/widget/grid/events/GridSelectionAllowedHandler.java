@@ -30,9 +30,10 @@ public interface GridSelectionAllowedHandler extends EventHandler {
 
     /**
      * Called when Grid selection is allowed value changes.
+     * 
+     * @param event
+     *            the {@link GridSelectionAllowedEvent} that was fired
      *
-     * @param allowed
-     *            {@code true} if selection allowed, {@code false} otherwise
      */
-    public void onSelectionAllowed(boolean allowed);
+    public void onSelectionAllowed(GridSelectionAllowedEvent event);
 }

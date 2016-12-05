@@ -30,10 +30,16 @@ public class GridSelectionAllowedEvent
      * The type of this event
      */
     public static final Type<GridSelectionAllowedHandler> TYPE = new Type<>();
-    private final boolean selectionAllowed;
+    private final boolean isSelectionAllowed;
 
+    /**
+     * Creates a new event instance.
+     * 
+     * @param selectionAllowed
+     *            selection allowed value
+     */
     public GridSelectionAllowedEvent(boolean selectionAllowed) {
-        this.selectionAllowed = selectionAllowed;
+        isSelectionAllowed = selectionAllowed;
     }
 
     @Override
@@ -41,8 +47,17 @@ public class GridSelectionAllowedEvent
         return TYPE;
     }
 
+    /**
+     * Gets selection allowed value.
+     * 
+     * @return {@code true} if selection is allowed, {@code false} otherwise
+     */
+    public boolean isSelectionAllowed() {
+        return isSelectionAllowed;
+    }
+
     @Override
     protected void dispatch(final GridSelectionAllowedHandler handler) {
-        handler.onSelectionAllowed(selectionAllowed);
+        handler.onSelectionAllowed(this);
     }
 }
