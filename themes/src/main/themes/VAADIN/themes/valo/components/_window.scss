@@ -161,7 +161,7 @@ $v-window-modality-curtain-background-color: #222 !default;
     z-index: 3;
     top: 0;
     right: 0;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     width: $v-unit-size - round($v-unit-size/9);
     height: $v-unit-size - 1px;
     background-color: $v-window-background-color;
@@ -241,7 +241,7 @@ $v-window-modality-curtain-background-color: #222 !default;
   }
 
   .#{$primary-stylename}-contents {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     border-radius: $v-border-radius;
     margin-top: 0 !important;
 
@@ -348,7 +348,7 @@ $v-window-modality-curtain-background-color: #222 !default;
   .v-margin-left.v-margin-right.v-margin-top {
     .#{$primary-stylename}-top-toolbar {
       &.v-layout {
-        @include box-sizing(content-box);
+        box-sizing: content-box;
         margin: round($v-unit-size/-3) round($v-unit-size/-3) 0;
       }
 
@@ -366,7 +366,7 @@ $v-window-modality-curtain-background-color: #222 !default;
   .v-margin-left.v-margin-right.v-margin-bottom {
     .#{$primary-stylename}-bottom-toolbar {
       &.v-layout {
-        @include box-sizing(content-box);
+        box-sizing: content-box;
         margin: 0 round($v-unit-size/-3) round($v-unit-size/-3);
       }
     }

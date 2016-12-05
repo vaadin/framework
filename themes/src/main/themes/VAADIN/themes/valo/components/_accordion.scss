@@ -144,6 +144,6 @@
 @mixin valo-accordion-item-content-style {
   @include box-shadow(valo-bevel-and-shadow($shadow: join(inset, $v-shadow), $shadow-opacity: $v-shadow-opacity/2));
   background-color: $v-panel-background-color;
-  @include box-sizing(border-box);
+  box-sizing: border-box;
   @include valo-panel-adjust-content-margins;
 }

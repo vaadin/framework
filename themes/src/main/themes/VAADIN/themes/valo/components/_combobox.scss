@@ -234,7 +234,7 @@
 
     $states: normal focus disabled
 ) {
-  @include box-sizing(border-box);
+  box-sizing: border-box;
   @include valo-textfield-style($unit-size: $unit-size,
                                 $padding: $padding,
                                 $font-color: $font-color,
@@ -355,7 +355,7 @@
 
   [class$="suggestmenu"] {
     @include valo-selection-overlay-style($animate-in: false, $animate-out: false);
-    @include box-sizing(content-box);
+    box-sizing: content-box;
     position: relative;
     z-index: 1;
     display: block;

@@ -87,7 +87,7 @@
     & ~ label:after {
       content: "";
       display: inline-block;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
       width: round($size);
       height: round($size);
       position: absolute;

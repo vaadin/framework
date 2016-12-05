@@ -12,7 +12,7 @@
 
   .v-layout.v-vertical > .v-expand,
   .v-layout.v-horizontal > .v-expand {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
   }

@@ -142,7 +142,7 @@
   border-radius: $border-radius;
 
   [class*="textfield"] {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     @include valo-textfield-style($bevel: $bevel, $shadow: $shadow, $unit-size: $unit-size, $border: $border, $border-radius: $border-radius, $background-color: $background-color, $states: $states) ;
     padding-left: $unit-size * 1.2;
     width: 100%;
@@ -319,7 +319,7 @@
   .#{$primary-stylename}-day {
     @include valo-datefield-calendarpanel-day-style;
     display: inline-block;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     cursor: pointer;
     &:hover {
       @include valo-datefield-calendarpanel-day-hover-style;
@@ -476,7 +476,7 @@
  * @group datefield
  */
 @mixin valo-datefield-calendarpanel-day-style {
-  @include box-sizing(border-box);
+  box-sizing: border-box;
   width: round($v-unit-size * 0.8);
   height: round($v-unit-size * 0.7);
   border: first-number(valo-border()) solid transparent;
