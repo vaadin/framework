@@ -17,6 +17,7 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import com.vaadin.server.data.DataProvider;
 
@@ -51,7 +52,7 @@ public interface Listing<T, D extends DataProvider<T, ?>> extends Serializable {
     void setDataProvider(D dataProvider);
 
     /**
-     * Sets the collection of data items of this listing.
+     * Sets the data items of this listing provided as a collection.
      * <p>
      * <strong>Note for component developers: </strong> If the component
      * implementing this interface uses a custom data provider and/or filter
@@ -81,6 +82,25 @@ public interface Listing<T, D extends DataProvider<T, ?>> extends Serializable {
      */
     default void setItems(@SuppressWarnings("unchecked") T... items) {
         setDataProvider((D) DataProvider.create(items));
+    }
+
+    /**
+     * Sets the data items of this listing provided as a stream.
+     * <p>
+     * This is just a shorthand for {@link #setItems(Collection)}, by
+     * <b>collecting all the items in the stream to a list</b>.
+     * <p>
+     * <strong>Note for component developers: </strong> If the component
+     * implementing this interface uses a custom data provider and/or filter
+     * types, this method should be overridden to provide the same functionality
+     * with the correct data provider type. This might require filter conversion
+     * or a completely custom implementation.
+     *
+     * @param streamOfItems
+     *            the stream of data items to display, not {@code null}
+     */
+    default void setItems(Stream<T> streamOfItems) {
+        setDataProvider((D) DataProvider.create(streamOfItems));
     }
 
 }

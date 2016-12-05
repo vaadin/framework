@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializableFunction;
@@ -167,5 +168,24 @@ public interface DataProvider<T, F> extends Serializable {
     @SafeVarargs
     public static <T> ListDataProvider<T> create(T... items) {
         return new ListDataProvider<>(Arrays.asList(items));
+    }
+
+    /**
+     * This method creates a new {@link ListDataProvider} from the given stream.
+     * The ListDataProvider <b>collects all the items in the stream to a
+     * list</b>.
+     * <p>
+     * This is just a shorthand for using {@link #create(Collection)} after
+     * collecting the items in the stream to a list with e.g.
+     * {@code stream.collect(Collectors.toList));}.
+     *
+     * @param <T>
+     *            the data item type
+     * @param items
+     *            a stream of data items, not {@code null}
+     * @return a new list data provider
+     */
+    public static <T> ListDataProvider<T> create(Stream<T> items) {
+        return new ListDataProvider<>(items.collect(Collectors.toList()));
     }
 }
