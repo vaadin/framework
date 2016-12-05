@@ -213,6 +213,14 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         return read;
     }
 
+    public DesignContext readComponentAndCompare(String design, T expected) {
+        TestLogHandler l = new TestLogHandler();
+        DesignContext context = readAndReturnContext(design);
+        assertEquals(expected, context.getRootComponent());
+        Assert.assertEquals("", l.getMessages());
+        return context;
+    }
+
     public void testWrite(String design, T expected) {
         TestLogHandler l = new TestLogHandler();
         testWrite(design, expected, false);
