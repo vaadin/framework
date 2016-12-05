@@ -19,7 +19,7 @@ package com.vaadin.data.util.converter;
 import java.io.Serializable;
 import java.util.function.Function;
 
-import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.Result;
 import com.vaadin.server.SerializableFunction;
 
@@ -149,7 +149,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * <p>
      * In most typical cases you should not need this method but instead only
      * need to define one converter for a binding using
-     * {@link Binding#withConverter(Converter)}.
+     * {@link BindingBuilder#withConverter(Converter)}.
      *
      * @param <T>
      *            the model type of the resulting converter
