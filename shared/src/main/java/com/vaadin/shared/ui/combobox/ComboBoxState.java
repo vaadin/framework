@@ -60,7 +60,7 @@ public class ComboBoxState extends AbstractSingleSelectState {
      * itself.
      */
     @DelegateToWidget
-    public String suggestionPopupWidth = null;
+    public String suggestionPopupWidth = "100%";
 
     /**
      * True to allow the user to send new items to the server, false to only
