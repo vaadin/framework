@@ -40,6 +40,32 @@ public class CalendarState extends AbstractLegacyComponentState {
     public List<CalendarState.Action> actions;
     public boolean eventCaptionAsHtml;
 
+    public EventSortOrder eventSortOrder = EventSortOrder.DURATION_DESC;
+
+    /**
+     * Defines sort strategy for events in calendar month view and week view. In
+     * month view events will be sorted from top to bottom using the order in
+     * day cell. In week view events inside same day will be sorted from left to
+     * right using the order if their intervals are overlapping.
+     * <p>
+     * <ul>
+     * <li>{@code UNSORTED} means no sort. Events will be in the order provided
+     * by com.vaadin.ui.components.calendar.event.CalendarEventProvider.
+     * <li>{@code START_DATE_DESC} means descending sort by events start date
+     * (earlier event are shown first).
+     * <li>{@code DURATION_DESC} means descending sort by duration (longer event
+     * are shown first).
+     * <li>{@code START_DATE_ASC} means ascending sort by events start date
+     * (later event are shown first).
+     * <li>{@code DURATION_ASC} means ascending sort by duration (shorter event
+     * are shown first).
+     * 
+     * </ul>
+     */
+    public enum EventSortOrder {
+        UNSORTED, START_DATE_DESC, START_DATE_ASC, DURATION_DESC, DURATION_ASC;
+    }
+
     public static class Day implements java.io.Serializable {
         public String date;
         public String localizedDateFormat;
