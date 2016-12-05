@@ -230,21 +230,9 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    @Deprecated
-    public void removeFocusListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-    }
-
-    @Override
     public Registration addBlurListener(BlurListener listener) {
         return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
-    }
-
-    @Override
-    @Deprecated
-    public void removeBlurListener(BlurListener listener) {
-        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
     @Override

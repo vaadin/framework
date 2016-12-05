@@ -249,25 +249,31 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
 
     protected Command<T, Boolean> focusListenerCommand = new Command<T, Boolean>() {
 
+        private Registration focusListenerRegistration;
+
         @Override
         public void execute(T c, Boolean value, Object data) {
-            FocusNotifier fn = (FocusNotifier) c;
+            FocusNotifier focusNotifier = (FocusNotifier) c;
             if (value) {
-                fn.addFocusListener(AbstractComponentTest.this);
-            } else {
-                fn.removeFocusListener(AbstractComponentTest.this);
+                focusListenerRegistration = focusNotifier
+                        .addFocusListener(AbstractComponentTest.this);
+            } else if (focusListenerRegistration != null) {
+                focusListenerRegistration.remove();
             }
         }
     };
     protected Command<T, Boolean> blurListenerCommand = new Command<T, Boolean>() {
 
+        private Registration blurListenerRegistration;
+
         @Override
         public void execute(T c, Boolean value, Object data) {
             BlurNotifier bn = (BlurNotifier) c;
             if (value) {
-                bn.addBlurListener(AbstractComponentTest.this);
-            } else {
-                bn.removeBlurListener(AbstractComponentTest.this);
+                blurListenerRegistration = bn
+                        .addBlurListener(AbstractComponentTest.this);
+            } else if (blurListenerRegistration != null) {
+                blurListenerRegistration.remove();
             }
         }
     };

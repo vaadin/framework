@@ -332,21 +332,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    @Deprecated
-    public void removeBlurListener(BlurListener listener) {
-        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
-    }
-
-    @Override
     public Registration addFocusListener(FocusListener listener) {
         return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
-    }
-
-    @Override
-    @Deprecated
-    public void removeFocusListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
     /**
