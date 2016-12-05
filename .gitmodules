@@ -1,0 +1,4 @@
+[submodule "screenshots"]
+	path = screenshots
+	url = https://github.com/vaadin/vaadin-screenshots.git
+	branch = master
