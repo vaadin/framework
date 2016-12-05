@@ -41,6 +41,7 @@ import com.vaadin.v7.client.ui.calendar.schedule.SimpleWeekToolbar;
 import com.vaadin.v7.client.ui.calendar.schedule.WeekGrid;
 import com.vaadin.v7.client.ui.calendar.schedule.WeeklyLongEvents;
 import com.vaadin.v7.client.ui.calendar.schedule.dd.CalendarDropHandler;
+import com.vaadin.v7.shared.ui.calendar.CalendarState.EventSortOrder;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
@@ -97,6 +98,11 @@ public class VCalendar extends Composite implements VHasDropHandler {
     private int lastDay;
     private int firstHour;
     private int lastHour;
+
+    private EventSortOrder eventSortOrder = EventSortOrder.DURATION_DESC;
+
+    private static EventDurationComparator DEFAULT_COMPARATOR = new EventDurationComparator(
+            false);
 
     private CalendarDropHandler dropHandler;
 
@@ -241,6 +247,106 @@ public class VCalendar extends Composite implements VHasDropHandler {
         void contextMenu(ContextMenuEvent event, Widget widget);
     }
 
+    private static abstract class AbstractEventComparator
+            implements Comparator<CalendarEvent> {
+
+        @Override
+        public int compare(CalendarEvent e1, CalendarEvent e2) {
+            if (e1.isAllDay() != e2.isAllDay()) {
+                if (e2.isAllDay()) {
+                    return 1;
+                }
+                return -1;
+            }
+            int result = doCompare(e1, e2);
+            if (result == 0) {
+                return indexCompare(e1, e2);
+            }
+            return result;
+        }
+
+        protected int indexCompare(CalendarEvent e1, CalendarEvent e2) {
+            return ((Integer) e2.getIndex()).compareTo(e1.getIndex());
+        }
+
+        public abstract int doCompare(CalendarEvent o1, CalendarEvent o2);
+    }
+
+    private static class EventDurationComparator
+            extends AbstractEventComparator {
+
+        EventDurationComparator(boolean ascending) {
+            isAscending = ascending;
+        }
+
+        @Override
+        public int doCompare(CalendarEvent e1, CalendarEvent e2) {
+            int result = durationCompare(e1, e2, isAscending);
+            if (result == 0) {
+                return StartDateComparator.startDateCompare(e1, e2,
+                        isAscending);
+            }
+            return result;
+        }
+
+        static int durationCompare(CalendarEvent e1, CalendarEvent e2,
+                boolean ascending) {
+            int result = doDurationCompare(e1, e2);
+            return ascending ? -result : result;
+        }
+
+        private static int doDurationCompare(CalendarEvent e1,
+                CalendarEvent e2) {
+            Long d1 = e1.getRangeInMilliseconds();
+            Long d2 = e2.getRangeInMilliseconds();
+            if (!d1.equals(0L) && !d2.equals(0L)) {
+                return d2.compareTo(d1);
+            }
+
+            if (d2.equals(0L) && d1.equals(0L)) {
+                return 0;
+            } else if (d2.equals(0L) && d1 >= DateConstants.DAYINMILLIS) {
+                return -1;
+            } else if (d2.equals(0L) && d1 < DateConstants.DAYINMILLIS) {
+                return 1;
+            } else if (d1.equals(0L) && d2 >= DateConstants.DAYINMILLIS) {
+                return 1;
+            } else if (d1.equals(0L) && d2 < DateConstants.DAYINMILLIS) {
+                return -1;
+            }
+            return d2.compareTo(d1);
+        }
+
+        private boolean isAscending;
+
+    }
+
+    private static class StartDateComparator extends AbstractEventComparator {
+
+        StartDateComparator(boolean ascending) {
+            isAscending = ascending;
+        }
+
+        @Override
+        public int doCompare(CalendarEvent e1, CalendarEvent e2) {
+            int result = startDateCompare(e1, e2, isAscending);
+            if (result == 0) {
+                // show a longer event after a shorter event
+                return EventDurationComparator.durationCompare(e1, e2,
+                        isAscending);
+            }
+            return result;
+        }
+
+        static int startDateCompare(CalendarEvent e1, CalendarEvent e2,
+                boolean ascending) {
+            int result = e1.getStartTime().compareTo(e2.getStartTime());
+            return ascending ? -result : result;
+        }
+
+        private boolean isAscending;
+    }
+
     /**
      * Default constructor
      */
@@ -262,15 +368,15 @@ public class VCalendar extends Composite implements VHasDropHandler {
     	e.onselectstart = function() {
     		return false;
     	}
-
+    
     	e.ondragstart = function() {
     		return false;
     	}
     }-*/;
 
     private void updateEventsToWeekGrid(CalendarEvent[] events) {
-        List<CalendarEvent> allDayLong = new ArrayList<CalendarEvent>();
-        List<CalendarEvent> belowDayLong = new ArrayList<CalendarEvent>();
+        List<CalendarEvent> allDayLong = new ArrayList<>();
+        List<CalendarEvent> belowDayLong = new ArrayList<>();
 
         for (CalendarEvent e : events) {
             if (e.isAllDay()) {
@@ -302,7 +408,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
      */
     public void updateEventsToMonthGrid(Collection<CalendarEvent> events,
             boolean drawImmediately) {
-        for (CalendarEvent e : sortEventsByDuration(events)) {
+        for (CalendarEvent e : sortEvents(events)) {
             // FIXME Why is drawImmediately not used ?????
             addEventToMonthGrid(e, false);
         }
@@ -315,8 +421,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
         boolean eventAdded = false;
         boolean inProgress = false; // Event adding has started
         boolean eventMoving = false;
-        List<SimpleDayCell> dayCells = new ArrayList<SimpleDayCell>();
-        List<SimpleDayCell> timeCells = new ArrayList<SimpleDayCell>();
+        List<SimpleDayCell> dayCells = new ArrayList<>();
+        List<SimpleDayCell> timeCells = new ArrayList<>();
         for (int row = 0; row < monthGrid.getRowCount(); row++) {
             if (eventAdded) {
                 break;
@@ -463,12 +569,44 @@ public class VCalendar extends Composite implements VHasDropHandler {
     }
 
     /**
-     * Sort the event by how long they are
-     *
+     * Sort the events by current sort order
+     * 
      * @param events
      *            The events to sort
      * @return An array where the events has been sorted
      */
+    public CalendarEvent[] sortEvents(Collection<CalendarEvent> events) {
+        if (EventSortOrder.DURATION_DESC.equals(eventSortOrder)) {
+            return sortEventsByDuration(events);
+        } else if (!EventSortOrder.UNSORTED.equals(eventSortOrder)) {
+            CalendarEvent[] sorted = events
+                    .toArray(new CalendarEvent[events.size()]);
+            switch (eventSortOrder) {
+            case DURATION_ASC:
+                Arrays.sort(sorted, new EventDurationComparator(true));
+                break;
+            case START_DATE_ASC:
+                Arrays.sort(sorted, new StartDateComparator(true));
+                break;
+            case START_DATE_DESC:
+                Arrays.sort(sorted, new StartDateComparator(false));
+                break;
+            }
+            return sorted;
+        }
+        return events.toArray(new CalendarEvent[events.size()]);
+    }
+
+    /**
+     * Sort the event by how long they are
+     * 
+     * @param events
+     *            The events to sort
+     * @return An array where the events has been sorted
+     * @deprecated use {@link #sortEvents(Collection)} method which shorts
+     *             events by current sort order.
+     */
+    @Deprecated
     public CalendarEvent[] sortEventsByDuration(
             Collection<CalendarEvent> events) {
         CalendarEvent[] sorted = events
@@ -828,49 +966,18 @@ public class VCalendar extends Composite implements VHasDropHandler {
     }
 
     /**
-     * Returns a comparator which can compare calendar events.
-     *
+     * Returns the default comparator which can compare calendar events by
+     * duration.
+     * 
+     * @deprecated this returns just one default comparator, but there are
+     *             number of comparators that are used to sort events depending
+     *             on order.
+     * 
      * @return
      */
+    @Deprecated
     public static Comparator<CalendarEvent> getEventComparator() {
-        return new Comparator<CalendarEvent>() {
-
-            @Override
-            public int compare(CalendarEvent o1, CalendarEvent o2) {
-                if (o1.isAllDay() != o2.isAllDay()) {
-                    if (o2.isAllDay()) {
-                        return 1;
-                    }
-                    return -1;
-                }
-
-                Long d1 = o1.getRangeInMilliseconds();
-                Long d2 = o2.getRangeInMilliseconds();
-                int r = 0;
-                if (!d1.equals(0L) && !d2.equals(0L)) {
-                    r = d2.compareTo(d1);
-                    return (r == 0)
-                            ? ((Integer) o2.getIndex()).compareTo(o1.getIndex())
-                            : r;
-                }
-
-                if (d2.equals(0L) && d1.equals(0L)) {
-                    return ((Integer) o2.getIndex()).compareTo(o1.getIndex());
-                } else if (d2.equals(0L) && d1 >= DateConstants.DAYINMILLIS) {
-                    return -1;
-                } else if (d2.equals(0L) && d1 < DateConstants.DAYINMILLIS) {
-                    return 1;
-                } else if (d1.equals(0L) && d2 >= DateConstants.DAYINMILLIS) {
-                    return 1;
-                } else if (d1.equals(0L) && d2 < DateConstants.DAYINMILLIS) {
-                    return -1;
-                }
-                r = d2.compareTo(d1);
-                return (r == 0)
-                        ? ((Integer) o2.getIndex()).compareTo(o1.getIndex())
-                        : r;
-            }
-        };
+        return DEFAULT_COMPARATOR;
     }
 
     /**
@@ -1086,7 +1193,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
             weekGrid = new WeekGrid(this, is24HFormat());
         }
         updateWeekGrid(daysInMonth, days, today, realDayNames);
-        updateEventsToWeekGrid(sortEventsByDuration(events));
+        updateEventsToWeekGrid(sortEvents(events));
         outer.add(dayToolbar, DockPanel.NORTH);
         outer.add(weeklyLongEvents, DockPanel.NORTH);
         outer.add(weekGrid, DockPanel.SOUTH);
@@ -1501,4 +1608,28 @@ public class VCalendar extends Composite implements VHasDropHandler {
     public boolean isEventCaptionAsHtml() {
         return eventCaptionAsHtml;
     }
+
+    /**
+     * Set sort strategy for events.
+     * 
+     * @param order
+     *            sort order
+     */
+    public void setSortOrder(EventSortOrder order) {
+        if (order == null) {
+            eventSortOrder = EventSortOrder.DURATION_DESC;
+        } else {
+            eventSortOrder = order;
+        }
+    }
+
+    /**
+     * Return currently active sort order.
+     * 
+     * @return current sort order
+     */
+    public EventSortOrder getSortOrder() {
+        return eventSortOrder;
+    }
+
 }
