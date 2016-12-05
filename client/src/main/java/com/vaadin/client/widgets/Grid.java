@@ -3049,7 +3049,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         @Override
-        public void onSelectionAllowed(boolean selectionAllowed) {
+        public void onSelectionAllowed(GridSelectionAllowedEvent event) {
             updateEnable();
         }
 

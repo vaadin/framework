@@ -62,12 +62,6 @@ public abstract class AbstractSelectionModelConnector
         return getParent().getWidget();
     }
 
-    @OnStateChange("selectionAllowed")
-    protected void onSelectionAllowedChange() {
-        getGrid().getSelectionModel()
-                .setSelectionAllowed(getState().selectionAllowed);
-    }
-
     @Override
     public AbstractSelectionModelState getState() {
         return (AbstractSelectionModelState) super.getState();
@@ -82,5 +76,11 @@ public abstract class AbstractSelectionModelConnector
      */
     protected boolean isSelected(JsonObject item) {
         return SelectionModel.isItemSelected(item);
+    }
+
+    @OnStateChange("selectionAllowed")
+    private void onSelectionAllowedChange() {
+        getGrid().getSelectionModel()
+                .setSelectionAllowed(getState().selectionAllowed);
     }
 }

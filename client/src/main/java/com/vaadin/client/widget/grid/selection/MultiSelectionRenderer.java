@@ -43,6 +43,7 @@ import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.events.GridEnabledHandler;
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedEvent;
 import com.vaadin.client.widget.grid.events.GridSelectionAllowedHandler;
 import com.vaadin.client.widgets.Grid;
 
@@ -119,7 +120,7 @@ public class MultiSelectionRenderer<T>
         }
 
         @Override
-        public void onSelectionAllowed(boolean selectionAllowed) {
+        public void onSelectionAllowed(GridSelectionAllowedEvent event) {
             updateEnable();
         }
 
