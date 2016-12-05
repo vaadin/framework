@@ -24,9 +24,9 @@ import com.vaadin.tests.data.bean.BeanWithEnums;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.data.bean.TestEnum;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.MultiSelect;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 
 public class GridAsMultiSelectInBinder
         extends BinderTestBase<Binder<BeanWithEnums>, BeanWithEnums> {
@@ -50,10 +50,6 @@ public class GridAsMultiSelectInBinder
 
     private class CustomMultiSelectModel extends MultiSelectionModelImpl<Sex> {
 
-        public CustomMultiSelectModel(Grid<Sex> grid) {
-            super(grid);
-        }
-
         @Override
         public void updateSelection(Set<Sex> addedItems, Set<Sex> removedItems,
                 boolean userOriginated) {
@@ -72,7 +68,7 @@ public class GridAsMultiSelectInBinder
         item = new BeanWithEnums();
         grid = new Grid<>();
         grid.setItems(TestEnum.values());
-        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+        grid.setSelectionMode(SelectionMode.MULTI);
         select = grid.asMultiSelect();
 
         converterBinder.forField(select)
@@ -82,7 +78,7 @@ public class GridAsMultiSelectInBinder
 
     @Test(expected = IllegalStateException.class)
     public void boundGridInBinder_selectionModelChanged_throws() {
-        grid.setSelectionModel(new SingleSelectionModelImpl<>(grid));
+        grid.setSelectionMode(SelectionMode.SINGLE);
 
         select.select(TestEnum.ONE);
     }
@@ -204,9 +200,12 @@ public class GridAsMultiSelectInBinder
 
     @Test
     public void addValueChangeListener_selectionUpdated_eventTriggeredForMultiSelect() {
-        Grid<Sex> grid = new Grid<>();
-        CustomMultiSelectModel model = new CustomMultiSelectModel(grid);
-        grid.setSelectionModel(model);
+        CustomMultiSelectModel model = new CustomMultiSelectModel();
+        Grid<Sex> grid = new Grid<Sex>() {
+            {
+                setSelectionModel(model);
+            }
+        };
         grid.setItems(Sex.values());
         MultiSelect<Sex> select = grid.asMultiSelect();
 

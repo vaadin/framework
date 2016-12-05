@@ -11,9 +11,7 @@ import org.junit.Test;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.GridSelectionModel;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.NoSelectionModel;
-import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+import com.vaadin.ui.Grid.SelectionMode;
 
 public class GridNoSelectionModelTest {
 
@@ -29,8 +27,7 @@ public class GridNoSelectionModelTest {
         grid = new Grid<>();
         grid.setItems(PERSON_A, PERSON_B, PERSON_C);
 
-        model = new NoSelectionModel<>(grid);
-        grid.setSelectionModel(model);
+        model = grid.setSelectionMode(SelectionMode.NONE);
     }
 
     @Test
@@ -50,7 +47,7 @@ public class GridNoSelectionModelTest {
 
     @Test
     public void changingToSingleSelectionModel() {
-        grid.setSelectionModel(new SingleSelectionModelImpl<>(grid));
+        grid.setSelectionMode(SelectionMode.SINGLE);
 
         grid.getSelectionModel().select(PERSON_B);
         Assert.assertEquals(PERSON_B,
@@ -59,7 +56,7 @@ public class GridNoSelectionModelTest {
 
     @Test
     public void changingToMultiSelectionModel() {
-        grid.setSelectionModel(new MultiSelectionModelImpl<>(grid));
+        grid.setSelectionMode(SelectionMode.MULTI);
 
         grid.getSelectionModel().select(PERSON_B);
         Assert.assertEquals(new LinkedHashSet<>(Arrays.asList(PERSON_B)),

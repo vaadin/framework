@@ -17,6 +17,8 @@ package com.vaadin.ui.components.grid;
 
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.grid.AbstractSelectionModelState;
+import com.vaadin.ui.AbstractListing;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.GridSelectionModel;
 
@@ -51,6 +53,40 @@ public abstract class AbstractSelectionModel<T> extends AbstractGridExtension<T>
     protected AbstractSelectionModelState getState(boolean markAsDirty) {
         return (AbstractSelectionModelState) super.getState(markAsDirty);
     }
+
+    /**
+     * Returns the grid this selection model is attached to using, or throws
+     * {@link IllegalStateException} if not attached to any selection model.
+     *
+     * @return the grid this selection model is attached to
+     * @throws IllegalStateException
+     *             if this selection mode is not attached to any grid
+     */
+    protected Grid<T> getGrid() throws IllegalStateException {
+        Grid<T> parent = getParent();
+        if (parent == null) {
+            throw new IllegalStateException(
+                    "This selection model is no currently attached to any grid.");
+        }
+        return parent;
+    }
+
+    @Override
+    public void extend(AbstractListing<T> grid) {
+        if (getParent() != null) {
+            throw new IllegalStateException(
+                    "This selection model has been bound to a grid already. Please remove the existing binding with model.remove() first.");
+        }
+        // type is verified in parent
+        super.extend(grid);
+
+        init();
+    }
+
+    /**
+     * Initializes the selection model after it has been attached to a grid.
+     */
+    protected abstract void init();
 
     @Override
     public void remove() {
