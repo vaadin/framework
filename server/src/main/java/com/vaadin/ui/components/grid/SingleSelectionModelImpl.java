@@ -169,6 +169,10 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
      *            selection
      */
     protected void setSelectedFromClient(String key) {
+        if (!isUserSelectionAllowed()) {
+            throw new IllegalStateException("Client tried to update selection"
+                    + " although user selection is disallowed");
+        }
         if (isKeySelected(key)) {
             return;
         }
@@ -224,6 +228,10 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
+    private boolean isUserSelectionAllowed() {
+        return getState(false).selectionAllowed;
+    }
+
     /**
      * Gets a wrapper for using this grid as a single select in a binder.
      *
@@ -267,15 +275,12 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                // TODO support read only when grid is used in binder ?
-                throw new UnsupportedOperationException(
-                        "Read only is not supported for Grid.");
+                getState().selectionAllowed = readOnly;
             }
 
             @Override
             public boolean isReadOnly() {
-                throw new UnsupportedOperationException(
-                        "Read only is not supported for Grid.");
+                return isUserSelectionAllowed();
             }
         };
     }

@@ -48,6 +48,19 @@ public class GridSingleSelectionModelTest {
 
     }
 
+    private static class TestSingleSelectionModel
+            extends SingleSelectionModelImpl<Object> {
+
+        public TestSingleSelectionModel() {
+            getState(false).selectionAllowed = false;
+        }
+
+        @Override
+        protected void setSelectedFromClient(String key) {
+            super.setSelectedFromClient(key);
+        }
+    }
+
     private List<Person> selectionChanges;
     private Grid<Person> grid;
     private SingleSelectionModelImpl<Person> selectionModel;
@@ -62,6 +75,12 @@ public class GridSingleSelectionModelTest {
         selectionChanges = new ArrayList<>();
         selectionModel
                 .addSelectionListener(e -> selectionChanges.add(e.getValue()));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void throwExceptionWhenSelectionIsDisallowed() {
+        TestSingleSelectionModel model = new TestSingleSelectionModel();
+        model.setSelectedFromClient("foo");
     }
 
     @Test(expected = IllegalStateException.class)

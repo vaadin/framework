@@ -22,6 +22,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedEvent;
 import com.vaadin.client.widget.grid.events.SelectAllEvent;
 import com.vaadin.client.widget.grid.selection.MultiSelectionRenderer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
@@ -64,6 +65,8 @@ public class MultiSelectionModelConnector
     protected class MultiSelectionModel implements SelectionModel<JsonObject>,
             SelectionModelWithSelectionColumn {
 
+        private boolean isSelectionAllowed = true;
+
         @Override
         public Renderer<Boolean> getRenderer() {
             // this method is only called once when the selection model is set
@@ -104,6 +107,18 @@ public class MultiSelectionModelConnector
         @Override
         public boolean isSelected(JsonObject item) {
             return MultiSelectionModelConnector.this.isSelected(item);
+        }
+
+        @Override
+        public void setSelectionAllowed(boolean selectionAllowed) {
+            isSelectionAllowed = selectionAllowed;
+            getGrid()
+                    .fireEvent(new GridSelectionAllowedEvent(selectionAllowed));
+        }
+
+        @Override
+        public boolean isSelectionAllowed() {
+            return isSelectionAllowed;
         }
 
     }
