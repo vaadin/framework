@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.renderers;
 
+import com.vaadin.shared.ui.grid.renderers.ProgressBarRendererState;
+
 import elemental.json.JsonValue;
 
 /**
@@ -41,5 +43,15 @@ public class ProgressBarRenderer extends AbstractRenderer<Object, Double> {
             value = 0d;
         }
         return super.encode(value);
+    }
+
+    @Override
+    protected ProgressBarRendererState getState() {
+        return (ProgressBarRendererState) super.getState();
+    }
+
+    @Override
+    protected ProgressBarRendererState getState(boolean markAsDirty) {
+        return (ProgressBarRendererState) super.getState(markAsDirty);
     }
 }

@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.renderers;
 
+import com.vaadin.shared.ui.grid.renderers.HtmlRendererState;
+
 /**
  * A renderer for presenting HTML content.
  *
@@ -42,5 +44,15 @@ public class HtmlRenderer extends AbstractRenderer<Object, String> {
     @Override
     public String getNullRepresentation() {
         return super.getNullRepresentation();
+    }
+
+    @Override
+    protected HtmlRendererState getState() {
+        return (HtmlRendererState) super.getState();
+    }
+
+    @Override
+    protected HtmlRendererState getState(boolean markAsDirty) {
+        return (HtmlRendererState) super.getState(markAsDirty);
     }
 }

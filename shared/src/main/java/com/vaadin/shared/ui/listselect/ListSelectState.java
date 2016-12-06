@@ -15,8 +15,8 @@
  */
 package com.vaadin.shared.ui.listselect;
 
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.ui.abstractmultiselect.AbstractMultiSelectState;
 
 /**
  * Shared state for ListSelect component.
@@ -24,7 +24,7 @@ import com.vaadin.shared.annotations.DelegateToWidget;
  * @author Vaadin Ltd
  *
  */
-public class ListSelectState extends AbstractFieldState {
+public class ListSelectState extends AbstractMultiSelectState {
     {
         primaryStyleName = "v-select";
     }

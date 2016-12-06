@@ -18,6 +18,7 @@ package com.vaadin.client.connectors.grid;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.renderers.HtmlRendererState;
 
 /**
  * A connector for {@link UnsafeHtmlRenderer}
@@ -39,5 +40,10 @@ public class UnsafeHtmlRendererConnector
     @Override
     public UnsafeHtmlRenderer getRenderer() {
         return (UnsafeHtmlRenderer) super.getRenderer();
+    }
+
+    @Override
+    public HtmlRendererState getState() {
+        return (HtmlRendererState) super.getState();
     }
 }

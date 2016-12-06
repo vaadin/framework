@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.shared.ui.customfield.CustomFieldState;
 
 /**
  * A {@link HasValue} whose UI content can be constructed by the user, enabling
@@ -115,6 +116,16 @@ public abstract class CustomField<T> extends AbstractField<T>
     public void setWidth(float width, Unit unit) {
         super.setWidth(width, unit);
         markAsDirtyRecursive();
+    }
+
+    @Override
+    protected CustomFieldState getState() {
+        return (CustomFieldState) super.getState();
+    }
+
+    @Override
+    protected CustomFieldState getState(boolean markAsDirty) {
+        return (CustomFieldState) super.getState(markAsDirty);
     }
 
     // ComponentContainer methods

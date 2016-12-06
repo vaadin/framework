@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.renderers;
 
+import com.vaadin.shared.ui.grid.renderers.ButtonRendererState;
+
 /**
  * A Renderer that displays a button with a textual caption. The value of the
  * corresponding property is used as the caption. Click listeners can be added
@@ -69,6 +71,16 @@ public class ButtonRenderer<T> extends ClickableRenderer<T, String> {
     @Override
     public String getNullRepresentation() {
         return super.getNullRepresentation();
+    }
+
+    @Override
+    protected ButtonRendererState getState() {
+        return (ButtonRendererState) super.getState();
+    }
+
+    @Override
+    protected ButtonRendererState getState(boolean markAsDirty) {
+        return (ButtonRendererState) super.getState(markAsDirty);
     }
 
 }

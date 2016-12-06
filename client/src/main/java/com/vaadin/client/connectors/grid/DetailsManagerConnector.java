@@ -30,6 +30,7 @@ import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.DetailsManagerState;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.ui.Grid.DetailsManager;
 
@@ -157,6 +158,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     @Override
     public GridConnector getParent() {
         return (GridConnector) super.getParent();
+    }
+
+    @Override
+    public DetailsManagerState getState() {
+        return (DetailsManagerState) super.getState();
     }
 
     private Grid<JsonObject> getWidget() {

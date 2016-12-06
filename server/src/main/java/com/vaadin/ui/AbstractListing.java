@@ -29,6 +29,8 @@ import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataGenerator;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.Query;
+import com.vaadin.shared.extension.abstractlisting.AbstractListingExtensionState;
+import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -116,6 +118,16 @@ public abstract class AbstractListing<T> extends AbstractComponent {
          */
         protected void refresh(T item) {
             getParent().getDataCommunicator().refresh(item);
+        }
+
+        @Override
+        protected AbstractListingExtensionState getState() {
+            return (AbstractListingExtensionState) super.getState();
+        }
+
+        @Override
+        protected AbstractListingExtensionState getState(boolean markAsDirty) {
+            return (AbstractListingExtensionState) super.getState(markAsDirty);
         }
     }
 
@@ -437,5 +449,15 @@ public abstract class AbstractListing<T> extends AbstractComponent {
      */
     protected String serializeDeclarativeRepresentation(T item) {
         return item.toString();
+    }
+
+    @Override
+    protected AbstractListingState getState() {
+        return (AbstractListingState) super.getState();
+    }
+
+    @Override
+    protected AbstractListingState getState(boolean markAsDirty) {
+        return (AbstractListingState) super.getState(markAsDirty);
     }
 }

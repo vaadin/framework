@@ -19,6 +19,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.renderers.CheckBoxRenderer;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.renderers.CheckBoxRendererState;
 
 import elemental.json.JsonObject;
 
@@ -41,5 +42,10 @@ public class CheckBoxRendererConnector
     protected HandlerRegistration addClickHandler(
             RendererClickHandler<JsonObject> handler) {
         return getRenderer().addClickHandler(handler);
+    }
+
+    @Override
+    public CheckBoxRendererState getState() {
+        return (CheckBoxRendererState) super.getState();
     }
 }
