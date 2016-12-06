@@ -257,4 +257,17 @@ public interface HasValue<V> extends Serializable {
      *         not.
      */
     public boolean isReadOnly();
+
+    /**
+     * Resets the value to the empty one.
+     * <p>
+     * This is just a shorthand for resetting the value, see the methods
+     * {@link #setValue(Object)} and {@link #getEmptyValue()}.
+     * 
+     * @see #setValue(Object)
+     * @see #getEmptyValue()
+     */
+    public default void clear() {
+        setValue(getEmptyValue());
+    }
 }
