@@ -19,8 +19,8 @@ package com.vaadin.shared.extension.javascriptmanager;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.extension.AbstractExtensionState;
 
-public class JavaScriptManagerState extends SharedState {
+public class JavaScriptManagerState extends AbstractExtensionState {
     public Set<String> names = new HashSet<>();
 }

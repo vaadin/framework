@@ -208,4 +208,9 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
     protected JavaScriptExtensionState getState() {
         return (JavaScriptExtensionState) super.getState();
     }
+
+    @Override
+    protected JavaScriptExtensionState getState(boolean markAsDirty) {
+        return (JavaScriptExtensionState) super.getState(markAsDirty);
+    }
 }

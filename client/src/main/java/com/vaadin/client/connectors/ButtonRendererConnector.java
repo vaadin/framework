@@ -19,6 +19,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.renderers.ButtonRenderer;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.renderers.ButtonRendererState;
 
 import elemental.json.JsonObject;
 
@@ -41,5 +42,10 @@ public class ButtonRendererConnector
     protected HandlerRegistration addClickHandler(
             RendererClickHandler<JsonObject> handler) {
         return getRenderer().addClickHandler(handler);
+    }
+
+    @Override
+    public ButtonRendererState getState() {
+        return (ButtonRendererState) super.getState();
     }
 }

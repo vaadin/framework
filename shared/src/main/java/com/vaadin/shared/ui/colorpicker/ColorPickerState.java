@@ -15,24 +15,13 @@
  */
 package com.vaadin.shared.ui.colorpicker;
 
-import com.vaadin.shared.AbstractFieldState;
-import com.vaadin.shared.annotations.DelegateToWidget;
-
 /**
- * Default shared state implementation for AbstractColorPicker.
+ * Default shared state implementation for ColorPicker.
+ * 
+ * @author Vaadin Ltd.
  *
- * @since 7.0.0
+ * @since
  */
-public class ColorPickerState extends AbstractFieldState {
-    {
-        primaryStyleName = "v-colorpicker";
-    }
+public class ColorPickerState extends AbstractColorPickerState {
 
-    @DelegateToWidget("setOpen")
-    public boolean popupVisible = false;
-
-    @DelegateToWidget("setColor")
-    public String color = null;
-
-    public boolean showDefaultCaption;
 }

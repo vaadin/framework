@@ -19,9 +19,9 @@ package com.vaadin.shared.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.extension.AbstractExtensionState;
 
-public class BrowserWindowOpenerState extends AbstractComponentState {
+public class BrowserWindowOpenerState extends AbstractExtensionState {
     public static final String locationResource = "url";
 
     public String target = "_blank";

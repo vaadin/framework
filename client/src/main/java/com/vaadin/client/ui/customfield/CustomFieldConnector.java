@@ -27,6 +27,7 @@ import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VCustomComponent;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.customfield.CustomFieldState;
 import com.vaadin.ui.CustomField;
 
 @Connect(value = CustomField.class)
@@ -119,6 +120,11 @@ public class CustomFieldConnector extends AbstractFieldConnector
         } else {
             return null;
         }
+    }
+
+    @Override
+    public CustomFieldState getState() {
+        return (CustomFieldState) super.getState();
     }
 
 }

@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.shared.ui.grid.selection;
 
-import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.extension.AbstractExtensionState;
 
 /**
  * SharedState object for SingleSelectionModel.
@@ -23,7 +23,7 @@ import com.vaadin.shared.communication.SharedState;
  * @since 7.6
  * @author Vaadin Ltd
  */
-public class SingleSelectionModelState extends SharedState {
+public class SingleSelectionModelState extends AbstractExtensionState {
 
     /* Allow deselecting rows */
     public boolean deselectAllowed = true;

@@ -58,7 +58,9 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
 import com.vaadin.shared.ui.grid.ColumnState;
+import com.vaadin.shared.ui.grid.DetailsManagerState;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
@@ -656,6 +658,16 @@ public class Grid<T> extends AbstractListing<T>
         public Grid<T> getParent() {
             return (Grid<T>) super.getParent();
         }
+
+        @Override
+        protected AbstractGridExtensionState getState() {
+            return (AbstractGridExtensionState) super.getState();
+        }
+
+        @Override
+        protected AbstractGridExtensionState getState(boolean markAsDirty) {
+            return (AbstractGridExtensionState) super.getState(markAsDirty);
+        }
     }
 
     private final class GridServerRpcImpl implements GridServerRpc {
@@ -888,6 +900,16 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         public Grid<T> getParent() {
             return super.getParent();
+        }
+
+        @Override
+        protected DetailsManagerState getState() {
+            return (DetailsManagerState) super.getState();
+        }
+
+        @Override
+        protected DetailsManagerState getState(boolean markAsDirty) {
+            return (DetailsManagerState) super.getState(markAsDirty);
         }
     }
 

@@ -34,6 +34,7 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.DataRequestRpc;
+import com.vaadin.shared.extension.datacommunicator.DataCommunicatorState;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -513,6 +514,16 @@ public class DataCommunicator<T, F> extends AbstractExtension {
      */
     public int getMinPushSize() {
         return minPushSize;
+    }
+
+    @Override
+    protected DataCommunicatorState getState(boolean markAsDirty) {
+        return (DataCommunicatorState) super.getState(markAsDirty);
+    }
+
+    @Override
+    protected DataCommunicatorState getState() {
+        return (DataCommunicatorState) super.getState();
     }
 
     private void attachDataProviderListener() {

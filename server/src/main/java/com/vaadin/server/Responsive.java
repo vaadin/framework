@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.extension.responsive.ResponsiveState;
 import com.vaadin.ui.Component;
 
 /**
@@ -157,5 +158,15 @@ public class Responsive extends AbstractExtension {
                 new Responsive().extend((AbstractClientConnector) c);
             }
         }
+    }
+
+    @Override
+    protected ResponsiveState getState() {
+        return (ResponsiveState) super.getState();
+    }
+
+    @Override
+    protected ResponsiveState getState(boolean markAsDirty) {
+        return (ResponsiveState) super.getState(markAsDirty);
     }
 }

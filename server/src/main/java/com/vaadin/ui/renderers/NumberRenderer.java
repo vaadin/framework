@@ -18,6 +18,8 @@ package com.vaadin.ui.renderers;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.shared.ui.grid.renderers.NumberRendererState;
+
 import elemental.json.JsonValue;
 
 /**
@@ -201,5 +203,15 @@ public class NumberRenderer extends AbstractRenderer<Object, Number> {
     @Override
     public String getNullRepresentation() {
         return super.getNullRepresentation();
+    }
+
+    @Override
+    protected NumberRendererState getState() {
+        return (NumberRendererState) super.getState();
+    }
+
+    @Override
+    protected NumberRendererState getState(boolean markAsDirty) {
+        return (NumberRendererState) super.getState(markAsDirty);
     }
 }

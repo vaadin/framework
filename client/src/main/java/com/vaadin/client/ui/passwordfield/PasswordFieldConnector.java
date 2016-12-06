@@ -18,6 +18,7 @@ package com.vaadin.client.ui.passwordfield;
 import com.vaadin.client.ui.VPasswordField;
 import com.vaadin.client.ui.textfield.TextFieldConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.passwordfield.PasswordFieldState;
 import com.vaadin.ui.PasswordField;
 
 @Connect(PasswordField.class)
@@ -26,5 +27,10 @@ public class PasswordFieldConnector extends TextFieldConnector {
     @Override
     public VPasswordField getWidget() {
         return (VPasswordField) super.getWidget();
+    }
+
+    @Override
+    public PasswordFieldState getState() {
+        return (PasswordFieldState) super.getState();
     }
 }

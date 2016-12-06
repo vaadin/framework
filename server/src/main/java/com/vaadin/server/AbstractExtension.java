@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.extension.AbstractExtensionState;
+
 /**
  * An extension is an entity that is attached to a Component or another
  * Extension and independently communicates between client and server.
@@ -99,6 +101,16 @@ public abstract class AbstractExtension extends AbstractClientConnector
                     + supportedParentType.getName() + " but attach to "
                     + parent.getClass().getName() + " was attempted.");
         }
+    }
+
+    @Override
+    protected AbstractExtensionState getState() {
+        return (AbstractExtensionState) super.getState();
+    }
+
+    @Override
+    protected AbstractExtensionState getState(boolean markAsDirty) {
+        return (AbstractExtensionState) super.getState(markAsDirty);
     }
 
     /**

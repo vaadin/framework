@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.shared.ui.passwordfield.PasswordFieldState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -72,10 +73,19 @@ public class PasswordField extends TextField {
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractTextField def = designContext
-                .getDefaultInstance(this);
+        AbstractTextField def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         DesignAttributeHandler.writeAttribute("value", attr, getValue(),
                 def.getValue(), String.class, designContext);
+    }
+
+    @Override
+    protected PasswordFieldState getState() {
+        return (PasswordFieldState) super.getState();
+    }
+
+    @Override
+    protected PasswordFieldState getState(boolean markAsDirty) {
+        return (PasswordFieldState) super.getState(markAsDirty);
     }
 }

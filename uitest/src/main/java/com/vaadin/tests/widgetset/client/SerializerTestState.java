@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.extension.AbstractExtensionState;
 import com.vaadin.shared.ui.label.ContentMode;
 
 import elemental.json.JsonBoolean;
 import elemental.json.JsonValue;
 
-public class SerializerTestState extends AbstractComponentState {
+public class SerializerTestState extends AbstractExtensionState {
 
     public boolean booleanValue;
     public Boolean booleanObjectValue;

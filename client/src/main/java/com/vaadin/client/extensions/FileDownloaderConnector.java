@@ -30,6 +30,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.server.FileDownloader;
+import com.vaadin.shared.extension.filedownloader.FileDownloaderState;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(FileDownloader.class)
@@ -79,6 +80,11 @@ public class FileDownloaderConnector extends AbstractExtensionConnector
         if (parent == null && iframe != null) {
             iframe.removeFromParent();
         }
+    }
+
+    @Override
+    public FileDownloaderState getState() {
+        return (FileDownloaderState) super.getState();
     }
 
 }

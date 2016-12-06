@@ -19,7 +19,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.shared.ui.colorpicker.ColorPickerState;
+import com.vaadin.shared.ui.colorpicker.AbstractColorPickerState;
 
 /**
  * An abstract class that defines default implementation for a color picker
@@ -33,8 +33,8 @@ public abstract class AbstractColorPickerConnector
     private static final String DEFAULT_WIDTH_STYLE = "v-default-caption-width";
 
     @Override
-    public ColorPickerState getState() {
-        return (ColorPickerState) super.getState();
+    public AbstractColorPickerState getState() {
+        return (AbstractColorPickerState) super.getState();
     }
 
     @Override

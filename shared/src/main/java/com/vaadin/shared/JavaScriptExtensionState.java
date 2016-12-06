@@ -21,9 +21,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.grid.renderers.AbstractRendererState;
 
-public class JavaScriptExtensionState extends SharedState
+public class JavaScriptExtensionState extends AbstractRendererState
         implements JavaScriptConnectorState {
 
     private Set<String> callbackNames = new HashSet<>();

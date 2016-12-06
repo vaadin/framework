@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.widgetset.client.helloworldfeature;
 
-import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.extension.AbstractExtensionState;
 
-public class HelloWorldState extends SharedState {
+public class HelloWorldState extends AbstractExtensionState {
     private String greeting = "Hello world";
 
     public String getGreeting() {

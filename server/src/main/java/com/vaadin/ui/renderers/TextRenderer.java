@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.renderers;
 
+import com.vaadin.shared.ui.grid.renderers.TextRendererState;
+
 /**
  * A renderer for presenting simple plain-text string values.
  *
@@ -43,5 +45,15 @@ public class TextRenderer extends AbstractRenderer<Object, String> {
     @Override
     public String getNullRepresentation() {
         return super.getNullRepresentation();
+    }
+
+    @Override
+    protected TextRendererState getState() {
+        return (TextRendererState) super.getState();
+    }
+
+    @Override
+    protected TextRendererState getState(boolean markAsDirty) {
+        return (TextRendererState) super.getState(markAsDirty);
     }
 }

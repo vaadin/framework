@@ -19,6 +19,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.shared.ui.grid.renderers.DateRendererState;
+
 import elemental.json.JsonValue;
 
 /**
@@ -234,5 +236,15 @@ public class DateRenderer extends AbstractRenderer<Object, Date> {
         }
 
         return String.format("%s [%s]", getClass().getSimpleName(), fieldInfo);
+    }
+
+    @Override
+    protected DateRendererState getState() {
+        return (DateRendererState) super.getState();
+    }
+
+    @Override
+    protected DateRendererState getState(boolean markAsDirty) {
+        return (DateRendererState) super.getState(markAsDirty);
     }
 }

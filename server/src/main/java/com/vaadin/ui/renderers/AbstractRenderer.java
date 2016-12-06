@@ -20,6 +20,7 @@ import java.util.Objects;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.JsonCodec;
+import com.vaadin.shared.ui.grid.renderers.AbstractRendererState;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.renderers.ClickableRenderer.RendererClickEvent;
@@ -156,5 +157,15 @@ public abstract class AbstractRenderer<T, V> extends AbstractExtension
             return null;
         }
         return (Grid<T>) super.getParent().getParent();
+    }
+
+    @Override
+    protected AbstractRendererState getState() {
+        return (AbstractRendererState) super.getState();
+    }
+
+    @Override
+    protected AbstractRendererState getState(boolean markAsDirty) {
+        return (AbstractRendererState) super.getState(markAsDirty);
     }
 }

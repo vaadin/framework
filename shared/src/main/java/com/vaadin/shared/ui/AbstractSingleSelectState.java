@@ -15,7 +15,7 @@
  */
 package com.vaadin.shared.ui;
 
-import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
 
 /**
  * Shared state for {@code AbstractSingleSelect}.
@@ -24,7 +24,7 @@ import com.vaadin.shared.AbstractFieldState;
  *
  * @since 8.0
  */
-public class AbstractSingleSelectState extends AbstractFieldState {
+public class AbstractSingleSelectState extends AbstractListingState {
 
     /**
      * The key of the currently selected item or {@code null} if no item is
