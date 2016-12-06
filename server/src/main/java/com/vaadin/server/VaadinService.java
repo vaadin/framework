@@ -1866,6 +1866,7 @@ public abstract class VaadinService implements Serializable {
             while ((pendingAccess = session.getPendingAccessQueue()
                     .poll()) != null) {
                 if (!pendingAccess.isCancelled()) {
+                    CurrentInstance.setCurrent(session);
                     pendingAccess.run();
 
                     try {
