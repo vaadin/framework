@@ -202,16 +202,16 @@ public class BinderConverterValidatorTest
     @Test
     public void convertDataToField() {
         bindAgeWithValidatorConverterValidator();
-        binder.getBean().get().setAge(12);
-        binder.readBean(binder.getBean().get());
+        binder.getBean().setAge(12);
+        binder.readBean(binder.getBean());
         assertEquals("12", ageField.getValue());
     }
 
     @Test
     public void convertNotValidatableDataToField() {
         bindAgeWithValidatorConverterValidator();
-        binder.getBean().get().setAge(-12);
-        binder.readBean(binder.getBean().get());
+        binder.getBean().setAge(-12);
+        binder.readBean(binder.getBean());
         assertEquals("-12", ageField.getValue());
     }
 
