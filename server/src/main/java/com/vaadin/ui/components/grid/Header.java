@@ -15,11 +15,15 @@
  */
 package com.vaadin.ui.components.grid;
 
-import com.vaadin.ui.Grid;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jsoup.nodes.Element;
+
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Represents the header section of a Grid.
@@ -39,8 +43,8 @@ public abstract class Header extends StaticSection<Header.Row> {
         /**
          * A cell in a Grid header row.
          */
-        public class Cell extends StaticSection.StaticCell implements
-                Grid.HeaderCell {
+        public class Cell extends StaticSection.StaticCell
+                implements Grid.HeaderCell {
             /**
              * Creates a new header cell.
              */
@@ -87,12 +91,14 @@ public abstract class Header extends StaticSection<Header.Row> {
         }
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
          * @see #join(Grid.HeaderCell...)
@@ -117,12 +123,14 @@ public abstract class Header extends StaticSection<Header.Row> {
         }
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
          * @see #join(Set)
@@ -130,10 +138,34 @@ public abstract class Header extends StaticSection<Header.Row> {
          */
         @Override
         public Grid.HeaderCell join(Grid.HeaderCell... cellsToMerge) {
-            Set<Grid.HeaderCell> headerCells = new HashSet<>(Arrays.asList(cellsToMerge));
+            Set<Grid.HeaderCell> headerCells = new HashSet<>(
+                    Arrays.asList(cellsToMerge));
             return join(headerCells);
         }
 
+        @Override
+        protected void readDesign(Element trElement,
+                DesignContext designContext) {
+            super.readDesign(trElement, designContext);
+
+            boolean defaultRow = DesignAttributeHandler.readAttribute("default",
+                    trElement.attributes(), false, boolean.class);
+            if (defaultRow) {
+                setDefault(true);
+            }
+        }
+
+        @Override
+        protected void writeDesign(Element trElement,
+                DesignContext designContext) {
+            super.writeDesign(trElement, designContext);
+
+            if (isDefault()) {
+                DesignAttributeHandler.writeAttribute("default",
+                        trElement.attributes(), true, null, boolean.class,
+                        designContext);
+            }
+        }
     }
 
     @Override
@@ -156,9 +188,7 @@ public abstract class Header extends StaticSection<Header.Row> {
      * @return the default row, or {@code null} if there is no default row
      */
     public Row getDefaultRow() {
-        return getRows().stream()
-                .filter(Row::isDefault)
-                .findAny().orElse(null);
+        return getRows().stream().filter(Row::isDefault).findAny().orElse(null);
     }
 
     /**
@@ -185,4 +215,5 @@ public abstract class Header extends StaticSection<Header.Row> {
 
         markAsDirty();
     }
+
 }
