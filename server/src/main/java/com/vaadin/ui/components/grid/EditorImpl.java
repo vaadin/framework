@@ -58,7 +58,9 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             }
 
             if (ok) {
-                binder.getBean().ifPresent(t -> refresh(t));
+                if (binder.getBean() != null) {
+                    refresh(binder.getBean());
+                }
                 rpc.setErrorMessage(null, Collections.emptyList());
             } else {
                 List<Component> fields = status.getFieldValidationErrors()
