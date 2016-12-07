@@ -544,7 +544,9 @@ public class Binder<BEAN> implements Serializable {
                     this, getter, setter);
 
             getBinder().bindings.add(binding);
-            getBinder().getBean().ifPresent(binding::initFieldValue);
+            if (getBinder().getBean() != null) {
+                binding.initFieldValue(getBinder().getBean());
+            }
             getBinder().fireStatusChangeEvent(false);
 
             bound = true;
@@ -813,8 +815,8 @@ public class Binder<BEAN> implements Serializable {
             List<ValidationResult> binderValidationResults = Collections
                     .emptyList();
             ValidationStatus<TARGET> fieldValidationStatus;
-            if (getBinder().getBean().isPresent()) {
-                BEAN bean = getBinder().getBean().get();
+            if (getBinder().getBean() != null) {
+                BEAN bean = getBinder().getBean();
                 fieldValidationStatus = writeFieldValue(bean);
                 if (!getBinder().bindings.stream()
                         .map(BindingImpl::doValidation)
@@ -964,13 +966,13 @@ public class Binder<BEAN> implements Serializable {
     private boolean hasChanges = false;
 
     /**
-     * Returns an {@code Optional} of the bean that has been bound with
-     * {@link #bind}, or an empty optional if a bean is not currently bound.
+     * Returns the bean that has been bound with {@link #bind}, or null if a
+     * bean is not currently bound.
      *
      * @return the currently bound bean if any
      */
-    public Optional<BEAN> getBean() {
-        return Optional.ofNullable(bean);
+    public BEAN getBean() {
+        return bean;
     }
 
     /**
@@ -1371,10 +1373,11 @@ public class Binder<BEAN> implements Serializable {
      */
     private List<ValidationResult> validateBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        List<ValidationResult> results = Collections.unmodifiableList(validators
-                .stream()
-                .map(validator -> validator.apply(bean, new ValueContext()))
-                .collect(Collectors.toList()));
+        List<ValidationResult> results = Collections
+                .unmodifiableList(validators.stream()
+                        .map(validator -> validator.apply(bean,
+                                new ValueContext()))
+                        .collect(Collectors.toList()));
         return results;
     }
 
@@ -1471,7 +1474,8 @@ public class Binder<BEAN> implements Serializable {
      * <li>{@link #readBean(Object)} is called
      * <li>{@link #setBean(Object)} is called
      * <li>{@link #removeBean()} is called
-     * <li>{@link BindingBuilder#bind(SerializableFunction, SerializableBiConsumer)}
+     * <li>
+     * {@link BindingBuilder#bind(SerializableFunction, SerializableBiConsumer)}
      * is called
      * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
      * </ul>
