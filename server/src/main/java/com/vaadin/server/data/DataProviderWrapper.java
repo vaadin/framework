@@ -185,7 +185,7 @@ public abstract class DataProviderWrapper<T, F, M>
     /**
      * Creates a data provider wrapper with a chained filter. The filter will be
      * combined to existing filters using
-     * {@link AppendableFilterDataProvider#combineFilters(Object, java.util.Optional)}.
+     * {@link AppendableFilterDataProvider#combineFilters(Object, Object)}.
      *
      * @param dataProvider
      *            the underlying data provider
@@ -204,7 +204,8 @@ public abstract class DataProviderWrapper<T, F, M>
 
             @Override
             protected F getFilter(Query<T, F> query) {
-                return combineFilters(filter, query.getFilter());
+                return query.getFilter().map(f -> combineFilters(filter, f))
+                        .orElse(filter);
             }
         };
     }
