@@ -56,10 +56,6 @@ public class SimpleLoginUI extends UI {
                 return true;
             }
 
-            @Override
-            public void afterViewChange(ViewChangeEvent event) {
-
-            }
         });
     }
 }
