@@ -21,13 +21,18 @@ import java.util.EventObject;
 
 /**
  * Interface for listening to View changes before and after they occur.
- *
+ * <p>
  * Implementations of this interface can also block navigation between views
- * before it is performed.
+ * before it is performed (using {@link #beforeViewChange(ViewChangeEvent)}).
+ * <p>
+ * The interface contains two methods {@link #beforeViewChange(ViewChangeEvent)}
+ * and {@link #afterViewChange(ViewChangeEvent)}. The latter one has default
+ * empty implementation.
  *
  * @author Vaadin Ltd
  * @since 7.0
  */
+@FunctionalInterface
 public interface ViewChangeListener extends Serializable {
 
     /**
@@ -124,10 +129,14 @@ public interface ViewChangeListener extends Serializable {
      * method blocked the view change, this method is not called. Be careful of
      * unbounded recursion if you decide to change the view again in the
      * listener.
+     * <p>
+     * By default it does nothing. Override it in your listener if you need this
+     * functionality.
      *
      * @param event
      *            view change event
      */
-    public void afterViewChange(ViewChangeEvent event);
+    public default void afterViewChange(ViewChangeEvent event) {
+    }
 
 }
