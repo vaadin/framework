@@ -128,7 +128,7 @@ $_valo-slider-base-margin-horizontal: round($v-slider-handle-width/2);
     &:before,
     &:after {
       content: "";
-      @include box-sizing(border-box);
+      box-sizing: border-box;
       padding: 0;
       width: $v-slider-handle-width;
       height: $v-slider-handle-height;
