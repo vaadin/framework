@@ -28,6 +28,7 @@ import java.util.EventObject;
  * @author Vaadin Ltd
  * @since 7.0
  */
+@FunctionalInterface
 public interface ViewChangeListener extends Serializable {
 
     /**
@@ -124,10 +125,14 @@ public interface ViewChangeListener extends Serializable {
      * method blocked the view change, this method is not called. Be careful of
      * unbounded recursion if you decide to change the view again in the
      * listener.
+     * <p>
+     * By default it does nothing. Override it in your listener if you need this
+     * functionality.
      *
      * @param event
      *            view change event
      */
-    public void afterViewChange(ViewChangeEvent event);
+    public default void afterViewChange(ViewChangeEvent event) {
+    }
 
 }
