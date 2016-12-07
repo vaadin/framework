@@ -25,7 +25,7 @@ import com.vaadin.ui.Layout.MarginHandler;
 public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler>
         extends DeclarativeTestBase<L> {
 
-    protected void testMargins(String componentTag) {
+    protected void testMargins(String componentTag, boolean defaultMargin) {
 
         for (int i = 0; i < 16; ++i) {
             boolean top = (i & 1) == 1;
@@ -35,37 +35,41 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
 
             MarginInfo m = new MarginInfo(top, right, bottom, left);
 
-            String design = getMarginTag(componentTag, top, right, bottom,
+            String design = getMarginTag(componentTag, defaultMargin, top, right, bottom,
                     left);
 
             // The assertEquals machinery in DeclarativeTestBase uses bean
             // introspection and MarginInfo is not a proper bean. It ends up
             // considering *all* MarginInfo objects equal... (#18229)
             L layout = read(design);
-            Assert.assertEquals(m, layout.getMargin());
+            Assert.assertEquals("For tag: " + design, m, layout.getMargin());
 
             testWrite(design, layout);
         }
     }
 
-    private String getMarginTag(String componentTag, boolean top, boolean right,
-            boolean bottom, boolean left) {
+    private String getMarginTag(String componentTag, boolean defaultMargin, boolean top, boolean right,
+                                boolean bottom, boolean left) {
         String s = "<" + componentTag + " ";
+        String suffix = defaultMargin ? "=false " : " ";
 
-        if (left && right && top && bottom) {
-            s += "margin";
+        if (top == left && top == right && top == bottom) {
+            if(top != defaultMargin)
+            {
+                s += "margin" + suffix;
+            }
         } else {
-            if (left) {
-                s += "margin-left ";
+            if (left != defaultMargin) {
+                s += "margin-left" + suffix;
             }
-            if (right) {
-                s += "margin-right ";
+            if (right != defaultMargin) {
+                s += "margin-right" + suffix;
             }
-            if (top) {
-                s += "margin-top ";
+            if (top != defaultMargin) {
+                s += "margin-top" + suffix;
             }
-            if (bottom) {
-                s += "margin-bottom ";
+            if (bottom != defaultMargin) {
+                s += "margin-bottom" + suffix;
             }
         }
         return s + " />";
