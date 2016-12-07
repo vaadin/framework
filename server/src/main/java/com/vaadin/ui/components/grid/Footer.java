@@ -15,11 +15,11 @@
  */
 package com.vaadin.ui.components.grid;
 
-import com.vaadin.ui.Grid;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.vaadin.ui.Grid;
 
 /**
  * Represents the footer section of a Grid.
@@ -67,12 +67,14 @@ public abstract class Footer extends StaticSection<Footer.Row> {
         }
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
          * @see #join(Grid.FooterCell...)
@@ -97,12 +99,14 @@ public abstract class Footer extends StaticSection<Footer.Row> {
         }
 
         /**
-         * Merges column cells in the row. Original cells are hidden, and new merged cell is shown instead.
-         * The cell has a width of all merged cells together, inherits styles of the first merged cell
-         * but has empty caption.
+         * Merges column cells in the row. Original cells are hidden, and new
+         * merged cell is shown instead. The cell has a width of all merged
+         * cells together, inherits styles of the first merged cell but has
+         * empty caption.
          *
          * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be merged to any other cell set.
+         *            the cells which should be merged. The cells should not be
+         *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
          * @see #join(Set)
@@ -110,10 +114,10 @@ public abstract class Footer extends StaticSection<Footer.Row> {
          */
         @Override
         public Grid.FooterCell join(Grid.FooterCell... cellsToMerge) {
-            Set<Grid.FooterCell> footerCells = new HashSet<>(Arrays.asList(cellsToMerge));
+            Set<Grid.FooterCell> footerCells = new HashSet<>(
+                    Arrays.asList(cellsToMerge));
             return join(footerCells);
         }
-
 
     }
 
@@ -121,4 +125,5 @@ public abstract class Footer extends StaticSection<Footer.Row> {
     public Row createRow() {
         return new Row();
     }
+
 }

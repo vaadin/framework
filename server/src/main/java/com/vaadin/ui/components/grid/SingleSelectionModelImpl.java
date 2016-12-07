@@ -269,12 +269,12 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                getState().selectionAllowed = readOnly;
+                getState().selectionAllowed = !readOnly;
             }
 
             @Override
             public boolean isReadOnly() {
-                return isUserSelectionAllowed();
+                return !isUserSelectionAllowed();
             }
         };
     }

@@ -92,16 +92,24 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
         boolean visible = false;
         boolean requiredIndicator = true;
 
+        T component = getComponentClass().newInstance();
+
+        boolean hasReadOnly = callBooleanSetter(readOnly, "setReadOnly",
+                component);
+        boolean hasRequiredIndicator = callBooleanSetter(requiredIndicator,
+                "setRequiredIndicatorVisible", component);
+
         String design = String.format(
                 "<%s id='%s' caption='%s' caption-as-html description='%s' "
                         + "error='%s' enabled='false' width='%s' height='%s' "
                         + "icon='%s' locale='%s' primary-style-name='%s' "
-                        + "readonly responsive style-name='%s' visible='false' "
-                        + "required-indicator-visible/>",
+                        + "%s responsive style-name='%s' visible='false' "
+                        + "%s/>",
                 getComponentTag(), id, caption, description, error, width,
-                height, icon, locale.toString(), primaryStyle, styleName);
+                height, icon, locale.toString(), primaryStyle,
+                hasReadOnly ? "readonly" : "", styleName,
+                hasRequiredIndicator ? "required-indicator-visible" : "");
 
-        T component = getComponentClass().newInstance();
         component.setId(id);
         component.setCaption(caption);
         component.setCaptionAsHtml(captionAsHtml);
@@ -115,9 +123,6 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
         component.setIcon(new FileResource(new File(icon)));
         component.setLocale(locale);
         component.setPrimaryStyleName(primaryStyle);
-        callBooleanSetter(readOnly, "setReadOnly", component);
-        callBooleanSetter(requiredIndicator, "setRequiredIndicatorVisible",
-                component);
         component.setResponsive(responsive);
         component.setStyleName(styleName);
         component.setVisible(visible);
@@ -126,15 +131,17 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
         testWrite(design, component);
     }
 
-    private void callBooleanSetter(boolean value, String setterName,
+    private boolean callBooleanSetter(boolean value, String setterName,
             T component)
             throws IllegalAccessException, InvocationTargetException {
         try {
             Method method = component.getClass().getMethod(setterName,
                     new Class[] { boolean.class });
             method.invoke(component, value);
+            return true;
         } catch (NoSuchMethodException ignore) {
             // ignore if there is no such method
+            return false;
         }
     }
 
