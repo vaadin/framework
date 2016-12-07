@@ -359,7 +359,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     /**
-     * Returns the suggestion pop-up's width as a CSS string.
+     * Returns the suggestion pop-up's width as a CSS string. By default this
+     * width is set to "100%".
      *
      * @see #setPopupWidth
      * @since 7.7
@@ -405,13 +406,13 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Returns the empty selection caption.
      * <p>
      * The empty string {@code ""} is the default empty selection caption.
-     * 
+     *
      * @see #setEmptySelectionAllowed(boolean)
      * @see #isEmptySelectionAllowed()
      * @see #setEmptySelectionCaption(String)
      * @see #isSelected(Object)
      * @see #select(Object)
-     * 
+     *
      * @return the empty selection caption, not {@code null}
      */
     public String getEmptySelectionCaption() {
@@ -442,6 +443,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Sets the suggestion pop-up's width as a CSS string. By using relative
      * units (e.g. "50%") it's possible to set the popup's width relative to the
      * ComboBox itself.
+     * <p>
+     * By default this width is set to "100%". By setting width to null the
+     * pop-up's width will automatically expand beyond 100% relative width to
+     * fit the content of all displayed items.
      *
      * @see #getPopupWidth()
      * @since 7.7
@@ -455,7 +460,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Sets whether to scroll the selected item visible (directly open the page
      * on which it is) when opening the combo box popup or not.
-     *
+     * <p>
      * This requires finding the index of the item, which can be expensive in
      * many large lazy loading containers.
      *
