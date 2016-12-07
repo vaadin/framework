@@ -19,12 +19,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.SectionState;
@@ -33,6 +42,10 @@ import com.vaadin.shared.ui.grid.SectionState.RowState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * Represents the header or footer section of a Grid.
@@ -108,10 +121,11 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
             CELL cell = cells.remove(columnId);
             if (cell != null) {
                 rowState.cells.remove(columnId);
-                for (Iterator<Set<String>> iterator = rowState.cellGroups.values().iterator(); iterator.hasNext(); ) {
+                for (Iterator<Set<String>> iterator = rowState.cellGroups
+                        .values().iterator(); iterator.hasNext();) {
                     Set<String> group = iterator.next();
                     group.remove(columnId);
-                    if(group.size() < 2) {
+                    if (group.size() < 2) {
                         iterator.remove();
                     }
                 }
@@ -147,6 +161,126 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
             return cell;
         }
 
+        /**
+         * Reads the declarative design from the given table row element.
+         *
+         * @since 7.5.0
+         * @param trElement
+         *            Element to read design from
+         * @param designContext
+         *            the design context
+         * @throws DesignException
+         *             if the given table row contains unexpected children
+         */
+        protected void readDesign(Element trElement,
+                DesignContext designContext) throws DesignException {
+            Elements cellElements = trElement.children();
+            for (int i = 0; i < cellElements.size(); i++) {
+                Element element = cellElements.get(i);
+                if (!element.tagName().equals(getCellTagName())) {
+                    throw new DesignException(
+                            "Unexpected element in tr while expecting "
+                                    + getCellTagName() + ": "
+                                    + element.tagName());
+                }
+
+                int colspan = DesignAttributeHandler.readAttribute("colspan",
+                        element.attributes(), 1, int.class);
+
+                String columnIdsString = DesignAttributeHandler.readAttribute(
+                        "coulmn-ids", element.attributes(), "", String.class);
+                if (columnIdsString.trim().isEmpty()) {
+                    throw new DesignException(
+                            "Unexpected 'coulmn-ids' attribute value '"
+                                    + columnIdsString
+                                    + "'. It cannot be empty and must "
+                                    + "be comma separated column identifiers");
+                }
+                String[] columnIds = columnIdsString.split(",");
+                if (columnIds.length != colspan) {
+                    throw new DesignException(
+                            "Unexpected 'colspan' attribute value '" + colspan
+                                    + "' whereas there is " + columnIds.length
+                                    + " column identifiers specified : '"
+                                    + columnIdsString + "'");
+                }
+
+                Stream.of(columnIds).forEach(this::addCell);
+
+                Stream<String> idsStream = Stream.of(columnIds);
+                if (colspan > 1) {
+                    CELL newCell = createCell();
+                    addMergedCell(createCell(),
+                            idsStream.collect(Collectors.toSet()));
+                    newCell.readDesign(element, designContext);
+                } else {
+                    idsStream.map(this::getCell).forEach(
+                            cell -> cell.readDesign(element, designContext));
+                }
+            }
+        }
+
+        /**
+         * Writes the declarative design to the given table row element.
+         *
+         * @since 7.5.0
+         * @param trElement
+         *            Element to write design to
+         * @param designContext
+         *            the design context
+         */
+        protected void writeDesign(Element trElement,
+                DesignContext designContext) {
+            Set<String> visited = new HashSet<>();
+            for (Entry<String, CELL> entry : cells.entrySet()) {
+                if (visited.contains(entry.getKey())) {
+                    continue;
+                }
+                visited.add(entry.getKey());
+
+                Element cellElement = trElement.appendElement(getCellTagName());
+
+                Optional<Entry<CellState, Set<String>>> groupCell = getRowState().cellGroups
+                        .entrySet().stream().filter(groupEntry -> groupEntry
+                                .getValue().contains(entry.getKey()))
+                        .findFirst();
+                Stream<String> columnIds = Stream.of(entry.getKey());
+                if (groupCell.isPresent()) {
+                    Set<String> orderedSet = new LinkedHashSet<>(
+                            cells.keySet());
+                    orderedSet.retainAll(groupCell.get().getValue());
+                    columnIds = orderedSet.stream();
+                    visited.addAll(orderedSet);
+                    cellElement.attr("colspan", "" + orderedSet.size());
+                    writeCellState(cellElement, designContext,
+                            groupCell.get().getKey());
+                } else {
+                    writeCellState(cellElement, designContext,
+                            entry.getValue().getCellState());
+                }
+                cellElement.attr("coulmn-ids",
+                        columnIds.collect(Collectors.joining(",")));
+            }
+        }
+
+        protected void writeCellState(Element cellElement,
+                DesignContext context, CellState state) {
+            switch (state.type) {
+            case TEXT:
+                cellElement.attr("plain-text", true);
+                cellElement
+                        .appendText(Optional.ofNullable(state.text).orElse(""));
+                break;
+            case HTML:
+                cellElement.append(Optional.ofNullable(state.html).orElse(""));
+                break;
+            case WIDGET:
+                cellElement.appendChild(
+                        context.createElement((Component) state.connector));
+                break;
+            }
+        }
+
         void detach() {
             for (CELL cell : cells.values()) {
                 cell.detach();
@@ -171,10 +305,15 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         }
     }
 
+    public interface Cell extends Serializable {
+        public String getColumnId();
+
+    }
+
     /**
      * A header or footer cell. Has a simple textual caption.
      */
-    abstract static class StaticCell implements Serializable {
+    abstract static class StaticCell implements Cell, Serializable {
 
         private final CellState cellState = new CellState();
         private final StaticRow<?> row;
@@ -187,6 +326,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
             cellState.columnId = id;
         }
 
+        @Override
         public String getColumnId() {
             return cellState.columnId;
         }
@@ -297,6 +437,31 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          */
         public GridStaticCellType getCellType() {
             return cellState.type;
+        }
+
+        /**
+         * Reads the declarative design from the given table cell element.
+         *
+         * @since 7.5.0
+         * @param cellElement
+         *            Element to read design from
+         * @param designContext
+         *            the design context
+         */
+        protected void readDesign(Element cellElement,
+                DesignContext designContext) {
+            if (!cellElement.hasAttr("plain-text")) {
+                if (cellElement.children().size() > 0
+                        && cellElement.child(0).tagName().contains("-")) {
+                    setComponent(
+                            designContext.readDesign(cellElement.child(0)));
+                } else {
+                    setHtml(cellElement.html());
+                }
+            } else {
+                // text – need to unescape HTML entities
+                setText(DesignFormatter.decodeFromTextNode(cellElement.html()));
+            }
         }
 
         private void removeComponentIfPresent() {
@@ -441,6 +606,48 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
     }
 
     /**
+     * Writes the declarative design to the given table section element.
+     *
+     * @param tableSectionElement
+     *            Element to write design to
+     * @param designContext
+     *            the design context
+     */
+    public void writeDesign(Element tableSectionElement,
+            DesignContext designContext) {
+        for (ROW row : getRows()) {
+            Element tr = tableSectionElement.appendElement("tr");
+            row.writeDesign(tr, designContext);
+        }
+    }
+
+    /**
+     * Reads the declarative design from the given table section element.
+     *
+     * @since 7.5.0
+     * @param tableSectionElement
+     *            Element to read design from
+     * @param designContext
+     *            the design context
+     * @throws DesignException
+     *             if the table section contains unexpected children
+     */
+    public void readDesign(Element tableSectionElement,
+            DesignContext designContext) throws DesignException {
+        while (getRowCount() > 0) {
+            removeRow(0);
+        }
+
+        for (Element row : tableSectionElement.children()) {
+            if (!row.tagName().equals("tr")) {
+                throw new DesignException("Unexpected element in "
+                        + tableSectionElement.tagName() + ": " + row.tagName());
+            }
+            addRowAt(getRowCount()).readDesign(row, designContext);
+        }
+    }
+
+    /**
      * Returns an unmodifiable list of the rows in this section.
      *
      * @return the rows in this section
@@ -448,4 +655,5 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
     protected List<ROW> getRows() {
         return Collections.unmodifiableList(rows);
     }
+
 }
