@@ -444,9 +444,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * units (e.g. "50%") it's possible to set the popup's width relative to the
      * ComboBox itself.
      * <p>
-     * By default this width is set to "100%". By setting width to null the
-     * pop-up's width will automatically expand beyond 100% relative width to
-     * fit the content of all displayed items.
+     * By default this width is set to "100%" so that the pop-up's width is
+     * equal to the width of the combobox. By setting width to null the pop-up's
+     * width will automatically expand beyond 100% relative width to fit the
+     * content of all displayed items.
      *
      * @see #getPopupWidth()
      * @since 7.7
