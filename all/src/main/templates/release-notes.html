@@ -176,11 +176,13 @@
             <li><tt>required-indicator-visible</tt> attribute replaces the <tt>required</tt> attribute</li>
             <li><tt>placeholder</tt> attribute replaces the <tt>input-prompt</tt> attribute for input components</li>
             <li><tt>multi-select</tt> attribute is no longer used for select components</li>
-            <li><tt>v-option-group</tt> with attribute <tt>multi-select=true</tt> is replaced by <tt>v-check-box-group</tt></li>
-            <li><tt>v-option-group</tt> with attribute <tt>multi-select=false</tt> is replaced by <tt>v-radio-button-group</tt></li>
+            <li><tt>vaadin-option-group</tt> with attribute <tt>multi-select=true</tt> is replaced by <tt>v-check-box-group</tt></li>
+            <li><tt>vaadin-option-group</tt> with attribute <tt>multi-select=false</tt> is replaced by <tt>v-radio-button-group</tt></li>
             <li><tt>immediate</tt> attribute is not used for any component</li>
             <li><tt>read-only</tt> attribute is now only used for field components instead of all components</li>
-            <li><tt>v-upload</tt> has a new attribute <tt>immediate-mode</tt> that replaces the removed <tt>immediate</tt> attribue</li>
+            <li><tt>vaadin-upload</tt> has a new attribute <tt>immediate-mode</tt> that replaces the removed <tt>immediate</tt> attribue</li>
+            <li><tt>vaadin-grid</tt> column elements don't have <tt>property-id</tt> attribute anymore. Columns aren't addressed by a property anymore but they have an id. So there is <tt>column-id</tt> attribute instead</li>
+            <li><tt>vaadin-grid</tt> doesn't have <tt>readonly</tt> attribute anymore. It  is replaced by <tt>selection-allowed</tt> attribute which has special meaning for a <tt>Grid</tt></li> 
         </ul>
         <ul id="legacycomponents"><h4>Legacy components in the v7 compatiblity package <tt>com.vaadin.v7.ui</tt> available as a separate dependency</h4>
             <li><tt>Calendar</tt> - no replacement in 8</li>

@@ -221,9 +221,9 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         return context;
     }
 
-    public void testWrite(String design, T expected) {
+    public void testWrite(String expected, T component) {
         TestLogHandler l = new TestLogHandler();
-        testWrite(design, expected, false);
+        testWrite(expected, component, false);
         Assert.assertEquals("", l.getMessages());
     }
 

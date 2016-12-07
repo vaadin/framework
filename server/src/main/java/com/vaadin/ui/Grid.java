@@ -30,7 +30,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
@@ -38,7 +40,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.BinderValidationStatus;
@@ -57,6 +61,7 @@ import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataProvider;
+import com.vaadin.server.data.Query;
 import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -82,8 +87,12 @@ import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignException;
+import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
+import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
@@ -1780,6 +1789,136 @@ public class Grid<T> extends AbstractListing<T>
                         "Column is no longer attached to a grid.");
             }
         }
+
+        /**
+         * Writes the design attributes for this column into given element.
+         *
+         * @since 7.5.0
+         *
+         * @param element
+         *            Element to write attributes into
+         *
+         * @param designContext
+         *            the design context
+         */
+        protected void writeDesign(Element element,
+                DesignContext designContext) {
+            Attributes attributes = element.attributes();
+
+            ColumnState defaultState = new ColumnState();
+
+            DesignAttributeHandler.writeAttribute("column-id", attributes,
+                    getId(), null, String.class, designContext);
+
+            // Sortable is a special attribute that depends on the data
+            // provider.
+            DesignAttributeHandler.writeAttribute("sortable", attributes,
+                    isSortable(), null, boolean.class, designContext);
+            DesignAttributeHandler.writeAttribute("editable", attributes,
+                    isEditable(), defaultState.editable, boolean.class,
+                    designContext);
+            DesignAttributeHandler.writeAttribute("resizable", attributes,
+                    isResizable(), defaultState.resizable, boolean.class,
+                    designContext);
+
+            DesignAttributeHandler.writeAttribute("hidable", attributes,
+                    isHidable(), defaultState.hidable, boolean.class,
+                    designContext);
+            DesignAttributeHandler.writeAttribute("hidden", attributes,
+                    isHidden(), defaultState.hidden, boolean.class,
+                    designContext);
+            DesignAttributeHandler.writeAttribute("hiding-toggle-caption",
+                    attributes, getHidingToggleCaption(),
+                    defaultState.hidingToggleCaption, String.class,
+                    designContext);
+
+            DesignAttributeHandler.writeAttribute("width", attributes,
+                    getWidth(), defaultState.width, Double.class,
+                    designContext);
+            DesignAttributeHandler.writeAttribute("min-width", attributes,
+                    getMinimumWidth(), defaultState.minWidth, Double.class,
+                    designContext);
+            DesignAttributeHandler.writeAttribute("max-width", attributes,
+                    getMaximumWidth(), defaultState.maxWidth, Double.class,
+                    designContext);
+            DesignAttributeHandler.writeAttribute("expand", attributes,
+                    getExpandRatio(), defaultState.expandRatio, Integer.class,
+                    designContext);
+        }
+
+        /**
+         * Reads the design attributes for this column from given element.
+         *
+         * @since 7.5.0
+         * @param design
+         *            Element to read attributes from
+         * @param designContext
+         *            the design context
+         */
+        protected void readDesign(Element design, DesignContext designContext) {
+            Attributes attributes = design.attributes();
+
+            if (design.hasAttr("sortable")) {
+                setSortable(DesignAttributeHandler.readAttribute("sortable",
+                        attributes, boolean.class));
+            } else {
+                setSortable(false);
+            }
+            if (design.hasAttr("editable")) {
+                /*
+                 * This is a fake editor just to have something (otherwise
+                 * "setEditable" throws an exception.
+                 * 
+                 * Let's use TextField here because we support only Strings as
+                 * inline data type. It will work incorrectly for other types
+                 * but we don't support them anyway.
+                 */
+                setEditorComponentGenerator(item -> new TextField(
+                        Optional.ofNullable(valueProvider.apply(item))
+                                .map(Object::toString).orElse("")));
+                setEditable(DesignAttributeHandler.readAttribute("editable",
+                        attributes, boolean.class));
+            }
+            if (design.hasAttr("resizable")) {
+                setResizable(DesignAttributeHandler.readAttribute("resizable",
+                        attributes, boolean.class));
+            }
+
+            if (design.hasAttr("hidable")) {
+                setHidable(DesignAttributeHandler.readAttribute("hidable",
+                        attributes, boolean.class));
+            }
+            if (design.hasAttr("hidden")) {
+                setHidden(DesignAttributeHandler.readAttribute("hidden",
+                        attributes, boolean.class));
+            }
+            if (design.hasAttr("hiding-toggle-caption")) {
+                setHidingToggleCaption(DesignAttributeHandler.readAttribute(
+                        "hiding-toggle-caption", attributes, String.class));
+            }
+
+            // Read size info where necessary.
+            if (design.hasAttr("width")) {
+                setWidth(DesignAttributeHandler.readAttribute("width",
+                        attributes, Double.class));
+            }
+            if (design.hasAttr("min-width")) {
+                setMinimumWidth(DesignAttributeHandler
+                        .readAttribute("min-width", attributes, Double.class));
+            }
+            if (design.hasAttr("max-width")) {
+                setMaximumWidth(DesignAttributeHandler
+                        .readAttribute("max-width", attributes, Double.class));
+            }
+            if (design.hasAttr("expand")) {
+                if (design.attr("expand").isEmpty()) {
+                    setExpandRatio(1);
+                } else {
+                    setExpandRatio(DesignAttributeHandler.readAttribute(
+                            "expand", attributes, Integer.class));
+                }
+            }
+        }
     }
 
     /**
@@ -1976,7 +2115,7 @@ public class Grid<T> extends AbstractListing<T>
     /**
      * An individual cell on a Grid footer row.
      */
-    public interface FooterCell extends Serializable {
+    public interface FooterCell {
 
         /**
          * Returns the textual caption of this cell.
@@ -3307,14 +3446,7 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     @Override
-    protected Element writeItem(Element design, T item, DesignContext context) {
-        // TODO see vaadin/framework8-issues#390
-        return null;
-    }
-
-    @Override
     protected List<T> readItems(Element design, DesignContext context) {
-        // TODO see vaadin/framework8-issues#390
         return Collections.emptyList();
     }
 
@@ -3326,6 +3458,226 @@ public class Grid<T> extends AbstractListing<T>
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         internalSetDataProvider(dataProvider);
+    }
+
+    @Override
+    protected void doReadDesign(Element design, DesignContext context) {
+        Attributes attrs = design.attributes();
+        if (attrs.hasKey("selection-mode")) {
+            setSelectionMode(DesignAttributeHandler.readAttribute(
+                    "selection-mode", attrs, SelectionMode.class));
+        }
+        Attributes attr = design.attributes();
+        if (attr.hasKey("selection-allowed")) {
+            setReadOnly(DesignAttributeHandler
+                    .readAttribute("selection-allowed", attr, Boolean.class));
+        }
+
+        if (attrs.hasKey("rows")) {
+            setHeightByRows(DesignAttributeHandler.readAttribute("rows", attrs,
+                    double.class));
+        }
+
+        readStructure(design, context);
+
+        // Read frozen columns after columns are read.
+        if (attrs.hasKey("frozen-columns")) {
+            setFrozenColumnCount(DesignAttributeHandler
+                    .readAttribute("frozen-columns", attrs, int.class));
+        }
+    }
+
+    @Override
+    protected void doWriteDesign(Element design, DesignContext designContext) {
+        Attributes attr = design.attributes();
+        DesignAttributeHandler.writeAttribute("selection-allowed", attr,
+                isReadOnly(), false, Boolean.class, designContext);
+
+        Attributes attrs = design.attributes();
+        Grid<?> defaultInstance = designContext.getDefaultInstance(this);
+
+        DesignAttributeHandler.writeAttribute("frozen-columns", attrs,
+                getFrozenColumnCount(), defaultInstance.getFrozenColumnCount(),
+                int.class, designContext);
+
+        if (HeightMode.ROW.equals(getHeightMode())) {
+            DesignAttributeHandler.writeAttribute("rows", attrs,
+                    getHeightByRows(), defaultInstance.getHeightByRows(),
+                    double.class, designContext);
+        }
+
+        SelectionMode mode = getSelectionMode();
+
+        if (mode != null) {
+            DesignAttributeHandler.writeAttribute("selection-mode", attrs, mode,
+                    SelectionMode.SINGLE, SelectionMode.class, designContext);
+        }
+
+        writeStructure(design, designContext);
+    }
+
+    @Override
+    protected T deserializeDeclarativeRepresentation(String item) {
+        if (item == null) {
+            return super.deserializeDeclarativeRepresentation(
+                    new String(UUID.randomUUID().toString()));
+        }
+        return super.deserializeDeclarativeRepresentation(new String(item));
+    }
+
+    @Override
+    protected boolean isReadOnly() {
+        SelectionMode selectionMode = getSelectionMode();
+        if (SelectionMode.SINGLE.equals(selectionMode)) {
+            return asSingleSelect().isReadOnly();
+        } else if (SelectionMode.MULTI.equals(selectionMode)) {
+            return asMultiSelect().isReadOnly();
+        }
+        return false;
+    }
+
+    @Override
+    protected void setReadOnly(boolean readOnly) {
+        SelectionMode selectionMode = getSelectionMode();
+        if (SelectionMode.SINGLE.equals(selectionMode)) {
+            asSingleSelect().setReadOnly(readOnly);
+        } else if (SelectionMode.MULTI.equals(selectionMode)) {
+            asMultiSelect().setReadOnly(readOnly);
+        }
+    }
+
+    private void readStructure(Element design, DesignContext context) {
+        if (design.children().isEmpty()) {
+            return;
+        }
+        if (design.children().size() > 1
+                || !design.child(0).tagName().equals("table")) {
+            throw new DesignException(
+                    "Grid needs to have a table element as its only child");
+        }
+        Element table = design.child(0);
+
+        Elements colgroups = table.getElementsByTag("colgroup");
+        if (colgroups.size() != 1) {
+            throw new DesignException(
+                    "Table element in declarative Grid needs to have a"
+                            + " colgroup defining the columns used in Grid");
+        }
+
+        List<DeclarativeValueProvider<T>> providers = new ArrayList<>();
+        for (Element col : colgroups.get(0).getElementsByTag("col")) {
+            String id = DesignAttributeHandler.readAttribute("column-id",
+                    col.attributes(), null, String.class);
+            Column<T, String> column;
+            DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
+            if (id != null) {
+                column = addColumn(id, provider, new HtmlRenderer());
+            } else {
+                column = addColumn(provider, new HtmlRenderer());
+            }
+            providers.add(provider);
+            column.readDesign(col, context);
+        }
+
+        for (Element child : table.children()) {
+            if (child.tagName().equals("thead")) {
+                getHeader().readDesign(child, context);
+            } else if (child.tagName().equals("tbody")) {
+                readData(child, providers);
+            } else if (child.tagName().equals("tfoot")) {
+                getFooter().readDesign(child, context);
+            }
+        }
+    }
+
+    private void readData(Element body,
+            List<DeclarativeValueProvider<T>> providers) {
+        getSelectionModel().deselectAll();
+        List<T> items = new ArrayList<>();
+        for (Element row : body.children()) {
+            T item = deserializeDeclarativeRepresentation(row.attr("item"));
+            if (row.hasAttr("selected")) {
+                getSelectionModel().select(item);
+            }
+            Elements cells = row.children();
+            int i = 0;
+            for (Element cell : cells) {
+                providers.get(i).addValue(item, cell.html());
+                i++;
+            }
+        }
+
+        setItems(items);
+    }
+
+    private void writeStructure(Element design, DesignContext designContext) {
+        if (getColumns().isEmpty()) {
+            return;
+        }
+        Element tableElement = design.appendElement("table");
+        Element colGroup = tableElement.appendElement("colgroup");
+
+        getColumns().forEach(column -> column
+                .writeDesign(colGroup.appendElement("col"), designContext));
+
+        // Always write thead. Reads correctly when there no header rows
+        getHeader().writeDesign(tableElement.appendElement("thead"),
+                designContext);
+
+        if (designContext.shouldWriteData(this)) {
+            Element bodyElement = tableElement.appendElement("tbody");
+            getDataProvider().fetch(new Query<>()).forEach(
+                    item -> writeRow(bodyElement, item, designContext));
+        }
+
+        if (getFooter().getRowCount() > 0) {
+            getFooter().writeDesign(tableElement.appendElement("tfoot"),
+                    designContext);
+        }
+    }
+
+    private void writeRow(Element container, T item, DesignContext context) {
+        Element tableRow = container.appendElement("tr");
+        tableRow.attr("item", serializeDeclarativeRepresentation(item));
+        if (getSelectionModel().isSelected(item)) {
+            tableRow.attr("selected", "");
+        }
+        for (Column<T, ?> column : getColumns()) {
+            Object value = column.valueProvider.apply(item);
+            tableRow.appendElement("td")
+                    .append((Optional.ofNullable(value).map(Object::toString)
+                            .map(DesignFormatter::encodeForTextNode)
+                            .orElse("")));
+        }
+    }
+
+    private SelectionMode getSelectionMode() {
+        GridSelectionModel<T> selectionModel = getSelectionModel();
+        SelectionMode mode = null;
+        if (selectionModel.getClass().equals(SingleSelectionModelImpl.class)) {
+            mode = SelectionMode.SINGLE;
+        } else if (selectionModel.getClass()
+                .equals(MultiSelectionModelImpl.class)) {
+            mode = SelectionMode.MULTI;
+        } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
+            mode = SelectionMode.NONE;
+        }
+        return mode;
+    }
+
+    @Override
+    protected Collection<String> getCustomAttributes() {
+        Collection<String> result = super.getCustomAttributes();
+        // "rename" for frozen column count
+        result.add("frozen-column-count");
+        result.add("frozen-columns");
+        // "rename" for height-mode
+        result.add("height-by-rows");
+        result.add("rows");
+        // add a selection-mode attribute
+        result.add("selection-mode");
+
+        return result;
     }
 
 }

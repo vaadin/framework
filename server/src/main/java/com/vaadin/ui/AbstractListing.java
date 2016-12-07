@@ -269,7 +269,26 @@ public abstract class AbstractListing<T> extends AbstractComponent {
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
+        doWriteDesign(design, designContext);
+    }
 
+    /**
+     * Writes listing specific state into the given design.
+     * <p>
+     * This method is separated from {@link writeDesign(Element, DesignContext)}
+     * to be overridable in subclasses that need to replace this, but still must
+     * be able to call {@code super.writeDesign(...)}.
+     * 
+     * @see #doReadDesign(Element, DesignContext)
+     *
+     * @param design
+     *            The element to write the component state to. Any previous
+     *            attributes or child nodes are <i>not</i> cleared.
+     * @param designContext
+     *            The DesignContext instance used for writing the design
+     *
+     */
+    protected void doWriteDesign(Element design, DesignContext designContext) {
         // Write options if warranted
         if (designContext.shouldWriteData(this)) {
             writeItems(design, designContext);
@@ -330,6 +349,24 @@ public abstract class AbstractListing<T> extends AbstractComponent {
     @Override
     public void readDesign(Element design, DesignContext context) {
         super.readDesign(design, context);
+        doReadDesign(design, context);
+    }
+
+    /**
+     * Reads the listing specific state from the given design.
+     * <p>
+     * This method is separated from {@link readDesign(Element, DesignContext)}
+     * to be overridable in subclasses that need to replace this, but still must
+     * be able to call {@code super.readDesign(...)}.
+     * 
+     * @see #doWriteDesign(Element, DesignContext)
+     *
+     * @param design
+     *            The element to obtain the state from
+     * @param context
+     *            The DesignContext instance used for parsing the design
+     */
+    protected void doReadDesign(Element design, DesignContext context) {
         Attributes attr = design.attributes();
         if (attr.hasKey("readonly")) {
             setReadOnly(DesignAttributeHandler.readAttribute("readonly", attr,
@@ -441,7 +478,7 @@ public abstract class AbstractListing<T> extends AbstractComponent {
      * <p>
      * Default implementation delegates a call to {@code item.toString()}.
      *
-     * @see #serializeDeclarativeRepresentation(Object)
+     * @see #deserializeDeclarativeRepresentation(String)
      *
      * @param item
      *            a data item
