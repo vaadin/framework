@@ -45,4 +45,5 @@ public class CheckBoxRenderer extends ClickableRenderer<Boolean, CheckBox> {
             CheckBox widget) {
         widget.setValue(data);
     }
+
 }

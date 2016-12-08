@@ -20,6 +20,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.communication.URLReference;
+import com.vaadin.shared.ui.grid.renderers.ImageRendererState;
 
 import elemental.json.JsonValue;
 
@@ -67,5 +68,15 @@ public class ImageRenderer<T> extends ClickableRenderer<T, Resource> {
 
         return encode(ResourceReference.create(resource, this, null),
                 URLReference.class);
+    }
+
+    @Override
+    protected ImageRendererState getState() {
+        return (ImageRendererState) super.getState();
+    }
+
+    @Override
+    protected ImageRendererState getState(boolean markAsDirty) {
+        return (ImageRendererState) super.getState(markAsDirty);
     }
 }

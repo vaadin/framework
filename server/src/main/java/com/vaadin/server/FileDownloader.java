@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.io.IOException;
 
+import com.vaadin.shared.extension.filedownloader.FileDownloaderState;
 import com.vaadin.ui.AbstractComponent;
 
 /**
@@ -161,6 +162,16 @@ public class FileDownloader extends AbstractExtension {
         }
         stream.writeResponse(request, response);
         return true;
+    }
+
+    @Override
+    protected FileDownloaderState getState() {
+        return (FileDownloaderState) super.getState();
+    }
+
+    @Override
+    protected FileDownloaderState getState(boolean markAsDirty) {
+        return (FileDownloaderState) super.getState(markAsDirty);
     }
 
 }

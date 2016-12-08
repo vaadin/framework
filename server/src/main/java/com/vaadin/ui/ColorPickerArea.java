@@ -16,6 +16,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.shared.ui.colorpicker.Color;
+import com.vaadin.shared.ui.colorpicker.ColorPickerAreaState;
 
 /**
  * A class that defines area-like implementation for a color picker component.
@@ -72,5 +73,15 @@ public class ColorPickerArea extends AbstractColorPicker {
         if ("".equals(getState().width)) {
             getState().width = "30px";
         }
+    }
+
+    @Override
+    protected ColorPickerAreaState getState() {
+        return (ColorPickerAreaState) super.getState();
+    }
+
+    @Override
+    protected ColorPickerAreaState getState(boolean markAsDirty) {
+        return (ColorPickerAreaState) super.getState(markAsDirty);
     }
 }

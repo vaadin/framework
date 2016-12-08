@@ -16,9 +16,8 @@
 package com.vaadin.shared.ui.grid;
 
 import com.vaadin.shared.Connector;
-import com.vaadin.shared.communication.SharedState;
 
-public class ColumnState extends SharedState {
+public class ColumnState extends AbstractGridExtensionState {
 
     public String caption;
     public String id;

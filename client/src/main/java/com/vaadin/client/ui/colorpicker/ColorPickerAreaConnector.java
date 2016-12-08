@@ -23,6 +23,7 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.VColorPickerArea;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.colorpicker.ColorPickerAreaState;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
 import com.vaadin.ui.ColorPickerArea;
 
@@ -62,6 +63,11 @@ public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
     @Override
     protected void refreshColor() {
         getWidget().refreshColor();
+    }
+
+    @Override
+    public ColorPickerAreaState getState() {
+        return (ColorPickerAreaState) super.getState();
     }
 
 }

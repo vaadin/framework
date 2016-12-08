@@ -15,8 +15,6 @@
  */
 package com.vaadin.shared.ui.grid;
 
-import com.vaadin.shared.communication.SharedState;
-
 /**
  * Shared state for grid's abstract selection model.
  *
@@ -24,7 +22,7 @@ import com.vaadin.shared.communication.SharedState;
  *
  * @since 8.0
  */
-public class AbstractSelectionModelState extends SharedState {
+public class AbstractSelectionModelState extends AbstractGridExtensionState {
 
     /**
      * Whether the selection model allows selection from the client side.

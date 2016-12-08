@@ -19,6 +19,7 @@ import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
 import com.vaadin.ui.AbstractListing;
 
 import elemental.json.JsonObject;
@@ -77,5 +78,10 @@ public abstract class AbstractListingConnector extends AbstractFieldConnector
      */
     protected boolean isRowSelected(JsonObject row) {
         return row.hasKey(DataCommunicatorConstants.SELECTED);
+    }
+
+    @Override
+    public AbstractListingState getState() {
+        return (AbstractListingState) super.getState();
     }
 }

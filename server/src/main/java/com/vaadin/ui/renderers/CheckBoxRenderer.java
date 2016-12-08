@@ -18,6 +18,8 @@ package com.vaadin.ui.renderers;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import com.vaadin.shared.ui.grid.renderers.CheckBoxRendererState;
+
 /**
  * A renderer that displays boolean valued grid columns as checkboxes.
  *
@@ -42,5 +44,15 @@ public class CheckBoxRenderer<T> extends ClickableRenderer<T, Boolean> {
         super(Boolean.class, "");
         addClickListener(clickEvent -> setter.accept(clickEvent.getItem(),
                 !getter.apply(clickEvent.getItem())));
+    }
+
+    @Override
+    protected CheckBoxRendererState getState() {
+        return (CheckBoxRendererState) super.getState();
+    }
+
+    @Override
+    protected CheckBoxRendererState getState(boolean markAsDirty) {
+        return (CheckBoxRendererState) super.getState(markAsDirty);
     }
 }

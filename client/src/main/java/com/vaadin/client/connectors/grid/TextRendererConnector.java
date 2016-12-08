@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.grid;
 
 import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.renderers.TextRendererState;
 
 /**
  * A connector for {@link TextRenderer}.
@@ -31,5 +32,10 @@ public class TextRendererConnector
     @Override
     public TextRenderer getRenderer() {
         return (TextRenderer) super.getRenderer();
+    }
+
+    @Override
+    public TextRendererState getState() {
+        return (TextRendererState) super.getState();
     }
 }

@@ -176,4 +176,9 @@ public abstract class AbstractJavaScriptRenderer<T, V>
     protected JavaScriptExtensionState getState() {
         return (JavaScriptExtensionState) super.getState();
     }
+
+    @Override
+    protected JavaScriptExtensionState getState(boolean markAsDirty) {
+        return (JavaScriptExtensionState) super.getState(markAsDirty);
+    }
 }

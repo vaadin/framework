@@ -18,7 +18,7 @@ package com.vaadin.shared.ui.grid.editor;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
 import com.vaadin.shared.ui.grid.GridConstants;
 
 /**
@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.grid.GridConstants;
  * @author Vaadin Ltd
  * @since
  */
-public class EditorState extends SharedState {
+public class EditorState extends AbstractGridExtensionState {
 
     {
         // Disable editor by default.

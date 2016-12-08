@@ -23,6 +23,7 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.renderers.Renderer;
+import com.vaadin.shared.ui.grid.renderers.AbstractRendererState;
 
 import elemental.json.JsonValue;
 
@@ -125,4 +126,8 @@ public abstract class AbstractRendererConnector<T>
         // NOOP
     }
 
+    @Override
+    public AbstractRendererState getState() {
+        return (AbstractRendererState) super.getState();
+    }
 }

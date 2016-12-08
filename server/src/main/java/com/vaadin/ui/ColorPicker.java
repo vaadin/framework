@@ -16,6 +16,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.shared.ui.colorpicker.Color;
+import com.vaadin.shared.ui.colorpicker.ColorPickerState;
 
 /**
  * A class that defines default (button-like) implementation for a color picker
@@ -62,5 +63,15 @@ public class ColorPicker extends AbstractColorPicker {
     protected void setDefaultStyles() {
         setPrimaryStyleName(STYLENAME_BUTTON);
         addStyleName(STYLENAME_DEFAULT);
+    }
+
+    @Override
+    protected ColorPickerState getState() {
+        return (ColorPickerState) super.getState();
+    }
+
+    @Override
+    protected ColorPickerState getState(boolean markAsDirty) {
+        return (ColorPickerState) super.getState(markAsDirty);
     }
 }

@@ -21,6 +21,7 @@ import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.grid.renderers.ClickableRendererState;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -158,5 +159,15 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
     @Deprecated
     public void removeClickListener(RendererClickListener<T> listener) {
         removeListener(RendererClickEvent.class, listener);
+    }
+
+    @Override
+    protected ClickableRendererState getState() {
+        return (ClickableRendererState) super.getState();
+    }
+
+    @Override
+    protected ClickableRendererState getState(boolean markAsDirty) {
+        return (ClickableRendererState) super.getState(markAsDirty);
     }
 }

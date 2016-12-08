@@ -26,11 +26,11 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.HasRequiredIndicator;
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.ui.ListingJsonConstants;
+import com.vaadin.shared.ui.abstractmultiselect.AbstractMultiSelectState;
 
 import elemental.json.JsonObject;
 
@@ -156,8 +156,8 @@ public abstract class AbstractMultiSelectConnector
     }
 
     @Override
-    public AbstractFieldState getState() {
-        return (AbstractFieldState) super.getState();
+    public AbstractMultiSelectState getState() {
+        return (AbstractMultiSelectState) super.getState();
     }
 
     @Override

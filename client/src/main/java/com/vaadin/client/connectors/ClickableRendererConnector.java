@@ -20,6 +20,7 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.connectors.grid.AbstractGridRendererConnector;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickEvent;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
+import com.vaadin.shared.ui.grid.renderers.ClickableRendererState;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 
 import elemental.json.JsonObject;
@@ -60,4 +61,9 @@ public abstract class ClickableRendererConnector<T>
 
     protected abstract HandlerRegistration addClickHandler(
             RendererClickHandler<JsonObject> handler);
+
+    @Override
+    public ClickableRendererState getState() {
+        return (ClickableRendererState) super.getState();
+    }
 }

@@ -201,4 +201,9 @@ public abstract class AbstractJavaScriptComponent extends AbstractComponent {
     protected JavaScriptComponentState getState() {
         return (JavaScriptComponentState) super.getState();
     }
+
+    @Override
+    protected JavaScriptComponentState getState(boolean markAsDirty) {
+        return (JavaScriptComponentState) super.getState(markAsDirty);
+    }
 }

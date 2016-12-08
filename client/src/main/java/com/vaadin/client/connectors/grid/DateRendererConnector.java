@@ -16,6 +16,7 @@
 package com.vaadin.client.connectors.grid;
 
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.renderers.DateRendererState;
 
 /**
  * A connector for {@link com.vaadin.ui.renderers.DateRenderer DateRenderer}.
@@ -29,5 +30,9 @@ import com.vaadin.shared.ui.Connect;
  */
 @Connect(com.vaadin.ui.renderers.DateRenderer.class)
 public class DateRendererConnector extends TextRendererConnector {
-    // No implementation needed
+
+    @Override
+    public DateRendererState getState() {
+        return (DateRendererState) super.getState();
+    }
 }

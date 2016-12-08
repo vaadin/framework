@@ -27,6 +27,7 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.extension.responsive.ResponsiveState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -164,26 +165,26 @@ public class ResponsiveConnector extends AbstractExtensionConnector
      */
     private static native void searchForBreakPointsNative()
     /*-{
-
+    
         // Initialize variables
         @com.vaadin.client.extensions.ResponsiveConnector::widthRangeCache = [];
         @com.vaadin.client.extensions.ResponsiveConnector::heightRangeCache = [];
-
+    
         var widthRanges = @com.vaadin.client.extensions.ResponsiveConnector::widthRangeCache;
         var heightRanges = @com.vaadin.client.extensions.ResponsiveConnector::heightRangeCache;
-
+    
         // Can't do squat if we can't parse stylesheets
         if(!$doc.styleSheets)
             return;
-
+    
         var sheets = $doc.styleSheets;
-
+    
         // Loop all stylesheets on the page and process them individually
         for(var i = 0, len = sheets.length; i < len; i++) {
             var sheet = sheets[i];
             @com.vaadin.client.extensions.ResponsiveConnector::searchStylesheetForBreakPoints(Lcom/google/gwt/core/client/JavaScriptObject;)(sheet);
         }
-
+    
     }-*/;
 
     /**
@@ -196,15 +197,15 @@ public class ResponsiveConnector extends AbstractExtensionConnector
     private static native void searchStylesheetForBreakPoints(
             final JavaScriptObject sheet)
     /*-{
-
+    
         // Inline variables for easier reading
         var widthRanges = @com.vaadin.client.extensions.ResponsiveConnector::widthRangeCache;
         var heightRanges = @com.vaadin.client.extensions.ResponsiveConnector::heightRangeCache;
-
+    
         // Get all the rulesets from the stylesheet
         var theRules = new Array();
         var IEOrEdge = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE()() || @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isEdge()();
-
+    
         try {
             if (sheet.cssRules) {
                     theRules = sheet.cssRules
@@ -217,18 +218,18 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                 ", probably because of cross domain issues: " + e);
             return;
         }
-
+    
         // Loop through the rulesets
         for(var i = 0, len = theRules.length; i < len; i++) {
             var rule = theRules[i];
-
+    
             if(rule.type == 3) {
                 // @import rule, traverse recursively
                 @com.vaadin.client.extensions.ResponsiveConnector::searchStylesheetForBreakPoints(Lcom/google/gwt/core/client/JavaScriptObject;)(rule.styleSheet);
-
+    
             } else if(rule.type == 1 || !rule.type) {
                 // Regular selector rule
-
+    
                 // Helper function
                 var pushToCache = function(ranges, selector, min, max) {
                     // Avoid adding duplicates
@@ -244,46 +245,46 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                         ranges.push([selector, min, max]);
                     }
                 };
-
+    
                 // Array of all of the separate selectors in this ruleset
                 var haystack = rule.selectorText.split(",");
-
+    
                 // IE/Edge parses CSS like .class[attr="val"] into [attr="val"].class so we need to check for both
                 var selectorRegEx = IEOrEdge ? /\[.*\]([\.|#]\S+)/ : /([\.|#]\S+?)\[.*\]/;
-
+    
                 // Loop all the selectors in this ruleset
                 for(var k = 0, len2 = haystack.length; k < len2; k++) {
-
+    
                     // Split the haystack into parts.
                     var widthRange = haystack[k].match(/\[width-range.*?\]/);
                     var heightRange = haystack[k].match(/\[height-range.*?\]/);
                     var selector = haystack[k].match(selectorRegEx);
-
+    
                     if (selector != null) {
                         selector = selector[1];
-
+    
                         // Check for width-ranges.
                         if (widthRange != null) {
                             var minMax = widthRange[0].match(/\[width-range~?=["|'](.*?)-(.*?)["|']\]/i);
                             var min = minMax[1];
                             var max = minMax[2];
-
+    
                             pushToCache(widthRanges, selector, min, max);
                         }
-
+    
                         // Check for height-ranges.
                         if (heightRange != null) {
                             var minMax = heightRange[0].match(/\[height-range~?=["|'](.*?)-(.*?)["|']\]/i);
                             var min = minMax[1];
                             var max = minMax[2];
-
+    
                             pushToCache(heightRanges, selector, min, max);
                         }
                     }
                 }
             }
         }
-
+    
     }-*/;
 
     /**
@@ -293,15 +294,15 @@ public class ResponsiveConnector extends AbstractExtensionConnector
      */
     private native void getBreakPointsFor(final String selectors)
     /*-{
-
+    
         var selectors = selectors.split(",");
-
+    
         var widthBreakpoints = this.@com.vaadin.client.extensions.ResponsiveConnector::widthBreakpoints = [];
         var heightBreakpoints = this.@com.vaadin.client.extensions.ResponsiveConnector::heightBreakpoints = [];
-
+    
         var widthRanges = @com.vaadin.client.extensions.ResponsiveConnector::widthRangeCache;
         var heightRanges = @com.vaadin.client.extensions.ResponsiveConnector::heightRangeCache;
-
+    
         for(var i = 0, len = widthRanges.length; i < len; i++) {
             var bp = widthRanges[i];
             for(var j = 0, len2 = selectors.length; j < len2; j++) {
@@ -309,7 +310,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                     widthBreakpoints.push(bp);
             }
         }
-
+    
         for(var i = 0, len = heightRanges.length; i < len; i++) {
             var bp = heightRanges[i];
             for(var j = 0, len2 = selectors.length; j < len2; j++) {
@@ -317,10 +318,10 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                     heightBreakpoints.push(bp);
             }
         }
-
+    
         // Only for debugging
         // console.log("Breakpoints for", selectors.join(","), widthBreakpoints, heightBreakpoints);
-
+    
     }-*/;
 
     private String currentWidthRanges = "";
@@ -329,6 +330,11 @@ public class ResponsiveConnector extends AbstractExtensionConnector
     @Override
     public void onElementResize(final ElementResizeEvent event) {
         updateRanges();
+    }
+
+    @Override
+    public ResponsiveState getState() {
+        return (ResponsiveState) super.getState();
     }
 
     private void updateRanges() {
@@ -370,24 +376,24 @@ public class ResponsiveConnector extends AbstractExtensionConnector
 
     private native String resolveBreakpoint(String which, int size)
     /*-{
-
+    
         // Default to "width" breakpoints
         var breakpoints = this.@com.vaadin.client.extensions.ResponsiveConnector::widthBreakpoints;
-
+    
         // Use height breakpoints if we're measuring the height
         if(which == "height")
             breakpoints = this.@com.vaadin.client.extensions.ResponsiveConnector::heightBreakpoints;
-
+    
         // Output string that goes into either the "width-range" or "height-range" attribute in the element
         var ranges = "";
-
+    
         // Loop the breakpoints
         for(var i = 0, len = breakpoints.length; i < len; i++) {
             var bp = breakpoints[i];
-
+    
             var min = parseInt(bp[1]);
             var max = parseInt(bp[2]);
-
+    
             if(!isNaN(min) && !isNaN(max)) {
                 if(min <= size && size <= max) {
                     ranges += " " + bp[1] + "-" + bp[2];
@@ -402,10 +408,10 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                 }
             }
         }
-
+    
         // Trim the output and return it
         return ranges.replace(/^\s+/, "");
-
+    
     }-*/;
 
 }

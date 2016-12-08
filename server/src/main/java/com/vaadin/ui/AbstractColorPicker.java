@@ -24,7 +24,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
-import com.vaadin.shared.ui.colorpicker.ColorPickerState;
+import com.vaadin.shared.ui.colorpicker.AbstractColorPickerState;
 import com.vaadin.ui.components.colorpicker.ColorPickerPopup;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -390,13 +390,13 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     }
 
     @Override
-    protected ColorPickerState getState() {
-        return (ColorPickerState) super.getState();
+    protected AbstractColorPickerState getState() {
+        return (AbstractColorPickerState) super.getState();
     }
 
     @Override
-    protected ColorPickerState getState(boolean markAsDirty) {
-        return (ColorPickerState) super.getState(markAsDirty);
+    protected AbstractColorPickerState getState(boolean markAsDirty) {
+        return (AbstractColorPickerState) super.getState(markAsDirty);
     }
 
     /**
