@@ -35,7 +35,7 @@ public class ComponentMissingFromDefaultWidgetsetTest
         openTestURL();
         WebElement component = vaadinElementById("missing-component");
         assertTrue(component.getText().startsWith(
-                "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain implementation for com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent."));
+                "Widgetset 'com.vaadin.DefaultWidgetSet' does not contain an implementation for com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent."));
 
     }
 }
