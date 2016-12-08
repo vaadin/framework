@@ -166,7 +166,7 @@
                     <execution>
                         <id>copy-sources</id>
                         <!-- here the phase you need -->
-                        <phase>generate-resources</phase>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
