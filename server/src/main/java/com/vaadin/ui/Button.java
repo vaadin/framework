@@ -541,7 +541,10 @@ public class Button extends AbstractFocusable
      * @param htmlContentAllowed
      *            <code>true</code> if caption is rendered as HTML,
      *            <code>false</code> otherwise
+     *
+     * @deprecated as of 8.0.0, use {@link #setCaptionAsHtml(boolean)} instead.
      */
+    @Deprecated
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         getState().captionAsHtml = htmlContentAllowed;
     }
@@ -551,7 +554,10 @@ public class Button extends AbstractFocusable
      *
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise
+     *
+     * @deprecated as of 8.0.0, use {@link #isCaptionAsHtml()} instead.
      */
+    @Deprecated
     public boolean isHtmlContentAllowed() {
         return getState(false).captionAsHtml;
     }
@@ -571,7 +577,7 @@ public class Button extends AbstractFocusable
         Boolean plain = DesignAttributeHandler
                 .readAttribute(DESIGN_ATTR_PLAIN_TEXT, attr, Boolean.class);
         if (plain == null || !plain) {
-            setHtmlContentAllowed(true);
+            setCaptionAsHtml(true);
             content = design.html();
         } else {
             // content is not intended to be interpreted as HTML,
