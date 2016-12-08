@@ -230,7 +230,7 @@ public class GridBasics extends AbstractTestUIWithLog {
 
         selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
                 .getSelectionModel())
-                        .addSelectionListener(this::onSingleSelect);
+                        .addSingleSelectionListener(this::onSingleSelect);
 
         layout.addComponent(createMenu());
         layout.addComponent(grid);
@@ -512,7 +512,7 @@ public class GridBasics extends AbstractTestUIWithLog {
             grid.setSelectionMode(SelectionMode.SINGLE);
             selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
                     .getSelectionModel())
-                            .addSelectionListener(this::onSingleSelect);
+                            .addSingleSelectionListener(this::onSingleSelect);
             grid.asSingleSelect().setReadOnly(isUserSelectionAllowed);
         });
         selectionModelItem.addItem("multi", menuItem -> {
@@ -558,10 +558,10 @@ public class GridBasics extends AbstractTestUIWithLog {
             selectionListenerRegistration.remove();
             MultiSelectionModelImpl<DataObject> model = (MultiSelectionModelImpl<DataObject>) grid
                     .setSelectionMode(SelectionMode.MULTI);
-            model.addSelectionListener(this::onMultiSelect);
+            model.addMultiSelectionListener(this::onMultiSelect);
             grid.asMultiSelect().setReadOnly(isUserSelectionAllowed);
             selectionListenerRegistration = model
-                    .addSelectionListener(this::onMultiSelect);
+                    .addMultiSelectionListener(this::onMultiSelect);
         }
     }
 

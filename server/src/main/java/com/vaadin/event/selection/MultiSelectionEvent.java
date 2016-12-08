@@ -145,4 +145,14 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
     public MultiSelect<T> getSource() {
         return (MultiSelect<T>) super.getSource();
     }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This is the same as {@link #getValue()}.
+     */
+    @Override
+    public Set<T> getAllSelectedItems() {
+        return getValue();
+    }
 }
