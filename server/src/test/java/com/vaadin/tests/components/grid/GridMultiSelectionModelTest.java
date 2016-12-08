@@ -103,7 +103,7 @@ public class GridMultiSelectionModelTest {
         oldSelectionCapture = new Capture<>();
         events = new AtomicInteger();
 
-        selectionModel.addSelectionListener(event -> {
+        selectionModel.addMultiSelectionListener(event -> {
             currentSelectionCapture
                     .setValue(new ArrayList<>(event.getNewSelection()));
             oldSelectionCapture
@@ -135,7 +135,7 @@ public class GridMultiSelectionModelTest {
         List<String> selectionChanges = new ArrayList<>();
         Capture<List<String>> oldSelectionCapture = new Capture<>();
         ((MultiSelectionModelImpl<String>) customGrid.getSelectionModel())
-                .addSelectionListener(e -> {
+                .addMultiSelectionListener(e -> {
                     selectionChanges.addAll(e.getValue());
                     oldSelectionCapture
                             .setValue(new ArrayList<>(e.getOldSelection()));
@@ -578,7 +578,7 @@ public class GridMultiSelectionModelTest {
         Registration registration = Mockito.mock(Registration.class);
         MultiSelectionModelImpl<String> model = new MultiSelectionModelImpl<String>() {
             @Override
-            public Registration addSelectionListener(
+            public Registration addMultiSelectionListener(
                     MultiSelectionListener<String> listener) {
                 selectionListener.set(listener);
                 return registration;
@@ -595,10 +595,11 @@ public class GridMultiSelectionModelTest {
         grid.setItems("foo", "bar");
 
         AtomicReference<MultiSelectionEvent<String>> event = new AtomicReference<>();
-        Registration actualRegistration = model.addSelectionListener(evt -> {
-            Assert.assertNull(event.get());
-            event.set(evt);
-        });
+        Registration actualRegistration = model
+                .addMultiSelectionListener(evt -> {
+                    Assert.assertNull(event.get());
+                    event.set(evt);
+                });
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get().accept(new MultiSelectionEvent<>(grid,

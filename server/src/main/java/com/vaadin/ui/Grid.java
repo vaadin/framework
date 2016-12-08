@@ -46,6 +46,9 @@ import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.EventListener;
+import com.vaadin.event.selection.MultiSelectionListener;
+import com.vaadin.event.selection.SelectionListener;
+import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.EncodeResult;
 import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
@@ -235,6 +238,31 @@ public class Grid<T> extends AbstractListing<T>
          * @return the single select wrapper
          */
         SingleSelect<T> asSingleSelect();
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Use {@link #addSingleSelectionListener(SingleSelectionListener)} for
+         * more specific single selection event.
+         *
+         * @see #addSingleSelectionListener(SingleSelectionListener)
+         */
+        @Override
+        public default Registration addSelectionListener(
+                SelectionListener<T> listener) {
+            return addSingleSelectionListener(e -> listener.accept(e));
+        }
+
+        /**
+         * Adds a single selection listener that is called when the value of
+         * this select is changed either by the user or programmatically.
+         *
+         * @param listener
+         *            the value change listener, not {@code null}
+         * @return a registration for the listener
+         */
+        public Registration addSingleSelectionListener(
+                SingleSelectionListener<T> listener);
     }
 
     /**
@@ -253,6 +281,31 @@ public class Grid<T> extends AbstractListing<T>
          * @return the multiselect wrapper
          */
         MultiSelect<T> asMultiSelect();
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Use {@link #addMultiSelectionListener(MultiSelectionListener)} for
+         * more specific event on multiselection.
+         *
+         * @see #addMultiSelectionListener(MultiSelectionListener)
+         */
+        @Override
+        public default Registration addSelectionListener(
+                SelectionListener<T> listener) {
+            return addMultiSelectionListener(e -> listener.accept(e));
+        }
+
+        /**
+         * Adds a selection listener that will be called when the selection is
+         * changed either by the user or programmatically.
+         *
+         * @param listener
+         *            the value change listener, not {@code null}
+         * @return a registration for the listener
+         */
+        public Registration addMultiSelectionListener(
+                MultiSelectionListener<T> listener);
     }
 
     /**
@@ -3136,6 +3189,7 @@ public class Grid<T> extends AbstractListing<T>
         if (selectionModel != null) { // null when called from constructor
             selectionModel.remove();
         }
+
         selectionModel = model;
 
         if (selectionModel instanceof AbstractListingExtension) {
@@ -3143,6 +3197,7 @@ public class Grid<T> extends AbstractListing<T>
         } else {
             addExtension(selectionModel);
         }
+
     }
 
     /**
@@ -3176,6 +3231,33 @@ public class Grid<T> extends AbstractListing<T>
         setSelectionModel(model);
 
         return model;
+    }
+
+    /**
+     * Adds a selection listener to the current selection model.
+     * <p>
+     * <em>NOTE:</em> If selection mode is switched with
+     * {@link #setSelectionMode(SelectionMode)}, then this listener is not
+     * triggered anymore when selection changes!
+     * <p>
+     * This is a shorthand for
+     * {@code grid.getSelectionModel().addSelectionListener()}. To get more
+     * detailed selection events, use {@link #getSelectionModel()} and either
+     * {@link SingleSelectionModel#addSingleSelectionListener(SingleSelectionListener)}
+     * or
+     * {@link MultiSelectionModel#addMultiSelectionListener(MultiSelectionListener)}
+     * depending on the used selection mode.
+     *
+     * @param listener
+     *            the listener to add
+     * @return a registration handle to remove the listener
+     * @throws UnsupportedOperationException
+     *             if selection has been disabled with
+     *             {@link SelectionMode.NONE}
+     */
+    public Registration addSelectionListener(SelectionListener<T> listener)
+            throws UnsupportedOperationException {
+        return getSelectionModel().addSelectionListener(listener);
     }
 
     @Override

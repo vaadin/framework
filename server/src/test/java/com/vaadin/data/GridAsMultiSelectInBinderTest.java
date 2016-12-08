@@ -28,7 +28,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.MultiSelect;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 
-public class GridAsMultiSelectInBinder
+public class GridAsMultiSelectInBinderTest
         extends BinderTestBase<Binder<BeanWithEnums>, BeanWithEnums> {
     public class TestEnumSetToStringConverter
             implements Converter<Set<TestEnum>, String> {

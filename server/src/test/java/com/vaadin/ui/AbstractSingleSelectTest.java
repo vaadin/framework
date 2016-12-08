@@ -81,7 +81,7 @@ public class AbstractSingleSelectTest {
         listing = new PersonListing();
         listing.setItems(PERSON_A, PERSON_B, PERSON_C);
         selectionChanges = new ArrayList<>();
-        listing.addSelectionChangeListener(
+        listing.addSelectionListener(
                 e -> selectionChanges.add(e.getValue()));
     }
 
@@ -237,7 +237,7 @@ public class AbstractSingleSelectTest {
         String value = "foo";
         AbstractSingleSelect<String> select = new AbstractSingleSelect<String>() {
             @Override
-            public Registration addSelectionChangeListener(
+            public Registration addSelectionListener(
                     SingleSelectionListener<String> listener) {
                 selectionListener.set(listener);
                 return registration;

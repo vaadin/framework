@@ -243,19 +243,11 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
-    /**
-     * Adds a selection listener that will be called when the selection is
-     * changed either by the user or programmatically.
-     *
-     * @param listener
-     *            the value change listener, not {@code null}
-     * @return a registration for the listener
-     */
-    public Registration addSelectionListener(
+    @Override
+    public Registration addMultiSelectionListener(
             MultiSelectionListener<T> listener) {
-        addListener(MultiSelectionEvent.class, listener,
+        return addListener(MultiSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
-        return () -> removeListener(MultiSelectionEvent.class, listener);
     }
 
     @Override
@@ -348,7 +340,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             public Registration addSelectionListener(
                     MultiSelectionListener<T> listener) {
                 return MultiSelectionModelImpl.this
-                        .addSelectionListener(listener);
+                        .addMultiSelectionListener(listener);
             }
         };
     }
