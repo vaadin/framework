@@ -1,9 +1,9 @@
 package com.vaadin.data;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -34,10 +34,10 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void bindNullBean_noBeanPresent() {
         binder.setBean(item);
-        assertTrue(binder.getBean().isPresent());
+        assertNotNull(binder.getBean());
 
         binder.setBean(null);
-        assertFalse(binder.getBean().isPresent());
+        assertNull(binder.getBean());
     }
 
     @Test(expected = NullPointerException.class)
@@ -76,16 +76,16 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     @Test
     public void bound_getBean_returnsBoundBean() {
-        assertFalse(binder.getBean().isPresent());
+        assertNull(binder.getBean());
         binder.setBean(item);
-        assertSame(item, binder.getBean().get());
+        assertSame(item, binder.getBean());
     }
 
     @Test
     public void unbound_getBean_returnsNothing() {
         binder.setBean(item);
         binder.removeBean();
-        assertFalse(binder.getBean().isPresent());
+        assertNull(binder.getBean());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.setBean(p2);
         assertEquals("Marlon", nameField.getValue());
         assertEquals("Leif", item.getFirstName());
-        assertSame(p2, binder.getBean().get());
+        assertSame(p2, binder.getBean());
 
         nameField.setValue("Ilia");
         assertEquals("Ilia", p2.getFirstName());
