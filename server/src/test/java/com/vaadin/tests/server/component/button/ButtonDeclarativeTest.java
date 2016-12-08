@@ -100,12 +100,12 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
         Assert.assertEquals(expectedCaptionHtml, nativeButton.getCaption());
 
         read = new Button("&amp; Test");
-        read.setHtmlContentAllowed(true);
+        read.setCaptionAsHtml(true);
         Element root = new Element(Tag.valueOf("vaadin-button"), "");
         read.writeDesign(root, new DesignContext());
         assertEquals("&amp; Test", root.html());
 
-        read.setHtmlContentAllowed(false);
+        read.setCaptionAsHtml(false);
         root = new Element(Tag.valueOf("vaadin-button"), "");
         read.writeDesign(root, new DesignContext());
         assertEquals("&amp;amp; Test", root.html());

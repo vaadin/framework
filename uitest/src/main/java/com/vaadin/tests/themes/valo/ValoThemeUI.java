@@ -46,9 +46,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Hierarchical;
 import com.vaadin.v7.data.Item;
@@ -197,7 +197,7 @@ public class ValoThemeUI extends UI {
         b.setIcon(FontAwesome.TH_LIST);
         b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
         b.addStyleName("selected");
-        b.setHtmlContentAllowed(true);
+        b.setCaptionAsHtml(true);
         menu.addComponent(b);
 
         b = new Button("API");
@@ -326,7 +326,7 @@ public class ValoThemeUI extends UI {
                 b.setCaption(b.getCaption()
                         + " <span class=\"valo-menu-badge\">123</span>");
             }
-            b.setHtmlContentAllowed(true);
+            b.setCaptionAsHtml(true);
             b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
             b.setIcon(testIcon.get());
             menuItemsLayout.addComponent(b);
