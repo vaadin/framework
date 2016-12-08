@@ -31,18 +31,20 @@ import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.MultiSelectionModel;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.MultiSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.SingleSelect;
 import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
-import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -63,6 +65,8 @@ public class GridBasics extends AbstractTestUIWithLog {
     public static final String CELL_STYLE_GENERATOR_SPECIAL = "Special for 1/4 Column 1";
     public static final String CELL_STYLE_GENERATOR_EMPTY = "Empty string";
     public static final String CELL_STYLE_GENERATOR_NULL = "Null";
+
+    private boolean isUserSelectionAllowed = true;
 
     public static final String[] COLUMN_CAPTIONS = { "Column 0", "Column 1",
             "Column 2", "Row Number", "Date", "HTML String", "Big Random",
@@ -403,6 +407,23 @@ public class GridBasics extends AbstractTestUIWithLog {
             }
         }).setCheckable(true);
 
+        MenuItem selectionAllowedItem = stateMenu
+                .addItem("Allow user selection", item -> {
+                    isUserSelectionAllowed = !isUserSelectionAllowed;
+                    if (grid.getSelectionModel() instanceof MultiSelectionModelImpl) {
+                        MultiSelect<DataObject> multiSelect = grid
+                                .asMultiSelect();
+                        multiSelect.setReadOnly(isUserSelectionAllowed);
+                    }
+                    if (grid.getSelectionModel() instanceof SingleSelectionModelImpl) {
+                        SingleSelect<DataObject> singleSelect = grid
+                                .asSingleSelect();
+                        singleSelect.setReadOnly(isUserSelectionAllowed);
+                    }
+                });
+        selectionAllowedItem.setChecked(true);
+        selectionAllowedItem.setCheckable(true);
+
         stateMenu.addItem("Column reorder listener",
                 toggleReorderListenerCommand).setCheckable(true);
 
@@ -488,17 +509,18 @@ public class GridBasics extends AbstractTestUIWithLog {
                 null);
         selectionModelItem.addItem("single", menuItem -> {
             selectionListenerRegistration.remove();
-            grid.setSelectionModel(new SingleSelectionModelImpl<>(grid));
+            grid.setSelectionMode(SelectionMode.SINGLE);
             selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
                     .getSelectionModel())
                             .addSelectionListener(this::onSingleSelect);
+            grid.asSingleSelect().setReadOnly(isUserSelectionAllowed);
         });
         selectionModelItem.addItem("multi", menuItem -> {
             switchToMultiSelect();
         });
         selectionModelItem.addItem("none", menuItem -> {
             selectionListenerRegistration.remove();
-            grid.setSelectionModel(new NoSelectionModel<>(grid));
+            grid.setSelectionMode(SelectionMode.NONE);
         });
 
         selectionModelItem.addItem("Select All", menuItem -> {
@@ -534,9 +556,10 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void switchToMultiSelect() {
         if (!(grid.getSelectionModel() instanceof MultiSelectionModel)) {
             selectionListenerRegistration.remove();
-            MultiSelectionModelImpl<DataObject> model = new MultiSelectionModelImpl<>(
-                    grid);
-            grid.setSelectionModel(model);
+            MultiSelectionModelImpl<DataObject> model = (MultiSelectionModelImpl<DataObject>) grid
+                    .setSelectionMode(SelectionMode.MULTI);
+            model.addSelectionListener(this::onMultiSelect);
+            grid.asMultiSelect().setReadOnly(isUserSelectionAllowed);
             selectionListenerRegistration = model
                     .addSelectionListener(this::onMultiSelect);
         }

@@ -8,7 +8,7 @@
     position: absolute;
     z-index: 1;
     outline: none;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
   }
 
   .#{$primaryStyleName}-scroller-horizontal {
@@ -30,7 +30,7 @@
   .#{$primaryStyleName}-tablewrapper {
     position: absolute;
     overflow: hidden;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     z-index: 5;
   }
 
@@ -44,7 +44,7 @@
   .#{$primaryStyleName}-footer-deco {
     position: absolute;
     right: 0;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
   }
 
   .#{$primaryStyleName}-horizontal-scrollbar-deco {
@@ -52,7 +52,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
   }
 
   .#{$primaryStyleName}-header,
@@ -104,7 +104,7 @@
     float: left;
     padding: 2px;
     white-space: nowrap;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     overflow: hidden;
 
      // Because Vaadin changes the font size after the initial render, we
@@ -128,7 +128,7 @@
     > td {
       width: 100%;
       height: 100%;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
     }
   }
 }

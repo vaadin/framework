@@ -16,7 +16,6 @@
 package com.vaadin.server.data;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Interface for DataProviders that support chaining filters.
@@ -41,24 +40,6 @@ public interface AppendableFilterDataProvider<T, F> extends DataProvider<T, F> {
     public default AppendableFilterDataProvider<T, F> applyFilter(F filter) {
         Objects.requireNonNull(filter, "The applied filter can't be null");
         return DataProviderWrapper.chain(this, filter);
-    }
-
-    /**
-     * Combines two filters into one. Default implementation returns the base
-     * filter if the optional is not present.
-     * <p>
-     * Actual implementation of the combination is done in the method
-     * {@link #combineFilters(Object, Object)}.
-     *
-     * @param filter1
-     *            the base filter; not {@code null}
-     * @param filter2
-     *            an optional filter
-     * @return combined filter; not {@code null}
-     */
-    public default F combineFilters(F filter1, Optional<F> filter2) {
-        Objects.requireNonNull(filter1, "The base filter can't be null");
-        return filter2.map(f -> combineFilters(filter1, f)).orElse(filter1);
     }
 
     /**

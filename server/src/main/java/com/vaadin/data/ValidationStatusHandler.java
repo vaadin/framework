@@ -18,13 +18,13 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.ui.AbstractComponent;
 
 /**
  * Handler for {@link ValidationStatus} changes.
  * <p>
- * {@link Binding#withValidationStatusHandler(withValidationStatusHandler)
+ * {@link BindingBuilder#withValidationStatusHandler(withValidationStatusHandler)
  * Register} an instance of this class to be able to override the default
  * handling, which is to show
  * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
@@ -32,7 +32,7 @@ import com.vaadin.ui.AbstractComponent;
  *
  * @author Vaadin Ltd
  *
- * @see Binding#withValidationStatusHandler(withValidationStatusHandler)
+ * @see BindingBuilder#withValidationStatusHandler(withValidationStatusHandler)
  * @see ValidationStatus
  *
  * @since 8.0

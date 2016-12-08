@@ -27,12 +27,12 @@ import java.util.stream.Stream;
 
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
+import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.Query;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
 import com.vaadin.shared.ui.grid.MultiSelectionModelState;
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.MultiSelect;
 import com.vaadin.util.ReflectTools;
@@ -127,22 +127,12 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             .findMethod(MultiSelectionListener.class, "accept",
                     MultiSelectionEvent.class);
 
-    private final Grid<T> grid;
-
     private Set<T> selection = new LinkedHashSet<>();
 
     private SelectAllCheckBoxVisible selectAllCheckBoxVisible = SelectAllCheckBoxVisible.DEFAULT;
 
-    /**
-     * Constructs a new multiselection model for the given grid.
-     *
-     * @param grid
-     *            the grid to bind the selection model into
-     */
-    public MultiSelectionModelImpl(Grid<T> grid) {
-        this.grid = grid;
-        extend(grid);
-
+    @Override
+    protected void init() {
         registerRpc(new GridMultiSelectServerRpcImpl());
     }
 
@@ -164,7 +154,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
      * in- memory.
      *
      * @param selectAllCheckBoxVisible
-     *            the mode to use
+     *            the visiblity mode to use
      * @see SelectAllCheckBoxVisible
      */
     public void setSelectAllCheckBoxVisible(
@@ -178,7 +168,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     /**
      * Gets the current mode for the select all checkbox visibility.
      *
-     * @return the select all checkbox visibility state
+     * @return the select all checkbox visibility mode
      * @see SelectAllCheckBoxVisible
      * @see #isSelectAllCheckBoxVisible()
      */
@@ -245,8 +235,8 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             getState(false).selectAllCheckBoxVisible = false;
             break;
         case DEFAULT:
-            getState(false).selectAllCheckBoxVisible = grid.getDataProvider()
-                    .isInMemory();
+            getState(false).selectAllCheckBoxVisible = getGrid()
+                    .getDataProvider().isInMemory();
             break;
         default:
             break;
@@ -334,16 +324,12 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                // TODO support read only in grid ?
-                throw new UnsupportedOperationException(
-                        "Read only mode is not supported for grid.");
+                getState().selectionAllowed = readOnly;
             }
 
             @Override
             public boolean isReadOnly() {
-                // TODO support read only in grid ?
-                throw new UnsupportedOperationException(
-                        "Read only mode is not supported for grid.");
+                return isUserSelectionAllowed();
             }
 
             @Override
@@ -384,7 +370,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             getState().allSelected = true;
         }
 
-        DataProvider<T, ?> dataSource = grid.getDataProvider();
+        DataProvider<T, ?> dataSource = getGrid().getDataProvider();
         // this will fetch everything from backend
         Stream<T> stream = dataSource.fetch(new Query<>());
         LinkedHashSet<T> allItems = new LinkedHashSet<>();
@@ -439,6 +425,11 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         Objects.requireNonNull(addedItems);
         Objects.requireNonNull(removedItems);
 
+        if (userOriginated && !isUserSelectionAllowed()) {
+            throw new IllegalStateException("Client tried to update selection"
+                    + " although user selection is disallowed");
+        }
+
         // if there are duplicates, some item is both added & removed, just
         // discard that and leave things as was before
         addedItems.removeIf(item -> removedItems.remove(item));
@@ -460,9 +451,15 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             set.addAll(addedItems);
 
             // refresh method is NOOP for items that are not present client side
-            removedItems.forEach(grid.getDataCommunicator()::refresh);
-            addedItems.forEach(grid.getDataCommunicator()::refresh);
+            DataCommunicator<T, ?> dataCommunicator = getGrid()
+                    .getDataCommunicator();
+            removedItems.forEach(dataCommunicator::refresh);
+            addedItems.forEach(dataCommunicator::refresh);
         }, userOriginated);
+    }
+
+    private boolean isUserSelectionAllowed() {
+        return getState(false).selectionAllowed;
     }
 
     private void doUpdateSelection(Consumer<Set<T>> handler,
@@ -475,7 +472,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
         handler.accept(selection);
 
-        fireEvent(new MultiSelectionEvent<>(grid, asMultiSelect(), oldSelection,
-                userOriginated));
+        fireEvent(new MultiSelectionEvent<>(getGrid(), asMultiSelect(),
+                oldSelection, userOriginated));
     }
 }

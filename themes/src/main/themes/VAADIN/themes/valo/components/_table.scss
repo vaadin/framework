@@ -191,7 +191,7 @@ $v-table-background-color: null !default;
     overflow: hidden;
     line-height: 1;
     min-height: $v-table-row-height;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
   }
 
   .#{$primary-stylename}-footer-container {
@@ -247,7 +247,7 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-cell-wrapper {
     line-height: 1;
     padding: 0 $v-table-cell-padding-horizontal;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     margin-right: 0 !important;
 
     > .v-widget {

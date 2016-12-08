@@ -16,6 +16,7 @@
 package com.vaadin.client.connectors.grid;
 
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Grid;
@@ -59,6 +60,12 @@ public abstract class AbstractSelectionModelConnector
      */
     protected Grid<JsonObject> getGrid() {
         return getParent().getWidget();
+    }
+
+    @OnStateChange("selectionAllowed")
+    private void onSelectionAllowedChange() {
+        getGrid().getSelectionModel()
+                .setSelectionAllowed(getState().selectionAllowed);
     }
 
     @Override

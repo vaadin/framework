@@ -45,7 +45,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
   .#{$primary-stylename}-tabs {
     white-space: nowrap;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
   }
 
   .#{$primary-stylename}-content {
@@ -162,7 +162,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
  */
 @mixin valo-tabsheet-tabcontainer-style ($primary-stylename: v-tabsheet) {
   position: relative;
-  @include box-sizing(border-box);
+  box-sizing: border-box;
 
   &:before {
     content: "";
@@ -197,7 +197,7 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
   .v-caption {
     margin-left: round($v-unit-size/2);
     padding: 0 round($v-unit-size/10);
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     cursor: pointer;
     text-align: center;
     line-height: $v-unit-size;

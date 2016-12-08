@@ -29,7 +29,6 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.grid.SingleSelectionModelState;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SingleSelectionModel;
 import com.vaadin.ui.SingleSelect;
 import com.vaadin.util.ReflectTools;
@@ -50,18 +49,10 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             .findMethod(SingleSelectionListener.class, "accept",
                     SingleSelectionEvent.class);
 
-    private final Grid<T> grid;
     private T selectedItem = null;
 
-    /**
-     * Constructs a new single selection model for the given grid.
-     *
-     * @param grid
-     *            the grid to bind the selection model into
-     */
-    public SingleSelectionModelImpl(Grid<T> grid) {
-        this.grid = grid;
-        extend(grid);
+    @Override
+    protected void init() {
         registerRpc(new SelectionServerRpc() {
 
             @Override
@@ -159,11 +150,11 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
 
         if (selectedItem != null) {
-            grid.getDataCommunicator().refresh(selectedItem);
+            getGrid().getDataCommunicator().refresh(selectedItem);
         }
         selectedItem = getData(key);
         if (selectedItem != null) {
-            grid.getDataCommunicator().refresh(selectedItem);
+            getGrid().getDataCommunicator().refresh(selectedItem);
         }
     }
 
@@ -178,12 +169,17 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
      *            selection
      */
     protected void setSelectedFromClient(String key) {
+        if (!isUserSelectionAllowed()) {
+            throw new IllegalStateException("Client tried to update selection"
+                    + " although user selection is disallowed");
+        }
         if (isKeySelected(key)) {
             return;
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), true));
+        fireEvent(
+                new SingleSelectionEvent<>(getGrid(), asSingleSelect(), true));
     }
 
     /**
@@ -203,7 +199,8 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
 
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(grid, asSingleSelect(), false));
+        fireEvent(
+                new SingleSelectionEvent<>(getGrid(), asSingleSelect(), false));
     }
 
     /**
@@ -218,7 +215,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             return null;
         } else {
             // TODO creates a key if item not in data provider
-            return grid.getDataCommunicator().getKeyMapper().key(item);
+            return getGrid().getDataCommunicator().getKeyMapper().key(item);
         }
     }
 
@@ -229,6 +226,10 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         } else {
             return Collections.emptySet();
         }
+    }
+
+    private boolean isUserSelectionAllowed() {
+        return getState(false).selectionAllowed;
     }
 
     /**
@@ -274,15 +275,12 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                // TODO support read only when grid is used in binder ?
-                throw new UnsupportedOperationException(
-                        "Read only is not supported for Grid.");
+                getState().selectionAllowed = readOnly;
             }
 
             @Override
             public boolean isReadOnly() {
-                throw new UnsupportedOperationException(
-                        "Read only is not supported for Grid.");
+                return isUserSelectionAllowed();
             }
         };
     }

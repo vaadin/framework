@@ -25,7 +25,7 @@
   $size: round($size) + round($size) % 2;
   height: $size !important;
   width: $size !important;
-  @include box-sizing(border-box);
+  box-sizing: border-box;
   border: $thickness solid transparentize($color, .8);
   border-top-color: $color;
   border-right-color: $color;

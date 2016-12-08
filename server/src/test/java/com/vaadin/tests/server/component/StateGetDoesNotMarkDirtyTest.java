@@ -30,6 +30,7 @@ public class StateGetDoesNotMarkDirtyTest {
         excludedMethods.add(Label.class.getName() + "getDataProviderValue");
         excludedMethods.add("getConnectorId");
         excludedMethods.add("getContent");
+        excludedMethods.add("com.vaadin.ui.Grid:getSelectAllCheckBoxVisible");
     }
 
     @Test
@@ -62,8 +63,8 @@ public class StateGetDoesNotMarkDirtyTest {
                             // we still wouldnt know what to put into
                             continue;
                         }
-                        if (excludedMethods
-                                .contains(clazz.getName() + method.getName())) {
+                        if (excludedMethods.contains(
+                                clazz.getName() + ":" + method.getName())) {
                             // blacklisted method for specific classes
                             continue;
                         }

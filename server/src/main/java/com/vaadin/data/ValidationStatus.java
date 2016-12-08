@@ -20,14 +20,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.Binder.BindingBuilder;
 
 /**
  * Represents the status of field validation. Status can be {@code Status.OK},
  * {@code Status.ERROR} or {@code Status.RESET}. Status OK and ERROR are always
  * associated with a ValidationResult {@link #getResult}.
  * <p>
- * Use {@link Binding#withValidationStatusHandler(ValidationStatusHandler)} to
- * register a handler for field level validation status changes.
+ * Use
+ * {@link BindingBuilder#withValidationStatusHandler(ValidationStatusHandler)}
+ * to register a handler for field level validation status changes.
  *
  * @author Vaadin Ltd
  *
@@ -36,7 +38,7 @@ import com.vaadin.data.Binder.Binding;
  *            status changed, matches the field type unless a converter has been
  *            set
  *
- * @see Binding#withValidationStatusHandler(ValidationStatusHandler)
+ * @see BindingBuilder#withValidationStatusHandler(ValidationStatusHandler)
  * @see Binding#validate()
  * @see ValidationStatusHandler
  * @see BinderValidationStatus

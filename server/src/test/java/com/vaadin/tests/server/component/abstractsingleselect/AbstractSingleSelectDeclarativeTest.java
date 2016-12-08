@@ -20,12 +20,15 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Listing;
+import com.vaadin.tests.design.DeclarativeTestBaseBase;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.ItemCaptionGenerator;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * {@link AbstractSingleSelect} component declarative test.
@@ -49,17 +52,27 @@ public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSing
             IllegalAccessException, InvocationTargetException {
         List<String> items = Arrays.asList("foo", "bar", "foobar");
 
+        String type = "com.vaadin.SomeType";
+        String attribute = "data-type";
+
         String design = String.format(
-                "<%s>\n" + "<option item='foo'>foo</option>\n"
+                "<%s %s='%s'>\n" + "<option item='foo'>foo</option>\n"
                         + "<option item='bar' selected>bar</option>"
                         + "<option item='foobar'>foobar</option></%s>",
-                getComponentTag(), getComponentTag());
+                getComponentTag(), attribute, type, getComponentTag());
         T component = getComponentClass().newInstance();
         component.setItems(items);
         component.setSelectedItem("bar");
 
-        testRead(design, component);
-        testWrite(design, component, true);
+        DesignContext context = readComponentAndCompare(design, component);
+        Assert.assertEquals(type,
+                context.getCustomAttributes(context.getRootComponent())
+                        .get(attribute));
+        context = new DesignContext();
+        context.setCustomAttribute(component, attribute, type);
+        context.setShouldWriteDataDelegate(
+                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        testWrite(component, design, context);
     }
 
     @Override
@@ -68,17 +81,27 @@ public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSing
             IllegalAccessException, InvocationTargetException {
         List<String> items = Arrays.asList("foo", "bar", "foobar");
 
+        String type = "com.vaadin.SomeType";
+        String attribute = "data-type";
+
         String design = String.format(
-                "<%s>\n" + "<option item='foo'>foo</option>\n"
+                "<%s  %s='%s'>\n" + "<option item='foo'>foo</option>\n"
                         + "<option item='bar' selected>bar</option>"
                         + "<option item='foobar'>foobar</option></%s>",
-                getComponentTag(), getComponentTag());
+                getComponentTag(), attribute, type, getComponentTag());
         T component = getComponentClass().newInstance();
         component.setItems(items);
         component.setValue("bar");
 
-        testRead(design, component);
-        testWrite(design, component, true);
+        DesignContext context = readComponentAndCompare(design, component);
+        Assert.assertEquals(type,
+                context.getCustomAttributes(context.getRootComponent())
+                        .get(attribute));
+        context = new DesignContext();
+        context.setCustomAttribute(component, attribute, type);
+        context.setShouldWriteDataDelegate(
+                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        testWrite(component, design, context);
     }
 
     @Test

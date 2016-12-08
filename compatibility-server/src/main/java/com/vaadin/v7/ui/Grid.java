@@ -45,6 +45,10 @@ import org.jsoup.select.Elements;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.event.ContextClickEvent;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
@@ -60,8 +64,9 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.AbstractFocusable;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.SelectiveRenderer;
 import com.vaadin.ui.UI;
@@ -89,6 +94,8 @@ import com.vaadin.v7.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
+import com.vaadin.v7.event.FieldEvents.BlurNotifier;
+import com.vaadin.v7.event.FieldEvents.FocusNotifier;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
@@ -186,8 +193,9 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  */
 @Deprecated
-public class Grid extends AbstractFocusable implements SelectionNotifier,
-        SortNotifier, SelectiveRenderer, ItemClickNotifier {
+public class Grid extends AbstractComponent
+        implements SelectionNotifier, SortNotifier, SelectiveRenderer,
+        ItemClickNotifier, Focusable, FocusNotifier, BlurNotifier {
 
     /**
      * An event listener for column visibility change events in the Grid.
@@ -7450,6 +7458,43 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         if (footer.getRowCount() > 0) {
             footer.writeDesign(tableElement.appendElement("tfoot"), context);
         }
+    }
+
+    @Override
+    public void addBlurListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    @Override
+    public void removeBlurListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    @Override
+    public void addFocusListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    @Override
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    @Override
+    public void focus() {
+        super.focus();
+    }
+
+    @Override
+    public int getTabIndex() {
+        return getState(false).tabIndex;
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        getState().tabIndex = tabIndex;
     }
 
     @Override

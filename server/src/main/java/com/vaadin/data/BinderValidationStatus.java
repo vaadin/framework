@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.validator.BeanValidator;
 
 /**
  * Binder validation status change. Represents the outcome of binder level
  * validation. Has information about the validation results for the
- * {@link Binding#withValidator(Validator) field level} and
+ * {@link BindingBuilder#withValidator(Validator) field level} and
  * {@link Binder#withValidator(Validator)binder level} validation.
  * <p>
  * Note: if there are any field level validation errors, the bean level
@@ -149,7 +149,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * Gets the field level validation statuses.
      * <p>
      * The field level validtors have been added with
-     * {@link Binding#withValidator(Validator)}.
+     * {@link BindingBuilder#withValidator(Validator)}.
      *
      * @return the field validation statuses
      */
@@ -175,7 +175,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * Gets the failed field level validation statuses.
      * <p>
      * The field level validtors have been added with
-     * {@link Binding#withValidator(Validator)}.
+     * {@link BindingBuilder#withValidator(Validator)}.
      *
      * @return a list of failed field level validation statuses
      */

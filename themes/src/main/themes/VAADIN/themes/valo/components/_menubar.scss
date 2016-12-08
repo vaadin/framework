@@ -130,7 +130,7 @@
   position: relative;
   z-index: 1;
   display: inline-block;
-  @include box-sizing(border-box);
+  box-sizing: border-box;
   @include valo-button-style($states: normal, $border-radius: 0, $shadow: null, $font-color: inherit, $cursor: pointer);
   background: transparent;
   @include box-shadow(none);

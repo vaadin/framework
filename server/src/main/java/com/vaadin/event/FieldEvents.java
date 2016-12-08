@@ -55,19 +55,6 @@ public interface FieldEvents {
          */
         public Registration addFocusListener(FocusListener listener);
 
-        /**
-         * Removes a <code>BlurListener</code> from the Component.
-         *
-         * @param listener
-         * @see FocusListener
-         * @since 6.2
-         *
-         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
-         *             the registration object returned from
-         *             {@link #addFocusListener(FocusListener)}.
-         */
-        @Deprecated
-        public void removeFocusListener(FocusListener listener);
     }
 
     /**
@@ -94,21 +81,6 @@ public interface FieldEvents {
          */
         public Registration addBlurListener(BlurListener listener);
 
-        /**
-         * Removes a <code>BlurListener</code> from the Component.
-         *
-         * @see BlurListener
-         * @since 6.2
-         *
-         * @param listener
-         *            the listener to remove
-         * 
-         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
-         *             the registration object returned from
-         *             {@link #addFocusListener(FocusListener)}.
-         */
-        @Deprecated
-        public void removeBlurListener(BlurListener listener);
     }
 
     /**

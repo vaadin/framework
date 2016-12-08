@@ -13,10 +13,10 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.RichTextArea;
 import com.vaadin.v7.ui.Table;
 
 public class NavigatorTest extends UI {
@@ -107,9 +107,6 @@ public class NavigatorTest extends UI {
             return true;
         }
 
-        @Override
-        public void afterViewChange(ViewChangeEvent event) {
-        }
     }
 
     class NaviButton extends Button {
