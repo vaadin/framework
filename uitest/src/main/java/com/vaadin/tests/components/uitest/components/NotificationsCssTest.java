@@ -14,6 +14,8 @@ public class NotificationsCssTest extends VerticalLayout {
 
     public NotificationsCssTest(TestSampler parent) {
         this.parent = parent;
+        setSpacing(false);
+        setMargin(false);
         parent.registerComponent(this);
 
         Button humanized = new Button("Humanized message",

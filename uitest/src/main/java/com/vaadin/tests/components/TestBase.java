@@ -39,6 +39,8 @@ public abstract class TestBase extends AbstractTestCase {
         window.addComponent(label);
 
         layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(false);
         window.addComponent(layout);
         ((VerticalLayout) window.getContent()).setExpandRatio(layout, 1);
 

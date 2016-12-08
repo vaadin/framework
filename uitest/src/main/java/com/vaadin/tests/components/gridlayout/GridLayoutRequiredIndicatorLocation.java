@@ -68,6 +68,8 @@ public class GridLayoutRequiredIndicatorLocation extends AbstractReindeerTestUI 
 
     private VerticalLayout createVerticalLayout(boolean useCaption) {
         VerticalLayout vl = new VerticalLayout();
+        vl.setMargin(false);
+        vl.setSpacing(false);
         vl.setWidth("320px");
 
         addLabel(vl, "200px", Alignment.MIDDLE_LEFT, useCaption);

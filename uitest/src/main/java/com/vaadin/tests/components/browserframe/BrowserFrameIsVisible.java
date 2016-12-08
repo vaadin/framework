@@ -17,6 +17,7 @@ public class BrowserFrameIsVisible extends TestBase {
     protected void setup() {
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(false);
         addComponent(buttonLayout);
 
         Button page1 = new Button("Hello World");

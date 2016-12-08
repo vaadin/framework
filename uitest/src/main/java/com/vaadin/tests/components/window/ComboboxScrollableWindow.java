@@ -42,6 +42,8 @@ public class ComboboxScrollableWindow extends AbstractReindeerTestUI {
         w.center();
 
         VerticalLayout content = new VerticalLayout();
+        content.setMargin(false);
+        content.setSpacing(false);
         w.setContent(content);
         content.setHeight("1000px");
         ComboBox<String> cb = new ComboBox<>();

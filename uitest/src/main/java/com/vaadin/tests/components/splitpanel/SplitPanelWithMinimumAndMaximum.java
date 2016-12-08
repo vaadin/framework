@@ -17,8 +17,10 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         TabSheet tabs = new TabSheet();
 
-        VerticalLayout horizontalSplitsLayout = new VerticalLayout();
-        horizontalSplitsLayout.setCaption("Horizontal splits");
+        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setMargin(false);
+        verticalLayout.setSpacing(false);
+        verticalLayout.setCaption("Horizontal splits");
 
         HorizontalSplitPanel percentagePositionWithPercentageLimitsHorizontal = new HorizontalSplitPanel();
         percentagePositionWithPercentageLimitsHorizontal.setMinSplitPosition(10,
@@ -31,7 +33,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 80 %"));
         percentagePositionWithPercentageLimitsHorizontal.setSplitPosition(50,
                 Sizeable.UNITS_PERCENTAGE);
-        horizontalSplitsLayout
+        verticalLayout
                 .addComponent(percentagePositionWithPercentageLimitsHorizontal);
 
         HorizontalSplitPanel pixelPositionWithPercentageLimitsHorizontal = new HorizontalSplitPanel();
@@ -45,7 +47,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 80 %"));
         pixelPositionWithPercentageLimitsHorizontal.setSplitPosition(400,
                 Sizeable.UNITS_PIXELS);
-        horizontalSplitsLayout
+        verticalLayout
                 .addComponent(pixelPositionWithPercentageLimitsHorizontal);
 
         HorizontalSplitPanel pixelPositionWithPixelLimitsHorizontal = new HorizontalSplitPanel();
@@ -59,7 +61,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 550 px"));
         pixelPositionWithPixelLimitsHorizontal.setSplitPosition(400,
                 Sizeable.UNITS_PIXELS);
-        horizontalSplitsLayout
+        verticalLayout
                 .addComponent(pixelPositionWithPixelLimitsHorizontal);
 
         HorizontalSplitPanel percentagePositionWithPixelLimitsHorizontal = new HorizontalSplitPanel();
@@ -73,7 +75,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 550 px"));
         percentagePositionWithPixelLimitsHorizontal.setSplitPosition(30,
                 Sizeable.UNITS_PERCENTAGE);
-        horizontalSplitsLayout
+        verticalLayout
                 .addComponent(percentagePositionWithPixelLimitsHorizontal);
 
         HorizontalSplitPanel percentagePositionWithPercentageLimitsHorizontalResersed = new HorizontalSplitPanel();
@@ -88,7 +90,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 10 %"));
         percentagePositionWithPercentageLimitsHorizontalResersed
                 .setSplitPosition(50, Sizeable.UNITS_PERCENTAGE, true);
-        horizontalSplitsLayout.addComponent(
+        verticalLayout.addComponent(
                 percentagePositionWithPercentageLimitsHorizontalResersed);
 
         HorizontalSplitPanel pixelPositionWithPercentageLimitsHorizontalResersed = new HorizontalSplitPanel();
@@ -102,7 +104,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 10 %"));
         pixelPositionWithPercentageLimitsHorizontalResersed
                 .setSplitPosition(400, Sizeable.UNITS_PIXELS, true);
-        horizontalSplitsLayout.addComponent(
+        verticalLayout.addComponent(
                 pixelPositionWithPercentageLimitsHorizontalResersed);
 
         HorizontalSplitPanel pixelPositionWithPixelLimitsHorizontalResersed = new HorizontalSplitPanel();
@@ -116,7 +118,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 100 px"));
         pixelPositionWithPixelLimitsHorizontalResersed.setSplitPosition(400,
                 Sizeable.UNITS_PIXELS, true);
-        horizontalSplitsLayout
+        verticalLayout
                 .addComponent(pixelPositionWithPixelLimitsHorizontalResersed);
 
         HorizontalSplitPanel percentagePositionWithPixelLimitsHorizontalResersed = new HorizontalSplitPanel();
@@ -130,14 +132,15 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 100 px"));
         percentagePositionWithPixelLimitsHorizontalResersed.setSplitPosition(30,
                 Sizeable.UNITS_PERCENTAGE, true);
-        horizontalSplitsLayout.addComponent(
+        verticalLayout.addComponent(
                 percentagePositionWithPixelLimitsHorizontalResersed);
 
-        horizontalSplitsLayout.setSizeFull();
-        tabs.addComponent(horizontalSplitsLayout);
+        verticalLayout.setSizeFull();
+        tabs.addComponent(verticalLayout);
 
-        HorizontalLayout verticalSplitsLayout = new HorizontalLayout();
-        verticalSplitsLayout.setCaption("Vertical splits");
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.setSpacing(false);
+        horizontalLayout.setCaption("Vertical splits");
 
         VerticalSplitPanel percentagePositionWithPercentageLimitsVertical = new VerticalSplitPanel();
         percentagePositionWithPercentageLimitsVertical.setMinSplitPosition(10,
@@ -150,7 +153,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 80 %"));
         percentagePositionWithPercentageLimitsVertical.setSplitPosition(50,
                 Sizeable.UNITS_PERCENTAGE);
-        verticalSplitsLayout
+        horizontalLayout
                 .addComponent(percentagePositionWithPercentageLimitsVertical);
 
         VerticalSplitPanel pixelPositionWithPercentageLimitsVertical = new VerticalSplitPanel();
@@ -164,7 +167,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 80 %"));
         pixelPositionWithPercentageLimitsVertical.setSplitPosition(400,
                 Sizeable.UNITS_PIXELS);
-        verticalSplitsLayout
+        horizontalLayout
                 .addComponent(pixelPositionWithPercentageLimitsVertical);
 
         VerticalSplitPanel pixelPositionWithPixelLimitsVertical = new VerticalSplitPanel();
@@ -178,7 +181,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 450 px"));
         pixelPositionWithPixelLimitsVertical.setSplitPosition(400,
                 Sizeable.UNITS_PIXELS);
-        verticalSplitsLayout.addComponent(pixelPositionWithPixelLimitsVertical);
+        horizontalLayout.addComponent(pixelPositionWithPixelLimitsVertical);
 
         VerticalSplitPanel percentagePositionWithPixelLimitsVertical = new VerticalSplitPanel();
         percentagePositionWithPixelLimitsVertical.setMinSplitPosition(100,
@@ -191,7 +194,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 450 px"));
         percentagePositionWithPixelLimitsVertical.setSplitPosition(30,
                 Sizeable.UNITS_PERCENTAGE);
-        verticalSplitsLayout
+        horizontalLayout
                 .addComponent(percentagePositionWithPixelLimitsVertical);
 
         VerticalSplitPanel percentagePositionWithPercentageLimitsVerticalReversed = new VerticalSplitPanel();
@@ -206,7 +209,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 10 %"));
         percentagePositionWithPercentageLimitsVerticalReversed
                 .setSplitPosition(50, Sizeable.UNITS_PERCENTAGE, true);
-        verticalSplitsLayout.addComponent(
+        horizontalLayout.addComponent(
                 percentagePositionWithPercentageLimitsVerticalReversed);
 
         VerticalSplitPanel pixelPositionWithPercentageLimitsVerticalReversed = new VerticalSplitPanel();
@@ -220,7 +223,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 10 %"));
         pixelPositionWithPercentageLimitsVerticalReversed.setSplitPosition(400,
                 Sizeable.UNITS_PIXELS, true);
-        verticalSplitsLayout.addComponent(
+        horizontalLayout.addComponent(
                 pixelPositionWithPercentageLimitsVerticalReversed);
 
         VerticalSplitPanel pixelPositionWithPixelLimitsVerticalReversed = new VerticalSplitPanel();
@@ -234,7 +237,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 100 px"));
         pixelPositionWithPixelLimitsVerticalReversed.setSplitPosition(300,
                 Sizeable.UNITS_PIXELS, true);
-        verticalSplitsLayout
+        horizontalLayout
                 .addComponent(pixelPositionWithPixelLimitsVerticalReversed);
 
         VerticalSplitPanel percentagePositionWithPixelLimitsVerticalReversed = new VerticalSplitPanel();
@@ -248,13 +251,15 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Min 100 px"));
         percentagePositionWithPixelLimitsVerticalReversed.setSplitPosition(30,
                 Sizeable.UNITS_PERCENTAGE, true);
-        verticalSplitsLayout.addComponent(
+        horizontalLayout.addComponent(
                 percentagePositionWithPixelLimitsVerticalReversed);
 
-        tabs.addComponent(verticalSplitsLayout);
-        verticalSplitsLayout.setSizeFull();
+        tabs.addComponent(horizontalLayout);
+        horizontalLayout.setSizeFull();
 
         final VerticalLayout togglableSplitPanelLayout = new VerticalLayout();
+        togglableSplitPanelLayout.setSpacing(false);
+        togglableSplitPanelLayout.setMargin(false);
         togglableSplitPanelLayout.setCaption("Togglable minimum/maximum");
 
         final HorizontalSplitPanel togglableSplitPanel = new HorizontalSplitPanel();
@@ -268,6 +273,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
         togglableSplitPanelLayout.addComponent(togglableSplitPanel);
 
         final HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(false);
 
         Button disableMinimum = new Button("Disable min limit",
                 new Button.ClickListener() {

@@ -29,7 +29,7 @@ public class DragStartModes extends TestBase {
     private Component makeOtherComponentWrapper(DragStartMode componentOther) {
         VerticalLayout parent = new VerticalLayout();
         parent.setWidth("200px");
-        parent.setSpacing(true);
+        parent.setMargin(false);
 
         CssLayout header = new CssLayout();
         Label dragStartModeLabel = new Label(

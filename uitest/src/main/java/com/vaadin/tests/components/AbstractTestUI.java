@@ -29,10 +29,12 @@ public abstract class AbstractTestUI extends UI {
         label.setWidth("100%");
 
         VerticalLayout rootLayout = new VerticalLayout();
-        rootLayout.setMargin(true);
+        rootLayout.setSpacing(false);
         setContent(rootLayout);
 
         layout = new VerticalLayout();
+        layout.setSpacing(false);
+        layout.setMargin(false);
 
         rootLayout.addComponent(label);
         rootLayout.addComponent(layout);

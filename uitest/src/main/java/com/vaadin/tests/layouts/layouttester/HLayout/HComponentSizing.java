@@ -26,9 +26,6 @@ import com.vaadin.ui.HorizontalLayout;
 
 public class HComponentSizing extends BaseComponentSizing {
 
-    /**
-     * @param layoutClass
-     */
     public HComponentSizing() {
         super(HorizontalLayout.class);
     }

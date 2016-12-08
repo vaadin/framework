@@ -100,7 +100,9 @@ public class TabKeyboardNavigation extends AbstractReindeerTestUI {
     }
 
     private Tab addTab() {
-        Layout content = new VerticalLayout();
+        VerticalLayout content = new VerticalLayout();
+        content.setMargin(false);
+        content.setSpacing(false);
         tabs.add(content);
         Label label = new Label("Tab " + index);
         label.setId(labelID(index));

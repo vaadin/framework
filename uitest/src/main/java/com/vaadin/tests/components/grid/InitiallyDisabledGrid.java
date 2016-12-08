@@ -15,6 +15,8 @@ public class InitiallyDisabledGrid extends UI {
     @Override
     protected void init(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(false);
         setContent(layout);
         layout.setSizeFull();
         layout.setWidth("600px");
@@ -25,6 +27,8 @@ public class InitiallyDisabledGrid extends UI {
 
         layout.addComponent(button);
         VerticalLayout l = new VerticalLayout();
+        l.setMargin(false);
+        l.setSpacing(false);
         l.setSizeFull();
         l.addComponent(grid);
 

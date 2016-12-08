@@ -18,7 +18,6 @@ public class Footer extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         HorizontalLayout layout = new HorizontalLayout();
-        layout.setSpacing(true);
 
         final Table table = new Table();
         table.setWidth("400px");
@@ -43,7 +42,7 @@ public class Footer extends AbstractReindeerTestUI {
 
         // Add some options to play with
         VerticalLayout options = new VerticalLayout();
-        options.setSpacing(true);
+        options.setMargin(false);
 
         final CheckBox visible = new CheckBox("Footers Visible", true);
         visible.addValueChangeListener(
@@ -60,6 +59,7 @@ public class Footer extends AbstractReindeerTestUI {
             }
         });
         HorizontalLayout footer1 = new HorizontalLayout();
+        footer1.setSpacing(false);
         footer1.addComponent(footer1Value);
         footer1.addComponent(footer1Btn);
         options.addComponent(footer1);
@@ -73,6 +73,7 @@ public class Footer extends AbstractReindeerTestUI {
             }
         });
         HorizontalLayout footer2 = new HorizontalLayout();
+        footer2.setSpacing(false);
         footer2.addComponent(footer2Value);
         footer2.addComponent(footer2Btn);
         options.addComponent(footer2);
@@ -86,6 +87,7 @@ public class Footer extends AbstractReindeerTestUI {
             }
         });
         HorizontalLayout footer3 = new HorizontalLayout();
+        footer3.setSpacing(false);
         footer3.addComponent(footer3Value);
         footer3.addComponent(footer3Btn);
         options.addComponent(footer3);

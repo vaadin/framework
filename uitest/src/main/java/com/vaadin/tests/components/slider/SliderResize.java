@@ -27,7 +27,7 @@ public class SliderResize extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final VerticalLayout layout = new VerticalLayout();
-        layout.setSpacing(true);
+        layout.setMargin(false);
         layout.setWidth("500px");
         addComponent(layout);
 

@@ -20,9 +20,6 @@ import com.vaadin.ui.HorizontalLayout;
 
 public class HCaption extends BaseCaption {
 
-    /**
-     * @param layoutClass
-     */
     public HCaption() {
         super(HorizontalLayout.class);
     }

@@ -30,6 +30,7 @@ public class ResponsiveLayoutUpdate extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         HorizontalLayout layout = new HorizontalLayout();
+        layout.setSpacing(false);
         layout.addStyleName("layout-update");
         layout.setWidth("100%");
         setContent(layout);

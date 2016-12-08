@@ -48,6 +48,7 @@ public class HeaderSyncOnScroll extends AbstractReindeerTestUI {
         addComponent(table);
 
         HorizontalLayout buttonsLo = new HorizontalLayout();
+        buttonsLo.setSpacing(false);
         addComponent(buttonsLo);
 
         Button setTableWidth100 = new Button("table.setWidth(100%)",

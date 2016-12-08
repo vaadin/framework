@@ -21,7 +21,6 @@ public class ThemeTestUI extends AbstractReindeerTestUI {
         createCustomStyleStringField();
 
         HorizontalLayout selectors = new HorizontalLayout();
-        selectors.setSpacing(true);
 
         selectors.addComponent(customStyle);
         selectors.addComponent(setStyleName);

@@ -32,6 +32,8 @@ public class CustomFieldSize extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(false);
         setContent(layout);
         layout.setWidth("50px");
 

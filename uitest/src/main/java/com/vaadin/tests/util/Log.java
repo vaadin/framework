@@ -13,6 +13,8 @@ public class Log extends VerticalLayout {
     private int nextLogNr = 1;
 
     public Log(int nr) {
+        setSpacing(false);
+        setMargin(false);
         for (int i = 0; i < nr; i++) {
             Label l = createEventLabel();
             l.setId("Log_row_" + i);

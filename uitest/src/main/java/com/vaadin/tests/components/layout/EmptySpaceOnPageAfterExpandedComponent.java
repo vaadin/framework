@@ -34,7 +34,7 @@ public class EmptySpaceOnPageAfterExpandedComponent extends AbstractReindeerTest
         VerticalLayout container = new VerticalLayout();
         container.setStyleName("mystyle");
         container.setId("container");
-        container.setSpacing(true);
+        container.setMargin(false);
         container.setSizeFull();
         addComponent(container);
 
