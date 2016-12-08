@@ -432,11 +432,9 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         getFieldsInDeclareOrder(objectClass).stream()
                 .filter(memberField -> HasValue.class
                         .isAssignableFrom(memberField.getType()))
-                .forEach(
-                        memberField -> handleProperty(memberField,
-                                (property, type) -> bindProperty(
-                                        objectWithMemberFields, memberField,
-                                        property, type)));
+                .forEach(memberField -> handleProperty(memberField,
+                        (property, type) -> bindProperty(objectWithMemberFields,
+                                memberField, property, type)));
     }
 
     /**
