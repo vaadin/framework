@@ -52,6 +52,7 @@ public class UploadNoSelection extends AbstractTestUIWithLog
         Upload u = new Upload("Upload", this);
         u.setId(UPLOAD_ID);
         u.setSizeUndefined();
+        u.setImmediateMode(false);
 
         addComponent(u);
 

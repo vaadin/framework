@@ -1122,11 +1122,15 @@ public class Upload extends AbstractComponent
     /**
      * Sets the immediate mode of the upload.
      * <p>
-     * If the upload is in immediate mode, it displays the browser file choosing
-     * button immediately, whereas a non-immediate upload only shows a Vaadin
-     * button.
+     * If the upload is in immediate mode, it displays only a Vaadin button
+     * which triggers both: the selecting of the file to upload, and starts the
+     * upload immediately after it.
      * <p>
-     * The default mode of an Upload component is non-immediate.
+     * If the upload is not in immediate mode, the user has to first select the
+     * file and after selecting it, they can click the button to start the
+     * upload.
+     * <p>
+     * The default mode of an Upload component is immediate.
      *
      * @param immediateMode
      *            {@code true} for immediate mode, {@code false} for not
@@ -1137,6 +1141,8 @@ public class Upload extends AbstractComponent
 
     /**
      * Returns the immediate mode of the upload.
+     * <p>
+     * The default mode of an Upload component is immediate.
      *
      * @return {@code true} if the upload is in immediate mode, {@code false} if
      *         the upload is not in immediate mode

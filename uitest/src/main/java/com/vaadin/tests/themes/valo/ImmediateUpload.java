@@ -35,14 +35,14 @@ public class ImmediateUpload extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
 
-        // by default is not in immediate mode
+        // by default is in immediate mode (since 8.0ßs)
         Upload upload = new Upload();
-        upload.setId("upload");
+        upload.setId("immediateupload");
         addComponent(upload);
 
         Upload immediateUpload = new Upload();
-        immediateUpload.setId("immediateupload");
-        immediateUpload.setImmediateMode(true);
+        immediateUpload.setId("upload");
+        immediateUpload.setImmediateMode(false);
         addComponent(immediateUpload);
     }
 

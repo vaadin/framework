@@ -30,6 +30,7 @@ public class UploadTitleWithTooltip extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         Upload upload = new Upload();
         upload.setDescription("tootlip");
+        upload.setImmediateMode(false);
 
         addComponent(upload);
     }
