@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui;
+package com.vaadin.v7.client.ui;
 
 import com.vaadin.client.Focusable;
 
+@Deprecated
 public class VCustomField extends VCustomComponent implements Focusable {
 
     private Focusable focusDelegate;
