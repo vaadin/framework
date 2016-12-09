@@ -10,11 +10,11 @@ public class UploadCssTest {
     public UploadCssTest(TestSampler parent) {
         Upload up = new Upload();
         up.setId("upload" + debugIdCounter++);
+        up.setImmediateMode(false);
         parent.addComponent(up);
 
         up = new Upload();
         up.setId("upload" + debugIdCounter++);
-        up.setImmediateMode(true);
         parent.addComponent(up);
     }
 }

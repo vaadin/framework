@@ -122,6 +122,9 @@ public class FontIcons extends AbstractReindeerTestUI {
                 e.printStackTrace();
                 continue;
             }
+            if (c instanceof Upload) {
+                ((Upload) c).setImmediateMode(false);
+            }
             c.setCaption(clazz.getSimpleName());
             c.setIcon(icon);
             gl.addComponent(c);
