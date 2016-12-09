@@ -44,7 +44,7 @@ import com.vaadin.ui.UI;
  * Currently the framework uses the following instances:
  * </p>
  * <p>
- * {@link UI}, {@link VaadinService}, {@link VaadinSession}.
+ * {@link UI}, {@link VaadinService}, {@link VaadinSession},
  * {@link VaadinRequest}, {@link VaadinResponse}.
  * </p>
  *
