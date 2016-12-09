@@ -73,8 +73,8 @@ public class GridSingleSelectionModelTest {
                 .getSelectionModel();
 
         selectionChanges = new ArrayList<>();
-        selectionModel
-                .addSelectionListener(e -> selectionChanges.add(e.getValue()));
+        selectionModel.addSingleSelectionListener(
+                e -> selectionChanges.add(e.getValue()));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -97,7 +97,8 @@ public class GridSingleSelectionModelTest {
 
         List<String> selectionChanges = new ArrayList<>();
         ((SingleSelectionModelImpl<String>) customGrid.getSelectionModel())
-                .addSelectionListener(e -> selectionChanges.add(e.getValue()));
+                .addSingleSelectionListener(
+                        e -> selectionChanges.add(e.getValue()));
 
         customGrid.getSelectionModel().select("Foo");
         assertEquals("Foo",
@@ -292,7 +293,7 @@ public class GridSingleSelectionModelTest {
         String value = "foo";
         SingleSelectionModelImpl<String> select = new SingleSelectionModelImpl<String>() {
             @Override
-            public Registration addSelectionListener(
+            public Registration addSingleSelectionListener(
                     SingleSelectionListener<String> listener) {
                 selectionListener.set(listener);
                 return registration;
@@ -305,10 +306,11 @@ public class GridSingleSelectionModelTest {
         };
 
         AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
-        Registration actualRegistration = select.addSelectionListener(evt -> {
-            Assert.assertNull(event.get());
-            event.set(evt);
-        });
+        Registration actualRegistration = select
+                .addSingleSelectionListener(evt -> {
+                    Assert.assertNull(event.get());
+                    event.set(evt);
+                });
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get().accept(new SingleSelectionEvent<>(grid,

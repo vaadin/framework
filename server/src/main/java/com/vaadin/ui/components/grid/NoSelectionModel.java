@@ -19,7 +19,9 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Grid.GridSelectionModel;
 
 /**
@@ -55,6 +57,12 @@ public class NoSelectionModel<T> extends AbstractExtension
 
     @Override
     public void deselectAll() {
+    }
+
+    @Override
+    public Registration addSelectionListener(SelectionListener<T> listener) {
+        throw new UnsupportedOperationException(
+                "This selection model doesn't allow selection, cannot add selection listeners to it");
     }
 
 }

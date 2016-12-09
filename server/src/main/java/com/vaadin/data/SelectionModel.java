@@ -24,6 +24,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.vaadin.event.selection.SelectionListener;
+import com.vaadin.shared.Registration;
+
 /**
  * Models the selection logic of a {@code Listing} component. Determines how
  * items can be selected and deselected.
@@ -257,4 +260,14 @@ public interface SelectionModel<T> extends Serializable {
     public default boolean isSelected(T item) {
         return getSelectedItems().contains(item);
     }
+
+    /**
+     * Adds a generic listener to this selection model, accepting both single
+     * and multiselection events.
+     *
+     * @param listener
+     *            the listener to add
+     * @return a registration handle for removing the listener
+     */
+    public Registration addSelectionListener(SelectionListener<T> listener);
 }

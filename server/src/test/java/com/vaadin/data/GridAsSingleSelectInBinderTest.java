@@ -19,7 +19,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.SingleSelect;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 
-public class GridAsSingleSelectInBinder
+public class GridAsSingleSelectInBinderTest
         extends BinderTestBase<Binder<Person>, Person> {
 
     private class GridWithCustomSingleSelectionModel extends Grid<Sex> {

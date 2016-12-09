@@ -15,7 +15,9 @@
  */
 package com.vaadin.event.selection;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.ui.AbstractSingleSelect;
@@ -95,5 +97,15 @@ public class SingleSelectionEvent<T> extends ValueChangeEvent<T>
     @Override
     public Optional<T> getFirstSelected() {
         return getSelectedItem();
+    }
+
+    @Override
+    public Set<T> getAllSelectedItems() {
+        Optional<T> selectedItem = getSelectedItem();
+        if (selectedItem.isPresent()) {
+            return Collections.singleton(selectedItem.get());
+        } else {
+            return Collections.emptySet();
+        }
     }
 }

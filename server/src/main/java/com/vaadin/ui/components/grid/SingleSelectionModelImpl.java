@@ -79,15 +79,8 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         return (SingleSelectionModelState) super.getState(markAsDirty);
     }
 
-    /**
-     * Adds a selection listener to this select. The listener is called when the
-     * value of this select is changed either by the user or programmatically.
-     *
-     * @param listener
-     *            the value change listener, not null
-     * @return a registration for the listener
-     */
-    public Registration addSelectionListener(
+    @Override
+    public Registration addSingleSelectionListener(
             SingleSelectionListener<T> listener) {
         return addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
@@ -255,8 +248,9 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             @Override
             public Registration addValueChangeListener(
                     com.vaadin.data.HasValue.ValueChangeListener<T> listener) {
-                return SingleSelectionModelImpl.this
-                        .addSelectionListener(event -> listener.accept(event));
+                return SingleSelectionModelImpl.this.addSingleSelectionListener(
+                        (SingleSelectionListener<T>) event -> listener
+                                .accept(event));
             }
 
             @Override

@@ -17,6 +17,7 @@ package com.vaadin.event.selection;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A selection event that unifies the way to access to selection event for multi
@@ -33,11 +34,30 @@ public interface SelectionEvent<T> extends Serializable {
     /**
      * Get first selected data item.
      * <p>
-     * This is the same as {@link SingleSelectionChange#getSelectedItem()} in
+     * This is the same as {@link SingleSelectionEvent#getSelectedItem()} in
      * case of single selection and the first selected item from
-     * {@link MultiSelectionChangeEvent#getNewSelection()} in case of multi selection.
-     * 
+     * {@link MultiSelectionEvent#getNewSelection()} in case of multi selection.
+     *
      * @return the first selected item.
      */
     Optional<T> getFirstSelected();
+
+    /**
+     * Gets all the currently selected items.
+     * <p>
+     * This method applies more to multiselection - for single select it returns
+     * either an empty set or a set containing the only selected item.
+     *
+     * @return return all the selected items, if any, never {@code null}
+     */
+    Set<T> getAllSelectedItems();
+
+    /**
+     * Returns whether this selection event was triggered by user interaction,
+     * on the client side, or programmatically, on the server side.
+     *
+     * @return {@code true} if this event originates from the client,
+     *         {@code false} otherwise.
+     */
+    boolean isUserOriginated();
 }

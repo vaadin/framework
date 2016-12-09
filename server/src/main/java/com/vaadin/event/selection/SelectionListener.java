@@ -15,25 +15,25 @@
  */
 package com.vaadin.event.selection;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
+import com.vaadin.server.SerializableConsumer;
 
 /**
- * A listener for {@code SingleSelectionEvent}.
+ * A listener for {@code SelectionEvent}.
+ * <p>
+ * This is a generic listener for both type of selections, single and
+ * multiselect.
  *
  * @author Vaadin Ltd.
  *
  * @param <T>
  *            the type of the selected item
  *
- * @see SingleSelectionEvent
+ * @see SelectionEvent
  *
  * @since 8.0
  */
 @FunctionalInterface
-public interface SingleSelectionListener<T>
-        extends Consumer<SingleSelectionEvent<T>>, Serializable {
+public interface SelectionListener<T>
+        extends SerializableConsumer<SelectionEvent<T>> {
 
-    @Override
-    public void accept(SingleSelectionEvent<T> event);
 }

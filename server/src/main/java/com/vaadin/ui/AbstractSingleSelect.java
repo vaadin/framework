@@ -97,13 +97,13 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
 
     /**
      * Adds a selection listener to this select. The listener is called when the
-     * value of this select is changed either by the user or programmatically.
+     * selection is changed either by the user or programmatically.
      *
      * @param listener
-     *            the value change listener, not null
+     *            the selection listener, not null
      * @return a registration for the listener
      */
-    public Registration addSelectionChangeListener(
+    public Registration addSelectionListener(
             SingleSelectionListener<T> listener) {
         return addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
@@ -168,7 +168,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionChangeListener(event -> listener.accept(
+        return addSelectionListener(event -> listener.accept(
                 new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 
