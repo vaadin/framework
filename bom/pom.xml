@@ -13,6 +13,18 @@
     <name>Vaadin Framework (Bill of Materials)</name>
     <description>Vaadin Framework (Bill of Materials)</description>
     <url>http://vaadin.com</url>
+    
+    <properties>
+        <vaadin.spring.version>2.0-SNAPSHOT</vaadin.spring.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -80,6 +92,21 @@
                 <artifactId>vaadin-compatibility-client-compiled</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- AddOn Dependencies -->
+
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-spring-boot-starter</artifactId>
+                <version>${vaadin.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-spring</artifactId>
+                <version>${vaadin.spring.version}</version>
+            </dependency>
+            
+
         </dependencies>
     </dependencyManagement>
     <profiles>
