@@ -464,7 +464,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                     memberField.getName(),
                     objectWithMemberFields.getClass().getName()));
         }
-        if (propertyType.equals(valueType)) {
+        if (propertyType.equals(GenericTypeReflector.erase(valueType))) {
             HasValue<?> field;
             // Get the field from the object
             try {
@@ -485,7 +485,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             throw new IllegalStateException(String.format(
                     "Property type '%s' doesn't "
                             + "match the field type '%s'. "
-                            + "Binding should be configured manulaly using converter.",
+                            + "Binding should be configured manually using converter.",
                     propertyType.getName(), valueType.getTypeName()));
         }
     }
