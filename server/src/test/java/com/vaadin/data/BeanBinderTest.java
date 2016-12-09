@@ -5,6 +5,7 @@ import static org.junit.Assert.assertSame;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,9 +14,29 @@ import org.junit.Test;
 import com.vaadin.data.BeanBinder.BeanBindingBuilder;
 import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.tests.data.bean.BeanToValidate;
+import com.vaadin.ui.CheckBoxGroup;
 
 public class BeanBinderTest
         extends BinderTestBase<BeanBinder<BeanToValidate>, BeanToValidate> {
+
+    private enum TestEnum {
+    }
+
+    private class TestClass {
+        private CheckBoxGroup<TestEnum> enums;
+    }
+
+    private class TestBean {
+        private Set<TestEnum> enums;
+
+        public Set<TestEnum> getEnums() {
+            return enums;
+        }
+
+        public void setEnums(Set<TestEnum> enums) {
+            this.enums = enums;
+        }
+    }
 
     @Before
     public void setUp() {
@@ -23,6 +44,13 @@ public class BeanBinderTest
         item = new BeanToValidate();
         item.setFirstname("Johannes");
         item.setAge(32);
+    }
+
+    @Test
+    public void bindInstanceFields_parameters_type_erased() {
+        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        TestClass testClass = new TestClass();
+        otherBinder.bindInstanceFields(testClass);
     }
 
     @Test
