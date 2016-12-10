@@ -25,7 +25,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -51,7 +51,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.event.EventRouter;
 import com.vaadin.server.VaadinSession.FutureAccess;
 import com.vaadin.server.VaadinSession.State;
 import com.vaadin.server.communication.AtmospherePushConnection;
@@ -66,7 +65,6 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
-import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 import elemental.json.JsonException;
@@ -101,17 +99,6 @@ public abstract class VaadinService implements Serializable {
     @Deprecated
     static final String REINITIALIZING_SESSION_MARKER = PRESERVE_UNBOUND_SESSION_ATTRIBUTE;
 
-    private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
-            SessionInitListener.class, "sessionInit", SessionInitEvent.class);
-
-    private static final Method SESSION_DESTROY_METHOD = ReflectTools
-            .findMethod(SessionDestroyListener.class, "sessionDestroy",
-                    SessionDestroyEvent.class);
-
-    private static final Method SERVICE_DESTROY_METHOD = ReflectTools
-            .findMethod(ServiceDestroyListener.class, "serviceDestroy",
-                    ServiceDestroyEvent.class);
-
     /**
      * @deprecated As of 7.0. Only supported for {@link LegacyApplication}.
      */
@@ -128,7 +115,20 @@ public abstract class VaadinService implements Serializable {
 
     private final DeploymentConfiguration deploymentConfiguration;
 
-    private final EventRouter eventRouter = new EventRouter();
+    /*
+     * Can't use EventRouter for these listeners since it's not thread safe. One
+     * option would be to use an EventRouter instance guarded with a lock, but
+     * then we would needlessly hold a "global" lock while invoking potentially
+     * slow listener implementations.
+     */
+    private final Set<ServiceDestroyListener> serviceDestroyListeners = Collections
+            .newSetFromMap(new ConcurrentHashMap<>());
+
+    private final Set<SessionInitListener> sessionInitListeners = Collections
+            .newSetFromMap(new ConcurrentHashMap<>());
+
+    private final Set<SessionDestroyListener> sessionDestroyListeners = Collections
+            .newSetFromMap(new ConcurrentHashMap<>());
 
     private SystemMessagesProvider systemMessagesProvider = DefaultSystemMessagesProvider
             .get();
@@ -445,8 +445,8 @@ public abstract class VaadinService implements Serializable {
      * @return a registration object for removing the listener
      */
     public Registration addSessionInitListener(SessionInitListener listener) {
-        return eventRouter.addListener(SessionInitEvent.class, listener,
-                SESSION_INIT_METHOD);
+        sessionInitListeners.add(listener);
+        return () -> sessionInitListeners.remove(listener);
     }
 
     /**
@@ -463,8 +463,7 @@ public abstract class VaadinService implements Serializable {
      */
     @Deprecated
     public void removeSessionInitListener(SessionInitListener listener) {
-        eventRouter.removeListener(SessionInitEvent.class, listener,
-                SESSION_INIT_METHOD);
+        sessionInitListeners.remove(listener);
     }
 
     /**
@@ -482,8 +481,8 @@ public abstract class VaadinService implements Serializable {
      */
     public Registration addSessionDestroyListener(
             SessionDestroyListener listener) {
-        return eventRouter.addListener(SessionDestroyEvent.class, listener,
-                SESSION_DESTROY_METHOD);
+        sessionDestroyListeners.add(listener);
+        return () -> sessionDestroyListeners.remove(listener);
     }
 
     /**
@@ -517,12 +516,20 @@ public abstract class VaadinService implements Serializable {
                     session.removeUI(ui);
                 });
             }
-            // for now, use the session error handler; in the future, could
-            // have an API for using some other handler for session init and
-            // destroy listeners
-            eventRouter.fireEvent(
-                    new SessionDestroyEvent(VaadinService.this, session),
-                    session.getErrorHandler());
+            SessionDestroyEvent event = new SessionDestroyEvent(
+                    VaadinService.this, session);
+            for (SessionDestroyListener l : sessionDestroyListeners) {
+                try {
+                    l.sessionDestroy(event);
+                } catch (Exception e) {
+                    /*
+                     * for now, use the session error handler; in the future,
+                     * could have an API for using some other handler for
+                     * session init and destroy listeners
+                     */
+                    session.getErrorHandler().error(new ErrorEvent(e));
+                }
+            }
             session.setState(State.CLOSED);
         });
     }
@@ -540,8 +547,7 @@ public abstract class VaadinService implements Serializable {
      */
     @Deprecated
     public void removeSessionDestroyListener(SessionDestroyListener listener) {
-        eventRouter.removeListener(SessionDestroyEvent.class, listener,
-                SESSION_DESTROY_METHOD);
+        sessionDestroyListeners.remove(listener);
     }
 
     /**
@@ -851,12 +857,19 @@ public abstract class VaadinService implements Serializable {
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServiceException {
-        // for now, use the session error handler; in the future, could have an
-        // API for using some other handler for session init and destroy
-        // listeners
-
-        eventRouter.fireEvent(new SessionInitEvent(this, session, request),
-                session.getErrorHandler());
+        SessionInitEvent event = new SessionInitEvent(this, session, request);
+        for (SessionInitListener l : sessionInitListeners) {
+            try {
+                l.sessionInit(event);
+            } catch (Exception e) {
+                /*
+                 * for now, use the session error handler; in the future, could
+                 * have an API for using some other handler for session init and
+                 * destroy listeners
+                 */
+                session.getErrorHandler().error(new ErrorEvent(e));
+            }
+        }
 
         ServletPortletHelper.checkUiProviders(session, this);
     }
@@ -1903,8 +1916,8 @@ public abstract class VaadinService implements Serializable {
      */
     public Registration addServiceDestroyListener(
             ServiceDestroyListener listener) {
-        return eventRouter.addListener(ServiceDestroyEvent.class, listener,
-                SERVICE_DESTROY_METHOD);
+        serviceDestroyListeners.add(listener);
+        return () -> serviceDestroyListeners.remove(listener);
     }
 
     /**
@@ -1920,8 +1933,7 @@ public abstract class VaadinService implements Serializable {
      */
     @Deprecated
     public void removeServiceDestroyListener(ServiceDestroyListener listener) {
-        eventRouter.removeListener(ServiceDestroyEvent.class, listener,
-                SERVICE_DESTROY_METHOD);
+        serviceDestroyListeners.remove(serviceDestroyListeners);
     }
 
     /**
@@ -1936,7 +1948,8 @@ public abstract class VaadinService implements Serializable {
      * @since 7.2
      */
     public void destroy() {
-        eventRouter.fireEvent(new ServiceDestroyEvent(this));
+        ServiceDestroyEvent event = new ServiceDestroyEvent(this);
+        serviceDestroyListeners.forEach(l -> l.serviceDestroy(event));
     }
 
     /**
