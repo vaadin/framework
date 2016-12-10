@@ -7,13 +7,16 @@ import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class DownloadStreamTest {
-    private String filename = "日本語.png";
+    private String filename = "A å日.png";
+    private String encodedFileName = "A" + "%20" // space
+            + "%c3%a5" // å
+            + "%e6%97%a5" // 日
+            + ".png";
     private DownloadStream stream;
 
     @Before
@@ -27,11 +30,12 @@ public class DownloadStreamTest {
 
         stream.writeResponse(mock(VaadinRequest.class), response);
 
-        String encodedFileName = URLEncoder.encode(filename, "utf-8");
         verify(response).setHeader(eq(DownloadStream.CONTENT_DISPOSITION),
                 contains(String.format("filename=\"%s\";", encodedFileName)));
-        verify(response).setHeader(eq(DownloadStream.CONTENT_DISPOSITION),
-                contains(
-                        String.format("filename*=utf-8''%s", encodedFileName)));
+        verify(response)
+                .setHeader(
+                        eq(DownloadStream.CONTENT_DISPOSITION),
+                        contains(String.format("filename*=utf-8''%s",
+                                encodedFileName)));
     }
 }
