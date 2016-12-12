@@ -28,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class PopupViews extends VerticalLayout implements View {
     public PopupViews() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Popup Views");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -36,7 +36,6 @@ public class PopupViews extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         PopupView pv = new PopupView(new Content() {
@@ -44,7 +43,7 @@ public class PopupViews extends VerticalLayout implements View {
             public Component getPopupComponent() {
                 return new VerticalLayout() {
                     {
-                        setMargin(true);
+                        setSpacing(false);
                         setWidth("300px");
                         addComponent(new Label(
                                 "Fictum,  deserunt mollit anim laborum astutumque! Magna pars studiorum, prodita quaerimus."));
@@ -73,7 +72,7 @@ public class PopupViews extends VerticalLayout implements View {
                 }
                 return new VerticalLayout() {
                     {
-                        setMargin(true);
+                        setSpacing(false);
                         addComponent(
                                 new Label(
                                         "<h3>Thanks for waiting!</h3><p>You've opened this popup <b>"

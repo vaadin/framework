@@ -27,7 +27,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class Sliders extends VerticalLayout implements View {
     public Sliders() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Sliders");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -35,7 +35,6 @@ public class Sliders extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         Slider slider = new Slider("Horizontal");
@@ -143,7 +142,6 @@ public class Sliders extends VerticalLayout implements View {
 
         row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         pb = new ProgressBar();
