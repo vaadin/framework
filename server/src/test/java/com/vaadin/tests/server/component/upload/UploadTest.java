@@ -42,6 +42,14 @@ public class UploadTest {
     }
 
     @Test
+    public void setImmediateMode_defaultTrue() {
+        Upload upload = new Upload();
+
+        Assert.assertTrue("Upload should be in immediate mode by default",
+                upload.isImmediateMode());
+    }
+
+    @Test
     public void getState_uploadHasCustomState() {
         TestUpload upload = new TestUpload();
         UploadState state = upload.getState();

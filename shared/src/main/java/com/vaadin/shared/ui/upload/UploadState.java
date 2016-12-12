@@ -25,7 +25,7 @@ import com.vaadin.shared.AbstractComponentState;
 public class UploadState extends AbstractComponentState {
 
     /** Is the upload component in immediate mode or not */
-    public boolean immediateMode;
+    public boolean immediateMode = true;
 
     {
         primaryStyleName = "v-upload";
