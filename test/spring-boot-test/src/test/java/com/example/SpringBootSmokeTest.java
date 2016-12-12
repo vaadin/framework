@@ -41,5 +41,4 @@ public class SpringBootSmokeTest extends TestBenchTestCase {
         Assert.assertEquals(MyUI.NOTIFICATION_TEXT,
                 $(NotificationElement.class).first().getText());
     }
-
 }
