@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.grid;
 
-import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -29,20 +29,17 @@ public class HorizontalScrollAfterResize extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid grid = new Grid();
+        final Grid<Integer> grid = new Grid<>();
         grid.setWidth("100%");
         grid.setHeight("350px");
         grid.setCaption("My Grid");
 
         for (int i = 0; i < 10; i++) {
             char ch = (char) ('a' + i);
-            grid.addColumn(ch, String.class);
+            grid.addColumn(item -> "test").setCaption("" + ch);
         }
-        for (int i = 0; i < 100; i++) {
-            String[] row = new String[10];
-            Arrays.fill(row, "test");
-            grid.addRow(row);
-        }
+
+        grid.setItems(IntStream.of(0, 100).mapToObj(Integer::valueOf));
 
         addComponents(grid);
     }
