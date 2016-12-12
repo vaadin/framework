@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,8 +45,8 @@ import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.ContextClickEvent;
-import com.vaadin.event.EventListener;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.event.selection.SingleSelectionListener;
@@ -163,8 +164,8 @@ public class Grid<T> extends AbstractListing<T>
         },
 
         /**
-         * Multiselection mode that maps to build-in
-         * {@link MultiSelectionModel}.
+         * Multiselection mode that maps to build-in {@link MultiSelectionModel}
+         * .
          *
          * @see MultiSelectionModelImpl
          */
@@ -472,7 +473,8 @@ public class Grid<T> extends AbstractListing<T>
      * @see Registration
      */
     @FunctionalInterface
-    public interface ItemClickListener<T> extends EventListener<ItemClick<T>> {
+    public interface ItemClickListener<T>
+            extends Consumer<ItemClick<T>>, ConnectorEventListener {
         /**
          * Invoked when this listener receives a item click event from a Grid to
          * which it has been added.
