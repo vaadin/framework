@@ -241,7 +241,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                 // @import rule, traverse recursively
                 @com.vaadin.client.extensions.ResponsiveConnector::searchStylesheetForBreakPoints(Lcom/google/gwt/core/client/JavaScriptObject;)(rule.styleSheet);
 
-            } else if(rule.type == 1 || !rule.type) {
+            } else if(rule.type == 1 || !rule.type) {
                 // Regular selector rule
 
                 // Helper function

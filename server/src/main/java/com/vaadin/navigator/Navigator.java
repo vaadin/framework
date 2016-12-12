@@ -388,7 +388,7 @@ public class Navigator implements Serializable {
      * active {@link View}. Views must implement {@link Component} when using
      * this constructor.
      * <p>
-     * Navigation is automatically initiated after {@code UI.init()} if a
+     * Navigation is automatically initiated after {@code UI.init()} if a
      * navigator was created. If at a later point changes are made to the
      * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
      * be explicitly called to ensure the current view matches the navigation
@@ -411,7 +411,7 @@ public class Navigator implements Serializable {
      * <p>
      * Views must implement {@link Component} when using this constructor.
      * <p>
-     * Navigation is automatically initiated after {@code UI.init()} if a
+     * Navigation is automatically initiated after {@code UI.init()} if a
      * navigator was created. If at a later point changes are made to the
      * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
      * be explicitly called to ensure the current view matches the navigation
@@ -431,7 +431,7 @@ public class Navigator implements Serializable {
      * Creates a navigator that is tracking the active view using URI fragments
      * of the {@link Page} containing the given UI.
      * <p>
-     * Navigation is automatically initiated after {@code UI.init()} if a
+     * Navigation is automatically initiated after {@code UI.init()} if a
      * navigator was created. If at a later point changes are made to the
      * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
      * be explicitly called to ensure the current view matches the navigation
@@ -452,7 +452,7 @@ public class Navigator implements Serializable {
      * When a custom navigation state manager is not needed, use one of the
      * other constructors which use a URI fragment based state manager.
      * <p>
-     * Navigation is automatically initiated after {@code UI.init()} if a
+     * Navigation is automatically initiated after {@code UI.init()} if a
      * navigator was created. If at a later point changes are made to the
      * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
      * be explicitly called to ensure the current view matches the navigation
@@ -489,7 +489,7 @@ public class Navigator implements Serializable {
      * When a custom navigation state manager is not needed, use null to create
      * a default one based on URI fragments.
      * <p>
-     * Navigation is automatically initiated after {@code UI.init()} if a
+     * Navigation is automatically initiated after {@code UI.init()} if a
      * navigator was created. If at a later point changes are made to the
      * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
      * be explicitly called to ensure the current view matches the navigation

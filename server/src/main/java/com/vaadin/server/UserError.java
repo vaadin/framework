@@ -27,19 +27,19 @@ package com.vaadin.server;
 public class UserError extends AbstractErrorMessage {
 
     /**
-     * @deprecated As of 7.0, use {@link ContentMode#TEXT} instead    
+     * @deprecated As of 7.0, use {@link ContentMode#TEXT} instead    
      */
     @Deprecated
     public static final ContentMode CONTENT_TEXT = ContentMode.TEXT;
 
     /**
-     * @deprecated As of 7.0, use {@link ContentMode#PREFORMATTED} instead    
+     * @deprecated As of 7.0, use {@link ContentMode#PREFORMATTED} instead    
      */
     @Deprecated
     public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
 
     /**
-     * @deprecated As of 7.0, use {@link ContentMode#HTML} instead    
+     * @deprecated As of 7.0, use {@link ContentMode#HTML} instead    
      */
     @Deprecated
     public static final ContentMode CONTENT_XHTML = ContentMode.HTML;
