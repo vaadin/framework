@@ -201,6 +201,7 @@ public class Upload extends AbstractComponent
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface Receiver extends Serializable {
 
         /**
@@ -214,7 +215,6 @@ public class Upload extends AbstractComponent
          * @return Stream to which the uploaded file should be written.
          */
         public OutputStream receiveUpload(String filename, String mimeType);
-
     }
 
     /* Upload events */
@@ -544,6 +544,7 @@ public class Upload extends AbstractComponent
      * @author Vaadin Ltd.
      * @since 5.0
      */
+    @FunctionalInterface
     public interface StartedListener extends Serializable {
 
         /**
@@ -561,6 +562,7 @@ public class Upload extends AbstractComponent
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface FinishedListener extends Serializable {
 
         /**
@@ -578,6 +580,7 @@ public class Upload extends AbstractComponent
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface FailedListener extends Serializable {
 
         /**
@@ -595,6 +598,7 @@ public class Upload extends AbstractComponent
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface SucceededListener extends Serializable {
 
         /**
@@ -611,6 +615,7 @@ public class Upload extends AbstractComponent
      *
      * @since 7.2
      */
+    @FunctionalInterface
     public interface ChangeListener extends Serializable {
 
         Method FILENAME_CHANGED = ReflectTools.findMethod(ChangeListener.class,
@@ -954,6 +959,7 @@ public class Upload extends AbstractComponent
     /**
      * ProgressListener receives events to track progress of upload.
      */
+    @FunctionalInterface
     public interface ProgressListener extends Serializable {
         /**
          * Updates progress to listener

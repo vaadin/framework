@@ -55,6 +55,7 @@ public interface ClientConnector extends Connector {
      * Interface for listening {@link AttachEvent connector attach events}.
      *
      */
+    @FunctionalInterface
     public static interface AttachListener extends ConnectorEventListener {
         public static final Method attachMethod = ReflectTools
                 .findMethod(AttachListener.class, "attach", AttachEvent.class);
@@ -83,6 +84,7 @@ public interface ClientConnector extends Connector {
      * Interface for listening {@link DetachEvent connector detach events}.
      *
      */
+    @FunctionalInterface
     public static interface DetachListener extends ConnectorEventListener {
         public static final Method detachMethod = ReflectTools
                 .findMethod(DetachListener.class, "detach", DetachEvent.class);

@@ -44,6 +44,7 @@ import com.vaadin.ui.AbstractComponent;
  *
  * @since 8.0
  */
+@FunctionalInterface
 public interface BinderValidationStatusHandler<BEAN>
         extends Consumer<BinderValidationStatus<BEAN>>, Serializable {
 

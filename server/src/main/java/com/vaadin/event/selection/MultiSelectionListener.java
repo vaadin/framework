@@ -28,6 +28,7 @@ import java.util.function.Consumer;
  * @param <T>
  *            the data type of the selection model
  */
+@FunctionalInterface
 public interface MultiSelectionListener<T>
         extends Consumer<MultiSelectionEvent<T>>, Serializable {
     @Override

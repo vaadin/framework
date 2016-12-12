@@ -41,6 +41,7 @@ public interface FieldEvents {
      * @see FocusListener
      * @see FocusEvent
      */
+    @FunctionalInterface
     public interface FocusNotifier extends Serializable {
         /**
          * Adds a <code>FocusListener</code> to the Component which gets fired
@@ -66,6 +67,7 @@ public interface FieldEvents {
      * @see BlurListener
      * @see BlurEvent
      */
+    @FunctionalInterface
     public interface BlurNotifier extends Serializable {
         /**
          * Adds a <code>BlurListener</code> to the Component which gets fired
@@ -109,6 +111,7 @@ public interface FieldEvents {
      * @see FocusEvent
      * @since 6.2
      */
+    @FunctionalInterface
     public interface FocusListener extends ConnectorEventListener {
 
         public static final Method focusMethod = ReflectTools
@@ -149,6 +152,7 @@ public interface FieldEvents {
      * @see BlurEvent
      * @since 6.2
      */
+    @FunctionalInterface
     public interface BlurListener extends ConnectorEventListener {
 
         public static final Method blurMethod = ReflectTools

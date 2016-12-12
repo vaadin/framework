@@ -48,6 +48,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
      *
      * @see ButtonRenderer#addClickListener(RendererClickListener)
      */
+    @FunctionalInterface
     public interface RendererClickListener<T> extends ConnectorEventListener {
 
         static final Method CLICK_METHOD = ReflectTools.findMethod(

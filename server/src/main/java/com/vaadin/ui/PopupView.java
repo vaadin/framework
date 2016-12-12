@@ -399,6 +399,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * visibility of the popup changes.
      *
      */
+    @FunctionalInterface
     public interface PopupVisibilityListener extends Serializable {
         /**
          * Pass to {@link PopupView#PopupVisibilityEvent} to start listening for

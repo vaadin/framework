@@ -90,6 +90,7 @@ public class Action implements Serializable {
      * Action.Handler interface.<br/>
      *
      */
+    @FunctionalInterface
     public interface Listener extends Serializable {
         public void handleAction(Object sender, Object target);
     }
