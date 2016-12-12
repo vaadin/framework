@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.server.component.upload;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.design.DeclarativeTestBase;
@@ -57,5 +58,16 @@ public class UploadDeclarativeTest extends DeclarativeTestBase<Upload> {
     @Test
     public void testWriteEmpty() {
         testWrite("<vaadin-upload />", new Upload());
+    }
+
+    @Test
+    public void testImmediateModeDefault() {
+        Assert.assertTrue(
+                testRead("<v-upload />", new Upload()).isImmediateMode());
+
+        Upload upload = new Upload();
+        upload.setImmediateMode(false);
+        Assert.assertFalse(testRead("<v-upload immediate-mode=false />", upload)
+                .isImmediateMode());
     }
 }
