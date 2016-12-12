@@ -31,7 +31,7 @@ public class LabelDataSourceTest {
     Label label;
     private static final String STRING_DS_VALUE = "String DatA source";
     private static final int INTEGER_DS_VALUE = 1587;
-    private static final String INTEGER_STRING_VALUE_FI = "1 587";
+    private static final String INTEGER_STRING_VALUE_FI = "1 587";
     private static final String INTEGER_STRING_VALUE_EN_US = "1,587";
     private static final Object INTEGER_STRING_VALUE_DE = "1.587";
     ObjectProperty<String> stringDataSource;
