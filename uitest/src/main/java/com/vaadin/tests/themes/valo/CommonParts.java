@@ -53,7 +53,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class CommonParts extends VerticalLayout implements View {
     public CommonParts() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Common UI Elements");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -75,8 +75,6 @@ public class CommonParts extends VerticalLayout implements View {
         Panel p = new Panel("Loading Indicator");
         VerticalLayout content = new VerticalLayout();
         p.setContent(content);
-        content.setSpacing(true);
-        content.setMargin(true);
         content.addComponent(new Label(
                 "You can test the loading indicator by pressing the buttons."));
 
@@ -152,9 +150,6 @@ public class CommonParts extends VerticalLayout implements View {
             String styleString = "";
             TextField delay = new TextField();
             {
-                setSpacing(true);
-                setMargin(true);
-
                 title.setPlaceholder("Title for the notification");
                 title.addValueChangeListener(event -> {
                     if (title.getValue() == null
@@ -385,7 +380,6 @@ public class CommonParts extends VerticalLayout implements View {
         Panel p = new Panel("Tooltips");
         HorizontalLayout content = new HorizontalLayout() {
             {
-                setSpacing(true);
                 setMargin(true);
                 addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 

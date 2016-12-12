@@ -34,7 +34,7 @@ public class TextFields extends VerticalLayout implements View {
     private TestIcon testIcon = new TestIcon(140);
 
     public TextFields() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Text Fields");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -42,7 +42,6 @@ public class TextFields extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         TextField tf = new TextField("Normal");
@@ -199,7 +198,6 @@ public class TextFields extends VerticalLayout implements View {
 
         row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         TextArea ta = new TextArea("Normal");

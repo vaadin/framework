@@ -34,6 +34,7 @@ public class ValoMenuLayout extends HorizontalLayout {
 
     public ValoMenuLayout() {
         setSizeFull();
+        setSpacing(false);
 
         menuArea.setPrimaryStyleName(ValoTheme.MENU_ROOT);
 

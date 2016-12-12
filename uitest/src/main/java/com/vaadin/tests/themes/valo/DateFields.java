@@ -41,7 +41,7 @@ import com.vaadin.v7.data.util.PropertysetItem;
 
 public class DateFields extends VerticalLayout implements View {
     public DateFields() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Date Fields");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -49,7 +49,6 @@ public class DateFields extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         AbstractDateField date = new TestDateField("Default resolution");
