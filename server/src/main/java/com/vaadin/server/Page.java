@@ -49,6 +49,7 @@ public class Page implements Serializable {
      *
      * @see UI#addListener(BrowserWindowResizeListener)
      */
+    @FunctionalInterface
     public interface BrowserWindowResizeListener extends Serializable {
         /**
          * Invoked when the browser window containing a UI has been resized.
@@ -251,6 +252,7 @@ public class Page implements Serializable {
      *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
      */
+    @FunctionalInterface
     public interface UriFragmentChangedListener extends Serializable {
         /**
          * Event handler method invoked when the URI fragment of the page
@@ -326,6 +328,7 @@ public class Page implements Serializable {
         }
     }
 
+    @FunctionalInterface
     private static interface InjectedStyle extends Serializable {
         public void paint(int id, PaintTarget target) throws PaintException;
     }

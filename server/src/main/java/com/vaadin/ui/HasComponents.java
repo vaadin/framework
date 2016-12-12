@@ -92,6 +92,7 @@ public interface HasComponents extends Component, Iterable<Component> {
     /**
      * Component attach listener interface.
      */
+    @FunctionalInterface
     public interface ComponentAttachListener extends Serializable {
 
         public static final Method attachMethod = ReflectTools.findMethod(
@@ -110,6 +111,7 @@ public interface HasComponents extends Component, Iterable<Component> {
     /**
      * Component detach listener interface.
      */
+    @FunctionalInterface
     public interface ComponentDetachListener extends Serializable {
 
         public static final Method detachMethod = ReflectTools.findMethod(

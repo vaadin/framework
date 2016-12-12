@@ -36,6 +36,7 @@ import java.util.ServiceLoader;
  * @since
  * @author Vaadin Ltd
  */
+@FunctionalInterface
 public interface VaadinServiceInitListener extends EventListener, Serializable {
     /**
      * Run when a {@link VaadinService} instance is initialized.

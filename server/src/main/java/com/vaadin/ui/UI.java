@@ -1847,6 +1847,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * 
      * @see Window.WindowOrderChangeEvent
      */
+    @FunctionalInterface
     public interface WindowOrderUpdateListener extends ConnectorEventListener {
 
         public static final Method windowOrderUpdateMethod = ReflectTools

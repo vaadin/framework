@@ -503,6 +503,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @see SplitterClickEvent
      * @since 6.2
      */
+    @FunctionalInterface
     public interface SplitterClickListener extends ConnectorEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(
@@ -533,6 +534,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *
      * @since 7.5.0
      */
+    @FunctionalInterface
     public interface SplitPositionChangeListener
             extends ConnectorEventListener {
 

@@ -32,6 +32,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
+@FunctionalInterface
 public interface SessionInitListener extends Serializable {
     /**
      * Invoked when a new Vaadin service session is initialized for that

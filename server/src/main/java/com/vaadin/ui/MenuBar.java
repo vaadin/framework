@@ -434,6 +434,7 @@ public class MenuBar extends AbstractComponent
      * clicks on the containing {@link com.vaadin.ui.MenuBar.MenuItem}. The
      * selected item is given as an argument.
      */
+    @FunctionalInterface
     public interface Command extends Serializable {
         public void menuSelected(MenuBar.MenuItem selectedItem);
     }

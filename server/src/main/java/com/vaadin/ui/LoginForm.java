@@ -99,6 +99,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
     /**
      * Listener triggered when a login occurs in a {@link LoginForm}.
      */
+    @FunctionalInterface
     public interface LoginListener extends Serializable {
         /**
          * Event method invoked when the login button is pressed in a login

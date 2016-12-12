@@ -26,6 +26,7 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd
  */
+@FunctionalInterface
 public interface ViewportGenerator extends Serializable {
     /**
      * Generates a viewport tag based on a request.

@@ -28,6 +28,7 @@ import com.vaadin.util.ReflectTools;
 
 public interface LayoutEvents {
 
+    @FunctionalInterface
     public interface LayoutClickListener extends ConnectorEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(

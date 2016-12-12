@@ -24,6 +24,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  * @since 8.0
  */
+@FunctionalInterface
 public interface DataProviderListener extends Serializable {
 
     /**

@@ -27,6 +27,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  * @since 7.0
  */
+@FunctionalInterface
 public interface ViewDisplay extends Serializable {
     /**
      * Remove previously shown view and show the newly selected view in its

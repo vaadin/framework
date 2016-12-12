@@ -809,6 +809,7 @@ public class TabSheet extends AbstractComponentContainer
      *
      * @since 3.0
      */
+    @FunctionalInterface
     public interface SelectedTabChangeListener extends Serializable {
 
         /**
@@ -1288,6 +1289,7 @@ public class TabSheet extends AbstractComponentContainer
      * @since 6.2.0
      *
      */
+    @FunctionalInterface
     public interface CloseHandler extends Serializable {
 
         /**

@@ -20,6 +20,7 @@ import java.io.Serializable;
 /**
  * Interface for listening to errors in the application.
  */
+@FunctionalInterface
 public interface ErrorHandler extends Serializable {
 
     /**
