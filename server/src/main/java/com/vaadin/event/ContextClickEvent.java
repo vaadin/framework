@@ -46,6 +46,7 @@ public class ContextClickEvent extends ClickEvent {
     /**
      * Listener for {@link ContextClickEvent ContextClickEvents}.
      */
+    @FunctionalInterface
     public interface ContextClickListener extends Serializable {
 
         /**

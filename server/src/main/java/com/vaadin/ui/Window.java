@@ -435,6 +435,7 @@ public class Window extends Panel
      * 
      * @see UI.WindowOrderUpdateListener
      */
+    @FunctionalInterface
     public interface WindowOrderChangeListener extends ConnectorEventListener {
 
         public static final Method windowOrderChangeMethod = ReflectTools
@@ -495,6 +496,7 @@ public class Window extends Panel
      * fires the CloseListener.
      * </p>
      */
+    @FunctionalInterface
     public interface CloseListener extends Serializable {
         /**
          * Called when the user closes a window. Use
@@ -596,6 +598,7 @@ public class Window extends Panel
      * will be called whenever the window is maximized (
      * {@link WindowMode#MAXIMIZED}) or restored ({@link WindowMode#NORMAL} ).
      */
+    @FunctionalInterface
     public interface WindowModeChangeListener extends Serializable {
 
         public static final Method windowModeChangeMethod = ReflectTools
@@ -694,6 +697,7 @@ public class Window extends Panel
      *
      * @see com.vaadin.ui.Window.ResizeEvent
      */
+    @FunctionalInterface
     public interface ResizeListener extends Serializable {
         public void windowResized(ResizeEvent e);
     }

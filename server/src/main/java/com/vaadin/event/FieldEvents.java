@@ -109,6 +109,7 @@ public interface FieldEvents {
      * @see FocusEvent
      * @since 6.2
      */
+    @FunctionalInterface
     public interface FocusListener extends ConnectorEventListener {
 
         public static final Method focusMethod = ReflectTools
@@ -149,6 +150,7 @@ public interface FieldEvents {
      * @see BlurEvent
      * @since 6.2
      */
+    @FunctionalInterface
     public interface BlurListener extends ConnectorEventListener {
 
         public static final Method blurMethod = ReflectTools

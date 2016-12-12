@@ -288,6 +288,7 @@ public class Button extends AbstractFocusable
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface ClickListener extends Serializable {
 
         public static final Method BUTTON_CLICK_METHOD = ReflectTools
@@ -302,7 +303,6 @@ public class Button extends AbstractFocusable
          *            An event containing information about the click.
          */
         public void buttonClick(ClickEvent event);
-
     }
 
     /**

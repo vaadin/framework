@@ -38,6 +38,7 @@ import com.vaadin.ui.AbstractComponent;
  * @since 8.0
  *
  */
+@FunctionalInterface
 public interface ValidationStatusHandler
         extends Consumer<ValidationStatus<?>>, Serializable {
 

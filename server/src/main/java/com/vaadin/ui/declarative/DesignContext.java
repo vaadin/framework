@@ -674,6 +674,7 @@ public class DesignContext implements Serializable {
      *
      * @author Vaadin Ltd
      */
+    @FunctionalInterface
     public interface ComponentCreationListener extends Serializable {
 
         /**

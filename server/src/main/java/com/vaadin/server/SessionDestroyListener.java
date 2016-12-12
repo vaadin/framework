@@ -27,6 +27,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
+@FunctionalInterface
 public interface SessionDestroyListener extends Serializable {
     /**
      * Called when a Vaadin service session is no longer used.

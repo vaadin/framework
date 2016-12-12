@@ -28,6 +28,7 @@ import java.io.Serializable;
  * @since 7.2
  * @author Vaadin Ltd
  */
+@FunctionalInterface
 public interface ServiceDestroyListener extends Serializable {
     /**
      * Invoked when a service is destroyed

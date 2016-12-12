@@ -26,6 +26,7 @@ import com.vaadin.ui.UI;
  * added on a {@link VaadinService service} level, common for all users, or on a
  * {@link VaadinSession session} level for only a single user.
  */
+@FunctionalInterface
 public interface RequestHandler extends Serializable {
 
     /**

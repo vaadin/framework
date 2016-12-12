@@ -28,6 +28,7 @@ import com.vaadin.ui.Component;
  * @since 7.5.0
  * @author Vaadin Ltd
  */
+@FunctionalInterface
 public interface ShouldWriteDataDelegate extends Serializable {
 
     /**

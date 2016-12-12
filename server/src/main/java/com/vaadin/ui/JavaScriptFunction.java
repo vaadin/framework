@@ -34,6 +34,7 @@ import elemental.json.JsonArray;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
+@FunctionalInterface
 public interface JavaScriptFunction extends Serializable {
     /**
      * Invoked whenever the corresponding JavaScript function is called in the

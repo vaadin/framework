@@ -27,6 +27,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
+@FunctionalInterface
 public interface SystemMessagesProvider extends Serializable {
     /**
      * Gets the system messages to use in the given context. The
