@@ -1628,6 +1628,11 @@ public class GridLayout extends AbstractLayout
         result.add("cursor-y");
         result.add("rows");
         result.add("columns");
+        result.add("margin");
+        result.add("margin-left");
+        result.add("margin-right");
+        result.add("margin-top");
+        result.add("margin-bottom");
         return result;
     }
 }
