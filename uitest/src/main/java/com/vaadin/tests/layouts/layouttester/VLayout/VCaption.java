@@ -26,9 +26,6 @@ import com.vaadin.ui.VerticalLayout;
 
 public class VCaption extends BaseCaption {
 
-    /**
-     * @param layoutClass
-     */
     public VCaption() {
         super(VerticalLayout.class);
         // TODO Auto-generated constructor stub

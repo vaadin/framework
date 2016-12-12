@@ -149,6 +149,17 @@ public class MarginInfo implements Serializable {
     }
 
     /**
+     * Checks if this MarginInfo object has no margins enabled.
+     *
+     * @since 8.0.0
+     *
+     * @return true if all edges have margins disabled
+     */
+    public boolean hasNone() {
+        return (bitMask & ALL) == 0;
+    }
+
+    /**
      * Checks if this MarginInfo object has the left edge margin enabled.
      *
      * @return true if left edge margin is enabled

@@ -29,7 +29,7 @@ import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxes extends VerticalLayout implements View {
     public ComboBoxes() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Combo Boxes");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -37,7 +37,6 @@ public class ComboBoxes extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         ComboBox combo = new ComboBox("Normal");

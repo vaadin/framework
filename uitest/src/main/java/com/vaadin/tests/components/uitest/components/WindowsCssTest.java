@@ -20,6 +20,8 @@ public class WindowsCssTest extends VerticalLayout {
 
     public WindowsCssTest(TestSampler parent) {
         this.parent = parent;
+        setMargin(false);
+        setSpacing(false);
         parent.registerComponent(this);
 
         Button defWindow = new Button("Default window",

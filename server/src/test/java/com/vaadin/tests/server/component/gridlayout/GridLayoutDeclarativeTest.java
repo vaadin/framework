@@ -38,7 +38,7 @@ public class GridLayoutDeclarativeTest
 
     @Test
     public void testMargins() {
-        testMargins("vaadin-grid-layout");
+        testMargins("vaadin-grid-layout",false);
     }
 
     @Test

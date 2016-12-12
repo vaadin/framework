@@ -76,6 +76,8 @@ public class BottomComponentScrollsUp extends AbstractReindeerTestUI {
         Panel p = new Panel();
 
         VerticalLayout content = new VerticalLayout();
+        content.setMargin(false);
+        content.setSpacing(false);
         p.setContent(content);
         content.setHeight("500px");
 

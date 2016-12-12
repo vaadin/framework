@@ -20,6 +20,8 @@ public class FormsCssTest extends HorizontalLayout {
         setWidth("100%");
 
         VerticalLayout vl = new VerticalLayout();
+        vl.setSpacing(false);
+        vl.setMargin(false);
         FieldGroup fg = new BeanFieldGroup<>(Person.class);
         fg.setItemDataSource(new BeanItem<>(new Person()));
         for (Object propId : fg.getUnboundPropertyIds()) {

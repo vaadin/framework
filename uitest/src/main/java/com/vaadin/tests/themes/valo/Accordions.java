@@ -25,14 +25,13 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class Accordions extends VerticalLayout implements View {
     public Accordions() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Accordions");
         h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
         HorizontalLayout row = new HorizontalLayout();
-        row.setSpacing(true);
         row.setWidth("100%");
         addComponent(row);
 

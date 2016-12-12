@@ -30,6 +30,8 @@ public class UploadImmediateButtonWidth extends AbstractReindeerTestUI {
         // Let's use a separate layout without margins to make the
         // button widths not dependent on the selected theme.
         VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(false);
         layout.setWidth("500px");
 
         layout.addComponent(getImmediateUpload("upload1", "300px"));

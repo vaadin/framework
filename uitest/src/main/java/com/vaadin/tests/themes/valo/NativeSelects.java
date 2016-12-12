@@ -27,7 +27,7 @@ import com.vaadin.v7.ui.TwinColSelect;
 
 public class NativeSelects extends VerticalLayout implements View {
     public NativeSelects() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Selects");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -35,7 +35,6 @@ public class NativeSelects extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         NativeSelect select = new NativeSelect("Drop Down Select");

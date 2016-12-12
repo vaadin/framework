@@ -40,7 +40,7 @@ public class LegacyWindow extends UI {
      */
     public LegacyWindow() {
         super(new VerticalLayout());
-        ((VerticalLayout) getContent()).setMargin(true);
+        ((VerticalLayout) getContent()).setSpacing(false);
     }
 
     /**
@@ -50,8 +50,7 @@ public class LegacyWindow extends UI {
      *            the caption of the window
      */
     public LegacyWindow(String caption) {
-        super(new VerticalLayout());
-        ((VerticalLayout) getContent()).setMargin(true);
+        this();
         setCaption(caption);
     }
 

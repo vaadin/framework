@@ -37,7 +37,7 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
     *
     */
     public ButtonsAndLinks() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Buttons");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -45,7 +45,6 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         Button button = new Button("Normal");
@@ -154,7 +153,6 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
 
         row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         Link link = new Link("vaadin.com",

@@ -73,7 +73,6 @@ public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {
         gl.setHeight("800px");
 
         HorizontalLayout images = new HorizontalLayout();
-        images.setSpacing(true);
 
         Label l = new Label("Chameleon theme image in caption");
         l.setIcon(new ThemeResource("img/magnifier.png"));
@@ -90,7 +89,10 @@ public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {
         getLayout().setSpacing(true);
 
         Window w = new Window();
-        w.setContent(new VerticalLayout(new Button("Button in window")));
+        VerticalLayout content = new VerticalLayout(new Button("Button in window"));
+        content.setSpacing(false);
+        content.setMargin(false);
+        w.setContent(content);
         addWindow(w);
     }
 

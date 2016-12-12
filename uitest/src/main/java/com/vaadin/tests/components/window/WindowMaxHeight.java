@@ -23,11 +23,15 @@ public class WindowMaxHeight extends UI {
             setWidth(200, Unit.PIXELS);
 
             VerticalLayout layoutRoot = new VerticalLayout();
+            layoutRoot.setMargin(false);
+            layoutRoot.setSpacing(false);
 
             Panel container = new Panel();
             container.setHeight(200, Unit.PIXELS);
 
             VerticalLayout containerContent = new VerticalLayout();
+            containerContent.setMargin(false);
+            containerContent.setSpacing(false);
             for (int i = 0; i < 300; i++) {
                 Panel hello = new Panel("hello");
                 containerContent.addComponent(hello);

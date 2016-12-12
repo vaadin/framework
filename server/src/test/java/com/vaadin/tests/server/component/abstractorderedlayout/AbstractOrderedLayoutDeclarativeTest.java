@@ -18,6 +18,7 @@ package com.vaadin.tests.server.component.abstractorderedlayout;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.label.ContentMode;
@@ -40,8 +41,13 @@ public class AbstractOrderedLayoutDeclarativeTest
     private List<String> defaultAlignments = Arrays.asList(":top", ":left");
 
     @Test
-    public void testMargins() {
-        testMargins("vaadin-vertical-layout");
+    public void testMarginsVertical() {
+        testMargins("vaadin-vertical-layout", true);
+    }
+
+    @Test
+    public void testMarginsHorizontal() {
+        testMargins("vaadin-horizontal-layout", false);
     }
 
     @Test

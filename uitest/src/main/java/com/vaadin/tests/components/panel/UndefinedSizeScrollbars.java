@@ -29,7 +29,7 @@ public class UndefinedSizeScrollbars extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
-        layout.setSpacing(true);
+        layout.setMargin(false);
         layout.setSizeFull();
         setContent(layout);
 

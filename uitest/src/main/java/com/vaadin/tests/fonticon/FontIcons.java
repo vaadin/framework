@@ -67,7 +67,7 @@ public class FontIcons extends AbstractReindeerTestUI {
     private void buildUI(final Resource icon) {
         VerticalLayout layout = new VerticalLayout();
         setContent(layout);
-        layout.setMargin(true);
+        layout.setSpacing(false);
 
         layout.setIcon(icon);
 

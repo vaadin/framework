@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class ColorPickers extends VerticalLayout implements View {
     public ColorPickers() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Color Pickers");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -35,7 +35,6 @@ public class ColorPickers extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         TestIcon testIcon = new TestIcon(40);

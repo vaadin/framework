@@ -30,9 +30,8 @@ public class TableChildMeasurementHint extends AbstractReindeerTestUI {
     protected void initMain() {
         ((AbstractOrderedLayout) getContent()).setMargin(false);
         layout = new HorizontalLayout();
-        layout.setSpacing(true);
-        layout.setMargin(false);
         layout.setSizeFull();
+        buttonLayout.setSpacing(false);
         addComponent(buttonLayout);
         addComponent(layout);
 

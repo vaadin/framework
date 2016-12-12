@@ -240,6 +240,7 @@ public class ValoThemeUI extends UI {
 
         HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
+        top.setSpacing(false);
         top.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
         top.addStyleName(ValoTheme.MENU_TITLE);
         menu.addComponent(top);

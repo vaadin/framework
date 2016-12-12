@@ -14,12 +14,16 @@ public class GridLayoutWidthChange extends AbstractReindeerTestUI {
 
     private GridLayout generateLayout() {
         VerticalLayout fields1 = new VerticalLayout();
+        fields1.setMargin(false);
+        fields1.setSpacing(false);
 
         NativeButton nb = new NativeButton("A button");
         nb.setHeight("300px");
         fields1.addComponent(nb);
 
         VerticalLayout fields3 = new VerticalLayout();
+        fields3.setMargin(false);
+        fields3.setSpacing(false);
         fields3.addComponent(new TextField("field14"));
 
         NativeButton b = new NativeButton("A big button");

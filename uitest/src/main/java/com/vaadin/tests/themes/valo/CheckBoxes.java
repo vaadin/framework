@@ -27,7 +27,7 @@ import com.vaadin.v7.ui.OptionGroup;
 
 public class CheckBoxes extends VerticalLayout implements View {
     public CheckBoxes() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Check Boxes");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -35,7 +35,6 @@ public class CheckBoxes extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         CheckBox check = new CheckBox("Checked", true);
@@ -96,7 +95,6 @@ public class CheckBoxes extends VerticalLayout implements View {
 
         row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         OptionGroup options = new OptionGroup("Choose one, explicit width");

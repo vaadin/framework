@@ -53,6 +53,8 @@ abstract public class BaseAlignment extends BaseLayoutTestUI {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            layout.setMargin(false);
+            layout.setSpacing(false);
             layout.setHeight("300px");
             layout.setWidth("200px");
             layout.addComponent(components[i]);

@@ -32,7 +32,7 @@ import com.vaadin.v7.ui.Tree.TreeDragMode;
 
 public class Trees extends VerticalLayout implements View {
     public Trees() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Trees");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -40,7 +40,6 @@ public class Trees extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         Tree tree = new Tree();

@@ -31,7 +31,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class Panels extends VerticalLayout implements View {
     public Panels() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Panels & Layout panels");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -39,7 +39,6 @@ public class Panels extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
         TestIcon testIcon = new TestIcon(60);
 
@@ -104,6 +103,7 @@ public class Panels extends VerticalLayout implements View {
         layout.addStyleName(ValoTheme.LAYOUT_CARD);
         row.addComponent(layout);
         HorizontalLayout panelCaption = new HorizontalLayout();
+        panelCaption.setSpacing(false);
         panelCaption.addStyleName("v-panel-caption");
         panelCaption.setWidth("100%");
         // panelCaption.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
@@ -143,8 +143,6 @@ public class Panels extends VerticalLayout implements View {
     Component panelContent() {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
-        layout.setMargin(true);
-        layout.setSpacing(true);
         Label content = new Label(
                 "Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio.");
         content.setWidth("10em");
@@ -157,8 +155,6 @@ public class Panels extends VerticalLayout implements View {
 
     Component panelContentScroll() {
         VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
         Label content = new Label(
                 "Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio.");
         content.setWidth("10em");

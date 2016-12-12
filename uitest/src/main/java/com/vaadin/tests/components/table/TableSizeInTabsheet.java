@@ -33,7 +33,7 @@ public class TableSizeInTabsheet extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
+        layout.setSpacing(false);
         setContent(layout);
 
         TabSheet tabSheet = new TabSheet();
@@ -45,7 +45,9 @@ public class TableSizeInTabsheet extends AbstractReindeerTestUI {
     public class TabComposite extends CustomComponent {
 
         public TabComposite() {
-            Layout mainLayout = new VerticalLayout();
+            VerticalLayout mainLayout = new VerticalLayout();
+            mainLayout.setSpacing(false);
+            mainLayout.setMargin(false);
             addComponent(mainLayout);
             setCompositionRoot(mainLayout);
 
