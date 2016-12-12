@@ -153,7 +153,7 @@ public class MarginInfo implements Serializable {
      *
      * @since 8.0.0
      *
-     * @return true if all edges have margins enabled
+     * @return true if all edges have margins disabled
      */
     public boolean hasNone() {
         return (bitMask & ALL) == 0;
