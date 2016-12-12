@@ -73,26 +73,6 @@ public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
     }
 
     /**
-     * Removes all registered listeners matching the given parameters. Since
-     * this method receives the event type and the listener object as
-     * parameters, it will unregister all <code>object</code>'s methods that are
-     * registered to listen to events of type <code>eventType</code> generated
-     * by this component.
-     *
-     * @param eventType
-     *            the exact event type the <code>object</code> listens to.
-     * @param listener
-     *            the target object that has registered to listen to events of
-     *            type <code>eventType</code> with one or more methods.
-     */
-    protected void removeListener(Class<?> eventType,
-            DataProviderListener listener) {
-        if (eventRouter != null) {
-            eventRouter.removeListener(eventType, listener);
-        }
-    }
-
-    /**
      * Sends the event to all listeners.
      *
      * @param event
