@@ -616,7 +616,7 @@ public class Grid extends AbstractComponent
             // Use enums directly and the EnumToStringConverter to be consistent
             // with what is shown in the Grid
             @SuppressWarnings("unchecked")
-            EnumSet<?> enumSet = EnumSet.allOf(enumClass);
+            EnumSet enumSet = EnumSet.allOf(enumClass);
             for (Object r : enumSet) {
                 select.addItem(r);
             }

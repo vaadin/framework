@@ -243,7 +243,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         select.addContainerProperty(CAPTION_PROPERTY_ID, String.class, "");
         select.setItemCaptionPropertyId(CAPTION_PROPERTY_ID);
         @SuppressWarnings("unchecked")
-        EnumSet<?> enumSet = EnumSet.allOf(enumClass);
+        EnumSet enumSet = EnumSet.allOf(enumClass);
         for (Object r : enumSet) {
             Item newItem = select.addItem(r);
             newItem.getItemProperty(CAPTION_PROPERTY_ID).setValue(r.toString());

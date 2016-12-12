@@ -92,11 +92,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-widgets</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

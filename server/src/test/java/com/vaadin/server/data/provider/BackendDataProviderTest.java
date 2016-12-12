@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializablePredicate;
@@ -45,10 +44,7 @@ public class BackendDataProviderTest extends
                         .reduce((c1, c2) -> c1.thenComparing(c2)).get();
                 stream = stream.sorted(sorting);
             }
-            List<StrBean> list = stream.skip(query.getOffset())
-                    .limit(query.getLimit()).collect(Collectors.toList());
-            list.forEach(s -> System.err.println(s.toString()));
-            return list.stream();
+            return stream;
         }, query -> (int) data.stream()
                 .filter(t -> query.getFilter().orElse(s -> true).test(t))
                 .count());

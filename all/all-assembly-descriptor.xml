@@ -33,7 +33,6 @@
 				<exclude>${project.groupId}:vaadin-compatibility-themes</exclude>
 				<exclude>${project.groupId}:vaadin-compatibility-client</exclude>
 				<exclude>${project.groupId}:vaadin-compatibility-client-compiled</exclude>
-				<exclude>${project.groupId}:vaadin-widgets</exclude>
 			</excludes>
 		</dependencySet>
 	</dependencySets>
