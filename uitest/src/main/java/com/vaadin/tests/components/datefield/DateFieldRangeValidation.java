@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.event.Listener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.CheckBoxWithPropertyDataSource;
 import com.vaadin.ui.CheckBox;
@@ -55,7 +56,7 @@ public class DateFieldRangeValidation extends TestBase {
     private Range range = new Range();
 
     private PopupDateField actualDateField;
-    private HasValue.ValueChangeListener<Boolean> refreshField = event -> actualDateField
+    private Listener<HasValue.ValueChangeEvent<Boolean>> refreshField = event -> actualDateField
             .markAsDirty();
 
     @Override

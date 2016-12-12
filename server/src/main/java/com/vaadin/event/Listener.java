@@ -13,25 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data;
+package com.vaadin.event;
 
 import java.io.Serializable;
 
 /**
- * Listener interface for {@link StatusChangeEvent}s.
- * 
- * @see StatusChangeEvent
- * @author Vaadin Ltd
+ * Generic Listener interface.
  *
+ * @author Vaadin Ltd.
+ * @since 8.0
  */
-@FunctionalInterface
-public interface StatusChangeListener extends Serializable {
 
-    /**
-     * Notifies the listener about status change {@code event}.
-     * 
-     * @param event
-     *            a status change event, not null
-     */
-    void statusChange(StatusChangeEvent event);
+@FunctionalInterface
+public interface Listener<E extends Serializable> extends Serializable{
+    public void onEvent(E event);
 }

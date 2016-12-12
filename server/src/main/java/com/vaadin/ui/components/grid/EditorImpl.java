@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.BinderValidationStatus;
-import com.vaadin.data.BinderValidationStatusHandler;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
 import com.vaadin.shared.ui.grid.editor.EditorServerRpc;
 import com.vaadin.shared.ui.grid.editor.EditorState;
@@ -47,10 +46,10 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
         implements Editor<T> {
 
     private class EditorStatusHandler
-            implements BinderValidationStatusHandler<T> {
+            implements com.vaadin.event.Listener<BinderValidationStatus<T>> {
 
         @Override
-        public void accept(BinderValidationStatus<T> status) {
+        public void onEvent(BinderValidationStatus<T> status) {
             boolean ok = status.isOk();
             if (saving) {
                 rpc.confirmSave(ok);

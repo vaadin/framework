@@ -25,6 +25,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.TextField;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A component that represents color selection preview within a color picker.
@@ -114,10 +115,12 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     @Override
     public Registration addValueChangeListener(
-            ValueChangeListener<Color> listener) {
+            com.vaadin.event.Listener<ValueChangeEvent<Color>> listener) {
         Objects.requireNonNull(listener, "listener cannot be null");
         return addListener(ValueChangeEvent.class, listener,
-                ValueChangeListener.VALUE_CHANGE_METHOD);
+                ReflectTools
+                        .findMethod(com.vaadin.event.Listener.class, "onEvent",
+                                ValueChangeEvent.class));
     }
 
     private void valueChange(ValueChangeEvent<String> event) {

@@ -34,7 +34,6 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.event.selection.MultiSelectionEvent;
-import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializablePredicate;
@@ -124,7 +123,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
     @Deprecated
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(MultiSelectionListener.class, "accept",
+            .findMethod(com.vaadin.event.Listener.class, "onEvent",
                     MultiSelectionEvent.class);
 
     /**
@@ -153,8 +152,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
      * @return a registration for the listener
      */
     @Override
-    public Registration addSelectionListener(
-            MultiSelectionListener<T> listener) {
+    public Registration addSelectionListener(com.vaadin.event.Listener<MultiSelectionEvent<T>> listener) {
         return addListener(MultiSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
     }
@@ -222,7 +220,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
      * set of this multi select is changed either by the user or
      * programmatically.
      *
-     * @see #addSelectionListener(MultiSelectionListener)
+     * @see #addSelectionListener
      *
      * @param listener
      *            the value change listener, not null
@@ -230,8 +228,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
      */
     @Override
     public Registration addValueChangeListener(
-            HasValue.ValueChangeListener<Set<T>> listener) {
-        return addSelectionListener(event -> listener.accept(
+            com.vaadin.event.Listener<ValueChangeEvent<Set<T>>> listener) {
+        return addSelectionListener(event -> listener.onEvent(
                 new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 

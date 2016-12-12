@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.abstractcomponent;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.event.Listener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -54,7 +55,7 @@ public class TooltipTests extends TestBase {
         layout.addComponent(label);
     }
 
-    private final HasValue.ValueChangeListener<Boolean> panelListener = event -> {
+    private final Listener<HasValue.ValueChangeEvent<Boolean>> panelListener = event -> {
         if (event.getValue()) {
             panel.setDescription("I'm panel!");
         } else {
@@ -62,7 +63,7 @@ public class TooltipTests extends TestBase {
         }
     };
 
-    private final HasValue.ValueChangeListener<Boolean> layoutListener = event -> {
+    private final Listener<HasValue.ValueChangeEvent<Boolean>> layoutListener = event -> {
         if (event.getValue()) {
             layout.setDescription("I'm layout!");
         } else {
@@ -70,7 +71,7 @@ public class TooltipTests extends TestBase {
         }
     };
 
-    private final HasValue.ValueChangeListener<Boolean> labelListener = event -> {
+    private final Listener<HasValue.ValueChangeEvent<Boolean>> labelListener = event -> {
         if (event.getValue()) {
             label.setDescription("I'm label!");
         } else {

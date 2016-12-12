@@ -52,7 +52,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     @Deprecated
     private static final Method VALUE_CHANGE_METHOD = ReflectTools.findMethod(
-            ValueChangeListener.class, "accept", ValueChangeEvent.class);
+            com.vaadin.event.Listener.class, "onEvent", ValueChangeEvent.class);
 
     @Override
     public void setValue(T value) {
@@ -88,7 +88,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     @Override
     public Registration addValueChangeListener(
-            ValueChangeListener<T> listener) {
+            com.vaadin.event.Listener<ValueChangeEvent<T>> listener) {
         return addListener(ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
     }

@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.HasValue;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -34,7 +33,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         CheckBox headerClickListenerCheckbox = new CheckBox(
                 "Header click listener");
         headerClickListenerCheckbox.addValueChangeListener(
-                new HasValue.ValueChangeListener<Boolean>() {
+                new com.vaadin.event.Listener<ValueChangeEvent<Boolean>>() {
 
                     private HeaderClickListener headerClickListener = new HeaderClickListener() {
 
@@ -50,7 +49,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void accept(ValueChangeEvent<Boolean> event) {
+                    public void onEvent(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(HeaderClickEvent.class)
                                 .isEmpty()) {
                             table.addHeaderClickListener(headerClickListener);
@@ -65,7 +64,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         CheckBox footerClickListenerCheckbox = new CheckBox(
                 "Footer click listener");
         footerClickListenerCheckbox.addValueChangeListener(
-                new HasValue.ValueChangeListener<Boolean>() {
+                new com.vaadin.event.Listener<ValueChangeEvent<Boolean>>() {
 
                     private FooterClickListener footerClickListener = new FooterClickListener() {
 
@@ -80,7 +79,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void accept(ValueChangeEvent<Boolean> event) {
+                    public void onEvent(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(FooterClickEvent.class)
                                 .isEmpty()) {
                             table.addFooterClickListener(footerClickListener);

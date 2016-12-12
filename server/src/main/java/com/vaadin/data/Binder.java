@@ -35,6 +35,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.event.EventRouter;
+import com.vaadin.event.Listener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.SerializableBiConsumer;
 import com.vaadin.server.SerializableFunction;
@@ -729,7 +730,7 @@ public class Binder<BEAN> implements Serializable {
         public ValidationStatus<TARGET> validate() {
             ValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
-                    .accept(new BinderValidationStatus<>(getBinder(),
+                    .onEvent(new BinderValidationStatus<>(getBinder(),
                             Arrays.asList(status), Collections.emptyList()));
             getBinder().fireStatusChangeEvent(status.isError());
             return status;
@@ -833,7 +834,7 @@ public class Binder<BEAN> implements Serializable {
             BinderValidationStatus<BEAN> status = new BinderValidationStatus<>(
                     getBinder(), Arrays.asList(fieldValidationStatus),
                     binderValidationResults);
-            getBinder().getValidationStatusHandler().accept(status);
+            getBinder().getValidationStatusHandler().onEvent(status);
             getBinder().fireStatusChangeEvent(status.hasErrors());
         }
 
@@ -961,7 +962,7 @@ public class Binder<BEAN> implements Serializable {
 
     private Label statusLabel;
 
-    private BinderValidationStatusHandler<BEAN> statusHandler;
+    private Listener<BinderValidationStatus<BEAN>> statusHandler;
 
     private boolean hasChanges = false;
 
@@ -1099,7 +1100,7 @@ public class Binder<BEAN> implements Serializable {
             bindings.forEach(b -> b.initFieldValue(bean));
             // if there has been field value change listeners that trigger
             // validation, need to make sure the validation errors are cleared
-            getValidationStatusHandler().accept(
+            getValidationStatusHandler().onEvent(
                     BinderValidationStatus.createUnresolvedStatus(this));
             fireStatusChangeEvent(false);
         }
@@ -1136,7 +1137,7 @@ public class Binder<BEAN> implements Serializable {
         bindings.forEach(binding -> binding.initFieldValue(bean));
 
         getValidationStatusHandler()
-                .accept(BinderValidationStatus.createUnresolvedStatus(this));
+                .onEvent(BinderValidationStatus.createUnresolvedStatus(this));
         fireStatusChangeEvent(false);
     }
 
@@ -1335,7 +1336,7 @@ public class Binder<BEAN> implements Serializable {
             validationStatus = new BinderValidationStatus<>(this,
                     bindingStatuses, validateBean(bean));
         }
-        getValidationStatusHandler().accept(validationStatus);
+        getValidationStatusHandler().onEvent(validationStatus);
         fireStatusChangeEvent(validationStatus.hasErrors());
         return validationStatus;
     }
@@ -1400,7 +1401,7 @@ public class Binder<BEAN> implements Serializable {
     public void setStatusLabel(Label statusLabel) {
         if (statusHandler != null) {
             throw new IllegalStateException("Cannot set status label if a "
-                    + BinderValidationStatusHandler.class.getSimpleName()
+                    + Listener.class.getSimpleName()
                     + " has already been set.");
         }
         this.statusLabel = statusLabel;
@@ -1436,12 +1437,12 @@ public class Binder<BEAN> implements Serializable {
      * @see BindingBuilder#withValidationStatusHandler(ValidationStatusHandler)
      */
     public void setValidationStatusHandler(
-            BinderValidationStatusHandler<BEAN> statusHandler) {
+            com.vaadin.event.Listener<BinderValidationStatus<BEAN>> statusHandler) {
         Objects.requireNonNull(statusHandler, "Cannot set a null "
-                + BinderValidationStatusHandler.class.getSimpleName());
+                + Listener.class.getSimpleName());
         if (statusLabel != null) {
             throw new IllegalStateException("Cannot set "
-                    + BinderValidationStatusHandler.class.getSimpleName()
+                    + Listener.class.getSimpleName()
                     + " if a status label has already been set.");
         }
         this.statusHandler = statusHandler;
@@ -1457,7 +1458,7 @@ public class Binder<BEAN> implements Serializable {
      * @return the status handler used, never <code>null</code>
      * @see #setValidationStatusHandler(BinderStatusHandler)
      */
-    public BinderValidationStatusHandler<BEAN> getValidationStatusHandler() {
+    public Listener<BinderValidationStatus<BEAN>> getValidationStatusHandler() {
         return Optional.ofNullable(statusHandler)
                 .orElse(this::handleBinderValidationStatus);
     }
@@ -1493,9 +1494,9 @@ public class Binder<BEAN> implements Serializable {
      *            status change listener to add, not null
      * @return a registration for the listener
      */
-    public Registration addStatusChangeListener(StatusChangeListener listener) {
+    public Registration addStatusChangeListener(Listener<StatusChangeEvent> listener) {
         return getEventRouter().addListener(StatusChangeEvent.class, listener,
-                StatusChangeListener.class.getDeclaredMethods()[0]);
+                Listener.class.getDeclaredMethods()[0]);
     }
 
     /**
@@ -1676,7 +1677,7 @@ public class Binder<BEAN> implements Serializable {
             bean = null;
         }
         getValidationStatusHandler()
-                .accept(BinderValidationStatus.createUnresolvedStatus(this));
+                .onEvent(BinderValidationStatus.createUnresolvedStatus(this));
         if (fireStatusEvent) {
             fireStatusChangeEvent(false);
         }

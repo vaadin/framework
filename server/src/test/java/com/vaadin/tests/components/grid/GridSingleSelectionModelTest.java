@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.vaadin.event.Listener;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,6 @@ import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.event.selection.SingleSelectionEvent;
-import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Grid;
@@ -286,7 +286,7 @@ public class GridSingleSelectionModelTest {
     @SuppressWarnings({ "serial" })
     @Test
     public void addValueChangeListener() {
-        AtomicReference<SingleSelectionListener<String>> selectionListener = new AtomicReference<>();
+        AtomicReference<Listener<SingleSelectionEvent<String>>> selectionListener = new AtomicReference<>();
         Registration registration = Mockito.mock(Registration.class);
         Grid<String> grid = new Grid<>();
         grid.setItems("foo", "bar");
@@ -294,7 +294,7 @@ public class GridSingleSelectionModelTest {
         SingleSelectionModelImpl<String> select = new SingleSelectionModelImpl<String>() {
             @Override
             public Registration addSingleSelectionListener(
-                    SingleSelectionListener<String> listener) {
+                    Listener<SingleSelectionEvent<String>> listener) {
                 selectionListener.set(listener);
                 return registration;
             }
@@ -313,7 +313,7 @@ public class GridSingleSelectionModelTest {
                 });
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().accept(new SingleSelectionEvent<>(grid,
+        selectionListener.get().onEvent(new SingleSelectionEvent<>(grid,
                 select.asSingleSelect(), true));
 
         Assert.assertEquals(grid, event.get().getComponent());

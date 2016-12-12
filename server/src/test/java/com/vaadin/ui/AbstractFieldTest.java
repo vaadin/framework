@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.event.Listener;
 import com.vaadin.server.ClientConnector;
 
 public class AbstractFieldTest extends EasyMockSupport {
@@ -32,7 +32,7 @@ public class AbstractFieldTest extends EasyMockSupport {
 
     TextField field;
 
-    ValueChangeListener<String> l;
+    com.vaadin.event.Listener<ValueChangeEvent<String>> l;
     Capture<ValueChangeEvent<String>> capture;
 
     @Before
@@ -58,7 +58,7 @@ public class AbstractFieldTest extends EasyMockSupport {
 
     @Test
     public void valueChangeListenerInvoked() {
-        l.accept(EasyMock.capture(capture));
+        l.onEvent(EasyMock.capture(capture));
         replayAll();
 
         field.setValue("foo");
@@ -72,7 +72,7 @@ public class AbstractFieldTest extends EasyMockSupport {
 
     @Test
     public void valueChangeListenerInvokedFromClient() {
-        l.accept(EasyMock.capture(capture));
+        l.onEvent(EasyMock.capture(capture));
         replayAll();
 
         field.setValue("foo");
@@ -108,8 +108,8 @@ public class AbstractFieldTest extends EasyMockSupport {
     }
 
     @SuppressWarnings("unchecked")
-    private ValueChangeListener<String> mockListener() {
-        return createStrictMock(ValueChangeListener.class);
+    private com.vaadin.event.Listener<ValueChangeEvent<String>> mockListener() {
+        return createStrictMock(Listener.class);
     }
 
     private void assertEventEquals(ValueChangeEvent<String> e, String value,

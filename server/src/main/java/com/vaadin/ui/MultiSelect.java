@@ -24,7 +24,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.event.selection.MultiSelectionListener;
+import com.vaadin.event.Listener;
+import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.shared.Registration;
 
 /**
@@ -135,5 +136,5 @@ public interface MultiSelect<T> extends HasValue<Set<T>>, Serializable {
      * @return a registration for the listener
      */
     public Registration addSelectionListener(
-            MultiSelectionListener<T> listener);
+            Listener<MultiSelectionEvent<T>> listener);
 }

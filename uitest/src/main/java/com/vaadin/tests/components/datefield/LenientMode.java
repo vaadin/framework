@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.event.Listener;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.components.TestDateField;
@@ -12,13 +12,13 @@ import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 
 public class LenientMode extends TestBase
-        implements ValueChangeListener<LocalDate> {
+        implements Listener<ValueChangeEvent<LocalDate>> {
 
     private static final long serialVersionUID = -9064553409580072387L;
 
     @Override
     protected String getDescription() {
-        return "In lenien mode DateField should accept date input from user like '32/12/09'. In normal mode, an exception should be thrown. ";
+        return "In lenien mode DateField should onEvent date input from user like '32/12/09'. In normal mode, an exception should be thrown. ";
     }
 
     @Override
@@ -72,7 +72,7 @@ public class LenientMode extends TestBase
     }
 
     @Override
-    public void accept(ValueChangeEvent<LocalDate> event) {
+    public void onEvent(ValueChangeEvent<LocalDate> event) {
         getMainWindow().showNotification("New value" + event.getValue());
     }
 

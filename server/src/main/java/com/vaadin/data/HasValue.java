@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
+import com.vaadin.event.Listener;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
@@ -131,34 +131,6 @@ public interface HasValue<V> extends Serializable {
     }
 
     /**
-     * A listener for value change events.
-     *
-     * @param <V>
-     *            the value type
-     *
-     * @see ValueChangeEvent
-     * @see Registration
-     */
-    @FunctionalInterface
-    public interface ValueChangeListener<V>
-            extends Consumer<ValueChangeEvent<V>>, Serializable {
-        @Deprecated
-        public static final Method VALUE_CHANGE_METHOD = ReflectTools
-                .findMethod(ValueChangeListener.class, "accept",
-                        ValueChangeEvent.class);
-
-        /**
-         * Invoked when this listener receives a value change event from an
-         * event source to which it has been added.
-         *
-         * @param event
-         *            the received event, not null
-         */
-        @Override
-        public void accept(ValueChangeEvent<V> event);
-    }
-
-    /**
      * Sets the value of this object. If the new value is not equal to
      * {@code getValue()}, fires a value change event. May throw
      * {@code IllegalArgumentException} if the value is not acceptable.
@@ -191,7 +163,7 @@ public interface HasValue<V> extends Serializable {
      *            the value change listener, not null
      * @return a registration for the listener
      */
-    public Registration addValueChangeListener(ValueChangeListener<V> listener);
+    public Registration addValueChangeListener(Listener<ValueChangeEvent<V>> listener);
 
     /**
      * Returns the value that represents an empty value.

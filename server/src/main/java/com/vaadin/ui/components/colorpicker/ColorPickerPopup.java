@@ -42,6 +42,7 @@ import com.vaadin.ui.Slider.ValueOutOfBoundsException;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A component that represents color selection popup within a color picker.
@@ -497,10 +498,12 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     @Override
     public Registration addValueChangeListener(
-            ValueChangeListener<Color> listener) {
+            com.vaadin.event.Listener<ValueChangeEvent<Color>> listener) {
         Objects.requireNonNull(listener, "listener cannot be null");
         return addListener(ValueChangeEvent.class, listener,
-                ValueChangeListener.VALUE_CHANGE_METHOD);
+                ReflectTools
+                        .findMethod(com.vaadin.event.Listener.class, "onEvent",
+                                ValueChangeEvent.class));
     }
 
     /**
