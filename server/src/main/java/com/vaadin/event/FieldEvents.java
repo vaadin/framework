@@ -41,7 +41,6 @@ public interface FieldEvents {
      * @see FocusListener
      * @see FocusEvent
      */
-    @FunctionalInterface
     public interface FocusNotifier extends Serializable {
         /**
          * Adds a <code>FocusListener</code> to the Component which gets fired
@@ -67,7 +66,6 @@ public interface FieldEvents {
      * @see BlurListener
      * @see BlurEvent
      */
-    @FunctionalInterface
     public interface BlurNotifier extends Serializable {
         /**
          * Adds a <code>BlurListener</code> to the Component which gets fired

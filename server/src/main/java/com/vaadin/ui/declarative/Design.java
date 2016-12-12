@@ -76,7 +76,6 @@ public class Design implements Serializable {
      *
      * @since 7.4.1
      */
-    @FunctionalInterface
     public interface ComponentFactory extends Serializable {
         /**
          * Creates a component based on the fully qualified name derived from
