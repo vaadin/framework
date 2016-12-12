@@ -21,7 +21,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 
 import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 /**
  * @author Vaadin Ltd
