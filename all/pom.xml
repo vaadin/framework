@@ -92,12 +92,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-widgets</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- Needed because referenced from javadocs -->
         <dependency>
             <groupId>javax.portlet</groupId>
