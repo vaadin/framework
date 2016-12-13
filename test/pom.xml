@@ -13,7 +13,6 @@
     <packaging>pom</packaging><properties>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <vaadin.testbench.version>5.0.0.alpha1</vaadin.testbench.version>
-        <skip.jetty.plugin>false</skip.jetty.plugin>
     </properties>
 
     <repositories>
@@ -118,6 +117,20 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.github.klieber</groupId>
+                <artifactId>phantomjs-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                        <configuration>
+                            <version>${phantomjs.version}</version>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <plugin>
@@ -135,20 +148,6 @@
                         <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
                     </systemPropertyVariables>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                        <configuration>
-                            <version>${phantomjs.version}</version>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
