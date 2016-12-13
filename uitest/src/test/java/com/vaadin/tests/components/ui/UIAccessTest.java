@@ -117,16 +117,4 @@ public class UIAccessTest extends MultiBrowserTest {
                 "3. Test value after accessSynchornously: Set in accessSynchronosly"));
     }
 
-    @Test
-    public void currentInstanceCanAccessValue() {
-        $(ButtonElement.class).get(6).click();
-
-        assertTrue(logContainsText("0. access has request? false"));
-        assertTrue(
-                logContainsText("1. Test value in access: Set before access"));
-        assertTrue(logContainsText("2. has request after access? true"));
-        assertTrue(logContainsText(
-                "3. Test value after access: Set before run pending"));
-    }
-
 }
