@@ -303,8 +303,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * automatically defined.
      * <p>
      * The current servlet is derived from the current service using
-     *
      * {@link VaadinService#getCurrent()}
+     *
      * @return the current Vaadin servlet instance if available, otherwise
      *         <code>null</code>
      *
