@@ -470,11 +470,11 @@ public abstract class AbstractListing<T> extends AbstractComponent
 
     @Override
     public int getTabIndex() {
-        return getState().tabIndex;
+        return getState(false).tabIndex;
     }
 
     @Override
     public void setTabIndex(int tabIndex) {
-        getState(true).tabIndex = tabIndex;
+        getState().tabIndex = tabIndex;
     }
 }
