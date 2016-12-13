@@ -6,12 +6,12 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test</artifactId>
-        <version>8.0-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>spring-boot-test</artifactId>
+    <artifactId>vaadin-test-spring-boot</artifactId>
     <packaging>jar</packaging>
 
-    <name>demo</name>
+    <name>vaadin-test-spring-boot</name>
     <description>Demo project for Vaadin Spring Boot</description>
 
     <properties>
@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
-                <version>${project.version}</version>
+                <version>${vaadin.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
