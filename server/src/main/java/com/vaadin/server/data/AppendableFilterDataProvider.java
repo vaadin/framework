@@ -37,7 +37,8 @@ public interface AppendableFilterDataProvider<T, F> extends DataProvider<T, F> {
      *            the applied filter; not {@code null}
      * @return new data provider with the filter applied
      */
-    public default AppendableFilterDataProvider<T, F> applyFilter(F filter) {
+    @Override
+    public default AppendableFilterDataProvider<T, F> withFilter(F filter) {
         Objects.requireNonNull(filter, "The applied filter can't be null");
         return DataProviderWrapper.chain(this, filter);
     }

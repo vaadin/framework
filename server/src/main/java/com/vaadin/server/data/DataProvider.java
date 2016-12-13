@@ -100,7 +100,7 @@ public interface DataProvider<T, F> extends Serializable {
      *            the default filter
      * @return wrapped data provider with provided filter
      */
-    public default DataProvider<T, Void> setFilter(F filter) {
+    public default DataProvider<T, ?> withFilter(F filter) {
         Objects.requireNonNull(filter, "Filter can't be null");
         return DataProviderWrapper.filter(this, filter);
     }
