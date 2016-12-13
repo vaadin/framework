@@ -66,7 +66,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     public static final String CELL_STYLE_GENERATOR_EMPTY = "Empty string";
     public static final String CELL_STYLE_GENERATOR_NULL = "Null";
 
-    private boolean isUserSelectionAllowed = true;
+    private boolean isUserSelectionDisallowed;
 
     public static final String[] COLUMN_CAPTIONS = { "Column 0", "Column 1",
             "Column 2", "Row Number", "Date", "HTML String", "Big Random",
@@ -408,20 +408,20 @@ public class GridBasics extends AbstractTestUIWithLog {
         }).setCheckable(true);
 
         MenuItem selectionAllowedItem = stateMenu
-                .addItem("Allow user selection", item -> {
-                    isUserSelectionAllowed = !isUserSelectionAllowed;
+                .addItem("Disallow user selection", item -> {
+                    isUserSelectionDisallowed = !isUserSelectionDisallowed;
                     if (grid.getSelectionModel() instanceof MultiSelectionModelImpl) {
                         MultiSelect<DataObject> multiSelect = grid
                                 .asMultiSelect();
-                        multiSelect.setReadOnly(isUserSelectionAllowed);
+                        multiSelect.setReadOnly(isUserSelectionDisallowed);
                     }
                     if (grid.getSelectionModel() instanceof SingleSelectionModelImpl) {
                         SingleSelect<DataObject> singleSelect = grid
                                 .asSingleSelect();
-                        singleSelect.setReadOnly(isUserSelectionAllowed);
+                        singleSelect.setReadOnly(isUserSelectionDisallowed);
                     }
                 });
-        selectionAllowedItem.setChecked(true);
+        selectionAllowedItem.setChecked(false);
         selectionAllowedItem.setCheckable(true);
 
         stateMenu.addItem("Column reorder listener",
@@ -513,7 +513,7 @@ public class GridBasics extends AbstractTestUIWithLog {
             selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
                     .getSelectionModel())
                             .addSingleSelectionListener(this::onSingleSelect);
-            grid.asSingleSelect().setReadOnly(isUserSelectionAllowed);
+            grid.asSingleSelect().setReadOnly(isUserSelectionDisallowed);
         });
         selectionModelItem.addItem("multi", menuItem -> {
             switchToMultiSelect();
@@ -559,7 +559,7 @@ public class GridBasics extends AbstractTestUIWithLog {
             MultiSelectionModelImpl<DataObject> model = (MultiSelectionModelImpl<DataObject>) grid
                     .setSelectionMode(SelectionMode.MULTI);
             model.addMultiSelectionListener(this::onMultiSelect);
-            grid.asMultiSelect().setReadOnly(isUserSelectionAllowed);
+            grid.asMultiSelect().setReadOnly(isUserSelectionDisallowed);
             selectionListenerRegistration = model
                     .addMultiSelectionListener(this::onMultiSelect);
         }

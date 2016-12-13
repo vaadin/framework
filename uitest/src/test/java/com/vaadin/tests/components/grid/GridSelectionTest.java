@@ -404,7 +404,7 @@ public class GridSelectionTest extends GridBasicsTest {
     }
 
     private void toggleUserSelectionAllowed() {
-        selectMenuPath("Component", "State", "Allow user selection");
+        selectMenuPath("Component", "State", "Disallow user selection");
     }
 
     private WebElement getSelectionCheckbox(int row) {
