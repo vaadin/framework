@@ -31,7 +31,9 @@ import com.vaadin.ui.Component;
  *
  * @author Vaadin Ltd.
  * @since
+ * @deprecated use com.vaadin.ui.VerticalLayout (with different defaults)
  */
+@Deprecated
 public class VerticalLayout extends com.vaadin.ui.VerticalLayout {
     /**
      * Constructs an empty VerticalLayout.

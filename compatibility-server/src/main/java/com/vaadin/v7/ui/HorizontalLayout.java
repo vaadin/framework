@@ -30,7 +30,9 @@ import com.vaadin.ui.Component;
  *
  * @author Vaadin Ltd.
  * @since
+ * @deprecated use com.vaadin.ui.HorizontalLayout (with different defaults)
  */
+@Deprecated
 public class HorizontalLayout extends com.vaadin.ui.HorizontalLayout {
     /**
      * Constructs an empty HorizontalLayout.
