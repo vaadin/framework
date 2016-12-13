@@ -438,6 +438,12 @@ public class GridBasics extends AbstractTestUIWithLog {
         enableItem.setChecked(true);
 
         createSelectionMenu(stateMenu);
+        
+        stateMenu.addItem("Set focus", item -> grid.focus());
+        MenuItem tabIndexMenu = stateMenu.addItem("Tab index", null);
+        addGridMethodMenu(tabIndexMenu, "0", 0, grid::setTabIndex);
+        addGridMethodMenu(tabIndexMenu, "-1", -1, grid::setTabIndex);
+        addGridMethodMenu(tabIndexMenu, "10", 10, grid::setTabIndex);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {

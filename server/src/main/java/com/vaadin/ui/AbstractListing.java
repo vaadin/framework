@@ -31,6 +31,7 @@ import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.Query;
 import com.vaadin.shared.extension.abstractlisting.AbstractListingExtensionState;
 import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -51,7 +52,8 @@ import com.vaadin.ui.declarative.DesignFormatter;
  *
  * @see Listing
  */
-public abstract class AbstractListing<T> extends AbstractComponent {
+public abstract class AbstractListing<T> extends AbstractComponent
+        implements Focusable {
     /**
      * The item icon caption provider.
      */
@@ -459,5 +461,20 @@ public abstract class AbstractListing<T> extends AbstractComponent {
     @Override
     protected AbstractListingState getState(boolean markAsDirty) {
         return (AbstractListingState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void focus() {
+        super.focus();
+    }
+
+    @Override
+    public int getTabIndex() {
+        return getState().tabIndex;
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        getState(true).tabIndex = tabIndex;
     }
 }
