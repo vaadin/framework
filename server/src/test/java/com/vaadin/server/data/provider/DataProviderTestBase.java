@@ -27,7 +27,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
         private int counter = 0;
 
         @Override
-        public void onDataChange(DataChangeEvent event) {
+        public void onEvent(DataChangeEvent event) {
             ++counter;
         }
 

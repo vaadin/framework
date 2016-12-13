@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.event.EventRouter;
-import com.vaadin.event.MethodEventSource;
 import com.vaadin.server.data.AbstractDataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.tests.VaadinClasses;
@@ -26,7 +25,7 @@ public class RemoveListenersDeprecatedTest {
         ALLOW_REMOVE_LISTENER
                 .add(RemoveListenersDeprecatedTest::acceptAbstractDataProvider);
         ALLOW_REMOVE_LISTENER
-                .add(RemoveListenersDeprecatedTest::acceptMethodEventSource);
+                .add(RemoveListenersDeprecatedTest::acceptEventRouter);
     }
 
     @Test
@@ -71,8 +70,8 @@ public class RemoveListenersDeprecatedTest {
         Assert.assertTrue(count > 0);
     }
 
-    private static boolean acceptMethodEventSource(Method method) {
-        return method.getDeclaringClass().equals(MethodEventSource.class)
+    private static boolean acceptEventRouter(Method method) {
+        return method.getDeclaringClass().equals(EventRouter.class)
                 && method.getParameterCount() == 2;
     }
 

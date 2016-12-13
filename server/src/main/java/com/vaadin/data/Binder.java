@@ -34,7 +34,7 @@ import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.converter.ValueContext;
-import com.vaadin.event.EventRouter;
+import com.vaadin.event.SimpleEventRouter;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.SerializableBiConsumer;
 import com.vaadin.server.SerializableFunction;
@@ -957,7 +957,7 @@ public class Binder<BEAN> implements Serializable {
 
     private final Map<HasValue<?>, ConverterDelegate<?>> initialConverters = new IdentityHashMap<>();
 
-    private EventRouter eventRouter;
+    private SimpleEventRouter<StatusChangeEvent> eventRouter;
 
     private Label statusLabel;
 
@@ -1373,11 +1373,10 @@ public class Binder<BEAN> implements Serializable {
      */
     private List<ValidationResult> validateBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        List<ValidationResult> results = Collections
-                .unmodifiableList(validators.stream()
-                        .map(validator -> validator.apply(bean,
-                                new ValueContext()))
-                        .collect(Collectors.toList()));
+        List<ValidationResult> results = Collections.unmodifiableList(validators
+                .stream()
+                .map(validator -> validator.apply(bean, new ValueContext()))
+                .collect(Collectors.toList()));
         return results;
     }
 
@@ -1494,8 +1493,7 @@ public class Binder<BEAN> implements Serializable {
      * @return a registration for the listener
      */
     public Registration addStatusChangeListener(StatusChangeListener listener) {
-        return getEventRouter().addListener(StatusChangeEvent.class, listener,
-                StatusChangeListener.class.getDeclaredMethods()[0]);
+        return getEventRouter().addListener(listener);
     }
 
     /**
@@ -1663,9 +1661,9 @@ public class Binder<BEAN> implements Serializable {
      *
      * @return the event router, not null
      */
-    protected EventRouter getEventRouter() {
+    private SimpleEventRouter getEventRouter() {
         if (eventRouter == null) {
-            eventRouter = new EventRouter();
+            eventRouter = new SimpleEventRouter();
         }
         return eventRouter;
     }

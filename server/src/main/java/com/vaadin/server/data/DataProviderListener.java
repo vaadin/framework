@@ -15,17 +15,17 @@
  */
 package com.vaadin.server.data;
 
-import java.io.Serializable;
+import com.vaadin.event.Listener;
 
 /**
  * Interface for listening for a data change events fired by a
  * {@link DataProvider}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */
 @FunctionalInterface
-public interface DataProviderListener extends Serializable {
+public interface DataProviderListener extends Listener<DataChangeEvent> {
 
     /**
      * Invoked when this listener receives a data change event from a data
@@ -39,5 +39,6 @@ public interface DataProviderListener extends Serializable {
      * @param event
      *            the received event, not null
      */
-    void onDataChange(DataChangeEvent event);
+    @Override
+    void onEvent(DataChangeEvent event);
 }
