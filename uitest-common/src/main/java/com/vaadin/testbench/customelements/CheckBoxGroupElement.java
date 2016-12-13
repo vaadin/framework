@@ -21,30 +21,18 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.AbstractSelectElement;
-import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
  * TestBench element supporting CheckBoxGroup
  *
  * @author Vaadin Ltd
  */
-
-@ServerClass("com.vaadin.ui.CheckBoxGroup")
-public class CheckBoxGroupElement extends AbstractSelectElement {
+public class CheckBoxGroupElement
+        extends com.vaadin.testbench.elements.CheckBoxGroupElement {
     private static org.openqa.selenium.By byButtonSpan = By
             .className("v-select-option");
     private static org.openqa.selenium.By byLabel = By.tagName("label");
     private static org.openqa.selenium.By byInput = By.tagName("input");
-
-    public List<String> getOptions() {
-        List<String> optionTexts = new ArrayList<>();
-        List<WebElement> options = findElements(byButtonSpan);
-        for (WebElement option : options) {
-            optionTexts.add(option.findElement(byLabel).getText());
-        }
-        return optionTexts;
-    }
 
     public List<String> getOptionsCssClasses() {
         List<String> optionTexts = new ArrayList<>();
@@ -68,26 +56,6 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
 
         }
         return icons;
-    }
-
-    public void selectByText(String text) throws ReadOnlyException {
-        if (isReadOnly()) {
-            throw new ReadOnlyException();
-        }
-        List<WebElement> options = findElements(byButtonSpan);
-        for (int i = 0; i < options.size(); i++) {
-            WebElement option = options.get(i);
-            if (text.equals(option.findElement(byLabel).getText())) {
-                option.findElement(byInput).click();
-
-                // Seems like this is needed because of #19753
-                waitForVaadin();
-
-                // Toggling selection causes the DOM to be rebuilt, so fetch new
-                // items and continue iterating from the same index
-                options = findElements(byButtonSpan);
-            }
-        }
     }
 
     /**

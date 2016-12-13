@@ -38,14 +38,16 @@ public class RadioButtonGroupFocusBlurTest extends MultiBrowserTest {
     public void focusBlurEvents() {
         openTestURL();
 
-        List<WebElement> radioButtons = $(RadioButtonGroupElement.class).first()
+        RadioButtonGroupElement radioButtonGroup = $(
+                RadioButtonGroupElement.class).first();
+        List<WebElement> radioButtons = radioButtonGroup
                 .findElements(By.tagName("input"));
-        radioButtons.get(0).click();
+        radioButtonGroup.selectByText("1");
 
         // Focus event is fired
         Assert.assertTrue(logContainsText("1. Focus Event"));
 
-        radioButtons.get(1).click();
+        radioButtonGroup.selectByText("2");
         // click on the second radio button doesn't fire anything
         Assert.assertFalse(logContainsText("2."));
 
@@ -60,8 +62,7 @@ public class RadioButtonGroupFocusBlurTest extends MultiBrowserTest {
         Assert.assertFalse(logContainsText("2."));
 
         // click to label of a radio button
-        $(RadioButtonGroupElement.class).first()
-                .findElements(By.tagName("label")).get(2).click();
+        radioButtonGroup.findElements(By.tagName("label")).get(2).click();
         // no new events
         Assert.assertFalse(logContainsText("2."));
 
@@ -70,7 +71,7 @@ public class RadioButtonGroupFocusBlurTest extends MultiBrowserTest {
         // blur event is fired
         Assert.assertTrue(logContainsText("2. Blur Event"));
 
-        radioButtons.get(3).click();
+        radioButtonGroup.selectByText("4");
         // Focus event is fired
         Assert.assertTrue(logContainsText("3. Focus Event"));
 

@@ -40,12 +40,12 @@ public class CheckBoxGroupFocusBlurTest extends MultiBrowserTest {
 
         List<WebElement> checkBoxes = $(CheckBoxGroupElement.class).first()
                 .findElements(By.tagName("input"));
-        checkBoxes.get(0).click();
+        $(CheckBoxGroupElement.class).first().selectByText("1");
 
         // Focus event is fired
         Assert.assertTrue(logContainsText("1. Focus Event"));
 
-        checkBoxes.get(1).click();
+        $(CheckBoxGroupElement.class).first().selectByText("2");
         // click on the second checkbox doesn't fire anything
         Assert.assertFalse(logContainsText("2."));
 
@@ -71,7 +71,7 @@ public class CheckBoxGroupFocusBlurTest extends MultiBrowserTest {
         // blur event is fired
         Assert.assertTrue(logContainsText("2. Blur Event"));
 
-        checkBoxes.get(3).click();
+        $(CheckBoxGroupElement.class).first().selectByText("4");
         // Focus event is fired
         Assert.assertTrue(logContainsText("3. Focus Event"));
 
