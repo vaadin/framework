@@ -79,6 +79,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
@@ -2487,9 +2488,9 @@ public class Grid<T> extends AbstractListing<T>
 
     /**
      * Adds a new text column to this {@link Grid} with a value provider. The
-     * column will use a {@link TextRenderer}. Value is converted to String
-     * using {@link Object#toString()}. Identifier for the column is generated
-     * automatically.
+     * column will use a {@link TextRenderer}. The value is converted to a
+     * String using {@link Object#toString()}. Identifier for the column is
+     * generated automatically.
      *
      * @param valueProvider
      *            the value provider
