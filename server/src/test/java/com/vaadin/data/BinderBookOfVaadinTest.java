@@ -638,7 +638,7 @@ public class BinderBookOfVaadinTest {
     public void withBinderStatusHandlerExample() {
         Label formStatusLabel = new Label();
 
-        BinderValidationStatusHandler<BookPerson> defaultHandler = binder
+        com.vaadin.event.Listener<BinderValidationStatus<BookPerson>> defaultHandler = binder
                 .getValidationStatusHandler();
 
         binder.setValidationStatusHandler(status -> {
@@ -652,7 +652,7 @@ public class BinderBookOfVaadinTest {
             formStatusLabel.setVisible(!errorMessage.isEmpty());
 
             // Let the default handler show messages for each field
-            defaultHandler.accept(status);
+            defaultHandler.onEvent(status);
         });
 
         final String bindingMessage = "uneven";

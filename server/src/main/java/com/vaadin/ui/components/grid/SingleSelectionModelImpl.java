@@ -23,8 +23,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import com.vaadin.event.Listener;
 import com.vaadin.event.selection.SingleSelectionEvent;
-import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.grid.SingleSelectionModelState;
@@ -46,7 +46,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         implements SingleSelectionModel<T> {
 
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(SingleSelectionListener.class, "accept",
+            .findMethod(Listener.class, "onEvent",
                     SingleSelectionEvent.class);
 
     private T selectedItem = null;
@@ -81,7 +81,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     @Override
     public Registration addSingleSelectionListener(
-            SingleSelectionListener<T> listener) {
+            Listener<SingleSelectionEvent<T>> listener) {
         return addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
     }
@@ -247,10 +247,10 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public Registration addValueChangeListener(
-                    com.vaadin.data.HasValue.ValueChangeListener<T> listener) {
+                    com.vaadin.event.Listener<ValueChangeEvent<T>> listener) {
                 return SingleSelectionModelImpl.this.addSingleSelectionListener(
-                        (SingleSelectionListener<T>) event -> listener
-                                .accept(event));
+                        (Listener<SingleSelectionEvent<T>>) event -> listener
+                                .onEvent(event));
             }
 
             @Override

@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.draganddropwrapper;
 
-import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.data.HasValue;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -49,7 +49,7 @@ public class DragAndDropFocusObtain extends AbstractTestUIWithLog {
         }
     };
 
-    private ValueChangeListener<String> listener = event -> {
+    private com.vaadin.event.Listener<HasValue.ValueChangeEvent<String>> listener = event -> {
         log("Value of " + ((AbstractTextField) event.getSource()).getCaption()
                 + " changed to " + event.getValue());
     };

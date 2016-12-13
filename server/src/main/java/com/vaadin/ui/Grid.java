@@ -38,6 +38,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.event.selection.MultiSelectionEvent;
+import com.vaadin.event.selection.SingleSelectionEvent;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Binder;
@@ -47,9 +49,7 @@ import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.ContextClickEvent;
-import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
-import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.EncodeResult;
 import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
@@ -73,7 +73,6 @@ import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
@@ -106,38 +105,23 @@ public class Grid<T> extends AbstractListing<T>
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
-            ColumnReorderListener.class, "columnReorder",
+            com.vaadin.event.Listener.class, "columnReorder",
             ColumnReorderEvent.class);
 
     @Deprecated
     private static final Method COLUMN_RESIZE_METHOD = ReflectTools.findMethod(
-            ColumnResizeListener.class, "columnResize",
+            com.vaadin.event.Listener.class, "columnResize",
             ColumnResizeEvent.class);
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
-            .findMethod(ItemClickListener.class, "accept", ItemClick.class);
+            .findMethod(ItemClickListener.class, "onEvent", ItemClick.class);
 
     @Deprecated
     private static final Method COLUMN_VISIBILITY_METHOD = ReflectTools
-            .findMethod(ColumnVisibilityChangeListener.class,
+            .findMethod(com.vaadin.event.Listener.class,
                     "columnVisibilityChanged",
                     ColumnVisibilityChangeEvent.class);
-
-    /**
-     * An event listener for column reorder events in the Grid.
-     */
-    @FunctionalInterface
-    public interface ColumnReorderListener extends Serializable {
-
-        /**
-         * Called when the columns of the grid have been reordered.
-         *
-         * @param event
-         *            An event providing more information
-         */
-        void columnReorder(ColumnReorderEvent event);
-    }
 
     /**
      * Selection mode representing the built-in selection models in grid.
@@ -243,10 +227,10 @@ public class Grid<T> extends AbstractListing<T>
         /**
          * {@inheritDoc}
          * <p>
-         * Use {@link #addSingleSelectionListener(SingleSelectionListener)} for
+         * Use {@link #addSingleSelectionListener(com.vaadin.event.Listener)} for
          * more specific single selection event.
          *
-         * @see #addSingleSelectionListener(SingleSelectionListener)
+         * @see #addSingleSelectionListener(com.vaadin.event.Listener)
          */
         @Override
         public default Registration addSelectionListener(
@@ -263,7 +247,7 @@ public class Grid<T> extends AbstractListing<T>
          * @return a registration for the listener
          */
         public Registration addSingleSelectionListener(
-                SingleSelectionListener<T> listener);
+                com.vaadin.event.Listener<SingleSelectionEvent<T>> listener);
     }
 
     /**
@@ -286,10 +270,10 @@ public class Grid<T> extends AbstractListing<T>
         /**
          * {@inheritDoc}
          * <p>
-         * Use {@link #addMultiSelectionListener(MultiSelectionListener)} for
+         * Use {@link #addMultiSelectionListener(Listener)} for
          * more specific event on multiselection.
          *
-         * @see #addMultiSelectionListener(MultiSelectionListener)
+         * @see #addMultiSelectionListener(Listener)
          */
         @Override
         public default Registration addSelectionListener(
@@ -301,27 +285,12 @@ public class Grid<T> extends AbstractListing<T>
          * Adds a selection listener that will be called when the selection is
          * changed either by the user or programmatically.
          *
-         * @param listener
+         * @param multiSelectionEventListenerListener
          *            the value change listener, not {@code null}
          * @return a registration for the listener
          */
         public Registration addMultiSelectionListener(
-                MultiSelectionListener<T> listener);
-    }
-
-    /**
-     * An event listener for column resize events in the Grid.
-     */
-    @FunctionalInterface
-    public interface ColumnResizeListener extends Serializable {
-
-        /**
-         * Called when the columns of the grid have been resized.
-         *
-         * @param event
-         *            An event providing more information
-         */
-        void columnResize(ColumnResizeEvent event);
+                com.vaadin.event.Listener<MultiSelectionEvent<T>> multiSelectionEventListenerListener);
     }
 
     /**
@@ -568,22 +537,6 @@ public class Grid<T> extends AbstractListing<T>
         public Grid<T> getComponent() {
             return (Grid<T>) super.getComponent();
         }
-    }
-
-    /**
-     * An event listener for column visibility change events in the Grid.
-     *
-     * @since 7.5.0
-     */
-    @FunctionalInterface
-    public interface ColumnVisibilityChangeListener extends Serializable {
-
-        /**
-         * Called when a column has become hidden or unhidden.
-         *
-         * @param event
-         */
-        void columnVisibilityChanged(ColumnVisibilityChangeEvent event);
     }
 
     /**
@@ -2981,7 +2934,7 @@ public class Grid<T> extends AbstractListing<T>
      * @return a registration for the listener
      */
     public Registration addColumnReorderListener(
-            ColumnReorderListener listener) {
+            com.vaadin.event.Listener<ColumnReorderEvent> listener) {
         return addListener(ColumnReorderEvent.class, listener,
                 COLUMN_REORDER_METHOD);
     }
@@ -2993,7 +2946,7 @@ public class Grid<T> extends AbstractListing<T>
      *            the listener to register, not null
      * @return a registration for the listener
      */
-    public Registration addColumnResizeListener(ColumnResizeListener listener) {
+    public Registration addColumnResizeListener(com.vaadin.event.Listener<ColumnResizeEvent> listener) {
         return addListener(ColumnResizeEvent.class, listener,
                 COLUMN_RESIZE_METHOD);
     }
@@ -3020,7 +2973,7 @@ public class Grid<T> extends AbstractListing<T>
      * @return a registration for the listener
      */
     public Registration addColumnVisibilityChangeListener(
-            ColumnVisibilityChangeListener listener) {
+            com.vaadin.event.Listener<ColumnVisibilityChangeEvent> listener) {
         return addListener(ColumnVisibilityChangeEvent.class, listener,
                 COLUMN_VISIBILITY_METHOD);
     }
@@ -3245,9 +3198,9 @@ public class Grid<T> extends AbstractListing<T>
      * This is a shorthand for
      * {@code grid.getSelectionModel().addSelectionListener()}. To get more
      * detailed selection events, use {@link #getSelectionModel()} and either
-     * {@link SingleSelectionModel#addSingleSelectionListener(SingleSelectionListener)}
+     * {@link SingleSelectionModel#addSingleSelectionListener(com.vaadin.event.Listener)}
      * or
-     * {@link MultiSelectionModel#addMultiSelectionListener(MultiSelectionListener)}
+     * {@link MultiSelectionModel#addMultiSelectionListener(Listener)}
      * depending on the used selection mode.
      *
      * @param listener

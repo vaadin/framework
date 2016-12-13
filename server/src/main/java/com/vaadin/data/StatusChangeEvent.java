@@ -38,7 +38,7 @@ import com.vaadin.server.SerializableFunction;
  * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
  * </ul>
  *
- * @see StatusChangeListener#statusChange(StatusChangeEvent)
+ * @see StatusChangeListener#onEvent(StatusChangeEvent)
  * @see Binder#addStatusChangeListener(StatusChangeListener)
  *
  * @author Vaadin Ltd

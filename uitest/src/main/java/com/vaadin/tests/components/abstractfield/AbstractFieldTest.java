@@ -7,8 +7,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.event.Listener;
 import com.vaadin.shared.Registration;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractField;
@@ -85,14 +86,10 @@ public abstract class AbstractFieldTest<T extends AbstractField<V>, V>
 
     protected Command<T, Boolean> valueChangeListenerCommand = new Command<T, Boolean>() {
 
-        private ValueChangeListener<V> valueChangeListener = new ValueChangeListener<V>() {
-
-            @Override
-            public void accept(ValueChangeEvent<V> event) {
-                log(event.getClass().getSimpleName() + ", new value: "
-                        + formatValue(event.getValue()));
-            }
-        };
+        private com.vaadin.event.Listener<ValueChangeEvent<V>> valueChangeListener =
+                (com.vaadin.event.Listener<ValueChangeEvent<V>>) event ->
+                        log(event.getClass().getSimpleName() + ", new value: "
+                                + formatValue(event.getValue()));
 
         @Override
         public void execute(T c, Boolean value, Object data) {

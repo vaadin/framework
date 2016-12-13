@@ -557,9 +557,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     @Override
     public Registration addValueChangeListener(
-            HasValue.ValueChangeListener<T> listener) {
+            com.vaadin.event.Listener<ValueChangeEvent<T>> listener) {
         return addSelectionListener(event -> {
-            listener.accept(new ValueChangeEvent<>(event.getComponent(), this,
+            listener.onEvent(new ValueChangeEvent<>(event.getComponent(), this,
                     event.isUserOriginated()));
         });
     }

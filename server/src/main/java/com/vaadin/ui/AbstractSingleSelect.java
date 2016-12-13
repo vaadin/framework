@@ -30,7 +30,6 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Single;
 import com.vaadin.event.selection.SingleSelectionEvent;
-import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
@@ -59,7 +58,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
 
     @Deprecated
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(SingleSelectionListener.class, "accept",
+            .findMethod(com.vaadin.event.Listener.class, "onEvent",
                     SingleSelectionEvent.class);
 
     /**
@@ -104,7 +103,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      * @return a registration for the listener
      */
     public Registration addSelectionListener(
-            SingleSelectionListener<T> listener) {
+            com.vaadin.event.Listener<SingleSelectionEvent<T>> listener) {
         return addListener(SingleSelectionEvent.class, listener,
                 SELECTION_CHANGE_METHOD);
     }
@@ -167,8 +166,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
 
     @Override
     public Registration addValueChangeListener(
-            HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> listener.accept(
+            com.vaadin.event.Listener<ValueChangeEvent<T>> listener) {
+        return addSelectionListener(event -> listener.onEvent(
                 new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 

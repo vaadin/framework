@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
+import com.vaadin.event.Listener;
 import org.easymock.Capture;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +26,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.event.selection.MultiSelectionEvent;
-import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.BackEndDataProvider;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
@@ -574,12 +574,12 @@ public class GridMultiSelectionModelTest {
     public void addValueChangeListener() {
         String value = "foo";
 
-        AtomicReference<MultiSelectionListener<String>> selectionListener = new AtomicReference<>();
+        AtomicReference<Listener<MultiSelectionEvent<String>>> selectionListener = new AtomicReference<>();
         Registration registration = Mockito.mock(Registration.class);
         MultiSelectionModelImpl<String> model = new MultiSelectionModelImpl<String>() {
             @Override
             public Registration addMultiSelectionListener(
-                    MultiSelectionListener<String> listener) {
+                    Listener<MultiSelectionEvent<String>> listener) {
                 selectionListener.set(listener);
                 return registration;
             }
@@ -602,7 +602,7 @@ public class GridMultiSelectionModelTest {
                 });
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().accept(new MultiSelectionEvent<>(grid,
+        selectionListener.get().onEvent(new MultiSelectionEvent<>(grid,
                 model.asMultiSelect(), Collections.emptySet(), true));
 
         Assert.assertEquals(grid, event.get().getComponent());

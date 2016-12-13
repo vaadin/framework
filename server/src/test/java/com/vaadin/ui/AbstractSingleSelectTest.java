@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.vaadin.event.Listener;
 import org.jsoup.nodes.Element;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,7 +35,6 @@ import org.mockito.Mockito;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.Listing;
 import com.vaadin.event.selection.SingleSelectionEvent;
-import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
@@ -232,13 +232,12 @@ public class AbstractSingleSelectTest {
     @SuppressWarnings("serial")
     @Test
     public void addValueChangeListener() {
-        AtomicReference<SingleSelectionListener<String>> selectionListener = new AtomicReference<>();
+        AtomicReference<Listener<SingleSelectionEvent<String>>> selectionListener = new AtomicReference<>();
         Registration registration = Mockito.mock(Registration.class);
         String value = "foo";
         AbstractSingleSelect<String> select = new AbstractSingleSelect<String>() {
             @Override
-            public Registration addSelectionListener(
-                    SingleSelectionListener<String> listener) {
+            public Registration addSelectionListener(com.vaadin.event.Listener<SingleSelectionEvent<String>> listener) {
                 selectionListener.set(listener);
                 return registration;
             }
@@ -269,7 +268,7 @@ public class AbstractSingleSelectTest {
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get()
-                .accept(new SingleSelectionEvent<>(select, true));
+                .onEvent(new SingleSelectionEvent<>(select, true));
 
         Assert.assertEquals(select, event.get().getComponent());
         Assert.assertEquals(value, event.get().getValue());

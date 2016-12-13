@@ -92,7 +92,7 @@ public class Tabsheets extends VerticalLayout implements View {
         final CheckBox selectedOnly = new CheckBox("Selected tab closable");
         wrap.addComponent(selectedOnly);
 
-        HasValue.ValueChangeListener<Boolean> update = event -> {
+        com.vaadin.event.Listener<HasValue.ValueChangeEvent<Boolean>> update = event -> {
             String style = framed.getValue() ? "framed " : "";
             style += centered.getValue() ? " centered-tabs" : "";
             style += rightAlign.getValue() ? " right-aligned-tabs" : "";

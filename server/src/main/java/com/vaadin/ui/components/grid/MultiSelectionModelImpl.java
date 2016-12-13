@@ -25,8 +25,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.event.Listener;
 import com.vaadin.event.selection.MultiSelectionEvent;
-import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.server.data.Query;
@@ -124,7 +124,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     @Deprecated
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(MultiSelectionListener.class, "accept",
+            .findMethod(Listener.class, "onEvent",
                     MultiSelectionEvent.class);
 
     private Set<T> selection = new LinkedHashSet<>();
@@ -244,9 +244,8 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     }
 
     @Override
-    public Registration addMultiSelectionListener(
-            MultiSelectionListener<T> listener) {
-        return addListener(MultiSelectionEvent.class, listener,
+    public Registration addMultiSelectionListener(Listener<MultiSelectionEvent<T>> multiSelectionEventListenerListener) {
+        return addListener(MultiSelectionEvent.class, multiSelectionEventListenerListener,
                 SELECTION_CHANGE_METHOD);
     }
 
@@ -295,8 +294,8 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public Registration addValueChangeListener(
-                    com.vaadin.data.HasValue.ValueChangeListener<Set<T>> listener) {
-                return addSelectionListener(event -> listener.accept(event));
+                    com.vaadin.event.Listener<ValueChangeEvent<Set<T>>> listener) {
+                return addSelectionListener(event -> listener.onEvent(event));
             }
 
             @Override
@@ -337,8 +336,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             }
 
             @Override
-            public Registration addSelectionListener(
-                    MultiSelectionListener<T> listener) {
+            public Registration addSelectionListener(Listener<MultiSelectionEvent<T>> listener) {
                 return MultiSelectionModelImpl.this
                         .addMultiSelectionListener(listener);
             }

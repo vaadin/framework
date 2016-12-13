@@ -85,7 +85,7 @@ public class Tables extends VerticalLayout implements View {
                 verticalLines, horizontalLines, borderless, headers, compact,
                 small, rowIndex, rowCaption, rowIcon, componentsInCells);
 
-        HasValue.ValueChangeListener<Boolean> update = event -> {
+        com.vaadin.event.Listener<HasValue.ValueChangeEvent<Boolean>> update = event -> {
             if (table == null) {
                 table = new Table();
                 table.setContainerDataSource(normalContainer);

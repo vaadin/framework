@@ -198,7 +198,7 @@ public class ListenerMethod implements EventListener, Serializable {
                         .isAssignableFrom(eventType)) {
             throw new java.lang.IllegalArgumentException(
                     "The method " + method.getName()
-                            + " does not accept the given eventType: "
+                            + " does not onEvent the given eventType: "
                             + eventType.getName());
         }
 
@@ -269,7 +269,7 @@ public class ListenerMethod implements EventListener, Serializable {
                         .isAssignableFrom(eventType)) {
             throw new java.lang.IllegalArgumentException(
                     "The method " + method.getName()
-                            + " does not accept the given eventType: "
+                            + " does not onEvent the given eventType: "
                             + eventType.getName());
         }
 

@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.event.Listener;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +40,6 @@ import org.mockito.Mockito;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.Listing;
 import com.vaadin.event.selection.MultiSelectionEvent;
-import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
@@ -291,15 +291,14 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
     @SuppressWarnings({ "unchecked", "serial" })
     @Test
     public void addValueChangeListener() {
-        AtomicReference<MultiSelectionListener<String>> selectionListener = new AtomicReference<>();
+        AtomicReference<Listener<MultiSelectionEvent<String>>> selectionListener = new AtomicReference<>();
         Registration registration = Mockito.mock(Registration.class);
         Set<String> set = new HashSet<>();
         set.add("foo");
         set.add("bar");
         AbstractMultiSelect<String> select = new AbstractMultiSelect<String>() {
             @Override
-            public Registration addSelectionListener(
-                    MultiSelectionListener<String> listener) {
+            public Registration addSelectionListener(com.vaadin.event.Listener<MultiSelectionEvent<String>> listener) {
                 selectionListener.set(listener);
                 return registration;
             }
@@ -318,7 +317,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
 
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().accept(new MultiSelectionEvent<>(select,
+        selectionListener.get().onEvent(new MultiSelectionEvent<>(select,
                 Mockito.mock(Set.class), true));
 
         Assert.assertEquals(select, event.get().getComponent());
