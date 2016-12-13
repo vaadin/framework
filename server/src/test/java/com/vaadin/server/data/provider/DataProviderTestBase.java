@@ -300,7 +300,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     @Test
     public void filteringListDataProvider_defaultFilter() {
         // Intentionally lost filter type. Not actually filterable anymore.
-        DataProvider<StrBean, ?> filtered = dataProvider.setFilter(gt5Filter);
+        DataProvider<StrBean, ?> filtered = dataProvider.withFilter(gt5Filter);
 
         Assert.assertEquals("Filter not applied, unexpected item count",
                 dataProvider.size(new Query<>(gt5Filter)),
