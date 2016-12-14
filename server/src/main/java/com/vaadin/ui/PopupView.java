@@ -68,7 +68,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
 
     /**
      * This is an internal constructor. Use
-     * {@link PopupView#PopupView(String, Component)} instead.
+     * {@link PopupView#PopupView(String, Component)} instead.
      *
      * @since 7.5.0
      */

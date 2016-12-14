@@ -52,12 +52,12 @@ public class CompositeValidator implements Validator {
     }
 
     /**
-     * @deprecated As of 7.0, use {@link CombinationMode#AND} instead    
+     * @deprecated As of 7.0, use {@link CombinationMode#AND} instead    
      */
     @Deprecated
     public static final CombinationMode MODE_AND = CombinationMode.AND;
     /**
-     * @deprecated As of 7.0, use {@link CombinationMode#OR} instead    
+     * @deprecated As of 7.0, use {@link CombinationMode#OR} instead    
      */
     @Deprecated
     public static final CombinationMode MODE_OR = CombinationMode.OR;

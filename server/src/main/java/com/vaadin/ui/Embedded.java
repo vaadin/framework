@@ -38,7 +38,7 @@ import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
  * Java applets, and QuickTime videos. Installing a browser plug-in is usually
  * required to actually view the embedded content.
  * <p>
- * Note that before Vaadin 7, {@code Embedded} was also used to display images,
+ * Note that before Vaadin 7, {@code Embedded} was also used to display images,
  * Adobe Flash objects, and embedded web pages. This use of the component is
  * deprecated in Vaadin 7; the {@link Image}, {@link Flash}, and
  * {@link BrowserFrame} components should be used instead, respectively.
