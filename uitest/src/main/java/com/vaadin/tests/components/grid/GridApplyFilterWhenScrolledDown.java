@@ -16,7 +16,8 @@ public class GridApplyFilterWhenScrolledDown extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Grid<String> grid = new Grid<>();
 
-        grid.addColumn("Name", SerializableFunction.identity());
+        grid.addColumn(SerializableFunction.identity()).setId("Name")
+                .setCaption("Name");
 
         List<String> data = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {

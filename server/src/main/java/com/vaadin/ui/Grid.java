@@ -77,7 +77,6 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
-import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
@@ -997,21 +996,19 @@ public class Grid<T> extends AbstractListing<T>
 
         private SerializableFunction<T, Component> componentGenerator;
 
+        private String id;
+
         /**
          * Constructs a new Column configuration with given header caption,
          * renderer and value provider.
          *
-         * @param caption
-         *            the header caption
          * @param valueProvider
          *            the function to get values from items
          * @param renderer
          *            the type of value
          */
-        protected Column(String caption,
-                SerializableFunction<T, ? extends V> valueProvider,
+        protected Column(SerializableFunction<T, ? extends V> valueProvider,
                 Renderer<V> renderer) {
-            Objects.requireNonNull(caption, "Header caption can't be null");
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -1021,7 +1018,7 @@ public class Grid<T> extends AbstractListing<T>
             this.valueProvider = valueProvider;
             state.renderer = renderer;
 
-            state.caption = caption;
+            state.caption = "";
             sortOrderProvider = d -> Stream.of();
 
             // Add the renderer as a child extension of this extension, thus
@@ -1155,7 +1152,7 @@ public class Grid<T> extends AbstractListing<T>
          *
          * @return the identifier string
          */
-        public String getId() {
+        public String getInternalId() {
             return getState(false).id;
         }
 
@@ -1165,9 +1162,36 @@ public class Grid<T> extends AbstractListing<T>
          * @param id
          *            the identifier string
          */
-        private void setId(String id) {
+        private void setInternalId(String id) {
             Objects.requireNonNull(id, "Communication ID can't be null");
             getState().id = id;
+        }
+
+        /**
+         * Returns the user-defined identifier for this column.
+         *
+         * @return the identifier string
+         */
+        public String getId() {
+            return id;
+        }
+
+        /**
+         * Sets the user-defined identifier to map this column. The identifier
+         * can be used for example in {@link Grid#getColumn(String)}.
+         *
+         * @param id
+         *            the identifier string
+         */
+        public Column<T, V> setId(String id) {
+            Objects.requireNonNull(id, "Column identifier cannot be null");
+            if (this.id != null) {
+                throw new IllegalStateException(
+                        "Column identifier cannot be changed");
+            }
+            this.id = id;
+            getParent().setColumnId(id, this);
+            return this;
         }
 
         /**
@@ -1207,7 +1231,7 @@ public class Grid<T> extends AbstractListing<T>
 
             HeaderRow row = getParent().getDefaultHeaderRow();
             if (row != null) {
-                row.getCell(getId()).setText(caption);
+                row.getCell(getInternalId()).setText(caption);
             }
 
             return this;
@@ -1808,7 +1832,7 @@ public class Grid<T> extends AbstractListing<T>
             ColumnState defaultState = new ColumnState();
 
             DesignAttributeHandler.writeAttribute("column-id", attributes,
-                    getId(), null, String.class, designContext);
+                    getInternalId(), null, String.class, designContext);
 
             // Sortable is a special attribute that depends on the data
             // provider.
@@ -1946,9 +1970,7 @@ public class Grid<T> extends AbstractListing<T>
          * @throws IllegalArgumentException
          *             if there is no such column in the grid
          */
-        public default HeaderCell getCell(Column<?, ?> column) {
-            return getCell(column.getId());
-        }
+        public HeaderCell getCell(Column<?, ?> column);
 
         /**
          * Merges column cells in the row. Original cells are hidden, and new
@@ -2075,9 +2097,7 @@ public class Grid<T> extends AbstractListing<T>
          * @throws IllegalArgumentException
          *             if there is no such column in the grid
          */
-        public default FooterCell getCell(Column<?, ?> column) {
-            return getCell(column.getId());
-        }
+        public FooterCell getCell(Column<?, ?> column);
 
         /**
          * Merges column cells in the row. Original cells are hidden, and new
@@ -2377,6 +2397,7 @@ public class Grid<T> extends AbstractListing<T>
 
     private final Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
     private final Map<String, Column<T, ?>> columnKeys = new HashMap<>();
+    private final Map<String, Column<T, ?>> columnIds = new HashMap<>();
 
     private final List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
     private final DetailsManager<T> detailsManager;
@@ -2433,64 +2454,10 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * Adds a new column to this {@link Grid} with given identifier, typed
-     * renderer and value provider.
-     *
-     * @param identifier
-     *            the identifier in camel case for the new column
-     * @param valueProvider
-     *            the value provider
-     * @param renderer
-     *            the column value class
-     * @param <V>
-     *            the column value type
-     *
-     * @return the new column
-     * @throws IllegalArgumentException
-     *             if the same identifier is used for multiple columns
-     *
-     * @see AbstractRenderer
-     */
-    public <V> Column<T, V> addColumn(String identifier,
-            SerializableFunction<T, ? extends V> valueProvider,
-            AbstractRenderer<? super T, V> renderer)
-            throws IllegalArgumentException {
-        if (columnKeys.containsKey(identifier)) {
-            throw new IllegalArgumentException(
-                    "Multiple columns with the same identifier: " + identifier);
-        }
-
-        final Column<T, V> column = new Column<>(
-                SharedUtil.camelCaseToHumanFriendly(identifier), valueProvider,
-                renderer);
-        addColumn(identifier, column);
-        return column;
-    }
-
-    /**
-     * Adds a new text column to this {@link Grid} with given identifier and
-     * string value provider. The column will use a {@link TextRenderer}.
-     *
-     * @param identifier
-     *            the header caption
-     * @param valueProvider
-     *            the value provider
-     *
-     * @return the new column
-     * @throws IllegalArgumentException
-     *             if the same identifier is used for multiple columns
-     */
-    public Column<T, String> addColumn(String identifier,
-            SerializableFunction<T, String> valueProvider) {
-        return addColumn(identifier, valueProvider, new TextRenderer());
-    }
-
-    /**
      * Adds a new text column to this {@link Grid} with a value provider. The
      * column will use a {@link TextRenderer}. The value is converted to a
      * String using {@link Object#toString()}. Sorting in memory is executed by
-     * comparing the String values. Identifier for the column is generated
-     * automatically.
+     * comparing the String values.
      *
      * @param valueProvider
      *            the value provider
@@ -2499,14 +2466,13 @@ public class Grid<T> extends AbstractListing<T>
      */
     public Column<T, String> addColumn(
             SerializableFunction<T, ?> valueProvider) {
-        return addColumn(getGeneratedIdentifier(),
-                t -> String.valueOf(valueProvider.apply(t)),
+        return addColumn(t -> String.valueOf(valueProvider.apply(t)),
                 new TextRenderer());
     }
 
     /**
      * Adds a new column to this {@link Grid} with typed renderer and value
-     * provider. Identifier for the column is generated automatically.
+     * provider.
      *
      * @param valueProvider
      *            the value provider
@@ -2522,7 +2488,9 @@ public class Grid<T> extends AbstractListing<T>
     public <V> Column<T, V> addColumn(
             SerializableFunction<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
-        return addColumn(getGeneratedIdentifier(), valueProvider, renderer);
+        Column<T, V> column = new Column<>(valueProvider, renderer);
+        addColumn(getGeneratedIdentifier(), column);
+        return column;
     }
 
     private void addColumn(String identifier, Column<T, ?> column) {
@@ -2533,7 +2501,7 @@ public class Grid<T> extends AbstractListing<T>
         column.extend(this);
         columnSet.add(column);
         columnKeys.put(identifier, column);
-        column.setId(identifier);
+        column.setInternalId(identifier);
         addDataGenerator(column);
 
         getState().columnOrder.add(identifier);
@@ -2553,7 +2521,7 @@ public class Grid<T> extends AbstractListing<T>
      */
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
-            String columnId = column.getId();
+            String columnId = column.getInternalId();
             columnKeys.remove(columnId);
             column.remove();
             getHeader().removeColumn(columnId);
@@ -2614,10 +2582,10 @@ public class Grid<T> extends AbstractListing<T>
      *
      * @param columnId
      *            the identifier of the column to get
-     * @return the column corresponding to the given column id
+     * @return the column corresponding to the given column identifier
      */
     public Column<T, ?> getColumn(String columnId) {
-        return columnKeys.get(columnId);
+        return columnIds.get(columnId);
     }
 
     @Override
@@ -3221,7 +3189,7 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     private String getGeneratedIdentifier() {
-        String columnId = "generatedColumn" + counter;
+        String columnId = "c" + counter;
         counter++;
         return columnId;
     }
@@ -3238,7 +3206,7 @@ public class Grid<T> extends AbstractListing<T>
         List<String> columnOrder = new ArrayList<>();
         for (Column<T, ?> column : columns) {
             if (columnSet.contains(column)) {
-                columnOrder.add(column.getId());
+                columnOrder.add(column.getInternalId());
             } else {
                 throw new IllegalArgumentException(
                         "setColumnOrder should not be called "
@@ -3571,12 +3539,12 @@ public class Grid<T> extends AbstractListing<T>
         for (Element col : colgroups.get(0).getElementsByTag("col")) {
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
-            Column<T, String> column;
             DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
+            Column<T, String> column = new Column<>(provider,
+                    new HtmlRenderer());
+            addColumn(getGeneratedIdentifier(), column);
             if (id != null) {
-                column = addColumn(id, provider, new HtmlRenderer());
-            } else {
-                column = addColumn(provider, new HtmlRenderer());
+                column.setId(id);
             }
             providers.add(provider);
             column.readDesign(col, context);
@@ -3666,6 +3634,21 @@ public class Grid<T> extends AbstractListing<T>
             mode = SelectionMode.NONE;
         }
         return mode;
+    }
+
+    /**
+     * Sets a user-defined identifier for given column.
+     *
+     * @param column
+     *            the column
+     * @param id
+     *            the user-defined identifier
+     */
+    protected void setColumnId(String id, Column<T, ?> column) {
+        if (columnIds.containsKey(id)) {
+            throw new IllegalArgumentException("Duplicate ID for columns");
+        }
+        columnIds.put(id, column);
     }
 
     @Override

@@ -139,16 +139,16 @@ public class GridHeaderFooterTest {
 
     @Test
     public void addColumn_headerCellAdded() {
-        Column<?, ?> column = grid.addColumn("Col",
-                SerializableFunction.identity());
+        Column<?, ?> column = grid.addColumn(SerializableFunction.identity())
+                .setId("Col");
 
         assertNotNull(grid.getHeaderRow(0).getCell(column));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void removeColumn_headerCellRemoved() {
-        Column<String, ?> column = grid.addColumn("Col",
-                SerializableFunction.identity());
+        Column<String, ?> column = grid
+                .addColumn(SerializableFunction.identity()).setId("Col");
         grid.removeColumn(column);
 
         grid.getHeaderRow(0).getCell(column);

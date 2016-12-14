@@ -33,19 +33,21 @@ public class GridContextClick extends
     protected Grid<Person> createTestComponent() {
         Grid<Person> grid = new Grid<>();
         grid.setItems(PersonContainer.createTestData());
-        grid.addColumn("Address",
-                person -> String.valueOf(person.getAddress()));
-        grid.addColumn("Email", person -> String.valueOf(person.getEmail()));
-        grid.addColumn("First Name",
-                person -> String.valueOf(person.getFirstName()));
-        grid.addColumn("Last Name",
-                person -> String.valueOf(person.getLastName()));
-        grid.addColumn("Phone Number",
-                person -> String.valueOf(person.getPhoneNumber()));
-        grid.addColumn("Street Address", person -> String
-                .valueOf(person.getAddress().getStreetAddress()));
-        grid.addColumn("City",
-                person -> String.valueOf(person.getAddress().getCity()));
+        grid.addColumn(person -> String.valueOf(person.getAddress()))
+                .setCaption("Address");
+        grid.addColumn(person -> String.valueOf(person.getEmail()))
+                .setCaption("Email");
+        grid.addColumn(person -> String.valueOf(person.getFirstName()))
+                .setCaption("First Name");
+        grid.addColumn(person -> String.valueOf(person.getLastName()))
+                .setCaption("Last Name");
+        grid.addColumn(person -> String.valueOf(person.getPhoneNumber()))
+                .setCaption("Phone Number");
+        grid.addColumn(person -> String
+                .valueOf(person.getAddress().getStreetAddress()))
+                .setCaption("Street Address");
+        grid.addColumn(person -> String.valueOf(person.getAddress().getCity()))
+                .setCaption("City");
 
         // grid.setFooterVisible(true);
         // grid.appendFooterRow();

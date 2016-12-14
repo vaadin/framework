@@ -98,16 +98,45 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         protected abstract String getCellTagName();
 
         /**
-         * Adds a cell to this section, corresponding to the given column id.
+         * Adds a cell to this section, corresponding to the given user-defined
+         * column id.
          *
          * @param columnId
          *            the id of the column for which to add a cell
          */
         protected void addCell(String columnId) {
+            Column<?, ?> column = section.getGrid().getColumn(columnId);
+            Objects.requireNonNull(column,
+                    "No column matching given identifier");
+            addCell(column);
+        }
+
+        /**
+         * Adds a cell to this section for given column.
+         *
+         * @param column
+         *            the column for which to add a cell
+         */
+        protected void addCell(Column<?, ?> column) {
+            if (!section.getGrid().getColumns().contains(column)) {
+                throw new IllegalArgumentException(
+                        "Given column does not exist in this Grid");
+            }
+            addCell(column.getInternalId());
+        }
+
+        /**
+         * Adds a cell to this section, corresponding to the given internal
+         * column id.
+         *
+         * @param internalId
+         *            the internal id of the column for which to add a cell
+         */
+        protected void internalAddCell(String internalId) {
             CELL cell = createCell();
-            cell.setColumnId(columnId);
-            cells.put(columnId, cell);
-            rowState.cells.put(columnId, cell.getCellState());
+            cell.setColumnId(internalId);
+            cells.put(internalId, cell);
+            rowState.cells.put(internalId, cell.getCellState());
         }
 
         /**
@@ -153,10 +182,43 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          *             if no cell was found for the column id
          */
         public CELL getCell(String columnId) {
-            CELL cell = cells.get(columnId);
+            Column<?, ?> column = section.getGrid().getColumn(columnId);
+            Objects.requireNonNull(column,
+                    "No column matching given identifier");
+            return internalGetCell(column.getInternalId());
+        }
+
+        /**
+         * Returns the cell in this section that corresponds to the given
+         * column.
+         *
+         * @param column
+         *            the column
+         * @return the cell for the given column
+         *
+         * @throws IllegalArgumentException
+         *             if no cell was found for the column
+         */
+        public CELL getCell(Column<?, ?> column) {
+            return internalGetCell(column.getInternalId());
+        }
+
+        /**
+         * Returns the cell in this section that corresponds to the given
+         * internal column id.
+         *
+         * @param internalId
+         *            the internal id of the column
+         * @return the cell for the given column
+         *
+         * @throws IllegalArgumentException
+         *             if no cell was found for the column id
+         */
+        protected CELL internalGetCell(String internalId) {
+            CELL cell = cells.get(internalId);
             if (cell == null) {
                 throw new IllegalArgumentException(
-                        "No cell found for column id " + columnId);
+                        "No cell found for column id " + internalId);
             }
             return cell;
         }
@@ -264,7 +326,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         }
 
         /**
-         * 
+         *
          * Writes declarative design for the cell using its {@code state} to the
          * given table cell element.
          * <p>
@@ -272,7 +334,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * sometimes there is no a reference to the cell which should be written
          * (merged cell) but only its state is available (the cell is virtual
          * and is not stored).
-         * 
+         *
          * @param cellElement
          *            Element to write design to
          * @param context
@@ -532,7 +594,8 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         rows.add(index, row);
         getState(true).rows.add(index, row.getRowState());
 
-        getColumns().stream().forEach(column -> row.addCell(column.getId()));
+        getColumns().stream()
+                .forEach(column -> row.addCell(column.getInternalId()));
 
         return row;
     }

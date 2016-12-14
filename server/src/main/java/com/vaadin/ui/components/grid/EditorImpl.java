@@ -78,7 +78,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                 String message = errorGenerator.apply(fieldToColumn, status);
 
                 List<String> columnIds = fieldToColumn.values().stream()
-                        .map(Column::getId).collect(Collectors.toList());
+                        .map(Column::getInternalId)
+                        .collect(Collectors.toList());
 
                 rpc.setErrorMessage(message, columnIds);
             }
@@ -221,7 +222,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                             .apply(edited);
                     addComponentToGrid(component);
                     columnFields.put(c, component);
-                    getState().columnFields.put(c.getId(),
+                    getState().columnFields.put(c.getInternalId(),
                             component.getConnectorId());
                 });
     }

@@ -94,10 +94,11 @@ public class JavaScriptRenderers extends AbstractReindeerTestUI {
 
         Grid<ItemBean> grid = new Grid<>();
 
-        grid.addColumn("id", item -> item.getId().toString());
-        grid.addColumn("bean", ItemBean::getBean, new MyBeanJSRenderer());
-        grid.addColumn("string", ItemBean::getString,
-                new JavaScriptStringRenderer());
+        grid.addColumn(item -> item.getId().toString()).setCaption("Id");
+        grid.addColumn(ItemBean::getBean, new MyBeanJSRenderer())
+                .setCaption("Bean");
+        grid.addColumn(ItemBean::getString, new JavaScriptStringRenderer())
+                .setCaption("String");
 
         grid.setItems(items);
 

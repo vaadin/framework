@@ -57,7 +57,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         double heightByRows = 13.7d;
 
         grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getLastName).setId("id");
 
         grid.setFrozenColumnCount(frozenColumns);
         grid.setSelectionMode(SelectionMode.MULTI);
@@ -86,10 +86,10 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Grid<Person> grid = new Grid<>();
 
         Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn("id",
-                Person::getLastName);
-        Column<Person, String> column3 = grid.addColumn("mail",
-                Person::getEmail);
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId("id");
+        Column<Person, String> column3 = grid.addColumn(Person::getEmail)
+                .setId("mail");
 
         HeaderRow header = grid.addHeaderRowAt(1);
         String headerRowText1 = "foo";
@@ -120,10 +120,10 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Grid<Person> grid = new Grid<>();
 
         Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn("id",
-                Person::getLastName);
-        Column<Person, String> column3 = grid.addColumn("mail",
-                Person::getEmail);
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId("id");
+        Column<Person, String> column3 = grid.addColumn(Person::getEmail)
+                .setId("mail");
 
         FooterRow footer = grid.addFooterRowAt(0);
 
@@ -159,8 +159,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
         String secondColumnId = "id";
         Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn(secondColumnId,
-                Person::getLastName);
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId(secondColumnId);
 
         String caption = "test-caption";
         column1.setCaption(caption);
@@ -208,8 +208,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Grid<Person> grid = new Grid<>();
 
         Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn("id",
-                Person::getLastName);
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId("id");
 
         FooterRow footerRow = grid.addFooterRowAt(0);
         footerRow.getCell(column1).setText("x");
@@ -239,7 +239,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         grid.setItems(person1, person2);
 
         grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getLastName).setId("id");
 
         String design = String.format(
                 "<%s><table><colgroup>"
@@ -282,7 +282,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         grid.setItems(person1, person2, person3);
 
         grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getLastName).setId("id");
 
         Multi<Person> model = (Multi<Person>) grid
                 .setSelectionMode(SelectionMode.MULTI);
@@ -319,7 +319,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         grid.setItems(person1, person2);
 
         grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getLastName).setId("id");
 
         Single<Person> model = (Single<Person>) grid
                 .setSelectionMode(SelectionMode.SINGLE);
@@ -354,7 +354,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         grid.setItems(person1, person2);
 
         grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getLastName).setId("id");
 
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.asMultiSelect().setReadOnly(true);
@@ -509,7 +509,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 + "<tr><td %s column-ids='%s'>&gt; Test</td></tr>"
                 + "</tfoot>"
                 + "<tbody />"
-                + "</table></%s>", 
+                + "</table></%s>",
                 getComponentTag() , id, plainText, id, plainText, id, getComponentTag());
         //@formatter:on
 
@@ -531,8 +531,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Assert.assertEquals(expected, actualFooter);
 
         grid = new Grid<>();
-        Column<Person, String> column = grid.addColumn(id,
-                Person::getFirstName);
+        Column<Person, String> column = grid.addColumn(Person::getFirstName)
+                .setId(id);
         HeaderRow header = grid.addHeaderRowAt(0);
         FooterRow footer = grid.addFooterRowAt(0);
         grid.removeHeaderRow(grid.getDefaultHeaderRow());

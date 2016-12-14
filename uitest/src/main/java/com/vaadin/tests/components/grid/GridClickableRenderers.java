@@ -32,18 +32,20 @@ public class GridClickableRenderers extends AbstractReindeerTestUI {
         Label checkBoxValueLabel = new Label("checkbox click label");
         Grid<TestPOJO> grid = new Grid<>();
 
-        grid.addColumn("images", pojo -> new ExternalResource(pojo.imageUrl),
-                new ImageRenderer<>());
-        grid.addColumn("buttons", pojo -> pojo.buttonText,
+        grid.addColumn(pojo -> new ExternalResource(pojo.imageUrl),
+                new ImageRenderer<>()).setId("images").setCaption("Images");
+        grid.addColumn(pojo -> pojo.buttonText,
                 new ButtonRenderer<>(event -> valueDisplayLabel
-                        .setValue(event.getItem().testText + " clicked")));
+                        .setValue(event.getItem().testText + " clicked")))
+                .setId("buttons").setCaption("Buttons");
 
         CheckBoxRenderer<TestPOJO> checkBoxRenderer = new CheckBoxRenderer<>(
                 pojo -> pojo.truthValue,
                 (pojo, newTruthValue) -> pojo.truthValue = newTruthValue);
         checkBoxRenderer.addClickListener(click -> checkBoxValueLabel.setValue(
                 click.getItem().testText + " " + click.getItem().truthValue));
-        grid.addColumn("checkboxes", pojo -> pojo.truthValue, checkBoxRenderer);
+        grid.addColumn(pojo -> pojo.truthValue, checkBoxRenderer)
+                .setId("checkboxes").setCaption("Checkboxes");
 
         grid.setItems(new TestPOJO("first row", "", "button 1 text", true),
                 new TestPOJO("second row", "", "button 2 text", false));

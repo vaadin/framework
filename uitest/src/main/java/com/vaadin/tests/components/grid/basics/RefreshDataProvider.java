@@ -39,7 +39,8 @@ public class RefreshDataProvider extends AbstractReindeerTestUI {
         grid.setDataProvider(dataProvider);
 
         grid.setDataProvider(dataProvider);
-        grid.addColumn("Coordinates", DataObject::getCoordinates);
+        grid.addColumn(DataObject::getCoordinates).setCaption("Coordinates")
+                .setId("Coordinates");
         addComponent(grid);
 
         Button update = new Button("Update data",
