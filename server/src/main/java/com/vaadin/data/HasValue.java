@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
@@ -140,11 +140,12 @@ public interface HasValue<V> extends Serializable {
      * @see Registration
      */
     @FunctionalInterface
-    public interface ValueChangeListener<V>
-            extends Consumer<ValueChangeEvent<V>>, Serializable {
+    public interface ValueChangeListener<V> extends SerializableEventListener {
+
+        /** For internal use only. Might be removed in the future. */
         @Deprecated
         public static final Method VALUE_CHANGE_METHOD = ReflectTools
-                .findMethod(ValueChangeListener.class, "accept",
+                .findMethod(ValueChangeListener.class, "valueChange",
                         ValueChangeEvent.class);
 
         /**
@@ -154,8 +155,7 @@ public interface HasValue<V> extends Serializable {
          * @param event
          *            the received event, not null
          */
-        @Override
-        public void accept(ValueChangeEvent<V> event);
+        public void valueChange(ValueChangeEvent<V> event);
     }
 
     /**
@@ -263,7 +263,7 @@ public interface HasValue<V> extends Serializable {
      * <p>
      * This is just a shorthand for resetting the value, see the methods
      * {@link #setValue(Object)} and {@link #getEmptyValue()}.
-     * 
+     *
      * @see #setValue(Object)
      * @see #getEmptyValue()
      */

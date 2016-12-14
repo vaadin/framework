@@ -28,7 +28,7 @@ import com.vaadin.data.Binder.BindingBuilder;
  * associated with a ValidationResult {@link #getResult}.
  * <p>
  * Use
- * {@link BindingBuilder#withValidationStatusHandler(ValidationStatusHandler)}
+ * {@link BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)}
  * to register a handler for field level validation status changes.
  *
  * @author Vaadin Ltd
@@ -38,19 +38,19 @@ import com.vaadin.data.Binder.BindingBuilder;
  *            status changed, matches the field type unless a converter has been
  *            set
  *
- * @see BindingBuilder#withValidationStatusHandler(ValidationStatusHandler)
+ * @see BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)
  * @see Binding#validate()
- * @see ValidationStatusHandler
+ * @see BindingValidationStatusHandler
  * @see BinderValidationStatus
  *
  * @since 8.0
  */
-public class ValidationStatus<TARGET> implements Serializable {
+public class BindingValidationStatus<TARGET> implements Serializable {
 
     /**
      * Status of the validation.
      * <p>
-     * The status is the part of {@link ValidationStatus} which indicates
+     * The status is the part of {@link BindingValidationStatus} which indicates
      * whether the validation failed or not, or whether it is in unresolved
      * state (e.g. after clear or reset).
      */
@@ -84,9 +84,9 @@ public class ValidationStatus<TARGET> implements Serializable {
      *            the target data type of the binding for which the validation
      *            status was reset
      */
-    public static <TARGET> ValidationStatus<TARGET> createUnresolvedStatus(
+    public static <TARGET> BindingValidationStatus<TARGET> createUnresolvedStatus(
             Binding<?, TARGET> source) {
-        return new ValidationStatus<>(source, Status.UNRESOLVED, null);
+        return new BindingValidationStatus<>(source, Status.UNRESOLVED, null);
     }
 
     /**
@@ -98,7 +98,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      * @param result
      *            the result of the validation
      */
-    public ValidationStatus(Binding<?, TARGET> source,
+    public BindingValidationStatus(Binding<?, TARGET> source,
             ValidationResult result) {
         this(source, result.isError() ? Status.ERROR : Status.OK, result);
     }
@@ -116,7 +116,7 @@ public class ValidationStatus<TARGET> implements Serializable {
      * @param result
      *            the related result, may be {@code null}
      */
-    public ValidationStatus(Binding<?, TARGET> source, Status status,
+    public BindingValidationStatus(Binding<?, TARGET> source, Status status,
             ValidationResult result) {
         Objects.requireNonNull(source, "Event source may not be null");
         Objects.requireNonNull(status, "Status may not be null");

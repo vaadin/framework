@@ -88,7 +88,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<V>, V>
         private ValueChangeListener<V> valueChangeListener = new ValueChangeListener<V>() {
 
             @Override
-            public void accept(ValueChangeEvent<V> event) {
+            public void valueChange(ValueChangeEvent<V> event) {
                 log(event.getClass().getSimpleName() + ", new value: "
                         + formatValue(event.getValue()));
             }

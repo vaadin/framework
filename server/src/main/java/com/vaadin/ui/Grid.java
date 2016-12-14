@@ -35,7 +35,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,8 +48,8 @@ import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.event.ConnectorEvent;
-import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.ContextClickEvent;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.event.selection.SingleSelectionListener;
@@ -125,7 +124,7 @@ public class Grid<T> extends AbstractListing<T>
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
-            .findMethod(ItemClickListener.class, "accept", ItemClick.class);
+            .findMethod(ItemClickListener.class, "itemClick", ItemClick.class);
 
     @Deprecated
     private static final Method COLUMN_VISIBILITY_METHOD = ReflectTools
@@ -260,7 +259,7 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         public default Registration addSelectionListener(
                 SelectionListener<T> listener) {
-            return addSingleSelectionListener(e -> listener.accept(e));
+            return addSingleSelectionListener(e -> listener.selectionChange(e));
         }
 
         /**
@@ -303,7 +302,7 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         public default Registration addSelectionListener(
                 SelectionListener<T> listener) {
-            return addMultiSelectionListener(e -> listener.accept(e));
+            return addMultiSelectionListener(e -> listener.selectionChange(e));
         }
 
         /**
@@ -482,8 +481,7 @@ public class Grid<T> extends AbstractListing<T>
      * @see Registration
      */
     @FunctionalInterface
-    public interface ItemClickListener<T>
-            extends Consumer<ItemClick<T>>, ConnectorEventListener {
+    public interface ItemClickListener<T> extends SerializableEventListener {
         /**
          * Invoked when this listener receives a item click event from a Grid to
          * which it has been added.
@@ -491,8 +489,7 @@ public class Grid<T> extends AbstractListing<T>
          * @param event
          *            the received event, not null
          */
-        @Override
-        public void accept(ItemClick<T> event);
+        public void itemClick(ItemClick<T> event);
     }
 
     /**
@@ -3648,9 +3645,9 @@ public class Grid<T> extends AbstractListing<T>
         for (Column<T, ?> column : getColumns()) {
             Object value = column.valueProvider.apply(item);
             tableRow.appendElement("td")
-                    .append((Optional.ofNullable(value).map(Object::toString)
+                    .append(Optional.ofNullable(value).map(Object::toString)
                             .map(DesignFormatter::encodeForTextNode)
-                            .orElse("")));
+                            .orElse(""));
         }
     }
 

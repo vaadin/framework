@@ -50,7 +50,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void accept(ValueChangeEvent<Boolean> event) {
+                    public void valueChange(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(HeaderClickEvent.class)
                                 .isEmpty()) {
                             table.addHeaderClickListener(headerClickListener);
@@ -80,7 +80,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void accept(ValueChangeEvent<Boolean> event) {
+                    public void valueChange(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(FooterClickEvent.class)
                                 .isEmpty()) {
                             table.addFooterClickListener(footerClickListener);

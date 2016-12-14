@@ -98,11 +98,11 @@ public class BinderConverterValidatorTest
         binding.bind(Person::getFirstName, Person::setFirstName);
 
         BinderValidationStatus<Person> status = binder.validate();
-        List<ValidationStatus<?>> errors = status.getFieldValidationErrors();
+        List<BindingValidationStatus<?>> errors = status.getFieldValidationErrors();
 
         assertEquals(1, errors.size());
 
-        ValidationStatus<?> validationStatus = errors.stream().findFirst()
+        BindingValidationStatus<?> validationStatus = errors.stream().findFirst()
                 .get();
         String msg = validationStatus.getMessage().get();
         assertEquals(msg1, msg);
@@ -167,7 +167,7 @@ public class BinderConverterValidatorTest
     }
 
     private void assertValidationErrors(
-            List<ValidationStatus<?>> validationErrors,
+            List<BindingValidationStatus<?>> validationErrors,
             String... errorMessages) {
         assertEquals(errorMessages.length, validationErrors.size());
         for (int i = 0; i < errorMessages.length; i++) {
@@ -258,7 +258,7 @@ public class BinderConverterValidatorTest
         Person person = new Person();
         binder.setBean(person);
 
-        List<ValidationStatus<?>> errors = binder.validate()
+        List<BindingValidationStatus<?>> errors = binder.validate()
                 .getFieldValidationErrors();
         assertEquals(0, errors.size());
     }
@@ -275,10 +275,10 @@ public class BinderConverterValidatorTest
         Person person = new Person();
         binder.setBean(person);
 
-        List<ValidationStatus<?>> errors = binder.validate()
+        List<BindingValidationStatus<?>> errors = binder.validate()
                 .getFieldValidationErrors();
         assertEquals(1, errors.size());
-        ValidationStatus<?> error = errors.get(0);
+        BindingValidationStatus<?> error = errors.get(0);
         assertEquals(msg, error.getMessage().get());
         assertEquals(nameField, error.getField());
     }
@@ -296,11 +296,11 @@ public class BinderConverterValidatorTest
         Person person = new Person();
         binder.setBean(person);
 
-        List<ValidationStatus<?>> errors = binder.validate()
+        List<BindingValidationStatus<?>> errors = binder.validate()
                 .getFieldValidationErrors();
         assertEquals(1, errors.size());
 
-        ValidationStatus<?> error = errors.get(0);
+        BindingValidationStatus<?> error = errors.get(0);
 
         assertEquals(msg1, error.getMessage().get());
         assertEquals(nameField, error.getField());
@@ -570,10 +570,10 @@ public class BinderConverterValidatorTest
             binder.writeBean(person);
             Assert.fail();
         } catch (ValidationException exception) {
-            List<ValidationStatus<?>> validationErrors = exception
+            List<BindingValidationStatus<?>> validationErrors = exception
                     .getFieldValidationErrors();
             Assert.assertEquals(2, validationErrors.size());
-            ValidationStatus<?> error = validationErrors.get(0);
+            BindingValidationStatus<?> error = validationErrors.get(0);
             Assert.assertEquals(nameField, error.getField());
             Assert.assertEquals(msg, error.getMessage().get());
 

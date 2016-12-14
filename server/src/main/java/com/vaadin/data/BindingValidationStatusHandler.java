@@ -15,14 +15,12 @@
  */
 package com.vaadin.data;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
-
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.ui.AbstractComponent;
 
 /**
- * Handler for {@link ValidationStatus} changes.
+ * Handler for {@link BindingValidationStatus} changes.
  * <p>
  * {@link BindingBuilder#withValidationStatusHandler(withValidationStatusHandler)
  * Register} an instance of this class to be able to override the default
@@ -33,13 +31,20 @@ import com.vaadin.ui.AbstractComponent;
  * @author Vaadin Ltd
  *
  * @see BindingBuilder#withValidationStatusHandler(withValidationStatusHandler)
- * @see ValidationStatus
+ * @see BindingValidationStatus
  *
  * @since 8.0
  *
  */
 @FunctionalInterface
-public interface ValidationStatusHandler
-        extends Consumer<ValidationStatus<?>>, Serializable {
+public interface BindingValidationStatusHandler
+        extends SerializableEventListener {
 
+    /**
+     * Invoked when the validation status has changed in a binding.
+     *
+     * @param statusChange
+     *            the changed status
+     */
+    public void statusChange(BindingValidationStatus<?> statusChange);
 }

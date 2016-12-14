@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.data.ValidationStatus.Status;
+import com.vaadin.data.BindingValidationStatus.Status;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.data.util.converter.ValueContext;
@@ -375,7 +375,7 @@ public class BinderBookOfVaadinTest {
         departing.setValue(before);
         returning.setValue(after);
 
-        ValidationStatus<LocalDate> result = returnBinding.validate();
+        BindingValidationStatus<LocalDate> result = returnBinding.validate();
         Assert.assertFalse(result.isError());
         Assert.assertNull(departing.getComponentError());
 
@@ -426,7 +426,7 @@ public class BinderBookOfVaadinTest {
     @Test
     public void withBindingStatusHandlerExample() {
         Label nameStatus = new Label();
-        AtomicReference<ValidationStatus<?>> statusCapture = new AtomicReference<>();
+        AtomicReference<BindingValidationStatus<?>> statusCapture = new AtomicReference<>();
 
         String msg = "Full name must contain at least three characters";
         binder.forField(field).withValidator(name -> name.length() >= 3, msg)
@@ -444,7 +444,7 @@ public class BinderBookOfVaadinTest {
         Assert.assertTrue(nameStatus.isVisible());
         Assert.assertEquals(msg, nameStatus.getValue());
         Assert.assertNotNull(statusCapture.get());
-        ValidationStatus<?> status = statusCapture.get();
+        BindingValidationStatus<?> status = statusCapture.get();
         Assert.assertEquals(Status.ERROR, status.getStatus());
         Assert.assertEquals(msg, status.getMessage().get());
         Assert.assertEquals(field, status.getField());
@@ -652,7 +652,7 @@ public class BinderBookOfVaadinTest {
             formStatusLabel.setVisible(!errorMessage.isEmpty());
 
             // Let the default handler show messages for each field
-            defaultHandler.accept(status);
+            defaultHandler.statusChange(status);
         });
 
         final String bindingMessage = "uneven";
