@@ -87,7 +87,7 @@ public class TextChangeEvents extends AbstractTestUIWithLog {
         }
 
         @Override
-        public void accept(HasValue.ValueChangeEvent<String> event) {
+        public void valueChange(HasValue.ValueChangeEvent<String> event) {
             boolean atTheEndOfText = event.getValue()
                     .length() == getCursorPosition();
             String match = findMatch(event.getValue());
