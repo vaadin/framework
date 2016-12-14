@@ -70,6 +70,11 @@ public class TwinColSelectConnector extends AbstractMultiSelectConnector
         getWidget().setReadOnly(isReadOnly());
     }
 
+    @OnStateChange("tabIndex")
+    void updateTabIndex() {
+        getWidget().setTabIndex(getState().tabIndex);
+    }
+
     @Override
     public void layoutVertically() {
         if (isUndefinedHeight()) {
