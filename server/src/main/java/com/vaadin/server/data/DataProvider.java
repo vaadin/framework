@@ -35,7 +35,7 @@ import com.vaadin.shared.Registration;
  * Vaadin comes with a ready-made solution for in-memory data, known as
  * {@link ListDataProvider} which can be created using static {@code create}
  * methods in this interface. For custom backends such as SQL, EntityManager,
- * REST APIs, SpringData use a {@link BackEndDataProvider} or its subclass.
+ * REST APIs or SpringData, use a {@link BackEndDataProvider} or its subclass.
  *
  * @author Vaadin Ltd.
  *
