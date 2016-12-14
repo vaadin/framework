@@ -132,7 +132,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
                 MouseEventDetails mouseDetails) -> {
             Grid<T> grid = getParentGrid();
             T item = grid.getDataCommunicator().getKeyMapper().get(rowKey);
-            Column column = grid.getColumn(columnId);
+            Column<T, ?> column = grid.getColumnByInternalId(columnId);
 
             fireEvent(
                     new RendererClickEvent<>(grid, item, column, mouseDetails));

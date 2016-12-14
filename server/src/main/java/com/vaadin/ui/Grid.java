@@ -748,7 +748,7 @@ public class Grid<T> extends AbstractListing<T>
             }
 
             for (int i = 0; i < columnIds.length; ++i) {
-                Column<T, ?> column = columnKeys.get(columnIds[i]);
+                Column<T, ?> column = getColumnByInternalId(columnIds[i]);
                 sortOrder.add(new SortOrder<>(column, directions[i]));
             }
 
@@ -781,8 +781,7 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         public void itemClick(String rowKey, String columnId,
                 MouseEventDetails details) {
-            Column<T, ?> column = columnKeys.containsKey(columnId)
-                    ? columnKeys.get(columnId) : null;
+            Column<T, ?> column = getColumnByInternalId(columnId);
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
             fireEvent(new ItemClick<>(Grid.this, column, item, details));
         }
@@ -795,7 +794,7 @@ public class Grid<T> extends AbstractListing<T>
                 item = getDataCommunicator().getKeyMapper().get(rowKey);
             }
             fireEvent(new GridContextClickEvent<>(Grid.this, details, section,
-                    rowIndex, item, getColumn(columnId)));
+                    rowIndex, item, getColumnByInternalId(columnId)));
         }
 
         @Override
@@ -836,7 +835,7 @@ public class Grid<T> extends AbstractListing<T>
 
         @Override
         public void columnVisibilityChanged(String id, boolean hidden) {
-            Column<T, ?> column = getColumn(id);
+            Column<T, ?> column = getColumnByInternalId(id);
             ColumnState columnState = column.getState(false);
             if (columnState.hidden != hidden) {
                 columnState.hidden = hidden;
@@ -846,7 +845,7 @@ public class Grid<T> extends AbstractListing<T>
 
         @Override
         public void columnResized(String id, double pixels) {
-            final Column<T, ?> column = getColumn(id);
+            final Column<T, ?> column = getColumnByInternalId(id);
             if (column != null && column.isResizable()) {
                 column.getState().width = pixels;
                 fireColumnResizeEvent(column, true);
@@ -3660,4 +3659,15 @@ public class Grid<T> extends AbstractListing<T>
         return result;
     }
 
+    /**
+     * Returns a column identified by its internal id.
+     *
+     * @see Column#getInternalId()
+     * @param columnId
+     *            the internal id of column
+     * @return column identified by internal id
+     */
+    public Column<T, ?> getColumnByInternalId(String columnId) {
+        return columnKeys.get(columnId);
+    }
 }

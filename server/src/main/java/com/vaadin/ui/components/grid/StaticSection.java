@@ -320,16 +320,10 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                     writeCellState(cellElement, designContext,
                             entry.getValue().getCellState());
                 }
-                // TODO: Make column finding based on internal id easier.
-                cellElement
-                        .attr("column-ids",
-                                columnIds
-                                        .map(id -> section.getGrid()
-                                                .getColumns()
-                                                .stream().filter(
-                                                        c -> c.getInternalId() == id)
-                                                .findAny().orElse(null).getId())
-                                        .collect(Collectors.joining(",")));
+                cellElement.attr("column-ids",
+                        columnIds.map(section.getGrid()::getColumnByInternalId)
+                                .map(Column::getId)
+                                .collect(Collectors.joining(",")));
             }
         }
 
