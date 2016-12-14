@@ -38,13 +38,13 @@ public class TextChangeEventsTest extends SingleBrowserTest {
         TextFieldElement tfEager = $(TextFieldElement.class).caption("Eager")
                 .first();
         tfEager.sendKeys("abc");
-        waitUntil(driver -> getLogRow(0).equals(
-                "2. Text change event for Eager, text content currently:'abc' Cursor at index:3"));
+        waitUntil(driver -> getLogRow(0).contains(
+                "Text change event for Eager, text content currently:'abc' Cursor at index:3"));
 
         TextFieldElement tfTimeout = $(TextFieldElement.class)
                 .caption("Timeout 3s").first();
         tfTimeout.sendKeys("abc");
-        waitUntil(driver -> getLogRow(0).equals(
-                "3. Text change event for Timeout 3s, text content currently:'abc' Cursor at index:3"));
+        waitUntil(driver -> getLogRow(0).contains(
+                "Text change event for Timeout 3s, text content currently:'abc' Cursor at index:3"));
     }
 }
