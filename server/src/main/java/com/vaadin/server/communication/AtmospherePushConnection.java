@@ -148,7 +148,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Pushes pending state changes and client RPC calls to the client. If
-     * {@code isConnected()} is false, defers the push until a connection is
+     * {@code isConnected()} is false, defers the push until a connection is
      * established.
      *
      * @param async
