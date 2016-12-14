@@ -79,7 +79,6 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
@@ -1869,7 +1868,7 @@ public class Grid<T> extends AbstractListing<T>
                 /*
                  * This is a fake editor just to have something (otherwise
                  * "setEditable" throws an exception.
-                 * 
+                 *
                  * Let's use TextField here because we support only Strings as
                  * inline data type. It will work incorrectly for other types
                  * but we don't support them anyway.
@@ -2487,9 +2486,11 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * Adds a new text column to this {@link Grid} with string value provider.
-     * The column will use a {@link TextRenderer}. Identifier for the column is
-     * generated automatically.
+     * Adds a new text column to this {@link Grid} with a value provider. The
+     * column will use a {@link TextRenderer}. The value is converted to a
+     * String using {@link Object#toString()}. Sorting in memory is executed by
+     * comparing the String values. Identifier for the column is generated
+     * automatically.
      *
      * @param valueProvider
      *            the value provider
@@ -2497,8 +2498,9 @@ public class Grid<T> extends AbstractListing<T>
      * @return the new column
      */
     public Column<T, String> addColumn(
-            SerializableFunction<T, String> valueProvider) {
-        return addColumn(getGeneratedIdentifier(), valueProvider,
+            SerializableFunction<T, ?> valueProvider) {
+        return addColumn(getGeneratedIdentifier(),
+                t -> String.valueOf(valueProvider.apply(t)),
                 new TextRenderer());
     }
 
