@@ -3,7 +3,7 @@ package com.vaadin.tests.components.grid;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.server.SerializableFunction;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.data.DataProvider;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -16,7 +16,7 @@ public class GridApplyFilterWhenScrolledDown extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Grid<String> grid = new Grid<>();
 
-        grid.addColumn("Name", SerializableFunction.identity());
+        grid.addColumn("Name", ValueProvider.identity());
 
         List<String> data = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {

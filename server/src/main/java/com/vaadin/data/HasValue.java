@@ -200,7 +200,7 @@ public interface HasValue<V> extends Serializable {
      * values. Specific implementations might not support this.
      *
      * @return empty value
-     * @see Binder#bind(HasValue, java.util.function.Function, BiConsumer)
+     * @see Binder#bind(HasValue, ValueProvider, BiConsumer)
      */
     public default V getEmptyValue() {
         return null;

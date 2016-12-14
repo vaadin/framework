@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.server.SerializableFunction;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -140,7 +140,7 @@ public class GridHeaderFooterTest {
     @Test
     public void addColumn_headerCellAdded() {
         Column<?, ?> column = grid.addColumn("Col",
-                SerializableFunction.identity());
+                ValueProvider.identity());
 
         assertNotNull(grid.getHeaderRow(0).getCell(column));
     }
@@ -148,7 +148,7 @@ public class GridHeaderFooterTest {
     @Test(expected = IllegalArgumentException.class)
     public void removeColumn_headerCellRemoved() {
         Column<String, ?> column = grid.addColumn("Col",
-                SerializableFunction.identity());
+                ValueProvider.identity());
         grid.removeColumn(column);
 
         grid.getHeaderRow(0).getCell(column);
