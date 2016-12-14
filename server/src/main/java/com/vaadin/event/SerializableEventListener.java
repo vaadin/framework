@@ -15,18 +15,15 @@
  */
 package com.vaadin.event;
 
-import com.vaadin.server.ClientConnector;
-import com.vaadin.shared.Connector;
+import java.io.Serializable;
+import java.util.EventListener;
 
 /**
- * Event listener interface for events originating from server side connectors.
+ * Event listener interface that is serializable.
  *
- * @since 6.0
+ * @since 8.0
  * @author Vaadin Ltd
- *
- * @see Connector
- * @see ClientConnector
  */
-public interface ConnectorEventListener extends SerializableEventListener {
+public interface SerializableEventListener extends EventListener, Serializable {
 
 }
