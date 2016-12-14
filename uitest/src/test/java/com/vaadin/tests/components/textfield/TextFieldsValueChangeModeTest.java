@@ -95,14 +95,10 @@ public class TextFieldsValueChangeModeTest extends MultiBrowserTest {
 
     private void testTimeout(String id) {
         openTestURL();
-        WebElement eagerTextField = findElement(By.id(id));
-        eagerTextField.sendKeys("f");
-        eagerTextField.sendKeys("o");
-        eagerTextField.sendKeys("o");
+        WebElement textField = findElement(By.id(id));
+        textField.sendKeys("foo");
         sleep(1000); // Timer set to 1000ms
-        eagerTextField.sendKeys("b");
-        eagerTextField.sendKeys("a");
-        eagerTextField.sendKeys("a");
+        textField.sendKeys("baa");
         sleep(1000); // Timer set to 1000ms
         assertLog(id, "foo", "foobaa");
     }
