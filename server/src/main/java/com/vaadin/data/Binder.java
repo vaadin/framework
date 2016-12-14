@@ -445,21 +445,21 @@ public class Binder<BEAN> implements Serializable {
          * <li>the field value is validated for not being empty*</li>
          * </ol>
          * For localizing the error message, use
-         * {@link #setRequired(SerializableFunction)}.
+         * {@link #asRequired(ErrorMessageProvider)}.
          * <p>
          * *Value not being the equal to what {@link HasValue#getEmptyValue()}
          * returns.
          *
-         * @see #setRequired(SerializableFunction)
+         * @see #asRequired(ErrorMessageProvider)
          * @see HasValue#setRequiredIndicatorVisible(boolean)
          * @see HasValue#isEmpty()
          * @param errorMessage
          *            the error message to show for the invalid value
          * @return this binding, for chaining
          */
-        public default BindingBuilder<BEAN, TARGET> setRequired(
+        public default BindingBuilder<BEAN, TARGET> asRequired(
                 String errorMessage) {
-            return setRequired(context -> errorMessage);
+            return asRequired(context -> errorMessage);
         }
 
         /**
@@ -477,7 +477,7 @@ public class Binder<BEAN> implements Serializable {
          *            the provider for localized validation error message
          * @return this binding, for chaining
          */
-        public BindingBuilder<BEAN, TARGET> setRequired(
+        public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider);
     }
 
@@ -587,7 +587,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public BindingBuilder<BEAN, TARGET> setRequired(
+        public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider) {
             checkUnbound();
             field.setRequiredIndicatorVisible(true);

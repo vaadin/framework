@@ -97,13 +97,13 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @Override
-        public BeanBindingBuilder<BEAN, TARGET> setRequired(
+        public BeanBindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider);
 
         @Override
-        public default BeanBindingBuilder<BEAN, TARGET> setRequired(
+        public default BeanBindingBuilder<BEAN, TARGET> asRequired(
                 String errorMessage) {
-            return (BeanBindingBuilder<BEAN, TARGET>) BindingBuilder.super.setRequired(
+            return (BeanBindingBuilder<BEAN, TARGET>) BindingBuilder.super.asRequired(
                     errorMessage);
         }
 
@@ -222,9 +222,9 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @Override
-        public BeanBindingBuilder<BEAN, TARGET> setRequired(
+        public BeanBindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider) {
-            return (BeanBindingBuilder<BEAN, TARGET>) super.setRequired(
+            return (BeanBindingBuilder<BEAN, TARGET>) super.asRequired(
                     errorMessageProvider);
         }
 
