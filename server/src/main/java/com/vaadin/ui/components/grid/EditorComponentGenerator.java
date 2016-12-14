@@ -29,6 +29,7 @@ import com.vaadin.ui.Component;
  * @param <BEAN>
  *            the bean type this generator is compatible with
  */
+@FunctionalInterface
 public interface EditorComponentGenerator<BEAN>
         extends SerializableFunction<BEAN, Component> {
 
