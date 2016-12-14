@@ -17,7 +17,6 @@ In this example, we use the following toolchain:
 * link:http://www.eclipse.org/downloads/[Eclipse IDE for Java EE Developers]
 * link:http://tomcat.apache.org/[Apache Tomcat 8.0 (Core)]
 * link:http://www.getfirefox.com/[Mozilla Firefox] browser
-* link:http://www.getfirebug.com/[Firebug] debug tool (optional)
 * link:http://vaadin.com/download/[Vaadin Framework]
 
 The above reference toolchain is a good choice of tools, but you can use almost
