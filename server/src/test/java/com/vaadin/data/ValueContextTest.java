@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.converter.ValueContext;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;

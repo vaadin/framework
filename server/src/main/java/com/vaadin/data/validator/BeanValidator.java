@@ -30,7 +30,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
-import com.vaadin.data.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 import com.vaadin.data.util.BeanUtil;
 
 /**

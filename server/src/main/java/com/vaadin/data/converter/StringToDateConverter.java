@@ -21,7 +21,9 @@ import java.text.ParsePosition;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
  * A converter that converts from {@link Date} to {@link String} and back. Uses

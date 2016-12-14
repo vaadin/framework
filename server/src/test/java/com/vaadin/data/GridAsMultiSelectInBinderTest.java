@@ -18,8 +18,6 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.converter.Converter;
-import com.vaadin.data.converter.ValueContext;
 import com.vaadin.tests.data.bean.BeanWithEnums;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.data.bean.TestEnum;

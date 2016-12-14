@@ -15,7 +15,6 @@
  */
 package com.vaadin.data;
 
-import com.vaadin.data.converter.ValueContext;
 import com.vaadin.server.SerializableFunction;
 
 /**

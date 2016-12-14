@@ -18,7 +18,9 @@ package com.vaadin.data.converter;
 
 import java.util.Locale;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
  * A converter that converts from {@link String} to {@link Boolean} and back.

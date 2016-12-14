@@ -31,7 +31,6 @@ import org.junit.Test;
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.converter.StringToIntegerConverter;
-import com.vaadin.data.converter.ValueContext;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;

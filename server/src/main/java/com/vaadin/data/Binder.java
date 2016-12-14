@@ -31,9 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.converter.Converter;
 import com.vaadin.data.converter.StringToIntegerConverter;
-import com.vaadin.data.converter.ValueContext;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.SerializableBiConsumer;

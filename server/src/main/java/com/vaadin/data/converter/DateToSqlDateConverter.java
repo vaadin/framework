@@ -21,7 +21,9 @@ package com.vaadin.data.converter;
 
 import java.util.Date;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
  * Converter for handling conversion between {@link java.util.Date} and

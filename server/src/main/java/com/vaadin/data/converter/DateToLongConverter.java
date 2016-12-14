@@ -18,7 +18,9 @@ package com.vaadin.data.converter;
 
 import java.util.Date;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
  * A converter that converts from {@link Long} to {@link Date} and back.

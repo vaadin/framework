@@ -31,12 +31,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jsoup.parser.Parser;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
-import com.vaadin.data.converter.Converter;
+import com.vaadin.data.ValueContext;
 import com.vaadin.data.converter.StringToBigDecimalConverter;
 import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.data.converter.StringToFloatConverter;
-import com.vaadin.data.converter.ValueContext;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;

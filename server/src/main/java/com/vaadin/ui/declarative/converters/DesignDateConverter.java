@@ -19,9 +19,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
-import com.vaadin.data.converter.Converter;
-import com.vaadin.data.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**

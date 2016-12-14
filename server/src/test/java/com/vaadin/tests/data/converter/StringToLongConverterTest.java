@@ -3,8 +3,8 @@ package com.vaadin.tests.data.converter;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 import com.vaadin.data.converter.StringToLongConverter;
-import com.vaadin.data.converter.ValueContext;
 
 public class StringToLongConverterTest extends AbstractStringConverterTest {
 

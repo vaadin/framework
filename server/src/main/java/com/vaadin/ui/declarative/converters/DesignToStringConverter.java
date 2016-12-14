@@ -17,9 +17,9 @@ package com.vaadin.ui.declarative.converters;
 
 import java.lang.reflect.InvocationTargetException;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
-import com.vaadin.data.converter.Converter;
-import com.vaadin.data.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**

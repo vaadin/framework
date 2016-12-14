@@ -34,7 +34,6 @@ import java.util.function.BiConsumer;
 
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
-import com.vaadin.data.converter.Converter;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.SerializableBiConsumer;
