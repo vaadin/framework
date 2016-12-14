@@ -2127,7 +2127,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     /**
      * A callback interface for generating optional descriptions (tooltips) for
      * Grid cells. If a cell has both a {@link RowDescriptionGenerator row
-     * description} and a cell description, the latter has precedence.
+     * description} and a cell description, the latter has precedence.
      *
      * @see Grid#setCellDescriptionGenerator(CellDescriptionGenerator)
      *

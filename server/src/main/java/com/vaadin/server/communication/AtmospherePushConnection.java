@@ -148,7 +148,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Pushes pending state changes and client RPC calls to the client. If
-     * {@code isConnected()} is false, defers the push until a connection is
+     * {@code isConnected()} is false, defers the push until a connection is
      * established.
      *
      * @param async
@@ -258,17 +258,21 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     /**
-     * @return the UI associated with this connection.
+     * Gets the UI this push connection is associated with.
+     *
+     * @return the UI associated with this connection
      */
-    protected UI getUI() {
+    public UI getUI() {
         return ui;
     }
 
     /**
-     * @return The AtmosphereResource associated with this connection or null if
-     *         connection not open.
+     * Gets the atmosphere resource associated with this connection.
+     *
+     * @return The AtmosphereResource associated with this connection or
+     *         <code>null</code> if the connection is not open.
      */
-    protected AtmosphereResource getResource() {
+    public AtmosphereResource getResource() {
         return resource;
     }
 

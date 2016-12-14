@@ -28,55 +28,55 @@ import java.io.Serializable;
 public interface Sizeable extends Serializable {
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#PIXELS} instead    
+     * @deprecated As of 7.0, use {@link Unit#PIXELS} instead    
      */
     @Deprecated
     public static final Unit UNITS_PIXELS = Unit.PIXELS;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#POINTS} instead    
+     * @deprecated As of 7.0, use {@link Unit#POINTS} instead    
      */
     @Deprecated
     public static final Unit UNITS_POINTS = Unit.POINTS;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#PICAS} instead    
+     * @deprecated As of 7.0, use {@link Unit#PICAS} instead    
      */
     @Deprecated
     public static final Unit UNITS_PICAS = Unit.PICAS;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#EM} instead    
+     * @deprecated As of 7.0, use {@link Unit#EM} instead    
      */
     @Deprecated
     public static final Unit UNITS_EM = Unit.EM;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#EX} instead    
+     * @deprecated As of 7.0, use {@link Unit#EX} instead    
      */
     @Deprecated
     public static final Unit UNITS_EX = Unit.EX;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#MM} instead    
+     * @deprecated As of 7.0, use {@link Unit#MM} instead    
      */
     @Deprecated
     public static final Unit UNITS_MM = Unit.MM;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#CM} instead    
+     * @deprecated As of 7.0, use {@link Unit#CM} instead    
      */
     @Deprecated
     public static final Unit UNITS_CM = Unit.CM;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#INCH} instead    
+     * @deprecated As of 7.0, use {@link Unit#INCH} instead    
      */
     @Deprecated
     public static final Unit UNITS_INCH = Unit.INCH;
 
     /**
-     * @deprecated As of 7.0, use {@link Unit#PERCENTAGE} instead    
+     * @deprecated As of 7.0, use {@link Unit#PERCENTAGE} instead    
      */
     @Deprecated
     public static final Unit UNITS_PERCENTAGE = Unit.PERCENTAGE;
