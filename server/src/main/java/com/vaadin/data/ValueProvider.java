@@ -19,15 +19,20 @@ import com.vaadin.server.SerializableFunction;
 
 /**
  * A callback interface for providing values from a given source.
+ * <p>
+ * For example this interface can be implemented to simply extract a value with
+ * a getter, or to create a composite value based on the fields of the source
+ * object.
  * 
  * @author Vaadin Ltd.
  * @since 8.0
  *
  * @param <SOURCE>
- *            the type of the provider of the value
+ *            the type of the object used to provide the value
  * @param <TARGET>
  *            the type of the provided value
  */
+@FunctionalInterface
 public interface ValueProvider<SOURCE, TARGET>
         extends SerializableFunction<SOURCE, TARGET> {
 
@@ -43,7 +48,7 @@ public interface ValueProvider<SOURCE, TARGET>
     }
 
     /**
-     * Provides a value from a given source.
+     * Provides a value from the given source object.
      * 
      * @param source
      *            the source to retrieve the value from
