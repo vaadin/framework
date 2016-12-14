@@ -1,10 +1,10 @@
 # Contributing to Vaadin Framework
 
-*There are many ways to participate to the Vaadin project. You can ask questions and participate to discussion in the [forum](https://vaadin.com/forum), [fill bug reports](https://dev.vaadin.com/) and enhancement suggestion, [create add-ons](https://vaadin.com/directory) and contribute code. These instructions are for contributing code the the core framework.*
+*There are many ways to participate to the Vaadin project. You can ask questions and participate to discussion in the [forum](https://vaadin.com/forum), [fill bug reports](https://github.com/vaadin/framework/issues) and enhancement suggestion, [create add-ons](https://vaadin.com/directory) and contribute code. These instructions are for contributing code the the core framework.*
 
 # Summary
 
-We like quality patches that solve problems. A quality patch follows good coding practices - it’s easy to read and understand. For more complicated fixes or features, the change should be broken down into several smaller easy to understand patches. Most of this is really just what we consider to be common sense and best development practices.  
+We like quality patches that solve problems. A quality patch follows good coding practices - it’s easy to read and understand. For more complicated fixes or features, the change should be broken down into several smaller easy to understand patches. Most of this is really just what we consider to be common sense and best development practices.
 
 In other words: 
 
