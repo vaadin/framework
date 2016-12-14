@@ -37,7 +37,7 @@ import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.BeanValidator;
-import com.vaadin.server.SerializableBiConsumer;
+import com.vaadin.server.Setter;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.ui.Label;
@@ -162,7 +162,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          *             if the property has no accessible getter
          *
          * @see BindingBuilder#bind(SerializableFunction,
-         *      SerializableBiConsumer)
+         *      Setter)
          */
         public Binding<BEAN, TARGET> bind(String propertyName);
     }
@@ -362,7 +362,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * @throws IllegalArgumentException
      *             if the property has no accessible getter
      *
-     * @see #bind(HasValue, SerializableFunction, SerializableBiConsumer)
+     * @see #bind(HasValue, SerializableFunction, Setter)
      */
     public <FIELDVALUE> Binding<BEAN, FIELDVALUE> bind(
             HasValue<FIELDVALUE> field, String propertyName) {

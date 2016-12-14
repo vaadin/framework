@@ -19,7 +19,7 @@ import java.util.EventObject;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.server.SerializableBiConsumer;
+import com.vaadin.server.Setter;
 import com.vaadin.server.SerializableFunction;
 
 /**
@@ -33,7 +33,7 @@ import com.vaadin.server.SerializableFunction;
  * <li>{@link Binder#readBean(Object)} is called
  * <li>{@link Binder#setBean(Object)} is called
  * <li>{@link Binder#removeBean()} is called
- * <li>{@link BindingBuilder#bind(SerializableFunction, SerializableBiConsumer)}
+ * <li>{@link BindingBuilder#bind(SerializableFunction, Setter)}
  * is called
  * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
  * </ul>
