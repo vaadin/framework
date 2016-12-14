@@ -15,10 +15,11 @@
  */
 package com.vaadin.data;
 
+import com.vaadin.server.SerializableConsumer;
+import com.vaadin.server.SerializableFunction;
+
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * An internal implementation of {@code Result}.
@@ -53,7 +54,7 @@ class SimpleResult<R> implements Result<R> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <S> Result<S> flatMap(Function<R, Result<S>> mapper) {
+    public <S> Result<S> flatMap(SerializableFunction<R, Result<S>> mapper) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
         if (isError()) {
@@ -65,7 +66,7 @@ class SimpleResult<R> implements Result<R> {
     }
 
     @Override
-    public void handle(Consumer<R> ifOk, Consumer<String> ifError) {
+    public void handle(SerializableConsumer<R> ifOk, SerializableConsumer<String> ifError) {
         Objects.requireNonNull(ifOk, "ifOk cannot be null");
         Objects.requireNonNull(ifError, "ifError cannot be null");
         if (isError()) {
@@ -96,7 +97,7 @@ class SimpleResult<R> implements Result<R> {
 
     @Override
     public <X extends Throwable> R getOrThrow(
-            Function<String, ? extends X> exceptionSupplier) throws X {
+            SerializableFunction<String, ? extends X> exceptionSupplier) throws X {
         Objects.requireNonNull(exceptionSupplier,
                 "Exception supplier cannot be null");
         if (isError()) {

@@ -15,8 +15,7 @@
  */
 package com.vaadin.data;
 
-import java.util.function.Function;
-
+import com.vaadin.server.SerializableFunction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -71,7 +70,7 @@ public class ResultTest {
         Result<String> result = new SimpleResult<String>("foo", null) {
 
             @Override
-            public <S> Result<S> flatMap(Function<String, Result<S>> mapper) {
+            public <S> Result<S> flatMap(SerializableFunction<String, Result<S>> mapper) {
                 return mapper.apply("foo");
             }
         };
@@ -90,7 +89,7 @@ public class ResultTest {
         Result<String> result = new SimpleResult<String>("foo", null) {
 
             @Override
-            public <S> Result<S> flatMap(Function<String, Result<S>> mapper) {
+            public <S> Result<S> flatMap(SerializableFunction<String, Result<S>> mapper) {
                 return new SimpleResult<>(null, "bar");
             }
         };

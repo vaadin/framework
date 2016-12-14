@@ -77,7 +77,6 @@ import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
@@ -675,7 +674,7 @@ public class Grid<T> extends AbstractListing<T>
      */
     @FunctionalInterface
     public interface DetailsGenerator<T>
-            extends Function<T, Component>, Serializable {
+            extends SerializableFunction<T, Component> {
     }
 
     /**
@@ -987,7 +986,7 @@ public class Grid<T> extends AbstractListing<T>
 
         private final SerializableFunction<T, ? extends V> valueProvider;
 
-        private SerializableFunction<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
+        private SortOrderProvider sortOrderProvider;
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
@@ -1279,8 +1278,7 @@ public class Grid<T> extends AbstractListing<T>
          *            given direction
          * @return this column
          */
-        public Column<T, V> setSortOrderProvider(
-                SerializableFunction<SortDirection, Stream<SortOrder<String>>> provider) {
+        public Column<T, V> setSortOrderProvider(SortOrderProvider provider) {
             Objects.requireNonNull(provider,
                     "Sort order provider can't be null");
             sortOrderProvider = provider;
@@ -2181,6 +2179,7 @@ public class Grid<T> extends AbstractListing<T>
      * @param <T>
      *            the bean type
      */
+    @FunctionalInterface
     public interface EditorErrorGenerator<T> extends Serializable,
             BiFunction<Map<Component, Column<T, ?>>, BinderValidationStatus<T>, String> {
 
@@ -3680,4 +3679,25 @@ public class Grid<T> extends AbstractListing<T>
         return result;
     }
 
+    /**
+     * Generates the sort orders when rows are sorted by a column.
+     * @see Column#setSortOrderProvider
+     *
+     * @since 8.0
+     * @author Vaadin Ltd
+     */
+    @FunctionalInterface
+    public interface SortOrderProvider extends SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
+
+        /**
+         * Generates the sort orders when rows are sorted by a column.
+         *
+         * @param sortDirection desired sort direction
+         *
+         * @return sort information
+         */
+        @Override
+        public Stream<SortOrder<String>> apply(SortDirection sortDirection);
+
+    }
 }
