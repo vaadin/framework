@@ -44,7 +44,7 @@ import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -536,20 +536,20 @@ public class GridBasics extends AbstractTestUIWithLog {
         selectionModelItem.addItem("SelectAllCheckbox: Visible", menuItem -> {
             switchToMultiSelect();
             ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
-                    .setSelectAllCheckBoxVisible(
-                            SelectAllCheckBoxVisible.VISIBLE);
+                    .setSelectAllCheckBoxVisibility(
+                            SelectAllCheckBoxVisibility.VISIBLE);
         });
         selectionModelItem.addItem("SelectAllCheckbox: Hidden", menuItem -> {
             switchToMultiSelect();
             ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
-                    .setSelectAllCheckBoxVisible(
-                            SelectAllCheckBoxVisible.HIDDEN);
+                    .setSelectAllCheckBoxVisibility(
+                            SelectAllCheckBoxVisibility.HIDDEN);
         });
         selectionModelItem.addItem("SelectAllCheckbox: Default", menuItem -> {
             switchToMultiSelect();
             ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
-                    .setSelectAllCheckBoxVisible(
-                            SelectAllCheckBoxVisible.DEFAULT);
+                    .setSelectAllCheckBoxVisibility(
+                            SelectAllCheckBoxVisibility.DEFAULT);
         });
     }
 

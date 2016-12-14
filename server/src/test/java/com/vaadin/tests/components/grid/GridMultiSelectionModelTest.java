@@ -35,7 +35,7 @@ import com.vaadin.ui.Grid.GridSelectionModel;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 
 import elemental.json.JsonObject;
 
@@ -622,28 +622,28 @@ public class GridMultiSelectionModelTest {
         ui.setContent(grid);
         // no items yet, default data provider is empty not in memory one
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());
-        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.DEFAULT,
+                model.getSelectAllCheckBoxVisibility());
 
         grid.setItems("Foo", "Bar", "Baz");
 
         // in-memory container keeps default
         Assert.assertTrue(model.isSelectAllCheckBoxVisible());
-        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.DEFAULT,
+                model.getSelectAllCheckBoxVisibility());
 
         // change to explicit NO
-        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.HIDDEN);
+        model.setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility.HIDDEN);
 
-        Assert.assertEquals(SelectAllCheckBoxVisible.HIDDEN,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.HIDDEN,
+                model.getSelectAllCheckBoxVisibility());
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());
 
         // change to explicit YES
-        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.VISIBLE);
+        model.setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility.VISIBLE);
 
-        Assert.assertEquals(SelectAllCheckBoxVisible.VISIBLE,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.VISIBLE,
+                model.getSelectAllCheckBoxVisibility());
         Assert.assertTrue(model.isSelectAllCheckBoxVisible());
     }
 
@@ -658,8 +658,8 @@ public class GridMultiSelectionModelTest {
 
         // no items yet, default data provider is empty not in memory one
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());
-        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.DEFAULT,
+                model.getSelectAllCheckBoxVisibility());
 
         grid.setDataProvider(
                 new BackEndDataProvider<String, String>(
@@ -672,29 +672,29 @@ public class GridMultiSelectionModelTest {
 
         // not in-memory -> checkbox is hidden
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());
-        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.DEFAULT,
+                model.getSelectAllCheckBoxVisibility());
 
         // change to explicit YES
-        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.VISIBLE);
+        model.setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility.VISIBLE);
 
-        Assert.assertEquals(SelectAllCheckBoxVisible.VISIBLE,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.VISIBLE,
+                model.getSelectAllCheckBoxVisibility());
         Assert.assertTrue(model.isSelectAllCheckBoxVisible());
 
         // change to explicit NO
-        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.HIDDEN);
+        model.setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility.HIDDEN);
 
-        Assert.assertEquals(SelectAllCheckBoxVisible.HIDDEN,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.HIDDEN,
+                model.getSelectAllCheckBoxVisibility());
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());
 
         // change back to depends on data provider
-        model.setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible.DEFAULT);
+        model.setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility.DEFAULT);
 
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());
-        Assert.assertEquals(SelectAllCheckBoxVisible.DEFAULT,
-                model.getSelectAllCheckBoxVisible());
+        Assert.assertEquals(SelectAllCheckBoxVisibility.DEFAULT,
+                model.getSelectAllCheckBoxVisibility());
 
     }
 }
