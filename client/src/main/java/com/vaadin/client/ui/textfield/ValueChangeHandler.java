@@ -41,13 +41,18 @@ public class ValueChangeHandler {
     private Timer valueChangeTrigger = new Timer() {
         @Override
         public void run() {
-            Scheduler.get().scheduleDeferred(() -> owner.sendValueChange());
+            Scheduler.get().scheduleDeferred(() -> {
+                owner.sendValueChange();
+                scheduled = false;
+            });
         }
     };
 
     private int valueChangeTimeout = -1;
 
     private ValueChangeMode valueChangeMode;
+
+    private boolean scheduled = false;
 
     /**
      * Creates a value change handler for the given owner.
@@ -88,6 +93,7 @@ public class ValueChangeHandler {
     }
 
     private void lazyTextChange() {
+        scheduled = true;
         valueChangeTrigger.schedule(valueChangeTimeout);
     }
 
@@ -95,10 +101,12 @@ public class ValueChangeHandler {
         if (valueChangeTrigger.isRunning()) {
             return;
         }
+        scheduled = true;
         valueChangeTrigger.schedule(valueChangeTimeout);
     }
 
     private void eagerTextChange() {
+        scheduled = true;
         valueChangeTrigger.run();
     }
 
@@ -124,6 +132,16 @@ public class ValueChangeHandler {
      */
     public void setValueChangeTimeout(int valueChangeTimeout) {
         this.valueChangeTimeout = valueChangeTimeout;
+    }
+
+    /**
+     * Returns {@code true} if value change is scheduled.
+     * 
+     * @return {@code true} if value change is scheduled, {@code false}
+     *         otherwise
+     */
+    public boolean isScheduled() {
+        return scheduled;
     }
 
 }

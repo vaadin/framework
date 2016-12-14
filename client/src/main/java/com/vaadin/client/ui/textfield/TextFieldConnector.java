@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.textfield;
 
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.event.InputEvent;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
@@ -26,7 +27,8 @@ import com.vaadin.ui.TextField;
  * Connector class for TextField.
  */
 @Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
-public class TextFieldConnector extends AbstractTextFieldConnector {
+public class TextFieldConnector extends AbstractTextFieldConnector
+        implements DeferredWorker {
 
     @Override
     protected void init() {
@@ -45,6 +47,11 @@ public class TextFieldConnector extends AbstractTextFieldConnector {
     @Override
     public VTextField getWidget() {
         return (VTextField) super.getWidget();
+    }
+
+    @Override
+    public boolean isWorkPending() {
+        return getValueChangeHandler().isScheduled();
     }
 
 }
