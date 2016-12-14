@@ -60,6 +60,16 @@ public class VNativeSelect extends FocusableFlowPanelComposite
     }
 
     /**
+     * Sets the tab index.
+     *
+     * @param tabIndex
+     *            the tab index to set
+     */
+    public void setTabIndex(int tabIndex) {
+        getListBox().setTabIndex(tabIndex);
+    }
+
+    /**
      * Gets the underlying ListBox widget that this widget wraps.
      *
      * @return the ListBox this widget wraps

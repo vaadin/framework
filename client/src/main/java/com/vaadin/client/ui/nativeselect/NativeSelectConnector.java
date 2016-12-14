@@ -77,7 +77,6 @@ public class NativeSelectConnector
     }
 
     @OnStateChange("readOnly")
-    @SuppressWarnings("deprecation")
     void updateWidgetReadOnly() {
         getWidget().getListBox().setEnabled(isEnabled() && !isReadOnly());
     }
@@ -85,6 +84,11 @@ public class NativeSelectConnector
     @OnStateChange("selectedItemKey")
     void updateSelectedItem() {
         getWidget().setSelectedItem(getState().selectedItemKey);
+    }
+
+    @OnStateChange("tabIndex")
+    void updateTabIndex() {
+        getWidget().setTabIndex(getState().tabIndex);
     }
 
     @Override
