@@ -731,15 +731,19 @@ public class Grid<T> extends AbstractListing<T>
         protected AbstractGridExtensionState getState(boolean markAsDirty) {
             return (AbstractGridExtensionState) super.getState(markAsDirty);
         }
+
+        protected String getInternalIdForColumn(Column<T, ?> column) {
+            return getParent().getInternalIdForColumn(column);
+        }
     }
 
     private final class GridServerRpcImpl implements GridServerRpc {
         @Override
-        public void sort(String[] columnIds, SortDirection[] directions,
+        public void sort(String[] columnInternalIds, SortDirection[] directions,
                 boolean isUserOriginated) {
-            assert columnIds.length == directions.length : "Column and sort direction counts don't match.";
+            assert columnInternalIds.length == directions.length : "Column and sort direction counts don't match.";
             sortOrder.clear();
-            if (columnIds.length == 0) {
+            if (columnInternalIds.length == 0) {
                 // Grid is not sorted anymore.
                 getDataCommunicator()
                         .setBackEndSorting(Collections.emptyList());
@@ -747,8 +751,9 @@ public class Grid<T> extends AbstractListing<T>
                 return;
             }
 
-            for (int i = 0; i < columnIds.length; ++i) {
-                Column<T, ?> column = getColumnByInternalId(columnIds[i]);
+            for (int i = 0; i < columnInternalIds.length; ++i) {
+                Column<T, ?> column = getColumnByInternalId(
+                        columnInternalIds[i]);
                 sortOrder.add(new SortOrder<>(column, directions[i]));
             }
 
@@ -779,22 +784,23 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         @Override
-        public void itemClick(String rowKey, String columnId,
+        public void itemClick(String rowKey, String columnInternalId,
                 MouseEventDetails details) {
-            Column<T, ?> column = getColumnByInternalId(columnId);
+            Column<T, ?> column = getColumnByInternalId(columnInternalId);
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
             fireEvent(new ItemClick<>(Grid.this, column, item, details));
         }
 
         @Override
-        public void contextClick(int rowIndex, String rowKey, String columnId,
-                Section section, MouseEventDetails details) {
+        public void contextClick(int rowIndex, String rowKey,
+                String columnInternalId, Section section,
+                MouseEventDetails details) {
             T item = null;
             if (rowKey != null) {
                 item = getDataCommunicator().getKeyMapper().get(rowKey);
             }
             fireEvent(new GridContextClickEvent<>(Grid.this, details, section,
-                    rowIndex, item, getColumnByInternalId(columnId)));
+                    rowIndex, item, getColumnByInternalId(columnInternalId)));
         }
 
         @Override
@@ -1151,7 +1157,7 @@ public class Grid<T> extends AbstractListing<T>
          *
          * @return the identifier string
          */
-        public String getInternalId() {
+        private String getInternalId() {
             return getState(false).id;
         }
 
@@ -2373,6 +2379,17 @@ public class Grid<T> extends AbstractListing<T>
         protected SectionState getState(boolean markAsDirty) {
             return Grid.this.getState(markAsDirty).header;
         }
+
+        @Override
+        protected Column<?, ?> getColumnByInternalId(String internalId) {
+            return getGrid().getColumnByInternalId(internalId);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected String getInternalIdForColumn(Column<?, ?> column) {
+            return getGrid().getInternalIdForColumn((Column<T, ?>) column);
+        }
     };
 
     private class FooterImpl extends Footer {
@@ -2385,6 +2402,17 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         protected SectionState getState(boolean markAsDirty) {
             return Grid.this.getState(markAsDirty).footer;
+        }
+
+        @Override
+        protected Column<?, ?> getColumnByInternalId(String internalId) {
+            return getGrid().getColumnByInternalId(internalId);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected String getInternalIdForColumn(Column<?, ?> column) {
+            return getGrid().getInternalIdForColumn((Column<T, ?>) column);
         }
     };
 
@@ -3660,14 +3688,26 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * Returns a column identified by its internal id.
+     * Returns a column identified by its internal id. This id should not be
+     * confused with the user-defined identifier.
      *
-     * @see Column#getInternalId()
      * @param columnId
      *            the internal id of column
      * @return column identified by internal id
      */
-    public Column<T, ?> getColumnByInternalId(String columnId) {
+    protected Column<T, ?> getColumnByInternalId(String columnId) {
         return columnKeys.get(columnId);
+    }
+
+    /**
+     * Returns the internal id for given column. This id should not be confused
+     * with the user-defined identifier.
+     *
+     * @param column
+     *            the column
+     * @return internal id of given column
+     */
+    protected String getInternalIdForColumn(Column<T, ?> column) {
+        return column.getInternalId();
     }
 }

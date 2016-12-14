@@ -73,10 +73,10 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
     public static class RendererClickEvent<T> extends ClickEvent {
 
         private final T item;
-        private final Column column;
+        private final Column<T, ?> column;
 
-        protected RendererClickEvent(Grid<T> source, T item, Column column,
-                MouseEventDetails mouseEventDetails) {
+        protected RendererClickEvent(Grid<T> source, T item,
+                Column<T, ?> column, MouseEventDetails mouseEventDetails) {
             super(source, mouseEventDetails);
             this.item = item;
             this.column = column;
@@ -96,7 +96,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
          *
          * @return the column of the click event
          */
-        public Column getColumn() {
+        public Column<T, ?> getColumn() {
             return column;
         }
     }
@@ -132,7 +132,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
                 MouseEventDetails mouseDetails) -> {
             Grid<T> grid = getParentGrid();
             T item = grid.getDataCommunicator().getKeyMapper().get(rowKey);
-            Column<T, ?> column = grid.getColumnByInternalId(columnId);
+            Column<T, V> column = getParent();
 
             fireEvent(
                     new RendererClickEvent<>(grid, item, column, mouseDetails));

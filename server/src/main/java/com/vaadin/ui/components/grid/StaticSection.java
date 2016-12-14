@@ -121,7 +121,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                 throw new IllegalArgumentException(
                         "Given column does not exist in this Grid");
             }
-            internalAddCell(column.getInternalId());
+            internalAddCell(section.getInternalIdForColumn(column));
         }
 
         /**
@@ -184,7 +184,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
             Column<?, ?> column = section.getGrid().getColumn(columnId);
             Objects.requireNonNull(column,
                     "No column matching given identifier");
-            return internalGetCell(column.getInternalId());
+            return getCell(column);
         }
 
         /**
@@ -199,7 +199,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          *             if no cell was found for the column
          */
         public CELL getCell(Column<?, ?> column) {
-            return internalGetCell(column.getInternalId());
+            return internalGetCell(section.getInternalIdForColumn(column));
         }
 
         /**
@@ -321,7 +321,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                             entry.getValue().getCellState());
                 }
                 cellElement.attr("column-ids",
-                        columnIds.map(section.getGrid()::getColumnByInternalId)
+                        columnIds.map(section::getColumnByInternalId)
                                 .map(Column::getId)
                                 .collect(Collectors.joining(",")));
             }
@@ -572,6 +572,10 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
     protected abstract SectionState getState(boolean markAsDirty);
 
     protected abstract Grid<?> getGrid();
+
+    protected abstract Column<?, ?> getColumnByInternalId(String internalId);
+
+    protected abstract String getInternalIdForColumn(Column<?, ?> column);
 
     /**
      * Marks the state of this section as modified.
