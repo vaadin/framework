@@ -7,8 +7,8 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToBooleanConverter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.StringToBooleanConverter;
 
 public class StringToBooleanConverterTest extends AbstractStringConverterTest {
 

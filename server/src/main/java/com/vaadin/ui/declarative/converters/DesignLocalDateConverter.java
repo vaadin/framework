@@ -20,9 +20,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**

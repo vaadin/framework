@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.Person;
 
 /**

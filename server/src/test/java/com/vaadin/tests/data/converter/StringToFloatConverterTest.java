@@ -2,8 +2,8 @@ package com.vaadin.tests.data.converter;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToFloatConverter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.StringToFloatConverter;
 
 public class StringToFloatConverterTest extends AbstractStringConverterTest {
 

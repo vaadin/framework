@@ -21,7 +21,7 @@ import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 
 /**
  * Simple validator to check against {@code null} value and empty {@link String}

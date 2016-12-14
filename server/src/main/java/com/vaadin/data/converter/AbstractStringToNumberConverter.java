@@ -14,13 +14,15 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Locale;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
  * A converter that converts from the number type T to {@link String} and back.

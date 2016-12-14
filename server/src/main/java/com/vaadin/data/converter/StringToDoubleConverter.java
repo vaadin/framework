@@ -14,12 +14,13 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
  * A converter that converts from {@link String} to {@link Double} and back.

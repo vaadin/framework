@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.data.ValidationResult;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 
 /**
  * A string validator comparing the string against a Java regular expression.

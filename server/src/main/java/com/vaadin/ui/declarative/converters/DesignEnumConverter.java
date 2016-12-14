@@ -17,9 +17,9 @@ package com.vaadin.ui.declarative.converters;
 
 import java.util.Locale;
 
+import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**

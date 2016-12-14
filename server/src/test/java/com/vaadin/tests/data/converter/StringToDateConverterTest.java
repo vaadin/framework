@@ -5,8 +5,8 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToDateConverter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.StringToDateConverter;
 
 public class StringToDateConverterTest extends AbstractConverterTest {
 
