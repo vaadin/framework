@@ -15,25 +15,39 @@
  */
 package com.vaadin.event.selection;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
+import java.lang.reflect.Method;
+
+import com.vaadin.event.SerializableEventListener;
+import com.vaadin.util.ReflectTools;
 
 /**
- * A listener for {@code SingleSelectionEvent}.
+ * A listener for listening to selection changes on a single selection
+ * component.
  *
  * @author Vaadin Ltd.
+ *
+ * @since 8.0
  *
  * @param <T>
  *            the type of the selected item
  *
+ * @see SelectionModel.Single
  * @see SingleSelectionEvent
- *
- * @since 8.0
  */
 @FunctionalInterface
-public interface SingleSelectionListener<T>
-        extends Consumer<SingleSelectionEvent<T>>, Serializable {
+public interface SingleSelectionListener<T> extends SerializableEventListener {
 
-    @Override
-    public void accept(SingleSelectionEvent<T> event);
+    /** For internal use only. Might be removed in the future. */
+    @Deprecated
+    static final Method SELECTION_CHANGE_METHOD = ReflectTools.findMethod(
+            SingleSelectionListener.class, "selectionChange",
+            SingleSelectionEvent.class);
+
+    /**
+     * Invoked when selection has been changed by the user or programmatically.
+     *
+     * @param event
+     *            the selection event
+     */
+    public void selectionChange(SingleSelectionEvent<T> event);
 }

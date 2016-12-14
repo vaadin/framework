@@ -72,7 +72,7 @@ public class LenientMode extends TestBase
     }
 
     @Override
-    public void accept(ValueChangeEvent<LocalDate> event) {
+    public void valueChange(ValueChangeEvent<LocalDate> event) {
         getMainWindow().showNotification("New value" + event.getValue());
     }
 

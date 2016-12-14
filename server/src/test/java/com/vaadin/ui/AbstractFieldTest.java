@@ -58,7 +58,7 @@ public class AbstractFieldTest extends EasyMockSupport {
 
     @Test
     public void valueChangeListenerInvoked() {
-        l.accept(EasyMock.capture(capture));
+        l.valueChange(EasyMock.capture(capture));
         replayAll();
 
         field.setValue("foo");
@@ -72,7 +72,7 @@ public class AbstractFieldTest extends EasyMockSupport {
 
     @Test
     public void valueChangeListenerInvokedFromClient() {
-        l.accept(EasyMock.capture(capture));
+        l.valueChange(EasyMock.capture(capture));
         replayAll();
 
         field.setValue("foo");

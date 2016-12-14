@@ -559,7 +559,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
         return addSelectionListener(event -> {
-            listener.accept(new ValueChangeEvent<>(event.getComponent(), this,
+            listener.valueChange(new ValueChangeEvent<>(event.getComponent(), this,
                     event.isUserOriginated()));
         });
     }

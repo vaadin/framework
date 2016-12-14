@@ -602,7 +602,7 @@ public class GridMultiSelectionModelTest {
                 });
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().accept(new MultiSelectionEvent<>(grid,
+        selectionListener.get().selectionChange(new MultiSelectionEvent<>(grid,
                 model.asMultiSelect(), Collections.emptySet(), true));
 
         Assert.assertEquals(grid, event.get().getComponent());

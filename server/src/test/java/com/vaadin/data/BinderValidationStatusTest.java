@@ -24,14 +24,14 @@ import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.data.ValidationStatus.Status;
+import com.vaadin.data.BindingValidationStatus.Status;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Label;
 
 public class BinderValidationStatusTest
         extends BinderTestBase<Binder<Person>, Person> {
 
-    protected final static ValidationStatusHandler NOOP = event -> {
+    protected final static BindingValidationStatusHandler NOOP = event -> {
     };
 
     @Before
@@ -48,7 +48,7 @@ public class BinderValidationStatusTest
 
     @Test
     public void bindingWithStatusHandler_handlerGetsEvents() {
-        AtomicReference<ValidationStatus<?>> statusCapture = new AtomicReference<>();
+        AtomicReference<BindingValidationStatus<?>> statusCapture = new AtomicReference<>();
         BindingBuilder<Person, String> binding = binder.forField(nameField)
                 .withValidator(notEmpty).withValidationStatusHandler(evt -> {
                     Assert.assertNull(statusCapture.get());
@@ -63,7 +63,7 @@ public class BinderValidationStatusTest
         binder.validate();
 
         Assert.assertNotNull(statusCapture.get());
-        ValidationStatus<?> evt = statusCapture.get();
+        BindingValidationStatus<?> evt = statusCapture.get();
         Assert.assertEquals(Status.ERROR, evt.getStatus());
         Assert.assertEquals(EMPTY_ERROR_MESSAGE, evt.getMessage().get());
         Assert.assertEquals(nameField, evt.getField());
@@ -235,13 +235,13 @@ public class BinderValidationStatusTest
 
         Assert.assertNull(nameField.getComponentError());
 
-        List<ValidationStatus<?>> bindingStatuses = status
+        List<BindingValidationStatus<?>> bindingStatuses = status
                 .getFieldValidationStatuses();
         Assert.assertNotNull(bindingStatuses);
         Assert.assertEquals(1, status.getFieldValidationErrors().size());
         Assert.assertEquals(2, bindingStatuses.size());
 
-        ValidationStatus<?> r = bindingStatuses.get(0);
+        BindingValidationStatus<?> r = bindingStatuses.get(0);
         Assert.assertTrue(r.isError());
         Assert.assertEquals(EMPTY_ERROR_MESSAGE, r.getMessage().get());
         Assert.assertEquals(nameField, r.getField());
@@ -328,13 +328,13 @@ public class BinderValidationStatusTest
 
         Assert.assertNull(nameField.getComponentError());
 
-        List<ValidationStatus<?>> bindingStatuses = status
+        List<BindingValidationStatus<?>> bindingStatuses = status
                 .getFieldValidationStatuses();
         Assert.assertNotNull(bindingStatuses);
         Assert.assertEquals(1, status.getFieldValidationErrors().size());
         Assert.assertEquals(2, bindingStatuses.size());
 
-        ValidationStatus<?> r = bindingStatuses.get(0);
+        BindingValidationStatus<?> r = bindingStatuses.get(0);
         Assert.assertTrue(r.isError());
         Assert.assertEquals(EMPTY_ERROR_MESSAGE, r.getMessage().get());
         Assert.assertEquals(nameField, r.getField());
@@ -497,7 +497,7 @@ public class BinderValidationStatusTest
         nameField.setValue("foo");
         binder.validate();
 
-        List<ValidationStatus<?>> results = capture.get()
+        List<BindingValidationStatus<?>> results = capture.get()
                 .getFieldValidationStatuses();
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());

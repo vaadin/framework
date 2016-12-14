@@ -313,7 +313,7 @@ public class GridSingleSelectionModelTest {
                 });
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().accept(new SingleSelectionEvent<>(grid,
+        selectionListener.get().selectionChange(new SingleSelectionEvent<>(grid,
                 select.asSingleSelect(), true));
 
         Assert.assertEquals(grid, event.get().getComponent());
