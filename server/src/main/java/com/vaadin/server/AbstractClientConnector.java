@@ -808,7 +808,11 @@ public abstract class AbstractClientConnector
      *            type <code>eventType</code> with one or more methods.
      *
      * @since 6.2
+     * @deprecated use a {@link Registration} from
+     *             {@link #addListener(Class, Object, Method)} to remove a
+     *             listener
      */
+    @Deprecated
     protected void removeListener(String eventIdentifier, Class<?> eventType,
             Object target) {
         if (eventRouter != null) {
@@ -874,7 +878,7 @@ public abstract class AbstractClientConnector
      * <p>
      * Note: Using this method is discouraged because it cannot be checked
      * during compilation. Use {@link #addListener(Class, Object, Method)} or
-     * {@link #addListener(com.vaadin.ui.Component.Listener)} instead.
+     * {@link #addListener(String, Class, Object, Method) instead.
      * </p>
      *
      * @param eventType
@@ -916,7 +920,11 @@ public abstract class AbstractClientConnector
      * @param target
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
+     * @deprecated use a {@link Registration} from
+     *             {@link #addListener} to remove a
+     *             listener
      */
+    @Deprecated
     @Override
     public void removeListener(Class<?> eventType, Object target) {
         if (eventRouter != null) {
