@@ -652,7 +652,7 @@ public class BinderBookOfVaadinTest {
             formStatusLabel.setVisible(!errorMessage.isEmpty());
 
             // Let the default handler show messages for each field
-            defaultHandler.accept(status);
+            defaultHandler.statusChanged(status);
         });
 
         final String bindingMessage = "uneven";

@@ -28,7 +28,7 @@ import com.vaadin.data.Binder.BindingBuilder;
  * associated with a ValidationResult {@link #getResult}.
  * <p>
  * Use
- * {@link BindingBuilder#withValidationStatusHandler(ValidationStatusHandler)}
+ * {@link BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)}
  * to register a handler for field level validation status changes.
  *
  * @author Vaadin Ltd
@@ -38,9 +38,9 @@ import com.vaadin.data.Binder.BindingBuilder;
  *            status changed, matches the field type unless a converter has been
  *            set
  *
- * @see BindingBuilder#withValidationStatusHandler(ValidationStatusHandler)
+ * @see BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)
  * @see Binding#validate()
- * @see ValidationStatusHandler
+ * @see BindingValidationStatusHandler
  * @see BinderValidationStatus
  *
  * @since 8.0

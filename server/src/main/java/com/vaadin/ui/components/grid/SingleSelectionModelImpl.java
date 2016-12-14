@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,7 +30,6 @@ import com.vaadin.shared.ui.grid.SingleSelectionModelState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid.SingleSelectionModel;
 import com.vaadin.ui.SingleSelect;
-import com.vaadin.util.ReflectTools;
 
 /**
  * Single selection model for grid.
@@ -44,10 +42,6 @@ import com.vaadin.util.ReflectTools;
  */
 public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         implements SingleSelectionModel<T> {
-
-    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(SingleSelectionListener.class, "accept",
-                    SingleSelectionEvent.class);
 
     private T selectedItem = null;
 
@@ -83,7 +77,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
     public Registration addSingleSelectionListener(
             SingleSelectionListener<T> listener) {
         return addListener(SingleSelectionEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
+                SingleSelectionListener.SELECTION_CHANGE_METHOD);
     }
 
     @Override
@@ -250,7 +244,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
                     com.vaadin.data.HasValue.ValueChangeListener<T> listener) {
                 return SingleSelectionModelImpl.this.addSingleSelectionListener(
                         (SingleSelectionListener<T>) event -> listener
-                                .accept(event));
+                                .valueChange(event));
             }
 
             @Override

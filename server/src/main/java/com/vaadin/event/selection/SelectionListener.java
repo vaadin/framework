@@ -15,7 +15,7 @@
  */
 package com.vaadin.event.selection;
 
-import com.vaadin.server.SerializableConsumer;
+import com.vaadin.event.SerializableEventListener;
 
 /**
  * A listener for {@code SelectionEvent}.
@@ -33,7 +33,14 @@ import com.vaadin.server.SerializableConsumer;
  * @since 8.0
  */
 @FunctionalInterface
-public interface SelectionListener<T>
-        extends SerializableConsumer<SelectionEvent<T>> {
+public interface SelectionListener<T> extends SerializableEventListener {
+
+    /**
+     * Invoked when the selection has changed by user or programmatically.
+     *
+     * @param event
+     *            the selection event
+     */
+    public void selectionChange(SelectionEvent<T> event);
 
 }

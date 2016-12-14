@@ -31,7 +31,7 @@ import com.vaadin.ui.Label;
 public class BinderValidationStatusTest
         extends BinderTestBase<Binder<Person>, Person> {
 
-    protected final static ValidationStatusHandler NOOP = event -> {
+    protected final static BindingValidationStatusHandler NOOP = event -> {
     };
 
     @Before

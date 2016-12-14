@@ -269,7 +269,7 @@ public class AbstractSingleSelectTest {
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get()
-                .accept(new SingleSelectionEvent<>(select, true));
+                .selectionChange(new SingleSelectionEvent<>(select, true));
 
         Assert.assertEquals(select, event.get().getComponent());
         Assert.assertEquals(value, event.get().getValue());

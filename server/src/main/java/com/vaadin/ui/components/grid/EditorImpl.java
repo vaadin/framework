@@ -50,7 +50,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             implements BinderValidationStatusHandler<T> {
 
         @Override
-        public void accept(BinderValidationStatus<T> status) {
+        public void statusChanged(BinderValidationStatus<T> status) {
             boolean ok = status.isOk();
             if (saving) {
                 rpc.confirmSave(ok);

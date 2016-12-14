@@ -15,10 +15,8 @@
  */
 package com.vaadin.data;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
-
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.ui.AbstractComponent;
 
 /**
@@ -39,7 +37,14 @@ import com.vaadin.ui.AbstractComponent;
  *
  */
 @FunctionalInterface
-public interface ValidationStatusHandler
-        extends Consumer<ValidationStatus<?>>, Serializable {
+public interface BindingValidationStatusHandler
+        extends SerializableEventListener {
 
+    /**
+     * Invoked when the validation status has changed in a binding.
+     *
+     * @param statusChange
+     *            the changed status
+     */
+    public void statusChanged(ValidationStatus<?> statusChange);
 }

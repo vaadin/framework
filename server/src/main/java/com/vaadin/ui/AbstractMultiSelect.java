@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -45,7 +44,6 @@ import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.abstractmultiselect.AbstractMultiSelectState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
-import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -122,11 +120,6 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         }
     }
 
-    @Deprecated
-    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(MultiSelectionListener.class, "accept",
-                    MultiSelectionEvent.class);
-
     /**
      * The item enabled status provider. It is up to the implementing class to
      * support this or not.
@@ -156,7 +149,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     public Registration addSelectionListener(
             MultiSelectionListener<T> listener) {
         return addListener(MultiSelectionEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
+                MultiSelectionListener.SELECTION_CHANGE_METHOD);
     }
 
     @Override
@@ -231,7 +224,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<Set<T>> listener) {
-        return addSelectionListener(event -> listener.accept(
+        return addSelectionListener(event -> listener.valueChange(
                 new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 

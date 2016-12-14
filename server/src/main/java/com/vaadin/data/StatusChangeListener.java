@@ -15,21 +15,24 @@
  */
 package com.vaadin.data;
 
-import java.io.Serializable;
+import com.vaadin.event.SerializableEventListener;
 
 /**
- * Listener interface for {@link StatusChangeEvent}s.
- * 
- * @see StatusChangeEvent
+ * Listener interface for status change events from binder.
+ *
  * @author Vaadin Ltd
  *
+ * @since 8.0
+ *
+ * @see StatusChangeEvent
+ * @see Binder#addStatusChangeListener(StatusChangeListener)
  */
 @FunctionalInterface
-public interface StatusChangeListener extends Serializable {
+public interface StatusChangeListener extends SerializableEventListener {
 
     /**
      * Notifies the listener about status change {@code event}.
-     * 
+     *
      * @param event
      *            a status change event, not null
      */

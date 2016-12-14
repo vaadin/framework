@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +36,6 @@ import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
-import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 
@@ -56,11 +54,6 @@ import elemental.json.Json;
  */
 public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         implements SingleSelect<T> {
-
-    @Deprecated
-    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(SingleSelectionListener.class, "accept",
-                    SingleSelectionEvent.class);
 
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
@@ -106,7 +99,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     public Registration addSelectionListener(
             SingleSelectionListener<T> listener) {
         return addListener(SingleSelectionEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
+                SingleSelectionListener.SELECTION_CHANGE_METHOD);
     }
 
     /**
@@ -168,7 +161,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> listener.accept(
+        return addSelectionListener(event -> listener.valueChange(
                 new ValueChangeEvent<>(this, event.isUserOriginated())));
     }
 

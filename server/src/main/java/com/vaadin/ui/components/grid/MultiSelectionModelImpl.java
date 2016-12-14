@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -35,7 +34,6 @@ import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
 import com.vaadin.shared.ui.grid.MultiSelectionModelState;
 import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.MultiSelect;
-import com.vaadin.util.ReflectTools;
 
 /**
  * Multiselection model for grid.
@@ -121,11 +119,6 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             onDeselectAll(true);
         }
     }
-
-    @Deprecated
-    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(MultiSelectionListener.class, "accept",
-                    MultiSelectionEvent.class);
 
     private Set<T> selection = new LinkedHashSet<>();
 
@@ -247,7 +240,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     public Registration addMultiSelectionListener(
             MultiSelectionListener<T> listener) {
         return addListener(MultiSelectionEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
+                MultiSelectionListener.SELECTION_CHANGE_METHOD);
     }
 
     @Override
@@ -296,7 +289,8 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             @Override
             public Registration addValueChangeListener(
                     com.vaadin.data.HasValue.ValueChangeListener<Set<T>> listener) {
-                return addSelectionListener(event -> listener.accept(event));
+                return addSelectionListener(
+                        event -> listener.valueChange(event));
             }
 
             @Override

@@ -318,7 +318,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
 
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().accept(new MultiSelectionEvent<>(select,
+        selectionListener.get().selectionChange(new MultiSelectionEvent<>(select,
                 Mockito.mock(Set.class), true));
 
         Assert.assertEquals(select, event.get().getComponent());
