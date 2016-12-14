@@ -17,7 +17,6 @@ package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -122,7 +121,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                 throw new IllegalArgumentException(
                         "Given column does not exist in this Grid");
             }
-            addCell(column.getInternalId());
+            internalAddCell(column.getInternalId());
         }
 
         /**
@@ -307,6 +306,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                                 .getValue().contains(entry.getKey()))
                         .findFirst();
                 Stream<String> columnIds = Stream.of(entry.getKey());
+
                 if (groupCell.isPresent()) {
                     Set<String> orderedSet = new LinkedHashSet<>(
                             cells.keySet());
@@ -320,8 +320,16 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                     writeCellState(cellElement, designContext,
                             entry.getValue().getCellState());
                 }
-                cellElement.attr("column-ids",
-                        columnIds.collect(Collectors.joining(",")));
+                // TODO: Make column finding based on internal id easier.
+                cellElement
+                        .attr("column-ids",
+                                columnIds
+                                        .map(id -> section.getGrid()
+                                                .getColumns()
+                                                .stream().filter(
+                                                        c -> c.getInternalId() == id)
+                                                .findAny().orElse(null).getId())
+                                        .collect(Collectors.joining(",")));
             }
         }
 
@@ -571,8 +579,6 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
     protected abstract Grid<?> getGrid();
 
-    protected abstract Collection<? extends Column<?, ?>> getColumns();
-
     /**
      * Marks the state of this section as modified.
      */
@@ -594,8 +600,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         rows.add(index, row);
         getState(true).rows.add(index, row.getRowState());
 
-        getColumns().stream()
-                .forEach(column -> row.addCell(column.getInternalId()));
+        getGrid().getColumns().stream().forEach(row::addCell);
 
         return row;
     }
@@ -662,7 +667,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
      */
     public void addColumn(String columnId) {
         for (ROW row : rows) {
-            row.addCell(columnId);
+            row.internalAddCell(columnId);
         }
     }
 

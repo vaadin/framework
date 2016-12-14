@@ -1231,7 +1231,7 @@ public class Grid<T> extends AbstractListing<T>
 
             HeaderRow row = getParent().getDefaultHeaderRow();
             if (row != null) {
-                row.getCell(getInternalId()).setText(caption);
+                row.getCell(this).setText(caption);
             }
 
             return this;
@@ -1831,8 +1831,12 @@ public class Grid<T> extends AbstractListing<T>
 
             ColumnState defaultState = new ColumnState();
 
+            if (getId() == null) {
+                setId("column" + getParent().getColumns().indexOf(this));
+            }
+
             DesignAttributeHandler.writeAttribute("column-id", attributes,
-                    getInternalId(), null, String.class, designContext);
+                    getId(), null, String.class, designContext);
 
             // Sortable is a special attribute that depends on the data
             // provider.
@@ -2370,11 +2374,6 @@ public class Grid<T> extends AbstractListing<T>
         protected SectionState getState(boolean markAsDirty) {
             return Grid.this.getState(markAsDirty).header;
         }
-
-        @Override
-        protected Collection<Column<T, ?>> getColumns() {
-            return Grid.this.getColumns();
-        }
     };
 
     private class FooterImpl extends Footer {
@@ -2387,11 +2386,6 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         protected SectionState getState(boolean markAsDirty) {
             return Grid.this.getState(markAsDirty).footer;
-        }
-
-        @Override
-        protected Collection<Column<T, ?>> getColumns() {
-            return Grid.this.getColumns();
         }
     };
 
@@ -2508,8 +2502,7 @@ public class Grid<T> extends AbstractListing<T>
         getHeader().addColumn(identifier);
 
         if (getDefaultHeaderRow() != null) {
-            getDefaultHeaderRow().getCell(identifier)
-                    .setText(column.getCaption());
+            getDefaultHeaderRow().getCell(column).setText(column.getCaption());
         }
     }
 
@@ -2523,6 +2516,7 @@ public class Grid<T> extends AbstractListing<T>
         if (columnSet.remove(column)) {
             String columnId = column.getInternalId();
             columnKeys.remove(columnId);
+            columnIds.remove(column.getId());
             column.remove();
             getHeader().removeColumn(columnId);
             getFooter().removeColumn(columnId);
@@ -2574,7 +2568,7 @@ public class Grid<T> extends AbstractListing<T>
      */
     public List<Column<T, ?>> getColumns() {
         return Collections.unmodifiableList(getState(false).columnOrder.stream()
-                .map(this::getColumn).collect(Collectors.toList()));
+                .map(columnKeys::get).collect(Collectors.toList()));
     }
 
     /**
@@ -3189,7 +3183,7 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     private String getGeneratedIdentifier() {
-        String columnId = "c" + counter;
+        String columnId = "" + counter;
         counter++;
         return columnId;
     }

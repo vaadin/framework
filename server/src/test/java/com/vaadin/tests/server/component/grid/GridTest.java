@@ -68,13 +68,6 @@ public class GridTest {
                 grid.getHeaderRow(0).getCell("foo").getText());
     }
 
-    @Test
-    public void testGridColumnGeneratedIdentifier() {
-        assertEquals("Unexpected caption on a generated Column",
-                "Generated Column0",
-                grid.getColumn("generatedColumn0").getCaption());
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void testGridMultipleColumnsWithSameIdentifier() {
         grid.addColumn(t -> t).setId("foo");
