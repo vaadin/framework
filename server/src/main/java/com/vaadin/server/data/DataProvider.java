@@ -22,12 +22,20 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.Listing;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
 /**
- * Minimal DataProvider API for communication between the DataProvider and a
- * back end service.
+ * A common interface for fetching data from a backend. The {@link DataProvider}
+ * interface is used by {@link Listing} components. The listing component will
+ * provide a {@link Query} object with request information, and the data
+ * provider uses this information to return a stream containing requested beans.
+ * <p>
+ * Vaadin comes with a ready-made solution for in-memory data, known as
+ * {@link ListDataProvider} which can be created using static {@code create}
+ * methods in this interface. For custom backends such as SQL, EntityManager,
+ * REST APIs or SpringData, use a {@link BackEndDataProvider} or its subclass.
  *
  * @author Vaadin Ltd.
  *
@@ -36,6 +44,9 @@ import com.vaadin.shared.Registration;
  * @param <F>
  *            filter type
  *
+ * @see #create(Collection)
+ * @see #create(Stream)
+ * @see #create(Object...)
  * @see ListDataProvider
  * @see BackEndDataProvider
  *
