@@ -32,17 +32,10 @@ import com.vaadin.shared.Registration;
  * provide a {@link Query} object with request information, and the data
  * provider uses this information to return a stream containing requested beans.
  * <p>
- * The data type of a data provider is the data that the backend has. It can be
- * a Java object when using ORM, or a JsonObject in the case of a RestAPI. The
- * application developer sets up the listing components to display the data in a
- * specific way, usually with a Java 8 lambda expression or a method reference.
- * <p>
  * Vaadin comes with a ready-made solution for in-memory data, known as
- * {@link ListDataProvider} which can be created using static create methods in
- * this interface.
- * <p>
- * There is also {@link BackEndDataProvider} implementation to use with any
- * custom backend such as SQL, EntityManager, REST APIs, SpringData.
+ * {@link ListDataProvider} which can be created using static {@code create}
+ * methods in this interface. For custom backends such as SQL, EntityManager,
+ * REST APIs, SpringData use a {@link BackEndDataProvider} or its subclass.
  *
  * @author Vaadin Ltd.
  *
