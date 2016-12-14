@@ -44,6 +44,7 @@ import com.vaadin.client.ui.ActionOwner;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.client.ui.VCalendar;
 import com.vaadin.v7.client.ui.VCalendar.BackwardListener;
@@ -71,6 +72,7 @@ import com.vaadin.v7.shared.ui.calendar.CalendarClientRpc;
 import com.vaadin.v7.shared.ui.calendar.CalendarEventId;
 import com.vaadin.v7.shared.ui.calendar.CalendarServerRpc;
 import com.vaadin.v7.shared.ui.calendar.CalendarState;
+import com.vaadin.v7.shared.ui.calendar.CalendarState.EventSortOrder;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.ui.Calendar;
 
@@ -352,6 +354,12 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
 
         widget.setEventCaptionAsHtml(state.eventCaptionAsHtml);
 
+        EventSortOrder oldOrder = getWidget().getSortOrder();
+        if (!SharedUtil.equals(oldOrder, getState().eventSortOrder)) {
+            getWidget().setSortOrder(getState().eventSortOrder);
+        }
+        updateEventsInView();
+
         List<CalendarState.Day> days = state.days;
         List<CalendarState.Event> events = state.events;
 
@@ -447,6 +455,27 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
          * that there are no tooltips during onStateChange when this is used.
          */
         return true;
+    }
+
+    private void updateEventsInView() {
+        CalendarState state = getState();
+        List<CalendarState.Day> days = state.days;
+        List<CalendarState.Event> events = state.events;
+
+        CalendarDropHandler dropHandler = getWidget().getDropHandler();
+        if (showingMonthView()) {
+            updateMonthView(days, events);
+            if (dropHandler != null
+                    && !(dropHandler instanceof CalendarMonthDropHandler)) {
+                getWidget().setDropHandler(new CalendarMonthDropHandler(this));
+            }
+        } else {
+            updateWeekView(days, events);
+            if (dropHandler != null
+                    && !(dropHandler instanceof CalendarWeekDropHandler)) {
+                getWidget().setDropHandler(new CalendarWeekDropHandler(this));
+            }
+        }
     }
 
     private void updateMonthView(List<CalendarState.Day> days,

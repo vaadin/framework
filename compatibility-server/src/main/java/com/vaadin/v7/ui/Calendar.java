@@ -57,6 +57,7 @@ import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.shared.ui.calendar.CalendarEventId;
 import com.vaadin.v7.shared.ui.calendar.CalendarServerRpc;
 import com.vaadin.v7.shared.ui.calendar.CalendarState;
+import com.vaadin.v7.shared.ui.calendar.CalendarState.EventSortOrder;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvent;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
@@ -996,6 +997,36 @@ public class Calendar extends AbstractLegacyComponent
                         && !weeklyCaptionFormat.equals(dateFormatPattern)) {
             weeklyCaptionFormat = dateFormatPattern;
             markAsDirty();
+        }
+    }
+
+    /**
+     * Sets sort order for events. By default sort order is
+     * {@link EventSortOrder#DURATION_DESC}.
+     * 
+     * @param order
+     *            sort strategy for events
+     */
+    public void setEventSortOrder(EventSortOrder order) {
+        if (order == null) {
+            getState().eventSortOrder = EventSortOrder.DURATION_DESC;
+        } else {
+            getState().eventSortOrder = EventSortOrder.values()[order
+                    .ordinal()];
+        }
+    }
+
+    /**
+     * Returns sort order for events.
+     * 
+     * @return currently active sort strategy
+     */
+    public EventSortOrder getEventSortOrder() {
+        EventSortOrder order = getState(false).eventSortOrder;
+        if (order == null) {
+            return EventSortOrder.DURATION_DESC;
+        } else {
+            return order;
         }
     }
 
