@@ -17,7 +17,7 @@ package com.vaadin.data;
 
 import org.junit.Before;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.converter.Converter;
 import com.vaadin.ui.TextField;
 
 /**

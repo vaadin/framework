@@ -22,8 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.Converter;
+import com.vaadin.data.converter.ValueContext;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;

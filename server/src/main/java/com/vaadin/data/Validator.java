@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.ValueContext;
 import com.vaadin.server.SerializablePredicate;
 
 /**

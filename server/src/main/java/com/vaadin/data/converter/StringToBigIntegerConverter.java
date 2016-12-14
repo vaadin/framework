@@ -13,9 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -23,7 +24,7 @@ import java.util.Locale;
 import com.vaadin.data.Result;
 
 /**
- * A converter that converts from {@link String} to {@link BigDecimal} and back.
+ * A converter that converts from {@link String} to {@link BigInteger} and back.
  * Uses the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
@@ -36,16 +37,15 @@ import com.vaadin.data.Result;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class StringToBigDecimalConverter
-        extends AbstractStringToNumberConverter<BigDecimal> {
-
+public class StringToBigIntegerConverter
+        extends AbstractStringToNumberConverter<BigInteger> {
     /**
      * Creates a new converter instance with the given error message.
      *
      * @param errorMessage
      *            the error message to use if conversion fails
      */
-    public StringToBigDecimalConverter(String errorMessage) {
+    public StringToBigIntegerConverter(String errorMessage) {
         super(errorMessage);
     }
 
@@ -60,10 +60,16 @@ public class StringToBigDecimalConverter
     }
 
     @Override
-    public Result<BigDecimal> convertToModel(String value,
+    public Result<BigInteger> convertToModel(String value,
             ValueContext context) {
         return convertToNumber(value, context.getLocale().orElse(null))
-                .map(number -> (BigDecimal) number);
+                .map(number -> {
+                    if (number == null) {
+                        return null;
+                    } else {
+                        return ((BigDecimal) number).toBigInteger();
+                    }
+                });
     }
 
 }

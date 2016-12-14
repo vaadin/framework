@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.server.VaadinRequest;

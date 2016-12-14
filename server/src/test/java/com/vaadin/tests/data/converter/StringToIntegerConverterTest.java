@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.StringToIntegerConverter;
+import com.vaadin.data.converter.ValueContext;
 
 public class StringToIntegerConverterTest extends AbstractConverterTest {
 

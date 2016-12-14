@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -22,12 +22,9 @@ import java.util.Locale;
 import com.vaadin.data.Result;
 
 /**
- * A converter that converts from {@link String} to {@link Double} and back.
- * Uses the given locale and a {@link NumberFormat} instance for formatting and
+ * A converter that converts from {@link String} to {@link Long} and back. Uses
+ * the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
- * <p>
- * Leading and trailing white spaces are ignored when converting from a String.
- * </p>
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
@@ -35,8 +32,8 @@ import com.vaadin.data.Result;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class StringToDoubleConverter
-        extends AbstractStringToNumberConverter<Double> {
+public class StringToLongConverter
+        extends AbstractStringToNumberConverter<Long> {
 
     /**
      * Creates a new converter instance with the given error message.
@@ -44,20 +41,35 @@ public class StringToDoubleConverter
      * @param errorMessage
      *            the error message to use if conversion fails
      */
-    public StringToDoubleConverter(String errorMessage) {
+    public StringToLongConverter(String errorMessage) {
         super(errorMessage);
     }
 
+    /**
+     * Returns the format used by {@link #convertToPresentation(Long, Locale)}
+     * and {@link #convertToModel(String, Locale)}.
+     *
+     * @param locale
+     *            The locale to use
+     * @return A NumberFormat instance
+     */
     @Override
-    public Result<Double> convertToModel(String value, ValueContext context) {
+    protected NumberFormat getFormat(Locale locale) {
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        return NumberFormat.getIntegerInstance(locale);
+    }
+
+    @Override
+    public Result<Long> convertToModel(String value, ValueContext context) {
         Result<Number> n = convertToNumber(value,
                 context.getLocale().orElse(null));
-
         return n.map(number -> {
             if (number == null) {
                 return null;
             } else {
-                return number.doubleValue();
+                return number.longValue();
             }
         });
     }

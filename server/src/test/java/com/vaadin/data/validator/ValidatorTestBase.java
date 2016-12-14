@@ -7,7 +7,7 @@ import org.junit.Before;
 
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.ValueContext;
 import com.vaadin.ui.Label;
 
 public class ValidatorTestBase {

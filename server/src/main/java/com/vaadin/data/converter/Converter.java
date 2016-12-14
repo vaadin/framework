@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.io.Serializable;
 import java.util.function.Function;

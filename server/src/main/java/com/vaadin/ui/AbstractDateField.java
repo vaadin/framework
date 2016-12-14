@@ -31,7 +31,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.ValidationResult;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.ValueContext;
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;

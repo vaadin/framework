@@ -36,8 +36,8 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.Converter;
+import com.vaadin.data.converter.ValueContext;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Alignment;

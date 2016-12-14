@@ -20,8 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.Converter;
+import com.vaadin.data.converter.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**

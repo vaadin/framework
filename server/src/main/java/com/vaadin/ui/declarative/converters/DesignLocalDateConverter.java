@@ -21,8 +21,8 @@ import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.converter.Converter;
+import com.vaadin.data.converter.ValueContext;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 
 /**

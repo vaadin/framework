@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
