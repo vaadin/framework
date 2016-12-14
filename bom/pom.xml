@@ -5,7 +5,7 @@
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-parent</artifactId>
         <version>1.0.0</version>
-	<relativePath />
+        <relativePath />
     </parent>
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-bom</artifactId>
