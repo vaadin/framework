@@ -32,7 +32,6 @@ import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
 import com.vaadin.shared.ui.grid.MultiSelectionModelState;
-import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.MultiSelect;
 
 /**
@@ -200,7 +199,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     @Override
     public boolean isSelected(T item) {
         return isAllSelected()
-                || com.vaadin.ui.Grid.MultiSelectionModel.super.isSelected(
+                || com.vaadin.ui.components.grid.MultiSelectionModel.super.isSelected(
                         item);
     }
 

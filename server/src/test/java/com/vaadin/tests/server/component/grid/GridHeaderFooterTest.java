@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.components.grid.HeaderRow;
 
 public class GridHeaderFooterTest {
 

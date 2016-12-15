@@ -28,7 +28,6 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.grid.SingleSelectionModelState;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid.SingleSelectionModel;
 import com.vaadin.ui.SingleSelect;
 
 /**
