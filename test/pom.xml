@@ -64,7 +64,7 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench</artifactId>
+            <artifactId>vaadin-testbench-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

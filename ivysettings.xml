@@ -34,7 +34,7 @@
         <module organisation="com.vaadin" name="vaadin-testbench-core"
             resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-testbench-api"
-            resolver="vaadin-addons" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-buildhelpers"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-root"
