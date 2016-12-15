@@ -78,7 +78,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                 String message = errorGenerator.apply(fieldToColumn, status);
 
                 List<String> columnIds = fieldToColumn.values().stream()
-                        .map(EditorImpl.this::getInternalIdForColumn)
+                        .map(column -> getInternalIdForColumn(column))
                         .collect(Collectors.toList());
 
                 rpc.setErrorMessage(message, columnIds);
