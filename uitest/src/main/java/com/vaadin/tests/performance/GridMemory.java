@@ -46,16 +46,16 @@ public class GridMemory extends AbstractBeansMemoryTest<Grid<Person>> {
     @Override
     protected Grid<Person> createComponent() {
         Grid<Person> grid = new Grid<>();
-        grid.addColumn("First Name", Person::getFirstName);
-        grid.addColumn("Last Name", Person::getLastName);
-        grid.addColumn("Street",
-                person -> Optional.ofNullable(person.getAddress())
-                        .map(Address::getStreetAddress).orElse(null));
-        grid.addColumn("Zip", person -> Optional.ofNullable(person.getAddress())
-                .map(Address::getPostalCode).map(Object::toString).orElse(""));
-        grid.addColumn("City",
-                person -> Optional.ofNullable(person.getAddress())
-                        .map(Address::getCity).orElse(null));
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        grid.addColumn(Person::getLastName).setCaption("Last Name");
+        grid.addColumn(person -> Optional.ofNullable(person.getAddress())
+                .map(Address::getStreetAddress).orElse(null))
+                .setCaption("Street");
+        grid.addColumn(person -> Optional.ofNullable(person.getAddress())
+                .map(Address::getPostalCode).map(Object::toString).orElse(""))
+                .setCaption("Zip");
+        grid.addColumn(person -> Optional.ofNullable(person.getAddress())
+                .map(Address::getCity).orElse(null)).setCaption("City");
         return grid;
     }
 

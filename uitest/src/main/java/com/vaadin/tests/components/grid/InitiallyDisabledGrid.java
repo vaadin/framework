@@ -51,8 +51,8 @@ public class InitiallyDisabledGrid extends UI {
         Grid<Person> grid = new Grid<>();
         grid.setSizeFull();
         grid.setItems(people);
-        grid.addColumn("firstName", Person::getFirstName);
-        grid.addColumn("lastNAme", Person::getLastName);
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        grid.addColumn(Person::getLastName).setCaption("Last Name");
 
         grid.setEnabled(false);
 

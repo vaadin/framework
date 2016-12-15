@@ -19,7 +19,7 @@ import java.util.EventObject;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.server.SerializableBiConsumer;
+import com.vaadin.server.Setter;
 
 /**
  * Binder status change event.
@@ -32,7 +32,7 @@ import com.vaadin.server.SerializableBiConsumer;
  * <li>{@link Binder#readBean(Object)} is called
  * <li>{@link Binder#setBean(Object)} is called
  * <li>{@link Binder#removeBean()} is called
- * <li>{@link BindingBuilder#bind(ValueProvider, SerializableBiConsumer)}
+ * <li>{@link BindingBuilder#bind(ValueProvider, Setter)}
  * is called
  * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
  * </ul>

@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import com.vaadin.server.data.BackEndDataProvider;
-import com.vaadin.server.data.DataProvider;
+import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
 
 /**
  * A generic interface for components that show a list of data.

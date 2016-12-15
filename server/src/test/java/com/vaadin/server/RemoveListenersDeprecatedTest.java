@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.data.provider.AbstractDataProvider;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
-import com.vaadin.server.data.AbstractDataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.tests.VaadinClasses;
 

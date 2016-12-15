@@ -149,7 +149,8 @@ public abstract class AbstractRenderer<T, V> extends AbstractExtension
      * indicating the source grid of possible events emitted by this renderer,
      * such as {@link RendererClickEvent}s.
      *
-     * @return the grid this renderer is attached to or null if unattached
+     * @return the grid this renderer is attached to or {@code null} if
+     *         unattached
      */
     @SuppressWarnings("unchecked")
     protected Grid<T> getParentGrid() {
@@ -157,6 +158,11 @@ public abstract class AbstractRenderer<T, V> extends AbstractExtension
             return null;
         }
         return (Grid<T>) super.getParent().getParent();
+    }
+
+    @Override
+    public Column<T, V> getParent() {
+        return (Column<T, V>) super.getParent();
     }
 
     @Override

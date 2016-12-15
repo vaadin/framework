@@ -20,7 +20,7 @@ import com.vaadin.shared.Connector;
 public class ColumnState extends AbstractGridExtensionState {
 
     public String caption;
-    public String id;
+    public String internalId;
     public boolean sortable;
     public boolean editable = false;
 

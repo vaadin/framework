@@ -9,10 +9,10 @@ import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Listing;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.ListDataProvider;
-import com.vaadin.server.data.Query;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.widgetset.TestingWidgetSet;

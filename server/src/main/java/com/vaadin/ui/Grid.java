@@ -33,7 +33,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,13 +43,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.Listing;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.Query;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
-import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
@@ -62,10 +62,6 @@ import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.data.DataCommunicator;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.Query;
-import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -81,17 +77,29 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
-import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.components.grid.AbstractSelectionModel;
+import com.vaadin.ui.components.grid.ColumnReorderListener;
+import com.vaadin.ui.components.grid.ColumnResizeListener;
+import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
+import com.vaadin.ui.components.grid.DetailsGenerator;
+import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorComponentGenerator;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
+import com.vaadin.ui.components.grid.FooterCell;
+import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
+import com.vaadin.ui.components.grid.HeaderCell;
+import com.vaadin.ui.components.grid.HeaderRow;
+import com.vaadin.ui.components.grid.ItemClickListener;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
+import com.vaadin.ui.components.grid.SingleSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+import com.vaadin.ui.components.grid.SortOrderProvider;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -140,21 +148,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             .findMethod(ColumnVisibilityChangeListener.class,
                     "columnVisibilityChanged",
                     ColumnVisibilityChangeEvent.class);
-
-    /**
-     * An event listener for column reorder events in the Grid.
-     */
-    @FunctionalInterface
-    public interface ColumnReorderListener extends Serializable {
-
-        /**
-         * Called when the columns of the grid have been reordered.
-         *
-         * @param event
-         *            An event providing more information
-         */
-        void columnReorder(ColumnReorderEvent event);
-    }
 
     /**
      * Selection mode representing the built-in selection models in grid.
@@ -213,157 +206,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @return the selection model
          */
         protected abstract <T> GridSelectionModel<T> createModel();
-    }
-
-    /**
-     * The server-side interface that controls Grid's selection state.
-     * SelectionModel should extend {@link AbstractGridExtension}.
-     * <p>
-     *
-     * @param <T>
-     *            the grid bean type
-     * @see AbstractSelectionModel
-     * @see SingleSelectionModel
-     * @see MultiSelectionModel
-     */
-    public interface GridSelectionModel<T>
-            extends SelectionModel<T>, Extension {
-
-        /**
-         * Removes this selection model from the grid.
-         * <p>
-         * Must call super {@link Extension#remove()} to detach the extension,
-         * and fire an selection change event for the selection model (with an
-         * empty selection).
-         */
-        @Override
-        public void remove();
-    }
-
-    /**
-     * Single selection model interface for Grid.
-     *
-     * @param <T>
-     *            the type of items in grid
-     */
-    public interface SingleSelectionModel<T> extends GridSelectionModel<T>,
-            com.vaadin.data.SelectionModel.Single<T> {
-
-        /**
-         * Gets a wrapper to use this single selection model as a single select
-         * in {@link Binder}.
-         *
-         * @return the single select wrapper
-         */
-        SingleSelect<T> asSingleSelect();
-
-        /**
-         * {@inheritDoc}
-         * <p>
-         * Use {@link #addSingleSelectionListener(SingleSelectionListener)} for
-         * more specific single selection event.
-         *
-         * @see #addSingleSelectionListener(SingleSelectionListener)
-         */
-        @Override
-        public default Registration addSelectionListener(
-                SelectionListener<T> listener) {
-            return addSingleSelectionListener(e -> listener.selectionChange(e));
-        }
-
-        /**
-         * Adds a single selection listener that is called when the value of
-         * this select is changed either by the user or programmatically.
-         *
-         * @param listener
-         *            the value change listener, not {@code null}
-         * @return a registration for the listener
-         */
-        public Registration addSingleSelectionListener(
-                SingleSelectionListener<T> listener);
-    }
-
-    /**
-     * Multiselection model interface for Grid.
-     *
-     * @param <T>
-     *            the type of items in grid
-     */
-    public interface MultiSelectionModel<T> extends GridSelectionModel<T>,
-            com.vaadin.data.SelectionModel.Multi<T> {
-
-        /**
-         * Gets a wrapper to use this multiselection model as a multiselect in
-         * {@link Binder}.
-         *
-         * @return the multiselect wrapper
-         */
-        MultiSelect<T> asMultiSelect();
-
-        /**
-         * {@inheritDoc}
-         * <p>
-         * Use {@link #addMultiSelectionListener(MultiSelectionListener)} for
-         * more specific event on multiselection.
-         *
-         * @see #addMultiSelectionListener(MultiSelectionListener)
-         */
-        @Override
-        public default Registration addSelectionListener(
-                SelectionListener<T> listener) {
-            return addMultiSelectionListener(e -> listener.selectionChange(e));
-        }
-
-        /**
-         * Adds a selection listener that will be called when the selection is
-         * changed either by the user or programmatically.
-         *
-         * @param listener
-         *            the value change listener, not {@code null}
-         * @return a registration for the listener
-         */
-        public Registration addMultiSelectionListener(
-                MultiSelectionListener<T> listener);
-    }
-
-    /**
-     * An event listener for column resize events in the Grid.
-     */
-    @FunctionalInterface
-    public interface ColumnResizeListener extends Serializable {
-
-        /**
-         * Called when the columns of the grid have been resized.
-         *
-         * @param event
-         *            An event providing more information
-         */
-        void columnResize(ColumnResizeEvent event);
-    }
-
-    /**
-     * Generates the sort orders when rows are sorted by a column.
-     * 
-     * @see Column#setSortOrderProvider
-     *
-     * @since 8.0
-     * @author Vaadin Ltd
-     */
-    @FunctionalInterface
-    public interface SortOrderProvider extends
-            SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
-
-        /**
-         * Generates the sort orders when rows are sorted by a column.
-         *
-         * @param sortDirection
-         *            desired sort direction
-         *
-         * @return sort information
-         */
-        @Override
-        public Stream<SortOrder<String>> apply(SortDirection sortDirection);
-
     }
 
     /**
@@ -506,27 +348,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * A listener for item click events.
-     *
-     * @param <T>
-     *            the grid bean type
-     *
-     * @see ItemClick
-     * @see Registration
-     */
-    @FunctionalInterface
-    public interface ItemClickListener<T> extends SerializableEventListener {
-        /**
-         * Invoked when this listener receives a item click event from a Grid to
-         * which it has been added.
-         *
-         * @param event
-         *            the received event, not null
-         */
-        public void itemClick(ItemClick<T> event);
-    }
-
-    /**
      * ContextClickEvent for the Grid Component.
      *
      * @param <T>
@@ -611,22 +432,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * An event listener for column visibility change events in the Grid.
-     *
-     * @since 7.5.0
-     */
-    @FunctionalInterface
-    public interface ColumnVisibilityChangeListener extends Serializable {
-
-        /**
-         * Called when a column has become hidden or unhidden.
-         *
-         * @param event
-         */
-        void columnVisibilityChanged(ColumnVisibilityChangeEvent event);
-    }
-
-    /**
      * An event that is fired when a column's visibility changes.
      *
      * @since 7.5.0
@@ -691,28 +496,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * A callback interface for generating description texts for an item.
-     *
-     * @param <T>
-     *            the grid bean type
-     */
-    @FunctionalInterface
-    public interface DescriptionGenerator<T>
-            extends SerializableFunction<T, String> {
-    }
-
-    /**
-     * A callback interface for generating details for a particular row in Grid.
-     *
-     * @param <T>
-     *            the grid bean type
-     */
-    @FunctionalInterface
-    public interface DetailsGenerator<T>
-            extends SerializableFunction<T, Component> {
-    }
-
-    /**
      * A helper base class for creating extensions for the Grid component.
      *
      * @param <T>
@@ -763,41 +546,46 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         protected AbstractGridExtensionState getState(boolean markAsDirty) {
             return (AbstractGridExtensionState) super.getState(markAsDirty);
         }
+
+        protected String getInternalIdForColumn(Column<T, ?> column) {
+            return getParent().getInternalIdForColumn(column);
+        }
     }
 
     private final class GridServerRpcImpl implements GridServerRpc {
         @Override
-        public void sort(String[] columnIds, SortDirection[] directions,
+        public void sort(String[] columnInternalIds, SortDirection[] directions,
                 boolean isUserOriginated) {
-            assert columnIds.length == directions.length : "Column and sort direction counts don't match.";
+
+            assert columnInternalIds.length == directions.length : "Column and sort direction counts don't match.";
 
             List<SortOrder<Column<T, ?>>> list = new ArrayList<>(
                     directions.length);
-            for (int i = 0; i < columnIds.length; ++i) {
-                Column<T, ?> column = columnKeys.get(columnIds[i]);
+            for (int i = 0; i < columnInternalIds.length; ++i) {
+                Column<T, ?> column = columnKeys.get(columnInternalIds[i]);
                 list.add(new SortOrder<>(column, directions[i]));
             }
             setSortOrder(list, isUserOriginated);
         }
 
         @Override
-        public void itemClick(String rowKey, String columnId,
+        public void itemClick(String rowKey, String columnInternalId,
                 MouseEventDetails details) {
-            Column<T, ?> column = columnKeys.containsKey(columnId)
-                    ? columnKeys.get(columnId) : null;
+            Column<T, ?> column = getColumnByInternalId(columnInternalId);
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
             fireEvent(new ItemClick<>(Grid.this, column, item, details));
         }
 
         @Override
-        public void contextClick(int rowIndex, String rowKey, String columnId,
-                Section section, MouseEventDetails details) {
+        public void contextClick(int rowIndex, String rowKey,
+                String columnInternalId, Section section,
+                MouseEventDetails details) {
             T item = null;
             if (rowKey != null) {
                 item = getDataCommunicator().getKeyMapper().get(rowKey);
             }
             fireEvent(new GridContextClickEvent<>(Grid.this, details, section,
-                    rowIndex, item, getColumn(columnId)));
+                    rowIndex, item, getColumnByInternalId(columnInternalId)));
         }
 
         @Override
@@ -837,8 +625,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @Override
-        public void columnVisibilityChanged(String id, boolean hidden) {
-            Column<T, ?> column = getColumn(id);
+        public void columnVisibilityChanged(String internalId, boolean hidden) {
+            Column<T, ?> column = getColumnByInternalId(internalId);
             ColumnState columnState = column.getState(false);
             if (columnState.hidden != hidden) {
                 columnState.hidden = hidden;
@@ -847,8 +635,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @Override
-        public void columnResized(String id, double pixels) {
-            final Column<T, ?> column = getColumn(id);
+        public void columnResized(String internalId, double pixels) {
+            final Column<T, ?> column = getColumnByInternalId(internalId);
             if (column != null && column.isResizable()) {
                 column.getState().width = pixels;
                 fireColumnResizeEvent(column, true);
@@ -997,12 +785,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         private EditorComponentGenerator<T> componentGenerator;
 
+        private String userId;
+
         /**
          * Constructs a new Column configuration with given header caption,
          * renderer and value provider.
          *
-         * @param caption
-         *            the header caption
          * @param valueProvider
          *            the function to get values from items
          * @param renderer
@@ -1011,7 +799,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         protected Column(String caption,
                 ValueProvider<T, ? extends V> valueProvider,
                 Renderer<V> renderer) {
-            Objects.requireNonNull(caption, "Header caption can't be null");
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -1021,7 +808,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             this.valueProvider = valueProvider;
             state.renderer = renderer;
 
-            state.caption = caption;
+            state.caption = "";
             sortOrderProvider = d -> Stream.of();
 
             // Add the renderer as a child extension of this extension, thus
@@ -1155,8 +942,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return the identifier string
          */
-        public String getId() {
-            return getState(false).id;
+        private String getInternalId() {
+            return getState(false).internalId;
         }
 
         /**
@@ -1165,9 +952,36 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param id
          *            the identifier string
          */
-        private void setId(String id) {
+        private void setInternalId(String id) {
             Objects.requireNonNull(id, "Communication ID can't be null");
-            getState().id = id;
+            getState().internalId = id;
+        }
+
+        /**
+         * Returns the user-defined identifier for this column.
+         *
+         * @return the identifier string
+         */
+        public String getId() {
+            return userId;
+        }
+
+        /**
+         * Sets the user-defined identifier to map this column. The identifier
+         * can be used for example in {@link Grid#getColumn(String)}.
+         *
+         * @param id
+         *            the identifier string
+         */
+        public Column<T, V> setId(String id) {
+            Objects.requireNonNull(id, "Column identifier cannot be null");
+            if (this.userId != null) {
+                throw new IllegalStateException(
+                        "Column identifier cannot be changed");
+            }
+            this.userId = id;
+            getParent().setColumnId(id, this);
+            return this;
         }
 
         /**
@@ -1207,7 +1021,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             HeaderRow row = getParent().getDefaultHeaderRow();
             if (row != null) {
-                row.getCell(getId()).setText(caption);
+                row.getCell(this).setText(caption);
             }
 
             return this;
@@ -1809,6 +1623,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             ColumnState defaultState = new ColumnState();
 
+            if (getId() == null) {
+                setId("column" + getParent().getColumns().indexOf(this));
+            }
+
             DesignAttributeHandler.writeAttribute("column-id", attributes,
                     getId(), null, String.class, designContext);
 
@@ -1923,425 +1741,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
-    /**
-     * A header row in a Grid.
-     */
-    public interface HeaderRow extends Serializable {
-
-        /**
-         * Returns the cell on this row corresponding to the given column id.
-         *
-         * @param columnId
-         *            the id of the column whose header cell to get, not null
-         * @return the header cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public HeaderCell getCell(String columnId);
-
-        /**
-         * Returns the cell on this row corresponding to the given column.
-         *
-         * @param column
-         *            the column whose header cell to get, not null
-         * @return the header cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public default HeaderCell getCell(Column<?, ?> column) {
-            return getCell(column.getId());
-        }
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Grid.HeaderCell...)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        HeaderCell join(Set<HeaderCell> cellsToMerge);
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Set)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        HeaderCell join(HeaderCell... cellsToMerge);
-
-    }
-
-    /**
-     * An individual cell on a Grid header row.
-     */
-    public interface HeaderCell extends Serializable {
-
-        /**
-         * Returns the textual caption of this cell.
-         *
-         * @return the header caption
-         */
-        public String getText();
-
-        /**
-         * Sets the textual caption of this cell.
-         *
-         * @param text
-         *            the header caption to set, not null
-         */
-        public void setText(String text);
-
-        /**
-         * Returns the HTML content displayed in this cell.
-         *
-         * @return the html
-         *
-         */
-        public String getHtml();
-
-        /**
-         * Sets the HTML content displayed in this cell.
-         *
-         * @param html
-         *            the html to set
-         */
-        public void setHtml(String html);
-
-        /**
-         * Returns the component displayed in this cell.
-         *
-         * @return the component
-         */
-        public Component getComponent();
-
-        /**
-         * Sets the component displayed in this cell.
-         *
-         * @param component
-         *            the component to set
-         */
-        public void setComponent(Component component);
-
-        /**
-         * Returns the type of content stored in this cell.
-         *
-         * @return cell content type
-         */
-        public GridStaticCellType getCellType();
-
-        /**
-         * Gets the column id where this cell is.
-         *
-         * @return column id for this cell
-         */
-        public String getColumnId();
-    }
-
-    /**
-     * A footer row in a Grid.
-     */
-    public interface FooterRow extends Serializable {
-
-        /**
-         * Returns the cell on this row corresponding to the given column id.
-         *
-         * @param columnId
-         *            the id of the column whose footer cell to get, not null
-         * @return the footer cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public FooterCell getCell(String columnId);
-
-        /**
-         * Returns the cell on this row corresponding to the given column.
-         *
-         * @param column
-         *            the column whose footer cell to get, not null
-         * @return the footer cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public default FooterCell getCell(Column<?, ?> column) {
-            return getCell(column.getId());
-        }
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Grid.FooterCell...)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        FooterCell join(Set<FooterCell> cellsToMerge);
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Set)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        FooterCell join(FooterCell... cellsToMerge);
-    }
-
-    /**
-     * An individual cell on a Grid footer row.
-     */
-    public interface FooterCell extends Serializable {
-
-        /**
-         * Returns the textual caption of this cell.
-         *
-         * @return the footer caption
-         */
-        public String getText();
-
-        /**
-         * Sets the textual caption of this cell.
-         *
-         * @param text
-         *            the footer caption to set, not null
-         */
-        public void setText(String text);
-
-        /**
-         * Returns the HTML content displayed in this cell.
-         *
-         * @return the html
-         *
-         */
-        public String getHtml();
-
-        /**
-         * Sets the HTML content displayed in this cell.
-         *
-         * @param html
-         *            the html to set
-         */
-        public void setHtml(String html);
-
-        /**
-         * Returns the component displayed in this cell.
-         *
-         * @return the component
-         */
-        public Component getComponent();
-
-        /**
-         * Sets the component displayed in this cell.
-         *
-         * @param component
-         *            the component to set
-         */
-        public void setComponent(Component component);
-
-        /**
-         * Returns the type of content stored in this cell.
-         *
-         * @return cell content type
-         */
-        public GridStaticCellType getCellType();
-
-        /**
-         * Gets the column id where this cell is.
-         *
-         * @return column id for this cell
-         */
-        public String getColumnId();
-    }
-
-    /**
-     * Generator for creating editor validation and conversion error messages.
-     *
-     * @param <T>
-     *            the bean type
-     */
-    @FunctionalInterface
-    public interface EditorErrorGenerator<T> extends Serializable,
-            BiFunction<Map<Component, Column<T, ?>>, BinderValidationStatus<T>, String> {
-
-        /**
-         * Generates an error message from given validation status object.
-         *
-         * @param fieldToColumn
-         *            the map of failed fields and corresponding columns
-         * @param status
-         *            the binder status object with all failures
-         *
-         * @return error message string
-         */
-        @Override
-        public String apply(Map<Component, Column<T, ?>> fieldToColumn,
-                BinderValidationStatus<T> status);
-    }
-
-    /**
-     * An editor in a Grid.
-     *
-     * @param <T>
-     */
-    public interface Editor<T> extends Serializable {
-
-        /**
-         * Sets the underlying Binder to this Editor.
-         *
-         * @param binder
-         *            the binder for updating editor fields; not {@code null}
-         * @return this editor
-         */
-        public Editor<T> setBinder(Binder<T> binder);
-
-        /**
-         * Returns the underlying Binder from Editor.
-         *
-         * @return the binder; not {@code null}
-         */
-        public Binder<T> getBinder();
-
-        /**
-         * Sets the Editor buffered mode. When the editor is in buffered mode,
-         * edits are only committed when the user clicks the save button. In
-         * unbuffered mode valid changes are automatically committed.
-         *
-         * @param buffered
-         *            {@code true} if editor should be buffered; {@code false}
-         *            if not
-         * @return this editor
-         */
-        public Editor<T> setBuffered(boolean buffered);
-
-        /**
-         * Enables or disabled the Editor. A disabled editor cannot be opened.
-         *
-         * @param enabled
-         *            {@code true} if editor should be enabled; {@code false} if
-         *            not
-         * @return this editor
-         */
-        public Editor<T> setEnabled(boolean enabled);
-
-        /**
-         * Returns whether Editor is buffered or not.
-         *
-         * @see #setBuffered(boolean)
-         *
-         * @return {@code true} if editor is buffered; {@code false} if not
-         */
-        public boolean isBuffered();
-
-        /**
-         * Returns whether Editor is enabled or not.
-         *
-         * @return {@code true} if editor is enabled; {@code false} if not
-         */
-        public boolean isEnabled();
-
-        /**
-         * Returns whether Editor is open or not.
-         *
-         * @return {@code true} if editor is open; {@code false} if not
-         */
-        public boolean isOpen();
-
-        /**
-         * Saves any changes from the Editor fields to the edited bean.
-         *
-         * @return {@code true} if save succeeded; {@code false} if not
-         */
-        public boolean save();
-
-        /**
-         * Close the editor discarding any unsaved changes.
-         */
-        public void cancel();
-
-        /**
-         * Sets the caption of the save button in buffered mode.
-         *
-         * @param saveCaption
-         *            the save button caption
-         * @return this editor
-         */
-        public Editor<T> setSaveCaption(String saveCaption);
-
-        /**
-         * Sets the caption of the cancel button in buffered mode.
-         *
-         * @param cancelCaption
-         *            the cancel button caption
-         * @return this editor
-         */
-        public Editor<T> setCancelCaption(String cancelCaption);
-
-        /**
-         * Gets the caption of the save button in buffered mode.
-         *
-         * @return the save button caption
-         */
-        public String getSaveCaption();
-
-        /**
-         * Gets the caption of the cancel button in buffered mode.
-         *
-         * @return the cancel button caption
-         */
-        public String getCancelCaption();
-
-        /**
-         * Sets the error message generator for this editor.
-         * <p>
-         * The default message is a concatenation of column field validation
-         * failures and bean validation failures.
-         *
-         * @param errorGenerator
-         *            the function to generate error messages; not {@code null}
-         * @return this editor
-         *
-         * @see EditorErrorGenerator
-         */
-        public Editor<T> setErrorGenerator(
-                EditorErrorGenerator<T> errorGenerator);
-
-        /**
-         * Gets the error message generator of this editor.
-         *
-         * @return the function that generates error messages; not {@code null}
-         *
-         * @see EditorErrorGenerator
-         */
-        public EditorErrorGenerator<T> getErrorGenerator();
-    }
-
     private class HeaderImpl extends Header {
 
         @Override
@@ -2355,8 +1754,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @Override
-        protected Collection<Column<T, ?>> getColumns() {
-            return Grid.this.getColumns();
+        protected Column<?, ?> getColumnByInternalId(String internalId) {
+            return getGrid().getColumnByInternalId(internalId);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected String getInternalIdForColumn(Column<?, ?> column) {
+            return getGrid().getInternalIdForColumn((Column<T, ?>) column);
         }
     };
 
@@ -2373,13 +1778,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @Override
-        protected Collection<Column<T, ?>> getColumns() {
-            return Grid.this.getColumns();
+        protected Column<?, ?> getColumnByInternalId(String internalId) {
+            return getGrid().getColumnByInternalId(internalId);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected String getInternalIdForColumn(Column<?, ?> column) {
+            return getGrid().getInternalIdForColumn((Column<T, ?>) column);
         }
     };
 
     private final Set<Column<T, ?>> columnSet = new LinkedHashSet<>();
     private final Map<String, Column<T, ?>> columnKeys = new HashMap<>();
+    private final Map<String, Column<T, ?>> columnIds = new HashMap<>();
 
     private final List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
     private final DetailsManager<T> detailsManager;
@@ -2436,64 +1848,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Adds a new column to this {@link Grid} with given identifier, typed
-     * renderer and value provider.
-     *
-     * @param identifier
-     *            the identifier in camel case for the new column
-     * @param valueProvider
-     *            the value provider
-     * @param renderer
-     *            the column value class
-     * @param <V>
-     *            the column value type
-     *
-     * @return the new column
-     * @throws IllegalArgumentException
-     *             if the same identifier is used for multiple columns
-     *
-     * @see AbstractRenderer
-     */
-    public <V> Column<T, V> addColumn(String identifier,
-            ValueProvider<T, ? extends V> valueProvider,
-            AbstractRenderer<? super T, V> renderer)
-            throws IllegalArgumentException {
-        if (columnKeys.containsKey(identifier)) {
-            throw new IllegalArgumentException(
-                    "Multiple columns with the same identifier: " + identifier);
-        }
-
-        final Column<T, V> column = new Column<>(
-                SharedUtil.camelCaseToHumanFriendly(identifier), valueProvider,
-                renderer);
-        addColumn(identifier, column);
-        return column;
-    }
-
-    /**
-     * Adds a new text column to this {@link Grid} with given identifier and
-     * string value provider. The column will use a {@link TextRenderer}.
-     *
-     * @param identifier
-     *            the header caption
-     * @param valueProvider
-     *            the value provider
-     *
-     * @return the new column
-     * @throws IllegalArgumentException
-     *             if the same identifier is used for multiple columns
-     */
-    public Column<T, String> addColumn(String identifier,
-            ValueProvider<T, String> valueProvider) {
-        return addColumn(identifier, valueProvider, new TextRenderer());
-    }
-
-    /**
      * Adds a new text column to this {@link Grid} with a value provider. The
      * column will use a {@link TextRenderer}. The value is converted to a
      * String using {@link Object#toString()}. Sorting in memory is executed by
-     * comparing the String values. Identifier for the column is generated
-     * automatically.
+     * comparing the String values.
      *
      * @param valueProvider
      *            the value provider
@@ -2501,14 +1859,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return the new column
      */
     public Column<T, String> addColumn(ValueProvider<T, String> valueProvider) {
-        return addColumn(getGeneratedIdentifier(),
-                t -> String.valueOf(valueProvider.apply(t)),
+        return addColumn(t -> String.valueOf(valueProvider.apply(t)),
                 new TextRenderer());
     }
 
     /**
      * Adds a new column to this {@link Grid} with typed renderer and value
-     * provider. Identifier for the column is generated automatically.
+     * provider.
      *
      * @param valueProvider
      *            the value provider
@@ -2524,7 +1881,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public <V> Column<T, V> addColumn(
             ValueProvider<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
-        return addColumn(getGeneratedIdentifier(), valueProvider, renderer);
+        String generatedIdentifier = getGeneratedIdentifier();
+        Column<T, V> column = new Column<>("Column " + generatedIdentifier,
+                valueProvider, renderer);
+        addColumn(generatedIdentifier, column);
+        return column;
     }
 
     private void addColumn(String identifier, Column<T, ?> column) {
@@ -2535,15 +1896,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         column.extend(this);
         columnSet.add(column);
         columnKeys.put(identifier, column);
-        column.setId(identifier);
+        column.setInternalId(identifier);
         addDataGenerator(column);
 
         getState().columnOrder.add(identifier);
         getHeader().addColumn(identifier);
 
         if (getDefaultHeaderRow() != null) {
-            getDefaultHeaderRow().getCell(identifier)
-                    .setText(column.getCaption());
+            getDefaultHeaderRow().getCell(column).setText(column.getCaption());
         }
     }
 
@@ -2555,8 +1915,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
-            String columnId = column.getId();
+            String columnId = column.getInternalId();
             columnKeys.remove(columnId);
+            columnIds.remove(column.getId());
             column.remove();
             getHeader().removeColumn(columnId);
             getFooter().removeColumn(columnId);
@@ -2608,7 +1969,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public List<Column<T, ?>> getColumns() {
         return Collections.unmodifiableList(getState(false).columnOrder.stream()
-                .map(this::getColumn).collect(Collectors.toList()));
+                .map(columnKeys::get).collect(Collectors.toList()));
     }
 
     /**
@@ -2616,10 +1977,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param columnId
      *            the identifier of the column to get
-     * @return the column corresponding to the given column id
+     * @return the column corresponding to the given column identifier
      */
     public Column<T, ?> getColumn(String columnId) {
-        return columnKeys.get(columnId);
+        return columnIds.get(columnId);
     }
 
     @Override
@@ -3223,7 +2584,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     private String getGeneratedIdentifier() {
-        String columnId = "generatedColumn" + counter;
+        String columnId = "" + counter;
         counter++;
         return columnId;
     }
@@ -3240,7 +2601,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         List<String> columnOrder = new ArrayList<>();
         for (Column<T, ?> column : columns) {
             if (columnSet.contains(column)) {
-                columnOrder.add(column.getId());
+                columnOrder.add(column.getInternalId());
             } else {
                 throw new IllegalArgumentException(
                         "setColumnOrder should not be called "
@@ -3661,12 +3022,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         for (Element col : colgroups.get(0).getElementsByTag("col")) {
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
-            Column<T, String> column;
             DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
+            Column<T, String> column = new Column<>("", provider,
+                    new HtmlRenderer());
+            addColumn(getGeneratedIdentifier(), column);
             if (id != null) {
-                column = addColumn(id, provider, new HtmlRenderer());
-            } else {
-                column = addColumn(provider, new HtmlRenderer());
+                column.setId(id);
             }
             providers.add(provider);
             column.readDesign(col, context);
@@ -3758,6 +3119,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return mode;
     }
 
+    /**
+     * Sets a user-defined identifier for given column.
+     *
+     * @param column
+     *            the column
+     * @param id
+     *            the user-defined identifier
+     */
+    protected void setColumnId(String id, Column<T, ?> column) {
+        if (columnIds.containsKey(id)) {
+            throw new IllegalArgumentException("Duplicate ID for columns");
+        }
+        columnIds.put(id, column);
+    }
+
     @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> result = super.getCustomAttributes();
@@ -3771,6 +3147,30 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         result.add("selection-mode");
 
         return result;
+    }
+
+    /**
+     * Returns a column identified by its internal id. This id should not be
+     * confused with the user-defined identifier.
+     *
+     * @param columnId
+     *            the internal id of column
+     * @return column identified by internal id
+     */
+    protected Column<T, ?> getColumnByInternalId(String columnId) {
+        return columnKeys.get(columnId);
+    }
+
+    /**
+     * Returns the internal id for given column. This id should not be confused
+     * with the user-defined identifier.
+     *
+     * @param column
+     *            the column
+     * @return internal id of given column
+     */
+    protected String getInternalIdForColumn(Column<T, ?> column) {
+        return column.getInternalId();
     }
 
     private void setSortOrder(List<SortOrder<Column<T, ?>>> order,

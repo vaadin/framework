@@ -19,8 +19,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.ui.Grid;
-
 /**
  * Represents the footer section of a Grid.
  *
@@ -34,13 +32,13 @@ public abstract class Footer extends StaticSection<Footer.Row> {
      * A row in a Grid Footer.
      */
     public class Row extends StaticSection.StaticRow<Row.Cell>
-            implements Grid.FooterRow {
+            implements FooterRow {
 
         /**
          * A cell in a Grid footer row.
          */
         public class Cell extends StaticSection.StaticCell
-                implements Grid.FooterCell {
+                implements FooterCell {
             /**
              * Creates a new footer cell.
              */
@@ -77,12 +75,12 @@ public abstract class Footer extends StaticSection<Footer.Row> {
          *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
-         * @see #join(Grid.FooterCell...)
+         * @see #join(FooterCell...)
          * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         @Override
-        public Grid.FooterCell join(Set<Grid.FooterCell> cellsToMerge) {
-            for (Grid.FooterCell cell : cellsToMerge) {
+        public FooterCell join(Set<FooterCell> cellsToMerge) {
+            for (FooterCell cell : cellsToMerge) {
                 checkIfAlreadyMerged(cell.getColumnId());
             }
 
@@ -90,7 +88,7 @@ public abstract class Footer extends StaticSection<Footer.Row> {
             Cell newCell = createCell();
 
             Set<String> columnGroup = new HashSet<>();
-            for (Grid.FooterCell cell : cellsToMerge) {
+            for (FooterCell cell : cellsToMerge) {
                 columnGroup.add(cell.getColumnId());
             }
             addMergedCell(newCell, columnGroup);
@@ -113,8 +111,8 @@ public abstract class Footer extends StaticSection<Footer.Row> {
          * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         @Override
-        public Grid.FooterCell join(Grid.FooterCell... cellsToMerge) {
-            Set<Grid.FooterCell> footerCells = new HashSet<>(
+        public FooterCell join(FooterCell... cellsToMerge) {
+            Set<FooterCell> footerCells = new HashSet<>(
                     Arrays.asList(cellsToMerge));
             return join(footerCells);
         }

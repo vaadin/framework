@@ -17,9 +17,9 @@ package com.vaadin.tests.components.grid.basics;
 
 import java.util.List;
 
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -39,7 +39,8 @@ public class RefreshDataProvider extends AbstractReindeerTestUI {
         grid.setDataProvider(dataProvider);
 
         grid.setDataProvider(dataProvider);
-        grid.addColumn("Coordinates", DataObject::getCoordinates);
+        grid.addColumn(DataObject::getCoordinates).setCaption("Coordinates")
+                .setId("Coordinates");
         addComponent(grid);
 
         Button update = new Button("Update data",
