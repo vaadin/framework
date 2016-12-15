@@ -6,7 +6,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.CheckBoxRenderer;
 import com.vaadin.ui.renderers.ImageRenderer;
 
 public class GridClickableRenderers extends AbstractReindeerTestUI {
@@ -39,9 +38,15 @@ public class GridClickableRenderers extends AbstractReindeerTestUI {
                         .setValue(event.getItem().testText + " clicked")))
                 .setId("buttons").setCaption("Buttons");
 
-        CheckBoxRenderer<TestPOJO> checkBoxRenderer = new CheckBoxRenderer<>();
-        grid.addColumn(pojo -> pojo.truthValue, checkBoxRenderer)
-                .setId("checkboxes").setCaption("Checkboxes");
+        ButtonRenderer<TestPOJO> yesNoRenderer = new ButtonRenderer<>();
+        yesNoRenderer.addClickListener(event -> {
+            TestPOJO item = event.getItem();
+            item.truthValue = !item.truthValue;
+            checkBoxValueLabel.setValue(item.testText + " " + item.truthValue);
+            grid.getDataProvider().refreshAll();
+        });
+        grid.addColumn(pojo -> pojo.truthValue ? "Yes" : "No",
+                yesNoRenderer).setCaption("Truth").setId(truth);
 
         grid.setItems(new TestPOJO("first row", "", "button 1 text", true),
                 new TestPOJO("second row", "", "button 2 text", false));
