@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event;
+package com.vaadin.v7.event;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.vaadin.data.sort.SortOrder;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.data.sort.SortOrder;
 
 /**
  * Event describing a change in sorting of a {@link Container}. Fired by
@@ -31,6 +31,7 @@ import com.vaadin.ui.Component;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class SortEvent extends Component.Event {
 
     private final List<SortOrder> sortOrder;
@@ -76,6 +77,7 @@ public class SortEvent extends Component.Event {
      * Listener for sort order change events.
      */
     @FunctionalInterface
+    @Deprecated
     public interface SortListener extends Serializable {
         /**
          * Called when the sort order has changed.
@@ -90,6 +92,7 @@ public class SortEvent extends Component.Event {
      * The interface for adding and removing listeners for {@link SortEvent
      * SortEvents}.
      */
+    @Deprecated
     public interface SortNotifier extends Serializable {
         /**
          * Adds a sort order change listener that gets notified when the sort
@@ -107,10 +110,7 @@ public class SortEvent extends Component.Event {
          *
          * @param listener
          *            the sort order change listener to remove
-         * @deprecated use a {@link Registration} returned by
-         *             {@link #addSortListener(SortListener)}
          */
-        @Deprecated
         public void removeSortListener(SortListener listener);
     }
 }

@@ -18,12 +18,12 @@ package com.vaadin.v7.tests.components.grid;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.sort.SortOrder;
-import com.vaadin.event.SortEvent;
-import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.v7.data.sort.SortOrder;
+import com.vaadin.v7.event.SortEvent;
+import com.vaadin.v7.event.SortEvent.SortListener;
 import com.vaadin.v7.ui.Grid;
 
 /*

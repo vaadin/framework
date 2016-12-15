@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.sort;
+package com.vaadin.v7.data.sort;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class Sort implements Serializable {
 
     private final Sort previous;
