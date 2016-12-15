@@ -78,6 +78,7 @@ import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
@@ -840,8 +841,9 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         @Override
-        public void columnVisibilityChanged(String id, boolean hidden) {
-            Column<T, ?> column = getColumnByInternalId(id);
+        public void columnVisibilityChanged(String internalId,
+                boolean hidden) {
+            Column<T, ?> column = getColumnByInternalId(internalId);
             ColumnState columnState = column.getState(false);
             if (columnState.hidden != hidden) {
                 columnState.hidden = hidden;
@@ -850,8 +852,8 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         @Override
-        public void columnResized(String id, double pixels) {
-            final Column<T, ?> column = getColumnByInternalId(id);
+        public void columnResized(String internalId, double pixels) {
+            final Column<T, ?> column = getColumnByInternalId(internalId);
             if (column != null && column.isResizable()) {
                 column.getState().width = pixels;
                 fireColumnResizeEvent(column, true);
