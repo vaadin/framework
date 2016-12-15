@@ -1,9 +1,13 @@
 package com.vaadin.tests.fieldgroup;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
+import com.vaadin.server.data.DataProvider;
+import com.vaadin.server.data.ListDataProvider;
 import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.v7.data.util.BeanItemContainer;
 
@@ -22,6 +26,10 @@ public class ComplexPerson {
     }
 
     public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String firstName) {
         this.firstName = firstName;
     }
 
@@ -88,6 +96,18 @@ public class ComplexPerson {
         }
 
         return bic;
+    }
+
+    public static ListDataProvider<ComplexPerson> createDataProvider(int size) {
+        List<ComplexPerson> list = new ArrayList<>();
+        Random r = new Random(size);
+
+        for (int i = 0; i < size; i++) {
+            ComplexPerson cp = ComplexPerson.create(r);
+            list.add(cp);
+        }
+
+        return DataProvider.create(list);
     }
 
     public static ComplexPerson create(Random r) {
