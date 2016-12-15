@@ -29,10 +29,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.DetailsGenerator;
-import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -45,6 +41,12 @@ import com.vaadin.ui.SingleSelect;
 import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.grid.DetailsGenerator;
+import com.vaadin.ui.components.grid.FooterCell;
+import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.HeaderCell;
+import com.vaadin.ui.components.grid.HeaderRow;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
@@ -634,7 +636,7 @@ public class GridBasics extends AbstractTestUIWithLog {
             int... columnIndexes) {
         HeaderRow headerRow = grid.getHeaderRow(rowIndex);
         List<Column<DataObject, ?>> columns = grid.getColumns();
-        Set<Grid.HeaderCell> toMerge = new HashSet<>();
+        Set<HeaderCell> toMerge = new HashSet<>();
         for (int columnIndex : columnIndexes) {
             toMerge.add(headerRow.getCell(columns.get(columnIndex)));
         }
@@ -645,7 +647,7 @@ public class GridBasics extends AbstractTestUIWithLog {
             int... columnIndexes) {
         FooterRow footerRow = grid.getFooterRow(rowIndex);
         List<Column<DataObject, ?>> columns = grid.getColumns();
-        Set<Grid.FooterCell> toMerge = new HashSet<>();
+        Set<FooterCell> toMerge = new HashSet<>();
         for (int columnIndex : columnIndexes) {
             toMerge.add(footerRow.getCell(columns.get(columnIndex)));
         }

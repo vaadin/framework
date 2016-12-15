@@ -16,14 +16,15 @@ public class GridColumnHiding extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Grid<Person> grid = new Grid<>();
-        Column<Person, String> nameColumn = grid
-                .addColumn("Name", Person::getFirstName).setHidable(true);
+        Column<Person, String> nameColumn = grid.addColumn(Person::getFirstName)
+                .setHidable(true).setCaption("Name");
         Column<Person, Number> ageColumn = grid
-                .addColumn("Age", Person::getAge, new NumberRenderer())
+                .addColumn(Person::getAge, new NumberRenderer())
                 .setHidable(true)
-                .setHidingToggleCaption("custom age column caption");
-        Column<Person, String> emailColumn = grid.addColumn("Email",
-                Person::getEmail);
+                .setHidingToggleCaption("custom age column caption")
+                .setCaption("Age");
+        Column<Person, String> emailColumn = grid.addColumn(Person::getEmail)
+                .setCaption("Email");
 
         Button toggleNameColumn = new Button("server side toggle name column");
         Button toggleAgeColumn = new Button("server side toggle age column");

@@ -15,6 +15,7 @@
  */
 package com.vaadin.v7.shared;
 
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.annotations.NoLayout;
 
 /**
@@ -34,4 +35,13 @@ public class AbstractFieldState extends AbstractLegacyComponentState {
      */
     @NoLayout
     public int tabIndex = 0;
+
+    /**
+     * The component which should receive focus events instead of the custom
+     * field wrapper.
+     * <p>
+     * This is not used in all fields, but needs to be here for the time being
+     * (#20468).
+     */
+    public Connector focusDelegate;
 }

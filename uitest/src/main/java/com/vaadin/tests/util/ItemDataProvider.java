@@ -4,8 +4,8 @@ import java.util.Locale;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.vaadin.server.data.BackEndDataProvider;
-import com.vaadin.server.data.Query;
+import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.Query;
 
 /**
  * A data provider for tests that creates "Item n" strings on the fly.

@@ -18,7 +18,7 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.util.List;
 
-import com.vaadin.server.data.SortOrder;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 
@@ -32,7 +32,7 @@ import com.vaadin.ui.Component;
  *            the type of the sorting information, usually a String (field id)
  *            or a {@link java.util.Comparator}.
  *
- * @since 7.4
+ * @since 8.0
  * @author Vaadin Ltd
  */
 public class SortEvent<T> extends Component.Event {

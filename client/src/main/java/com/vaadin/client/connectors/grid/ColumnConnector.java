@@ -74,7 +74,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             }
         };
         column.setRenderer(getRendererConnector().getRenderer());
-        getParent().addColumn(column, getState().id);
+        getParent().addColumn(column, getState().internalId);
     }
 
     @SuppressWarnings("unchecked")

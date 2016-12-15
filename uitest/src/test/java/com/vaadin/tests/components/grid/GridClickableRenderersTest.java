@@ -30,39 +30,37 @@ public class GridClickableRenderersTest extends MultiBrowserTest {
         openTestURL();
         Assert.assertTrue(isElementPresent(By.className("v-nativebutton")));
         Assert.assertTrue(isElementPresent(By.className("gwt-Image")));
-        Assert.assertTrue(isElementPresent(By.className("v-checkbox")));
     }
 
     @Test
     public void buttonRendererReturnsCorrectItem() {
         openTestURL();
-        WebElement firstButton = findElements(By.className("v-nativebutton"))
+        WebElement firstRowButton = findElements(By.className("v-nativebutton"))
                 .get(0);
-        WebElement secondButton = findElements(By.className("v-nativebutton"))
-                .get(1);
+        WebElement secondRowButton = findElements(By.className("v-nativebutton"))
+                .get(2);
         LabelElement label = $(LabelElement.class).get(1);
 
-        firstButton.click();
+        firstRowButton.click();
         Assert.assertEquals("first row clicked", label.getText());
 
-        secondButton.click();
+        secondRowButton.click();
         Assert.assertEquals("second row clicked", label.getText());
     }
 
     @Test
     public void checkBoxRendererClick() {
         openTestURL();
-        WebElement firstCheckBox = findElements(
-                By.cssSelector("input[type='checkbox']")).get(0);
-        WebElement secondCheckBox = findElements(
-                By.cssSelector("input[type='checkbox']")).get(1);
-
+        WebElement firstRowButton = findElements(By.className("v-nativebutton"))
+                .get(1);
+        WebElement secondRowButton = findElements(By.className("v-nativebutton"))
+                .get(3);
         LabelElement label = $(LabelElement.class).get(2);
 
-        firstCheckBox.click();
+        firstRowButton.click();
         Assert.assertEquals("first row false", label.getText());
 
-        secondCheckBox.click();
+        secondRowButton.click();
         Assert.assertEquals("second row true", label.getText());
     }
 }

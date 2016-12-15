@@ -32,8 +32,6 @@ import com.vaadin.shared.ui.grid.editor.EditorState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.Editor;
-import com.vaadin.ui.Grid.EditorErrorGenerator;
 
 import elemental.json.JsonObject;
 
@@ -78,7 +76,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                 String message = errorGenerator.apply(fieldToColumn, status);
 
                 List<String> columnIds = fieldToColumn.values().stream()
-                        .map(Column::getId).collect(Collectors.toList());
+                        .map(column -> getInternalIdForColumn(column))
+                        .collect(Collectors.toList());
 
                 rpc.setErrorMessage(message, columnIds);
             }
@@ -221,7 +220,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                             .apply(edited);
                     addComponentToGrid(component);
                     columnFields.put(c, component);
-                    getState().columnFields.put(c.getId(),
+                    getState().columnFields.put(getInternalIdForColumn(c),
                             component.getConnectorId());
                 });
     }
