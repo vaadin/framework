@@ -99,6 +99,11 @@ public class GridState extends AbstractSingleSelectState {
         primaryStyleName = "v-grid";
     }
 
+    /**
+     * Column resize mode in grid.
+     */
+    public ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
+
     /** The state of the header section. */
     public SectionState header = new SectionState();
 
