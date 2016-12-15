@@ -139,16 +139,18 @@ public class GridHeaderFooterTest {
 
     @Test
     public void addColumn_headerCellAdded() {
-        Column<?, ?> column = grid.addColumn("Col",
-                ValueProvider.identity());
+
+        Column<?, ?> column = grid.addColumn(ValueProvider.identity())
+                .setId("Col");
 
         assertNotNull(grid.getHeaderRow(0).getCell(column));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void removeColumn_headerCellRemoved() {
-        Column<String, ?> column = grid.addColumn("Col",
-                ValueProvider.identity());
+
+        Column<String, ?> column = grid.addColumn(ValueProvider.identity())
+                .setId("Col");
         grid.removeColumn(column);
 
         grid.getHeaderRow(0).getCell(column);

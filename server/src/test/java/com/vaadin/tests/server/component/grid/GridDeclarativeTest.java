@@ -56,8 +56,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         HeightMode heightMode = HeightMode.ROW;
         double heightByRows = 13.7d;
 
-        grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        grid.addColumn(Person::getLastName).setId("id").setCaption("Id");
 
         grid.setFrozenColumnCount(frozenColumns);
         grid.setSelectionMode(SelectionMode.MULTI);
@@ -66,9 +66,9 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
         String design = String.format(
                 "<%s height-mode='%s' frozen-columns='%d' rows='%s' selection-mode='%s'><table><colgroup>"
-                        + "<col column-id='generatedColumn0' sortable>"
+                        + "<col column-id='column0' sortable>"
                         + "<col column-id='id' sortable>" + "</colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
+                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
                         + "<th plain-text column-ids='id'>Id</th></tr>"
                         + "</thead></table></%s>",
                 getComponentTag(),
@@ -85,11 +85,12 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     public void mergedHeaderCells() {
         Grid<Person> grid = new Grid<>();
 
-        Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn("id",
-                Person::getLastName);
-        Column<Person, String> column3 = grid.addColumn("mail",
-                Person::getEmail);
+        Column<Person, String> column1 = grid.addColumn(Person::getFirstName)
+                .setCaption("First Name");
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId("id").setCaption("Id");
+        Column<Person, String> column3 = grid.addColumn(Person::getEmail)
+                .setId("mail").setCaption("Mail");
 
         HeaderRow header = grid.addHeaderRowAt(1);
         String headerRowText1 = "foo";
@@ -99,17 +100,19 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         String headerRowText3 = "foobar";
         join.setText(headerRowText3);
 
-        String design = String.format("<%s><table><colgroup>"
-                + "<col column-id='generatedColumn0' sortable>"
-                + "<col column-id='id' sortable>"
-                + "<col column-id='mail' sortable>" + "</colgroup><thead>"
-                + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
-                + "<th plain-text column-ids='id'>Id</th>"
-                + "<th plain-text column-ids='mail'>Mail</th></tr>"
-                + "<tr><th plain-text column-ids='generatedColumn0'>%s</th>"
-                + "<th colspan='2' plain-text column-ids='id,mail'>foobar</th></tr>"
-                + "</thead></table></%s>", getComponentTag(), headerRowText1,
-                headerRowText3, getComponentTag());
+        String design = String.format(
+                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
+                        + "<col column-id='id' sortable>"
+                        + "<col column-id='mail' sortable>"
+                        + "</colgroup><thead>"
+                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                        + "<th plain-text column-ids='id'>Id</th>"
+                        + "<th plain-text column-ids='mail'>Mail</th></tr>"
+                        + "<tr><th plain-text column-ids='column0'>%s</th>"
+                        + "<th colspan='2' plain-text column-ids='id,mail'>foobar</th></tr>"
+                        + "</thead></table></%s>",
+                getComponentTag(), headerRowText1, headerRowText3,
+                getComponentTag());
 
         testRead(design, grid);
         testWrite(design, grid);
@@ -119,11 +122,12 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     public void mergedFooterCells() {
         Grid<Person> grid = new Grid<>();
 
-        Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn("id",
-                Person::getLastName);
-        Column<Person, String> column3 = grid.addColumn("mail",
-                Person::getEmail);
+        Column<Person, String> column1 = grid.addColumn(Person::getFirstName)
+                .setCaption("First Name");
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId("id").setCaption("Id");
+        Column<Person, String> column3 = grid.addColumn(Person::getEmail)
+                .setId("mail").setCaption("Mail");
 
         FooterRow footer = grid.addFooterRowAt(0);
 
@@ -137,17 +141,19 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         String footerRowText2 = "foobar";
         footer.join(cell2, cell3).setHtml(footerRowText2);
 
-        String design = String.format("<%s><table><colgroup>"
-                + "<col column-id='generatedColumn0' sortable>"
-                + "<col column-id='id' sortable>"
-                + "<col column-id='mail' sortable>" + "</colgroup><thead>"
-                + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
-                + "<th plain-text column-ids='id'>Id</th>"
-                + "<th plain-text column-ids='mail'>Mail</th></tr></thead>"
-                + "<tfoot><tr><td plain-text column-ids='generatedColumn0'>%s</td>"
-                + "<td colspan='2' column-ids='id,mail'>%s</td></tr></tfoot>"
-                + "</table></%s>", getComponentTag(), footerRowText1,
-                footerRowText2, getComponentTag());
+        String design = String.format(
+                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
+                        + "<col column-id='id' sortable>"
+                        + "<col column-id='mail' sortable>"
+                        + "</colgroup><thead>"
+                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                        + "<th plain-text column-ids='id'>Id</th>"
+                        + "<th plain-text column-ids='mail'>Mail</th></tr></thead>"
+                        + "<tfoot><tr><td plain-text column-ids='column0'>%s</td>"
+                        + "<td colspan='2' column-ids='id,mail'>%s</td></tr></tfoot>"
+                        + "</table></%s>",
+                getComponentTag(), footerRowText1, footerRowText2,
+                getComponentTag());
 
         testRead(design, grid);
         testWrite(design, grid);
@@ -158,9 +164,10 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Grid<Person> grid = new Grid<>();
 
         String secondColumnId = "id";
-        Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn(secondColumnId,
-                Person::getLastName);
+        Column<Person, String> column1 = grid.addColumn(Person::getFirstName)
+                .setCaption("First Name");
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId(secondColumnId).setCaption("Id");
 
         String caption = "test-caption";
         column1.setCaption(caption);
@@ -189,10 +196,10 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
         String design = String.format(
                 "<%s><table><colgroup>"
-                        + "<col column-id='generatedColumn0' sortable='%s' editable resizable='%s' hidable hidden>"
+                        + "<col column-id='column0' sortable='%s' editable resizable='%s' hidable hidden>"
                         + "<col column-id='id' sortable hiding-toggle-caption='%s' width='%s' min-width='%s' max-width='%s' expand='%s'>"
                         + "</colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='generatedColumn0'>%s</th>"
+                        + "<tr default><th plain-text column-ids='column0'>%s</th>"
                         + "<th plain-text column-ids='id'>%s</th>"
                         + "</tr></thead>" + "</table></%s>",
                 getComponentTag(), sortable, resizable, hidingToggleCaption,
@@ -207,22 +214,24 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     public void headerFooterSerialization() {
         Grid<Person> grid = new Grid<>();
 
-        Column<Person, String> column1 = grid.addColumn(Person::getFirstName);
-        Column<Person, String> column2 = grid.addColumn("id",
-                Person::getLastName);
+        Column<Person, String> column1 = grid.addColumn(Person::getFirstName)
+                .setCaption("First Name");
+        Column<Person, String> column2 = grid.addColumn(Person::getLastName)
+                .setId("id").setCaption("Id");
 
         FooterRow footerRow = grid.addFooterRowAt(0);
         footerRow.getCell(column1).setText("x");
         footerRow.getCell(column2).setHtml("y");
 
-        String design = String.format("<%s><table><colgroup>"
-                + "<col column-id='generatedColumn0' sortable>"
-                + "<col column-id='id' sortable></colgroup><thead>"
-                + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
-                + "<th plain-text column-ids='id'>Id</th></tr>"
-                + "</thead><tbody></tbody>"
-                + "<tfoot><tr><td plain-text column-ids='generatedColumn0'>x</td>"
-                + "<td column-ids='id'>y</td></tr></tfoot>" + "</table></%s>",
+        String design = String.format(
+                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
+                        + "<col column-id='id' sortable></colgroup><thead>"
+                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                        + "<th plain-text column-ids='id'>Id</th></tr>"
+                        + "</thead><tbody></tbody>"
+                        + "<tfoot><tr><td plain-text column-ids='column0'>x</td>"
+                        + "<td column-ids='id'>y</td></tr></tfoot>"
+                        + "</table></%s>",
                 getComponentTag(), getComponentTag());
 
         testRead(design, grid);
@@ -238,14 +247,13 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Person person2 = createPerson("name", "last-name");
         grid.setItems(person1, person2);
 
-        grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        grid.addColumn(Person::getLastName).setId("id").setCaption("Id");
 
         String design = String.format(
-                "<%s><table><colgroup>"
-                        + "<col column-id='generatedColumn0' sortable>"
+                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
                         + "<col column-id='id' sortable></colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
+                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
                         + "<th plain-text column-ids='id'>Id</th></tr>"
                         + "</thead><tbody>"
                         + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
@@ -281,8 +289,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Person person3 = createPerson("foo", "last-name");
         grid.setItems(person1, person2, person3);
 
-        grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        grid.addColumn(Person::getLastName).setId("id").setCaption("Id");
 
         Multi<Person> model = (Multi<Person>) grid
                 .setSelectionMode(SelectionMode.MULTI);
@@ -290,9 +298,9 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
         String design = String.format(
                 "<%s selection-mode='multi'><table><colgroup>"
-                        + "<col column-id='generatedColumn0' sortable>"
+                        + "<col column-id='column0' sortable>"
                         + "<col column-id='id' sortable></colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
+                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
                         + "<th plain-text column-ids='id'>Id</th></tr>"
                         + "</thead><tbody>"
                         + "<tr item='%s' selected><td>%s</td><td>%s</td></tr>"
@@ -318,18 +326,17 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Person person2 = createPerson("name", "last-name");
         grid.setItems(person1, person2);
 
-        grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        grid.addColumn(Person::getLastName).setId("id").setCaption("Id");
 
         Single<Person> model = (Single<Person>) grid
                 .setSelectionMode(SelectionMode.SINGLE);
         model.select(person2);
 
         String design = String.format(
-                "<%s><table><colgroup>"
-                        + "<col column-id='generatedColumn0' sortable>"
+                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
                         + "<col column-id='id' sortable></colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
+                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
                         + "<th plain-text column-ids='id'>Id</th></tr>"
                         + "</thead><tbody>"
                         + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
@@ -353,16 +360,16 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Person person2 = createPerson("name", "last-name");
         grid.setItems(person1, person2);
 
-        grid.addColumn(Person::getFirstName);
-        grid.addColumn("id", Person::getLastName);
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        grid.addColumn(Person::getLastName).setId("id").setCaption("Id");
 
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.asMultiSelect().setReadOnly(true);
 
         String formatString = "<%s %s selection-allowed><table><colgroup>"
-                + "<col column-id='generatedColumn0' sortable>"
+                + "<col column-id='column0' sortable>"
                 + "<col column-id='id' sortable>" + "</colgroup><thead>"
-                + "<tr default><th plain-text column-ids='generatedColumn0'>Generated Column0</th>"
+                + "<tr default><th plain-text column-ids='column0'>First Name</th>"
                 + "<th plain-text column-ids='id'>Id</th></tr>"
                 + "</thead><tbody>"
                 + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
@@ -394,7 +401,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     @Test
     public void testComponentInGridHeader() {
         Grid<Person> grid = new Grid<>();
-        Column<Person, String> column = grid.addColumn(Person::getFirstName);
+        Column<Person, String> column = grid.addColumn(Person::getFirstName)
+                .setCaption("First Name");
 
         String html = "<b>Foo</b>";
         Label component = new Label(html);
@@ -403,16 +411,15 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         //@formatter:off
         String design = String.format( "<%s><table>"
                 + "<colgroup>"
-                + "   <col sortable column-id='generatedColumn0'>"
+                + "   <col sortable column-id='column0'>"
                 + "</colgroup>"
                 + "<thead>"
-                + "<tr default><th column-ids='generatedColumn0'><vaadin-label>%s</vaadin-label></th></tr>"
+                + "<tr default><th column-ids='column0'><vaadin-label>%s</vaadin-label></th></tr>"
                 + "</thead>"
                 + "</table></%s>", getComponentTag(), html, getComponentTag());
         //@formatter:on
 
-        grid.getDefaultHeaderRow().getCell(column.getId())
-                .setComponent(component);
+        grid.getDefaultHeaderRow().getCell(column).setComponent(component);
 
         testRead(design, grid, true);
         testWrite(design, grid);
@@ -421,7 +428,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     @Test
     public void testComponentInGridFooter() {
         Grid<Person> grid = new Grid<>();
-        Column<Person, String> column = grid.addColumn(Person::getFirstName);
+        Column<Person, String> column = grid.addColumn(Person::getFirstName)
+                .setCaption("First Name");
 
         String html = "<b>Foo</b>";
         Label component = new Label(html);
@@ -433,11 +441,11 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
       //@formatter:off
         String design = String.format( "<%s><table>"
                 + "<colgroup>"
-                + "   <col sortable column-id='generatedColumn0'>"
+                + "   <col sortable column-id='column0'>"
                 + "</colgroup>"
                 + "<thead>"
                 +"<tfoot>"
-                + "<tr><td column-ids='generatedColumn0'><vaadin-label>%s</vaadin-label></td></tr>"
+                + "<tr><td column-ids='column0'><vaadin-label>%s</vaadin-label></td></tr>"
                 + "</tfoot>"
                 + "</table>"
                 + "</%s>", getComponentTag(), html, getComponentTag());
@@ -452,14 +460,14 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         //@formatter:off
         String design = "<vaadin-grid><table>"
                 + "<colgroup>"
-                + "   <col sortable column-id='generatedColumn0'>"
+                + "   <col sortable column-id='column0'>"
                 + "</colgroup>"
                 + "<thead />"
                 + "</table>"
                 + "</vaadin-grid>";
         //@formatter:on
         Grid<Person> grid = new Grid<>();
-        grid.addColumn(Person::getFirstName);
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
         grid.removeHeaderRow(grid.getDefaultHeaderRow());
 
         testWrite(design, grid);
@@ -509,7 +517,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 + "<tr><td %s column-ids='%s'>&gt; Test</td></tr>"
                 + "</tfoot>"
                 + "<tbody />"
-                + "</table></%s>", 
+                + "</table></%s>",
                 getComponentTag() , id, plainText, id, plainText, id, getComponentTag());
         //@formatter:on
 
@@ -531,8 +539,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Assert.assertEquals(expected, actualFooter);
 
         grid = new Grid<>();
-        Column<Person, String> column = grid.addColumn(id,
-                Person::getFirstName);
+        Column<Person, String> column = grid.addColumn(Person::getFirstName)
+                .setId(id);
         HeaderRow header = grid.addHeaderRowAt(0);
         FooterRow footer = grid.addFooterRowAt(0);
         grid.removeHeaderRow(grid.getDefaultHeaderRow());

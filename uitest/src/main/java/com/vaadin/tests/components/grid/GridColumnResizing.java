@@ -20,10 +20,11 @@ public class GridColumnResizing extends AbstractReindeerTestUI {
         TextField input = new TextField();
         Label isResizedLabel = new Label("not resized");
         Grid<Person> grid = new Grid<>();
-        Column<Person, String> nameColumn = grid.addColumn("Name",
-                Person::getFirstName);
-        Column<Person, Number> ageColumn = grid.addColumn("Age", Person::getAge,
-                new NumberRenderer());
+        Column<Person, String> nameColumn = grid.addColumn(Person::getFirstName)
+                .setCaption("Name");
+        Column<Person, Number> ageColumn = grid
+                .addColumn(Person::getAge, new NumberRenderer())
+                .setCaption("Age");
         grid.addColumnResizeListener(event -> {
             if (event.isUserOriginated()) {
                 isResizedLabel.setValue("client resized");

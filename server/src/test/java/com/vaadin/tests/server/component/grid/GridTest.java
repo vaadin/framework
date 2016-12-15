@@ -30,9 +30,10 @@ public class GridTest {
     @Before
     public void setUp() {
         grid = new Grid<>();
-        grid.addColumn("foo", ValueProvider.identity());
+
+        grid.addColumn(ValueProvider.identity()).setId("foo");
         grid.addColumn(String::length, new NumberRenderer());
-        grid.addColumn("randomColumnId", ValueProvider.identity());
+        grid.addColumn(ValueProvider.identity()).setId("randomColumnId");
     }
 
     @Test
@@ -73,23 +74,9 @@ public class GridTest {
                 grid.getHeaderRow(0).getCell("foo").getText());
     }
 
-    @Test
-    public void testGridColumnGeneratedIdentifier() {
-        assertEquals("Unexpected caption on a generated Column",
-                "Generated Column0",
-                grid.getColumn("generatedColumn0").getCaption());
-    }
-
-    @Test
-    public void testGridColumnCaptionFromIdentifier() {
-        assertEquals("Unexpected caption on a generated Column",
-                "Random Column Id",
-                grid.getColumn("randomColumnId").getCaption());
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void testGridMultipleColumnsWithSameIdentifier() {
-        grid.addColumn("foo", t -> t);
+        grid.addColumn(t -> t).setId("foo");
     }
 
     @Test
