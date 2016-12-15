@@ -1003,7 +1003,7 @@ public class Grid<T> extends AbstractListing<T>
 
         private SerializableFunction<T, Component> componentGenerator;
 
-        private String id;
+        private String userId;
 
         /**
          * Constructs a new Column configuration with given header caption,
@@ -1160,7 +1160,7 @@ public class Grid<T> extends AbstractListing<T>
          * @return the identifier string
          */
         private String getInternalId() {
-            return getState(false).id;
+            return getState(false).internalId;
         }
 
         /**
@@ -1171,7 +1171,7 @@ public class Grid<T> extends AbstractListing<T>
          */
         private void setInternalId(String id) {
             Objects.requireNonNull(id, "Communication ID can't be null");
-            getState().id = id;
+            getState().internalId = id;
         }
 
         /**
@@ -1180,7 +1180,7 @@ public class Grid<T> extends AbstractListing<T>
          * @return the identifier string
          */
         public String getId() {
-            return id;
+            return userId;
         }
 
         /**
@@ -1192,11 +1192,11 @@ public class Grid<T> extends AbstractListing<T>
          */
         public Column<T, V> setId(String id) {
             Objects.requireNonNull(id, "Column identifier cannot be null");
-            if (this.id != null) {
+            if (this.userId != null) {
                 throw new IllegalStateException(
                         "Column identifier cannot be changed");
             }
-            this.id = id;
+            this.userId = id;
             getParent().setColumnId(id, this);
             return this;
         }
