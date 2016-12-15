@@ -24,7 +24,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.server.data.DataCommunicator;
+import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.DataRequestRpc;

@@ -24,11 +24,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
-import com.vaadin.server.data.DataCommunicator;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.Query;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
 import com.vaadin.shared.ui.grid.MultiSelectionModelState;

@@ -12,10 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Listing;
-import com.vaadin.server.data.BackEndDataProvider;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.ListDataProvider;
-import com.vaadin.server.data.Query;
+import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.ui.AbstractListing.AbstractListingExtension;
 import com.vaadin.ui.declarative.DesignContext;
 

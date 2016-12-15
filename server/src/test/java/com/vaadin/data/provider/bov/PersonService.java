@@ -13,36 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data;
+package com.vaadin.data.provider.bov;
 
-import java.util.EventObject;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 /**
- * An event fired when the data of a {@code DataProvider} changes.
- *
- *
- * @see DataProviderListener
+ * Data access service example.
  *
  * @author Vaadin Ltd
- * @since 8.0
- *
+ * @see Person
  */
-public class DataChangeEvent extends EventObject {
+public interface PersonService extends Serializable {
+    List<Person> fetchPersons(int offset, int limit);
 
-    /**
-     * Creates a new {@code DataChangeEvent} event originating from the given
-     * data provider.
-     *
-     * @param source
-     *            the data provider, not null
-     */
-    public DataChangeEvent(DataProvider<?, ?> source) {
-        super(source);
+    List<Person> fetchPersons(int offset, int limit,
+            Collection<PersonSort> personSorts);
+
+    int getPersonCount();
+
+    public interface PersonSort extends Comparator<Person>, Serializable {
     }
 
-    @Override
-    public DataProvider<?, ?> getSource() {
-        return (DataProvider<?, ?>) super.getSource();
-    }
-
+    PersonSort createSort(String propertyName, boolean descending);
 }

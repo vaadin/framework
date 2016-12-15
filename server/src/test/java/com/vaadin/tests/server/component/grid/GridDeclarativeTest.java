@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.SelectionModel.Single;
-import com.vaadin.server.data.DataProvider;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.data.bean.Person;

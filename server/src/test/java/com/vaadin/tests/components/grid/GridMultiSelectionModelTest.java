@@ -24,10 +24,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
-import com.vaadin.server.data.BackEndDataProvider;
-import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
 import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;

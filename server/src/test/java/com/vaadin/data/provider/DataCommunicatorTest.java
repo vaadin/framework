@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data;
+package com.vaadin.data.provider;
 
 import java.util.Collections;
 
@@ -21,6 +21,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataProviderListener;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinRequest;

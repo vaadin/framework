@@ -19,7 +19,7 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import com.vaadin.server.data.DataKeyMapper;
+import com.vaadin.data.provider.DataKeyMapper;
 
 /**
  * <code>KeyMapper</code> is the simple two-way map for generating textual keys

@@ -20,9 +20,9 @@ import java.util.Set;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Binder;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.ListDataProvider;
-import com.vaadin.server.data.Query;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
