@@ -53,7 +53,6 @@ import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.event.SortEvent;
-import com.vaadin.v7.event.SortEvent.SortListener;
 import com.vaadin.v7.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.v7.shared.ui.grid.GridStaticCellType;
 import com.vaadin.v7.shared.ui.grid.HeightMode;
@@ -357,7 +356,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             column.setHidable(isColumnHidableByDefault(col));
         }
 
-        grid.addSortListener(new SortListener() {
+        grid.addSortListener(new SortEvent.SortListener() {
+
             @Override
             public void sort(SortEvent event) {
                 log("SortEvent: isUserOriginated? " + event.isUserOriginated());

@@ -240,7 +240,12 @@ public class GridBasics extends AbstractTestUIWithLog {
                 event -> log("ColumnResizeEvent: isUserOriginated? "
                         + event.isUserOriginated()));
 
-        layout.addComponent(createMenu());
+        grid.addSortListener(event -> log(
+                "SortEvent: isUserOriginated? " + event.isUserOriginated()));
+
+        layout.addComponent(
+
+                createMenu());
         layout.addComponent(grid);
         addComponent(layout);
     }

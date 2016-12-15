@@ -51,6 +51,9 @@ import com.vaadin.data.provider.Query;
 import com.vaadin.data.provider.SortOrder;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
+import com.vaadin.event.SortEvent;
+import com.vaadin.event.SortEvent.SortListener;
+import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.event.selection.SingleSelectionListener;
@@ -74,7 +77,6 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
-import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
 import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
@@ -121,13 +123,16 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T>
-        implements HasComponents, Listing<T, DataProvider<T, ?>> {
+public class Grid<T> extends AbstractListing<T> implements HasComponents,
+        Listing<T, DataProvider<T, ?>>, SortNotifier<Grid.Column<T, ?>> {
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
             ColumnReorderListener.class, "columnReorder",
             ColumnReorderEvent.class);
+
+    private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
+            .findMethod(SortListener.class, "sort", SortEvent.class);
 
     @Deprecated
     private static final Method COLUMN_RESIZE_METHOD = ReflectTools.findMethod(
@@ -2809,6 +2814,18 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
+     * Adds a sort order change listener that gets notified when the sort order
+     * changes.
+     *
+     * @param listener
+     *            the sort order change listener to add
+     */
+    @Override
+    public Registration addSortListener(SortListener<Column<T, ?>> listener) {
+        return addListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
+    }
+
+    /**
      * Get the current sort order list.
      *
      * @return a sort order list
@@ -3164,6 +3181,8 @@ public class Grid<T> extends AbstractListing<T>
             // Grid is not sorted anymore.
             getDataCommunicator().setBackEndSorting(Collections.emptyList());
             getDataCommunicator().setInMemorySorting(null);
+            fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
+                    userOriginated));
             return;
         }
         sortOrder.addAll(order);
@@ -3193,6 +3212,8 @@ public class Grid<T> extends AbstractListing<T>
         if (getEditor().isOpen()) {
             getEditor().cancel();
         }
+        fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
+                userOriginated));
     }
 
 }
