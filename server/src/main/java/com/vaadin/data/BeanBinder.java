@@ -160,7 +160,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          * @throws IllegalArgumentException
          *             if the property has no accessible getter
          *
-         * @see BindingBuilder#bind(SerializableFunction,
+         * @see BindingBuilder#bind(ValueProvider,
          *      SerializableBiConsumer)
          */
         public Binding<BEAN, TARGET> bind(String propertyName);
@@ -361,7 +361,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      * @throws IllegalArgumentException
      *             if the property has no accessible getter
      *
-     * @see #bind(HasValue, SerializableFunction, SerializableBiConsumer)
+     * @see #bind(HasValue, ValueProvider, SerializableBiConsumer)
      */
     public <FIELDVALUE> Binding<BEAN, FIELDVALUE> bind(
             HasValue<FIELDVALUE> field, String propertyName) {

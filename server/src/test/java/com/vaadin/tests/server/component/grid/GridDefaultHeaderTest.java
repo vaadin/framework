@@ -22,7 +22,7 @@ import static org.junit.Assert.assertSame;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.server.SerializableFunction;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -35,8 +35,8 @@ public class GridDefaultHeaderTest {
     public void setUp() {
         grid = new Grid<>();
 
-        column1 = grid.addColumn("First", SerializableFunction.identity());
-        column2 = grid.addColumn("Second", SerializableFunction.identity());
+        column1 = grid.addColumn("First", ValueProvider.identity());
+        column2 = grid.addColumn("Second", ValueProvider.identity());
     }
 
     @Test

@@ -47,6 +47,7 @@ import com.vaadin.data.Binder;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.SerializableEventListener;
@@ -1005,7 +1006,7 @@ public class Grid<T> extends AbstractListing<T>
          *            the type of value
          */
         protected Column(String caption,
-                SerializableFunction<T, ? extends V> valueProvider,
+                ValueProvider<T, ? extends V> valueProvider,
                 Renderer<V> renderer) {
             Objects.requireNonNull(caption, "Header caption can't be null");
             Objects.requireNonNull(valueProvider,
@@ -2448,7 +2449,7 @@ public class Grid<T> extends AbstractListing<T>
      * @see AbstractRenderer
      */
     public <V> Column<T, V> addColumn(String identifier,
-            SerializableFunction<T, ? extends V> valueProvider,
+            ValueProvider<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer)
             throws IllegalArgumentException {
         if (columnKeys.containsKey(identifier)) {
@@ -2477,7 +2478,7 @@ public class Grid<T> extends AbstractListing<T>
      *             if the same identifier is used for multiple columns
      */
     public Column<T, String> addColumn(String identifier,
-            SerializableFunction<T, String> valueProvider) {
+            ValueProvider<T, String> valueProvider) {
         return addColumn(identifier, valueProvider, new TextRenderer());
     }
 
@@ -2494,7 +2495,7 @@ public class Grid<T> extends AbstractListing<T>
      * @return the new column
      */
     public Column<T, String> addColumn(
-            SerializableFunction<T, ?> valueProvider) {
+            ValueProvider<T, String> valueProvider) {
         return addColumn(getGeneratedIdentifier(),
                 t -> String.valueOf(valueProvider.apply(t)),
                 new TextRenderer());
@@ -2516,7 +2517,7 @@ public class Grid<T> extends AbstractListing<T>
      * @see AbstractRenderer
      */
     public <V> Column<T, V> addColumn(
-            SerializableFunction<T, ? extends V> valueProvider,
+            ValueProvider<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
         return addColumn(getGeneratedIdentifier(), valueProvider, renderer);
     }

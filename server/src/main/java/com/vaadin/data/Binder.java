@@ -172,7 +172,7 @@ public class Binder<BEAN> implements Serializable {
          *             if {@code bind} has already been called on this binding
          */
         public Binding<BEAN, TARGET> bind(
-                SerializableFunction<BEAN, TARGET> getter,
+                ValueProvider<BEAN, TARGET> getter,
                 com.vaadin.server.SerializableBiConsumer<BEAN, TARGET> setter);
 
         /**
@@ -255,7 +255,7 @@ public class Binder<BEAN> implements Serializable {
          * which must match the current target data type of the binding, and a
          * model type, which can be any data type and becomes the new target
          * type of the binding. When invoking
-         * {@link #bind(SerializableFunction, SerializableBiConsumer)}, the
+         * {@link #bind(ValueProvider, SerializableBiConsumer)}, the
          * target type of the binding must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
@@ -281,7 +281,7 @@ public class Binder<BEAN> implements Serializable {
          * type, which must match the current target data type of the binding,
          * and a model type, which can be any data type and becomes the new
          * target type of the binding. When invoking
-         * {@link #bind(SerializableFunction, SerializableBiConsumer)}, the
+         * {@link #bind(ValueProvider, SerializableBiConsumer)}, the
          * target type of the binding must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
@@ -316,7 +316,7 @@ public class Binder<BEAN> implements Serializable {
          * type, which must match the current target data type of the binding,
          * and a model type, which can be any data type and becomes the new
          * target type of the binding. When invoking
-         * {@link #bind(SerializableFunction, SerializableBiConsumer)}, the
+         * {@link #bind(ValueProvider, SerializableBiConsumer)}, the
          * target type of the binding must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
@@ -533,7 +533,7 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public Binding<BEAN, TARGET> bind(
-                SerializableFunction<BEAN, TARGET> getter,
+                ValueProvider<BEAN, TARGET> getter,
                 SerializableBiConsumer<BEAN, TARGET> setter) {
             checkUnbound();
             Objects.requireNonNull(getter, "getter cannot be null");
@@ -976,7 +976,7 @@ public class Binder<BEAN> implements Serializable {
     /**
      * Creates a new binding for the given field. The returned builder may be
      * further configured before invoking
-     * {@link BindingBuilder#bind(SerializableFunction, SerializableBiConsumer)}
+     * {@link BindingBuilder#bind(ValueProvider, SerializableBiConsumer)}
      * which completes the binding. Until {@code Binding.bind} is called, the
      * binding has no effect.
      * <p>
@@ -993,7 +993,7 @@ public class Binder<BEAN> implements Serializable {
      *            the field to be bound, not null
      * @return the new binding
      *
-     * @see #bind(HasValue, SerializableFunction, SerializableBiConsumer)
+     * @see #bind(HasValue, ValueProvider, SerializableBiConsumer)
      */
     public <FIELDVALUE> BindingBuilder<BEAN, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
@@ -1060,7 +1060,7 @@ public class Binder<BEAN> implements Serializable {
      */
     public <FIELDVALUE> Binding<BEAN, FIELDVALUE> bind(
             HasValue<FIELDVALUE> field,
-            SerializableFunction<BEAN, FIELDVALUE> getter,
+            ValueProvider<BEAN, FIELDVALUE> getter,
             SerializableBiConsumer<BEAN, FIELDVALUE> setter) {
         return forField(field).bind(getter, setter);
     }
@@ -1473,7 +1473,7 @@ public class Binder<BEAN> implements Serializable {
      * <li>{@link #setBean(Object)} is called
      * <li>{@link #removeBean()} is called
      * <li>
-     * {@link BindingBuilder#bind(SerializableFunction, SerializableBiConsumer)}
+     * {@link BindingBuilder#bind(ValueProvider, SerializableBiConsumer)}
      * is called
      * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
      * </ul>

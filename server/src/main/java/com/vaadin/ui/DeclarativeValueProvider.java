@@ -18,7 +18,7 @@ package com.vaadin.ui;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import com.vaadin.server.SerializableFunction;
+import com.vaadin.data.ValueProvider;
 
 /**
  * Value provider class for declarative support.
@@ -28,7 +28,7 @@ import com.vaadin.server.SerializableFunction;
  * @param <T>
  *            item type
  */
-class DeclarativeValueProvider<T> implements SerializableFunction<T, String> {
+class DeclarativeValueProvider<T> implements ValueProvider<T, String> {
 
     private final Map<T, String> values = new IdentityHashMap<>();
 
