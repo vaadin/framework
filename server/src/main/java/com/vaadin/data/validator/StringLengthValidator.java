@@ -17,7 +17,7 @@
 package com.vaadin.data.validator;
 
 import com.vaadin.data.ValidationResult;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 
 /**
  * Verifies that the length of a string is within the given range.

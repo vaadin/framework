@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -35,7 +34,6 @@ import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
 import com.vaadin.shared.ui.grid.MultiSelectionModelState;
 import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.MultiSelect;
-import com.vaadin.util.ReflectTools;
 
 /**
  * Multiselection model for grid.
@@ -63,7 +61,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
      * only visible if an in-memory data provider is used
      * {@link DataSource#isInMemory()}.
      */
-    public enum SelectAllCheckBoxVisible {
+    public enum SelectAllCheckBoxVisibility {
         /**
          * Shows the select all checkbox, regardless of data provider used.
          * <p>
@@ -122,14 +120,9 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
-    @Deprecated
-    private static final Method SELECTION_CHANGE_METHOD = ReflectTools
-            .findMethod(MultiSelectionListener.class, "accept",
-                    MultiSelectionEvent.class);
-
     private Set<T> selection = new LinkedHashSet<>();
 
-    private SelectAllCheckBoxVisible selectAllCheckBoxVisible = SelectAllCheckBoxVisible.DEFAULT;
+    private SelectAllCheckBoxVisibility selectAllCheckBoxVisibility = SelectAllCheckBoxVisibility.DEFAULT;
 
     @Override
     protected void init() {
@@ -149,18 +142,18 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     /**
      * Sets the select all checkbox visibility mode.
      * <p>
-     * The default value is {@link SelectAllCheckBoxVisible#DEFAULT}, which
+     * The default value is {@link SelectAllCheckBoxVisibility#DEFAULT}, which
      * means that the checkbox is only visible if the grid's data provider is
      * in- memory.
      *
-     * @param selectAllCheckBoxVisible
+     * @param selectAllCheckBoxVisibility
      *            the visiblity mode to use
-     * @see SelectAllCheckBoxVisible
+     * @see SelectAllCheckBoxVisibility
      */
-    public void setSelectAllCheckBoxVisible(
-            SelectAllCheckBoxVisible selectAllCheckBoxVisible) {
-        if (this.selectAllCheckBoxVisible != selectAllCheckBoxVisible) {
-            this.selectAllCheckBoxVisible = selectAllCheckBoxVisible;
+    public void setSelectAllCheckBoxVisibility(
+            SelectAllCheckBoxVisibility selectAllCheckBoxVisibility) {
+        if (this.selectAllCheckBoxVisibility != selectAllCheckBoxVisibility) {
+            this.selectAllCheckBoxVisibility = selectAllCheckBoxVisibility;
             markAsDirty();
         }
     }
@@ -169,22 +162,22 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
      * Gets the current mode for the select all checkbox visibility.
      *
      * @return the select all checkbox visibility mode
-     * @see SelectAllCheckBoxVisible
+     * @see SelectAllCheckBoxVisibility
      * @see #isSelectAllCheckBoxVisible()
      */
-    public SelectAllCheckBoxVisible getSelectAllCheckBoxVisible() {
-        return selectAllCheckBoxVisible;
+    public SelectAllCheckBoxVisibility getSelectAllCheckBoxVisibility() {
+        return selectAllCheckBoxVisibility;
     }
 
     /**
      * Returns whether the select all checkbox will be visible with the current
      * setting of
-     * {@link #setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible)}.
+     * {@link #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)}.
      *
      * @return {@code true} if the checkbox will be visible with the current
      *         settings
-     * @see SelectAllCheckBoxVisible
-     * @see #setSelectAllCheckBoxVisible(SelectAllCheckBoxVisible)
+     * @see SelectAllCheckBoxVisibility
+     * @see #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)
      */
     public boolean isSelectAllCheckBoxVisible() {
         updateCanSelectAll();
@@ -224,10 +217,10 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
      * This is updated as a part of {@link #beforeClientResponse(boolean)},
      * since the data provider for grid can be changed on the fly.
      *
-     * @see SelectAllCheckBoxVisible
+     * @see SelectAllCheckBoxVisibility
      */
     protected void updateCanSelectAll() {
-        switch (selectAllCheckBoxVisible) {
+        switch (selectAllCheckBoxVisibility) {
         case VISIBLE:
             getState(false).selectAllCheckBoxVisible = true;
             break;
@@ -247,7 +240,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     public Registration addMultiSelectionListener(
             MultiSelectionListener<T> listener) {
         return addListener(MultiSelectionEvent.class, listener,
-                SELECTION_CHANGE_METHOD);
+                MultiSelectionListener.SELECTION_CHANGE_METHOD);
     }
 
     @Override
@@ -296,7 +289,8 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             @Override
             public Registration addValueChangeListener(
                     com.vaadin.data.HasValue.ValueChangeListener<Set<T>> listener) {
-                return addSelectionListener(event -> listener.accept(event));
+                return addSelectionListener(
+                        event -> listener.valueChange(event));
             }
 
             @Override

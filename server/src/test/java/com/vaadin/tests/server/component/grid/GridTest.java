@@ -11,8 +11,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.event.selection.SelectionEvent;
-import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -25,9 +25,10 @@ public class GridTest {
     @Before
     public void setUp() {
         grid = new Grid<>();
-        grid.addColumn(SerializableFunction.identity()).setId("foo");
+
+        grid.addColumn(ValueProvider.identity()).setId("foo");
         grid.addColumn(String::length, new NumberRenderer());
-        grid.addColumn(SerializableFunction.identity()).setId("randomColumnId");
+        grid.addColumn(ValueProvider.identity()).setId("randomColumnId");
     }
 
     @Test

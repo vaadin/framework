@@ -14,13 +14,11 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.function.Function;
 
-import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.data.Result;
 import com.vaadin.server.SerializableFunction;
 
 /**

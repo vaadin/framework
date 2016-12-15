@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.tests.data.bean.Person;
@@ -334,7 +334,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         BindingBuilder<Person, String> binding = binder.forField(textField);
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
 
-        binding.setRequired("foobar");
+        binding.asRequired("foobar");
         Assert.assertTrue(textField.isRequiredIndicatorVisible());
 
         binding.bind(Person::getFirstName, Person::setFirstName);
@@ -361,7 +361,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Assert.assertFalse(textField.isRequiredIndicatorVisible());
         AtomicInteger invokes = new AtomicInteger();
 
-        binding.setRequired(context -> {
+        binding.asRequired(context -> {
             invokes.incrementAndGet();
             Assert.assertSame(Locale.CANADA, context.getLocale().get());
             return "foobar";

@@ -125,7 +125,7 @@ public abstract class DataProviderWrapper<T, F, M>
      * This {@code DataProvider} will deliberately ignore any possible filters
      * from the Query.
      *
-     * @see DataProvider#setFilter(Object)
+     * @see DataProvider#withFilter(Object)
      *
      * @param dataProvider
      *            the underlying data provider
@@ -145,6 +145,8 @@ public abstract class DataProviderWrapper<T, F, M>
 
             @Override
             protected F getFilter(Query<T, Void> query) {
+                assert !query.getFilter()
+                        .isPresent() : "A filter is provided to a data provider that should be unfilterable";
                 return filter;
             }
         };

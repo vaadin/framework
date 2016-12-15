@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -29,7 +28,6 @@ import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.util.ReflectTools;
 
 /**
  * An abstract implementation of a field, or a {@code Component} allowing user
@@ -49,10 +47,6 @@ import com.vaadin.util.ReflectTools;
  */
 public abstract class AbstractField<T> extends AbstractComponent
         implements HasValue<T>, Focusable {
-
-    @Deprecated
-    private static final Method VALUE_CHANGE_METHOD = ReflectTools.findMethod(
-            ValueChangeListener.class, "accept", ValueChangeEvent.class);
 
     @Override
     public void setValue(T value) {
@@ -90,7 +84,7 @@ public abstract class AbstractField<T> extends AbstractComponent
     public Registration addValueChangeListener(
             ValueChangeListener<T> listener) {
         return addListener(ValueChangeEvent.class, listener,
-                VALUE_CHANGE_METHOD);
+                ValueChangeListener.VALUE_CHANGE_METHOD);
     }
 
     @Override

@@ -1015,8 +1015,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * <p>
          * Notice that this interface does not provide an accessor that would
          * allow finding out the currently focused component. Focus information
-         * can be acquired for some (but not all) {@code LegacyField} components
-         * through the {@link com.vaadin.event.FieldEvents.FocusListener} and
+         * can be acquired for some (but not all) components through the
+         * {@link com.vaadin.event.FieldEvents.FocusListener} and
          * {@link com.vaadin.event.FieldEvents.BlurListener} interfaces.
          * </p>
          *

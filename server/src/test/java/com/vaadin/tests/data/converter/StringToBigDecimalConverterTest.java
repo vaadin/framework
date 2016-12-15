@@ -22,8 +22,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
-import com.vaadin.data.util.converter.StringToBigDecimalConverter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.StringToBigDecimalConverter;
 
 public class StringToBigDecimalConverterTest
         extends AbstractStringConverterTest {

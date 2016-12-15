@@ -24,11 +24,11 @@ public class ListDataProviderTest
     public void filteringListDataProvider_appliedFilters() {
         Assert.assertEquals("Filtering result differ",
                 data.stream().filter(fooFilter).count(),
-                dataProvider.applyFilter(fooFilter).size(new Query<>()));
+                dataProvider.withFilter(fooFilter).size(new Query<>()));
 
         Assert.assertEquals("Chained filtering result differ",
                 data.stream().filter(fooFilter.and(gt5Filter)).count(),
-                dataProvider.applyFilter(fooFilter)
+                dataProvider.withFilter(fooFilter)
                         .size(new Query<>(gt5Filter)));
     }
 
@@ -36,7 +36,7 @@ public class ListDataProviderTest
     public void filteringListDataProvider_chainedFilters() {
         Assert.assertEquals("Chained filtering result differ",
                 data.stream().filter(fooFilter.and(gt5Filter)).count(),
-                dataProvider.applyFilter(fooFilter).applyFilter(gt5Filter)
+                dataProvider.withFilter(fooFilter).withFilter(gt5Filter)
                         .size(new Query<>()));
     }
 
@@ -55,26 +55,26 @@ public class ListDataProviderTest
 
         Assert.assertEquals("Chained filtering result differ",
                 data.stream().filter(fooFilter.or(gt5Filter)).count(),
-                orFilteredDataProvider.applyFilter(fooFilter)
-                        .applyFilter(gt5Filter).size(new Query<>()));
+                orFilteredDataProvider.withFilter(fooFilter)
+                        .withFilter(gt5Filter).size(new Query<>()));
     }
 
     @Test
     public void filteringListDataProvider_appliedFilterAndConverter() {
         Assert.assertEquals("Filtering result differ with 'Foo'",
                 data.stream().filter(gt5Filter.and(fooFilter)).count(),
-                dataProvider.applyFilter(gt5Filter).convertFilter(
+                dataProvider.withFilter(gt5Filter).convertFilter(
                         text -> strBean -> strBean.getValue().equals(text))
                         .size(new Query<>("Foo")));
 
         Assert.assertEquals("Filtering result differ with 'Xyz'", data.stream()
                 .filter(gt5Filter.and(s -> s.getValue().equals("Xyz"))).count(),
-                dataProvider.applyFilter(gt5Filter).convertFilter(
+                dataProvider.withFilter(gt5Filter).convertFilter(
                         text -> strBean -> strBean.getValue().equals(text))
                         .size(new Query<>("Xyz")));
 
         Assert.assertEquals("No results should've been found", 0,
-                dataProvider.applyFilter(gt5Filter).convertFilter(
+                dataProvider.withFilter(gt5Filter).convertFilter(
                         text -> strBean -> strBean.getValue().equals(text))
                         .size(new Query<>("Zyx")));
     }

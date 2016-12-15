@@ -61,6 +61,7 @@ public class RadioButtonGroupConnector
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
+        getWidget().setTabIndex(getState().tabIndex);
         getWidget().client = getConnection();
     }
 

@@ -4,8 +4,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.DateToLongConverter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.DateToLongConverter;
 
 public class DateToLongConverterTest extends AbstractConverterTest {
 

@@ -13,37 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.server;
 
-package com.vaadin.data.util.converter;
-
-import java.util.Date;
-
-import com.vaadin.data.Result;
+import java.io.Serializable;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
- * A converter that converts from {@link Long} to {@link Date} and back.
+ * A {@link Supplier} that is also {@link Serializable}.
  *
+ * @see Supplier
  * @author Vaadin Ltd
  * @since 8.0
+ * @param <T>
+ *            the type of the input to the function
  */
-public class DateToLongConverter implements Converter<Date, Long> {
-
-    @Override
-    public Result<Long> convertToModel(Date value, ValueContext context) {
-        if (value == null) {
-            return Result.ok(null);
-        }
-
-        return Result.ok(value.getTime());
-    }
-
-    @Override
-    public Date convertToPresentation(Long value, ValueContext context) {
-        if (value == null) {
-            return null;
-        }
-
-        return new Date(value);
-    }
-
+@FunctionalInterface
+public interface SerializableSupplier<T>
+        extends Supplier<T>, Serializable {
+    // Only method inherited from Supplier
 }

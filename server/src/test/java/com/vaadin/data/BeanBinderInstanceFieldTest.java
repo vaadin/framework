@@ -21,7 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.PropertyId;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.AbstractField;

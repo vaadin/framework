@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,6 +22,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
  * A converter that converts from {@link String} to {@link BigInteger} and back.

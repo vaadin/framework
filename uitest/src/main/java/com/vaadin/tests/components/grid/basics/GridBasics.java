@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.server.VaadinRequest;
@@ -44,7 +44,7 @@ import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -438,6 +438,12 @@ public class GridBasics extends AbstractTestUIWithLog {
         enableItem.setChecked(true);
 
         createSelectionMenu(stateMenu);
+
+        stateMenu.addItem("Set focus", item -> grid.focus());
+        MenuItem tabIndexMenu = stateMenu.addItem("Tab index", null);
+        addGridMethodMenu(tabIndexMenu, "0", 0, grid::setTabIndex);
+        addGridMethodMenu(tabIndexMenu, "-1", -1, grid::setTabIndex);
+        addGridMethodMenu(tabIndexMenu, "10", 10, grid::setTabIndex);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
@@ -536,20 +542,20 @@ public class GridBasics extends AbstractTestUIWithLog {
         selectionModelItem.addItem("SelectAllCheckbox: Visible", menuItem -> {
             switchToMultiSelect();
             ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
-                    .setSelectAllCheckBoxVisible(
-                            SelectAllCheckBoxVisible.VISIBLE);
+                    .setSelectAllCheckBoxVisibility(
+                            SelectAllCheckBoxVisibility.VISIBLE);
         });
         selectionModelItem.addItem("SelectAllCheckbox: Hidden", menuItem -> {
             switchToMultiSelect();
             ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
-                    .setSelectAllCheckBoxVisible(
-                            SelectAllCheckBoxVisible.HIDDEN);
+                    .setSelectAllCheckBoxVisibility(
+                            SelectAllCheckBoxVisibility.HIDDEN);
         });
         selectionModelItem.addItem("SelectAllCheckbox: Default", menuItem -> {
             switchToMultiSelect();
             ((MultiSelectionModelImpl<DataObject>) grid.getSelectionModel())
-                    .setSelectAllCheckBoxVisible(
-                            SelectAllCheckBoxVisible.DEFAULT);
+                    .setSelectAllCheckBoxVisibility(
+                            SelectAllCheckBoxVisibility.DEFAULT);
         });
     }
 

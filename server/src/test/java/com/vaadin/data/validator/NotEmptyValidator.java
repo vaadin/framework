@@ -21,7 +21,7 @@ import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 
 /**
  * Simple validator to check against {@code null} value and empty {@link String}
@@ -33,13 +33,14 @@ import com.vaadin.data.util.converter.ValueContext;
  * This validator can be suitable for fields that have been marked as required
  * with {@link HasValue#setRequiredIndicatorVisible(boolean)}.
  * <p>
- * Note that {@link BindingBuilder#setRequired(com.vaadin.data.ErrorMessageProvider)}
- * does almost the same thing, but verifies against the value NOT being equal to
- * what {@link HasValue#getEmptyValue()} returns and sets the required indicator
+ * Note that
+ * {@link BindingBuilder#asRequired(com.vaadin.data.ErrorMessageProvider)} does
+ * almost the same thing, but verifies against the value NOT being equal to what
+ * {@link HasValue#getEmptyValue()} returns and sets the required indicator
  * visible with {@link HasValue#setRequiredIndicatorVisible(boolean)}.
  *
  * @see HasValue#setRequiredIndicatorVisible(boolean)
- * @see BindingBuilder#setRequired(com.vaadin.data.ErrorMessageProvider)
+ * @see BindingBuilder#asRequired(com.vaadin.data.ErrorMessageProvider)
  * @author Vaadin Ltd
  * @since 8.0
  *

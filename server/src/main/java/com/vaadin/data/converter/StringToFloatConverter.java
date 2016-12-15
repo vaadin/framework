@@ -14,26 +14,28 @@
  * the License.
  */
 
-package com.vaadin.data.util.converter;
+package com.vaadin.data.converter;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
- * A converter that converts from {@link String} to {@link Long} and back. Uses
+ * A converter that converts from {@link String} to {@link Float} and back. Uses
  * the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
+ * Leading and trailing white spaces are ignored when converting from a String.
+ * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
- * </p>
  *
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class StringToLongConverter
-        extends AbstractStringToNumberConverter<Long> {
+public class StringToFloatConverter
+        extends AbstractStringToNumberConverter<Float> {
 
     /**
      * Creates a new converter instance with the given error message.
@@ -41,35 +43,20 @@ public class StringToLongConverter
      * @param errorMessage
      *            the error message to use if conversion fails
      */
-    public StringToLongConverter(String errorMessage) {
+    public StringToFloatConverter(String errorMessage) {
         super(errorMessage);
     }
 
-    /**
-     * Returns the format used by {@link #convertToPresentation(Long, Locale)}
-     * and {@link #convertToModel(String, Locale)}.
-     *
-     * @param locale
-     *            The locale to use
-     * @return A NumberFormat instance
-     */
     @Override
-    protected NumberFormat getFormat(Locale locale) {
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
-        return NumberFormat.getIntegerInstance(locale);
-    }
-
-    @Override
-    public Result<Long> convertToModel(String value, ValueContext context) {
+    public Result<Float> convertToModel(String value, ValueContext context) {
         Result<Number> n = convertToNumber(value,
                 context.getLocale().orElse(null));
+
         return n.map(number -> {
             if (number == null) {
                 return null;
             } else {
-                return number.longValue();
+                return number.floatValue();
             }
         });
     }

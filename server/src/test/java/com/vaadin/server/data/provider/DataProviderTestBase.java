@@ -66,7 +66,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
             List<SortOrder<String>> sortOrder, Comparator<StrBean> comp,
             SerializablePredicate<StrBean> filter) {
-        return new Query<StrBean, SerializablePredicate<StrBean>>(0,
+        return new Query<>(0,
                 Integer.MAX_VALUE, sortOrder, comp, filter);
     }
 
@@ -295,19 +295,5 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
                 new Query<>(strBean -> strBean.getValue().contains("Zyx"))));
         Assert.assertEquals("Unexpected number of matches for 'Foo'", 36,
                 dataProvider.size(new Query<>(fooFilter)));
-    }
-
-    @Test
-    public void filteringListDataProvider_defaultFilter() {
-        // Intentionally lost filter type. Not actually filterable anymore.
-        DataProvider<StrBean, ?> filtered = dataProvider.setFilter(gt5Filter);
-
-        Assert.assertEquals("Filter not applied, unexpected item count",
-                dataProvider.size(new Query<>(gt5Filter)),
-                filtered.size(new Query<>()));
-
-        Assert.assertEquals("Further filtering succeeded",
-                filtered.size(new Query<>()),
-                filtered.size((Query) new Query<>(fooFilter)));
     }
 }

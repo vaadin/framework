@@ -28,8 +28,6 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ValueContext;
 import com.vaadin.tests.data.bean.BeanWithEnums;
 import com.vaadin.tests.data.bean.TestEnum;
 import com.vaadin.ui.CheckBoxGroup;

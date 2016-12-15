@@ -16,15 +16,18 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
+import com.vaadin.server.SerializableBiPredicate;
+import com.vaadin.server.SerializableConsumer;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
@@ -35,10 +38,6 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.server.KeyMapper;
-import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
-import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.data.DataCommunicator;
 import com.vaadin.server.data.DataKeyMapper;
 import com.vaadin.server.data.DataProvider;
@@ -72,7 +71,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * allowed mode is active.
      */
     @FunctionalInterface
-    public interface NewItemHandler extends Consumer<String>, Serializable {
+    public interface NewItemHandler extends SerializableConsumer<String> {
     }
 
     /**
@@ -238,17 +237,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Note that unlike {@link #setItems(Collection)}, no automatic case
      * conversion is performed before the comparison.
      *
-     * @param filterPredicate
-     *            predicate for comparing the item string (first parameter) and
-     *            the filter string (second parameter)
+     * @param captionFilter
+     *            filter to check if an item is shown when user typed some text into the ComboBox
      * @param items
      *            the data items to display
      */
     public void setItems(
-            SerializableBiPredicate<String, String> filterPredicate,
+            CaptionFilter captionFilter,
             Collection<T> items) {
         DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> filterPredicate.test(
+                .convertFilter(filterText -> item -> captionFilter.test(
                         getItemCaptionGenerator().apply(item), filterText));
         setDataProvider(provider);
     }
@@ -260,17 +258,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Note that unlike {@link #setItems(Collection)}, no automatic case
      * conversion is performed before the comparison.
      *
-     * @param filterPredicate
-     *            predicate for comparing the item string (first parameter) and
-     *            the filter string (second parameter)
+     * @param captionFilter
+     *            filter to check if an item is shown when user typed some text into the ComboBox
      * @param items
      *            the data items to display
      */
     public void setItems(
-            SerializableBiPredicate<String, String> filterPredicate,
+            CaptionFilter captionFilter,
             @SuppressWarnings("unchecked") T... items) {
         DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> filterPredicate.test(
+                .convertFilter(filterText -> item -> captionFilter.test(
                         getItemCaptionGenerator().apply(item), filterText));
         setDataProvider(provider);
     }
@@ -399,7 +396,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @see #isEmptySelectionAllowed()
      * @see #setEmptySelectionCaption(String)
      * @see #isSelected(Object)
-     * @see #select(Object)
      *
      * @return the empty selection caption, not {@code null}
      */
@@ -559,7 +555,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
         return addSelectionListener(event -> {
-            listener.accept(new ValueChangeEvent<>(event.getComponent(), this,
+            listener.valueChange(new ValueChangeEvent<>(event.getComponent(), this,
                     event.isUserOriginated()));
         });
     }
@@ -677,5 +673,25 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
          * always trigger a diff mismatch and a resend.
          */
         updateDiffstate("selectedItemKey", Json.create(0));
+    }
+
+    /**
+     * Predicate to check {@link ComboBox} item captions against user typed strings.
+     *
+     * @see #setItems(CaptionFilter, Collection)
+     * @see #setItems(CaptionFilter, Object[])
+     */
+    @FunctionalInterface
+    public interface CaptionFilter extends SerializableBiPredicate<String, String> {
+
+        /**
+         * Check item caption against entered text
+         *
+         * @param itemCaption
+         * @param filterText
+         * @return {@code true} if item passes the filter and should be listed, {@code false} otherwise
+         */
+        @Override
+        public boolean test(String itemCaption, String filterText);
     }
 }

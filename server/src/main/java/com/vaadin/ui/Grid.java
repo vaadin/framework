@@ -35,7 +35,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,9 +47,10 @@ import com.vaadin.data.Binder;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.event.ConnectorEvent;
-import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.ContextClickEvent;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.event.selection.SingleSelectionListener;
@@ -80,6 +80,7 @@ import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
+import com.vaadin.ui.components.grid.EditorComponentGenerator;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
@@ -125,7 +126,7 @@ public class Grid<T> extends AbstractListing<T>
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
-            .findMethod(ItemClickListener.class, "accept", ItemClick.class);
+            .findMethod(ItemClickListener.class, "itemClick", ItemClick.class);
 
     @Deprecated
     private static final Method COLUMN_VISIBILITY_METHOD = ReflectTools
@@ -260,7 +261,7 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         public default Registration addSelectionListener(
                 SelectionListener<T> listener) {
-            return addSingleSelectionListener(e -> listener.accept(e));
+            return addSingleSelectionListener(e -> listener.selectionChange(e));
         }
 
         /**
@@ -303,7 +304,7 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         public default Registration addSelectionListener(
                 SelectionListener<T> listener) {
-            return addMultiSelectionListener(e -> listener.accept(e));
+            return addMultiSelectionListener(e -> listener.selectionChange(e));
         }
 
         /**
@@ -482,8 +483,7 @@ public class Grid<T> extends AbstractListing<T>
      * @see Registration
      */
     @FunctionalInterface
-    public interface ItemClickListener<T>
-            extends Consumer<ItemClick<T>>, ConnectorEventListener {
+    public interface ItemClickListener<T> extends SerializableEventListener {
         /**
          * Invoked when this listener receives a item click event from a Grid to
          * which it has been added.
@@ -491,8 +491,7 @@ public class Grid<T> extends AbstractListing<T>
          * @param event
          *            the received event, not null
          */
-        @Override
-        public void accept(ItemClick<T> event);
+        public void itemClick(ItemClick<T> event);
     }
 
     /**
@@ -678,7 +677,7 @@ public class Grid<T> extends AbstractListing<T>
      */
     @FunctionalInterface
     public interface DetailsGenerator<T>
-            extends Function<T, Component>, Serializable {
+            extends SerializableFunction<T, Component> {
     }
 
     /**
@@ -841,8 +840,7 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         @Override
-        public void columnVisibilityChanged(String internalId,
-                boolean hidden) {
+        public void columnVisibilityChanged(String internalId, boolean hidden) {
             Column<T, ?> column = getColumnByInternalId(internalId);
             ColumnState columnState = column.getState(false);
             if (columnState.hidden != hidden) {
@@ -996,12 +994,12 @@ public class Grid<T> extends AbstractListing<T>
 
         private final SerializableFunction<T, ? extends V> valueProvider;
 
-        private SerializableFunction<SortDirection, Stream<SortOrder<String>>> sortOrderProvider;
+        private SortOrderProvider sortOrderProvider;
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
 
-        private SerializableFunction<T, Component> componentGenerator;
+        private EditorComponentGenerator<T> componentGenerator;
 
         private String userId;
 
@@ -1014,7 +1012,8 @@ public class Grid<T> extends AbstractListing<T>
          * @param renderer
          *            the type of value
          */
-        protected Column(SerializableFunction<T, ? extends V> valueProvider,
+        protected Column(String caption,
+                ValueProvider<T, ? extends V> valueProvider,
                 Renderer<V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
@@ -1313,8 +1312,7 @@ public class Grid<T> extends AbstractListing<T>
          *            given direction
          * @return this column
          */
-        public Column<T, V> setSortOrderProvider(
-                SerializableFunction<SortDirection, Stream<SortOrder<String>>> provider) {
+        public Column<T, V> setSortOrderProvider(SortOrderProvider provider) {
             Objects.requireNonNull(provider,
                     "Sort order provider can't be null");
             sortOrderProvider = provider;
@@ -1738,7 +1736,7 @@ public class Grid<T> extends AbstractListing<T>
          * @return this column
          *
          * @see #setEditorComponent(Component)
-         * @see #setEditorComponentGenerator(SerializableFunction)
+         * @see #setEditorComponentGenerator(EditorComponentGenerator)
          */
         public Column<T, V> setEditable(boolean editable) {
             Objects.requireNonNull(componentGenerator,
@@ -1769,7 +1767,7 @@ public class Grid<T> extends AbstractListing<T>
          *
          * @see Editor#getBinder()
          * @see Editor#setBinder(Binder)
-         * @see #setEditorComponentGenerator(SerializableFunction)
+         * @see #setEditorComponentGenerator(EditorComponentGenerator)
          */
         public Column<T, V> setEditorComponent(Component component) {
             Objects.requireNonNull(component,
@@ -1778,7 +1776,7 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         /**
-         * Sets a component generator to provide editor component for this
+         * Sets a component generator to provide an editor component for this
          * Column. This method can be used to generate any dynamic component to
          * be displayed in the editor row.
          * <p>
@@ -1789,10 +1787,11 @@ public class Grid<T> extends AbstractListing<T>
          *            the editor component generator
          * @return this column
          *
+         * @see EditorComponentGenerator
          * @see #setEditorComponent(Component)
          */
         public Column<T, V> setEditorComponentGenerator(
-                SerializableFunction<T, Component> componentGenerator) {
+                EditorComponentGenerator<T> componentGenerator) {
             Objects.requireNonNull(componentGenerator);
             this.componentGenerator = componentGenerator;
             return setEditable(true);
@@ -1802,8 +1801,10 @@ public class Grid<T> extends AbstractListing<T>
          * Gets the editor component generator for this Column.
          *
          * @return editor component generator
+         *
+         * @see EditorComponentGenerator
          */
-        public SerializableFunction<T, Component> getEditorComponentGenerator() {
+        public EditorComponentGenerator<T> getEditorComponentGenerator() {
             return componentGenerator;
         }
 
@@ -2215,6 +2216,7 @@ public class Grid<T> extends AbstractListing<T>
      * @param <T>
      *            the bean type
      */
+    @FunctionalInterface
     public interface EditorErrorGenerator<T> extends Serializable,
             BiFunction<Map<Component, Column<T, ?>>, BinderValidationStatus<T>, String> {
 
@@ -2487,8 +2489,7 @@ public class Grid<T> extends AbstractListing<T>
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(
-            SerializableFunction<T, ?> valueProvider) {
+    public Column<T, String> addColumn(ValueProvider<T, String> valueProvider) {
         return addColumn(t -> String.valueOf(valueProvider.apply(t)),
                 new TextRenderer());
     }
@@ -2509,10 +2510,12 @@ public class Grid<T> extends AbstractListing<T>
      * @see AbstractRenderer
      */
     public <V> Column<T, V> addColumn(
-            SerializableFunction<T, ? extends V> valueProvider,
+            ValueProvider<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
-        Column<T, V> column = new Column<>(valueProvider, renderer);
-        addColumn(getGeneratedIdentifier(), column);
+        String generatedIdentifier = getGeneratedIdentifier();
+        Column<T, V> column = new Column<>("Column " + generatedIdentifier,
+                valueProvider, renderer);
+        addColumn(generatedIdentifier, column);
         return column;
     }
 
@@ -3563,7 +3566,7 @@ public class Grid<T> extends AbstractListing<T>
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
             DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-            Column<T, String> column = new Column<>(provider,
+            Column<T, String> column = new Column<>("", provider,
                     new HtmlRenderer());
             addColumn(getGeneratedIdentifier(), column);
             if (id != null) {
@@ -3639,9 +3642,9 @@ public class Grid<T> extends AbstractListing<T>
         for (Column<T, ?> column : getColumns()) {
             Object value = column.valueProvider.apply(item);
             tableRow.appendElement("td")
-                    .append((Optional.ofNullable(value).map(Object::toString)
+                    .append(Optional.ofNullable(value).map(Object::toString)
                             .map(DesignFormatter::encodeForTextNode)
-                            .orElse("")));
+                            .orElse(""));
         }
     }
 
@@ -3711,5 +3714,30 @@ public class Grid<T> extends AbstractListing<T>
      */
     protected String getInternalIdForColumn(Column<T, ?> column) {
         return column.getInternalId();
+    }
+
+    /**
+     * Generates the sort orders when rows are sorted by a column.
+     *
+     * @see Column#setSortOrderProvider
+     *
+     * @since 8.0
+     * @author Vaadin Ltd
+     */
+
+    @FunctionalInterface
+    public interface SortOrderProvider extends
+            SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
+
+        /**
+         * Generates the sort orders when rows are sorted by a column.
+         *
+         * @param sortDirection
+         *            desired sort direction
+         *
+         * @return sort information
+         */
+        @Override
+        public Stream<SortOrder<String>> apply(SortDirection sortDirection);
     }
 }

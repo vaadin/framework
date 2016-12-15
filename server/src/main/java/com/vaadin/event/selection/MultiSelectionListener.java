@@ -15,23 +15,39 @@
  */
 package com.vaadin.event.selection;
 
-import java.io.Serializable;
-import java.util.function.Consumer;
+import java.lang.reflect.Method;
+
+import com.vaadin.event.SerializableEventListener;
+import com.vaadin.util.ReflectTools;
 
 /**
- * Listens to changes from a {@link com.vaadin.data.SelectionModel.Multi}.
+ * A listener for listening for selection changes from a multiselection
+ * component.
  *
  * @author Vaadin Ltd
  *
  * @since 8.0
  *
  * @param <T>
- *            the data type of the selection model
+ *            the type of the selected item
+ *
+ * @see SelectionModel.Multi
+ * @see MultiSelectionEvent
  */
 @FunctionalInterface
-public interface MultiSelectionListener<T>
-        extends Consumer<MultiSelectionEvent<T>>, Serializable {
-    @Override
-    // Explicitly defined to make reflection logic happy
-    void accept(MultiSelectionEvent<T> event);
+public interface MultiSelectionListener<T> extends SerializableEventListener {
+
+    /** For internal use only. Might be removed in the future. */
+    @Deprecated
+    static final Method SELECTION_CHANGE_METHOD = ReflectTools.findMethod(
+            MultiSelectionListener.class, "selectionChange",
+            MultiSelectionEvent.class);
+
+    /**
+     * Invoked when the selection has changed by the user or programmatically.
+     *
+     * @param event
+     *            the selection event, never {@code null}
+     */
+    public void selectionChange(MultiSelectionEvent<T> event);
 }

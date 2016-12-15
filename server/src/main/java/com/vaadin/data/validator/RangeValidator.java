@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import com.vaadin.data.ValidationResult;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
 
 /**
  * Verifies that a value is within the given range.

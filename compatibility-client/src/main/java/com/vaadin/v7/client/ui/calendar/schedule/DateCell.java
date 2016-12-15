@@ -546,8 +546,7 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
         events.add(dayEvent.getCalendarEvent());
 
         index = 0;
-        for (CalendarEvent e : weekgrid.getCalendar()
-                .sortEventsByDuration(events)) {
+        for (CalendarEvent e : weekgrid.getCalendar().sortEvents(events)) {
             if (e.equals(dayEvent.getCalendarEvent())) {
                 break;
             }

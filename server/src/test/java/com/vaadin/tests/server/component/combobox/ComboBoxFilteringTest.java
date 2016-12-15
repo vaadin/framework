@@ -143,7 +143,7 @@ public class ComboBoxFilteringTest {
         ListDataProvider<Person> ldp = DataProvider.create(getPersonArray());
         // Same as above, but only showing a subset of the persons
         comboBox.setDataProvider(ldp
-                .applyFilter(person -> person.getFirstName().contains("nr"))
+                .withFilter(person -> person.getFirstName().contains("nr"))
                 .convertFilter(
                         text -> person -> person.getLastName().contains(text)));
 

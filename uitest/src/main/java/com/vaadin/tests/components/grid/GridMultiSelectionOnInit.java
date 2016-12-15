@@ -24,7 +24,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisible;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 
 public class GridMultiSelectionOnInit extends AbstractTestUI {
 
@@ -44,14 +44,14 @@ public class GridMultiSelectionOnInit extends AbstractTestUI {
             grid.getSelectionModel().select("Foo 2");
         }
 
-        RadioButtonGroup<SelectAllCheckBoxVisible> rbg = new RadioButtonGroup<>(
+        RadioButtonGroup<SelectAllCheckBoxVisibility> rbg = new RadioButtonGroup<>(
                 "Select All Visible",
-                Arrays.asList(SelectAllCheckBoxVisible.VISIBLE,
-                        SelectAllCheckBoxVisible.HIDDEN,
-                        SelectAllCheckBoxVisible.DEFAULT));
-        rbg.setValue(selectionModel.getSelectAllCheckBoxVisible());
+                Arrays.asList(SelectAllCheckBoxVisibility.VISIBLE,
+                        SelectAllCheckBoxVisibility.HIDDEN,
+                        SelectAllCheckBoxVisibility.DEFAULT));
+        rbg.setValue(selectionModel.getSelectAllCheckBoxVisibility());
         rbg.addValueChangeListener(event -> selectionModel
-                .setSelectAllCheckBoxVisible(event.getValue()));
+                .setSelectAllCheckBoxVisibility(event.getValue()));
         addComponent(rbg);
     }
 }

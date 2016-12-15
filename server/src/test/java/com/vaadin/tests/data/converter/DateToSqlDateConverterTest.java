@@ -5,8 +5,8 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.DateToSqlDateConverter;
-import com.vaadin.data.util.converter.ValueContext;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.DateToSqlDateConverter;
 
 public class DateToSqlDateConverterTest extends AbstractConverterTest {
 

@@ -13,28 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.data.converter;
 
-package com.vaadin.data.util.converter;
-
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 
 /**
- * A converter that converts from {@link String} to {@link Float} and back. Uses
- * the given locale and a {@link NumberFormat} instance for formatting and
+ * A converter that converts from {@link String} to {@link BigDecimal} and back.
+ * Uses the given locale and a {@link NumberFormat} instance for formatting and
  * parsing.
  * <p>
  * Leading and trailing white spaces are ignored when converting from a String.
+ * </p>
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
+ * </p>
  *
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class StringToFloatConverter
-        extends AbstractStringToNumberConverter<Float> {
+public class StringToBigDecimalConverter
+        extends AbstractStringToNumberConverter<BigDecimal> {
 
     /**
      * Creates a new converter instance with the given error message.
@@ -42,22 +46,25 @@ public class StringToFloatConverter
      * @param errorMessage
      *            the error message to use if conversion fails
      */
-    public StringToFloatConverter(String errorMessage) {
+    public StringToBigDecimalConverter(String errorMessage) {
         super(errorMessage);
     }
 
     @Override
-    public Result<Float> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value,
-                context.getLocale().orElse(null));
+    protected NumberFormat getFormat(Locale locale) {
+        NumberFormat numberFormat = super.getFormat(locale);
+        if (numberFormat instanceof DecimalFormat) {
+            ((DecimalFormat) numberFormat).setParseBigDecimal(true);
+        }
 
-        return n.map(number -> {
-            if (number == null) {
-                return null;
-            } else {
-                return number.floatValue();
-            }
-        });
+        return numberFormat;
+    }
+
+    @Override
+    public Result<BigDecimal> convertToModel(String value,
+            ValueContext context) {
+        return convertToNumber(value, context.getLocale().orElse(null))
+                .map(number -> (BigDecimal) number);
     }
 
 }
