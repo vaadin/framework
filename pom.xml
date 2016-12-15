@@ -565,6 +565,7 @@
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
+                <module>testbench-api</module>
                 <!-- Nexus staging bug needs the last module to be deployed. -->
                 <module>bom</module>
             </modules>
