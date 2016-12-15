@@ -17,8 +17,8 @@ package com.vaadin.ui.components.grid;
 
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Grid.Column;
 
