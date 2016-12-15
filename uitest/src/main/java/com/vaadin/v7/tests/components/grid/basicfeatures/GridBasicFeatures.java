@@ -49,11 +49,11 @@ import com.vaadin.v7.data.sort.Sort;
 import com.vaadin.v7.data.sort.SortOrder;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.SelectionEvent;
-import com.vaadin.v7.event.SortEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.SelectionEvent.SelectionListener;
-import com.vaadin.v7.event.SortEvent.SortListener;
+import com.vaadin.v7.event.SortEvent;
+import com.vaadin.v7.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.v7.shared.ui.grid.GridStaticCellType;
 import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.v7.ui.Field;
@@ -356,7 +356,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             column.setHidable(isColumnHidableByDefault(col));
         }
 
-        grid.addSortListener(new SortListener() {
+        grid.addSortListener(new SortEvent.SortListener() {
+
             @Override
             public void sort(SortEvent event) {
                 log("SortEvent: isUserOriginated? " + event.isUserOriginated());
@@ -1267,6 +1268,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         grid.getColumns().get(0).setMaximumWidth(30);
                     }
                 }, null);
+        createBooleanAction("Simple resize mode", "Columns", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid g, Boolean value, Object data) {
+                        g.setColumnResizeMode(value ? ColumnResizeMode.SIMPLE
+                                : ColumnResizeMode.ANIMATED);
+                    }
+                });
     }
 
     private static String getColumnProperty(int c) {

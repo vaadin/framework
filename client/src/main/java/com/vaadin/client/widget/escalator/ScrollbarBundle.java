@@ -436,6 +436,9 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         boolean offsetSizeBecomesGreaterThanScrollSize = showsScrollHandle()
                 && newOffsetSizeIsGreaterThanScrollSize;
         if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
+            if (offsetSizeTemporaryScrollHandler != null) {
+                offsetSizeTemporaryScrollHandler.removeHandler();
+            }
             // must be a field because Java insists.
             offsetSizeTemporaryScrollHandler = addScrollHandler(
                     new ScrollHandler() {
@@ -661,6 +664,9 @@ public abstract class ScrollbarBundle implements DeferredWorker {
              */
             boolean delayedSizeSet = !BrowserInfo.get().isFirefox();
             if (delayedSizeSet) {
+                if (scrollSizeTemporaryScrollHandler != null) {
+                    scrollSizeTemporaryScrollHandler.removeHandler();
+                }
                 scrollSizeTemporaryScrollHandler = addScrollHandler(
                         new ScrollHandler() {
                             @Override

@@ -104,6 +104,7 @@ import com.vaadin.v7.event.SortEvent.SortListener;
 import com.vaadin.v7.event.SortEvent.SortNotifier;
 import com.vaadin.v7.server.communication.data.DataGenerator;
 import com.vaadin.v7.server.communication.data.RpcDataProviderExtension;
+import com.vaadin.v7.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.v7.shared.ui.grid.EditorClientRpc;
 import com.vaadin.v7.shared.ui.grid.EditorServerRpc;
 import com.vaadin.v7.shared.ui.grid.GridClientRpc;
@@ -565,6 +566,35 @@ public class Grid extends AbstractComponent
                 field.setCaption(null);
             }
             return field;
+        }
+
+        @Override
+        protected void bindFields() {
+            List<Field<?>> fields = new ArrayList<>(getFields());
+            Item itemDataSource = getItemDataSource();
+
+            if (itemDataSource == null) {
+                unbindFields(fields);
+            } else {
+                bindFields(fields, itemDataSource);
+            }
+        }
+
+        private void unbindFields(List<Field<?>> fields) {
+            for (Field<?> field : fields) {
+                clearField(field);
+                unbind(field);
+                field.setParent(null);
+            }
+        }
+
+        private void bindFields(List<Field<?>> fields, Item itemDataSource) {
+            for (Field<?> field : fields) {
+                if (itemDataSource
+                        .getItemProperty(getPropertyId(field)) != null) {
+                    bind(field, getPropertyId(field));
+                }
+            }
         }
     }
 
@@ -2242,8 +2272,9 @@ public class Grid extends AbstractComponent
             Renderer<?> renderer = column.getRenderer();
 
             Item item = cell.getItem();
-            Object modelValue = item.getItemProperty(cell.getPropertyId())
-                    .getValue();
+            Property itemProperty = item.getItemProperty(cell.getPropertyId());
+            Object modelValue = itemProperty == null ? null
+                    : itemProperty.getValue();
 
             data.put(columnKeys.key(cell.getPropertyId()), AbstractRenderer
                     .encodeValue(modelValue, renderer, converter, getLocale()));
@@ -4583,6 +4614,12 @@ public class Grid extends AbstractComponent
     private boolean editorSaving = false;
     private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
+    /**
+     * Poperty ID to Field mapping that stores editor fields set by
+     * {@link #setEditorField(Object, Field)}.
+     */
+    private Map<Object, Field<?>> editorFields = new HashMap<>();
+
     private CellStyleGenerator cellStyleGenerator;
     private RowStyleGenerator rowStyleGenerator;
 
@@ -5283,6 +5320,27 @@ public class Grid extends AbstractComponent
     @Override
     protected GridState getState(boolean markAsDirty) {
         return (GridState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @param mode
+     *            a ColumnResizeMode value
+     */
+    public void setColumnResizeMode(ColumnResizeMode mode) {
+        getState().columnResizeMode = mode;
+    }
+
+    /**
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @return a ColumnResizeMode value
+     */
+    public ColumnResizeMode getColumnResizeMode() {
+        return getState(false).columnResizeMode;
     }
 
     /**
@@ -6868,6 +6926,16 @@ public class Grid extends AbstractComponent
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
 
+        // If field group has no field for this property, see if we have it
+        // stored
+        if (editor == null) {
+            editor = editorFields.get(propertyId);
+            if (editor != null) {
+                editorFieldGroup.bind(editor, propertyId);
+            }
+        }
+
+        // Otherwise try to build one
         try {
             if (editor == null) {
                 editor = editorFieldGroup.buildAndBind(propertyId);
@@ -6923,8 +6991,9 @@ public class Grid extends AbstractComponent
         editorFieldGroup.setItemDataSource(item);
 
         for (Column column : getColumns()) {
-            column.getState().editorConnector = getEditorField(
-                    column.getPropertyId());
+            column.getState().editorConnector = item
+                    .getItemProperty(column.getPropertyId()) == null ? null
+                            : getEditorField(column.getPropertyId());
         }
 
         editorActive = true;
@@ -6953,6 +7022,9 @@ public class Grid extends AbstractComponent
             field.setParent(this);
             editorFieldGroup.bind(field, propertyId);
         }
+
+        // Store field for this property for future reference
+        editorFields.put(propertyId, field);
     }
 
     /**

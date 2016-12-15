@@ -72,4 +72,5 @@ public class VTextField extends TextBoxBase
     public void onFocus(FocusEvent event) {
         addStyleDependentName(CLASSNAME_FOCUS);
     }
+
 }

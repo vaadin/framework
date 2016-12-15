@@ -75,6 +75,30 @@ public class GridLayoutTest {
         assertOrder(grid, new int[] { 0, 1, 2, 3 });
     }
 
+    @Test
+    public void removeRowsExpandRatiosPreserved() {
+        GridLayout gl = new GridLayout(3, 3);
+        gl.setRowExpandRatio(0, 0);
+        gl.setRowExpandRatio(1, 1);
+        gl.setRowExpandRatio(2, 2);
+
+        gl.setRows(2);
+        assertEquals(0, gl.getRowExpandRatio(0), 0);
+        assertEquals(1, gl.getRowExpandRatio(1), 0);
+    }
+
+    @Test
+    public void removeColsExpandRatiosPreserved() {
+        GridLayout gl = new GridLayout(3, 3);
+        gl.setColumnExpandRatio(0, 0);
+        gl.setColumnExpandRatio(1, 1);
+        gl.setColumnExpandRatio(2, 2);
+
+        gl.setColumns(2);
+        assertEquals(0, gl.getColumnExpandRatio(0), 0);
+        assertEquals(1, gl.getColumnExpandRatio(1), 0);
+    }
+
     private void assertContentPositions(GridLayout grid) {
         assertEquals(grid.getComponentCount(), children.length);
         int c = 0;

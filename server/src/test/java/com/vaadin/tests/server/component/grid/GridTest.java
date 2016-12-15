@@ -4,7 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.easymock.Capture;
 import org.junit.Assert;
@@ -13,8 +17,11 @@ import org.junit.Test;
 
 import com.vaadin.data.ValueProvider;
 import com.vaadin.event.selection.SelectionEvent;
+import com.vaadin.server.data.SortOrder;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.renderers.NumberRenderer;
 
@@ -176,5 +183,94 @@ public class GridTest {
 
         grid.addSelectionListener(
                 event -> Assert.fail("never ever happens (tm)"));
+    }
+
+    @Test
+    public void sortByColumn_sortOrderIsAscendingOneColumn() {
+        Column<String, ?> column = grid.getColumns().get(1);
+        grid.sort(column);
+
+        SortOrder<Column<String, ?>> sortOrder = grid.getSortOrder().get(0);
+        Assert.assertEquals(column, sortOrder.getSorted());
+        Assert.assertEquals(SortDirection.ASCENDING, sortOrder.getDirection());
+    }
+
+    @Test
+    public void sortByColumnDesc_sortOrderIsDescendingOneColumn() {
+        Column<String, ?> column = grid.getColumns().get(1);
+        grid.sort(column, SortDirection.DESCENDING);
+
+        SortOrder<Column<String, ?>> sortOrder = grid.getSortOrder().get(0);
+        Assert.assertEquals(column, sortOrder.getSorted());
+        Assert.assertEquals(SortDirection.DESCENDING, sortOrder.getDirection());
+    }
+
+    @Test
+    public void setSortOrder() {
+        Column<String, ?> column1 = grid.getColumns().get(1);
+        Column<String, ?> column2 = grid.getColumns().get(2);
+        List<SortOrder<Column<String, ?>>> order = Arrays.asList(
+                new SortOrder<>(column2, SortDirection.DESCENDING),
+                new SortOrder<>(column1, SortDirection.ASCENDING));
+        grid.setSortOrder(order);
+
+        List<SortOrder<Column<String, ?>>> sortOrder = grid.getSortOrder();
+        Assert.assertEquals(column2, sortOrder.get(0).getSorted());
+        Assert.assertEquals(SortDirection.DESCENDING,
+                sortOrder.get(0).getDirection());
+
+        Assert.assertEquals(column1, sortOrder.get(1).getSorted());
+        Assert.assertEquals(SortDirection.ASCENDING,
+                sortOrder.get(1).getDirection());
+    }
+
+    @Test
+    public void clearSortOrder() {
+        Column<String, ?> column = grid.getColumns().get(1);
+        grid.sort(column);
+
+        grid.clearSortOrder();
+
+        assertEquals(0, grid.getSortOrder().size());
+    }
+
+    @Test
+    public void sortListener_eventIsFired() {
+        Column<String, ?> column1 = grid.getColumns().get(1);
+        Column<String, ?> column2 = grid.getColumns().get(2);
+
+        List<SortOrder<Column<String, ?>>> list = new ArrayList<>();
+        AtomicReference<Boolean> fired = new AtomicReference<>();
+        grid.addSortListener(event -> {
+            Assert.assertTrue(list.isEmpty());
+            fired.set(true);
+            list.addAll(event.getSortOrder());
+        });
+        grid.sort(column1, SortDirection.DESCENDING);
+
+        Assert.assertEquals(column1, list.get(0).getSorted());
+        Assert.assertEquals(SortDirection.DESCENDING,
+                list.get(0).getDirection());
+
+        List<SortOrder<Column<String, ?>>> order = Arrays.asList(
+                new SortOrder<>(column2, SortDirection.DESCENDING),
+                new SortOrder<>(column1, SortDirection.ASCENDING));
+        list.clear();
+
+        grid.setSortOrder(order);
+
+        Assert.assertEquals(column2, list.get(0).getSorted());
+        Assert.assertEquals(SortDirection.DESCENDING,
+                list.get(0).getDirection());
+
+        Assert.assertEquals(column1, list.get(1).getSorted());
+        Assert.assertEquals(SortDirection.ASCENDING,
+                list.get(1).getDirection());
+
+        list.clear();
+        fired.set(false);
+        grid.clearSortOrder();
+        Assert.assertEquals(0, list.size());
+        Assert.assertTrue(fired.get());
     }
 }
