@@ -49,7 +49,8 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench</artifactId>
+            <artifactId>vaadin-testbench-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

@@ -89,6 +89,11 @@
                 <artifactId>vaadin-compatibility-client-compiled</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-testbench-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- AddOn Dependencies -->
             <dependency>

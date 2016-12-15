@@ -15,7 +15,6 @@
         <phantomjs.version>2.1.1</phantomjs.version>
         <vaadin.version>8.0-SNAPSHOT</vaadin.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <vaadin.testbench.version>5.0.0.alpha1</vaadin.testbench.version>
     </properties>
 
     <repositories>
@@ -59,8 +58,7 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench</artifactId>
-            <version>${vaadin.testbench.version}</version>
+            <artifactId>vaadin-testbench-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
