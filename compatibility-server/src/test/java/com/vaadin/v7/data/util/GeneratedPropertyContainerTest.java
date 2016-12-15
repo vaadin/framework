@@ -23,13 +23,13 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.sort.SortOrder;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Container.Indexed;
 import com.vaadin.v7.data.Container.ItemSetChangeEvent;
 import com.vaadin.v7.data.Container.ItemSetChangeListener;
 import com.vaadin.v7.data.Container.PropertySetChangeEvent;
 import com.vaadin.v7.data.Container.PropertySetChangeListener;
+import com.vaadin.v7.data.sort.SortOrder;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.GeneratedPropertyContainer.GeneratedPropertyItem;
 import com.vaadin.v7.data.util.filter.Compare;
