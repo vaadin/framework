@@ -79,13 +79,12 @@ public class GridEditorCustomField extends AbstractTestUIWithLog {
     private Grid<ComplexPerson> createGrid() {
         Grid<ComplexPerson> grid = new Grid<>();
         grid.setWidth("800px");
-        grid.addColumn(FIRST_NAME_IDENTIFIER, person -> person.getFirstName())
-                .setCaption("First Name");
-        grid.addColumn(LAST_NAME_IDENTIFIER, person -> person.getLastName())
-                .setCaption("Last Name");
-        grid.addColumn(ADDRESS_CITY_IDENTIFIER,
-                person -> person.getAddress().getCity())
-                .setCaption("City Name");
+        grid.addColumn(person -> person.getFirstName())
+                .setId(FIRST_NAME_IDENTIFIER).setCaption("First Name");
+        grid.addColumn(person -> person.getLastName())
+                .setId(LAST_NAME_IDENTIFIER).setCaption("Last Name");
+        grid.addColumn(person -> person.getAddress().getCity())
+                .setId(ADDRESS_CITY_IDENTIFIER).setCaption("City Name");
         grid.getEditor().setEnabled(true);
 
         return grid;

@@ -23,8 +23,8 @@ import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.GridSelectionModel;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 
 import elemental.json.JsonObject;

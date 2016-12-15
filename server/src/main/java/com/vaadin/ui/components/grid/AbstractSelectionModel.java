@@ -20,7 +20,6 @@ import com.vaadin.shared.ui.grid.AbstractSelectionModelState;
 import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
-import com.vaadin.ui.Grid.GridSelectionModel;
 
 import elemental.json.JsonObject;
 

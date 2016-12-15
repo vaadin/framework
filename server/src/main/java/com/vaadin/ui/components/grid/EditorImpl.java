@@ -32,8 +32,6 @@ import com.vaadin.shared.ui.grid.editor.EditorState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.Editor;
-import com.vaadin.ui.Grid.EditorErrorGenerator;
 
 import elemental.json.JsonObject;
 
