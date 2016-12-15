@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -79,6 +80,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.components.grid.AbstractSelectionModel;
+import com.vaadin.ui.components.grid.EditorComponentGenerator;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.Header;
@@ -992,7 +994,7 @@ public class Grid<T> extends AbstractListing<T>
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
 
-        private SerializableFunction<T, Component> componentGenerator;
+        private EditorComponentGenerator<T> componentGenerator;
 
         /**
          * Constructs a new Column configuration with given header caption,
@@ -1703,7 +1705,7 @@ public class Grid<T> extends AbstractListing<T>
          * @return this column
          *
          * @see #setEditorComponent(Component)
-         * @see #setEditorComponentGenerator(SerializableFunction)
+         * @see #setEditorComponentGenerator(EditorComponentGenerator)
          */
         public Column<T, V> setEditable(boolean editable) {
             Objects.requireNonNull(componentGenerator,
@@ -1734,7 +1736,7 @@ public class Grid<T> extends AbstractListing<T>
          *
          * @see Editor#getBinder()
          * @see Editor#setBinder(Binder)
-         * @see #setEditorComponentGenerator(SerializableFunction)
+         * @see #setEditorComponentGenerator(EditorComponentGenerator)
          */
         public Column<T, V> setEditorComponent(Component component) {
             Objects.requireNonNull(component,
@@ -1743,7 +1745,7 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         /**
-         * Sets a component generator to provide editor component for this
+         * Sets a component generator to provide an editor component for this
          * Column. This method can be used to generate any dynamic component to
          * be displayed in the editor row.
          * <p>
@@ -1754,10 +1756,11 @@ public class Grid<T> extends AbstractListing<T>
          *            the editor component generator
          * @return this column
          *
+         * @see EditorComponentGenerator
          * @see #setEditorComponent(Component)
          */
         public Column<T, V> setEditorComponentGenerator(
-                SerializableFunction<T, Component> componentGenerator) {
+                EditorComponentGenerator<T> componentGenerator) {
             Objects.requireNonNull(componentGenerator);
             this.componentGenerator = componentGenerator;
             return setEditable(true);
@@ -1767,8 +1770,10 @@ public class Grid<T> extends AbstractListing<T>
          * Gets the editor component generator for this Column.
          *
          * @return editor component generator
+         *
+         * @see EditorComponentGenerator
          */
-        public SerializableFunction<T, Component> getEditorComponentGenerator() {
+        public EditorComponentGenerator<T> getEditorComponentGenerator() {
             return componentGenerator;
         }
 
