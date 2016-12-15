@@ -93,7 +93,7 @@
             Also components using those are replaced with updated implementations using the
             new API, and the old data binding API and components have been moved to separate
             compatibility packages for ease of migration.
-            For more details, see the Book of Vaadin and <a href="#migrating">how to migrate
+            For more details, see <a href="#incompatible">list of incompatible changes</a>, and <a href="#migrating">how to migrate
             to Vaadin 8</a>.
         </p>
 
@@ -103,7 +103,7 @@
                 Notes for Vaadin 7.7.0</a>.
         </p>
 
-        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-major@</h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version@</h2>
         
         <ul><h4>Compatibility and requirements</h4>
             <li>Vaadin now requires Java 8 or later and Servlet 3.0 or later</li>
@@ -135,6 +135,7 @@
             <li><tt>setItemIconGenerator</tt> in <tt>AbstractListing</tt> replaces <tt>setItemIcon</tt> and <tt>setItemIconPropertyId</tt> from <tt>AbstractSelect</tt></li>
         </ul>
         <ul><h4>General API changes</h4>
+            <li>All listeners and one method interfaces have been marked as <tt>@FuntionalInterface</tt></li>
             <li>All components are now immediate, and <tt>AbstractComponent::setImmediate(boolean immediate)</tt> has been removed.</li>
             <li>Read-only is now a feature for field components and has been moved from <tt>AbstractComponent</tt> to <tt>HasValue</tt> </li>
             <li>Some deprecated/obsolete parts of API have been removed</li>
@@ -168,8 +169,8 @@
         <ul><h4>Component specific visual changes</h4>
             <li>The default width of <tt>Label</tt> is now undefined, matching other components</li>
             <li>The default width for <tt>ComboBox</tt> pop-up is now 100 % (previously undefined)</li>
-            <li><b>NOT YET INCLUDED: </b><tt>VerticalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = true</tt></li>
-            <li><b>NOT YET INCLUDED: </b><tt>HorizontalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = false</tt></li>
+            <li><tt>VerticalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = true</tt></li>
+            <li><tt>HorizontalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = false</tt></li>
         </ul>
         <ul><h4>Component specific declarative syntax changes</h4>
             <li>Components in the compatibility packages now use the prefix <tt>vaadin7-"</tt> in declarative design files</li>
@@ -362,7 +363,10 @@
             vaadin-server, vaadin-shared etc. The package
             vaadin-compatibility-client-compiled contains the widgetset
             <tt>com.vaadin.v7.Vaadin7WidgetSet</tt> which can be used instead of
-            DefaultWidgetSet.
+            <tt>DefaultWidgetSet</tt>.
+        </p>
+        <p>
+        All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compability-themes</tt> package.
         </p>
 
         <p>
@@ -511,16 +515,7 @@
 
         <ul>
             <li>iOS 9+</li>
-            <li>Android 4+</li>
-        </ul>
-
-        <p>Vaadin SQL Container supports the following databases:</p>
-        <ul>
-            <li>HSQLDB</li>
-            <li>MySQL</li>
-            <li>MSSQL</li>
-            <li>Oracle</li>
-            <li>PostgreSQL</li>
+            <li>Chrome 42+ Android 4+</li>
         </ul>
 
         <h2 id="vaadinontheweb">Vaadin on the Web</h2>
@@ -551,13 +546,10 @@
                     - Expert services for Vaadin</a></li>
             <li><a href="http://vaadin.com/company">vaadin.com/company
                     - Information about the company behind Vaadin</a></li>
-
-            <li><a href="http://dev.vaadin.com">dev.vaadin.com
-                    - Bug tracker</a></li>
-
             <li><a
-                href="https://vaadin.com/contribute">How to get the source
-                    code of Vaadin</a></li>
+                href="https://vaadin.com/contribute">vaadin.com/contribute - Contribution quide</a></li>
+                
+            <li><a href="https://github.com/vaadin/framework/issues">github.com/vaadin/framework - Github repository</a></li>
         </ul>
 
     </div>
