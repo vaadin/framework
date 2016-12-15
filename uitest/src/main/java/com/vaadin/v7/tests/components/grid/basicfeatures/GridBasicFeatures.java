@@ -51,9 +51,10 @@ import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.SelectionEvent.SelectionListener;
+import com.vaadin.v7.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.v7.shared.ui.grid.GridStaticCellType;
 import com.vaadin.v7.shared.ui.grid.HeightMode;
 import com.vaadin.v7.ui.Field;
@@ -1267,6 +1268,14 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         grid.getColumns().get(0).setMaximumWidth(30);
                     }
                 }, null);
+        createBooleanAction("Simple resize mode", "Columns", false,
+                new Command<Grid, Boolean>() {
+                    @Override
+                    public void execute(Grid g, Boolean value, Object data) {
+                        g.setColumnResizeMode(value ? ColumnResizeMode.SIMPLE
+                                : ColumnResizeMode.ANIMATED);
+                    }
+                });
     }
 
     private static String getColumnProperty(int c) {

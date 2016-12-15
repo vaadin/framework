@@ -307,6 +307,8 @@ public class Escalator extends Widget
     static class JsniUtil {
         public static class TouchHandlerBundle {
 
+            public static final String POINTER_EVENT_TYPE_TOUCH = "touch";
+
             /**
              * A <a href=
              * "http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsOverlay.html"
@@ -338,6 +340,11 @@ public class Escalator extends Widget
                 public native int getPageY()
                 /*-{
                     return this.targetTouches[0].pageY;
+                }-*/;
+
+                public native String getPointerType()
+                /*-{
+                    return this.pointerType;
                 }-*/;
             }
 
@@ -456,6 +463,15 @@ public class Escalator extends Widget
                 }
 
                 int pagePosition(CustomTouchEvent event) {
+                    // Use native event's screen x and y for IE11 and Edge
+                    // since there is no touches for these browsers (#18737)
+                    if (isCurrentBrowserIE11OrEdge()) {
+                        return vertical
+                                ? event.getNativeEvent().getClientY()
+                                + Window.getScrollTop()
+                                : event.getNativeEvent().getClientX()
+                                + Window.getScrollLeft();
+                    }
                     JsArray<Touch> a = event.getNativeEvent().getTouches();
                     return vertical ? a.get(0).getPageY() : a.get(0).getPageX();
                 }
@@ -495,7 +511,7 @@ public class Escalator extends Widget
             };
 
             public void touchStart(final CustomTouchEvent event) {
-                if (event.getNativeEvent().getTouches().length() == 1) {
+                if (allowTouch(event)) {
                     if (yMov == null) {
                         yMov = new Movement(true);
                         xMov = new Movement(false);
@@ -540,6 +556,18 @@ public class Escalator extends Widget
                             && Math.abs(yMov.offset) > Math.abs(xMov.offset);
                     double delta = Math.abs((vert ? yMov : xMov).offset);
                     animation.run((int) (3 * DURATION * easingOutExp(delta)));
+                }
+            }
+
+            // Allow touchStart for IE11 and Edge even though there is no touch
+            // (#18737),
+            // otherwise allow touch only if there is a single touch in the
+            // event
+            private boolean allowTouch(final TouchHandlerBundle.CustomTouchEvent event) {
+                if (isCurrentBrowserIE11OrEdge()) {
+                    return (POINTER_EVENT_TYPE_TOUCH.equals(event.getPointerType()));
+                } else {
+                    return (event.getNativeEvent().getTouches().length() == 1);
                 }
             }
 
@@ -881,7 +909,7 @@ public class Escalator extends Widget
 
         public native void detachScrollListener(Element element)
         /*
-         * Attaching events with JSNI instead of the GWT event mechanism because
+         * Detaching events with JSNI instead of the GWT event mechanism because
          * GWT didn't provide enough details in events, or triggering the event
          * handlers with GWT bindings was unsuccessful. Maybe, with more time
          * and skill, it could be done with better success. JavaScript overlay
@@ -956,6 +984,50 @@ public class Escalator extends Widget
             element.removeEventListener("touchmove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
             element.removeEventListener("touchend", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
             element.removeEventListener("touchcancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+        }-*/;
+
+        /**
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11 and Edge instead of
+         * touch* listeners (#18737)
+         *
+         * @param element
+         */
+        public native void attachPointerEventListeners(Element element)
+        /*
+         * Attaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
+        /*-{
+            element.addEventListener("pointerdown", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
+            element.addEventListener("pointermove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.addEventListener("pointerup", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+            element.addEventListener("pointercancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+        }-*/;
+
+        /**
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11 and Edge instead of
+         * touch* listeners (#18737)
+         *
+         * @param element
+         */
+        public native void detachPointerEventListeners(Element element)
+        /*
+         * Detaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
+        /*-{
+            element.removeEventListener("pointerdown", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
+            element.removeEventListener("pointermove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.removeEventListener("pointerup", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+            element.removeEventListener("pointercancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
         }-*/;
 
         public void scrollToColumn(final int columnIndex,
@@ -5717,7 +5789,13 @@ public class Escalator extends Widget
         scroller.attachScrollListener(verticalScrollbar.getElement());
         scroller.attachScrollListener(horizontalScrollbar.getElement());
         scroller.attachMousewheelListener(getElement());
-        scroller.attachTouchListeners(getElement());
+
+        if (isCurrentBrowserIE11OrEdge()) {
+            // Touch listeners doesn't work for IE11 and Edge (#18737)
+            scroller.attachPointerEventListeners(getElement());
+        } else {
+            scroller.attachTouchListeners(getElement());
+        }
     }
 
     @Override
@@ -5726,7 +5804,13 @@ public class Escalator extends Widget
         scroller.detachScrollListener(verticalScrollbar.getElement());
         scroller.detachScrollListener(horizontalScrollbar.getElement());
         scroller.detachMousewheelListener(getElement());
-        scroller.detachTouchListeners(getElement());
+
+        if (isCurrentBrowserIE11OrEdge()) {
+            // Touch listeners doesn't work for IE11 and Edge (#18737)
+            scroller.detachPointerEventListeners(getElement());
+        } else {
+            scroller.detachTouchListeners(getElement());
+        }
 
         /*
          * We can call paintRemoveRows here, because static ranges are simple to
@@ -6771,5 +6855,13 @@ public class Escalator extends Widget
      */
     double getMinCellWidth(int colIndex) {
         return columnConfiguration.getMinCellWidth(colIndex);
+    }
+
+    /**
+     * Internal method for checking whether the browser is IE11 or Edge
+     * @return true only if the current browser is IE11, or Edge
+     */
+    private static boolean isCurrentBrowserIE11OrEdge() {
+        return BrowserInfo.get().isIE11() || BrowserInfo.get().isEdge();
     }
 }

@@ -68,6 +68,7 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.DetailsManagerState;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -332,6 +333,31 @@ public class Grid<T> extends AbstractListing<T>
          *            An event providing more information
          */
         void columnResize(ColumnResizeEvent event);
+    }
+
+    /**
+     * Generates the sort orders when rows are sorted by a column.
+     *
+     * @see Column#setSortOrderProvider
+     *
+     * @since 8.0
+     * @author Vaadin Ltd
+     */
+    @FunctionalInterface
+    public interface SortOrderProvider extends
+            SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
+
+        /**
+         * Generates the sort orders when rows are sorted by a column.
+         *
+         * @param sortDirection
+         *            desired sort direction
+         *
+         * @return sort information
+         */
+        @Override
+        public Stream<SortOrder<String>> apply(SortDirection sortDirection);
+
     }
 
     /**
@@ -741,46 +767,16 @@ public class Grid<T> extends AbstractListing<T>
         @Override
         public void sort(String[] columnInternalIds, SortDirection[] directions,
                 boolean isUserOriginated) {
+
             assert columnInternalIds.length == directions.length : "Column and sort direction counts don't match.";
-            sortOrder.clear();
-            if (columnInternalIds.length == 0) {
-                // Grid is not sorted anymore.
-                getDataCommunicator()
-                        .setBackEndSorting(Collections.emptyList());
-                getDataCommunicator().setInMemorySorting(null);
-                return;
-            }
 
+            List<SortOrder<Column<T, ?>>> list = new ArrayList<>(
+                    directions.length);
             for (int i = 0; i < columnInternalIds.length; ++i) {
-                Column<T, ?> column = getColumnByInternalId(
-                        columnInternalIds[i]);
-                sortOrder.add(new SortOrder<>(column, directions[i]));
+                Column<T, ?> column = columnKeys.get(columnInternalIds[i]);
+                list.add(new SortOrder<>(column, directions[i]));
             }
-
-            // Set sort orders
-            // In-memory comparator
-            BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                    comparator2) -> SerializableComparator.asInstance(
-                            (Comparator<T> & Serializable) comparator1
-                                    .thenComparing(comparator2));
-            SerializableComparator<T> comparator = sortOrder.stream()
-                    .map(order -> order.getSorted()
-                            .getComparator(order.getDirection()))
-                    .reduce((x, y) -> 0, operator);
-            getDataCommunicator().setInMemorySorting(comparator);
-
-            // Back-end sort properties
-            List<SortOrder<String>> sortProperties = new ArrayList<>();
-            sortOrder.stream()
-                    .map(order -> order.getSorted()
-                            .getSortOrder(order.getDirection()))
-                    .forEach(s -> s.forEach(sortProperties::add));
-            getDataCommunicator().setBackEndSorting(sortProperties);
-
-            // Close grid editor if it's open.
-            if (getEditor().isOpen()) {
-                getEditor().cancel();
-            }
+            setSortOrder(list, isUserOriginated);
         }
 
         @Override
@@ -855,7 +851,6 @@ public class Grid<T> extends AbstractListing<T>
             if (column != null && column.isResizable()) {
                 column.getState().width = pixels;
                 fireColumnResizeEvent(column, true);
-                markAsDirty();
             }
         }
     }
@@ -3398,6 +3393,61 @@ public class Grid<T> extends AbstractListing<T>
         return getSelectionModel().addSelectionListener(listener);
     }
 
+    /**
+     * Sort this Grid in ascending order by a specified column.
+     *
+     * @param column
+     *            a column to sort against
+     *
+     */
+    public void sort(Column<T, ?> column) {
+        sort(column, SortDirection.ASCENDING);
+    }
+
+    /**
+     * Sort this Grid in user-specified {@link SortOrder} by a column.
+     *
+     * @param column
+     *            a column to sort against
+     * @param direction
+     *            a sort order value (ascending/descending)
+     *
+     */
+    public void sort(Column<T, ?> column, SortDirection direction) {
+        setSortOrder(
+                Collections.singletonList(new SortOrder<>(column, direction)));
+    }
+
+    /**
+     * Clear the current sort order, and re-sort the grid.
+     */
+    public void clearSortOrder() {
+        sortOrder.clear();
+        sort(false);
+    }
+
+    /**
+     * Sets the sort order to use.
+     *
+     * @param order
+     *            a sort order list.
+     *
+     * @throws IllegalArgumentException
+     *             if order is null
+     */
+    public void setSortOrder(List<SortOrder<Column<T, ?>>> order) {
+        setSortOrder(order, false);
+    }
+
+    /**
+     * Get the current sort order list.
+     *
+     * @return a sort order list
+     */
+    public List<SortOrder<Column<T, ?>>> getSortOrder() {
+        return Collections.unmodifiableList(sortOrder);
+    }
+
     @Override
     protected GridState getState() {
         return getState(true);
@@ -3406,6 +3456,27 @@ public class Grid<T> extends AbstractListing<T>
     @Override
     protected GridState getState(boolean markAsDirty) {
         return (GridState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @param mode
+     *            a ColumnResizeMode value
+     */
+    public void setColumnResizeMode(ColumnResizeMode mode) {
+        getState().columnResizeMode = mode;
+    }
+
+    /**
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
+     *
+     * @return a ColumnResizeMode value
+     */
+    public ColumnResizeMode getColumnResizeMode() {
+        return getState(false).columnResizeMode;
     }
 
     /**
@@ -3716,28 +3787,43 @@ public class Grid<T> extends AbstractListing<T>
         return column.getInternalId();
     }
 
-    /**
-     * Generates the sort orders when rows are sorted by a column.
-     *
-     * @see Column#setSortOrderProvider
-     *
-     * @since 8.0
-     * @author Vaadin Ltd
-     */
-
-    @FunctionalInterface
-    public interface SortOrderProvider extends
-            SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
-
-        /**
-         * Generates the sort orders when rows are sorted by a column.
-         *
-         * @param sortDirection
-         *            desired sort direction
-         *
-         * @return sort information
-         */
-        @Override
-        public Stream<SortOrder<String>> apply(SortDirection sortDirection);
+    private void setSortOrder(List<SortOrder<Column<T, ?>>> order,
+            boolean userOriginated) {
+        Objects.requireNonNull(order, "Sort order list cannot be null");
+        sortOrder.clear();
+        if (order.isEmpty()) {
+            // Grid is not sorted anymore.
+            getDataCommunicator().setBackEndSorting(Collections.emptyList());
+            getDataCommunicator().setInMemorySorting(null);
+            return;
+        }
+        sortOrder.addAll(order);
+        sort(userOriginated);
     }
+
+    private void sort(boolean userOriginated) {
+        // Set sort orders
+        // In-memory comparator
+        BinaryOperator<SerializableComparator<T>> operator = (comparator1,
+                comparator2) -> SerializableComparator
+                        .asInstance((Comparator<T> & Serializable) comparator1
+                                .thenComparing(comparator2));
+        SerializableComparator<T> comparator = sortOrder.stream().map(
+                order -> order.getSorted().getComparator(order.getDirection()))
+                .reduce((x, y) -> 0, operator);
+        getDataCommunicator().setInMemorySorting(comparator);
+
+        // Back-end sort properties
+        List<SortOrder<String>> sortProperties = new ArrayList<>();
+        sortOrder.stream().map(
+                order -> order.getSorted().getSortOrder(order.getDirection()))
+                .forEach(s -> s.forEach(sortProperties::add));
+        getDataCommunicator().setBackEndSorting(sortProperties);
+
+        // Close grid editor if it's open.
+        if (getEditor().isOpen()) {
+            getEditor().cancel();
+        }
+    }
+
 }
