@@ -17,6 +17,7 @@
 
     <properties>
         <vaadin.spring.version>2.0-SNAPSHOT</vaadin.spring.version>
+        <vaadin.testbench.version>5.0.0.alpha2</vaadin.testbench.version>
     </properties>
 
     <repositories>
@@ -90,7 +91,6 @@
             </dependency>
 
             <!-- AddOn Dependencies -->
-
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-spring-boot-starter</artifactId>
@@ -105,6 +105,11 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-spring</artifactId>
                 <version>${vaadin.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-testbench</artifactId>
+                <version>${vaadin.testbench.version}</version>
             </dependency>
 
         </dependencies>
