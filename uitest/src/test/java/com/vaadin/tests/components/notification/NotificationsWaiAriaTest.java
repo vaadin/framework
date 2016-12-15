@@ -118,7 +118,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
     }
 
     private String getHiddenText(WebElement element) {
-        return (String) getTestBenchCommandExecutor()
+        return (String) getCommandExecutor()
                 .executeScript("return arguments[0].innerHTML", element);
     }
 }
