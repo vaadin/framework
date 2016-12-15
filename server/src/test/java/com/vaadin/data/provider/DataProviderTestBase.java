@@ -1,4 +1,4 @@
-package com.vaadin.server.data.provider;
+package com.vaadin.data.provider;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,13 +12,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.provider.DataChangeEvent;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.DataProviderListener;
+import com.vaadin.data.provider.Query;
+import com.vaadin.data.provider.Sort;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.server.SerializablePredicate;
-import com.vaadin.server.data.DataChangeEvent;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.DataProviderListener;
-import com.vaadin.server.data.Query;
-import com.vaadin.server.data.Sort;
-import com.vaadin.server.data.SortOrder;
 
 public abstract class DataProviderTestBase<D extends DataProvider<StrBean, SerializablePredicate<StrBean>>> {
 

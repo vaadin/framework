@@ -13,29 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data.provider.bov;
+package com.vaadin.data.provider.bov;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 
 /**
- * Data access service example.
+ * POJO
  *
  * @author Vaadin Ltd
- * @see Person
  */
-public interface PersonService extends Serializable {
-    List<Person> fetchPersons(int offset, int limit);
+public class Person implements Serializable {
+    private final String name;
+    private final int born;
 
-    List<Person> fetchPersons(int offset, int limit,
-            Collection<PersonSort> personSorts);
-
-    int getPersonCount();
-
-    public interface PersonSort extends Comparator<Person>, Serializable {
+    public Person(String name, int born) {
+        this.name = name;
+        this.born = born;
     }
 
-    PersonSort createSort(String propertyName, boolean descending);
+    public String getName() {
+        return name;
+    }
+
+    public int getBorn() {
+        return born;
+    }
+
+    @Override
+    public String toString() {
+        return name + "(" + born + ")";
+    }
 }

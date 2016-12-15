@@ -1,4 +1,4 @@
-package com.vaadin.server.data.provider;
+package com.vaadin.data.provider;
 
 import java.util.Comparator;
 import java.util.List;
@@ -6,11 +6,11 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.server.SerializablePredicate;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.ListDataProvider;
-import com.vaadin.server.data.Query;
-import com.vaadin.server.data.SortOrder;
 
 public class ListDataProviderTest
         extends DataProviderTestBase<ListDataProvider<StrBean>> {

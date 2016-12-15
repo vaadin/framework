@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.event.selection.SelectionEvent;
-import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid;

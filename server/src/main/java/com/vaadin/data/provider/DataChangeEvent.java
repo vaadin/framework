@@ -13,34 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data.provider.bov;
+package com.vaadin.data.provider;
 
-import java.io.Serializable;
+import java.util.EventObject;
 
 /**
- * POJO
+ * An event fired when the data of a {@code DataProvider} changes.
+ *
+ *
+ * @see DataProviderListener
  *
  * @author Vaadin Ltd
+ * @since 8.0
+ *
  */
-public class Person implements Serializable {
-    private final String name;
-    private final int born;
+public class DataChangeEvent extends EventObject {
 
-    public Person(String name, int born) {
-        this.name = name;
-        this.born = born;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getBorn() {
-        return born;
+    /**
+     * Creates a new {@code DataChangeEvent} event originating from the given
+     * data provider.
+     *
+     * @param source
+     *            the data provider, not null
+     */
+    public DataChangeEvent(DataProvider<?, ?> source) {
+        super(source);
     }
 
     @Override
-    public String toString() {
-        return name + "(" + born + ")";
+    public DataProvider<?, ?> getSource() {
+        return (DataProvider<?, ?>) super.getSource();
     }
+
 }
