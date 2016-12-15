@@ -93,7 +93,7 @@
             Also components using those are replaced with updated implementations using the
             new API, and the old data binding API and components have been moved to separate
             compatibility packages for ease of migration.
-            For more details, see the Book of Vaadin and <a href="#migrating">how to migrate
+            For more details, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
             to Vaadin 8</a>.
         </p>
 
@@ -103,7 +103,7 @@
                 Notes for Vaadin 7.7.0</a>.
         </p>
 
-        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-major@</h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version@</h2>
         
         <ul><h4>Compatibility and requirements</h4>
             <li>Vaadin now requires Java 8 or later and Servlet 3.0 or later</li>
@@ -135,6 +135,7 @@
             <li><tt>setItemIconGenerator</tt> in <tt>AbstractListing</tt> replaces <tt>setItemIcon</tt> and <tt>setItemIconPropertyId</tt> from <tt>AbstractSelect</tt></li>
         </ul>
         <ul><h4>General API changes</h4>
+            <li>All listeners and most single method interfaces have been marked as <tt>@FunctionalInterface</tt></li>
             <li>All components are now immediate, and <tt>AbstractComponent::setImmediate(boolean immediate)</tt> has been removed.</li>
             <li>Read-only is now a feature for field components and has been moved from <tt>AbstractComponent</tt> to <tt>HasValue</tt> </li>
             <li>Some deprecated/obsolete parts of API have been removed</li>
@@ -168,8 +169,8 @@
         <ul><h4>Component specific visual changes</h4>
             <li>The default width of <tt>Label</tt> is now undefined, matching other components</li>
             <li>The default width for <tt>ComboBox</tt> pop-up is now 100 % (previously undefined)</li>
-            <li><b>NOT YET INCLUDED: </b><tt>VerticalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = true</tt></li>
-            <li><b>NOT YET INCLUDED: </b><tt>HorizontalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = false</tt></li>
+            <li><tt>VerticalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = true</tt></li>
+            <li><tt>HorizontalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = false</tt></li>
         </ul>
         <ul><h4>Component specific declarative syntax changes</h4>
             <li>Components in the compatibility packages now use the prefix <tt>vaadin7-"</tt> in declarative design files</li>
@@ -218,19 +219,12 @@
                 
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
-            <li>Context click events are not generated on iOS devices
-                (<a href="http://dev.vaadin.com/ticket/19367">#19367</a>)</li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
-                (<a href="http://dev.vaadin.com/ticket/13737">#13737</a>)
+                (<a href="https://github.com/vaadin/framework/issues/5170">#5170</a>)
             </li>
-            <li><p>It is currently not possible to specify <tt>font-size</tt>
-                as <tt>em</tt> or <tt>%</tt>, or layout component sizes
-                with <tt>em</tt> (<a
-                href="http://dev.vaadin.com/ticket/10634">#10634</a>).</p><p>This
-                does not apply to Valo, but using em sizes to size layouts is discouraged,
-                because it results in fractional component sizes in many cases, which
-                might cause unwanted 1px gaps between components.</p>
+            <li>Specifying layout sizes using <tt>em</tt> is currently discouraged, because it results in fractional
+            components sizes in many cases, which might cause unwanted 1px gaps between components.
             </li>
             <li>Up-to-date information about configuration needed for push and compatibility issues are available in
             <a href="https://vaadin.com/wiki/-/wiki/Main/Configuring+push+for+your+environment">this wiki page.</a>
@@ -238,14 +232,14 @@
             The most prominent limitations are:
             <ul>
                 <li>Push is currently not supported in portals (See <a
-                    href="http://dev.vaadin.com/ticket/11493">#11493</a>)
+                    href="https://github.com/vaadin/framework/issues/3741">#3741</a>)
                 </li>
                 <li>>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
                      nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be
                      used to bypass these limitations.
                      <br />
-                     See tickets <a href="https://dev.vaadin.com/ticket/11808">#11808</a> and
-                     <a href="https://dev.vaadin.com/ticket/11721">#11721</a>
+                     See tickets <a href="https://github.com/vaadin/framework/issues/3911">#3911</a> and
+                     <a href="https://github.com/vaadin/framework/issues/3861">#3861</a>
                 </li>
             </ul>
             </li>
@@ -307,13 +301,13 @@
             <li>Shared library (<tt>vaadin-shared</tt>) for both
                 server- and client-side libraries
             </li>
-            <li>Built-in themes (<tt>vaadin-themes</tt>)
+            <li>Valo theme (the only inbuilt theme) (<tt>vaadin-themes</tt>)
             </li>
             <li>Dependency libraries provided under the <tt>lib/</tt>
                 folder
             </li>
             <li>Vaadin 7 compatible classes for server-side (<tt>vaadin-compatibility-server</tt>,
-                <tt>vaadin-compatibility-shared</tt>) and client-side (<tt>vaadin-compatibility-client</tt>)
+                <tt>vaadin-compatibility-shared</tt>), client-side (<tt>vaadin-compatibility-client</tt>) and themes (<tt>vaadin-compatibility-themes</tt>)
             </li>
         </ul>
 
@@ -362,7 +356,10 @@
             vaadin-server, vaadin-shared etc. The package
             vaadin-compatibility-client-compiled contains the widgetset
             <tt>com.vaadin.v7.Vaadin7WidgetSet</tt> which can be used instead of
-            DefaultWidgetSet.
+            <tt>DefaultWidgetSet</tt>.
+        </p>
+        <p>
+        All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compability-themes</tt> package.
         </p>
 
         <p>
@@ -511,16 +508,7 @@
 
         <ul>
             <li>iOS 9+</li>
-            <li>Android 4+</li>
-        </ul>
-
-        <p>Vaadin SQL Container supports the following databases:</p>
-        <ul>
-            <li>HSQLDB</li>
-            <li>MySQL</li>
-            <li>MSSQL</li>
-            <li>Oracle</li>
-            <li>PostgreSQL</li>
+            <li>Android 4+ with Chrome 42+</li>
         </ul>
 
         <h2 id="vaadinontheweb">Vaadin on the Web</h2>
@@ -551,13 +539,8 @@
                     - Expert services for Vaadin</a></li>
             <li><a href="http://vaadin.com/company">vaadin.com/company
                     - Information about the company behind Vaadin</a></li>
-
-            <li><a href="http://dev.vaadin.com">dev.vaadin.com
-                    - Bug tracker</a></li>
-
-            <li><a
-                href="https://vaadin.com/contribute">How to get the source
-                    code of Vaadin</a></li>
+            <li><a href="https://vaadin.com/contribute">vaadin.com/contribute - Contribution quide</a></li>
+            <li><a href="https://github.com/vaadin/framework/issues">github.com/vaadin/framework - Github repository</a></li>
         </ul>
 
     </div>
