@@ -1,4 +1,4 @@
-package com.vaadin.server.data.provider;
+package com.vaadin.data.provider;
 
 import java.io.Serializable;
 import java.util.ArrayList;

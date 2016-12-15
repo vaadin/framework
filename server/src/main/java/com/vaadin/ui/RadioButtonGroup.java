@@ -24,6 +24,8 @@ import java.util.Set;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Listing;
+import com.vaadin.data.provider.DataGenerator;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
@@ -34,8 +36,6 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializablePredicate;
-import com.vaadin.server.data.DataGenerator;
-import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;

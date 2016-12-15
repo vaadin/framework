@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.vaadin.server.data.Query;
+import com.vaadin.data.provider.Query;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Accordion;

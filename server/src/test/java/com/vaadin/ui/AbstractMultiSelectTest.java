@@ -37,10 +37,10 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.Listing;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
-import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 

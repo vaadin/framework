@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.ListDataProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.v7.data.util.BeanItemContainer;
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data;
+package com.vaadin.data.provider;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
@@ -21,6 +21,9 @@ import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.data.provider.AbstractDataProvider;
+import com.vaadin.data.provider.DataChangeEvent;
+import com.vaadin.data.provider.Query;
 import com.vaadin.shared.Registration;
 
 /**

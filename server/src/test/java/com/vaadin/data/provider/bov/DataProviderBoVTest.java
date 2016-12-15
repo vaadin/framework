@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.data.provider.bov;
+package com.vaadin.data.provider.bov;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,9 +25,9 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.server.data.BackEndDataProvider;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.SortOrder;
+import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 
 /**

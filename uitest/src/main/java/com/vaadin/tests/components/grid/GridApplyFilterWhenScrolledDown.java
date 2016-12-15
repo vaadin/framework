@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.data.DataProvider;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
