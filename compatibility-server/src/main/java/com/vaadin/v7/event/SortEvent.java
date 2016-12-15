@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event;
+package com.vaadin.v7.event;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.vaadin.data.sort.SortOrder;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.data.sort.SortOrder;
 
 /**
  * Event describing a change in sorting of a {@link Container}. Fired by
