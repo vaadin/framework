@@ -34,9 +34,9 @@ import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.Setter;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.server.Setter;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractComponent;
@@ -650,6 +650,10 @@ public class Binder<BEAN> implements Serializable {
                 throw new IllegalStateException(
                         "cannot modify binding: already bound to a property");
             }
+        }
+
+        protected HasValue<FIELDVALUE> getField() {
+            return field;
         }
     }
 

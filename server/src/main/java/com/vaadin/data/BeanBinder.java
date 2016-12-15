@@ -24,9 +24,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -36,9 +38,9 @@ import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
-import com.vaadin.server.Setter;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.server.Setter;
 import com.vaadin.ui.Label;
 import com.vaadin.util.ReflectTools;
 
@@ -227,6 +229,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                     errorMessageProvider);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public Binding<BEAN, TARGET> bind(String propertyName) {
             checkUnbound();
@@ -253,7 +256,15 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                                 value));
             } finally {
                 getBinder().boundProperties.add(propertyName);
+                getBinder().tentativeBindings.remove(getField());
             }
+        }
+
+        @Override
+        public Binding<BEAN, TARGET> bind(ValueProvider<BEAN, TARGET> getter,
+                Setter<BEAN, TARGET> setter) {
+            getBinder().tentativeBindings.remove(getField());
+            return super.bind(getter, setter);
         }
 
         @Override
@@ -317,6 +328,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
     private final Class<? extends BEAN> beanType;
     private final Set<String> boundProperties;
+    private final Map<HasValue<?>, BeanBindingImpl<BEAN, ?, ?>> tentativeBindings;
 
     /**
      * Creates a new {@code BeanBinder} supporting beans of the given type.
@@ -328,6 +340,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         BeanUtil.checkBeanValidationAvailable();
         this.beanType = beanType;
         boundProperties = new HashSet<>();
+        tentativeBindings = new HashMap<>();
     }
 
     @Override
@@ -379,7 +392,10 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             BindingValidationStatusHandler handler) {
         Objects.requireNonNull(field, "field cannot be null");
         Objects.requireNonNull(converter, "converter cannot be null");
-        return new BeanBindingImpl<>(this, field, converter, handler);
+        BeanBindingImpl<BEAN, FIELDVALUE, TARGET> newBinding = new BeanBindingImpl<>(
+                this, field, converter, handler);
+        tentativeBindings.put(field, newBinding);
+        return newBinding;
     }
 
     /**
@@ -432,8 +448,22 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                 .filter(memberField -> HasValue.class
                         .isAssignableFrom(memberField.getType()))
                 .forEach(memberField -> handleProperty(memberField,
+                        objectWithMemberFields,
                         (property, type) -> bindProperty(objectWithMemberFields,
                                 memberField, property, type)));
+    }
+
+    private BeanBindingImpl<BEAN, ?, ?> getTentativeBinding(Field memberField,
+            Object objectWithMemberFields) {
+        memberField.setAccessible(true);
+        try {
+            return tentativeBindings
+                    .get(memberField.get(objectWithMemberFields));
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } finally {
+            memberField.setAccessible(false);
+        }
     }
 
     /**
@@ -552,8 +582,9 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
     }
 
-    private void handleProperty(Field field,
+    private void handleProperty(Field field, Object objectWithMemberFields,
             BiConsumer<String, Class<?>> propertyHandler) {
+
         Optional<PropertyDescriptor> descriptor = getPropertyDescriptor(field);
 
         if (!descriptor.isPresent()) {
@@ -562,6 +593,13 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
         String propertyName = descriptor.get().getName();
         if (boundProperties.contains(propertyName)) {
+            return;
+        }
+
+        BeanBindingImpl<BEAN, ?, ?> tentativeBinding = getTentativeBinding(
+                field, objectWithMemberFields);
+        if (tentativeBinding != null) {
+            tentativeBinding.bind(propertyName);
             return;
         }
 
