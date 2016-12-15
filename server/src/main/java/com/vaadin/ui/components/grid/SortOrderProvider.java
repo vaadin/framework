@@ -17,8 +17,8 @@ package com.vaadin.ui.components.grid;
 
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Grid.Column;
 
@@ -31,8 +31,8 @@ import com.vaadin.ui.Grid.Column;
  * @author Vaadin Ltd
  */
 @FunctionalInterface
-public interface SortOrderProvider
-        extends SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
+public interface SortOrderProvider extends
+        SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
 
     /**
      * Generates the sort orders when rows are sorted by a column.
