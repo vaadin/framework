@@ -15,9 +15,6 @@
  */
 package com.vaadin.ui.renderers;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 import com.vaadin.shared.ui.grid.renderers.CheckBoxRendererState;
 
 /**
@@ -29,21 +26,11 @@ import com.vaadin.shared.ui.grid.renderers.CheckBoxRendererState;
 public class CheckBoxRenderer<T> extends ClickableRenderer<T, Boolean> {
 
     /**
-     * Creates a new checkbox renderer, given getter and setter functions.
-     * Getters and setters are used to update the object corresponding to a
-     * given row in the grid on the server side.
+     * Creates a new checkbox renderer
      *
-     * @param getter
-     *            function for getting the desired boolean value
-     * @param setter
-     *            function for setting the boolean value after a change from the
-     *            client side
      */
-    public CheckBoxRenderer(Function<T, Boolean> getter,
-            BiConsumer<T, Boolean> setter) {
+    public CheckBoxRenderer() {
         super(Boolean.class, "");
-        addClickListener(clickEvent -> setter.accept(clickEvent.getItem(),
-                !getter.apply(clickEvent.getItem())));
     }
 
     @Override
