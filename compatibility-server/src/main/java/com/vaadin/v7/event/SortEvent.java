@@ -31,6 +31,7 @@ import com.vaadin.v7.data.sort.SortOrder;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class SortEvent extends Component.Event {
 
     private final List<SortOrder> sortOrder;
@@ -76,6 +77,7 @@ public class SortEvent extends Component.Event {
      * Listener for sort order change events.
      */
     @FunctionalInterface
+    @Deprecated
     public interface SortListener extends Serializable {
         /**
          * Called when the sort order has changed.
@@ -90,6 +92,7 @@ public class SortEvent extends Component.Event {
      * The interface for adding and removing listeners for {@link SortEvent
      * SortEvents}.
      */
+    @Deprecated
     public interface SortNotifier extends Serializable {
         /**
          * Adds a sort order change listener that gets notified when the sort
@@ -107,10 +110,7 @@ public class SortEvent extends Component.Event {
          *
          * @param listener
          *            the sort order change listener to remove
-         * @deprecated use a {@link Registration} returned by
-         *             {@link #addSortListener(SortListener)}
          */
-        @Deprecated
         public void removeSortListener(SortListener listener);
     }
 }

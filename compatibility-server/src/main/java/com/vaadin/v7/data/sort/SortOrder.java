@@ -26,6 +26,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @since 7.4
  * @author Vaadin Ltd
  */
+@Deprecated
 public class SortOrder implements Serializable {
 
     private final Object propertyId;
