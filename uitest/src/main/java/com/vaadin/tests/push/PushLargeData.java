@@ -115,11 +115,13 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
         private Integer size;
         private Integer interval;
         private Integer duration;
+        private final UI ui;
 
         public PushRunnable(Integer size, Integer interval, Integer duration) {
             this.size = size;
             this.interval = interval;
             this.duration = duration;
+            ui = UI.getCurrent();
         }
 
         @Override
@@ -129,7 +131,7 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
             int packageIndex = 1;
             while (System.currentTimeMillis() < endTime) {
                 final int idx = packageIndex++;
-                UI.getCurrent().access(new Runnable() {
+                ui.access(new Runnable() {
                     @Override
                     public void run() {
                         PushLargeData ui = (PushLargeData) UI.getCurrent();
@@ -146,7 +148,7 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
                     return;
                 }
             }
-            UI.getCurrent().access(new Runnable() {
+            ui.access(new Runnable() {
                 @Override
                 public void run() {
                     PushLargeData ui = (PushLargeData) UI.getCurrent();
