@@ -21,7 +21,7 @@ import com.vaadin.shared.annotations.DelegateToWidget;
 /**
  * Default shared state implementation for AbstractColorPicker.
  *
- * @since
+ * @since 8.0
  */
 public class AbstractColorPickerState extends AbstractFieldState {
     {

@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.grid.GridConstants;
  * State object for Editor in Grid.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  */
 public class EditorState extends AbstractGridExtensionState {
 

@@ -26,7 +26,7 @@ import com.vaadin.shared.Registration;
  * provider with correct filters and sorting.
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            data provider data type

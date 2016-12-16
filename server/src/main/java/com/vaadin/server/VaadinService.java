@@ -217,7 +217,7 @@ public abstract class VaadinService implements Serializable {
      * {@link ServiceLoader}. This could for example be used to allow defining
      * an init listener as an OSGi service or as a Spring bean.
      *
-     * @since
+     * @since 8.0
      *
      * @return an iterator of available service init listeners
      */

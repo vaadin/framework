@@ -28,7 +28,7 @@ import com.vaadin.ui.UI;
  * converting values.
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 8.0
  */
 public class ValueContext implements Serializable {
 

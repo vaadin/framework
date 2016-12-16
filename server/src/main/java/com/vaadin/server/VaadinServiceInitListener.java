@@ -33,7 +33,7 @@ import java.util.ServiceLoader;
  * Integrations for specific runtime environments, such as OSGi or Spring, might
  * also provide other ways of discovering listeners.
  *
- * @since
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @FunctionalInterface
