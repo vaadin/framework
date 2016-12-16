@@ -55,7 +55,7 @@ public class MenuBarIsAutoOpenScrollingTest extends MultiBrowserTest {
 
         // here we have to use pause() because LazyCloser in VMenuBar auto
         // closes submenus popup in 750 ms.
-        actions.moveToElement(subMenuPopup, subMenuPopup.getSize().width - 7,
+        actions.moveToElement(subMenuPopup, subMenuPopup.getSize().width / 2,
                 100).clickAndHold().pause(1000).moveByOffset(0, 200).release()
                 .perform();
 
