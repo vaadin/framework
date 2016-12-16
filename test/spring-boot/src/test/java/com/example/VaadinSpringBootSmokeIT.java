@@ -22,7 +22,7 @@ import com.vaadin.testbench.parallel.Browser;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class SpringBootSmokeTest extends TestBenchTestCase {
+public class VaadinSpringBootSmokeIT extends TestBenchTestCase {
 
     @LocalServerPort
     Integer port;
