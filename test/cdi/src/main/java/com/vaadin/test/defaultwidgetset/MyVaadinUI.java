@@ -6,10 +6,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.cdi.CDIUI;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 
 @Theme("valo")
 @CDIUI("")
@@ -21,18 +19,8 @@ public class MyVaadinUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        setContent(layout);
-
-        Button button = new Button("Click Me");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.addComponent(new Label(service.getText()));
-            }
-        });
-        layout.addComponent(button);
+        setContent(new Button("Click Me",
+                e -> Notification.show(service.getText())));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -19,11 +20,13 @@ public class DemoApplication {
 
 @SpringUI
 class MyUI extends UI {
-    public static final String NOTIFICATION_TEXT = "Thank you for clicking.";
+
+    @Autowired
+    ThankYouService service;
 
     @Override
     protected void init(VaadinRequest request) {
         setContent(new Button("Click Me!",
-                e -> Notification.show(NOTIFICATION_TEXT)));
+                e -> Notification.show(service.getText())));
     }
 }

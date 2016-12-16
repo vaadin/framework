@@ -9,7 +9,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.NotificationElement;
 
 public class VaadinCDISmokeIT extends TestBenchTestCase {
 
@@ -29,8 +29,8 @@ public class VaadinCDISmokeIT extends TestBenchTestCase {
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertTrue($(LabelElement.class).exists());
+        Assert.assertTrue($(NotificationElement.class).exists());
         Assert.assertEquals(ThankYouServiceImpl.THANK_YOU_TEXT,
-                $(LabelElement.class).first().getText());
+                $(NotificationElement.class).first().getText());
     }
 }

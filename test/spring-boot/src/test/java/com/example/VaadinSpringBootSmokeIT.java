@@ -38,7 +38,7 @@ public class VaadinSpringBootSmokeIT extends TestBenchTestCase {
         getDriver().navigate().to("http://localhost:" + port + "");
         $(ButtonElement.class).first().click();
         Assert.assertTrue($(NotificationElement.class).exists());
-        Assert.assertEquals(MyUI.NOTIFICATION_TEXT,
+        Assert.assertEquals(ThankYouService.THANK_YOU_TEXT,
                 $(NotificationElement.class).first().getText());
     }
 }
