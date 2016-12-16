@@ -9,12 +9,15 @@ layout: page
 
 ////
 TODO
-
-* A Listing may let the user mark one or several of its items as selected.
-* Some listings only support having one item selected at a time
-** Code example: Setting, getting and reacting to events from a NativeSelect
-** Design question: Is nullSelectionAllowed a feature of each component or a feature of the selection model?
-* Other listings can be configured to allow selecting one or many items. Depending on how it is configured, it uses a different selection model type for working with the selection.
-** Code example: CheckBoxGroup/RadioButtonGroup. Using different selection model types to access the selection.
-** Code example: Using each selection model type with a Binder
+Outline
+* Intro: Some components are primarily for selection (HasValue, single or multi), some not
+* primarily selection
+ * comboBox.setItems(EnumSet.allOf(Status.class));
+ * value == selection -> directly usable with Binder
+ * value change event = selection change event
+ * Special event with added / removed for multi select
+* not HasValue
+ * selection models
+ * events through models
+ * asSingle, asMulti for using with Binder
 ////
