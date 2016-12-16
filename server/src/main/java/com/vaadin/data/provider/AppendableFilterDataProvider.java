@@ -21,7 +21,7 @@ import java.util.Objects;
  * Interface for DataProviders that support chaining filters.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            the data provider data type

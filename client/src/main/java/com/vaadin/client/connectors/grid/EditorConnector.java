@@ -41,7 +41,7 @@ import elemental.json.JsonObject;
  * Connector for Grid Editor.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  */
 @Connect(EditorImpl.class)
 public class EditorConnector extends AbstractExtensionConnector {
@@ -77,7 +77,7 @@ public class EditorConnector extends AbstractExtensionConnector {
                         List<String> errorColumnsIds) {
                     Collection<Column<?, JsonObject>> errorColumns;
                     if (errorColumnsIds != null) {
-                        errorColumns = new ArrayList<Grid.Column<?, JsonObject>>();
+                        errorColumns = new ArrayList<>();
                         for (String colId : errorColumnsIds) {
                             errorColumns.add(getParent().getColumn(colId));
                         }

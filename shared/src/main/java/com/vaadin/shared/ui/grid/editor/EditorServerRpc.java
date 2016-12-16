@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * An RPC interface for the grid editor client-to-server communications.
  *
- * @since
+ * @since 8.0
  * @author Vaadin Ltd
  */
 public interface EditorServerRpc extends ServerRpc {

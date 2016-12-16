@@ -28,7 +28,7 @@ import java.util.Objects;
  * This event can also be used to add {@link RequestHandler}s that will be used
  * by the {@code VaadinService} for handling all requests.
  *
- * @since
+ * @since 8.0
  * @author Vaadin Ltd
  */
 public class ServiceInitEvent extends EventObject {

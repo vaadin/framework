@@ -20,7 +20,7 @@ package com.vaadin.shared.ui.colorpicker;
  * 
  * @author Vaadin Ltd.
  *
- * @since
+ * @since 8.0
  */
 public class ColorPickerState extends AbstractColorPickerState {
 

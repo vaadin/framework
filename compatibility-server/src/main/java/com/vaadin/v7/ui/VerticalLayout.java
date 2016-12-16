@@ -30,7 +30,7 @@ import com.vaadin.ui.Component;
  * have changed.
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 5.3
  * @deprecated use com.vaadin.ui.VerticalLayout (with different defaults)
  */
 @Deprecated
