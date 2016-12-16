@@ -54,18 +54,20 @@ public class CalendarElement extends AbstractComponentElement {
     }
 
     public void back() {
-        if(hasWeekView() || hasDayView()) {
+        if (hasWeekView() || hasDayView()) {
             findElement(By.className("v-calendar-back")).click();
-        }else {
-            throw new IllegalStateException("Navigation only available in week or day view");
+        } else {
+            throw new IllegalStateException(
+                    "Navigation only available in week or day view");
         }
     }
 
     public void next() {
-        if(hasWeekView() || hasDayView()) {
+        if (hasWeekView() || hasDayView()) {
             findElement(By.className("v-calendar-next")).click();
-        }else {
-            throw new IllegalStateException("Navigation only available in week or day view");
+        } else {
+            throw new IllegalStateException(
+                    "Navigation only available in week or day view");
         }
     }
 

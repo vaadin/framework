@@ -36,8 +36,8 @@ public class TableRowElement extends AbstractComponentElement {
      * @return cell from current row by index.
      */
     public TestBenchElement getCell(int col) {
-        List<WebElement> cells = getWrappedElement().findElements(
-                By.tagName("td"));
+        List<WebElement> cells = getWrappedElement()
+                .findElements(By.tagName("td"));
         if (col >= cells.size()) {
             throw new NoSuchColumnException();
         }

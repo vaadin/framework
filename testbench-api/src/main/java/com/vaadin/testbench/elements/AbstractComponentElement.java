@@ -37,8 +37,8 @@ public class AbstractComponentElement extends AbstractElement {
         // IE8 getAttribute returns empty string instead of null
         // when there is no attribute with specified name
         if (captionId == null || captionId.equals("")) {
-            WebElement elem = findElement(By.xpath(".//*[@" + GWT_ID_ATTRIBUTE
-                    + "]"));
+            WebElement elem = findElement(
+                    By.xpath(".//*[@" + GWT_ID_ATTRIBUTE + "]"));
             captionId = elem.getAttribute(GWT_ID_ATTRIBUTE);
         }
         // element ids are unique, we can search the whole page

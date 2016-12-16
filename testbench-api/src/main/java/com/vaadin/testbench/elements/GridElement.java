@@ -144,10 +144,10 @@ public class GridElement extends AbstractComponentElement {
          * present.
          */
         public String getErrorMessage() {
-            WebElement messageWrapper = findElement(By
-                    .className("v-grid-editor-message"));
-            List<WebElement> divs = messageWrapper.findElements(By
-                    .tagName("div"));
+            WebElement messageWrapper = findElement(
+                    By.className("v-grid-editor-message"));
+            List<WebElement> divs = messageWrapper
+                    .findElements(By.tagName("div"));
             if (divs.isEmpty()) {
                 return null;
             } else {
@@ -181,8 +181,8 @@ public class GridElement extends AbstractComponentElement {
      */
     public GridCellElement getCell(int rowIndex, int colIndex) {
         scrollToRow(rowIndex);
-        return getSubPart("#cell[" + rowIndex + "][" + colIndex + "]").wrap(
-                GridCellElement.class);
+        return getSubPart("#cell[" + rowIndex + "][" + colIndex + "]")
+                .wrap(GridCellElement.class);
     }
 
     /**
@@ -207,8 +207,8 @@ public class GridElement extends AbstractComponentElement {
      * @return Header cell element with given indices.
      */
     public GridCellElement getHeaderCell(int rowIndex, int colIndex) {
-        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]").wrap(
-                GridCellElement.class);
+        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]")
+                .wrap(GridCellElement.class);
     }
 
     /**
@@ -221,8 +221,8 @@ public class GridElement extends AbstractComponentElement {
      * @return Footer cell element with given indices.
      */
     public GridCellElement getFooterCell(int rowIndex, int colIndex) {
-        return getSubPart("#footer[" + rowIndex + "][" + colIndex + "]").wrap(
-                GridCellElement.class);
+        return getSubPart("#footer[" + rowIndex + "][" + colIndex + "]")
+                .wrap(GridCellElement.class);
     }
 
     /**
@@ -236,7 +236,8 @@ public class GridElement extends AbstractComponentElement {
         List<GridCellElement> headers = new ArrayList<GridCellElement>();
         for (TestBenchElement e : TestBenchElement.wrapElements(
                 getSubPart("#header[" + rowIndex + "]").findElements(
-                        By.xpath("./th")), getCommandExecutor())) {
+                        By.xpath("./th")),
+                getCommandExecutor())) {
             headers.add(e.wrap(GridCellElement.class));
         }
         return headers;
@@ -253,7 +254,8 @@ public class GridElement extends AbstractComponentElement {
         List<GridCellElement> footers = new ArrayList<GridCellElement>();
         for (TestBenchElement e : TestBenchElement.wrapElements(
                 getSubPart("#footer[" + rowIndex + "]").findElements(
-                        By.xpath("./td")), getCommandExecutor())) {
+                        By.xpath("./td")),
+                getCommandExecutor())) {
             footers.add(e.wrap(GridCellElement.class));
         }
         return footers;
