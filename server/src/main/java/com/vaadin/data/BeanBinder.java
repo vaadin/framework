@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -340,7 +340,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         BeanUtil.checkBeanValidationAvailable();
         this.beanType = beanType;
         boundProperties = new HashSet<>();
-        tentativeBindings = new HashMap<>();
+        tentativeBindings = new IdentityHashMap<>();
     }
 
     @Override

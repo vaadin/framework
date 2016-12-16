@@ -64,11 +64,13 @@ public class BeanBinderTest
         otherBinder.forField(testClass.number).withConverter(
                 string -> Integer.parseInt(string),
                 integer -> Integer.toString(integer));
+
+        // Should correctly bind the enum field without throwing
         otherBinder.bindInstanceFields(testClass);
     }
 
     @Test
-    public void bindInstanceFields_detects_incomplete_custom_bindings() {
+    public void bindInstanceFields_automatically_binds_incomplete_custom_bindings() {
         BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
         TestClass testClass = new TestClass();
 
