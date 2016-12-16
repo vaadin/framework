@@ -21,7 +21,7 @@
 .#{$primaryStyleName}-immediate input {
 	opacity: 0;
 	filter: alpha(opacity=0);
-	z-index: 2;
+	z-index: -1;
 	position: absolute;
 	right: 0;
 	height: 21px;
