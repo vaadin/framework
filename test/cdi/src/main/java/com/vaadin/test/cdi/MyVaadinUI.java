@@ -1,4 +1,4 @@
-package com.vaadin.test.defaultwidgetset;
+package com.vaadin.test.cdi;
 
 import javax.inject.Inject;
 
