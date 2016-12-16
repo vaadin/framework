@@ -11,9 +11,10 @@ A typical application lets the user fill out structured data and maybe also brow
 The data that is being entered is typically represented in code as an instance of a business object (bean), for instance a [classname]#Person# in an HR application.
 
 Vaadin Framework provides a [classname]#Binder# class that the developer can use to define how the values in a business object should be bound to the fields shown in the user interface.
-[classname]#Binder# takes care of reading values from the business object, validating the user's input, and converting the user's data between the format expected by the business object and the format expected by the field.
+[classname]#Binder# takes care of reading values from the business object and converting the user's data between the format expected by the business object and the format expected by the field.
+The input entered by the user can also be validated, and the current validation status can be presented to the user in different ways.
 
-The first step to binding fields for a form is to create a [classname]#Binder# and bind some [classname]#Field# instances to it. You only need one [classname]#Binder# instance per form and use it for all fields in the form.
+The first step to binding fields for a form is to create a [classname]#Binder# and bind some input fields. There is only one [classname]#Binder# instance per form and it is used for all fields in that form.
 
 [source, java]
 ----
@@ -77,13 +78,13 @@ binder.bind(titleField,
 
 // With explicit callback interface instances
 binder.bind(nameField,
-  new Function<Person, String>() {
+  new ValueProvider<Person, String>() {
     @Override
     public String apply(Person person) {
       return person.getName();
     }
   },
-  new BiConsumer<Person, String>() {
+  new Setter<Person, String>() {
     @Override
     public void accept(Person person, String name) {
       person.setName(name);
@@ -91,14 +92,19 @@ binder.bind(nameField,
   });
 ----
 
-== Validating User Input
+== Validating and Converting User Input
+
+`Binder` supports checking the validity of the user's input and converting the values between the type used in business objects and the bound UI components.
+These to concepts go hand in hand since validation can be based on a converted value, and being able to convert a value is a kind of validation.
+
+=== Validation
 
 An application typically has some restrictions on exactly what kinds of values the user is allowed to enter into different fields.
 [classname]#Binder# lets us define validators for each field that we are binding.
 The validator is by default run whenever the user changes the value of a field, and the validation status is also checked again when saving.
 
 Validators for a field are defined between the [methodname]#forField# and [methodname]#bind# steps when a binding is created.
-A validator can be defined using an [classname]#Validator# instance or inline using a lambda expression.
+A validator can be defined using a [classname]#Validator# instance or inline using a lambda expression.
 
 [source, java]
 ----
@@ -117,7 +123,7 @@ binder.forField(nameField)
 
 binder.forField(titleField)
   // Shorthand for requiring the field to be non-empty
-  .setRequired("Every employee must have a title")
+  .asRequired("Every employee must have a title")
   .bind(Person::getTitle, Person::setTitle);
 ----
 
@@ -125,7 +131,7 @@ binder.forField(titleField)
 [classname]#Binder#.[methodname]#forField# works like a builder where [methodname]#forField# starts the process, is followed by various configuration calls for the field and [methodname]#bind# acts as the finalizing method which applies the configuration.
 
 The validation state of each field is updated whenever the user modifies the value of that field.
-The validation state is by default shown using [classname]#Component#.[methodname]#setComponentError# which is used by the layout that the field is shown in. Whenever an error is set, the component will also get a `v-<component>-error` class name, e.g. `v-textfield-error`. This error class will by default add a red border on the component. Most built-in layouts will show the error state as a red exclamation mark icon next to the component, so that hovering or tapping the icon shows a tooltip with the message text.
+The validation state is by default shown using [classname]#AbstractComponent#.[methodname]#setComponentError# which is used by the layout that the field is shown in. Whenever an error is set, the component will also get a `v-<component>-error` class name, e.g. `v-textfield-error`. This error class will by default add a red border on the component. The component will also get a tooltip that shows the error message text.
 
 We can also customize the way a binder displays error messages to get more flexibility than what  [methodname]#setComponentError# provides.
 The easiest way of customizing this is to configure each binding to use its own [classname]#Label# that is used to show the status for each field.
@@ -147,41 +153,20 @@ binder.forField(emailField)
 Label nameStatus = new Label();
 
 binder.forField(nameField)
+  // Define the validator
   .withValidator(
     name -> name.length() >= 3,
     "Full name must contain at least three characters")
+  // Define how the validation status is displayed
   .withValidationStatusHandler(status -> {
       nameStatus.setValue(status.getMessage().orElse(""));
-      // Only show the label when validation has failed
       nameStatus.setVisible(status.isError());
     })
+  // Finalize the binding
   .bind(Person::getName, Person::setName);
 ----
 
-In addition to showing a validation errors, [classname]#Binder# can also be configured to show a positive confirmation message when validation has passed or a neutral helper message when there is no other message to show for that field.
-
-[source, java]
-----
-binder.forField(titleField)
-  .setRequired("Every employee must have a title")
-  .withHelperMessage("The title is printed on business cards")
-  .bind(Person::getTitle, Person::setTitle);
-
-binder.forField(emailField)
-  .withValidator(new EmailValidator(
-    "This doesn't look like a valid email address"))
-  .withConfirmationMessage(
-    email -> email + " looks like a valid email address");
-  .bind(Person::getEmail, Person::setEmail);
-
-----
-
-The previous example also shows that the message to show can be generated dynamically based on the field value using a lambda expression or an explicit [classname]#Function# instance.
-The same way of defining the message is also available for other messages, such as any validation message.
-Just as other messages, the confirmation message can also be set as a static [classname]#String#.
-
 It is possible to add multiple validators for the same binding.
-In such cases, each validator will be run in the defined order until encountering one validator that doesn't accept the input value.
 The following example will first validate that the entered text looks like an email address, and only for seemingly valid email addresses it will continue checking that the email address is for the expected domain.
 
 [source, java]
@@ -204,7 +189,7 @@ DateField departing = new DateField("Departing");
 DateField returning = new DateField("Returning");
 
 // Store return date binding so we can revalidate it later
-Binding<Trip, LocalDate, LocalDate> returnBinding = binder.forField(returning)
+Binding<Trip, LocalDate> returnBinding = binder.forField(returning)
   .withValidator(returnDate -> !returnDate.isBefore(departing.getValue()),
   "Cannot return before departing");
 returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
@@ -213,12 +198,12 @@ returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
 departing.addValueChangeListener(event -> returnBinding.validate());
 ----
 
-== Converting User Input
+=== Conversion
 
-The data type of the used UI field component might not always match the type used by the application for the same data.
+You can also bind application data to a UI field component even though the types do not match.
 In some cases, there might be types specific for the application, such as custom type that encapsulates a postal code that the user enters through a [classname]#TextField#.
 Another quite typical case is for entering integer numbers using a [classname]#TextField# or a [classname]#Slider#.
-Similarly to validators, we can define a converter using a [classname]#Converter instance or inline using lambda expressions. We can optionally specify also an error message.
+Similarly to validators, we can define a converter using a [classname]#Converter# instance or inline using lambda expressions. We can optionally specify also an error message.
 
 [source, java]
 ----
@@ -238,9 +223,10 @@ binder.forField(salaryLevelField)
 
 ----
 
-We can freely mix validators and converters when defining a binding.
-Any validator defined before a converter will be run using the unconverted value whereas a validator defined after a converter will be run using the converted value.
-Correspondingly, the converter will only be run if all previous validators accept the user's value, and any validators defined after a converter will only be run if the conversion succeeded.
+Multiple validators and converters can be used for building one binding.
+Each validator or converter is used in the order they were defined for a value provided by the user.
+The value is passed along until a final converted value is stored in the business objet, or until the first validation error or impossible conversion is encountered.
+When updating the UI components, values from the business object are passed through each converter in the reverse order without doing any validation.
 
 [NOTE]
 A converter can be used as a validator but for code clarity and to avoid boilerplate code, you should use a validator when checking the contents and a converter when modifying the value.
@@ -260,7 +246,9 @@ binder.forField(yearOfBirthField)
   .bind(Person::getYearOfBirth, Person::setYearOfBirth);
 ----
 
-If the lambda expression used for converting the user-provided value throws an unchecked exception, then the field will be marked as invalid and the message of the exception will be used as the validation error message.
+You can define your own conversion either by using callbacks, typically lambda expressions or method references, or by implementing the `Converter` interface.
+
+When using callbacks, there is one for converting in each direction. If the callback used for converting the user-provided value throws an unchecked exception, then the field will be marked as invalid and the message of the exception will be used as the validation error message.
 Messages in Java runtime exceptions are typically written with developers in mind and might not be suitable to show to end users.
 We can provide a custom error message that is used whenever the conversion throws an unchecked exception.
 
@@ -275,13 +263,16 @@ binder.forField(yearOfBirthField)
   .bind(Person::getYearOfBirth, Person::setYearOfBirth);
 ----
 
-Another option is to directly implement the [interfacename]#Converter# interface where the conversion method returns a [interfacename]#Result# that can either be a converted value or an error message.
+There are two separate methods to implement in the `Converter` interface.
+`convertToModel` receives a value that originates from the user. The method should return a `Result` that either contains a converted value or a conversion error message.
+`convertToPresentation` receives a value that originates from the business object.
+Since it is assumed that the business object only contains valid values, this method directly returns the converted value.
 
 [source, java]
 ----
 class MyConverter implements Converter<String, Integer> {
   @Override
-  public Result<Integer> convertToModel(String fieldValue, Locale locale) {
+  public Result<Integer> convertToModel(String fieldValue, ValueContext context) {
     // Produces a converted value or an error
     try {
       // ok is a static helper method that creates a Result
@@ -293,7 +284,7 @@ class MyConverter implements Converter<String, Integer> {
   }
 
   @Override
-  public String convertToPresentation(Integer integer, Locale locale) {
+  public String convertToPresentation(Integer integer, ValueContext context) {
     // Converting to the field type should always succeed,
     // so there is no support for returning an error Result.
     return String.valueOf(integer);
@@ -306,23 +297,34 @@ binder.forField(yearOfBirthField)
   .bind(Person::getYearOfBirth, Person::setYearOfBirth);
 ----
 
+The provided `ValueContext` can be used for finding `Locale` to be used for the conversion.
+
 == Loading from and Saving to Business Objects
 
-As shown in the introduction, the [classname]#Binder#.[methodname]#load# method is used for populating field values based on a business object and the [methodname]#save# method is used for writing values from the fields into a business object, provided validation and conversion passes.
+Once all bindings have been set up, you are ready to actually fill the bound UI components with data from your business object. Changes can be written to the business object automatically or manually.
 
-A new form is often shown with empty default values.
-To avoid showing lots of errors to the user, the validation error is not shown until the user edits each field after the form has been bound or loaded.
-Helper and confirmation messages will still be shown right away when appropriate.
+Writing the changes automatically when the user makes any change through the is often the most convenient option, but it might have undesirable side effects – the user may see unsaved changes if some other part of the UI uses the same business object instance.
+To prevent that, you either need to use a copy of the edited object or use manual writing to only update the object when the user wants to save.
 
-Even if the user has not edited a field, all validation error will be shown if we explicitly validate the form or try to save the values to a business object.
+=== Manual Reading and Writing
+The `readBean` method reads values from a business object instance into the UI components.
 
 [source, java]
 ----
-// Resets the form to show default values by populating the fields with the default values from the bean
-binder.readBean(new Person());
+Person person = new Person("John Doe", 1957);
 
+binder.readBean(person);
+----
+Assuming `binder` has already been configured as in previous examples with a `TextField` bound to the name property, this example would show the value "John Doe" in that field.
+
+To avoid showing lots of errors to the user, validation errors are not shown until the user edits each field after the form has been bound or loaded.
+
+Even if the user has not edited a field, all validation errors will be shown if we explicitly validate the form or try to save the values to a business object.
+
+[source, java]
+----
 // This will make all current validation errors visible
-ValidationStatus<Person> status = binder.validate();
+BinderValidationStatus<Person> status = binder.validate();
 
 if (status.hasErrors()) {
   Notification.show("Validation error count: "
@@ -330,8 +332,8 @@ if (status.hasErrors()) {
 }
 ----
 
-Trying to save the field values to a business object will fail if any of the bound fields has an invalid value.
-There are different save methods that let us choose how to structure the code for dealing with invalid values.
+Trying to write the field values to a business object will fail if any of the bound fields has an invalid value.
+There are different methods that let us choose how to structure the code for dealing with invalid values.
 
 Handling a checked exception::
 +
@@ -340,25 +342,11 @@ Handling a checked exception::
 ----
 try {
   binder.writeBean(person);
+  MyBackend.updatePersonInDatabase(person);
 } catch (ValidationException e) {
   Notification.show("Validation error count: "
     + e.getValidationErrors().size());
 }
-----
---
-
-Defining an error handler when saving::
-+
---
-[source, java]
-----
-binder.writeBean(person,
-  // Callback invoked if there is an error
-  errors ->  {
-    Notification.show("Validation error count: "
-      + errors.size())
-  }
-);
 ----
 --
 
@@ -368,7 +356,9 @@ Checking a return value::
 [source, java]
 ----
 boolean saved = binder.writeBeanIfValid(person);
-if (!saved) {
+if (saved) {
+  MyBackend.updatePersonInDatabase(person);
+} else {
   Notification.show("Validation error count: "
     + binder.getValidationErrors().size());
 }
@@ -382,9 +372,7 @@ We can use that event to make the save and reset buttons of our forms become ena
 [source, java]
 ----
 binder.addStatusChangeListener(event -> {
-  // isValid() only checks the status, but doesn't make all
-  // validation errors visible in the way that validate() does
-  boolean isValid = binder.isValid();
+  boolean isValid = !event.hasValidationErrors();
   boolean hasChanges = binder.hasChanges();
 
   saveButton.setEnabled(hasChanges && isValid);
@@ -392,40 +380,10 @@ binder.addStatusChangeListener(event -> {
 });
 ----
 
-We can also listen for any change to any of the bound fields.
-This is useful for creating a user interface where changes are saved immediately without any save button.
-
-[source, java]
-----
-// Invoked when the value of any bound field component changes
-binder.addFieldValueChangeListener(event -> {
-  if (binder.writeBeanIfValid(person)) {
-    // We only get here if there are no validation errors
-
-    // TODO: Do something with the updated person instance
-  }
-});
-----
-
-In the previous example, a validation error in one field will prevent changes to other fields from being saved.
-If we want all the fields to work independently of each other, we can instead save the value of each binding separately.
-
-[source, java]
-----
-binder.addFieldValueChangeListener(event -> {
-  Binding<Person, ?> binding = event.getBinding();
-  if (binder.writeIfValid(person)) {
-    // We get here if the updated binding had no validation errors
-
-    // TODO: Do something with the updated person instance
-  }
-});
-----
-
 === Automatic Saving
 
 Instead of manually saving field values to a business object instance, we can also bind the values directly to an instance.
-In this way, the binder takes care of automatically saving values from the fields.
+In this way, `Binder` takes care of automatically saving values from the fields.
 
 [source, java]
 ----
@@ -440,22 +398,22 @@ Person person = new Person("John Doe", 1957);
 binder.setBean(person);
 
 Button saveButton = new Button("Save", event -> {
-  if (binder.isValid()) {
+  if (binder.validate().isOk()) {
     // person is always up-to-date as long as there are no
     // validation errors
 
-    // TODO: Do something with the updated person instance
+    MyBackend.updatePersonInDatabase(person);
   }
 });
 ----
 
 [WARNING]
-When using the [methodname]#bind# method, the business object instance will be updated whenever the user changes the value in any bound field.
+When using the `setBean` method, the business object instance will be updated whenever the user changes the value in any bound field.
 If some other part of the application is also using the same instance, then that part might show changes before the user has clicked the save button.
 
 == Binding Beans to Forms
 
-The business objects used in an application are in most cases implemented as Java beans.
+The business objects used in an application are in most cases implemented as Java beans or POJOs.
 There is special support for that kind of business object in [classname]#BeanBinder#.
 It can use reflection based on bean property names to bind values. This reduces the amount of code you have to write when binding to fields in the bean.
 
@@ -495,38 +453,12 @@ public class Person {
 }
 ----
 
-It can sometimes be necessary to restrict when certain constraint annotations are active.
-One such case is if administrator users are allowed to bypass some restrictions or if the backend should also perform validation, but with less strict constraints.
-
-
-We can define a marker class for configuring a constraint to belong to a specific group and then configure [classname]#BeanBinder# to only use constraints from specific groups.
-
-[source, java]
-----
-// Constraint defined for the default group
-@Size(min = 3, groups = FrontendValidation.class)
-private String title;
-
-// Constraint defined for a specific group
-@NotEmpty
-private String name;
-----
-
-We can now set our binder to use the frontend validation group in addition to the default group, leaving the backend to only validate based on the constraints defined for the default group.
-
-[source, java]
-----
-binder.setConstraintGroups(
-  FrontendValidation.class,
-  javax.validation.groups.Default.class);
-----
-
-[TIP]
-We can also configure our binder to not use the default group but only use a group that is not used for any of the constraint annotations on the bean.
-By doing so, all annotations on the bean will be ignored so that we can define our own validation for the user interface even though Bean Validation is used by the application's backend.
-
 Constraint annotations can also be defined on the bean level instead of being defined for any specific property.
-Validation errors caused by that kind of validation might not be directly associated with any field component shown in the user interface, so [classname]#BeanBinder# cannot know where such messages should be displayed.
+
+[NOTE]
+Bean level validation can only be performed once the bean has been updated. This means that this functionality can only be used together with `setBean`. You need to trigger validation manually if using `readBean` and `writeBean`.
+
+Validation errors caused by that bean level validation might not be directly associated with any field component shown in the user interface, so [classname]#BeanBinder# cannot know where such messages should be displayed.
 
 Similarly to how the [methodname]#withStatusLabel# method can be used for defining where messages for a specific binding should be showed, we can also define a [classname]#Label# that is used for showing status messages that are not related to any specific field.
 
@@ -573,45 +505,10 @@ binder.setValidationStatusHandler(status -> {
 });
 ----
 
-We can add custom form validators to [classname]#Binder#. These will be run on the updated item instance (bean) after field validators have succeeded and the item has been updated. If item level validators fail, the values updated in the item instance will be reverted, i.e. the bean will temporarily contain new values but after a call to [methodname]#save# or [methodname]#saveIfValid#, the bean will only contain the new values if all validators passed.
+== Using Binder with Declarative Layouts
+We can use [classname]#Binder# to connect data to a form that is defined in the declarative format.
 
-[classname]#BeanBinder# will automatically add bean-level validation based on the used bean instance and its annotations.
-
-[source, java]
-----
-BeanBinder<Person> binder = new BeanBinder<Person>(
-        Person.class);
-
-// Phone or email has to be specified for the bean
-Validator<Person> phoneOrEmail = Validator.from(
-        personBean -> !"".equals(personBean.getPhone())
-        || !"".equals(personBean.getEmail()),
-        "A person must have either a phone number or an email address");
-binder.withValidator(phoneOrEmail);
-
-binder.forField(emailField).bind("email");
-binder.forField(phoneField).bind("phone");
-
-Person person = // e.g. JPA entity or bean from Grid
-// Load person data to a form
-binder.readBean(person);
-
-Button saveButton = new Button("Save", event -> {
-  // Using saveIfValid to avoid the try-catch block that is
-  // needed if using the regular save method
-  if (binder.writeBeanIfValid(person)) {
-    // Person is valid and updated
-    // TODO Store in the database
-  }
-});
-----
-
-If we want to ensure that the [classname]#Person# instance is not even temporarily updated, we should make a clone and use that with [methodname]#saveIfValid#.
-
-== Using Binder with Vaadin Designer
-We can use [classname]#Binder# to connect data to a form that is designed using Vaadin Designer.
-
-This is the design HTML file that we create using Vaadin Designer:
+This is the design HTML file that we can create using Vaadin Designer:
 [source, html]
 ----
 <vaadin-form-layout size-full>
@@ -643,7 +540,6 @@ public class PersonFormDesign extends FormLayout {
 
 Based on those files, we can create a subclass of the design that uses a [classname]#BeanBinder# to automatically connect bean properties to field instances.
 This will look at all instance fields that are of a Field type in the class and try to find a bean property with the same name.
-The binder will automatically use a [interfacename]#ConverterFactory# to find a converter in case the type of the field component doesn't match the type of the bean property.
 
 [source, java]
 ----
@@ -658,7 +554,7 @@ public class PersonForm extends PersonFormDesign {
 
     save.addClickListener(event -> {
       if (binder.writeBeanIfValid(person)) {
-        // TODO: Do something with the updated person instance
+        MyBackend.updatePersonInDatabase(person);
       }
     });
   }
