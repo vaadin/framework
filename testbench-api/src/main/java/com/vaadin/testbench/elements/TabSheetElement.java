@@ -87,16 +87,16 @@ public class TabSheetElement extends AbstractComponentContainerElement {
     public void openTab(String tabCaption) {
         for (WebElement tabCell : findElements(byTabCell)) {
             String currentCaption = getTabCaption(tabCell);
-            boolean captionMatches = (currentCaption != null && currentCaption
-                    .equals(tabCaption))
+            boolean captionMatches = (currentCaption != null
+                    && currentCaption.equals(tabCaption))
                     || (currentCaption == null && tabCaption == null);
             if (captionMatches) {
                 openTab(tabCell);
                 return;
             }
         }
-        throw new NoSuchElementException("Tab with caption " + tabCaption
-                + " was not found.");
+        throw new NoSuchElementException(
+                "Tab with caption " + tabCaption + " was not found.");
     }
 
     /**
@@ -151,8 +151,8 @@ public class TabSheetElement extends AbstractComponentContainerElement {
     public void closeTab(String tabCaption) {
         for (WebElement tabCell : findElements(byTabCell)) {
             String currentCaption = getTabCaption(tabCell);
-            boolean captionMatches = (currentCaption != null && currentCaption
-                    .equals(tabCaption))
+            boolean captionMatches = (currentCaption != null
+                    && currentCaption.equals(tabCaption))
                     || (currentCaption == null && tabCaption == null);
             if (captionMatches) {
                 closeTab(tabCell);

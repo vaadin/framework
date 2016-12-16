@@ -18,6 +18,6 @@ package com.vaadin.testbench.elements;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.AbstractSingleComponentContainer")
-public class AbstractSingleComponentContainerElement extends
-        AbstractComponentElement {
+public class AbstractSingleComponentContainerElement
+        extends AbstractComponentElement {
 }

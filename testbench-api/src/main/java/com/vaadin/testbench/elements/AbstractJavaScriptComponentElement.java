@@ -18,7 +18,7 @@ package com.vaadin.testbench.elements;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.AbstractJavaScriptComponent")
-public class AbstractJavaScriptComponentElement extends
-        AbstractComponentElement {
+public class AbstractJavaScriptComponentElement
+        extends AbstractComponentElement {
 
 }

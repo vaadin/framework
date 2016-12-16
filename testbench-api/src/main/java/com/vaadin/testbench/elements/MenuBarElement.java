@@ -46,8 +46,8 @@ public class MenuBarElement extends AbstractComponentElement {
     private void clickItem(String item) {
         WebElement webElement = getVisibleItem("#" + item);
         if (webElement == null) {
-            throw new NoSuchElementException("Menu item " + item
-                    + " is not available.");
+            throw new NoSuchElementException(
+                    "Menu item " + item + " is not available.");
         }
         activateOrOpenSubmenu(webElement, true);
     }
@@ -92,8 +92,8 @@ public class MenuBarElement extends AbstractComponentElement {
     }
 
     private WebElement getSelectedTopLevelItem() {
-        List<WebElement> selectedItems = findElements(By
-                .className("v-menubar-menuitem-selected"));
+        List<WebElement> selectedItems = findElements(
+                By.className("v-menubar-menuitem-selected"));
         if (selectedItems.size() == 0) {
             return null;
         }
@@ -139,11 +139,11 @@ public class MenuBarElement extends AbstractComponentElement {
         }
 
         String itemCaption = item
-                .findElements(By.className("v-menubar-menuitem-caption"))
-                .get(0).getAttribute("innerHTML");
+                .findElements(By.className("v-menubar-menuitem-caption")).get(0)
+                .getAttribute("innerHTML");
         String selectedItemCaption = selectedItem
-                .findElements(By.className("v-menubar-menuitem-caption"))
-                .get(0).getAttribute("innerHTML");
+                .findElements(By.className("v-menubar-menuitem-caption")).get(0)
+                .getAttribute("innerHTML");
         return itemCaption.equals(selectedItemCaption);
     }
 
@@ -156,8 +156,8 @@ public class MenuBarElement extends AbstractComponentElement {
     }
 
     private boolean hasSubmenu(WebElement item) {
-        List<WebElement> submenuIndicatorElements = item.findElements(By
-                .className("v-menubar-submenu-indicator"));
+        List<WebElement> submenuIndicatorElements = item
+                .findElements(By.className("v-menubar-submenu-indicator"));
         return submenuIndicatorElements.size() != 0;
     }
 

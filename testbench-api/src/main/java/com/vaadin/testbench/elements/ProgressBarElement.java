@@ -29,8 +29,8 @@ public class ProgressBarElement extends AbstractFieldElement {
      * @return
      */
     public double getValue() {
-        WebElement indicator = findElement(By
-                .className("v-progressbar-indicator"));
+        WebElement indicator = findElement(
+                By.className("v-progressbar-indicator"));
         String width = getStyleAttribute(indicator, "width");
         if (!width.endsWith("%")) {
             return 0;

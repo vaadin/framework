@@ -123,8 +123,8 @@ public class TableElement extends AbstractSelectElement {
     public static class ContextMenuElement extends AbstractElement {
 
         public WebElement getItem(int index) {
-            return findElement(By.xpath(".//table//tr[" + (index + 1)
-                    + "]//td/*"));
+            return findElement(
+                    By.xpath(".//table//tr[" + (index + 1) + "]//td/*"));
         }
 
     }
@@ -133,17 +133,18 @@ public class TableElement extends AbstractSelectElement {
      * Fetches the context menu for the table
      *
      * @return {@link com.vaadin.testbench.elements.TableElement.ContextMenuElement}
-     * @throws java.util.NoSuchElementException if the menu isn't open
+     * @throws java.util.NoSuchElementException
+     *             if the menu isn't open
      */
     public ContextMenuElement getContextMenu() {
         try {
-            WebElement cm = getDriver().findElement(By.className("v-contextmenu"));
-            return wrapElement(cm, getCommandExecutor()).wrap(
-                    ContextMenuElement.class);
+            WebElement cm = getDriver()
+                    .findElement(By.className("v-contextmenu"));
+            return wrapElement(cm, getCommandExecutor())
+                    .wrap(ContextMenuElement.class);
         } catch (WebDriverException e) {
             throw new NoSuchElementException("Context menu not found", e);
         }
     }
-
 
 }

@@ -47,9 +47,10 @@ public class TwinColSelectElement extends AbstractSelectElement {
 
     private void deselectAll() {
         if (selectedOptions.isMultiple()) {
-            if (selectedOptions.getAllSelectedOptions().size() != selectedOptions
-                    .getOptions().size()) {
-                for (int i = 0, l = selectedOptions.getOptions().size(); i < l; ++i) {
+            if (selectedOptions.getAllSelectedOptions()
+                    .size() != selectedOptions.getOptions().size()) {
+                for (int i = 0, l = selectedOptions.getOptions()
+                        .size(); i < l; ++i) {
                     selectedOptions.selectByIndex(i);
                 }
             }
@@ -116,10 +117,10 @@ public class TwinColSelectElement extends AbstractSelectElement {
      */
     public String getValue() {
         String value = "";
-        WebElement selectedElement = findElement(By
-                .className("v-select-twincol-selections"));
-        List<WebElement> optionElements = selectedElement.findElements(By
-                .tagName("option"));
+        WebElement selectedElement = findElement(
+                By.className("v-select-twincol-selections"));
+        List<WebElement> optionElements = selectedElement
+                .findElements(By.tagName("option"));
         if (!optionElements.isEmpty()) {
             value = optionElements.get(0).getText();
         }

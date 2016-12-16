@@ -38,8 +38,9 @@ public class NotificationElement extends AbstractElement {
     public void close() {
         click();
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
-        wait.until(ExpectedConditions.not(ExpectedConditions
-                .presenceOfAllElementsLocatedBy(By.className("v-Notification"))));
+        wait.until(ExpectedConditions
+                .not(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                        By.className("v-Notification"))));
 
     }
 

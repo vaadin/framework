@@ -23,8 +23,8 @@ public class TableHeaderElement extends AbstractComponentElement {
 
     @Override
     public String getCaption() {
-        WebElement captionElement = findElement(By
-                .className("v-table-caption-container"));
+        WebElement captionElement = findElement(
+                By.className("v-table-caption-container"));
         return captionElement.getText();
     }
 

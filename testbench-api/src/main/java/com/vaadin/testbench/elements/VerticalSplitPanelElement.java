@@ -22,7 +22,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.VerticalSplitPanel")
 public class VerticalSplitPanelElement extends AbstractSplitPanelElement {
-    
+
     private static By bySplit = By.className("v-splitpanel-vsplitter");
 
     public TestBenchElement getSplitter() {

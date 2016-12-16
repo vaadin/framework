@@ -25,8 +25,8 @@ import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.AbstractSplitPanel")
-public class AbstractSplitPanelElement extends
-        AbstractComponentContainerElement {
+public class AbstractSplitPanelElement
+        extends AbstractComponentContainerElement {
 
     private static org.openqa.selenium.By byFirstContainer = By
             .xpath("./div/div[contains(normalize-space(concat(@class, ' ')), "
@@ -71,7 +71,8 @@ public class AbstractSplitPanelElement extends
             org.openqa.selenium.By byContainer) {
         List<AbstractComponentElement> containedComponents = $$(
                 AbstractComponentElement.class).all();
-        List<WebElement> componentsInSelectedContainer = findElements(byContainer);
+        List<WebElement> componentsInSelectedContainer = findElements(
+                byContainer);
         for (AbstractComponentElement component : containedComponents) {
             WebElement elem = component.getWrappedElement();
             if (componentsInSelectedContainer.contains(elem)) {

@@ -32,8 +32,8 @@ public class TreeElement extends AbstractSelectElement {
      * @return selected item of the tree
      */
     public String getValue() {
-        List<WebElement> selectedElements = findElements(By
-                .className("v-tree-node-selected"));
+        List<WebElement> selectedElements = findElements(
+                By.className("v-tree-node-selected"));
         if (selectedElements.isEmpty()) {
             return "";
         } else {
