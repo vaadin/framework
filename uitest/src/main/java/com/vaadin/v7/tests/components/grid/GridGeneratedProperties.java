@@ -15,8 +15,6 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import com.vaadin.data.sort.Sort;
-import com.vaadin.data.sort.SortOrder;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
@@ -26,6 +24,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Container.Filterable;
 import com.vaadin.v7.data.Container.Indexed;
+import com.vaadin.v7.data.sort.Sort;
+import com.vaadin.v7.data.sort.SortOrder;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.GeneratedPropertyContainer;
 import com.vaadin.v7.data.util.IndexedContainer;

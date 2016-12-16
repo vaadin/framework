@@ -23,12 +23,12 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataGenerator;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
-import com.vaadin.server.data.DataCommunicator;
-import com.vaadin.server.data.DataGenerator;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.Query;
 import com.vaadin.shared.extension.abstractlisting.AbstractListingExtensionState;
 import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
 import com.vaadin.ui.Component.Focusable;

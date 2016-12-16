@@ -33,7 +33,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,13 +43,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.Listing;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.Query;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
-import com.vaadin.event.SerializableEventListener;
+import com.vaadin.event.SortEvent;
+import com.vaadin.event.SortEvent.SortListener;
+import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.event.selection.SingleSelectionListener;
@@ -59,10 +62,6 @@ import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.data.DataCommunicator;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.Query;
-import com.vaadin.server.data.SortOrder;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -78,17 +77,29 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
-import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.components.grid.AbstractSelectionModel;
+import com.vaadin.ui.components.grid.ColumnReorderListener;
+import com.vaadin.ui.components.grid.ColumnResizeListener;
+import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
+import com.vaadin.ui.components.grid.DetailsGenerator;
+import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorComponentGenerator;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
+import com.vaadin.ui.components.grid.FooterCell;
+import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
+import com.vaadin.ui.components.grid.HeaderCell;
+import com.vaadin.ui.components.grid.HeaderRow;
+import com.vaadin.ui.components.grid.ItemClickListener;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
+import com.vaadin.ui.components.grid.SingleSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+import com.vaadin.ui.components.grid.SortOrderProvider;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -112,13 +123,16 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T>
-        implements HasComponents, Listing<T, DataProvider<T, ?>> {
+public class Grid<T> extends AbstractListing<T> implements HasComponents,
+        Listing<T, DataProvider<T, ?>>, SortNotifier<Grid.Column<T, ?>> {
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
             ColumnReorderListener.class, "columnReorder",
             ColumnReorderEvent.class);
+
+    private static final Method SORT_ORDER_CHANGE_METHOD = ReflectTools
+            .findMethod(SortListener.class, "sort", SortEvent.class);
 
     @Deprecated
     private static final Method COLUMN_RESIZE_METHOD = ReflectTools.findMethod(
@@ -134,21 +148,6 @@ public class Grid<T> extends AbstractListing<T>
             .findMethod(ColumnVisibilityChangeListener.class,
                     "columnVisibilityChanged",
                     ColumnVisibilityChangeEvent.class);
-
-    /**
-     * An event listener for column reorder events in the Grid.
-     */
-    @FunctionalInterface
-    public interface ColumnReorderListener extends Serializable {
-
-        /**
-         * Called when the columns of the grid have been reordered.
-         *
-         * @param event
-         *            An event providing more information
-         */
-        void columnReorder(ColumnReorderEvent event);
-    }
 
     /**
      * Selection mode representing the built-in selection models in grid.
@@ -207,157 +206,6 @@ public class Grid<T> extends AbstractListing<T>
          * @return the selection model
          */
         protected abstract <T> GridSelectionModel<T> createModel();
-    }
-
-    /**
-     * The server-side interface that controls Grid's selection state.
-     * SelectionModel should extend {@link AbstractGridExtension}.
-     * <p>
-     *
-     * @param <T>
-     *            the grid bean type
-     * @see AbstractSelectionModel
-     * @see SingleSelectionModel
-     * @see MultiSelectionModel
-     */
-    public interface GridSelectionModel<T>
-            extends SelectionModel<T>, Extension {
-
-        /**
-         * Removes this selection model from the grid.
-         * <p>
-         * Must call super {@link Extension#remove()} to detach the extension,
-         * and fire an selection change event for the selection model (with an
-         * empty selection).
-         */
-        @Override
-        public void remove();
-    }
-
-    /**
-     * Single selection model interface for Grid.
-     *
-     * @param <T>
-     *            the type of items in grid
-     */
-    public interface SingleSelectionModel<T> extends GridSelectionModel<T>,
-            com.vaadin.data.SelectionModel.Single<T> {
-
-        /**
-         * Gets a wrapper to use this single selection model as a single select
-         * in {@link Binder}.
-         *
-         * @return the single select wrapper
-         */
-        SingleSelect<T> asSingleSelect();
-
-        /**
-         * {@inheritDoc}
-         * <p>
-         * Use {@link #addSingleSelectionListener(SingleSelectionListener)} for
-         * more specific single selection event.
-         *
-         * @see #addSingleSelectionListener(SingleSelectionListener)
-         */
-        @Override
-        public default Registration addSelectionListener(
-                SelectionListener<T> listener) {
-            return addSingleSelectionListener(e -> listener.selectionChange(e));
-        }
-
-        /**
-         * Adds a single selection listener that is called when the value of
-         * this select is changed either by the user or programmatically.
-         *
-         * @param listener
-         *            the value change listener, not {@code null}
-         * @return a registration for the listener
-         */
-        public Registration addSingleSelectionListener(
-                SingleSelectionListener<T> listener);
-    }
-
-    /**
-     * Multiselection model interface for Grid.
-     *
-     * @param <T>
-     *            the type of items in grid
-     */
-    public interface MultiSelectionModel<T> extends GridSelectionModel<T>,
-            com.vaadin.data.SelectionModel.Multi<T> {
-
-        /**
-         * Gets a wrapper to use this multiselection model as a multiselect in
-         * {@link Binder}.
-         *
-         * @return the multiselect wrapper
-         */
-        MultiSelect<T> asMultiSelect();
-
-        /**
-         * {@inheritDoc}
-         * <p>
-         * Use {@link #addMultiSelectionListener(MultiSelectionListener)} for
-         * more specific event on multiselection.
-         *
-         * @see #addMultiSelectionListener(MultiSelectionListener)
-         */
-        @Override
-        public default Registration addSelectionListener(
-                SelectionListener<T> listener) {
-            return addMultiSelectionListener(e -> listener.selectionChange(e));
-        }
-
-        /**
-         * Adds a selection listener that will be called when the selection is
-         * changed either by the user or programmatically.
-         *
-         * @param listener
-         *            the value change listener, not {@code null}
-         * @return a registration for the listener
-         */
-        public Registration addMultiSelectionListener(
-                MultiSelectionListener<T> listener);
-    }
-
-    /**
-     * An event listener for column resize events in the Grid.
-     */
-    @FunctionalInterface
-    public interface ColumnResizeListener extends Serializable {
-
-        /**
-         * Called when the columns of the grid have been resized.
-         *
-         * @param event
-         *            An event providing more information
-         */
-        void columnResize(ColumnResizeEvent event);
-    }
-
-    /**
-     * Generates the sort orders when rows are sorted by a column.
-     *
-     * @see Column#setSortOrderProvider
-     *
-     * @since 8.0
-     * @author Vaadin Ltd
-     */
-    @FunctionalInterface
-    public interface SortOrderProvider extends
-            SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
-
-        /**
-         * Generates the sort orders when rows are sorted by a column.
-         *
-         * @param sortDirection
-         *            desired sort direction
-         *
-         * @return sort information
-         */
-        @Override
-        public Stream<SortOrder<String>> apply(SortDirection sortDirection);
-
     }
 
     /**
@@ -500,27 +348,6 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * A listener for item click events.
-     *
-     * @param <T>
-     *            the grid bean type
-     *
-     * @see ItemClick
-     * @see Registration
-     */
-    @FunctionalInterface
-    public interface ItemClickListener<T> extends SerializableEventListener {
-        /**
-         * Invoked when this listener receives a item click event from a Grid to
-         * which it has been added.
-         *
-         * @param event
-         *            the received event, not null
-         */
-        public void itemClick(ItemClick<T> event);
-    }
-
-    /**
      * ContextClickEvent for the Grid Component.
      *
      * @param <T>
@@ -605,22 +432,6 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * An event listener for column visibility change events in the Grid.
-     *
-     * @since 7.5.0
-     */
-    @FunctionalInterface
-    public interface ColumnVisibilityChangeListener extends Serializable {
-
-        /**
-         * Called when a column has become hidden or unhidden.
-         *
-         * @param event
-         */
-        void columnVisibilityChanged(ColumnVisibilityChangeEvent event);
-    }
-
-    /**
      * An event that is fired when a column's visibility changes.
      *
      * @since 7.5.0
@@ -682,28 +493,6 @@ public class Grid<T> extends AbstractListing<T>
         public boolean isUserOriginated() {
             return userOriginated;
         }
-    }
-
-    /**
-     * A callback interface for generating description texts for an item.
-     *
-     * @param <T>
-     *            the grid bean type
-     */
-    @FunctionalInterface
-    public interface DescriptionGenerator<T>
-            extends SerializableFunction<T, String> {
-    }
-
-    /**
-     * A callback interface for generating details for a particular row in Grid.
-     *
-     * @param <T>
-     *            the grid bean type
-     */
-    @FunctionalInterface
-    public interface DetailsGenerator<T>
-            extends SerializableFunction<T, Component> {
     }
 
     /**
@@ -1952,421 +1741,6 @@ public class Grid<T> extends AbstractListing<T>
         }
     }
 
-    /**
-     * A header row in a Grid.
-     */
-    public interface HeaderRow extends Serializable {
-
-        /**
-         * Returns the cell on this row corresponding to the given column id.
-         *
-         * @param columnId
-         *            the id of the column whose header cell to get, not null
-         * @return the header cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public HeaderCell getCell(String columnId);
-
-        /**
-         * Returns the cell on this row corresponding to the given column.
-         *
-         * @param column
-         *            the column whose header cell to get, not null
-         * @return the header cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public HeaderCell getCell(Column<?, ?> column);
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Grid.HeaderCell...)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        HeaderCell join(Set<HeaderCell> cellsToMerge);
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Set)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        HeaderCell join(HeaderCell... cellsToMerge);
-
-    }
-
-    /**
-     * An individual cell on a Grid header row.
-     */
-    public interface HeaderCell extends Serializable {
-
-        /**
-         * Returns the textual caption of this cell.
-         *
-         * @return the header caption
-         */
-        public String getText();
-
-        /**
-         * Sets the textual caption of this cell.
-         *
-         * @param text
-         *            the header caption to set, not null
-         */
-        public void setText(String text);
-
-        /**
-         * Returns the HTML content displayed in this cell.
-         *
-         * @return the html
-         *
-         */
-        public String getHtml();
-
-        /**
-         * Sets the HTML content displayed in this cell.
-         *
-         * @param html
-         *            the html to set
-         */
-        public void setHtml(String html);
-
-        /**
-         * Returns the component displayed in this cell.
-         *
-         * @return the component
-         */
-        public Component getComponent();
-
-        /**
-         * Sets the component displayed in this cell.
-         *
-         * @param component
-         *            the component to set
-         */
-        public void setComponent(Component component);
-
-        /**
-         * Returns the type of content stored in this cell.
-         *
-         * @return cell content type
-         */
-        public GridStaticCellType getCellType();
-
-        /**
-         * Gets the column id where this cell is.
-         *
-         * @return column id for this cell
-         */
-        public String getColumnId();
-    }
-
-    /**
-     * A footer row in a Grid.
-     */
-    public interface FooterRow extends Serializable {
-
-        /**
-         * Returns the cell on this row corresponding to the given column id.
-         *
-         * @param columnId
-         *            the id of the column whose footer cell to get, not null
-         * @return the footer cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public FooterCell getCell(String columnId);
-
-        /**
-         * Returns the cell on this row corresponding to the given column.
-         *
-         * @param column
-         *            the column whose footer cell to get, not null
-         * @return the footer cell
-         * @throws IllegalArgumentException
-         *             if there is no such column in the grid
-         */
-        public FooterCell getCell(Column<?, ?> column);
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Grid.FooterCell...)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        FooterCell join(Set<FooterCell> cellsToMerge);
-
-        /**
-         * Merges column cells in the row. Original cells are hidden, and new
-         * merged cell is shown instead. The cell has a width of all merged
-         * cells together, inherits styles of the first merged cell but has
-         * empty caption.
-         *
-         * @param cellsToMerge
-         *            the cells which should be merged. The cells should not be
-         *            merged to any other cell set.
-         * @return the remaining visible cell after the merge
-         *
-         * @see #join(Set)
-         * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
-         */
-        FooterCell join(FooterCell... cellsToMerge);
-    }
-
-    /**
-     * An individual cell on a Grid footer row.
-     */
-    public interface FooterCell extends Serializable {
-
-        /**
-         * Returns the textual caption of this cell.
-         *
-         * @return the footer caption
-         */
-        public String getText();
-
-        /**
-         * Sets the textual caption of this cell.
-         *
-         * @param text
-         *            the footer caption to set, not null
-         */
-        public void setText(String text);
-
-        /**
-         * Returns the HTML content displayed in this cell.
-         *
-         * @return the html
-         *
-         */
-        public String getHtml();
-
-        /**
-         * Sets the HTML content displayed in this cell.
-         *
-         * @param html
-         *            the html to set
-         */
-        public void setHtml(String html);
-
-        /**
-         * Returns the component displayed in this cell.
-         *
-         * @return the component
-         */
-        public Component getComponent();
-
-        /**
-         * Sets the component displayed in this cell.
-         *
-         * @param component
-         *            the component to set
-         */
-        public void setComponent(Component component);
-
-        /**
-         * Returns the type of content stored in this cell.
-         *
-         * @return cell content type
-         */
-        public GridStaticCellType getCellType();
-
-        /**
-         * Gets the column id where this cell is.
-         *
-         * @return column id for this cell
-         */
-        public String getColumnId();
-    }
-
-    /**
-     * Generator for creating editor validation and conversion error messages.
-     *
-     * @param <T>
-     *            the bean type
-     */
-    @FunctionalInterface
-    public interface EditorErrorGenerator<T> extends Serializable,
-            BiFunction<Map<Component, Column<T, ?>>, BinderValidationStatus<T>, String> {
-
-        /**
-         * Generates an error message from given validation status object.
-         *
-         * @param fieldToColumn
-         *            the map of failed fields and corresponding columns
-         * @param status
-         *            the binder status object with all failures
-         *
-         * @return error message string
-         */
-        @Override
-        public String apply(Map<Component, Column<T, ?>> fieldToColumn,
-                BinderValidationStatus<T> status);
-    }
-
-    /**
-     * An editor in a Grid.
-     *
-     * @param <T>
-     */
-    public interface Editor<T> extends Serializable {
-
-        /**
-         * Sets the underlying Binder to this Editor.
-         *
-         * @param binder
-         *            the binder for updating editor fields; not {@code null}
-         * @return this editor
-         */
-        public Editor<T> setBinder(Binder<T> binder);
-
-        /**
-         * Returns the underlying Binder from Editor.
-         *
-         * @return the binder; not {@code null}
-         */
-        public Binder<T> getBinder();
-
-        /**
-         * Sets the Editor buffered mode. When the editor is in buffered mode,
-         * edits are only committed when the user clicks the save button. In
-         * unbuffered mode valid changes are automatically committed.
-         *
-         * @param buffered
-         *            {@code true} if editor should be buffered; {@code false}
-         *            if not
-         * @return this editor
-         */
-        public Editor<T> setBuffered(boolean buffered);
-
-        /**
-         * Enables or disabled the Editor. A disabled editor cannot be opened.
-         *
-         * @param enabled
-         *            {@code true} if editor should be enabled; {@code false} if
-         *            not
-         * @return this editor
-         */
-        public Editor<T> setEnabled(boolean enabled);
-
-        /**
-         * Returns whether Editor is buffered or not.
-         *
-         * @see #setBuffered(boolean)
-         *
-         * @return {@code true} if editor is buffered; {@code false} if not
-         */
-        public boolean isBuffered();
-
-        /**
-         * Returns whether Editor is enabled or not.
-         *
-         * @return {@code true} if editor is enabled; {@code false} if not
-         */
-        public boolean isEnabled();
-
-        /**
-         * Returns whether Editor is open or not.
-         *
-         * @return {@code true} if editor is open; {@code false} if not
-         */
-        public boolean isOpen();
-
-        /**
-         * Saves any changes from the Editor fields to the edited bean.
-         *
-         * @return {@code true} if save succeeded; {@code false} if not
-         */
-        public boolean save();
-
-        /**
-         * Close the editor discarding any unsaved changes.
-         */
-        public void cancel();
-
-        /**
-         * Sets the caption of the save button in buffered mode.
-         *
-         * @param saveCaption
-         *            the save button caption
-         * @return this editor
-         */
-        public Editor<T> setSaveCaption(String saveCaption);
-
-        /**
-         * Sets the caption of the cancel button in buffered mode.
-         *
-         * @param cancelCaption
-         *            the cancel button caption
-         * @return this editor
-         */
-        public Editor<T> setCancelCaption(String cancelCaption);
-
-        /**
-         * Gets the caption of the save button in buffered mode.
-         *
-         * @return the save button caption
-         */
-        public String getSaveCaption();
-
-        /**
-         * Gets the caption of the cancel button in buffered mode.
-         *
-         * @return the cancel button caption
-         */
-        public String getCancelCaption();
-
-        /**
-         * Sets the error message generator for this editor.
-         * <p>
-         * The default message is a concatenation of column field validation
-         * failures and bean validation failures.
-         *
-         * @param errorGenerator
-         *            the function to generate error messages; not {@code null}
-         * @return this editor
-         *
-         * @see EditorErrorGenerator
-         */
-        public Editor<T> setErrorGenerator(
-                EditorErrorGenerator<T> errorGenerator);
-
-        /**
-         * Gets the error message generator of this editor.
-         *
-         * @return the function that generates error messages; not {@code null}
-         *
-         * @see EditorErrorGenerator
-         */
-        public EditorErrorGenerator<T> getErrorGenerator();
-    }
-
     private class HeaderImpl extends Header {
 
         @Override
@@ -3440,6 +2814,18 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
+     * Adds a sort order change listener that gets notified when the sort order
+     * changes.
+     *
+     * @param listener
+     *            the sort order change listener to add
+     */
+    @Override
+    public Registration addSortListener(SortListener<Column<T, ?>> listener) {
+        return addListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
+    }
+
+    /**
      * Get the current sort order list.
      *
      * @return a sort order list
@@ -3795,6 +3181,8 @@ public class Grid<T> extends AbstractListing<T>
             // Grid is not sorted anymore.
             getDataCommunicator().setBackEndSorting(Collections.emptyList());
             getDataCommunicator().setInMemorySorting(null);
+            fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
+                    userOriginated));
             return;
         }
         sortOrder.addAll(order);
@@ -3824,6 +3212,8 @@ public class Grid<T> extends AbstractListing<T>
         if (getEditor().isOpen()) {
             getEditor().cancel();
         }
+        fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
+                userOriginated));
     }
 
 }

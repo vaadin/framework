@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -38,13 +37,13 @@ public abstract class Header extends StaticSection<Header.Row> {
      * A row in a Grid header.
      */
     public class Row extends StaticSection.StaticRow<Row.Cell>
-            implements Grid.HeaderRow {
+            implements HeaderRow {
 
         /**
          * A cell in a Grid header row.
          */
         public class Cell extends StaticSection.StaticCell
-                implements Grid.HeaderCell {
+                implements HeaderCell {
             /**
              * Creates a new header cell.
              */
@@ -101,12 +100,12 @@ public abstract class Header extends StaticSection<Header.Row> {
          *            merged to any other cell set.
          * @return the remaining visible cell after the merge
          *
-         * @see #join(Grid.HeaderCell...)
+         * @see #join(HeaderCell...)
          * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         @Override
-        public Grid.HeaderCell join(Set<Grid.HeaderCell> cellsToMerge) {
-            for (Grid.HeaderCell cell : cellsToMerge) {
+        public HeaderCell join(Set<HeaderCell> cellsToMerge) {
+            for (HeaderCell cell : cellsToMerge) {
                 checkIfAlreadyMerged(cell.getColumnId());
             }
 
@@ -114,7 +113,7 @@ public abstract class Header extends StaticSection<Header.Row> {
             Cell newCell = createCell();
 
             Set<String> columnGroup = new HashSet<>();
-            for (Grid.HeaderCell cell : cellsToMerge) {
+            for (HeaderCell cell : cellsToMerge) {
                 columnGroup.add(cell.getColumnId());
             }
             addMergedCell(newCell, columnGroup);
@@ -137,8 +136,8 @@ public abstract class Header extends StaticSection<Header.Row> {
          * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
          */
         @Override
-        public Grid.HeaderCell join(Grid.HeaderCell... cellsToMerge) {
-            Set<Grid.HeaderCell> headerCells = new HashSet<>(
+        public HeaderCell join(HeaderCell... cellsToMerge) {
+            Set<HeaderCell> headerCells = new HashSet<>(
                     Arrays.asList(cellsToMerge));
             return join(headerCells);
         }

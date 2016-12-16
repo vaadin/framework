@@ -22,7 +22,6 @@ import java.util.Set;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
-import com.vaadin.ui.Grid.GridSelectionModel;
 
 /**
  * Selection model that doesn't allow selecting anything from the grid.

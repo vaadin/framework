@@ -32,11 +32,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.bov.Person;
 import com.vaadin.data.Listing;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
-import com.vaadin.server.data.DataProvider;
-import com.vaadin.server.data.provider.bov.Person;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.ui.declarative.DesignContext;

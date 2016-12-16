@@ -25,7 +25,7 @@ public class GridAsSingleSelectInBinderTest
     private class GridWithCustomSingleSelectionModel extends Grid<Sex> {
         @Override
         public void setSelectionModel(
-                com.vaadin.ui.Grid.GridSelectionModel<Sex> model) {
+                com.vaadin.ui.components.grid.GridSelectionModel<Sex> model) {
             super.setSelectionModel(model);
         }
     }

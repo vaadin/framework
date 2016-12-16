@@ -19,7 +19,7 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Listing;
-import com.vaadin.server.data.DataProvider;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
 
 /**

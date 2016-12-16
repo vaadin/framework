@@ -32,15 +32,15 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.data.Listing;
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataKeyMapper;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.server.data.DataCommunicator;
-import com.vaadin.server.data.DataKeyMapper;
-import com.vaadin.server.data.DataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;

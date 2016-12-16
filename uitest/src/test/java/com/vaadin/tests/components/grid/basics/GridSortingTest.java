@@ -63,6 +63,9 @@ public class GridSortingTest extends GridBasicsTest {
     public void serverSideOrderByColumn0() {
         selectMenuPath("Component", "Columns", "Column 0", "Sort ASC");
 
+        Assert.assertEquals("1. SortEvent: isUserOriginated? false",
+                getLogRow(0));
+
         Comparator<String> comparator = Comparator.naturalOrder();
 
         int i = 0;
@@ -76,6 +79,8 @@ public class GridSortingTest extends GridBasicsTest {
         Assert.assertTrue(i > 0);
 
         selectMenuPath("Component", "Columns", "Column 0", "Sort DESC");
+        Assert.assertEquals("2. SortEvent: isUserOriginated? false",
+                getLogRow(0));
 
         i = 0;
         for (String coord : getTestData().map(DataObject::getCoordinates)
@@ -91,6 +96,9 @@ public class GridSortingTest extends GridBasicsTest {
     public void serverSideOrderByDate() {
         selectMenuPath("Component", "Columns", "Date", "Sort ASC");
 
+        Assert.assertEquals("1. SortEvent: isUserOriginated? false",
+                getLogRow(0));
+
         Comparator<Date> comparator = Comparator.naturalOrder();
 
         int i = 0;
@@ -105,6 +113,8 @@ public class GridSortingTest extends GridBasicsTest {
         Assert.assertTrue(i > 0);
 
         selectMenuPath("Component", "Columns", "Date", "Sort DESC");
+        Assert.assertEquals("2. SortEvent: isUserOriginated? false",
+                getLogRow(0));
 
         i = 0;
         for (Date date : getTestData().map(DataObject::getDate)
@@ -121,6 +131,9 @@ public class GridSortingTest extends GridBasicsTest {
     public void serverSideClearOrder() {
         selectMenuPath("Component", "Columns", "Column 0", "Sort ASC");
         selectMenuPath("Component", "Columns", "Clear sort");
+
+        Assert.assertEquals("2. SortEvent: isUserOriginated? false",
+                getLogRow(0));
 
         int i = 0;
         for (String coord : getTestData().map(DataObject::getCoordinates)

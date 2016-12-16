@@ -27,19 +27,19 @@ import org.junit.Test;
 
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.SelectionModel.Single;
-import com.vaadin.server.data.DataProvider;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.Grid.FooterCell;
-import com.vaadin.ui.Grid.FooterRow;
-import com.vaadin.ui.Grid.HeaderCell;
-import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.components.grid.FooterCell;
+import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.HeaderCell;
+import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 

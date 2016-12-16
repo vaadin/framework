@@ -27,11 +27,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.vaadin.data.sort.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.sort.SortOrder;
 import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 
 /**
