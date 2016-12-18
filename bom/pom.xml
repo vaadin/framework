@@ -18,6 +18,7 @@
     <properties>
         <vaadin.spring.version>2.0-SNAPSHOT</vaadin.spring.version>
         <vaadin.testbench.version>5.0.0.alpha2</vaadin.testbench.version>
+        <vaadin.cdi.version>2.0-SNAPSHOT</vaadin.cdi.version>
     </properties>
 
     <repositories>
@@ -110,6 +111,11 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-testbench</artifactId>
                 <version>${vaadin.testbench.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-cdi</artifactId>
+                <version>${vaadin.cdi.version}</version>
             </dependency>
 
         </dependencies>

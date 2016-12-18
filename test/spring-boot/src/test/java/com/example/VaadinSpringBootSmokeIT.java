@@ -22,7 +22,7 @@ import com.vaadin.testbench.parallel.Browser;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class SpringBootSmokeTest extends TestBenchTestCase {
+public class VaadinSpringBootSmokeIT extends TestBenchTestCase {
 
     @LocalServerPort
     Integer port;
@@ -38,7 +38,7 @@ public class SpringBootSmokeTest extends TestBenchTestCase {
         getDriver().navigate().to("http://localhost:" + port + "");
         $(ButtonElement.class).first().click();
         Assert.assertTrue($(NotificationElement.class).exists());
-        Assert.assertEquals(MyUI.NOTIFICATION_TEXT,
+        Assert.assertEquals(ThankYouService.THANK_YOU_TEXT,
                 $(NotificationElement.class).first().getText());
     }
 }
