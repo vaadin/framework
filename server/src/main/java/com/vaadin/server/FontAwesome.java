@@ -32,7 +32,11 @@ package com.vaadin.server;
  * @since 7.2
  * @author Vaadin Ltd
  * @see http://fortawesome.github.io/Font-Awesome/
+ * @deprecated Planned to replace with Vaadin Icons https://vaadin.com/icons for
+ *             8.0.0 (#7979). Will be moved to {@code compability-server}
+ *             package and not updated to include new icons
  */
+@Deprecated
 public enum FontAwesome implements FontIcon {
     _500PX(0XF26E), //
     ADJUST(0XF042), //
