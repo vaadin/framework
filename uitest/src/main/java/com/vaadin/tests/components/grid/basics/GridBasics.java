@@ -382,6 +382,11 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createStateMenu(MenuItem stateMenu) {
+        MenuItem tabIndexMenu = stateMenu.addItem("Tab index", null);
+        addGridMethodMenu(tabIndexMenu, "0", 0, grid::setTabIndex);
+        addGridMethodMenu(tabIndexMenu, "-1", -1, grid::setTabIndex);
+        addGridMethodMenu(tabIndexMenu, "10", 10, grid::setTabIndex);
+
         MenuItem frozenColMenu = stateMenu.addItem("Frozen column count", null);
         for (int i = -1; i < 3; ++i) {
             addGridMethodMenu(frozenColMenu, "" + i, i,
@@ -463,10 +468,6 @@ public class GridBasics extends AbstractTestUIWithLog {
         createSelectionMenu(stateMenu);
 
         stateMenu.addItem("Set focus", item -> grid.focus());
-        MenuItem tabIndexMenu = stateMenu.addItem("Tab index", null);
-        addGridMethodMenu(tabIndexMenu, "0", 0, grid::setTabIndex);
-        addGridMethodMenu(tabIndexMenu, "-1", -1, grid::setTabIndex);
-        addGridMethodMenu(tabIndexMenu, "10", 10, grid::setTabIndex);
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
