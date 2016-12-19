@@ -7,14 +7,134 @@ layout: page
 [[datamodel.selection]]
 = Selecting items
 
-////
+In the chapter link:datamodel-providers.asciidoc[Showing Many Items in a Listing] populating listing components with data was discussed.
+In addition to displaying collections of data, listing components in the framework support the selection of the displayed items.
+The type of selection that each listing component supports differs from component to component, for instance `CheckBoxGroup` allows the selection of multiple items simultaneously, while `RadioButtonGroup` only allows a single item to be selected at a time.
+
+How selection is handled in listings is split into three categories:
+
+* Single selection: components that only allow a single item to be selected at a time, for example `RadioButtonGroup` belongs in this category.
+More generally, all components that implement the `SingleSelect` interface belong in this category.
+* Multi selection: components that allow for selecting any number of the displayed items, for example `CheckBoxGroup`.
+All components that implement the `MultiSelect` interface belong in this category.
+* Listing components whose selection can be configured through the usage of the `SelectionModel` interface.
+The `Grid` component is an example of this type of listing and it currently has built in implementations for both the single selection and multi selection cases, as well as disabling selection altogether.
+
+== Single and Multi Selection
+
+Single and multi selection components implement the `HasValue` interface, where the current selection represents the value that is currently held by the component.
+In practice this means that it is possible to get, set and listen to selection changes the same way you would with value changes in Vaadin field components.
+In the case of single select components `HasValue` is further extended with `SingleSelect`, and correspondingly with `MultiSelect` in the case of multi select components, giving further control over the current selection.
+
+An example of basic single selection with the ComboBox component, listing possible Availability enumerations is given below:
+[source, java]
+----
+ComboBox<Availability> comboBox = new ComboBox<>();
+// Populate the combo box with items
+comboBox.setItems(EnumSet.allOf(Availability.class));
+
+// Set the current selection
+comboBox.setValue(Availability.DISCONTINUED);
+// Get the current selection
+Availability availability = comboBox.getValue();
+
+// Add a value change listener, a ValueChangeEvent<Availability> will be fired
+// any time a change to the selection is made.
+comboBox.addValueChangeListener(event -> Notification.show(event.getValue()));
+----
+
+A similar example for the multi select listing `CheckBoxGroup` follows.
+A difference to note in this example is the parameter type of `setValue` and the return type of `getValue` being `Set<Category>`, the members of which represent the selection contents.
+[source, java]
+----
+CheckBoxGroup<Category> checkBoxGroup = new CheckBoxGroup<>();
+checkBoxGroup.setItems(EnumSet.allOf(Category.class));
+
+checkBoxGroup.setValue(EnumSet.allOf(Category.class));
+Set<Category> categories = checkBoxGroup.getValue();
+
+checkBoxGroup.addValueChangeListener(event -> {
+  Notification.show("Number of selected items: " + event.getValue().size());
+});
+----
+
+Additionally, `MultiSelect` provides numerous utility functions for simpler programmatic handling of selections, such as:
+[source, java]
+----
+checkBoxGroup.select(Category.DVD, Category.BOOK);
+checkBoxGroup.isSelected(Category.BOOK); // true
+checkBoxGroup.deselectAll();
+checkBoxGroup.getSelectedItems(); // now returns an empty set of Categories
+----
+
+== Selection Models
+
 TODO
 
-* A Listing may let the user mark one or several of its items as selected.
-* Some listings only support having one item selected at a time
-** Code example: Setting, getting and reacting to events from a NativeSelect
-** Design question: Is nullSelectionAllowed a feature of each component or a feature of the selection model?
-* Other listings can be configured to allow selecting one or many items. Depending on how it is configured, it uses a different selection model type for working with the selection.
-** Code example: CheckBoxGroup/RadioButtonGroup. Using different selection model types to access the selection.
-** Code example: Using each selection model type with a Binder
+== Using Listing Components With Binder
+
+TODO
+
+Examples for single/multiselect
+
+[source, java]
+----
+class Product {
+  String name;
+  Availability availability;
+  Set<Category> categories;
+
+  // Getter and Setter definitions
+  ...
+}
+----
+[source, java]
+----
+CheckBoxGroup<Category> checkBoxGroup = new CheckBoxGroup<>();
+RadioButtonGroup<Availability> radioButtonGroup = new RadioButtonGroup<>();
+
+Binder<Product> binder = new Binder<>();
+binder.forField(checkBoxGroup, Product::getCategories, Product::setCategories);
+binder.forField(radioButtonGroup, Product::getAvailability, Product::setAvailability);
+----
+
+Examples for asSingle/asMulti
+
+[source, java]
+----
+Grid<Availability> grid = new Grid<>();
+grid.setItems(EnumSet.allOf(Availability.class));
+
+// Shorthand for...
+grid.setSelectionMode(SelectionMode.SINGLE)
+
+//
+grid.asSingleSelect().addValueChangeListener(event -> {
+  Notification.show(event.getValue());
+});
+
+// The results of asSingleSelect and asMultiSelect can also be bound with a binder as shown in the previous example
+binder.forField(grid.asSingleSelect(), Product::getAvailability, Product::setAvailability);
+----
+
+[source, java]
+----
+Grid<Category> grid = new Grid<>();
+grid.setItems(EnumSet.allOf(Category.class));
+
+// Set the selection mode to multi
+grid.setSelectionMode(SelectionMode.MULTI)
+
+//
+grid.asMultiSelect().addValueChangeListener(event -> {
+  Notification.show("Number of selected items: " + event.getValue().size());
+});
+
+binder.forField(grid.asMultiSelect(), Product::getCategories, Product::setCategories);
+----
+
+////
+TODO (Not for beta)
+
+Document advanced usage: custom selection models
 ////
