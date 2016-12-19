@@ -25,12 +25,12 @@ Button sayHelloButton = new Button("Say hello", clickEvent -> {
 });
 ----
 
-Each field implementation has its own specific value type – for instance, the type of a `TextField` is `String`, the type of a `Slider` is [classname]#Double#, the type of a [classname]#DateField# is [classname]#LocalDate#, and so on.
+Each field implementation has its own specific value type – for instance, the type of a `TextField` is `String`, the type of a `Slider` is `Double`, the type of a `DateField` is `LocalDate`, and so on.
 
 == Reacting to Value Changes
 
 When the value of a field changes, it fires a value change event.
-By listening to the event, we can find out the new value of the field and whether the value was changed by the user through the user interface or by code through the [methodname]#setValue# method.
+By listening to the event, we can find out the new value of the field and whether the value was changed by the user through the user interface or by code through the `setValue` method.
 
 [source,java]
 ----
@@ -54,4 +54,4 @@ Fields can also be set in read-only mode, which means that the user is not able 
 This is useful for showing the user that the data is there, even though the user is currently not allowed to edit it.
 
 When editing multiple values from the same business object, you can use `Binder` to simplify how the values of all input fields in a form are handled.
-The <a>next chapter</a> describes how this is done.
+The link:datamodel-forms.asciidoc[next chapter] describes how this is done.
