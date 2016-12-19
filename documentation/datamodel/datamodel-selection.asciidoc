@@ -69,8 +69,8 @@ checkBoxGroup.getSelectedItems(); // now returns an empty set of Categories
 
 == Selection Models
 
-`Grid` component can hold ether multi- or single- selection. Since grid can not be both `SingleSelect<SomePojo>` and
-`MultiSelect<SomePojo>>` in the same time, grid itself is not a selection at all, but incapsulates one of those selections,
+`Grid` component can hold either multi- or single- selection. Since grid can not be both `SingleSelect<SomePojo>` and
+`MultiSelect<SomePojo>` in the same time, grid itself is not a selection at all, but incapsulates one of those selections,
 which are subclasses of `SelectionModel` class.
 By default, `Grid` is in single selection mode, and we can obtain selection object using `asSingleSelect` method.
 
