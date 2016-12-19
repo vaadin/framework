@@ -69,72 +69,78 @@ checkBoxGroup.getSelectedItems(); // now returns an empty set of Categories
 
 == Selection Models
 
-TODO
-
-== Using Listing Components With Binder
-
-TODO
-
-Examples for single/multiselect
+`Grid` component can hold ether multi- or single- selection. Since grid can not be both `SingleSelect<SomePojo>` and
+`MultiSelect<SomePojo>>` in the same time, grid itself is not a selection at all, but incapsulates one of those selections,
+which are subclasses of `SelectionModel` class.
+By default, `Grid` is in single selection mode, and we can obtain selection object using `asSingleSelect` method.
 
 [source, java]
 ----
-class Product {
-  String name;
-  Availability availability;
-  Set<Category> categories;
+Grid<Person> grid = new Grid<>();
+SingleSelect<Person> selection = grid.asSingleSelect();
+//...
+Notification.show(selection.getValue().getName() + " was selected");
+----
 
-  // Getter and Setter definitions
-  ...
+If selection of multiple rows is required, then `Grid` needs to be switched into multiselection mode, and multiple item
+selection object can be obtained using `asMultiSelect` method.
+
+[source, java]
+----
+Grid<Person> grid = new Grid<>();
+grid.setSelectionMode(Grid.SelectionMode.MULTI);
+MultiSelect<Person> selection = grid.asMultiSelect();
+//...
+Notification.show(
+  selection.getValue().stream().map(Person::getName).collect(Collectors.joining(", "))
+    + " were selected");
+----
+
+[[datamodel.selection.binder]]
+=== Selected Items
+
+Those selection objects (subclasses of `SelectionModel`) implement `HasValue` interface, and could be used as form fields,
+and all conversion and validation chains can be used also.
+
+[source, java]
+----
+public static class Company {
+  private Person boss;
+  private Set<Person> managers;
+
+  public Person getBoss() {
+    return boss;
+  }
+
+  public void setBoss(Person boss) {
+    this.boss = boss;
+  }
+
+  public Set<Person> getManagers() {
+    return managers;
+  }
+
+  public void setManagers(Set<Person> managers) {
+    this.managers = managers;
+  }
 }
-----
-[source, java]
-----
-CheckBoxGroup<Category> checkBoxGroup = new CheckBoxGroup<>();
-RadioButtonGroup<Availability> radioButtonGroup = new RadioButtonGroup<>();
 
-Binder<Product> binder = new Binder<>();
-binder.forField(checkBoxGroup, Product::getCategories, Product::setCategories);
-binder.forField(radioButtonGroup, Product::getAvailability, Product::setAvailability);
-----
-
-Examples for asSingle/asMulti
-
-[source, java]
-----
-Grid<Availability> grid = new Grid<>();
-grid.setItems(EnumSet.allOf(Availability.class));
-
-// Shorthand for...
-grid.setSelectionMode(SelectionMode.SINGLE)
-
-//
-grid.asSingleSelect().addValueChangeListener(event -> {
-  Notification.show(event.getValue());
-});
-
-// The results of asSingleSelect and asMultiSelect can also be bound with a binder as shown in the previous example
-binder.forField(grid.asSingleSelect(), Product::getAvailability, Product::setAvailability);
+  Grid<Person> bossGrid = new Grid<>();
+  Grid<Person> managersGrid = new Grid<>();
+  managersGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+  SingleSelect<Person> bossSelection = bossGrid.asSingleSelect();
+  MultiSelect<Person> managersSelection = managersGrid.asMultiSelect();
+  Binder<Company> companyBinder = new Binder<>();
+  companyBinder.forField(bossSelection).bind(Company::getBoss, Company::setBoss);
+  companyBinder.forField(managersSelection).bind(Company::getManagers, Company::setManagers);
 ----
 
-[source, java]
-----
-Grid<Category> grid = new Grid<>();
-grid.setItems(EnumSet.allOf(Category.class));
+Of course, application-specific components can use the same approach to implement similar functionality.
 
-// Set the selection mode to multi
-grid.setSelectionMode(SelectionMode.MULTI)
+[[datamodel.selection.events]]
+=== Selection Events
 
-//
-grid.asMultiSelect().addValueChangeListener(event -> {
-  Notification.show("Number of selected items: " + event.getValue().size());
-});
-
-binder.forField(grid.asMultiSelect(), Product::getCategories, Product::setCategories);
-----
-
-////
-TODO (Not for beta)
-
-Document advanced usage: custom selection models
-////
+Since both `SelectionModels` are regular `HasValue` objects, they support standard `addvalueChangeListener` method and
+all added listeners are notified about any selection change. In addition, selections support their own, selection-specific listeners,
+`SelectionListener`, `SingleSelectionListener`, and `MultiSelectionListener`. To add those listeners, we need to explicitly cast a selection to
+`SelectionModel`, `SingleSelectionModel`, or `MultiSelectionModel` respectively.
