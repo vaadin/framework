@@ -7,14 +7,139 @@ layout: page
 [[datamodel.selection]]
 = Selecting items
 
-////
-TODO
+Listing components displaying data also support allowing the user to select items. Depending on component, it the user can select either one or several items at a time.
 
-* A Listing may let the user mark one or several of its items as selected.
-* Some listings only support having one item selected at a time
-** Code example: Setting, getting and reacting to events from a NativeSelect
-** Design question: Is nullSelectionAllowed a feature of each component or a feature of the selection model?
-* Other listings can be configured to allow selecting one or many items. Depending on how it is configured, it uses a different selection model type for working with the selection.
-** Code example: CheckBoxGroup/RadioButtonGroup. Using different selection model types to access the selection.
-** Code example: Using each selection model type with a Binder
-////
+How selection is handled in listings is split into three categories:
+
+* Single selection: components that only allow a single item to be selected at a time, for example `RadioButtonGroup` belongs in this category.
+More generally, all components that implement the `SingleSelect` interface belong in this category.
+* Multi selection: components that allow for selecting any number of the displayed items, for example `CheckBoxGroup`.
+All components that implement the `MultiSelect` interface belong in this category.
+* Listing components whose selection can be configured through the usage of the `SelectionModel` interface.
+The `Grid` component is an example of this type of listing and it currently has built in implementations for both the single selection and multi selection cases, as well as disabling selection altogether.
+
+== Single and Multi Selection
+
+Single and multi selection components implement the `HasValue` interface, where the current selection represents the value that is currently held by the component.
+In practice this means that it is possible to get, set and listen to selection changes the same way you would with value changes in Vaadin field components.
+In the case of single select components `HasValue` is further extended with `SingleSelect`, and correspondingly with `MultiSelect` in the case of multi select components, giving further control over the current selection.
+
+An example of basic single selection with the ComboBox component:
+[source, java]
+----
+ComboBox<Availability> comboBox = new ComboBox<>();
+// Populate the combo box with items
+comboBox.setItems(EnumSet.allOf(Availability.class));
+
+// Set the current selection
+comboBox.setValue(Availability.DISCONTINUED);
+// Get the current selection
+Availability availability = comboBox.getValue();
+
+// Add a value change listener, a ValueChangeEvent<Availability> will be fired
+// any time a change to the selection is made.
+comboBox.addValueChangeListener(event -> Notification.show(event.getValue()));
+----
+
+A similar example for the multi select listing `CheckBoxGroup` follows.
+A difference to note in this example is the parameter type of `setValue` and the return type of `getValue` being `Set<Category>`, the members of which represent the selection contents.
+[source, java]
+----
+CheckBoxGroup<Category> checkBoxGroup = new CheckBoxGroup<>();
+checkBoxGroup.setItems(EnumSet.allOf(Category.class));
+
+checkBoxGroup.setValue(EnumSet.allOf(Category.class));
+Set<Category> categories = checkBoxGroup.getValue();
+
+checkBoxGroup.addValueChangeListener(event -> {
+  Notification.show("Number of selected items: " + event.getValue().size());
+});
+----
+
+Additionally, `MultiSelect` provides numerous utility functions for simpler programmatic handling of selections, such as:
+[source, java]
+----
+checkBoxGroup.select(Category.DVD, Category.BOOK);
+checkBoxGroup.isSelected(Category.BOOK); // true
+checkBoxGroup.deselectAll();
+checkBoxGroup.getSelectedItems(); // now returns an empty set of Categories
+----
+
+== Selection Models
+
+`Grid` component can hold either multi- or single- selection. Since grid can not be both `SingleSelect<SomePojo>` and
+`MultiSelect<SomePojo>` in the same time, grid itself is not a select component, but it delegates the selection to a subclass of `SelectionModel` class.
+By default, `Grid` is in single selection mode, and we can obtain selection object using `asSingleSelect` method.
+
+[source, java]
+----
+Grid<Person> grid = new Grid<>();
+SingleSelect<Person> selection = grid.asSingleSelect();
+//...
+Notification.show(selection.getValue().getName() + " was selected");
+----
+
+If selection of multiple rows is required, then `Grid` needs to be switched into multiselection mode, and multiple item
+selection object can be obtained using `asMultiSelect` method.
+
+[source, java]
+----
+Grid<Person> grid = new Grid<>();
+grid.setSelectionMode(Grid.SelectionMode.MULTI);
+MultiSelect<Person> selection = grid.asMultiSelect();
+//...
+Notification.show(
+  selection.getValue().stream().map(Person::getName).collect(Collectors.joining(", "))
+    + " were selected");
+----
+
+[[datamodel.selection.binder]]
+=== Selected Items
+
+Selection models (subclasses of `SelectionModel`) allow retrieving a `HasValue` object corresponding to the selection with the `asSingleSelect` and `asMultiSelect` methods, and thus can be used bound to data using a `Binder`.
+This way, conversions and validation can be used for selections.
+
+[source, java]
+----
+public static class Company {
+  private Person boss;
+  private Set<Person> managers;
+
+  public Person getBoss() {
+    return boss;
+  }
+
+  public void setBoss(Person boss) {
+    this.boss = boss;
+  }
+
+  public Set<Person> getManagers() {
+    return managers;
+  }
+
+  public void setManagers(Set<Person> managers) {
+    this.managers = managers;
+  }
+}
+
+  Binder<Company> companyBinder = new Binder<>();
+
+  //Setup single selection binding
+  Grid<Person> bossGrid = new Grid<>();
+  SingleSelect<Person> bossSelection = bossGrid.asSingleSelect();
+  companyBinder.forField(bossSelection).bind(Company::getBoss, Company::setBoss);
+
+  //Setup multi selection binding
+  Grid<Person> managersGrid = new Grid<>();
+  managersGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+  MultiSelect<Person> managersSelection = managersGrid.asMultiSelect();
+  companyBinder.forField(managersSelection).bind(Company::getManagers, Company::setManagers);
+----
+
+[[datamodel.selection.events]]
+=== Selection Events
+
+`SelectionModel` implementations allow retrieving a `HasValue` object corresponding to the selection with the `asSingleSelect` and `asMultiSelect` methods. The `HasValue` implementations returned by those methods support the standard `addValueChangeListener` method and
+all added listeners are notified about any selection change. In addition, selections support their own, selection-specific listeners,
+`SelectionListener`, `SingleSelectionListener`, and `MultiSelectionListener`. To add those listeners, we need to explicitly cast a selection to
+`SingleSelectionModel`, or `MultiSelectionModel` respectively.
