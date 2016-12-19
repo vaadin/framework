@@ -16,8 +16,6 @@ include::advanced-shortcuts.asciidoc[leveloffset=+2]
 
 include::advanced-printing.asciidoc[leveloffset=+2]
 
-include::advanced-gae.asciidoc[leveloffset=+2]
-
 include::advanced-security.asciidoc[leveloffset=+2]
 
 include::advanced-navigator.asciidoc[leveloffset=+2]
