@@ -7,7 +7,7 @@ layout: page
 [[datamodel.fields]]
 = Editing Values in Fields
 
-The [interfacename]#Field# interface is in a very central role for handling data in an application since different types of fields are the main user interface controls used for entering data into the application.
+Input field components (implementing the `HasValue` interface) are in a very central role for handling data in an application since different types of fields are the main user interface controls used for displaying and editing data.
 
 While each field implementation has its own functionality, all fields also have some common core functionality.
 By using these common building blocks, the data binding part of the framework can help simplify the code we need to write for many common data entry cases.
@@ -25,12 +25,12 @@ Button sayHelloButton = new Button("Say hello", clickEvent -> {
 });
 ----
 
-Each field implementation has its own specific value type – the type of a [classname]#TextField# is [classname]#String#, the type of a [classname]#Slider# is [classname]#Double#, the type of a [classname]#DateField# is [classname]#LocalDate#, and so on.
+Each field implementation has its own specific value type – for instance, the type of a `TextField` is `String`, the type of a `Slider` is `Double`, the type of a `DateField` is `LocalDate`, and so on.
 
 == Reacting to Value Changes
 
 When the value of a field changes, it fires a value change event.
-By listening to the event, we can find out the new value of the field and whether the value was changed by the user through the user interface or by code through the [methodname]#setValue# method.
+By listening to the event, we can find out the new value of the field and whether the value was changed by the user through the user interface or by code through the `setValue` method.
 
 [source,java]
 ----
@@ -44,25 +44,15 @@ nameField.addValueChangeListener(event -> {
   Notification.show(message);
 });
 
-Button button = new Button("Set name", event -> {
+Button setButton = new Button("Set name", event -> {
   // Will show "Name is Zaphod as set from code"
   nameField.setValue("Zaphod");
 });
 ----
 
-If we only need to get the new value whenever it changes, we can use the [methodname]#onChange# method.
-This kind of listener directly receives the new value, which makes it convenient if we want to directly pass on the value to some other part of the application.
-It is often practical to use a method reference for defining where the new value should be delivered.
+Fields can also be set in read-only mode, which means that the user is not able to directly edit the value through the user interface, but the value can still be changed through code.
+This is useful for showing the user that the data is there, even though the user is currently not allowed to edit it.
 
-[source,java]
-----
-Person person = new Person("Douglas Adams", 49);
+When editing multiple values from the same business object, you can use `Binder` to simplify how the values of all input fields in a form are handled.
 
-TextField nameField = new TextField("Name");
-nameField.setValue(person.getName());
-nameField.onChange(person::setName);
-
-Button button = new Button("Show name", event -> {
-  Notification.show("Person name: " + person.getName());
-})
-----
+link:datamodel-forms.asciidoc[Binding Data to Forms] describes how this is done.

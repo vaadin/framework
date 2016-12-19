@@ -7,25 +7,26 @@ layout: page
 [[datamodel.overview]]
 = Overview
 
-////
-TODO
-
- * Item: typically a Java Bean, but can also be any other Java type
- * Individual values in an item: callback or bean property name
- * Collections of items: In-memory list or explicitly fetched on demand from a backend
-////
-
 The Vaadin Data Model is one of the core concepts of the library.
-To allow the view (user interface components) to access the data model of an application directly, we have introduced a standard data interface.
+There is a standard data interface that all UI components use to access and modify the application's data.
 
-The model allows binding user interface components directly to data that can be viewed and possibly also edited.
+The most basic UI component for handling data is a field component that lets the user define a single value, for instance a text field for writing the name of a product or a dropdown menu for selecting which department an employee belongs to.
+See link:datamodel-fields.asciidoc[Editing Values in Fields] to learn how these components can be used on their own.
 
-Notice that the Data Model does not define data representation, but only how components access the data.
-This leaves the representation fully to the implementation of the containers.
-The representation can be almost anything, such as a plain old Java object (POJO) structure, a filesystem, or a database query.
+In most applications, there are business classes that represent real-world objects like a single employee or a product in an inventory.
+The user interface is structured as a form that lets the user edit all the different properties of a single business object instance.
+Vaadin Framework makes it easy to create forms for editing these sorts.
+You have full control over how you configure and lay out the individual input fields making up a form, and then you can use `Binder` to hook up those fields to a business object instance.
+link:datamodel-forms.asciidoc[Binding Data to Forms] shows how to bind data to fields.
 
-Many data model implementations, such as data sources, are available as add-ons, either from the Vaadin Directory or from independent sources.
-Installation of add-ons is described in
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
-Vaadin Add-ons">>.
-Notice that unlike with most regular add-on components, you do not need to compile a widget set for add-ons that include just data model implementations.
+There are UI components in the framework that lists multiple similar objects and lets the user view, select and in some cases even edit those objects.
+A listing component can get its data from an in-memory collection or lazily fetch it from some backend.
+In either case, there are options available for defining how the data is sorted and filtered before being displayed to the user.
+Read more about how to provide lists of data to these components in link:datamodel-providers.asciidoc[Showing Many Items in a Listing].
+Using a listing component as an input field to select one or many of the listed items is described in link:datamodel-selection.asciidoc[Selecting items].
+
+Vaadin Data Model topic references::
+* link:datamodel-fields.asciidoc[Editing Values in Fields]
+* link:datamodel-forms.asciidoc[Binding Data to Forms]
+* link:datamodel-providers.asciidoc[Showing Many Items in a Listing]
+* link:datamodel-selection.asciidoc[Selecting items]
