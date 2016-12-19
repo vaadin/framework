@@ -136,7 +136,6 @@ button.setDescription(
     "  <li>etc.</li>"+
     "</ul>");
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.description.richtext[on-line example, window="_blank"].
 
 The result is shown in <<figure.components.tooltip.richtext>>.
 
@@ -144,9 +143,8 @@ The result is shown in <<figure.components.tooltip.richtext>>.
 .A Rich Text Tooltip
 image::img/tooltip-richtext-withpointer-hi.png[width=40%, scaledwidth=75%]
 
-Notice that the setter and getter are defined for all fields in the
-[classname]#Field# interface, not for all components in the
-[classname]#Component# interface.
+Notice that the setter and getter are defined for all field components implementing the
+[classname]#HasValue# interface, not for all components.
 
 
 [[components.features.enabled]]
@@ -180,13 +178,13 @@ buttons.
 .An Enabled and Disabled [classname]#Button#
 image::img/features-enabled-simple.png[width=30%, scaledwidth=50%]
 
-A disabled component is automatically put in read-only state. No client
-interaction with such a component is sent to the server and, as an important
+A disabled component is automatically put in read-only like state. No client
+interaction with a disabled component is sent to the server and, as an important
 security feature, the server-side components do not receive state updates from
-the client in the read-only state. This feature exists in all built-in
-components in Vaadin and is automatically handled for all [classname]#Field#
-components for the field property value. For custom widgets, you need to make
-sure that the read-only state is checked on the server-side for all
+the client in the disabled state. This feature exists in all built-in
+components in Vaadin and is automatically handled for all [classname]#HasValue#
+components that have a value. For custom widgets, you need to make
+sure that the disabled state is checked on the server-side for all
 safety-critical variables.
 
 === CSS Style Rules
@@ -426,7 +424,7 @@ endif::web[]
 ((("read-only property")))
 ((("Component interface", "read-only")))
 The property defines whether the value of a component can be changed. The
-property is mainly applicable to [classname]#Field# components, as they have a
+property is only applicable to [classname]#HasValue# components implementing the `HasValue` interface, as they have a
 value that can be edited by the user.
 
 [source, java]
@@ -449,20 +447,16 @@ The resulting read-only text field is shown in
 .A read-only component
 image::img/features-readonly-simple.png[width=50%, scaledwidth=80%]
 
-Setting a layout or some other component container as read-only does not usually
-make the contained components read-only recursively. This is different from, for
-example, the disabled state, which is usually applied recursively.
-
 Notice that the value of a selection component is the selection, not its items.
 A read-only selection component doesn't therefore allow its selection to be
-changed, but other changes are possible. For example, if you have a read-only
-[classname]#Table# in editable mode, its contained fields and the underlying
-data model can still be edited, and the user could sort it or reorder the
-columns.
+changed, but other changes are possible. For example, if you have a
+[classname]#Grid# with a read-only selection model in editable mode,
+its contained fields and the underlying data model can still be edited,
+and the user could sort it or reorder the columns.
 
 Client-side state modifications will not be communicated to the server-side and,
 more importantly, server-side field components will not accept changes to the
-value of a read-only [classname]#Field# component. The latter is an important
+value of a read-only [classname]#HasValue# component. The latter is an important
 security feature, because a malicious user can not fabricate state changes in a
 read-only field.
 
@@ -470,7 +464,7 @@ Also notice that while the read-only status applies automatically to the value
 of a field, it does not apply to other component variables. A
 read-only component can accept some other state changes from the client-side
 and some of such changes could be acceptable, such as change in the scroll bar
-position of a [classname]#Table#. Custom components should check the read-only
+position of a [classname]#ListSelect#. Custom components should check the read-only
 state for variables bound to business data.
 
 ////
@@ -575,11 +569,6 @@ The resulting invisible component is shown in
 .An invisible component
 image::img/features-visible-simple.png[]
 
-Beware that invisible beings can leave footprints. The containing layout cell
-that holds the invisible component will not go away, but will show in the layout
-as extra empty space. Also expand ratios work just like if the component was
-visible - it is the layout cell that expands, not the component.
-
 If you need to make a component only cosmetically invisible, you should use a
 custom theme to set it [literal]#++display: none++# style. This is mainly useful
 for some special components that have effects even when made invisible in CSS.
@@ -622,7 +611,7 @@ mycomponent.setWidth(100, Unit.PERCENTAGE);
 mycomponent.setWidth(400, Unit.PIXELS);
 ----
 
-Alternatively, you can speficy the size as a string. The format of such a string
+Alternatively, you can specify the size as a string. The format of such a string
 must follow the HTML/CSS standards for specifying measures.
 
 
@@ -678,7 +667,7 @@ component allows inputting text, the focus and insertion point are indicated by
 a cursor. Pressing the Tab key moves the focus to the component next in the
 __focus order__.
 
-Focusing is supported by all [classname]#Field# and [classname]#Select# components and also by
+Focusing is supported by all [classname]#AbstractField# and [classname]#AbstractListing# components and also by
 components such as [classname]#Button#, [classname]#Upload#, and [classname]#TabSheet#.
 
 The focus order or __tab index__ of a component is defined as a positive integer

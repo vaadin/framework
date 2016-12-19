@@ -35,9 +35,7 @@ The result is shown in <<figure.components.textfield.basic>>.
 .[classname]#TextField# Example
 image::img/textfield-example.png[width=40%, scaledwidth=50%]
 
-Value changes are handled by adding a listener using either the [methodname]#onChange()#
-or [methodname]#addValueChangeListener()# method, as in most other fields. The value can be
-acquired with [methodname]#getValue()# directly from the text field or from the parameter
+Value changes are handled by adding a listener using [methodname]#addValueChangeListener()# method, as in most other fields. The value can be acquired with [methodname]#getValue()# directly from the text field or from the parameter
 passed to the event listener. 
 
 [source, java]
@@ -136,8 +134,8 @@ counter.setValue(tf.getValue().length() +
                  " of " + tf.getMaxLength());
 
 // Display the current length interactively in the counter
-tf.onChange(value -> {
-    int len = value.length();
+tf.addValueChangeListener(event -> {
+    int len = event.getValue().length();
     counter.setValue(len + " of " + tf.getMaxLength());
 });
 
