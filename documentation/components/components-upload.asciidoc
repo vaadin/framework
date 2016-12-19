@@ -12,6 +12,8 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/other/upload"]
 endif::web[]
 
+*_This section has not yet been updated to Vaadin Framework 8_*
+
 The [classname]#Upload# component allows a user to upload files to the server.
 It displays a file name entry box, a file selection button, and an upload submit
 button. The user can either write the filename in the text area or click the
@@ -45,7 +47,7 @@ upload.setButtonCaption("Upload Now");
 You can also hide the upload button with [literal]#++.v-upload .v-button
 {display: none}++# in theme, have custom logic for starting the upload, and call
 [methodname]#startUpload()# to start it. If the upload component has
-[methodname]#setImmediate(true)# enabled, uploading starts immediately after
+[methodname]#setImmediateMode(true)# enabled, uploading starts immediately after
 choosing the file.
 
 [[components.upload.receiving]]

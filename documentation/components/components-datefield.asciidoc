@@ -199,8 +199,7 @@ endif::web[]
 === Input Prompt
 
 Like other fields that have a text box, [classname]#PopupDateField# allows an
-input prompt that is visible until the user has input a value. You can set the
-prompt with [methodname]#setInputPrompt#.
+placeholder that is visible until the user has input a value. You can set that with [methodname]#setPlaceholder#.
 
 
 [source, java]
@@ -208,7 +207,7 @@ prompt with [methodname]#setInputPrompt#.
 PopupDateField date = new PopupDateField();
 
 // Set the prompt
-date.setInputPrompt("Select a date");
+date.setPlaceholder("Select a date");
 
 // Set width explicitly to accommodate the prompt
 date.setWidth("10em");

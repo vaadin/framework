@@ -41,8 +41,7 @@ TextField editor = new TextField(null, // No caption
                                  label.getValue());
 
 // Change the label's text
-editor.onChange(label::setValue);
-// or onChange(value -> label.setValue(value));
+editor.addValueChangeListener(event -> label.setValue(value));
 ----
 See the http://demo.vaadin.com/book-examples-vaadin7/book#component.label.basic[on-line example, window="_blank"].
 
