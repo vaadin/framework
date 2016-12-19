@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.util;
+package com.vaadin.v7.util;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,7 +25,9 @@ import java.io.ObjectOutputStream;
  * should not be used by application developers. Subject to change at any time.
  *
  * @since 6.0
+ * @deprecated Only used for compatibility-server
  */
+@Deprecated
 public class SerializerHelper {
 
     /**
@@ -105,9 +107,9 @@ public class SerializerHelper {
      * List of primitive classes. Google App Engine has problems
      * serializing/deserializing these (#3064).
      */
-    private static final Class<?>[] primitiveClasses = new Class<?>[] { byte.class,
-            short.class, int.class, long.class, float.class, double.class,
-            boolean.class, char.class };
+    private static final Class<?>[] primitiveClasses = new Class<?>[] {
+            byte.class, short.class, int.class, long.class, float.class,
+            double.class, boolean.class, char.class };
 
     /**
      * Resolves the class given by {@code className}.

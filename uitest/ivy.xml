@@ -24,9 +24,6 @@
             rev="1.0.0.GA" conf="build -> default,sources" />
         <dependency org="org.hibernate" name="hibernate-validator"
             rev="4.2.0.Final" conf="build -> default" />
-        <!-- Google App Engine -->
-        <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
-            rev="1.7.7" conf="build-provided -> default" />
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->

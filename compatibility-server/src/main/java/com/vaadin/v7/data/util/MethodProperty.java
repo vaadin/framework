@@ -26,8 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.util.SerializerHelper;
 import com.vaadin.v7.data.Property;
+import com.vaadin.v7.util.SerializerHelper;
 
 /**
  * <p>

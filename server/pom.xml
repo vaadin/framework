@@ -39,13 +39,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Google App Engine -->
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Bean Validation API -->
         <dependency>
             <groupId>javax.validation</groupId>

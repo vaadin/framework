@@ -298,9 +298,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Gets the currently used Vaadin servlet. The current servlet is
      * automatically defined when initializing the servlet and when processing
      * requests to the server (see {@link ThreadLocal}) and in
-     * {@link VaadinSession#access(Runnable)} and {@link UI#access(Runnable)}. In
-     * other cases, (e.g. from background threads), the current servlet is not
-     * automatically defined.
+     * {@link VaadinSession#access(Runnable)} and {@link UI#access(Runnable)}.
+     * In other cases, (e.g. from background threads), the current servlet is
+     * not automatically defined.
      * <p>
      * The current servlet is derived from the current service using
      * {@link VaadinService#getCurrent()}
@@ -553,7 +553,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *             if the writing failed due to input/output error.
      *
      * @deprecated As of 7.0. This method is retained only for backwards
-     *             compatibility and for {@link GAEVaadinServlet}.
+     *             compatibility and for GAEVaadinServlet.
      */
     @Deprecated
     protected void criticalNotification(VaadinServletRequest request,
@@ -778,7 +778,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         response.setHeader("Cache-Control", cacheControl);
         response.setDateHeader("Expires",
-                System.currentTimeMillis() + (resourceCacheTime * 1000));
+                System.currentTimeMillis() + resourceCacheTime * 1000);
 
         // Find the modification timestamp
         long lastModifiedTime = 0;
@@ -1339,10 +1339,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws MalformedURLException {
         final URL reqURL = new URL((request.isSecure() ? "https://" : "http://")
                 + request.getServerName()
-                + ((request.isSecure() && request.getServerPort() == 443)
-                        || (!request.isSecure()
-                                && request.getServerPort() == 80) ? ""
-                                        : ":" + request.getServerPort())
+                + (request.isSecure() && request.getServerPort() == 443
+                        || !request.isSecure() && request.getServerPort() == 80
+                                ? "" : ":" + request.getServerPort())
                 + request.getRequestURI());
         String servletPath = "";
         if (request
