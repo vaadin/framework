@@ -19,8 +19,8 @@ Before a Vaadin application can be used, it has to be deployed to a Java web
 server, as described in
 <<dummy/../../../framework/application/application-environment#application.environment,"Deploying
 an Application">>. Deploying reads the servlet classes annotated with the
-[literal]#++@WebServlet++# annotation (Servlet 3.0) or the [filename]#web.xml#
-deployment descriptor (Servlet 2.4) in the application to register servlets for
+[literal]#++@WebServlet++# annotation or the [filename]#web.xml#
+deployment descriptor in the application to register servlets for
 specific URL paths and loads the classes. Deployment does not yet normally run
 any code in the application, although static blocks in classes are executed when
 they are loaded.
@@ -103,20 +103,6 @@ public class MyServlet extends VaadinServlet {
 To add custom functionality around request handling, you can override the
 [methodname]#service()# method.
 
-To use the custom servlet class in a Servlet 2.4 project, you need to define it
-in the [filename]#web.xml# deployment descriptor instead of the regular
-[classname]#VaadinServlet# class, as described in
-<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
-a web.xml Deployment Descriptor">>.
-
-
-ifdef::web[]
-[[application.lifecycle.servlet-service.portletcustomization]]
-=== Customizing Vaadin Portlet
-
-__To Be Done__
-
-endif::web[]
 
 ifdef::web[]
 [[application.lifecycle.servlet-service.servicecustomization]]
@@ -194,13 +180,6 @@ public class MyServlet extends VaadinServlet
     }
 }
 ----
-
-If using Servlet 2.4, you need to configure the custom servlet class in the
-[parameter]#servlet-class# parameter in the [filename]#web.xml# descriptor
-instead of the [classname]#VaadinServlet#, as described in
-<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
-a web.xml Deployment Descriptor">>.
-
 
 
 [[application.lifecycle.ui]]

@@ -191,8 +191,8 @@ documentation of Vaadin.
 Component properties are directly mapped to the attributes of the HTML elements
 according to the names of the properties. Attributes are written in lower-case
 letters and dash is used for word separation instead of upper-case letters in
-the Java methods, so that [literal]#++input-prompt++# attribute is equivalent to
-[methodname]#setInputPrompt()#.
+the Java methods, so that [literal]#++placeholder++# attribute is equivalent to
+[methodname]#setPlaceholder()#.
 
 For example, the __caption__ property, which you can set with
 [methodname]#setCaption()#, is represented as [literal]#++caption++# attribute.
@@ -203,7 +203,7 @@ classes.
 
 [source, html]
 ----
-<vaadin-text-field caption="Name" input-prompt="Enter Name"/>
+<vaadin-text-field caption="Name" placeholder="Enter Name"/>
 ----
 
 
