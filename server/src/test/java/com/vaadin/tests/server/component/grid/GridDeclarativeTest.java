@@ -28,6 +28,7 @@ import org.junit.Test;
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.SelectionModel.Single;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.Query;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.data.bean.Person;
@@ -264,7 +265,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 person2.getFirstName(), person2.getLastName(),
                 getComponentTag());
 
-        testRead(design, grid);
+        Grid<?> readGrid = testRead(design, grid, true, true);
+        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 
@@ -313,7 +315,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 person3.toString(), person3.getFirstName(),
                 person3.getLastName(), getComponentTag());
 
-        testRead(design, grid);
+        Grid<?> readGrid = testRead(design, grid, true, true);
+        Assert.assertEquals(3, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 
@@ -347,7 +350,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 person2.getFirstName(), person2.getLastName(),
                 getComponentTag());
 
-        testRead(design, grid);
+        Grid<?> readGrid = testRead(design, grid, true, true);
+        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 
@@ -382,7 +386,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 person2.toString(), person2.getFirstName(),
                 person2.getLastName(), getComponentTag());
 
-        testRead(design, grid);
+        Grid<?> readGrid = testRead(design, grid, true, true);
+        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
 
         grid.setSelectionMode(SelectionMode.SINGLE);
@@ -394,7 +399,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 person2.getFirstName(), person2.getLastName(),
                 getComponentTag());
 
-        testRead(design, grid);
+        readGrid = testRead(design, grid, true, true);
+        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 

@@ -77,6 +77,7 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.SectionState;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
 import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
@@ -3050,6 +3051,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         List<T> items = new ArrayList<>();
         for (Element row : body.children()) {
             T item = deserializeDeclarativeRepresentation(row.attr("item"));
+            items.add(item);
             if (row.hasAttr("selected")) {
                 getSelectionModel().select(item);
             }
