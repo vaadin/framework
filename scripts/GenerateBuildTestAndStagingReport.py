@@ -125,7 +125,7 @@ def completeArtifactNames(artifactIds, version):
 
 allowedPluginArtifacts = completeArtifactNames([ 'vaadin-maven-plugin' ], args.version)
 allowedArchetypeArtifacts = completeArtifactNames([ 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet' ], args.version)
-allowedFrameworkArtifacts = completeArtifactNames([ 'vaadin-root', 'vaadin-bom', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-widgets', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes' ], args.version)
+allowedFrameworkArtifacts = completeArtifactNames([ 'vaadin-root', 'vaadin-bom', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes' ], args.version)
 
 content = "<html><head></head><body><table>"
 traffic_light = "<svg width=\"20px\" height=\"20px\" style=\"padding-right:5px\"><circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"{color}\"/></svg>"
@@ -163,16 +163,12 @@ content += createTableRow("", "<a href=\"http://{}/repository/download/{}/{}:id/
 # link to api diff
 content += createTableRow("", getApiDiffHtml())
 
-# check that trac tickets are in the correct status
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=closed&status=pending-release&component=Core+Framework&resolution=fixed&group=milestone&col=id&col=summary&col=component&col=status&col=type&col=priority&col=milestone&order=priority\">Check that trac tickets have correct status</a>")
-# pending release tickets without milestone
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=pending-release&milestone=\">Pending-release tickets without milestone</a>")
+# check that GitHub issues are in the correct status
+content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/issues?q=is%3Aclosed+sort%3Aupdated-desc\">Check that closed GitHub issues have correct milestone</a>")
 
 content += createTableRow("", "<h2>Preparations before publishing</h2>")
-# close trac milestone
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone/Vaadin {version}\">Close Trac Milestone (deselect \"retarget tickets\")</a>".format(version=args.version))
-# verify pending release tickets still have milestone
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&col=id&col=summary&col=component&col=milestone&col=status&col=type\">Verify pending release tickets still have milestone {version}</a>".format(version=args.version))
+# close GitHub milestone
+content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a>".format(version=args.version))
 # link to build dependencies tab to initiate publish step
 content += createTableRow("", "<a href=\"http://{}/viewLog.html?buildId={}&buildTypeId={}&tab=dependencies\"><h2>Start Publish Release from dependencies tab</h2></a>".format(args.teamcityUrl, args.buildId, args.buildTypeId))
 
