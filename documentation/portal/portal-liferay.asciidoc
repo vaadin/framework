@@ -7,6 +7,8 @@ layout: page
 [[portal.liferay]]
 = Developing Vaadin Portlets for Liferay
 
+*_This section has not yet been updated for Vaadin Framework 8._*
+
 A Vaadin portlet requires resources such as the server-side Vaadin libraries, a
 theme, and a widget set. You have two basic ways to deploy these: either
 globally in Liferay, so that the resources are shared between all Vaadin
