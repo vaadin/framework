@@ -52,13 +52,16 @@ public class HorizontalScrollAfterResizeTest extends GridBasicFeaturesTest {
         // second scroll to the right
         scrollGridHorizontallyTo(600);
 
-        Point lolocationAfterSecondScrollcation = $(GridElement.class).first()
+        Point locationAfterSecondScrollcation = $(GridElement.class).first()
                 .getCell(0, 9).getLocation();
 
-        // With the bug scrolling doesn't happen. Location should be the same as
-        // first time
-        Assert.assertEquals(locationAfterFirstScroll,
-                lolocationAfterSecondScrollcation);
+        // With the bug scrolling doesn't happen. Location should be around of
+        // the initial scrolling
+        Assert.assertEquals(locationAfterFirstScroll.getY(),
+                locationAfterSecondScrollcation.getY());
+        int delta = 5;
+        Assert.assertTrue(Math.abs(locationAfterFirstScroll.getX()
+                - locationAfterSecondScrollcation.getX()) < delta);
     }
 
     @Override
