@@ -31,7 +31,7 @@ the Project">>.
 //TODO Use ellipsis
 
 //&lt;?dbfo-need height="8cm" ?&gt;
-. In the [guilabel]#New Project# window that opens, select "Web > Vaadin 7 Project" and click [guibutton]#Next#.
+. In the [guilabel]#New Project# window that opens, select "Web > Vaadin 8 Project" and click [guibutton]#Next#.
 //&lt;?dbfo-need height="10cm" ?&gt;
 . In the [guilabel]#Vaadin Project# step, you need to set the basic web project
 settings. You need to give at least the project name, the runtime, select

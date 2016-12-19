@@ -26,7 +26,7 @@ where you can even serve the theme and widget set from a front-end server. You
 can install the shared resources as described in <<portal.liferay.install>>.
 
 At the time of writing, the latest Liferay release 6.2 is bundled with a version
-of Vaadin release 6. If you want to use Vaadin 7 portlets with shared resources,
+of Vaadin release 6. If you want to use Vaadin 8 portlets with shared resources,
 you first need to remove the old ones as described in <<portal.liferay.remove>>.
 
 [[portal.liferay.profile]]
@@ -164,7 +164,7 @@ set, theme, and Vaadin libraries.
 
 __Liferay 6.2, which is the latest Liferay version at the time of publication of
 this book, comes bundled with an older Vaadin 6 version. If you want to use
-Vaadin 7, you need to remove the bundled version and install the newer one
+Vaadin 8, you need to remove the bundled version and install the newer one
 manually as described in this chapter.__
 
 In these instructions, we assume that you use Liferay bundled with Apache
@@ -195,7 +195,7 @@ If you are installing Vaadin in a Liferay version that comes bundled with an
 older version of Vaadin, you first need to remove the resources as described in
 <<portal.liferay.remove>>.
 
-In the following, we assume that you use only the built-in "reindeer" theme in
+In the following, we assume that you use only the built-in "valo" theme in
 Vaadin and the default widget set.
 
 . Get the Vaadin installation package from the Vaadin download page
@@ -216,19 +216,19 @@ copy their contents to [filename]#tomcat-x.x.x/webapps/ROOT/html/VAADIN#.
 +
 [subs="normal"]
 ----
-[prompt]#$# [command]#unzip# path-to/vaadin-server-7.1.0.jar 'VAADIN/*'
+[prompt]#$# [command]#unzip# path-to/vaadin-server-8.0.0.jar 'VAADIN/*'
 ----
 
 +
 [subs="normal"]
 ----
-[prompt]#$# [command]#unzip# path-to/vaadin-themes-7.1.0.jar 'VAADIN/*'
+[prompt]#$# [command]#unzip# path-to/vaadin-themes-8.0.0.jar 'VAADIN/*'
 ----
 
 +
 [subs="normal"]
 ----
-[prompt]#$# [command]#unzip# path-to/vaadin-client-compiled-7.1.0.jar 'VAADIN/*'
+[prompt]#$# [command]#unzip# path-to/vaadin-client-compiled-8.0.0.jar 'VAADIN/*'
 ----
 
 
@@ -250,7 +250,7 @@ vaadin.widgetset=com.vaadin.server.DefaultWidgetSet
 
 # Theme to use
 # This is the default theme if nothing is specified
-vaadin.theme=reindeer
+vaadin.theme=valo
 ----
 
 The allowed parameters are:
@@ -264,7 +264,7 @@ application server; in Liferay with Tomcat it would be located at
 notation. If the parameter is not given, the default widget set is used.
 
 [parameter]#vaadin.theme#:: Name of the theme to use. If the parameter is not given, the default theme is
-used, which is [literal]#++reindeer++#.
+used, which is [literal]#++valo++#.
 
 
 
