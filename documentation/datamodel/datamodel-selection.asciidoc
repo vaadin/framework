@@ -139,7 +139,7 @@ public static class Company {
 [[datamodel.selection.events]]
 === Selection Events
 
-`SelectionModel` implementations allow retrieving a `HasValue` object corresponding to the selection with the `asSingleSelect` and `asMultiSelect` methods. The `HasValue` implementations returned by those methods support the standard `addvalueChangeListener` method and
+`SelectionModel` implementations allow retrieving a `HasValue` object corresponding to the selection with the `asSingleSelect` and `asMultiSelect` methods. The `HasValue` implementations returned by those methods support the standard `addValueChangeListener` method and
 all added listeners are notified about any selection change. In addition, selections support their own, selection-specific listeners,
 `SelectionListener`, `SingleSelectionListener`, and `MultiSelectionListener`. To add those listeners, we need to explicitly cast a selection to
-`SelectionModel`, `SingleSelectionModel`, or `MultiSelectionModel` respectively.
+`SingleSelectionModel`, or `MultiSelectionModel` respectively.
