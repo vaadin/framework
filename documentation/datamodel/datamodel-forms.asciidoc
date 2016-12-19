@@ -14,7 +14,7 @@ Vaadin Framework provides a [classname]#Binder# class that the developer can use
 [classname]#Binder# takes care of reading values from the business object and converting the user's data between the format expected by the business object and the format expected by the field.
 The input entered by the user can also be validated, and the current validation status can be presented to the user in different ways.
 
-The first step to binding fields for a form is to create a [classname]#Binder# and bind some input fields. There is only one [classname]#Binder# instance per form and it is used for all fields in that form.
+The first step to binding fields for a form is to create a [classname]#Binder# and bind some input fields. There is only one [classname]#Binder# instance for each form and it is used for all fields in that form.
 
 [source, java]
 ----
