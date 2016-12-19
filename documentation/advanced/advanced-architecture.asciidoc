@@ -42,13 +42,6 @@ domain layer, offering the domain logic as a service, which can be used by the
 user interface layer, as well as for other uses. In Java EE development,
 Enterprise JavaBeans (EJBs) are typically used for building this layer.
 
-An __infrastructure layer__ (or __data access layer__) is often distinguished
-from the data store layer, with a purpose to abstract the data store. For
-example, it could involve a persistence solution such as JPA and an EJB
-container. This layer becomes relevant with Vaadin when binding Vaadin
-components to data with the JPAContainer, as described in
-<<dummy/../../../framework/jpacontainer/jpacontainer-overview.asciidoc#jpacontainer.overview,"Vaadin
-JPAContainer">>.
 
 
 [[advanced.architecture.mvp]]
