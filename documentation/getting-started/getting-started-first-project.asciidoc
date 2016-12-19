@@ -82,9 +82,7 @@ The further steps in the New Project Wizard depend on the selected deployment
 configuration; the steps listed in this section are for the default servlet
 configuration.
 ifdef::web[]
-See <<dummy/../../../framework/advanced/advanced-gae#advanced.gae,"Google App
-Engine Integration">> and <<dummy/../../../framework/portal/portal-overview.asciidoc#portal.overview,"Portal Integration">> for instructions regarding the use of Vaadin in the alternative
-environments.
+See <<dummy/../../../framework/portal/portal-overview.asciidoc#portal.overview,"Portal Integration">> for instructions regarding the use of Vaadin with portals.
 endif::web[]
 
 [guilabel]#Vaadin version#:: Select the Vaadin version to use. The drop-down list shows, by default, the
