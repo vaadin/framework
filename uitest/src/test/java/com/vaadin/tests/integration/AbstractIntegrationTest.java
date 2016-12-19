@@ -18,7 +18,7 @@ package com.vaadin.tests.integration;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.testbench.parallel.TestNameSuffix;
-import com.vaadin.tests.tb3.PrivateTB3Configuration;
+import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
 /**
  * Base class for integration tests. Integration tests use the
@@ -28,7 +28,8 @@ import com.vaadin.tests.tb3.PrivateTB3Configuration;
  * @author Vaadin Ltd
  */
 @TestNameSuffix(property = "server-name")
-public abstract class AbstractIntegrationTest extends PrivateTB3Configuration {
+public abstract class AbstractIntegrationTest
+        extends SingleBrowserTestPhantomJS2 {
     @Override
     protected String getBaseURL() {
         String deploymentUrl = System.getProperty("deployment.url");

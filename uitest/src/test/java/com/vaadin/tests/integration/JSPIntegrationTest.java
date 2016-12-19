@@ -27,9 +27,9 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.tb3.PrivateTB3Configuration;
+import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
-public class JSPIntegrationTest extends PrivateTB3Configuration {
+public class JSPIntegrationTest extends SingleBrowserTestPhantomJS2 {
 
     final String appRunnerTestUrl = getBaseURL() + "/run/Buttons";
     final String jspUrl = getBaseURL() + "/statictestfiles/vaadinsessions.jsp";
