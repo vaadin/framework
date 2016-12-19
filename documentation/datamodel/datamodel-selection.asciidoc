@@ -96,7 +96,7 @@ Notification.show(
 [[datamodel.selection.binder]]
 === Selected Items
 
-Selection models (subclasses of `SelectionModel`) implement the `HasValue` interface, and thus can be used bound to data using a `Binder`.
+Selection models (subclasses of `SelectionModel`) allow retrieving a `HasValue` object corresponding to the selection with the `asSingleSelect` and `asMultiSelect` methods, and thus can be used bound to data using a `Binder`.
 This way, conversions and validation can be used for selections.
 
 [source, java]
