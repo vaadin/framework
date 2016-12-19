@@ -7,6 +7,8 @@ layout: page
 [[application.architecture]]
 = Building the UI
 
+*_This section has not yet been updated to Vaadin Framework 8_*
+
 Vaadin user interfaces are built hierarchically from components, so that the
 leaf components are contained within layout components and other component
 containers. Building the hierarchy starts from the top (or bottom - whichever
