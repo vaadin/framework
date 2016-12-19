@@ -7,6 +7,8 @@ layout: page
 [[components.fields]]
 = Field Components
 
+*_This section has not yet been updated for Vaadin Framework 8_*
+
 ((("[classname]#Field#", id="term.components.fields", range="startofrange")))
 
 _Fields_ are components that have a value that the user can change through the
@@ -66,22 +68,16 @@ displayed in a tooltip when the mouse pointer hovers over the error indicator.
 [[components.fields.valuechanges]]
 == Handling Field Value Changes
 
-[classname]#Field# provides two methods for listening to changes to the field value:
-[methodname]#onChange# and [methodname]#addValueChangeListener#. The difference
-is that the former takes a [interfacename]#Consumer# object that only receives the new value;
-the latter, on the other hand, takes an [interfacename]#EventListener# that gets
-a [classname]#ValueChange# event instance containing extra information about the event.
+[classname]#Field# provides [methodname]#addValueChangeListener# method for listening to changes to the field value. This method takes a [interfacename]#EventListener# that gets
+a [classname]#ValueChange# event instance containing information about the event.
 
-Both methods return a [classname]#Registration# object that can be used to later
+This method returns a [classname]#Registration# object that can be used to later
 remove the added listener if necessary.
 
 [source, java]
 ----
 TextField textField = new TextField();
 Label echo = new Label();
-
-// Just echo in the label anything the user enters
-textField.onChange(echo::setValue);
 
 // Add a more complex listener
 textField.addValueChangeListener(event -> {

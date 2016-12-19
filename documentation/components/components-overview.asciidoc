@@ -7,6 +7,8 @@ layout: page
 [[components.overview]]
 = Overview
 
+*_This section has not yet been updated for Vaadin Framework 8_*
+
 Vaadin provides a comprehensive set of user interface components and allows you
 to define custom components. <<figure.uicomponents>> illustrates the inheritance
 hierarchy of the UI component classes and interfaces. Interfaces are displayed

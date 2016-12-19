@@ -9,17 +9,15 @@ layout: page
 
 ifdef::web[]
 [.sampler]
-image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/dates/popup-date-field"]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/dates/date-field"]
 endif::web[]
 
 The [classname]#DateField# component provides the means to display and input
-dates. The field comes in two variations: [classname]#PopupDateField#,
+dates. The field comes in two variations: [classname]#DateField#,
 with a numeric input box and a popup calendar view, and
-[classname]#InlineDateField#, with the calendar view always visible. The
-[classname]#DateField# base class defaults to the popup variation.
+[classname]#InlineDateField#, with the calendar view always visible.
 
-The example below illustrates the use of the [classname]#DateField# base class,
-which is equivalent to the [classname]#PopupDateField#. We set the initial date
+The example below illustrates the use of the [classname]#DateField#. We set the initial date
 of the date field to current date by using the factory method [methodname]#now#
 of the [classname]#java.time.LocalDate# class.
 
@@ -36,15 +34,13 @@ date.setValue(LocalDate.now());
 The result is shown in <<figure.components.datefield.basic>>.
 
 [[figure.components.datefield.basic]]
-.[classname]#DateField# ([classname]#PopupDateField#) for Selecting a Date
+.[classname]#DateField# for Selecting a Date
 image::img/datefield-example1.png[width=35%, scaledwidth=60%]
 
 [[components.datefield.popupdatefield]]
-== [classname]#PopupDateField#
+== [classname]#DateField#
 
-The [classname]#PopupDateField# provides date input using a text box. As the
-[classname]#DateField# defaults to this component, the use is exactly the same
-as described earlier. Clicking the handle right of the date opens a popup view
+The [classname]#DateField# provides date input using a text box. Clicking the handle right of the date opens a popup view
 for selecting the year, month, and day. The Down key also opens the popup.
 Once opened, the user can navigate the calendar using the cursor keys.
 
@@ -71,7 +67,7 @@ date.setDateFormat("yyyy-MM-dd");
 The result is shown in <<figure.components.datefield.popupdatefield.format>>.
 
 [[figure.components.datefield.popupdatefield.format]]
-.Custom Date Format for [classname]#PopupDateField#
+.Custom Date Format for [classname]#DateField#
 image::img/datefield-formatting.png[width=35%, scaledwidth=60%]
 
 The same format specification is also used for parsing user-input date,
@@ -121,10 +117,9 @@ in the following example.
 ----
 // Create a date field with a custom parsing and a
 // custom error message for invalid format
-PopupDateField date = new PopupDateField("My Date") {
+DateField date = new DateField("My Date") {
     @Override
-    protected Date handleUnparsableDateString(String dateString)
-    throws Property.ConversionException {
+    protected Result<Date> handleUnparsableDateString(String dateString) {
         // Try custom parsing
         String fields[] = dateString.split("/");
         if (fields.length >= 3) {
@@ -132,18 +127,15 @@ PopupDateField date = new PopupDateField("My Date") {
                 int year  = Integer.parseInt(fields[0]);
                 int month = Integer.parseInt(fields[1])-1;
                 int day   = Integer.parseInt(fields[2]);
-                GregorianCalendar c =
-                    new GregorianCalendar(year, month, day);
-                return c.getTime();
+                
+                return Result.ok(LocalDate.of(year, month, day));
             } catch (NumberFormatException e) {
-                throw new Property.
-                    ConversionException("Not a number");
+               return Result.error("Not a number");
             }
         }
 
         // Bad date
-        throw new Property.
-            ConversionException("Your date needs two slashes");
+        return Result.error("Your date needs two slashes");
     }
 };
 
@@ -174,17 +166,16 @@ done in the example below:
 [source, java]
 ----
 // Create a date field with a custom error message for invalid format
-PopupDateField date = new PopupDateField("My Date") {
+DateField date = new DateField("My Date") {
     @Override
-    protected Date handleUnparsableDateString(String dateString)
-    throws Property.ConversionException {
+    protected Result<LocalDate> handleUnparsableDateString(String dateString) {
         // Have a notification for the error
         Notification.show(
                 "Your date needs two slashes",
                 Notification.TYPE_WARNING_MESSAGE);
 
         // A failure must always also throw an exception
-        throw new Property.ConversionException("Bad date");
+        return Result.error("Bad date");
     }
 };
 ----
@@ -196,19 +187,18 @@ undesired.
 endif::web[]
 
 [[components.datefield.popupdatefield.prompt]]
-=== Input Prompt
+=== Placeholder
 
-Like other fields that have a text box, [classname]#PopupDateField# allows an
-input prompt that is visible until the user has input a value. You can set the
-prompt with [methodname]#setInputPrompt#.
+Like other fields that have a text box, [classname]#DateField# allows an
+placeholder that is visible until the user has input a value. You can set that with [methodname]#setPlaceholder#.
 
 
 [source, java]
 ----
-PopupDateField date = new PopupDateField();
+DateField date = new DateField();
 
 // Set the prompt
-date.setInputPrompt("Select a date");
+date.setPlaceholder("Select a date");
 
 // Set width explicitly to accommodate the prompt
 date.setWidth("10em");
@@ -311,10 +301,6 @@ The user can also navigate the calendar using the cursor keys.
         .v-last {}
       .v-datefield-calendarpanel-weeknumber {}
       .v-datefield-calendarpanel-day {}
-    .v-datefield-calendarpanel-time {}
-      .v-datefield-time {}
-        .v-select {}
-        .v-label {}
 ----
 
 The top-level element has the [literal]#++v-datefield++# style. In addition, the
@@ -334,7 +320,7 @@ The other style names should be self-explanatory. For weekdays, the
 endings for the weekday bar.
 
 [[components.datefield.resolution]]
-== Date and Time Resolution
+== Date Resolution
 
 In addition to display a calendar with dates, [classname]#DateField# can also
 display just the month or year. The visibility of the input components is
