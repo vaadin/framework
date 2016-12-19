@@ -1,11 +1,14 @@
 package com.vaadin.tests.push;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
+// ignored as not really working and takes a very long time
+@Ignore
 public class PushRemoveConnectorsTest extends SingleBrowserTest {
 
     @Test
@@ -19,8 +22,9 @@ public class PushRemoveConnectorsTest extends SingleBrowserTest {
             Thread.sleep(5000);
             int now = getMemoryUsage();
             System.out.println("Memory usage: " + now);
-            if (last == now)
+            if (last == now) {
                 break;
+            }
 
             last = now;
         }
