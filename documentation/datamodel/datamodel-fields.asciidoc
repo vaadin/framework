@@ -54,4 +54,5 @@ Fields can also be set in read-only mode, which means that the user is not able 
 This is useful for showing the user that the data is there, even though the user is currently not allowed to edit it.
 
 When editing multiple values from the same business object, you can use `Binder` to simplify how the values of all input fields in a form are handled.
-The link:datamodel-forms.asciidoc[next chapter] describes how this is done.
+
+link:datamodel-forms.asciidoc[Binding Data to Forms] chapter describes how this is done.

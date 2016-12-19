@@ -25,6 +25,7 @@ In either case, there are options available for defining how the data is sorted 
 Read more about how to provide lists of data to these components in link:datamodel-providers.asciidoc[Showing Many Items in a Listing].
 Using a listing component as an input field to select one or many of the listed items is described in link:datamodel-selection.asciidoc[Selecting items].
 
+Vaadin Data Model topic references::
 * link:datamodel-fields.asciidoc[Editing Values in Fields]
 * link:datamodel-forms.asciidoc[Binding Data to Forms]
 * link:datamodel-providers.asciidoc[Showing Many Items in a Listing]
