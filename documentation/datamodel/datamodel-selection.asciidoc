@@ -122,15 +122,17 @@ public static class Company {
   }
 }
 
+  Binder<Company> companyBinder = new Binder<>();
+
+  //Setup single selection binding
   Grid<Person> bossGrid = new Grid<>();
   SingleSelect<Person> bossSelection = bossGrid.asSingleSelect();
-  
+  companyBinder.forField(bossSelection).bind(Company::getBoss, Company::setBoss);
+
+  //Setup multi selection binding
   Grid<Person> managersGrid = new Grid<>();
   managersGrid.setSelectionMode(Grid.SelectionMode.MULTI);
   MultiSelect<Person> managersSelection = managersGrid.asMultiSelect();
-
-  Binder<Company> companyBinder = new Binder<>();
-  companyBinder.forField(bossSelection).bind(Company::getBoss, Company::setBoss);
   companyBinder.forField(managersSelection).bind(Company::getManagers, Company::setManagers);
 ----
 
