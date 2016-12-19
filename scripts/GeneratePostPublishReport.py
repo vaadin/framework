@@ -13,6 +13,10 @@ buildResultUrl = "http://{}/viewLog.html?buildId={}&tab=buildResultsDiv&buildTyp
 (major, minor, maintenance) = args.version.split(".", 2)
 prerelease = "." in maintenance
 
+def checkUrlStatus(url):
+	r = requests.get(url)
+	return r.status_code == 200
+
 def createTableRow(*columns):
     html = "<tr>"
     for column in columns:
@@ -21,13 +25,13 @@ def createTableRow(*columns):
 
 traffic_light = "<svg width=\"20px\" height=\"20px\" style=\"padding-right:5px\"><circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"{color}\"/></svg>"
 
+def getTrafficLight(b):
+	return traffic_light.format(color="green") if b else traffic_light.format(color="red")
+
 content = "<html><head></head><body><table>"
 
-# Batch update tickets in trac
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/query?status=pending-release&component=Core+Framework&resolution=fixed&milestone=Vaadin {version}&col=id&col=summary&col=component&col=milestone&col=status&col=type\">Batch update tickets in Trac</a>")
-
-# Create milestone for next release
-content += createTableRow("", "<a href=\"https://dev.vaadin.com/milestone?action=new\">Create milestone for next release</a>")
+tagOk = checkUrlStatus("https://github.com/vaadin/framework/releases/tag/{ver}".format(ver=args.version))
+content += createTableRow(getTrafficLight(tagOk), "Tag ok on github.com")
 
 # Tag and pin build
 content += createTableRow("", "<a href=\"{url}\">Tag and pin build</a>".format(url=buildResultUrl))
