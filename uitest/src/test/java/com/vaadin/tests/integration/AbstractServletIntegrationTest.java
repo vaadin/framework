@@ -42,8 +42,12 @@ public abstract class AbstractServletIntegrationTest
     @Test
     public void runTest() throws IOException, AssertionError {
         openTestURL();
+        // make sure no fading progress indicator from table update is lingering
+        sleep(2000);
         compareScreen("initial");
         $(TableElement.class).first().getCell(0, 1).click();
+        // without this, table fetch might have a fading progress indicator
+        sleep(2000);
         compareScreen("finland");
     }
 
