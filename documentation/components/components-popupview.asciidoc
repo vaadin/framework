@@ -46,7 +46,7 @@ PopupView popup = new PopupView(null,
     new Table(null, TableExample.generateContent()));
 
 // A component to open the view
-Button button = new Button("Show table", click -> // Java 8
+Button button = new Button("Show table", click ->
      popup.setPopupVisible(true));
 
 layout.addComponents(button, popup);

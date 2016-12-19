@@ -7,15 +7,17 @@ layout: page
 [[components.selection]]
 = Selection Components
 
+For a better overview on how selection works, see link:../datamodel/datamodel-selection.asciidoc[Selecting items]
+
 Vaadin offers many alternative ways for selecting one or more items. The core
-library includes the following selection components, all based on the
-[classname]#AbstractSelect# class:
+library includes the following selection components, all based on either
+`AbstractSingleSelect` or `AbstractMultiSelect` class:
 
 // TODO Only use section numbers here, prefixed with "Section", not include section title
 
 [classname]#ComboBox# (<<components-combobox#components.combobox,"ComboBox">>)::
 A drop-down list with a text box, where the user can type text to find matching items.
-The component also provides an input prompt and the user can enter new items.
+The component also provides a placeholder and the user can enter new items.
 
 [classname]#ListSelect# (<<components-listselect#components.listselect,"ListSelect">>)::
 A vertical list box for selecting items in either single or multiple selection mode.
@@ -33,36 +35,22 @@ Shows the items as a vertically arranged group of check boxes in multiple select
 [classname]#TwinColSelect# (<<components-twincolselect#components.twincolselect, "TwinColSelect">>)::
 Shows two list boxes side by side where the user can select items from a list of available items and move them to a list of selected items using control buttons.
 
-In addition, the [classname]#Tree#, [classname]#Table#, and [classname]#TreeTable# components allow special forms of selection.
-They also inherit [classname]#AbstractSelect#.
+In addition, the [classname]#Grid# component allows user selection.
 
 [[components.selection.databinding]]
 == Binding Selection Components to Data
 
-The selection components typically bound to list of items obtained from backend system.
-You can give the the list of items in the constructor or set it set
+The selection components are typically bound to list of items obtained from backend system.
+You can give the list of items in the constructor or set it with
 [methodname]#setItems()#. Read more in
 <<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
 Components to Data">>.
 
 You can get the current selection as the
-value of the selection component using [methodname]#getSelected# defined in
-[interfacename]#Select# interface. Also selection changes are handled as
-selection change events, as is described later.
+value of the selection component using [methodname]#getValue# defined in
+[interfacename]#HasValue# interface. Selection changes are handled as value change or
+selection events, as is described later.
 
-[[components.selection.adding]]
-== Adding New Items
-
-New items are added with the [methodname]#addItems()# method.
-
-[source, java]
-----
-// Create a selection component
-ComboBox<String> select = new ComboBox<>("Select a planet");
-
-// Add items to select
-select.setItems("Mercury","Venus","Earth");
-----
 
 [[components.selection.captions]]
 == Item Captions
@@ -70,7 +58,7 @@ select.setItems("Mercury","Venus","Earth");
 The items are typically a strings, in which case they can be used as the
 caption, but can be any object type. We could as well have given Planet instances
 for the items and use captions generated based on them
-[methodname]#setItemCaptionProvider()# method.
+[methodname]#setItemCaptionGenerator()# method.
 
 [source, java]
 ----
@@ -86,15 +74,17 @@ ComboBox<Planet> select = new ComboBox<>("My Select");
 // Add an items to the ComboBox
 select.setItems(planets);
 
-select.setItemCaptionProvider(planet -> planet.getName());
-// or even select.setItemCaptionProvider(Planet::getName);
+select.setItemCaptionGenerator(planet -> planet.getName());
+// or even select.setItemCaptionGenerator(Planet::getName);
 
 // Select the first
-select.select(planets.get(0));
+select.setSelectedItem(planets.get(0));
+// or
+select.setValue(planets.get(0));
 ----
 
 In addition to a caption, an item can have an icon. The icon is set with
-[methodname]#setItemIconProvider()#.
+[methodname]#setItemIconGenerator()#.
 
 Typical use cases for captions are:
 
@@ -126,39 +116,12 @@ planets.add(new Planet("Mercury"));
 planets.add(new Planet("Venus"));
 planets.add(new Planet("Earth"));
 
-select.addItems(planets);
+select.setItems(planets);
 ----
 
 Using a field of a item as caption: the caption is retrieved using the
-[interfacename]#ItemCaptionProvider# typically given as Java 8 lambda:
+[interfacename]#ItemCaptionGenerator# typically given as Java 8 lambda.
 
-
-
-INDEX::
-Index number of item is used as caption.
-This caption mode is applicable only to data sources that implement the [interfacename]#Container.Indexed# interface.
-If the interface is not available, the component will throw a
-[classname]#ClassCastException#.
-The [classname]#AbstractSelect# itself does not implement this interface, so the mode is not usable without a separate data source.
-An [classname]#IndexedContainer#, for example, would work.
-
-ITEM:: [classname]#String# representation of item, acquired with
-[methodname]#toString()#, is used as the caption. This is applicable mainly when
-using a custom [classname]#Item# class, which also requires using a custom
-[classname]#Container# that is used as a data source for the selection
-component.
-
-PROPERTY:: Item captions are read from the [classname]#String# representation of the
-property with the identifier specified with
-[methodname]#setItemCaptionPropertyId()#. This is useful, for example, when you
-have a container that you use as the data source for the selection component,
-and you want to use a specific property for caption.
-
-+
-In the example below, we bind a selection component to a bean container and use
-a property of the bean as the caption.
-
-+
 [source, java]
 ----
 // A class that implements toString()
@@ -197,59 +160,26 @@ planets.add(new Planet(4, "Mars"));
 ComboBox<Planet> select =
     new ComboBox<>("Planets");
 
-// Set the caption provider to read the
+// Set the caption generator to read the
 // caption directly from the 'name'
 // property of the bean
-select.setItemCaptionProvider(Planet::getName);
+select.setItemCaptionGenerator(Planet::getName);
 ----
 
-[[components.selection.getset]]
-== Getting and Setting Selection
 
-You can get the item with [methodname]#getSelected()# of the
-[classname]#Select# interface that returns collection of selected items.
-You can select an item with the corresponding [methodname]#select()# method.
+[[components.selection.item-icons]]
+== Item Icons
 
-In multiselect mode, the [methodname]#getSelected()# returns an unmodifiable
-set of items. If no item is selected, the select will be an empty collection.
-
-The [classname]#ComboBox# and [classname]#NativeSelect# will show empty
-selection when no actual item is selected.
-
-
-[[components.selection.valuechange]]
-== Handling Selection Changes
-
-You can access currently selected item with the [methodname]#getSelected()# or
-[methodname]#getFirstSelected()# method of the component. Also, when
-handling selection changes with a
-[classname]#SelectionChangeListener#, the
-[classname]#SelectionChange# will have the selected items of the event.
-
-
-[source, java]
-----
-// Create a selection component with some items
-ComboBox<String> select = new ComboBox<>("My Select");
-select.setItems("Io", "Europa", "Ganymedes", "Callisto");
-
-// Handle selection change
-select.addSelectionChangeListener(event ->
-    layout.addComponent(new Label("Selected " +
-        event.getSelected())));
-----
-
-The result of user interaction is shown in
-<<figure.components.selection.valuechange>>.
-
-[[figure.components.selection.valuechange]]
-.Selected Item
-image::img/select-selected1.png[width=30%, scaledwidth=40%]
+You can set an icon for each item with [methodname]#setItemIconGenerator()#,
+in a fashion similar to captions. Notice, however, that icons are not
+supported in [classname]#NativeSelect#, [classname]#TwinColSelect#, and
+some other selection components and modes. This is because HTML does not
+support images inside the native [literal]#++select++#
+elements.
 
 
 [[components.selection.newitems]]
 == Allowing Adding New Items
-
 
 [classname]#ComboBox# allows the user to add new items, when the user types
 in a value and presses kbd:[Enter]. You need to enable this with
@@ -262,7 +192,7 @@ attempt to do so may result in an exception.
 === Handling New Items
 
 Adding new items is handled by a [interfacename]#NewItemHandler#, which gets the
-item caption string as parameter for the [methodname]#addNewItem()# method.
+item caption string as parameter for the [methodname]#accept(String)# method.
 
 ifdef::web[]
 
@@ -280,7 +210,7 @@ ComboBox<Planet> select =
 select.setItems(planets);
 
 // Use the name property for item captions
-select.setItemCaptionProvider(Planet::getName);
+select.setItemCaptionGenerator(Planet::getName);
 
 // Allow adding new items and add
 // handling for new items
@@ -299,22 +229,69 @@ select.setNewItemHandler(inputString -> {
     Notification.show("Added new planet called " +
                       inputString);
 });
+
+
+[[components.selection.getset]]
+== Getting and Setting Selection
+
+For a better overview on how selection works, see link:../datamodel/datamodel-selection.asciidoc[Selecting items]
+
+You can get selected the item with [methodname]#getValue()# of the
+[classname]#HasValue# interface that returns either a single selected item
+(case of `SingleSelect`) or a collection of selected items (case of `MultiSelect`).
+You can select an item with the corresponding [methodname]#setValue()# method.
+
+The [classname]#ComboBox# and [classname]#NativeSelect# will show empty
+selection when no actual item is selected.
+
+
+[[components.selection.valuechange]]
+== Handling Selection Changes
+
+You can access the currently selected item with the [methodname]#getValue()# (`SingleSelect`) or
+[methodname]#getSelectedItems()# (`MultiSelect`) method of the component. Also, when
+handling selection changes with a
+[classname]#SelectionListener#, the
+[classname]#SelectionEvent# will have the selected items of the event. Single- and Multiselect
+components have their own more specific listener and event types, `SingleSelectionListener` for `SingleSelectionEvent` and `MultiSelectionListener` for `MultiSelectionEvent` respectively. Both can be added with the `addSelectionListener` method.
+
+
+[source, java]
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.select.combobox.newitemhandler[on-line example, window="_blank"].
+// Create a selection component with some items
+ComboBox<String> select = new ComboBox<>("My Select");
+select.setItems("Io", "Europa", "Ganymedes", "Callisto");
+
+// Handle selection change
+select.addSelectionListener(event ->
+    layout.addComponent(new Label("Selected " +
+        event.getSelectedItem().orElse("none")));
+----
+
+The result of user interaction is shown in
+<<figure.components.selection.valuechange>>.
+
+[[figure.components.selection.valuechange]]
+.Selected Item
+image::img/select-selected1.png[width=30%, scaledwidth=40%]
+
+
+----
 endif::web[]
 
 
 [[components.selection.multiple]]
 == Multiple Selection
 
+For a better overview on how selection works, see link:../datamodel/datamodel-selection.asciidoc[Selecting items]
+
 Some selection components, such as [classname]#CheckBoxGroup#,
-[classname]#ListSelect# and [classname]#TwinColSelect# are multiselect components, 
+[classname]#ListSelect# and [classname]#TwinColSelect# are multiselect components,
 they extend [classname]#AbstractMultiSelect# class.
 
 
-Multiselect components use the [interfacename]#SelectionModel.Multi# selection model.
-This model allows to select multiple items.
-You can get and set the selection with the [methodname]#SelectionModel.getSelectedItems()# and
+Multiselect components use the `MultiSelect` interface which extends `HasValue`.
+This provides more fine grained API for selection. You can get and set the selection with the [methodname]#MultiSelect.getSelectedItems()# and
 [methodname]#SelectionModel.Multi.selectItems()# methods.
 
 A change in the selection will trigger a [classname]#SelectionChange#, which
@@ -338,14 +315,3 @@ select.addSelectionListener(event -> {
 });
 
 ----
-
-
-[[components.selection.item-icons]]
-== Item Icons
-
-You can set an icon for each item with [methodname]#setItemIconProvider()#,
-in a fashion similar to captions. Notice, however, that icons are not
-supported in [classname]#NativeSelect#, [classname]#TwinColSelect#, and
-some other selection components and modes. This is because HTML does not
-support images inside the native [literal]#++select++#
-elements. Icons are also not really visually applicable.
