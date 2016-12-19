@@ -53,6 +53,7 @@ public class TestFileUpload extends TestBase implements Receiver {
                 baos.reset();
             }
         });
+        u.setImmediateMode(false);
 
         addComponent(log);
         addComponent(u);
