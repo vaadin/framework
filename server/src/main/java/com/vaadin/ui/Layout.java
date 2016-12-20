@@ -93,7 +93,7 @@ public interface Layout extends ComponentContainer, Serializable {
          * <strong>NOTE:</strong> This will only affect the space between
          * components, not the space around all the components in the layout
          * (i.e. do not confuse this with the cellspacing attribute of a HTML
-         * Table). Use {@link #setMargin(boolean)} to add space around the
+         * Table). Use {@link MarginHandler#setMargin(boolean)} to add space around the
          * layout.
          * </p>
          *
@@ -140,7 +140,7 @@ public interface Layout extends ComponentContainer, Serializable {
          * <p>
          * <strong>NOTE:</strong> This will only affect the space around the
          * components in the layout, not space between the components in the
-         * layout. Use {@link #setSpacing(boolean)} to add space between the
+         * layout. Use {@link SpacingHandler#setSpacing(boolean)} to add space between the
          * components in the layout.
          * </p>
          *

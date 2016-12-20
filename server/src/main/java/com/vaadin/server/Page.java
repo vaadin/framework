@@ -47,7 +47,7 @@ public class Page implements Serializable {
      * Listener that gets notified when the size of the browser window
      * containing the uI has changed.
      *
-     * @see UI#addListener(BrowserWindowResizeListener)
+     * @see #addBrowserWindowResizeListener(BrowserWindowResizeListener)
      */
     @FunctionalInterface
     public interface BrowserWindowResizeListener extends Serializable {
@@ -533,7 +533,7 @@ public class Page implements Serializable {
      *
      * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
      *             registration object returned from
-     *             {@link #addUriFragmentChangedListener(FocusListener)}.
+     *             {@link #addUriFragmentChangedListener(UriFragmentChangedListener)}.
      */
     @Deprecated
     public void removeUriFragmentChangedListener(

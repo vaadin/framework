@@ -22,7 +22,7 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Handler for {@link BindingValidationStatus} changes.
  * <p>
- * {@link BindingBuilder#withValidationStatusHandler(withValidationStatusHandler)
+ * {@link BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)}
  * Register} an instance of this class to be able to override the default
  * handling, which is to show
  * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
@@ -30,7 +30,7 @@ import com.vaadin.ui.AbstractComponent;
  *
  * @author Vaadin Ltd
  *
- * @see BindingBuilder#withValidationStatusHandler(withValidationStatusHandler)
+ * @see BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)
  * @see BindingValidationStatus
  *
  * @since 8.0

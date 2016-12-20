@@ -246,8 +246,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
     }
 
     /**
-     * Gets the number of contained components. Consistent with the iterator
-     * returned by {@link #getComponentIterator()}.
+     * Gets the number of contained components.
      *
      * @return the number of contained components (zero or one)
      */
@@ -349,7 +348,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * @param listener
      *            the listener to remove
      * @see PopupVisibilityListener
-     * @see #addListener(PopupVisibilityListener)
+     * @see #addPopupVisibilityListener(PopupVisibilityListener)
      *
      * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
      *             registration object returned from
@@ -402,14 +401,14 @@ public class PopupView extends AbstractComponent implements HasComponents {
     @FunctionalInterface
     public interface PopupVisibilityListener extends Serializable {
         /**
-         * Pass to {@link PopupView#PopupVisibilityEvent} to start listening for
+         * Pass to {@link PopupView.PopupVisibilityEvent} to start listening for
          * popup visibility changes.
          *
          * @param event
          *            the event
          *
          * @see PopupVisibilityEvent
-         * @see PopupView#addListener(PopupVisibilityListener)
+         * @see PopupView#addPopupVisibilityListener(PopupVisibilityListener)
          */
         public void popupVisibilityChange(PopupVisibilityEvent event);
     }

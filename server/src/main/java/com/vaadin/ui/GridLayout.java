@@ -1047,7 +1047,7 @@ public class GridLayout extends AbstractLayout
      * the server and set it to <code>100%</code> in CSS. You must set it to
      * <code>100%</code> on the server.
      *
-     * @see #setWidth(float, int)
+     * @see #setWidth(float, Unit)
      *
      * @param columnIndex
      * @param ratio
@@ -1090,7 +1090,7 @@ public class GridLayout extends AbstractLayout
      * height on the server and set it to <code>100%</code> in CSS. You must set
      * it to <code>100%</code> on the server.
      *
-     * @see #setHeight(float, int)
+     * @see #setHeight(float, Unit)
      *
      * @param rowIndex
      *            The row index, starting from 0 for the topmost row.
