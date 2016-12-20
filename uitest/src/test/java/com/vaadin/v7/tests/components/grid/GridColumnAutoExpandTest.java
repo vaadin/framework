@@ -19,9 +19,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 public class GridColumnAutoExpandTest extends MultiBrowserTest {
 

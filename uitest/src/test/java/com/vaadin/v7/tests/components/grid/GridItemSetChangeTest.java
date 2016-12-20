@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 public class GridItemSetChangeTest extends SingleBrowserTest {
 

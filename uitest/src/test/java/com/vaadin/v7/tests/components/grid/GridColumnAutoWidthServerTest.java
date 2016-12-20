@@ -16,7 +16,6 @@
 package com.vaadin.v7.tests.components.grid;
 
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.v7.tests.components.grid.GridColumnAutoWidth;
 
 @TestCategory("grid")
 public class GridColumnAutoWidthServerTest

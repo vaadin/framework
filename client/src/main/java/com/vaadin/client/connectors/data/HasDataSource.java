@@ -21,7 +21,7 @@ import elemental.json.JsonObject;
 
 /**
  * A marker interface for connectors that have a data source.
- * 
+ *
  * @author Vaadin Ltd.
  * @see DataSource
  * @since 8.0

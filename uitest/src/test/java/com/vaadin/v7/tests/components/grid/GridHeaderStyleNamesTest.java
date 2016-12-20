@@ -21,11 +21,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridHeaderStyleNamesTest extends SingleBrowserTest {

@@ -32,9 +32,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.Listing;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.bov.Person;
-import com.vaadin.data.Listing;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.shared.Registration;
@@ -81,8 +81,7 @@ public class AbstractSingleSelectTest {
         listing = new PersonListing();
         listing.setItems(PERSON_A, PERSON_B, PERSON_C);
         selectionChanges = new ArrayList<>();
-        listing.addSelectionListener(
-                e -> selectionChanges.add(e.getValue()));
+        listing.addSelectionListener(e -> selectionChanges.add(e.getValue()));
     }
 
     public static final Person PERSON_C = new Person("c", 3);

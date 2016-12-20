@@ -17,8 +17,8 @@ public class GridHeightByRowOnInitWidget extends Composite {
         initWidget(panel);
 
         panel.setWidget(grid);
-        grid.setDataSource(new ListDataSource<>(
-                Arrays.asList("A", "B", "C", "D", "E")));
+        grid.setDataSource(
+                new ListDataSource<>(Arrays.asList("A", "B", "C", "D", "E")));
         grid.addColumn(new Column<String, String>("letter") {
             @Override
             public String getValue(String row) {

@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Listener;

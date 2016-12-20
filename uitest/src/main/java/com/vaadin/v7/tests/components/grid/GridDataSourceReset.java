@@ -37,8 +37,7 @@ public class GridDataSourceReset extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         persons = createPersons(10, new Random(1));
-        container = new BeanItemContainer<>(ComplexPerson.class,
-                persons);
+        container = new BeanItemContainer<>(ComplexPerson.class, persons);
 
         grid = new Grid(container);
         grid.select(container.firstItemId());

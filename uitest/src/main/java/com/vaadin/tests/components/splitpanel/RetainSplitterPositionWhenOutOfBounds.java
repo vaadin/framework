@@ -24,7 +24,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class RetainSplitterPositionWhenOutOfBounds extends AbstractReindeerTestUI {
+public class RetainSplitterPositionWhenOutOfBounds
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

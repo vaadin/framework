@@ -78,7 +78,7 @@ public interface ValidationResult extends Serializable {
 
     /**
      * Returns a successful result.
-     * 
+     *
      * @return the successful result
      */
     public static ValidationResult ok() {
@@ -88,7 +88,7 @@ public interface ValidationResult extends Serializable {
     /**
      * Creates the validation result which represent an error with the given
      * {@code errorMessage}.
-     * 
+     *
      * @param errorMessage
      *            error message, not {@code null}
      * @return validation result which represent an error with the given

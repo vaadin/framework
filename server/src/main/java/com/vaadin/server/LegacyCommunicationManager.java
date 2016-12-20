@@ -299,7 +299,6 @@ public class LegacyCommunicationManager implements Serializable {
         }
     }
 
-
     /**
      * @deprecated As of 7.1. In 7.2 and later, use
      *             {@link ConnectorTracker#getConnector(String)

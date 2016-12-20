@@ -31,7 +31,8 @@ import com.vaadin.v7.ui.Table;
  */
 
 @SuppressWarnings("serial")
-public class SetPageFirstItemLoadsNeededRowsOnly extends AbstractReindeerTestUI {
+public class SetPageFirstItemLoadsNeededRowsOnly
+        extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)

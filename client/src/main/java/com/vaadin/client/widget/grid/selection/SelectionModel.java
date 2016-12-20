@@ -97,7 +97,7 @@ public interface SelectionModel<T> {
      * <p>
      * The check is done only for the client side actions. It doesn't affect
      * selection requests sent from the server side.
-     * 
+     *
      * @param selectionAllowed
      *            <code>true</code> if the user is allowed to change the
      *            selection, <code>false</code> otherwise
@@ -109,7 +109,7 @@ public interface SelectionModel<T> {
      * <p>
      * The check is done only for the client side actions. It doesn't affect
      * selection requests sent from the server side.
-     * 
+     *
      * @return <code>true</code> if the user is allowed to change the selection,
      *         <code>false</code> otherwise
      */

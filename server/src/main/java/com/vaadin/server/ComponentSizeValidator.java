@@ -17,7 +17,9 @@ package com.vaadin.server;
 
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,8 +42,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 @SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
@@ -104,7 +104,7 @@ public class ComponentSizeValidator implements Serializable {
 
     /**
      * Comparability form component which is defined in the different jar.
-     * 
+     *
      * TODO : Normally this logic shouldn't be here. But it means that the whole
      * this class has wrong design and implementation and should be refactored.
      */
@@ -402,7 +402,8 @@ public class ComponentSizeValidator implements Serializable {
         }
 
         if (createLoc != null) {
-            err.append(", created at (").append(createLoc.file).append(":").append(createLoc.lineNumber).append(")");
+            err.append(", created at (").append(createLoc.file).append(":")
+                    .append(createLoc.lineNumber).append(")");
 
         }
 
@@ -410,7 +411,8 @@ public class ComponentSizeValidator implements Serializable {
             err.append(" (");
             err.append(attribute);
             if (sizeLoc != null) {
-                err.append(", set at (").append(sizeLoc.file).append(":").append(sizeLoc.lineNumber).append(")");
+                err.append(", set at (").append(sizeLoc.file).append(":")
+                        .append(sizeLoc.lineNumber).append(")");
             }
 
             err.append(")");
@@ -512,7 +514,7 @@ public class ComponentSizeValidator implements Serializable {
 
     /**
      * Comparability form component which is defined in the different jar.
-     * 
+     *
      * TODO : Normally this logic shouldn't be here. But it means that the whole
      * this class has wrong design and impementation and should be refactored.
      */
@@ -713,8 +715,7 @@ public class ComponentSizeValidator implements Serializable {
     public static List<InvalidLayout> validateLayouts(UI ui) {
         List<InvalidLayout> invalidRelativeSizes = ComponentSizeValidator
                 .validateComponentRelativeSizes(ui.getContent(),
-                        new ArrayList<>(),
-                        null);
+                        new ArrayList<>(), null);
 
         // Also check any existing subwindows
         if (ui.getWindows() != null) {

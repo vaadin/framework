@@ -803,7 +803,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Checks if it is possible to currently fetch data from the remote data
      * source.
-     * 
+     *
      * @return <code>true</code> if it is ok to try to fetch data,
      *         <code>false</code> if it is known that fetching data will fail
      *         and should not be tried right now.

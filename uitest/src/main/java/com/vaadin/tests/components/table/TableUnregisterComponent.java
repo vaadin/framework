@@ -30,8 +30,7 @@ public class TableUnregisterComponent extends TestBase {
         container.addContainerProperty(COL_B, String.class, "");
 
         Item it = container.addItem("a");
-        final ObjectProperty<String> valA = new ObjectProperty<>(
-                "orgVal");
+        final ObjectProperty<String> valA = new ObjectProperty<>("orgVal");
         final TextField fieldA = new TextField(valA) {
             @Override
             public void setPropertyDataSource(Property newDataSource) {

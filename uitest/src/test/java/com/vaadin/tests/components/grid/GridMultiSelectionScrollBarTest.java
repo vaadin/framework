@@ -21,8 +21,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridMultiSelectionScrollBarTest extends MultiBrowserTest {
 

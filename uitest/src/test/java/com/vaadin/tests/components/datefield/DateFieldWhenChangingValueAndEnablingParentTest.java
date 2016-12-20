@@ -32,8 +32,8 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
         openTestURL();
         $(CheckBoxElement.class).first().click();
 
-        assertState($(AbstractDateFieldElement.class).id("DATEFIELD_ENABLED"), true,
-                true);
+        assertState($(AbstractDateFieldElement.class).id("DATEFIELD_ENABLED"),
+                true, true);
         assertState($(AbstractDateFieldElement.class).id("DATEFIELD_DISABLED"),
                 false, false);
 

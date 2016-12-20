@@ -29,7 +29,8 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
-public class ContainerSizeChangeDuringTablePaint extends AbstractReindeerTestUI {
+public class ContainerSizeChangeDuringTablePaint
+        extends AbstractReindeerTestUI {
 
     /**
      * A test {@link Table} that simply acts a hook for when Vaadin starts

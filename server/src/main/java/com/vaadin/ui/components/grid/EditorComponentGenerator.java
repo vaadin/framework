@@ -22,7 +22,7 @@ import com.vaadin.ui.Component;
  * A callback interface for generating an editor component corresponding to an
  * editable column of a grid. The generated component will be used in the grid
  * editor to edit the value of the column for the selected grid row.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 8.0
  *
@@ -35,7 +35,7 @@ public interface EditorComponentGenerator<BEAN>
 
     /**
      * Gets a component for a given {@code bean}.
-     * 
+     *
      * @param bean
      *            the bean this component will be used to edit
      * @return the generated component

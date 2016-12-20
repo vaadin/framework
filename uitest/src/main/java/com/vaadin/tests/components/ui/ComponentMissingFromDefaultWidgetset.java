@@ -6,7 +6,8 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class ComponentMissingFromDefaultWidgetset extends AbstractReindeerTestUI {
+public class ComponentMissingFromDefaultWidgetset
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

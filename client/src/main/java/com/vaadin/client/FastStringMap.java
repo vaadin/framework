@@ -52,7 +52,7 @@ public final class FastStringMap<T> extends JavaScriptObject {
         for(var key in this) {
             if (Object.hasOwnProperty.call(this, key)) {
                 keys.push(key);
-            } 
+            }
         }
         return keys;
     }-*/;
@@ -63,7 +63,7 @@ public final class FastStringMap<T> extends JavaScriptObject {
         for(var key in this) {
             if (Object.hasOwnProperty.call(this, key)) {
                 size++;
-            } 
+            }
         }
         return size;
     }-*/;

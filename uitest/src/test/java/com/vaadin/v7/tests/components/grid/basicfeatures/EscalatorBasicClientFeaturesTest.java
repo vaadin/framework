@@ -28,7 +28,6 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.components.grid.basicfeatures.EscalatorBasicClientFeatures;
 
 @TestCategory("grid")
 public abstract class EscalatorBasicClientFeaturesTest

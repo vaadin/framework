@@ -9,7 +9,8 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class MoveComponentsFromGridLayoutToInnerLayout extends AbstractReindeerTestUI {
+public class MoveComponentsFromGridLayoutToInnerLayout
+        extends AbstractReindeerTestUI {
 
     protected Button testButton;
     private GridLayout gl;

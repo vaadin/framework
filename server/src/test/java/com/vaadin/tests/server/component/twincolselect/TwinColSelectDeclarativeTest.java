@@ -25,9 +25,9 @@ import com.vaadin.ui.TwinColSelect;
  * <p>
  * There are only TwinColSelect specific properties explicit tests. All other
  * tests are in the super class ( {@link AbstractMultiSelectDeclarativeTest}).
- * 
+ *
  * @see AbstractMultiSelectDeclarativeTest
- * 
+ *
  * @author Vaadin Ltd
  *
  */

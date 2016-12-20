@@ -267,8 +267,7 @@ public class ConnectorMap {
     @Deprecated
     public Collection<? extends ServerConnector> getConnectors() {
         Collection<ComponentDetail> values = idToComponentDetail.values();
-        ArrayList<ServerConnector> arrayList = new ArrayList<>(
-                values.size());
+        ArrayList<ServerConnector> arrayList = new ArrayList<>(values.size());
         for (ComponentDetail componentDetail : values) {
             arrayList.add(componentDetail.getConnector());
         }

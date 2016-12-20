@@ -17,7 +17,7 @@ package com.vaadin.shared.ui.colorpicker;
 
 /**
  * Default shared state implementation for ColorPickerArea.
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @since 8.0

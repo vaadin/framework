@@ -65,8 +65,7 @@ public class BinderMultiSelectTest
 
         converterBinder.forField(select)
                 .withConverter(new TestEnumSetToStringConverter())
-                .bind(AtomicReference::get,
-                        AtomicReference::set);
+                .bind(AtomicReference::get, AtomicReference::set);
     }
 
     @Test

@@ -20,8 +20,8 @@ package com.vaadin.testcategory;
  * verification tests.
  * <p>
  * The purpose of the test to make some measurement (memory, time, etc.).
- * 
- * 
+ *
+ *
  * @author Vaadin Ltd
  *
  */

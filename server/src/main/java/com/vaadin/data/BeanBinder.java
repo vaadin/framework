@@ -36,9 +36,9 @@ import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
-import com.vaadin.server.Setter;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.server.Setter;
 import com.vaadin.ui.Label;
 import com.vaadin.util.ReflectTools;
 
@@ -160,8 +160,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          * @throws IllegalArgumentException
          *             if the property has no accessible getter
          *
-         * @see BindingBuilder#bind(ValueProvider,
-         *      Setter)
+         * @see BindingBuilder#bind(ValueProvider, Setter)
          */
         public Binding<BEAN, TARGET> bind(String propertyName);
     }

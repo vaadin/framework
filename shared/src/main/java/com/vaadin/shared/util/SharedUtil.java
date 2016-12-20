@@ -305,7 +305,7 @@ public class SharedUtil implements Serializable {
     /**
      * Checks if the given array contains duplicates (according to
      * {@link Object#equals(Object)}.
-     * 
+     *
      * @param values
      *            the array to check for duplicates
      * @return <code>true</code> if the array contains duplicates,
@@ -319,7 +319,7 @@ public class SharedUtil implements Serializable {
     /**
      * Return duplicate values in the given array in the format
      * "duplicateValue1, duplicateValue2".
-     * 
+     *
      * @param values
      *            the values to check for duplicates
      * @return a comma separated string of duplicates or an empty string if no

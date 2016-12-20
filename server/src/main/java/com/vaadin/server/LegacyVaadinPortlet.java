@@ -49,8 +49,8 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
         getService().addSessionInitListener((SessionInitEvent event) -> {
             try {
                 onVaadinSessionStarted(
-                    (VaadinPortletRequest) event.getRequest(),
-                    (VaadinPortletSession) event.getSession());
+                        (VaadinPortletRequest) event.getRequest(),
+                        (VaadinPortletSession) event.getSession());
             } catch (PortletException e) {
                 throw new ServiceException(e);
             }

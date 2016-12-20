@@ -73,7 +73,7 @@ public abstract class AbstractGridRendererConnector<T>
 
     /**
      * Gets the grid connector for this renderer connector.
-     * 
+     *
      * @return the parent grid connector.
      */
     protected GridConnector getGridConnector() {

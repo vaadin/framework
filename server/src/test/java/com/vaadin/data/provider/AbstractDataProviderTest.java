@@ -21,9 +21,6 @@ import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.provider.AbstractDataProvider;
-import com.vaadin.data.provider.DataChangeEvent;
-import com.vaadin.data.provider.Query;
 import com.vaadin.shared.Registration;
 
 /**

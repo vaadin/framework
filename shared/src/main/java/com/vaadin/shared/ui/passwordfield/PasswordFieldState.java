@@ -19,7 +19,7 @@ import com.vaadin.shared.ui.textfield.TextFieldState;
 
 /**
  * State class for PasswordField.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *

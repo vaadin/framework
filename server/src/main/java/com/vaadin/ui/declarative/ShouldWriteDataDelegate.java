@@ -33,8 +33,8 @@ public interface ShouldWriteDataDelegate extends Serializable {
 
     /**
      * The default delegate implementation that assumes that all component data
-     * is provided by a data provider connected to a back end system and that the
-     * data should thus not be written.
+     * is provided by a data provider connected to a back end system and that
+     * the data should thus not be written.
      */
     public static final ShouldWriteDataDelegate DEFAULT = (
             Component component) -> false;

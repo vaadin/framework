@@ -78,7 +78,7 @@ public class SortEvent<T> extends Component.Event {
 
     /**
      * Listener for sort order change events.
-     * 
+     *
      * @param <T>
      *            the type of the sorting information, usually a String (field
      *            id) or a {@link java.util.Comparator}.
@@ -97,7 +97,7 @@ public class SortEvent<T> extends Component.Event {
     /**
      * The interface for adding and removing listeners for {@link SortEvent
      * SortEvents}.
-     * 
+     *
      * @param <T>
      *            the type of the sorting information, usually a String (field
      *            id) or a {@link java.util.Comparator}.

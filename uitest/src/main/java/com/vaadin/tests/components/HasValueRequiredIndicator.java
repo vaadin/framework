@@ -101,7 +101,7 @@ public abstract class HasValueRequiredIndicator<C extends HasValue & Component>
 
     /**
      * Initialize value for the {@code component}.
-     * 
+     *
      * @param component
      *            a UI component
      */

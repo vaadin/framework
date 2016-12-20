@@ -104,7 +104,7 @@ import elemental.json.JsonValue;
  * supported in the object passed to the <code>render</code> function - other
  * functions should not use the property. Readable and writable.
  * </ul>
- * 
+ *
  * @param <T>
  *            the grid type this renderer can be attached to
  * @param <V>

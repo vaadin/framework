@@ -23,7 +23,7 @@ import com.vaadin.server.SerializableFunction;
  * For example this interface can be implemented to simply extract a value with
  * a getter, or to create a composite value based on the fields of the source
  * object.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 8.0
  *
@@ -49,7 +49,7 @@ public interface ValueProvider<SOURCE, TARGET>
 
     /**
      * Provides a value from the given source object.
-     * 
+     *
      * @param source
      *            the source to retrieve the value from
      * @return the value provided by the source

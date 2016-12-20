@@ -21,7 +21,7 @@ import com.vaadin.ui.CheckBoxGroup;
 /**
  * The whole logic is inside HasValueRequiredIndicator. The code here just set
  * value for the component.
- * 
+ *
  * @author Vaadin Ltd
  *
  */

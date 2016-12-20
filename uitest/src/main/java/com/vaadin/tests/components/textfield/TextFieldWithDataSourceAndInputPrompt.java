@@ -20,7 +20,8 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.TextField;
 
-public class TextFieldWithDataSourceAndInputPrompt extends AbstractReindeerTestUI {
+public class TextFieldWithDataSourceAndInputPrompt
+        extends AbstractReindeerTestUI {
     public static class Pojo {
         private String string;
 

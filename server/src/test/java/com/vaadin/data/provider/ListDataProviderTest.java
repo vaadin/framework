@@ -6,10 +6,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.ListDataProvider;
-import com.vaadin.data.provider.Query;
-import com.vaadin.data.provider.SortOrder;
 import com.vaadin.server.SerializablePredicate;
 
 public class ListDataProviderTest

@@ -70,7 +70,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
 
     /**
      * Tests that the valo-menu-hover style makes the menu appear on mouseover.
-     * 
+     *
      * @throws Exception
      */
     @Test

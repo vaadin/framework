@@ -15,6 +15,11 @@
  */
 package com.vaadin.ui;
 
+import static com.vaadin.ui.ComponentTest.getRpcProxy;
+import static com.vaadin.ui.ComponentTest.isDirty;
+import static com.vaadin.ui.ComponentTest.syncToClient;
+import static com.vaadin.ui.ComponentTest.updateDiffState;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,12 +27,8 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.shared.ui.richtextarea.RichTextAreaServerRpc;
 import com.vaadin.tests.util.MockUI;
-import static com.vaadin.ui.ComponentTest.getRpcProxy;
-import static com.vaadin.ui.ComponentTest.isDirty;
-import static com.vaadin.ui.ComponentTest.syncToClient;
-import static com.vaadin.ui.ComponentTest.updateDiffState;
 
-public class RichTextAreaTest  {
+public class RichTextAreaTest {
 
     @Test
     public void initiallyEmpty() {

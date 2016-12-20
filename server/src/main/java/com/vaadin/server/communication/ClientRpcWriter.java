@@ -124,17 +124,14 @@ public class ClientRpcWriter implements Serializable {
                 List<ClientMethodInvocation> oldPendingRpc = pendingInvocations;
                 int totalCalls = pendingInvocations.size()
                         + paintablePendingRpc.size();
-                pendingInvocations = new ArrayList<>(
-                        totalCalls);
+                pendingInvocations = new ArrayList<>(totalCalls);
 
                 // merge two ordered comparable lists
                 for (int destIndex = 0, oldIndex = 0, paintableIndex = 0; destIndex < totalCalls; destIndex++) {
                     if (paintableIndex >= paintablePendingRpc.size()
-                            || (oldIndex < oldPendingRpc.size()
-                                    && oldPendingRpc
-                                        .get(oldIndex).compareTo(
-                                                    paintablePendingRpc.get(
-                                                            paintableIndex)) <= 0)) {
+                            || (oldIndex < oldPendingRpc.size() && oldPendingRpc
+                                    .get(oldIndex).compareTo(paintablePendingRpc
+                                            .get(paintableIndex)) <= 0)) {
                         pendingInvocations.add(oldPendingRpc.get(oldIndex++));
                     } else {
                         pendingInvocations

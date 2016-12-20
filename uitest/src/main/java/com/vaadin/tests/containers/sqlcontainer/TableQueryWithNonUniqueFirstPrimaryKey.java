@@ -17,7 +17,8 @@ import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
-public class TableQueryWithNonUniqueFirstPrimaryKey extends AbstractReindeerTestUI {
+public class TableQueryWithNonUniqueFirstPrimaryKey
+        extends AbstractReindeerTestUI {
 
     @Override
     public void setup(VaadinRequest request) {

@@ -2,8 +2,8 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.TextField;

@@ -283,7 +283,8 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         GridCellElement c00;
         c00 = getGridElement().getHeaderCell(0, 0);
         assertEquals("Column 0", c00.getText());
-        assertEquals("Colspan of header cell [0,0]", "1", c00.getAttribute("colspan"));
+        assertEquals("Colspan of header cell [0,0]", "1",
+                c00.getAttribute("colspan"));
 
         GridCellElement c01 = getGridElement().getHeaderCell(0, 1);
         assertEquals("Column 2", c01.getText());
@@ -303,10 +304,11 @@ public class GridHeaderFooterTest extends GridBasicsTest {
 
     private void checkFooterAfterDelete() {
         GridCellElement c10;
-        //footer has an invisible first row
+        // footer has an invisible first row
         c10 = getGridElement().getFooterCell(1, 0);
         assertEquals("Footer cell 0", c10.getText());
-        assertEquals("Colspan of footer cell [0,0]", "1", c10.getAttribute("colspan"));
+        assertEquals("Colspan of footer cell [0,0]", "1",
+                c10.getAttribute("colspan"));
 
         GridCellElement c11 = getGridElement().getFooterCell(1, 1);
         assertEquals("Footer cell 2", c11.getText());
@@ -321,11 +323,13 @@ public class GridHeaderFooterTest extends GridBasicsTest {
     private void checkMergedHeaderFooter() {
         GridCellElement c00 = getGridElement().getHeaderCell(0, 0);
         assertEquals("0+1", c00.getText());
-        assertEquals("Colspan of header cell [0,0]", "2", c00.getAttribute("colspan"));
+        assertEquals("Colspan of header cell [0,0]", "2",
+                c00.getAttribute("colspan"));
 
         c00 = getGridElement().getFooterCell(0, 0);
         assertEquals("0+1", c00.getText());
-        assertEquals("Colspan of footer cell [0,0]", "2", c00.getAttribute("colspan"));
+        assertEquals("Colspan of footer cell [0,0]", "2",
+                c00.getAttribute("colspan"));
     }
 
     @Test
@@ -337,15 +341,18 @@ public class GridHeaderFooterTest extends GridBasicsTest {
 
         GridCellElement mergedCell1 = getGridElement().getHeaderCell(0, 0);
         assertEquals("0+1", mergedCell1.getText());
-        assertEquals("Colspan, cell [0,0]", "2", mergedCell1.getAttribute("colspan"));
+        assertEquals("Colspan, cell [0,0]", "2",
+                mergedCell1.getAttribute("colspan"));
 
         GridCellElement mergedCell2 = getGridElement().getHeaderCell(1, 1);
         assertEquals("1+2+3", mergedCell2.getText());
-        assertEquals("Colspan of cell [1,1]", "3", mergedCell2.getAttribute("colspan"));
+        assertEquals("Colspan of cell [1,1]", "3",
+                mergedCell2.getAttribute("colspan"));
 
         GridCellElement mergedCell3 = getGridElement().getHeaderCell(0, 6);
         assertEquals("6+7", mergedCell3.getText());
-        assertEquals("Colspan of cell [0,6]", "2", mergedCell3.getAttribute("colspan"));
+        assertEquals("Colspan of cell [0,6]", "2",
+                mergedCell3.getAttribute("colspan"));
 
     }
 
@@ -358,15 +365,18 @@ public class GridHeaderFooterTest extends GridBasicsTest {
 
         GridCellElement mergedCell1 = getGridElement().getFooterCell(0, 0);
         assertEquals("0+1", mergedCell1.getText());
-        assertEquals("Colspan, cell [0,0]", "2", mergedCell1.getAttribute("colspan"));
+        assertEquals("Colspan, cell [0,0]", "2",
+                mergedCell1.getAttribute("colspan"));
 
         GridCellElement mergedCell2 = getGridElement().getFooterCell(1, 1);
         assertEquals("1+2+3", mergedCell2.getText());
-        assertEquals("Colspan of cell [1,1]", "3", mergedCell2.getAttribute("colspan"));
+        assertEquals("Colspan of cell [1,1]", "3",
+                mergedCell2.getAttribute("colspan"));
 
         GridCellElement mergedCell3 = getGridElement().getFooterCell(0, 6);
         assertEquals("6+7", mergedCell3.getText());
-        assertEquals("Colspan of cell [0,6]", "2", mergedCell3.getAttribute("colspan"));
+        assertEquals("Colspan of cell [0,6]", "2",
+                mergedCell3.getAttribute("colspan"));
 
     }
 

@@ -19,7 +19,7 @@ import com.vaadin.tests.components.HasValueRequiredIndicatorTest;
 
 /**
  * The test logic is in the superclass.
- * 
+ *
  * @author Vaadin Ltd
  *
  */

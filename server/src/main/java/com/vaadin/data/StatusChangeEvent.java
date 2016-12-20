@@ -32,8 +32,7 @@ import com.vaadin.server.Setter;
  * <li>{@link Binder#readBean(Object)} is called
  * <li>{@link Binder#setBean(Object)} is called
  * <li>{@link Binder#removeBean()} is called
- * <li>{@link BindingBuilder#bind(ValueProvider, Setter)}
- * is called
+ * <li>{@link BindingBuilder#bind(ValueProvider, Setter)} is called
  * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
  * </ul>
  *

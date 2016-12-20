@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.vaadin.testbench.customelements.GridElement;
-import com.vaadin.v7.tests.components.grid.GridEditorConverterNotFound;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class GridEditorConverterNotFoundTest extends GridBasicFeaturesTest {

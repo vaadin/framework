@@ -39,8 +39,8 @@ public class ValueContext implements Serializable {
      * Constructor for {@code ValueContext} without a {@code Locale}.
      */
     public ValueContext() {
-        this.component = null;
-        this.locale = findLocale();
+        component = null;
+        locale = findLocale();
     }
 
     /**
@@ -50,7 +50,7 @@ public class ValueContext implements Serializable {
      *            The locale used with conversion. Can be null.
      */
     public ValueContext(Locale locale) {
-        this.component = null;
+        component = null;
         this.locale = locale;
     }
 
@@ -64,7 +64,7 @@ public class ValueContext implements Serializable {
         Objects.requireNonNull(component,
                 "Component can't be null in ValueContext construction");
         this.component = component;
-        this.locale = findLocale();
+        locale = findLocale();
     }
 
     private Locale findLocale() {

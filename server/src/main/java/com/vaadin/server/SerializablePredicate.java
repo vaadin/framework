@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 
 /**
  * A {@link Predicate} that is also {@link Serializable}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  * @param <T>

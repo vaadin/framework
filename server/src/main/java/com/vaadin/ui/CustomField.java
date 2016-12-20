@@ -166,7 +166,7 @@ public abstract class CustomField<T> extends AbstractField<T>
      * <p>
      * By default, {@link Focusable} events are handled by the super class and
      * ultimately ignored.
-     * 
+     *
      * @param focusDelegate
      *            the focusable component to which focus events are redirected
      */

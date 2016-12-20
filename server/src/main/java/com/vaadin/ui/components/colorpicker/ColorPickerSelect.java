@@ -187,9 +187,9 @@ public class ColorPickerSelect extends CustomField<Color> {
      * <p>
      * Value can be {@code null} if component is not yet initialized via
      * {@link #initContent()}
-     * 
+     *
      * @see ColorPickerSelect#initContent()
-     * 
+     *
      * @return the selected color, may be {@code null}
      */
     @Override

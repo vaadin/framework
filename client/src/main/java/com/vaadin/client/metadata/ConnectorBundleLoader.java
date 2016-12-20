@@ -165,11 +165,13 @@ public abstract class ConnectorBundleLoader {
         if (notice == null) {
             notice = new HTML();
             notice.addClickHandler(new ClickHandler() {
+                @Override
                 public void onClick(ClickEvent event) {
                     notice.removeFromParent();
                 }
             });
             notice.addTouchStartHandler(new TouchStartHandler() {
+                @Override
                 public void onTouchStart(TouchStartEvent event) {
                     notice.removeFromParent();
                 }

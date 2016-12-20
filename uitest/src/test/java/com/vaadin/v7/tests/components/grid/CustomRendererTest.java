@@ -21,11 +21,10 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
-import com.vaadin.v7.tests.components.grid.CustomRenderer;
 
 @TestCategory("grid")
 public class CustomRendererTest extends MultiBrowserTest {
