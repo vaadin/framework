@@ -53,7 +53,6 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -469,9 +468,9 @@ public class Escalator extends Widget
                     if (isCurrentBrowserIE11OrEdge()) {
                         return vertical
                                 ? event.getNativeEvent().getClientY()
-                                + Window.getScrollTop()
+                                        + Window.getScrollTop()
                                 : event.getNativeEvent().getClientX()
-                                + Window.getScrollLeft();
+                                        + Window.getScrollLeft();
                     }
                     JsArray<Touch> a = event.getNativeEvent().getTouches();
                     return vertical ? a.get(0).getPageY() : a.get(0).getPageX();
@@ -564,9 +563,11 @@ public class Escalator extends Widget
             // (#18737),
             // otherwise allow touch only if there is a single touch in the
             // event
-            private boolean allowTouch(final TouchHandlerBundle.CustomTouchEvent event) {
+            private boolean allowTouch(
+                    final TouchHandlerBundle.CustomTouchEvent event) {
                 if (isCurrentBrowserIE11OrEdge()) {
-                    return (POINTER_EVENT_TYPE_TOUCH.equals(event.getPointerType()));
+                    return (POINTER_EVENT_TYPE_TOUCH
+                            .equals(event.getPointerType()));
                 } else {
                     return (event.getNativeEvent().getTouches().length() == 1);
                 }
@@ -1025,8 +1026,8 @@ public class Escalator extends Widget
         }-*/;
 
         /**
-         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11 and Edge instead of
-         * touch* listeners (#18737)
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11
+         * and Edge instead of touch* listeners (#18737)
          *
          * @param element
          */
@@ -1047,8 +1048,8 @@ public class Escalator extends Widget
         }-*/;
 
         /**
-         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11 and Edge instead of
-         * touch* listeners (#18737)
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11
+         * and Edge instead of touch* listeners (#18737)
          *
          * @param element
          */
@@ -1134,7 +1135,7 @@ public class Escalator extends Widget
         }
     }
 
-    protected abstract class AbstractRowContainer implements RowContainer {
+    public abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
         private int rows;
@@ -2160,7 +2161,14 @@ public class Escalator extends Widget
          */
         protected abstract double getHeightOfSection();
 
-        protected int getLogicalRowIndex(final TableRowElement tr) {
+        /**
+         * Gets the logical row index for the given table row element.
+         * 
+         * @param tr
+         *            the table row element inside this container.
+         * @return the logical index of the given element
+         */
+        public int getLogicalRowIndex(final TableRowElement tr) {
             return tr.getSectionRowIndex();
         };
 
@@ -3469,7 +3477,7 @@ public class Escalator extends Widget
         }
 
         @Override
-        protected int getLogicalRowIndex(final TableRowElement tr) {
+        public int getLogicalRowIndex(final TableRowElement tr) {
             assert tr
                     .getParentNode() == root : "The given element isn't a row element in the body";
             int internalIndex = visualRowOrder.indexOf(tr);
@@ -6905,6 +6913,7 @@ public class Escalator extends Widget
 
     /**
      * Internal method for checking whether the browser is IE11 or Edge
+     * 
      * @return true only if the current browser is IE11, or Edge
      */
     private static boolean isCurrentBrowserIE11OrEdge() {
