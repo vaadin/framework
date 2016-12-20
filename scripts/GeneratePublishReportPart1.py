@@ -65,9 +65,8 @@ content = """<html>
 <body>
 <table>
 <tr><td>{metadataOk}</td><td>Metadata ok on vaadin.com</td></tr>
-<tr><td>{tagOk}</td><td>Tag ok on github.com</td></tr>
 <tr><td>{downloadPageOk}</td><td>Download folder on vaadin.com contains the version</td></tr>
-""".format(metadataOk=getTrafficLight(metadataOk), tagOk=getTrafficLight(tagOk), downloadPageOk=getTrafficLight(downloadPageOk))
+""".format(metadataOk=getTrafficLight(metadataOk), downloadPageOk=getTrafficLight(downloadPageOk))
 
 mavenUrl = ""
 if not prerelease:
@@ -77,10 +76,7 @@ else:
 	mavenUrl = "http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/{ver}".format(ver=args.version)
 	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published as prerelease to maven.vaadin.com</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 
-content += "<tr><td></td><td><a href=\"https://dev.vaadin.com/admin/ticket/versions\">Add version {version} to Trac</a></td></tr>".format(version=args.version)
-
-if not prerelease:
-	content += '<tr><td></td><td><a href="https://dev.vaadin.com/admin/ticket/versions">Set latest version to default</a></td></tr>'
+content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Create milestone for next version in GitHub</a></td></tr>"
 
 content += """
 <tr><td></td><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
