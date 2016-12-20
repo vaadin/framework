@@ -21,7 +21,8 @@ import com.vaadin.v7.ui.Table.RowHeaderMode;
 import com.vaadin.v7.ui.Table.TableDragMode;
 import com.vaadin.v7.ui.TextField;
 
-public class TableClickAndDragOnIconAndComponents extends AbstractReindeerTestUI {
+public class TableClickAndDragOnIconAndComponents
+        extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = -2534880024131980135L;
     private Table table;

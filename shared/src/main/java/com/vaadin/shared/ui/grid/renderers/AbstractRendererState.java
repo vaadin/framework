@@ -19,7 +19,7 @@ import com.vaadin.shared.communication.SharedState;
 
 /**
  * Default shared state implementation for AbstractRenderer.
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @since 8.0

@@ -16,7 +16,6 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -29,7 +28,6 @@ import java.util.function.Supplier;
  *            the type of the input to the function
  */
 @FunctionalInterface
-public interface SerializableSupplier<T>
-        extends Supplier<T>, Serializable {
+public interface SerializableSupplier<T> extends Supplier<T>, Serializable {
     // Only method inherited from Supplier
 }

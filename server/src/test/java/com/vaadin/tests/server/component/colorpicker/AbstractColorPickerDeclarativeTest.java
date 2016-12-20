@@ -30,7 +30,7 @@ import com.vaadin.ui.AbstractColorPicker.PopupStyle;
  * declarative test for a real component should extend it and implement abstract
  * methods to be able to test the common properties. Components specific
  * properties should be tested additionally in the subclasses implementations.
- * 
+ *
  * @author Vaadin Ltd
  *
  */

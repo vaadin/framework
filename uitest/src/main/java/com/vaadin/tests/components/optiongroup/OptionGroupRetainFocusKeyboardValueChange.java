@@ -26,7 +26,8 @@ import com.vaadin.v7.ui.OptionGroup;
  *
  * @author Vaadin Ltd
  */
-public class OptionGroupRetainFocusKeyboardValueChange extends AbstractReindeerTestUI {
+public class OptionGroupRetainFocusKeyboardValueChange
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

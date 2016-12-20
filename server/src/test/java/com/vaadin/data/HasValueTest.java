@@ -18,8 +18,6 @@ package com.vaadin.data;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.vaadin.data.HasValue;
-
 /**
  * @author Vaadin Ltd
  *

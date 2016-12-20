@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * Interface for listening for a data change events fired by a
  * {@link DataProvider}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */

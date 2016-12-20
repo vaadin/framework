@@ -27,7 +27,8 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class SpaceMenuBarNavigation extends AbstractReindeerTestUI implements Command {
+public class SpaceMenuBarNavigation extends AbstractReindeerTestUI
+        implements Command {
 
     @Override
     protected void setup(VaadinRequest request) {

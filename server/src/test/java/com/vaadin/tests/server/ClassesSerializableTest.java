@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,7 +31,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
-import java.util.Arrays;
 
 public class ClassesSerializableTest {
 
@@ -42,7 +42,8 @@ public class ClassesSerializableTest {
 
     private static final String[] BASE_PACKAGES = { "com.vaadin" };
 
-    private static final String[] EXCLUDED_PATTERNS = { "com\\.vaadin\\.demo\\..*", //
+    private static final String[] EXCLUDED_PATTERNS = {
+            "com\\.vaadin\\.demo\\..*", //
             "com\\.vaadin\\.external\\.org\\.apache\\.commons\\.fileupload\\..*", //
             "com\\.vaadin\\.launcher\\..*", //
             "com\\.vaadin\\.client\\..*", //

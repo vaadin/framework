@@ -161,7 +161,7 @@ public abstract class ClickableRenderer<T, W extends Widget>
         }
 
         private native static Escalator getEscalator(Grid<?> grid)
-        /*-{    
+        /*-{
           return grid.@com.vaadin.client.widgets.Grid::escalator;
         }-*/;
 

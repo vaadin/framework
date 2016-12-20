@@ -16,7 +16,6 @@
 package com.vaadin.tests.design.designroot;
 
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 

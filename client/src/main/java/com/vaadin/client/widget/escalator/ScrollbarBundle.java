@@ -645,7 +645,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
          * This needs to be made step-by-step because IE8 flat-out refuses to
          * fire a scroll event when the scroll size becomes smaller than the
          * offset size. All other browser need to suffer alongside.
-         * 
+         *
          * This really should be changed to not use any temporary scroll
          * handlers at all once IE8 support is dropped, like now done only for
          * Firefox.

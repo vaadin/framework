@@ -30,13 +30,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridDetailsLocationTest extends MultiBrowserTest {

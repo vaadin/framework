@@ -20,7 +20,7 @@ import com.vaadin.ui.ColorPicker;
 /**
  * Declarative test for ColorPicker. Provides only information about
  * ColorPickerArea class. All tests are in the superclass.
- * 
+ *
  * @author Vaadin Ltd
  *
  */

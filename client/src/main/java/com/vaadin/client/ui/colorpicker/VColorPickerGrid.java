@@ -70,7 +70,7 @@ public class VColorPickerGrid extends AbsolutePanel
      * The new grid replaces the old grid if one existed.
      * <p>
      * For internal use only. May be renamed or removed in a future release.
-     * 
+     *
      * @param rowCount
      * @param columnCount
      */

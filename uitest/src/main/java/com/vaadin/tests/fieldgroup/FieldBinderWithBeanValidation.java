@@ -84,8 +84,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
         PersonWithBeanValidationAnnotations p = new PersonWithBeanValidationAnnotations(
                 "John", "Doe", "john@doe.com", 64, Sex.MALE,
                 new Address("John street", 11223, "John's town", Country.USA));
-        fieldGroup.setItemDataSource(
-                new BeanItem<>(p));
+        fieldGroup.setItemDataSource(new BeanItem<>(p));
     }
 
     public static PersonWithBeanValidationAnnotations getPerson(

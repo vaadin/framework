@@ -27,8 +27,8 @@ public class FormBuilderWithNestedProperties extends TestBase {
         addComponent(lastName);
         addComponent(streetAddress);
 
-        fieldGroup.setItemDataSource(new BeanItem<>(new Person("Who",
-                "me?", "email", 1, Sex.MALE,
+        fieldGroup.setItemDataSource(new BeanItem<>(new Person("Who", "me?",
+                "email", 1, Sex.MALE,
                 new Address("street name", 202020, "City", Country.FINLAND))));
     }
 

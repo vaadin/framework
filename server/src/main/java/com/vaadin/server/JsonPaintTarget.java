@@ -19,9 +19,13 @@ package com.vaadin.server;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -30,10 +34,6 @@ import java.util.logging.Logger;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
 
 /**
  * User Interface Description Language Target.

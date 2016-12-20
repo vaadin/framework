@@ -31,6 +31,7 @@ public class DragAndDropWrapperInPanel extends TestBase {
     protected void setup() {
 
         addComponent(new Button("Click to resize", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 for (int i = 1; i < getLayout().getComponentCount(); ++i) {
                     Component c = getLayout().getComponent(i);

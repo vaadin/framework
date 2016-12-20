@@ -73,11 +73,11 @@ public class RemoveFromParentLockingTest {
         try {
             target.addComponent(testComponent);
             throw new AssertionError(
-                "Moving component when not holding its sessions's lock should throw");
+                    "Moving component when not holding its sessions's lock should throw");
         } catch (IllegalStateException e) {
             Assert.assertEquals(
-                "Cannot remove from parent when the session is not locked.",
-                e.getMessage());
+                    "Cannot remove from parent when the session is not locked.",
+                    e.getMessage());
         }
     }
 
@@ -106,12 +106,12 @@ public class RemoveFromParentLockingTest {
         try {
             lockedComponent.addComponent(notLockedComponent);
             throw new AssertionError(
-                "Moving component when not holding its sessions's lock should throw");
+                    "Moving component when not holding its sessions's lock should throw");
         } catch (IllegalStateException e) {
             Assert.assertEquals(
-                "Cannot remove from parent when the session is not locked."
-                + " Furthermore, there is another locked session, indicating that the component might be about to be moved from one session to another.",
-                e.getMessage());
+                    "Cannot remove from parent when the session is not locked."
+                            + " Furthermore, there is another locked session, indicating that the component might be about to be moved from one session to another.",
+                    e.getMessage());
         }
     }
 

@@ -4,8 +4,8 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.PopupView.Content;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.VerticalLayout;
 
 public class PopupViewWithRTE extends TestBase {
 

@@ -100,8 +100,9 @@ public class ComboBoxDeclarativeTest
             Method writeMethod) {
         if (readMethod != null) {
             Class<?> returnType = readMethod.getReturnType();
-            if (StyleGenerator.class.equals(returnType))
+            if (StyleGenerator.class.equals(returnType)) {
                 return false;
+            }
         }
         return super.acceptProperty(clazz, readMethod, writeMethod);
     }

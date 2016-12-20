@@ -12,12 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.provider.DataChangeEvent;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.DataProviderListener;
-import com.vaadin.data.provider.Query;
-import com.vaadin.data.provider.Sort;
-import com.vaadin.data.provider.SortOrder;
 import com.vaadin.server.SerializablePredicate;
 
 public abstract class DataProviderTestBase<D extends DataProvider<StrBean, SerializablePredicate<StrBean>>> {
@@ -66,8 +60,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
             List<SortOrder<String>> sortOrder, Comparator<StrBean> comp,
             SerializablePredicate<StrBean> filter) {
-        return new Query<>(0,
-                Integer.MAX_VALUE, sortOrder, comp, filter);
+        return new Query<>(0, Integer.MAX_VALUE, sortOrder, comp, filter);
     }
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(

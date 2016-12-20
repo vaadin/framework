@@ -14,8 +14,7 @@ public class HeaderRightClickAfterDrag extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Table table = new Table();
-        table.setContainerDataSource(
-                new BeanItemContainer<>(TestBean.class));
+        table.setContainerDataSource(new BeanItemContainer<>(TestBean.class));
         for (int i = 0; i < 10; i++) {
             table.addItem(new TestBean(i));
         }

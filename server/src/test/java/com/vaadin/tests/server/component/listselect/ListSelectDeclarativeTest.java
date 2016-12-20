@@ -26,9 +26,9 @@ import com.vaadin.ui.ListSelect;
  * There is only {@link ListSelect#setRows(int)}/{@link ListSelect#getRows()}
  * explicit test. All other tests are in the super class (
  * {@link AbstractMultiSelectDeclarativeTest}).
- * 
+ *
  * @see AbstractMultiSelectDeclarativeTest
- * 
+ *
  * @author Vaadin Ltd
  *
  */

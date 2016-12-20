@@ -280,7 +280,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * This method is separated from {@link writeDesign(Element, DesignContext)}
      * to be overridable in subclasses that need to replace this, but still must
      * be able to call {@code super.writeDesign(...)}.
-     * 
+     *
      * @see #doReadDesign(Element, DesignContext)
      *
      * @param design
@@ -360,7 +360,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * This method is separated from {@link readDesign(Element, DesignContext)}
      * to be overridable in subclasses that need to replace this, but still must
      * be able to call {@code super.readDesign(...)}.
-     * 
+     *
      * @see #doWriteDesign(Element, DesignContext)
      *
      * @param design

@@ -24,11 +24,11 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 /**
  * Tests the layouting of Grid's details row when it contains a HorizontalLayout

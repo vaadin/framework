@@ -22,7 +22,7 @@ import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 /**
  * Abstract class for listing widget connectors that contains focusable children
  * to track their focus/blur events.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @param <WIDGET>

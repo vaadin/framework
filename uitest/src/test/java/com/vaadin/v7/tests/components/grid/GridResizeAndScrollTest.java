@@ -18,9 +18,9 @@ package com.vaadin.v7.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 public class GridResizeAndScrollTest extends MultiBrowserTest {
 

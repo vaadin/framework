@@ -22,7 +22,7 @@ import com.vaadin.ui.TextField;
 /**
  * Declarative test for PasswordField. Provides only information about
  * ColorPickerArea class. All tests are in the superclass.
- * 
+ *
  * @author Vaadin Ltd
  *
  */

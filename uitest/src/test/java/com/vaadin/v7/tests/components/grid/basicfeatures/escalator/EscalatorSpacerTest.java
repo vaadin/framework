@@ -48,7 +48,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     // translate3d(0px, 40px, 123px);
     // translate3d(24px, 15.251px, 0);
     // translate(0, 40px);
-    private final static String TRANSLATE_VALUE_REGEX = 
+    private final static String TRANSLATE_VALUE_REGEX =
             "translate(?:3d|)" // "translate" or "translate3d"
             + "\\(" // literal "("
                 + "(" // start capturing the x argument

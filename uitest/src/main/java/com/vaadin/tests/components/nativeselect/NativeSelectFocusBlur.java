@@ -21,9 +21,9 @@ import com.vaadin.ui.NativeSelect;
 /**
  * This class only provides a component type. The initialization code is inside
  * the AbstractListingFocusBlurTest class.
- * 
+ *
  * @see AbstractListingFocusBlurTest
- * 
+ *
  * @author Vaadin Ltd
  *
  */

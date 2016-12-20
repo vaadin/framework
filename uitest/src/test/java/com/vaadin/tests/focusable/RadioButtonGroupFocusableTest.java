@@ -5,7 +5,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.components.radiobutton.RadioButtonGroupTestUI;
 
-public class RadioButtonGroupFocusableTest extends AbstractFocusableComponentTest {
+public class RadioButtonGroupFocusableTest
+        extends AbstractFocusableComponentTest {
 
     @Override
     protected Class<?> getUIClass() {

@@ -9,11 +9,11 @@ import com.vaadin.v7.ui.Tree.ExpandListener;
 import com.vaadin.v7.ui.TreeTable;
 
 @SuppressWarnings("serial")
-public class TreeTableContainerHierarchicalWrapper extends AbstractReindeerTestUI {
+public class TreeTableContainerHierarchicalWrapper
+        extends AbstractReindeerTestUI {
 
     TreeTable treetable = new TreeTable();
-    BeanItemContainer<Bean> beanContainer = new BeanItemContainer<>(
-            Bean.class);
+    BeanItemContainer<Bean> beanContainer = new BeanItemContainer<>(Bean.class);
     ContainerHierarchicalWrapper hierarchicalWrapper = new ContainerHierarchicalWrapper(
             beanContainer);
 

@@ -32,7 +32,7 @@ import com.vaadin.ui.TextField;
 
 /**
  * Unit tests for {@link BeanBinder#bindInstanceFields(Object)} method.
- * 
+ *
  * @author Vaadin Ltd
  *
  */

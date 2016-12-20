@@ -44,7 +44,8 @@ public class ValidationException extends Exception {
      * @param beanValidationErrors
      *            binder validation errors list
      */
-    public ValidationException(List<BindingValidationStatus<?>> fieldValidationErrors,
+    public ValidationException(
+            List<BindingValidationStatus<?>> fieldValidationErrors,
             List<ValidationResult> beanValidationErrors) {
         super("Validation has failed for some fields");
         this.fieldValidationErrors = Collections

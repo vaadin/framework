@@ -43,8 +43,7 @@ public class BigDecimalTextField extends AbstractTestUIWithLog {
         setLocale(new Locale("fi", "FI"));
 
         BeanBigDecimal beanBigDecimal = new BeanBigDecimal();
-        BeanItem<BeanBigDecimal> beanItem = new BeanItem<>(
-                beanBigDecimal);
+        BeanItem<BeanBigDecimal> beanItem = new BeanItem<>(beanBigDecimal);
 
         FormLayout formLayout = new FormLayout();
         TextField textField = new TextField("BigDecimal field");

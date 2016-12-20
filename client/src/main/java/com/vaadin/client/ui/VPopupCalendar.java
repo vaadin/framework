@@ -129,8 +129,8 @@ public class VPopupCalendar extends VTextualDate
 
         // Description of the usage of the widget for assisitve device users
         descriptionForAssisitveDevicesElement = DOM.createDiv();
-        descriptionForAssisitveDevicesElement.setInnerText(
-                DateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
+        descriptionForAssisitveDevicesElement
+                .setInnerText(DateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
         AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
         Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
                 Id.of(descriptionForAssisitveDevicesElement));

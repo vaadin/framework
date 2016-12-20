@@ -19,9 +19,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 @TestCategory("grid")
 public class GridAddAndRemoveDataOnInitTest extends MultiBrowserTest {

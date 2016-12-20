@@ -19,7 +19,7 @@ import com.vaadin.shared.AbstractFieldState;
 
 /**
  * Shared state for {@code AbstractListing}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *

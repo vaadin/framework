@@ -46,8 +46,8 @@ public class SourceIsTarget extends ClientSideCriterion {
     @Override
     public boolean accept(DragAndDropEvent dragEvent) {
         if (dragEvent.getTransferable() instanceof TransferableImpl) {
-            Component sourceComponent = dragEvent
-                .getTransferable().getSourceComponent();
+            Component sourceComponent = dragEvent.getTransferable()
+                    .getSourceComponent();
             DropTarget target = dragEvent.getTargetDetails().getTarget();
             return sourceComponent == target;
         }

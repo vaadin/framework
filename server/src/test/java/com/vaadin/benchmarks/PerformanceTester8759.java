@@ -5,7 +5,7 @@ import com.vaadin.ui.Label;
 /*
  * This simple test shows the performance difference between the StringTokenizer implementation and the String.split() implementation in AbstractComponent.
  * Your results will vary.
- * The real world use case motivating it was a 10k Row table, which generated labels for 10 columns. 
+ * The real world use case motivating it was a 10k Row table, which generated labels for 10 columns.
  * This is 1/10th of what this performance tester demonstrates.
  *
  * Please run with -server and -Xloggc:/tmp/gclog.vgc -verbose:gc -XX:+PrintCompilation

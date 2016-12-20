@@ -32,7 +32,8 @@ import com.vaadin.v7.ui.Table;
 import elemental.json.JsonObject;
 
 @Push
-public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractReindeerTestUI {
+public class TableRemovedQuicklySendsInvalidRpcCalls
+        extends AbstractReindeerTestUI {
 
     public static final String SUCCESS_CAPTION = "Success!";
     public static final String BUTTON_ID = "blinkbutton";

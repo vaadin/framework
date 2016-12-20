@@ -16,13 +16,13 @@
 
 package com.vaadin.data;
 
-import com.vaadin.server.SerializableConsumer;
-import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.SerializableSupplier;
-
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
+
+import com.vaadin.server.SerializableConsumer;
+import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializableSupplier;
 
 /**
  * Represents the result of an operation that might fail, such as type
@@ -131,7 +131,8 @@ public interface Result<R> extends Serializable {
      * @param ifError
      *            the function to call if failure
      */
-    public void handle(SerializableConsumer<R> ifOk, SerializableConsumer<String> ifError);
+    public void handle(SerializableConsumer<R> ifOk,
+            SerializableConsumer<String> ifError);
 
     /**
      * Applies the {@code consumer} if result is not an error.
@@ -184,5 +185,6 @@ public interface Result<R> extends Serializable {
      *             if this result denotes an error
      */
     public <X extends Throwable> R getOrThrow(
-            SerializableFunction<String, ? extends X> exceptionProvider) throws X;
+            SerializableFunction<String, ? extends X> exceptionProvider)
+            throws X;
 }

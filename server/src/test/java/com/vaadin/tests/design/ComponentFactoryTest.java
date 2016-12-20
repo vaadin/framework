@@ -24,7 +24,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.Design.ComponentFactory;
@@ -40,15 +39,16 @@ public class ComponentFactoryTest {
 
     // Set static component factory that delegate to a thread local factory
     static {
-        Design.setComponentFactory((String fullyQualifiedClassName, DesignContext context) -> {
-            ComponentFactory componentFactory = currentComponentFactory
-                .get();
-            if (componentFactory == null) {
-                componentFactory = defaultFactory;
-            }
-            return componentFactory.createComponent(fullyQualifiedClassName,
-                context);
-        });
+        Design.setComponentFactory(
+                (String fullyQualifiedClassName, DesignContext context) -> {
+                    ComponentFactory componentFactory = currentComponentFactory
+                            .get();
+                    if (componentFactory == null) {
+                        componentFactory = defaultFactory;
+                    }
+                    return componentFactory
+                            .createComponent(fullyQualifiedClassName, context);
+                });
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -59,11 +59,13 @@ public class ComponentFactoryTest {
     @Test
     public void testComponentFactoryLogging() {
         final List<String> messages = new ArrayList<>();
-        currentComponentFactory.set((ComponentFactory) (String fullyQualifiedClassName, DesignContext context) -> {
-            messages.add("Requested class " + fullyQualifiedClassName);
-            return defaultFactory.createComponent(fullyQualifiedClassName,
-                context);
-        });
+        currentComponentFactory
+                .set((ComponentFactory) (String fullyQualifiedClassName,
+                        DesignContext context) -> {
+                    messages.add("Requested class " + fullyQualifiedClassName);
+                    return defaultFactory
+                            .createComponent(fullyQualifiedClassName, context);
+                });
 
         Design.read(new ByteArrayInputStream("<vaadin-label />".getBytes()));
 
@@ -75,15 +77,24 @@ public class ComponentFactoryTest {
 
     @Test(expected = DesignException.class)
     public void testComponentFactoryReturningNull() {
-        currentComponentFactory.set((ComponentFactory) (String fullyQualifiedClassName, DesignContext context) -> null);
+        currentComponentFactory
+                .set((ComponentFactory) (String fullyQualifiedClassName,
+                        DesignContext context) -> null);
 
         Design.read(new ByteArrayInputStream("<vaadin-label />".getBytes()));
     }
 
     @Test(expected = DesignException.class)
     public void testComponentFactoryThrowingStuff() {
-        currentComponentFactory.set((ComponentFactory) (String fullyQualifiedClassName, DesignContext context) -> defaultFactory.createComponent(
-            "foobar." + fullyQualifiedClassName, context) // Will throw because class is not found
+        currentComponentFactory.set((ComponentFactory) (
+                String fullyQualifiedClassName,
+                DesignContext context) -> defaultFactory.createComponent(
+                        "foobar." + fullyQualifiedClassName, context) // Will
+                                                                      // throw
+                                                                      // because
+                                                                      // class
+                                                                      // is not
+                                                                      // found
         );
 
         Design.read(new ByteArrayInputStream("<vaadin-label />".getBytes()));
@@ -92,11 +103,13 @@ public class ComponentFactoryTest {
     @Test
     public void testGetDefaultInstanceUsesComponentFactory() {
         final List<String> classes = new ArrayList<>();
-        currentComponentFactory.set((ComponentFactory) (String fullyQualifiedClassName, DesignContext context) -> {
-            classes.add(fullyQualifiedClassName);
-            return defaultFactory.createComponent(fullyQualifiedClassName,
-                context);
-        });
+        currentComponentFactory
+                .set((ComponentFactory) (String fullyQualifiedClassName,
+                        DesignContext context) -> {
+                    classes.add(fullyQualifiedClassName);
+                    return defaultFactory
+                            .createComponent(fullyQualifiedClassName, context);
+                });
 
         DesignContext designContext = new DesignContext();
         designContext.getDefaultInstance(new DefaultInstanceTestComponent());

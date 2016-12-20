@@ -28,8 +28,8 @@ public class InputEvent extends DomEvent<InputHandler> {
      * Event type for InputEvent. Represents the meta-data associated with this
      * event.
      */
-    private static final Type<InputHandler> TYPE = new Type<>(
-            "input", new InputEvent());
+    private static final Type<InputHandler> TYPE = new Type<>("input",
+            new InputEvent());
 
     protected InputEvent() {
     }

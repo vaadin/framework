@@ -413,7 +413,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     /**
      * Fire a window order event.
-     * 
+     *
      * @param windows
      *            The windows with their orders whose order has been updated.
      */
@@ -1788,13 +1788,13 @@ public abstract class UI extends AbstractSingleComponentContainer
      * <p>
      * The other way to listen window position for specific window is
      * {@link Window#addWindowOrderChangeListener(WindowOrderChangeListener)}
-     * 
+     *
      * @see Window#addWindowOrderChangeListener(WindowOrderChangeListener)
-     * 
+     *
      * @param listener
      *            the WindowModeChangeListener to add.
      * @since 8.0.0
-     * 
+     *
      * @return a registration object for removing the listener
      */
     public Registration addWindowOrderUpdateListener(
@@ -1810,12 +1810,12 @@ public abstract class UI extends AbstractSingleComponentContainer
      * <p>
      * The other way to listen window position for specific window is
      * {@link Window#addWindowOrderChangeListener(WindowOrderChangeListener)}
-     * 
+     *
      * @see Window.WindowOrderChangeEvent
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.0.0
-     * 
+     *
      */
     public static class WindowOrderUpdateEvent extends Component.Event {
 
@@ -1830,7 +1830,7 @@ public abstract class UI extends AbstractSingleComponentContainer
         /**
          * Gets the windows in the order they appear in the UI: top most window
          * is first, bottom one last.
-         * 
+         *
          * @return the windows collection
          */
         public Collection<Window> getWindows() {
@@ -1840,9 +1840,9 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     /**
      * An interface used for listening to Windows order update events.
-     * 
+     *
      * @since 8.0.0
-     * 
+     *
      * @see Window.WindowOrderChangeEvent
      */
     @FunctionalInterface
@@ -1858,7 +1858,7 @@ public abstract class UI extends AbstractSingleComponentContainer
          * {@link Window}s whose order positions are updated. Use
          * {@link Window#getOrderPosition()} to get window position for specific
          * window.
-         * 
+         *
          * @param event
          */
         public void windowOrderUpdated(WindowOrderUpdateEvent event);

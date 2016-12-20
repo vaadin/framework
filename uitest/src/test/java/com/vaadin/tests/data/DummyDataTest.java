@@ -62,15 +62,15 @@ public class DummyDataTest extends SingleBrowserTest {
         $(ButtonElement.class).get(1).click();
         /*
          * There are two requests between the server and the client.
-         * 
+         *
          * But current implementation sends some data in both requests:
-         * 
+         *
          * - the first roundtrip contains data for initial range (normally
          * 0..40)
-         * 
+         *
          * - the second roundtrip initiated by the client sends remaining data (
          * from 41 to the whole size())
-         * 
+         *
          * This differs from the previous behavior: when data provider is
          * updated (it doesn't apply for the initially set data provider) no
          * data is sent to the client. So this first roundtrip is useless. And

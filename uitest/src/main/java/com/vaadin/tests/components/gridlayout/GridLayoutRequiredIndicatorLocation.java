@@ -26,7 +26,8 @@ import com.vaadin.v7.ui.TextField;
 /**
  * Test for grid required indicator location within slots.
  */
-public class GridLayoutRequiredIndicatorLocation extends AbstractReindeerTestUI {
+public class GridLayoutRequiredIndicatorLocation
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

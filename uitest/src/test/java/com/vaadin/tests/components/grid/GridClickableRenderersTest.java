@@ -37,8 +37,8 @@ public class GridClickableRenderersTest extends MultiBrowserTest {
         openTestURL();
         WebElement firstRowButton = findElements(By.className("v-nativebutton"))
                 .get(0);
-        WebElement secondRowButton = findElements(By.className("v-nativebutton"))
-                .get(2);
+        WebElement secondRowButton = findElements(
+                By.className("v-nativebutton")).get(2);
         LabelElement label = $(LabelElement.class).get(1);
 
         firstRowButton.click();
@@ -53,8 +53,8 @@ public class GridClickableRenderersTest extends MultiBrowserTest {
         openTestURL();
         WebElement firstRowButton = findElements(By.className("v-nativebutton"))
                 .get(1);
-        WebElement secondRowButton = findElements(By.className("v-nativebutton"))
-                .get(3);
+        WebElement secondRowButton = findElements(
+                By.className("v-nativebutton")).get(3);
         LabelElement label = $(LabelElement.class).get(2);
 
         firstRowButton.click();

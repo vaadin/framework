@@ -13,6 +13,7 @@ public class ComboBoxElement
     private static org.openqa.selenium.By bySuggestionPopup = By
             .vaadin("#popup");
 
+    @Override
     public WebElement getInputField() {
         return findElement(By.vaadin("#textbox"));
     }
@@ -27,6 +28,7 @@ public class ComboBoxElement
         getInputField().clear();
     }
 
+    @Override
     public WebElement getSuggestionPopup() {
         return findElement(bySuggestionPopup);
     }

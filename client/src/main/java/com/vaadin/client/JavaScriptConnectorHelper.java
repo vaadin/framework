@@ -402,7 +402,7 @@ public class JavaScriptConnectorHelper {
     private static native void updateNativeState(JavaScriptObject state,
             JavaScriptObject input)
     /*-{
-        // Copy all fields to existing state object 
+        // Copy all fields to existing state object
         for(var key in state) {
             if (state.hasOwnProperty(key)) {
                 delete state[key];

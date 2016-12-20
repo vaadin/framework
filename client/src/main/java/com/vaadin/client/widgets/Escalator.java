@@ -468,9 +468,9 @@ public class Escalator extends Widget
                     if (isCurrentBrowserIE11OrEdge()) {
                         return vertical
                                 ? event.getNativeEvent().getClientY()
-                                + Window.getScrollTop()
+                                        + Window.getScrollTop()
                                 : event.getNativeEvent().getClientX()
-                                + Window.getScrollLeft();
+                                        + Window.getScrollLeft();
                     }
                     JsArray<Touch> a = event.getNativeEvent().getTouches();
                     return vertical ? a.get(0).getPageY() : a.get(0).getPageX();
@@ -563,9 +563,11 @@ public class Escalator extends Widget
             // (#18737),
             // otherwise allow touch only if there is a single touch in the
             // event
-            private boolean allowTouch(final TouchHandlerBundle.CustomTouchEvent event) {
+            private boolean allowTouch(
+                    final TouchHandlerBundle.CustomTouchEvent event) {
                 if (isCurrentBrowserIE11OrEdge()) {
-                    return (POINTER_EVENT_TYPE_TOUCH.equals(event.getPointerType()));
+                    return (POINTER_EVENT_TYPE_TOUCH
+                            .equals(event.getPointerType()));
                 } else {
                     return (event.getNativeEvent().getTouches().length() == 1);
                 }
@@ -987,8 +989,8 @@ public class Escalator extends Widget
         }-*/;
 
         /**
-         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11 and Edge instead of
-         * touch* listeners (#18737)
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11
+         * and Edge instead of touch* listeners (#18737)
          *
          * @param element
          */
@@ -1009,8 +1011,8 @@ public class Escalator extends Widget
         }-*/;
 
         /**
-         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11 and Edge instead of
-         * touch* listeners (#18737)
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11
+         * and Edge instead of touch* listeners (#18737)
          *
          * @param element
          */
@@ -6859,6 +6861,7 @@ public class Escalator extends Widget
 
     /**
      * Internal method for checking whether the browser is IE11 or Edge
+     *
      * @return true only if the current browser is IE11, or Edge
      */
     private static boolean isCurrentBrowserIE11OrEdge() {

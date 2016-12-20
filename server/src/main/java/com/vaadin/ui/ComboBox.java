@@ -23,11 +23,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.vaadin.server.KeyMapper;
-import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
-import com.vaadin.server.SerializableBiPredicate;
-import com.vaadin.server.SerializableConsumer;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
@@ -41,6 +36,11 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
+import com.vaadin.server.SerializableBiPredicate;
+import com.vaadin.server.SerializableConsumer;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
@@ -238,13 +238,12 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * conversion is performed before the comparison.
      *
      * @param captionFilter
-     *            filter to check if an item is shown when user typed some text into the ComboBox
+     *            filter to check if an item is shown when user typed some text
+     *            into the ComboBox
      * @param items
      *            the data items to display
      */
-    public void setItems(
-            CaptionFilter captionFilter,
-            Collection<T> items) {
+    public void setItems(CaptionFilter captionFilter, Collection<T> items) {
         DataProvider<T, String> provider = DataProvider.create(items)
                 .convertFilter(filterText -> item -> captionFilter.test(
                         getItemCaptionGenerator().apply(item), filterText));
@@ -259,12 +258,12 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * conversion is performed before the comparison.
      *
      * @param captionFilter
-     *            filter to check if an item is shown when user typed some text into the ComboBox
+     *            filter to check if an item is shown when user typed some text
+     *            into the ComboBox
      * @param items
      *            the data items to display
      */
-    public void setItems(
-            CaptionFilter captionFilter,
+    public void setItems(CaptionFilter captionFilter,
             @SuppressWarnings("unchecked") T... items) {
         DataProvider<T, String> provider = DataProvider.create(items)
                 .convertFilter(filterText -> item -> captionFilter.test(
@@ -555,8 +554,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
         return addSelectionListener(event -> {
-            listener.valueChange(new ValueChangeEvent<>(event.getComponent(), this,
-                    event.isUserOriginated()));
+            listener.valueChange(new ValueChangeEvent<>(event.getComponent(),
+                    this, event.isUserOriginated()));
         });
     }
 
@@ -676,20 +675,23 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     /**
-     * Predicate to check {@link ComboBox} item captions against user typed strings.
+     * Predicate to check {@link ComboBox} item captions against user typed
+     * strings.
      *
      * @see #setItems(CaptionFilter, Collection)
      * @see #setItems(CaptionFilter, Object[])
      */
     @FunctionalInterface
-    public interface CaptionFilter extends SerializableBiPredicate<String, String> {
+    public interface CaptionFilter
+            extends SerializableBiPredicate<String, String> {
 
         /**
          * Check item caption against entered text
          *
          * @param itemCaption
          * @param filterText
-         * @return {@code true} if item passes the filter and should be listed, {@code false} otherwise
+         * @return {@code true} if item passes the filter and should be listed,
+         *         {@code false} otherwise
          */
         @Override
         public boolean test(String itemCaption, String filterText);

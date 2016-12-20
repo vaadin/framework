@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -62,8 +62,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 Map<Integer, List<SimpleTestBean>> value = new HashMap<>();
                 Set<SimpleTestBean> firstKeyValue = generics.keySet().iterator()
                         .next();
-                value.put(Integer.valueOf(1),
-                        new ArrayList<>(firstKeyValue));
+                value.put(Integer.valueOf(1), new ArrayList<>(firstKeyValue));
 
                 updated.put(key, value);
 

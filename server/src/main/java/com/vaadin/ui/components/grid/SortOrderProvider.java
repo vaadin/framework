@@ -31,8 +31,8 @@ import com.vaadin.ui.Grid.Column;
  * @author Vaadin Ltd
  */
 @FunctionalInterface
-public interface SortOrderProvider extends
-        SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
+public interface SortOrderProvider
+        extends SerializableFunction<SortDirection, Stream<SortOrder<String>>> {
 
     /**
      * Generates the sort orders when rows are sorted by a column.

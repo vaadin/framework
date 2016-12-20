@@ -89,7 +89,8 @@ public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {
         getLayout().setSpacing(true);
 
         Window w = new Window();
-        VerticalLayout content = new VerticalLayout(new Button("Button in window"));
+        VerticalLayout content = new VerticalLayout(
+                new Button("Button in window"));
         content.setSpacing(false);
         content.setMargin(false);
         w.setContent(content);

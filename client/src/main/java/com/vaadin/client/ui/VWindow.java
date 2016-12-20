@@ -355,7 +355,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Returns window position in list of opened and shown windows.
-     * 
+     *
      * @since 8.0.0
      */
     public final int getWindowOrder() {
@@ -1509,7 +1509,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Adds a Handler for window order change event.
-     * 
+     *
      * @since 8.0.0
      *
      * @return registration object to deregister the handler
@@ -1522,7 +1522,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /**
      * Checks if a modal window is currently open.
-     * 
+     *
      * @return <code>true</code> if a modal window is open, <code>false</code>
      *         otherwise.
      */

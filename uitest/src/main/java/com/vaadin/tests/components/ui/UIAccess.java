@@ -257,8 +257,7 @@ public class UIAccess extends AbstractTestUIWithLog {
                     public void buttonClick(ClickEvent event) {
                         log.clear();
                         // accessSynchronously should maintain values
-                        CurrentInstance.set(
-                                CurrentInstanceTestType.class,
+                        CurrentInstance.set(CurrentInstanceTestType.class,
                                 new CurrentInstanceTestType(
                                         "Set before access"));
                         access(new Runnable() {
@@ -275,8 +274,7 @@ public class UIAccess extends AbstractTestUIWithLog {
                                                 "Set in access"));
                             }
                         });
-                        CurrentInstance.set(
-                                CurrentInstanceTestType.class,
+                        CurrentInstance.set(CurrentInstanceTestType.class,
                                 new CurrentInstanceTestType(
                                         "Set before run pending"));
 

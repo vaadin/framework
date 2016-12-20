@@ -97,12 +97,13 @@ public class BinderConverterValidatorTest
         binding.bind(Person::getFirstName, Person::setFirstName);
 
         BinderValidationStatus<Person> status = binder.validate();
-        List<BindingValidationStatus<?>> errors = status.getFieldValidationErrors();
+        List<BindingValidationStatus<?>> errors = status
+                .getFieldValidationErrors();
 
         assertEquals(1, errors.size());
 
-        BindingValidationStatus<?> validationStatus = errors.stream().findFirst()
-                .get();
+        BindingValidationStatus<?> validationStatus = errors.stream()
+                .findFirst().get();
         String msg = validationStatus.getMessage().get();
         assertEquals(msg1, msg);
 

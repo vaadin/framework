@@ -33,7 +33,7 @@ import com.vaadin.ui.JavaScriptFunction;
 
 import elemental.json.JsonArray;
 
-// Load vaadinPush.js so that jQueryVaadin is defined 
+// Load vaadinPush.js so that jQueryVaadin is defined
 @JavaScript("vaadin://vaadinPush.debug.js")
 public class TrackMessageSizeUI extends AbstractTestUIWithLog {
 

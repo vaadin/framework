@@ -206,8 +206,7 @@ public class LocaleService implements Serializable {
         final boolean twelve_hour_clock = timeformat.contains("a");
         // TODO there are other possibilities as well, like 'h' in french
         // (ignore them, too complicated)
-        final String hour_min_delimiter = timeformat.contains(".") ? "."
-                : ":";
+        final String hour_min_delimiter = timeformat.contains(".") ? "." : ":";
         // outWriter.print("\"tf\":\"" + timeformat + "\",");
         localeData.twelveHourClock = twelve_hour_clock;
         localeData.hourMinuteDelimiter = hour_min_delimiter;

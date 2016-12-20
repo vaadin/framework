@@ -354,7 +354,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             throws IOException {
         response.setContentType("text/html");
         try (BufferedWriter writer = new BufferedWriter(
-            new OutputStreamWriter(response.getOutputStream(), "UTF-8"))) {
+                new OutputStreamWriter(response.getOutputStream(), "UTF-8"))) {
             writer.append(html);
         }
     }
