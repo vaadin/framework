@@ -21,8 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.util.ReflectTools;
-import com.vaadin.util.SerializerHelper;
 import com.vaadin.v7.data.Property;
+import com.vaadin.v7.util.SerializerHelper;
 
 /**
  * Property descriptor that is able to create simple {@link MethodProperty}

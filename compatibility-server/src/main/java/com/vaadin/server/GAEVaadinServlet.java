@@ -102,7 +102,10 @@ import com.google.apphosting.api.DeadlineExceededException;
  * <li/>The application remains locked while uploading - no progressbar is
  * possible.
  * </ul>
+ *
+ * @deprecated No longer supported with Vaadin 8.0
  */
+@Deprecated
 public class GAEVaadinServlet extends VaadinServlet {
 
     // memcache mutex is MUTEX_BASE + sessio id
@@ -257,7 +260,7 @@ public class GAEVaadinServlet extends VaadinServlet {
 
             String id = AC_BASE + session.getId();
             Date expire = new Date(
-                    started + (getMaxInactiveIntervalSeconds(session) * 1000));
+                    started + getMaxInactiveIntervalSeconds(session) * 1000);
             Expiration expires = Expiration.onDate(expire);
 
             memcache.put(id, bytes, expires);
