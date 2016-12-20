@@ -12,7 +12,8 @@ import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.Table;
 
-public class TableMatchesMouseDownMouseUpElement extends AbstractReindeerTestUI {
+public class TableMatchesMouseDownMouseUpElement
+        extends AbstractReindeerTestUI {
 
     static final String CLEAR_BUTTON_ID = "clear-button-id";
 

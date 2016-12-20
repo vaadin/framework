@@ -45,8 +45,8 @@ public class GridClickableRenderers extends AbstractReindeerTestUI {
             checkBoxValueLabel.setValue(item.testText + " " + item.truthValue);
             grid.getDataProvider().refreshAll();
         });
-        grid.addColumn(pojo -> pojo.truthValue ? "Yes" : "No",
-                yesNoRenderer).setCaption("Truth").setId("truth");
+        grid.addColumn(pojo -> pojo.truthValue ? "Yes" : "No", yesNoRenderer)
+                .setCaption("Truth").setId("truth");
 
         grid.setItems(new TestPOJO("first row", "", "button 1 text", true),
                 new TestPOJO("second row", "", "button 2 text", false));

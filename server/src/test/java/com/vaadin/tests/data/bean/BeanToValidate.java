@@ -99,7 +99,7 @@ public class BeanToValidate {
     }
 
     public void setAddresses(Address[] address) {
-        this.addresses = address;
+        addresses = address;
     }
 
     public Address getAddress() {

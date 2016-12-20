@@ -878,8 +878,7 @@ public abstract class AbstractClientConnector
      * <p>
      * Note: Using this method is discouraged because it cannot be checked
      * during compilation. Use {@link #addListener(Class, Object, Method)} or
-     * {@link #addListener(String, Class, Object, Method) instead.
-     * </p>
+     * {@link #addListener(String, Class, Object, Method) instead. </p>
      *
      * @param eventType
      *            the type of the listened event. Events of this type or its
@@ -920,9 +919,8 @@ public abstract class AbstractClientConnector
      * @param target
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
-     * @deprecated use a {@link Registration} from
-     *             {@link #addListener} to remove a
-     *             listener
+     * @deprecated use a {@link Registration} from {@link #addListener} to
+     *             remove a listener
      */
     @Deprecated
     @Override

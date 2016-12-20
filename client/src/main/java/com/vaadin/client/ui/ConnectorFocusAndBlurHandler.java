@@ -47,7 +47,7 @@ public class ConnectorFocusAndBlurHandler
 
     /**
      * Add focus/blur handlers to the widget of the {@code connector}.
-     * 
+     *
      * @param connector
      *            connector whose widget is a target to add focus/blur handlers
      * @return ConnectorFocusAndBlurHandler instance to remove all registered
@@ -61,7 +61,7 @@ public class ConnectorFocusAndBlurHandler
     /**
      * Add focus/blur handlers to the widget and a state change handler for the
      * {@code connector}.
-     * 
+     *
      * @param connector
      *            connector to register state change handler
      * @param widget

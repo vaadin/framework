@@ -20,7 +20,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handler for a Grid {@link GridSelectionAllowedEvent}, called when the Grid is
  * becomes allowed for selection or disallowed.
- * 
+ *
  * @see GridSelectionAllowedEvent
  * @author Vaadin Ltd
  * @since 8.0

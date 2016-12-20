@@ -15,6 +15,7 @@
  */
 package com.vaadin.event;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -26,7 +27,6 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VariableOwner;
 import com.vaadin.ui.Component;
-import java.util.Arrays;
 
 /**
  * Javadoc TODO

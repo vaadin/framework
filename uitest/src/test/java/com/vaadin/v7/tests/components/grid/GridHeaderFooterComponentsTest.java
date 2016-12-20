@@ -22,11 +22,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.testbench.customelements.GridElement;
 
 public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
 

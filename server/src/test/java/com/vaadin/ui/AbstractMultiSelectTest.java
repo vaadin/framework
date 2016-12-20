@@ -37,8 +37,8 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.Listing;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.shared.Registration;
@@ -318,8 +318,8 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
 
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get().selectionChange(new MultiSelectionEvent<>(select,
-                Mockito.mock(Set.class), true));
+        selectionListener.get().selectionChange(new MultiSelectionEvent<>(
+                select, Mockito.mock(Set.class), true));
 
         Assert.assertEquals(select, event.get().getComponent());
         Assert.assertEquals(set, event.get().getValue());

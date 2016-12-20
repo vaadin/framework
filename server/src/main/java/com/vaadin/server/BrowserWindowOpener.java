@@ -209,7 +209,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     }
 
     // Avoid breaking url to multiple lines
-    // @formatter:off 
+    // @formatter:off
     /**
      * Sets the features for opening the window. See e.g.
      * {@link https://developer.mozilla.org/en-US/docs/DOM/window.open#Position_and_size_features}

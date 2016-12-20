@@ -66,8 +66,8 @@ public class ComputedStyle {
         var cs = this.@com.vaadin.client.ComputedStyle::computedStyle;
         var elem = this.@com.vaadin.client.ComputedStyle::elem;
 
-        // Border values need to be checked separately. The width might have a 
-        // meaningful value even if the border style is "none". In that case the 
+        // Border values need to be checked separately. The width might have a
+        // meaningful value even if the border style is "none". In that case the
         // value should be 0.
         if(name.indexOf("border") > -1 && name.indexOf("Width") > -1) {
             var borderStyleProp = name.substring(0,name.length-5) + "Style";
@@ -111,7 +111,7 @@ public class ComputedStyle {
 
         }
 
-        // Normalize margin values. This is not totally valid, but in most cases 
+        // Normalize margin values. This is not totally valid, but in most cases
         // it is what the user wants to know.
         if(name.indexOf("margin") > -1 && ret == "auto") {
             return "0px";

@@ -169,6 +169,7 @@ public class RichTextArea extends AbstractField<String>
     /**
      * Clears the value of this field.
      */
+    @Override
     public void clear() {
         setValue("");
     }

@@ -27,7 +27,6 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.client.ui.UnknownExtensionConnector;
-import com.vaadin.client.ui.UnknownExtensionConnector;
 
 public class WidgetSet {
     /**

@@ -12,7 +12,8 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
-public class FirstTabNotVisibleWhenTabsheetNotClipped extends AbstractReindeerTestUI {
+public class FirstTabNotVisibleWhenTabsheetNotClipped
+        extends AbstractReindeerTestUI {
 
     private TabSheet.Tab firstNotClippedTab;
     private TabSheet.Tab firstClippedTab;

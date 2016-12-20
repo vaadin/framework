@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,7 +25,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
 
-public class EmptySpaceOnPageAfterExpandedComponent extends AbstractReindeerTestUI {
+public class EmptySpaceOnPageAfterExpandedComponent
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

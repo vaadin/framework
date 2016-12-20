@@ -20,6 +20,7 @@ public class GridElement extends com.vaadin.testbench.elements.GridElement {
      * @throws NoSuchElementException
      *             if the given details row is currently not open
      */
+    @Override
     public TestBenchElement getDetails(int rowIndex)
             throws NoSuchElementException {
         return getSubPart("#details[" + rowIndex + "]");

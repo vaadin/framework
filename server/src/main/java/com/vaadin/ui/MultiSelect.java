@@ -29,12 +29,12 @@ import com.vaadin.shared.Registration;
 
 /**
  * Multi selection component which allows to select and deselect multiple items.
- * 
+ *
  * @author Vaadin Ltd
- * 
+ *
  * @param <T>
  *            the type of the items to select
- * 
+ *
  * @since 8.0
  *
  */

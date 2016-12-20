@@ -47,6 +47,7 @@ import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.server.communication.PortletDummyRequestHandler;
 import com.vaadin.server.communication.PortletUIInitHandler;
+import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -359,8 +360,7 @@ public class VaadinPortlet extends GenericPortlet
                     Class<?> portletRequestClass = Class.forName(
                             "com.bea.portlet.container.PortletRequestImpl");
                     servletRequestMethod = portletRequestClass
-                            .getDeclaredMethod("getInternalRequest"
-                            );
+                            .getDeclaredMethod("getInternalRequest");
                     servletRequestMethod.setAccessible(true);
                 }
 

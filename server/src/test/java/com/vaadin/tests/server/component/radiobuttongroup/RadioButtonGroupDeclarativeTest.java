@@ -29,9 +29,9 @@ import com.vaadin.ui.RadioButtonGroup;
  * Only {@link RadioButtonGroup#setHtmlContentAllowed(boolean)} is tested here
  * explicitly. All other tests are in the super class (
  * {@link AbstractSingleSelectDeclarativeTest}).
- * 
+ *
  * @see AbstractSingleSelectDeclarativeTest
- * 
+ *
  * @author Vaadin Ltd
  *
  */

@@ -46,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  *      if registration is null
  *              register paintable as as handler for event
  *      return the registration
- * else 
+ * else
  *      if registration is not null
  *              remove the handler from paintable
  *      return null
@@ -149,7 +149,7 @@ public class EventHelper {
      * {@code handlerRegistration} and adds it via provided
      * {@code handlerProvider} if connector has event listener with
      * {@code eventIdentifier}.
-     * 
+     *
      * @param connector
      *            connector to check event listener presence
      * @param eventIdentifier

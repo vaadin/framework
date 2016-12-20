@@ -725,8 +725,7 @@ public class LayoutDependencyTree {
     public Collection<ComponentConnector> getMeasureTargets() {
         JsArrayString targetIds = getMeasureTargetsJsArray();
         int length = targetIds.length();
-        ArrayList<ComponentConnector> targets = new ArrayList<>(
-                length);
+        ArrayList<ComponentConnector> targets = new ArrayList<>(length);
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
         for (int i = 0; i < length; i++) {

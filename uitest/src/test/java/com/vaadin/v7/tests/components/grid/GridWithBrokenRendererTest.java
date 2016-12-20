@@ -18,8 +18,8 @@ package com.vaadin.v7.tests.components.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.tb3.SingleBrowserTest;
 import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class GridWithBrokenRendererTest extends SingleBrowserTest {
 

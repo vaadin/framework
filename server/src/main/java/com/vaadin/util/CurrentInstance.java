@@ -53,7 +53,8 @@ import com.vaadin.ui.UI;
  */
 public class CurrentInstance implements Serializable {
     private static final Object NULL_OBJECT = new Object();
-    private static final CurrentInstance CURRENT_INSTANCE_NULL = new CurrentInstance(NULL_OBJECT);
+    private static final CurrentInstance CURRENT_INSTANCE_NULL = new CurrentInstance(
+            NULL_OBJECT);
 
     private final WeakReference<Object> instance;
 

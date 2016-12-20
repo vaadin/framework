@@ -20,7 +20,7 @@ import java.util.Comparator;
 
 /**
  * A {@link Comparator} that is also {@link Serializable}.
- * 
+ *
  * @author Vaadin Ltd
  * @param <T>
  *            the type of objects that may be compared by this comparator
@@ -33,7 +33,7 @@ public interface SerializableComparator<T> extends Comparator<T>, Serializable {
     /**
      * Returns a {@link SerializableComparator} instance which delegates its
      * logic to the provided {@code comparator}.
-     * 
+     *
      * @param comparator
      *            comparator to convert
      * @param <T>

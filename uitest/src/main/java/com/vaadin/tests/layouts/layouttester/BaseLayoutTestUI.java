@@ -190,9 +190,9 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
         AbstractLayout curLayout = null;
         try {
             curLayout = layoutClass.newInstance();
-            if(curLayout instanceof AbstractOrderedLayout) {
-                ((AbstractOrderedLayout)curLayout).setMargin(false);
-                ((AbstractOrderedLayout)curLayout).setSpacing(false);
+            if (curLayout instanceof AbstractOrderedLayout) {
+                ((AbstractOrderedLayout) curLayout).setMargin(false);
+                ((AbstractOrderedLayout) curLayout).setSpacing(false);
             }
         } catch (InstantiationException e1) {
             // TODO Auto-generated catch block

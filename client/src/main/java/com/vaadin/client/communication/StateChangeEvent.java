@@ -251,7 +251,7 @@ public class StateChangeEvent
                 target = target[nextSegment];
             }
         }
-        // Not defined if we reach something that isn't an object 
+        // Not defined if we reach something that isn't an object
         return false;
     }-*/;
 

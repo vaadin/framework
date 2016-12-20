@@ -15,22 +15,22 @@
  */
 package com.vaadin.server;
 
-import com.vaadin.data.Binder;
-import com.vaadin.data.HasValue;
-
 import java.io.Serializable;
 import java.util.function.BiConsumer;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
+
 /**
  * The function to write the field value to the bean property
- * 
+ *
  * @see BiConsumer
  * @see Binder#bind(HasValue, SerializableFunction, Setter)
  * @param <BEAN>
  *            the type of the target bean
  * @param <FIELDVALUE>
  *            the field value type to be written to the bean
- * 
+ *
  * @since 8.0
  * @author Vaadin Ltd
  *
@@ -39,12 +39,13 @@ import java.util.function.BiConsumer;
 public interface Setter<BEAN, FIELDVALUE>
         extends BiConsumer<BEAN, FIELDVALUE>, Serializable {
 
-    /** Save value to the bean property
+    /**
+     * Save value to the bean property
      *
      * @param bean
-     *          the target bean
+     *            the target bean
      * @param fieldvalue
-     *          the field value to be written to the bean
+     *            the field value to be written to the bean
      */
     @Override
     void accept(BEAN bean, FIELDVALUE fieldvalue);

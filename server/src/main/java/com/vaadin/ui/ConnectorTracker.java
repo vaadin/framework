@@ -725,8 +725,7 @@ public class ConnectorTracker implements Serializable {
         @SuppressWarnings("unchecked")
         HashMap<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
                 .readObject();
-        diffStates = new HashMap<>(
-                stringDiffStates.size() * 2);
+        diffStates = new HashMap<>(stringDiffStates.size() * 2);
         for (ClientConnector key : stringDiffStates.keySet()) {
             try {
                 diffStates.put(key, Json.parse(stringDiffStates.get(key)));

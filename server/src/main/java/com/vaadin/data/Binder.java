@@ -34,9 +34,9 @@ import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.Setter;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.server.Setter;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractComponent;
@@ -171,8 +171,7 @@ public class Binder<BEAN> implements Serializable {
          * @throws IllegalStateException
          *             if {@code bind} has already been called on this binding
          */
-        public Binding<BEAN, TARGET> bind(
-                ValueProvider<BEAN, TARGET> getter,
+        public Binding<BEAN, TARGET> bind(ValueProvider<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter);
 
         /**
@@ -255,8 +254,8 @@ public class Binder<BEAN> implements Serializable {
          * which must match the current target data type of the binding, and a
          * model type, which can be any data type and becomes the new target
          * type of the binding. When invoking
-         * {@link #bind(ValueProvider, Setter)}, the
-         * target type of the binding must match the getter/setter types.
+         * {@link #bind(ValueProvider, Setter)}, the target type of the binding
+         * must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
          * property using an appropriate converter such as a
@@ -281,8 +280,8 @@ public class Binder<BEAN> implements Serializable {
          * type, which must match the current target data type of the binding,
          * and a model type, which can be any data type and becomes the new
          * target type of the binding. When invoking
-         * {@link #bind(ValueProvider, Setter)}, the
-         * target type of the binding must match the getter/setter types.
+         * {@link #bind(ValueProvider, Setter)}, the target type of the binding
+         * must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
          * property using appropriate functions such as:
@@ -316,8 +315,8 @@ public class Binder<BEAN> implements Serializable {
          * type, which must match the current target data type of the binding,
          * and a model type, which can be any data type and becomes the new
          * target type of the binding. When invoking
-         * {@link #bind(ValueProvider, Setter)}, the
-         * target type of the binding must match the getter/setter types.
+         * {@link #bind(ValueProvider, Setter)}, the target type of the binding
+         * must match the getter/setter types.
          * <p>
          * For instance, a {@code TextField} can be bound to an integer-typed
          * property using appropriate functions such as:
@@ -381,12 +380,13 @@ public class Binder<BEAN> implements Serializable {
          * default behavior).
          * <p>
          * This is just a shorthand for
-         * {@link #withValidationStatusHandler(BindingValidationStatusHandler)} method
-         * where the handler instance hides the {@code label} if there is no
-         * error and shows it with validation error message if validation fails.
-         * It means that it cannot be called after
-         * {@link #withValidationStatusHandler(BindingValidationStatusHandler)} method
-         * call or {@link #withValidationStatusHandler(BindingValidationStatusHandler)}
+         * {@link #withValidationStatusHandler(BindingValidationStatusHandler)}
+         * method where the handler instance hides the {@code label} if there is
+         * no error and shows it with validation error message if validation
+         * fails. It means that it cannot be called after
+         * {@link #withValidationStatusHandler(BindingValidationStatusHandler)}
+         * method call or
+         * {@link #withValidationStatusHandler(BindingValidationStatusHandler)}
          * after this method call.
          *
          * @see #withValidationStatusHandler(BindingValidationStatusHandler)
@@ -405,8 +405,8 @@ public class Binder<BEAN> implements Serializable {
         }
 
         /**
-         * Sets a {@link BindingValidationStatusHandler} to track validation status
-         * changes.
+         * Sets a {@link BindingValidationStatusHandler} to track validation
+         * status changes.
          * <p>
          * The validation state of each field is updated whenever the user
          * modifies the value of that field. The validation state is by default
@@ -532,8 +532,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public Binding<BEAN, TARGET> bind(
-                ValueProvider<BEAN, TARGET> getter,
+        public Binding<BEAN, TARGET> bind(ValueProvider<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter) {
             checkUnbound();
             Objects.requireNonNull(getter, "getter cannot be null");
@@ -575,9 +574,9 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(handler, "handler cannot be null");
             if (isStatusHandlerChanged) {
-                throw new IllegalStateException(
-                        "A " + BindingValidationStatusHandler.class.getSimpleName()
-                                + " has already been set");
+                throw new IllegalStateException("A "
+                        + BindingValidationStatusHandler.class.getSimpleName()
+                        + " has already been set");
             }
             isStatusHandlerChanged = true;
             statusHandler = handler;
@@ -735,7 +734,8 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Returns the field value run through all converters and validators,
-         * but doesn't pass the {@link BindingValidationStatus} to any status handler.
+         * but doesn't pass the {@link BindingValidationStatus} to any status
+         * handler.
          *
          * @return the result of the conversion
          */
@@ -755,7 +755,8 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Returns the field value run through all converters and validators,
-         * but doesn't pass the {@link BindingValidationStatus} to any status handler.
+         * but doesn't pass the {@link BindingValidationStatus} to any status
+         * handler.
          *
          * @return the validation status
          */
@@ -976,9 +977,8 @@ public class Binder<BEAN> implements Serializable {
     /**
      * Creates a new binding for the given field. The returned builder may be
      * further configured before invoking
-     * {@link BindingBuilder#bind(ValueProvider, Setter)}
-     * which completes the binding. Until {@code Binding.bind} is called, the
-     * binding has no effect.
+     * {@link BindingBuilder#bind(ValueProvider, Setter)} which completes the
+     * binding. Until {@code Binding.bind} is called, the binding has no effect.
      * <p>
      * <strong>Note:</strong> Not all {@link HasValue} implementations support
      * passing {@code null} as the value. For these the Binder will
@@ -1059,8 +1059,7 @@ public class Binder<BEAN> implements Serializable {
      * @return the newly created binding
      */
     public <FIELDVALUE> Binding<BEAN, FIELDVALUE> bind(
-            HasValue<FIELDVALUE> field,
-            ValueProvider<BEAN, FIELDVALUE> getter,
+            HasValue<FIELDVALUE> field, ValueProvider<BEAN, FIELDVALUE> getter,
             Setter<BEAN, FIELDVALUE> setter) {
         return forField(field).bind(getter, setter);
     }
@@ -1133,8 +1132,8 @@ public class Binder<BEAN> implements Serializable {
         setHasChanges(false);
         bindings.forEach(binding -> binding.initFieldValue(bean));
 
-        getValidationStatusHandler()
-                .statusChange(BinderValidationStatus.createUnresolvedStatus(this));
+        getValidationStatusHandler().statusChange(
+                BinderValidationStatus.createUnresolvedStatus(this));
         fireStatusChangeEvent(false);
     }
 
@@ -1208,8 +1207,8 @@ public class Binder<BEAN> implements Serializable {
         // First run fields level validation
         List<BindingValidationStatus<?>> bindingStatuses = validateBindings();
         // If no validation errors then update bean
-        if (bindingStatuses.stream().filter(BindingValidationStatus::isError).findAny()
-                .isPresent()) {
+        if (bindingStatuses.stream().filter(BindingValidationStatus::isError)
+                .findAny().isPresent()) {
             fireStatusChangeEvent(true);
             return new BinderValidationStatus<>(this, bindingStatuses,
                     Collections.emptyList());
@@ -1325,8 +1324,8 @@ public class Binder<BEAN> implements Serializable {
         List<BindingValidationStatus<?>> bindingStatuses = validateBindings();
 
         BinderValidationStatus<BEAN> validationStatus;
-        if (bindingStatuses.stream().filter(BindingValidationStatus::isError).findAny()
-                .isPresent() || bean == null) {
+        if (bindingStatuses.stream().filter(BindingValidationStatus::isError)
+                .findAny().isPresent() || bean == null) {
             validationStatus = new BinderValidationStatus<>(this,
                     bindingStatuses, Collections.emptyList());
         } else {
@@ -1371,11 +1370,10 @@ public class Binder<BEAN> implements Serializable {
      */
     private List<ValidationResult> validateBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        List<ValidationResult> results = Collections
-                .unmodifiableList(validators.stream()
-                        .map(validator -> validator.apply(bean,
-                                new ValueContext()))
-                        .collect(Collectors.toList()));
+        List<ValidationResult> results = Collections.unmodifiableList(validators
+                .stream()
+                .map(validator -> validator.apply(bean, new ValueContext()))
+                .collect(Collectors.toList()));
         return results;
     }
 
@@ -1472,9 +1470,7 @@ public class Binder<BEAN> implements Serializable {
      * <li>{@link #readBean(Object)} is called
      * <li>{@link #setBean(Object)} is called
      * <li>{@link #removeBean()} is called
-     * <li>
-     * {@link BindingBuilder#bind(ValueProvider, Setter)}
-     * is called
+     * <li>{@link BindingBuilder#bind(ValueProvider, Setter)} is called
      * <li>{@link Binder#validate()} or {@link Binding#validate()} is called
      * </ul>
      *
@@ -1552,7 +1548,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Default {@link BindingValidationStatusHandler} functional method implementation.
+     * Default {@link BindingValidationStatusHandler} functional method
+     * implementation.
      *
      * @param status
      *            the validation status
@@ -1673,8 +1670,8 @@ public class Binder<BEAN> implements Serializable {
         if (bean != null) {
             bean = null;
         }
-        getValidationStatusHandler()
-                .statusChange(BinderValidationStatus.createUnresolvedStatus(this));
+        getValidationStatusHandler().statusChange(
+                BinderValidationStatus.createUnresolvedStatus(this));
         if (fireStatusEvent) {
             fireStatusChangeEvent(false);
         }

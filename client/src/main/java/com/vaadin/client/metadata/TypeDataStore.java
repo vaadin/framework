@@ -354,7 +354,7 @@ public class TypeDataStore {
         }
         else {
             typeData[baseClassName] = {};
-        } 
+        }
     }-*/;
 
     private static native boolean hasGetter(JavaScriptObject typeData,

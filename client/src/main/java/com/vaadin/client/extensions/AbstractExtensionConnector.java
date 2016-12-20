@@ -21,7 +21,7 @@ import com.vaadin.client.ui.AbstractConnector;
 
 /**
  * An abstract implementation for extension connectors.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 7.0
  */

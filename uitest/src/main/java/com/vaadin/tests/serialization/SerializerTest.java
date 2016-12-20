@@ -177,9 +177,8 @@ public class SerializerTest extends AbstractReindeerTestUI {
         // new List[] { Arrays.asList(1, 2), Arrays.asList(3, 4) },
         // new List[] { Collections.singletonList(new SimpleTestBean(-1)) });
         rpc.sendSet(new HashSet<>(Arrays.asList(4, 7, 12)),
-                Collections.singleton((Connector) this),
-                new HashSet<>(Arrays.asList(new SimpleTestBean(1),
-                        new SimpleTestBean(2))));
+                Collections.singleton((Connector) this), new HashSet<>(Arrays
+                        .asList(new SimpleTestBean(1), new SimpleTestBean(2))));
         state.intSet = new HashSet<>(Arrays.asList(4, 7, 12));
         state.connectorSet = Collections.singleton((Connector) this);
 
@@ -403,11 +402,9 @@ public class SerializerTest extends AbstractReindeerTestUI {
                     Set<Connector> connectorSet, Set<SimpleTestBean> beanSet) {
                 List<Integer> intList = new ArrayList<>(intSet);
                 Collections.sort(intList);
-                List<Connector> connectorList = new ArrayList<>(
-                        connectorSet);
+                List<Connector> connectorList = new ArrayList<>(connectorSet);
                 Collections.sort(connectorList, new ConnectorComparator());
-                List<SimpleTestBean> beanList = new ArrayList<>(
-                        beanSet);
+                List<SimpleTestBean> beanList = new ArrayList<>(beanSet);
                 Collections.sort(beanList, new SimpleBeanComparator());
                 log.log("sendSet: " + intList + ", "
                         + connectorCollectionToString(connectorList) + ", "

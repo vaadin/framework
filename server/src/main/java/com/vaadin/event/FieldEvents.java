@@ -190,7 +190,7 @@ public interface FieldEvents {
     /**
      * Focus and blur server RPC implementation which fires focus or blur event
      * using a provided event handler.
-     * 
+     *
      * @author Vaadin Ltd
      *
      */
@@ -201,7 +201,7 @@ public interface FieldEvents {
 
         /**
          * Create a new decorator instance.
-         * 
+         *
          * @param component
          *            the source events component
          * @param eventHandler

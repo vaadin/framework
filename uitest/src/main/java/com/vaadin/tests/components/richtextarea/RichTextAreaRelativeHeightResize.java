@@ -19,8 +19,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.VerticalLayout;
 
 public class RichTextAreaRelativeHeightResize extends AbstractReindeerTestUI {
 

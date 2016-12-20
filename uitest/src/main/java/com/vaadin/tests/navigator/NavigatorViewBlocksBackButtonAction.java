@@ -13,7 +13,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class NavigatorViewBlocksBackButtonAction extends AbstractReindeerTestUI {
+public class NavigatorViewBlocksBackButtonAction
+        extends AbstractReindeerTestUI {
 
     private Navigator navigator;
 

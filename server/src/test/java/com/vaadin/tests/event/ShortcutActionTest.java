@@ -98,8 +98,7 @@ public class ShortcutActionTest {
                 && SharedUtil.equals(other.getIcon(), act.getIcon())
                 && act.getKeyCode() == other.getKeyCode()
                 && act.getModifiers().length == other.getModifiers().length) {
-            HashSet<Integer> thisSet = new HashSet<>(
-                    act.getModifiers().length);
+            HashSet<Integer> thisSet = new HashSet<>(act.getModifiers().length);
             // this is a bit tricky comparison, but there is no nice way of
             // making int[] into a Set
             for (int mod : act.getModifiers()) {

@@ -24,6 +24,7 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.connectors.grid.AbstractGridRendererConnector;
 
 import elemental.json.JsonValue;
 

@@ -586,6 +586,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         return testRead(design, expected, false);
     }
 
+    @Override
     @SuppressWarnings("rawtypes")
     public Grid<?> testRead(String design, Grid expected, boolean retestWrite) {
         return testRead(design, expected, retestWrite, false);

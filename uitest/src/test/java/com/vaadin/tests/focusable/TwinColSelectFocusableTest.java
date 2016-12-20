@@ -5,8 +5,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.tests.components.twincolselect.TwinColSelectTestUI;
 
-public class TwinColSelectFocusableTest
-        extends AbstractFocusableComponentTest {
+public class TwinColSelectFocusableTest extends AbstractFocusableComponentTest {
 
     @Override
     protected Class<?> getUIClass() {

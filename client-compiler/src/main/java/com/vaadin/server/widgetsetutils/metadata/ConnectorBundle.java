@@ -598,16 +598,14 @@ public class ConnectorBundle {
             Map<JMethod, Set<MethodAttribute>> typeData = methodAttributes
                     .get(type);
             if (typeData == null) {
-                typeData = new TreeMap<>(
-                        jMethodComparator);
+                typeData = new TreeMap<>(jMethodComparator);
                 methodAttributes.put(type, typeData);
             }
 
             Map<JMethod, Set<MethodAttribute>> methods = methodAttributes
                     .get(type);
             if (methods == null) {
-                methods = new TreeMap<>(
-                        jMethodComparator);
+                methods = new TreeMap<>(jMethodComparator);
                 methodAttributes.put(type, methods);
             }
 

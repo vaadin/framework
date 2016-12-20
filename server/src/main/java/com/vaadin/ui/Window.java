@@ -335,11 +335,11 @@ public class Window extends Panel
      * Window with position 0 is on the bottom, and window with greatest
      * position is at the top. If window has no position (it's not yet attached
      * or hidden) then position is {@code -1}.
-     * 
+     *
      * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
-     * 
+     *
      * @since 8.0.0
-     * 
+     *
      * @return window order position.
      */
     public int getOrderPosition() {
@@ -396,11 +396,11 @@ public class Window extends Panel
 
     /**
      * Event which is fired when the window order position is changed.
-     * 
+     *
      * @see UI.WindowOrderUpdateEvent
-     * 
+     *
      * @author Vaadin Ltd
-     * 
+     *
      */
     public static class WindowOrderChangeEvent extends Component.Event {
 
@@ -413,7 +413,7 @@ public class Window extends Panel
 
         /**
          * Gets the Window.
-         * 
+         *
          * @return the window
          */
         public Window getWindow() {
@@ -422,7 +422,7 @@ public class Window extends Panel
 
         /**
          * Gets the new window order position.
-         * 
+         *
          * @return the new order position
          */
         public int getOrder() {
@@ -432,7 +432,7 @@ public class Window extends Panel
 
     /**
      * An interface used for listening to Window order change events.
-     * 
+     *
      * @see UI.WindowOrderUpdateListener
      */
     @FunctionalInterface
@@ -448,7 +448,7 @@ public class Window extends Panel
          * {@link Window} whose order position is changed. Use
          * {@link WindowOrderChangeEvent#getOrder()} to get a new order
          * position.
-         * 
+         *
          * @param event
          */
         public void windowOrderChanged(WindowOrderChangeEvent event);
@@ -463,9 +463,9 @@ public class Window extends Panel
      * <p>
      * The other way to listen positions of all windows in UI is
      * {@link UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)}
-     * 
+     *
      * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
-     * 
+     *
      * @param listener
      *            the WindowModeChangeListener to add.
      */
@@ -478,8 +478,8 @@ public class Window extends Panel
     }
 
     protected void fireWindowOrderChange(Integer order) {
-        if (order == null || this.orderPosition != order) {
-            this.orderPosition = (order == null) ? -1 : order;
+        if (order == null || orderPosition != order) {
+            orderPosition = (order == null) ? -1 : order;
             fireEvent(new Window.WindowOrderChangeEvent(this,
                     getOrderPosition()));
         }

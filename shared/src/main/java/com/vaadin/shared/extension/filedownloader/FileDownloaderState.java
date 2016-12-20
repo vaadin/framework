@@ -19,7 +19,7 @@ import com.vaadin.shared.communication.SharedState;
 
 /**
  * Shared state for FileDownloader.
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @since 8.0

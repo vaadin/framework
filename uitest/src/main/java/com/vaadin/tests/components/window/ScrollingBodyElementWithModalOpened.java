@@ -25,7 +25,8 @@ import com.vaadin.ui.Window;
  * @since 7.1.9
  * @author Vaadin Ltd
  */
-public class ScrollingBodyElementWithModalOpened extends AbstractReindeerTestUI {
+public class ScrollingBodyElementWithModalOpened
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

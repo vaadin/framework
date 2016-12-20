@@ -198,7 +198,8 @@ public class BeanBinderTest
 
     private void assertInvalid(HasValue<?> field, String message) {
         BinderValidationStatus<?> status = binder.validate();
-        List<BindingValidationStatus<?>> errors = status.getFieldValidationErrors();
+        List<BindingValidationStatus<?>> errors = status
+                .getFieldValidationErrors();
         assertEquals(1, errors.size());
         assertSame(field, errors.get(0).getField());
         assertEquals(message, errors.get(0).getMessage().get());

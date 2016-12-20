@@ -19,7 +19,7 @@ import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
 
 /**
  * Shared state for {@code AbstractMultiSelect}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *

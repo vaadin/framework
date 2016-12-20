@@ -22,7 +22,7 @@ import com.vaadin.ui.NativeSelect;
  * Declarative support tests for {@link NativeSelect}. All tests are in the
  * super class ({@link AbstractSingleSelectDeclarativeTest}). This class
  * declares only tag name and native select class (test parameters).
- * 
+ *
  * @author Vaadin Ltd
  *
  */

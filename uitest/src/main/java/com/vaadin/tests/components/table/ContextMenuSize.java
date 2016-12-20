@@ -47,8 +47,7 @@ public class ContextMenuSize extends AbstractReindeerTestUI {
                         new Action("action4") };
             }
         });
-        BeanItemContainer<Bean> container = new BeanItemContainer<>(
-                Bean.class);
+        BeanItemContainer<Bean> container = new BeanItemContainer<>(Bean.class);
         container.addBean(new Bean());
         table.setContainerDataSource(container);
         addComponent(table);

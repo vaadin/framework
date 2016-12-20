@@ -49,8 +49,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
 
         getService().addSessionInitListener((SessionInitEvent event) -> {
             try {
-                onVaadinSessionStarted(event.getRequest(),
-                    event.getSession());
+                onVaadinSessionStarted(event.getRequest(), event.getSession());
             } catch (ServletException e) {
                 throw new ServiceException(e);
             }

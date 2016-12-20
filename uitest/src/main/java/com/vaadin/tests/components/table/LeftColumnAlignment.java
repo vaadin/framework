@@ -37,8 +37,7 @@ public class LeftColumnAlignment extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         final Table table = new Table();
 
-        BeanItemContainer<Bean> container = new BeanItemContainer<>(
-                Bean.class);
+        BeanItemContainer<Bean> container = new BeanItemContainer<>(Bean.class);
         Bean bean = new Bean();
         bean.setName("property");
         container.addBean(bean);

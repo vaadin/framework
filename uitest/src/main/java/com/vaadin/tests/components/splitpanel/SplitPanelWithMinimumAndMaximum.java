@@ -61,8 +61,7 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 .setSecondComponent(new Label("Max 550 px"));
         pixelPositionWithPixelLimitsHorizontal.setSplitPosition(400,
                 Sizeable.UNITS_PIXELS);
-        verticalLayout
-                .addComponent(pixelPositionWithPixelLimitsHorizontal);
+        verticalLayout.addComponent(pixelPositionWithPixelLimitsHorizontal);
 
         HorizontalSplitPanel percentagePositionWithPixelLimitsHorizontal = new HorizontalSplitPanel();
         percentagePositionWithPixelLimitsHorizontal.setMinSplitPosition(100,

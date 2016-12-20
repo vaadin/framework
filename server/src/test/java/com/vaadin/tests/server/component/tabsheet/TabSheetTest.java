@@ -7,6 +7,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Iterator;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -15,7 +16,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
-import org.junit.Assert;
 
 public class TabSheetTest {
 
