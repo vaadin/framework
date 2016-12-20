@@ -36,7 +36,7 @@ import com.vaadin.ui.AbstractDateField;
  * @author Vaadin Ltd
  *
  */
-public abstract class AbstarctDateFieldDeclarativeTest<T extends AbstractDateField>
+public abstract class AbstractDateFieldDeclarativeTest<T extends AbstractDateField>
         extends AbstractFieldDeclarativeTest<T, LocalDate> {
 
     @Override
