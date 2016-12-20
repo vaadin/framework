@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
@@ -134,7 +135,11 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
                 // checkbox is disabled
                 return;
             }
-
+            if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isIE11()) {
+                // Webkit does not focus non-text input elements on click
+                // (#11854)
+                source.setFocus(true);
+            }
             Boolean selected = source.getValue();
 
             JsonObject item = optionsToItems.get(source);
