@@ -17,15 +17,15 @@ package com.vaadin.shared.ui.grid;
 
 /**
  * The modes for height calculation that are supported by Grid (
- * {@link com.vaadin.client.ui.grid.Grid client} and
- * {@link com.vaadin.ui.components.grid.Grid server}) /
- * {@link com.vaadin.client.ui.grid.Escalator Escalator}.
+ * {@link com.vaadin.client.widgets.Grid client} and
+ * {@link com.vaadin.ui.Grid server}) /
+ * {@link com.vaadin.client.widgets.Escalator Escalator}.
  *
  * @since 7.4
  * @author Vaadin Ltd
- * @see com.vaadin.client.ui.grid.Grid#setHeightMode(HeightMode)
- * @see com.vaadin.ui.components.grid.Grid#setHeightMode(HeightMode)
- * @see com.vaadin.client.ui.grid.Escalator#setHeightMode(HeightMode)
+ * @see com.vaadin.client.widgets.Grid#setHeightMode(HeightMode)
+ * @see com.vaadin.ui.Grid#setHeightMode(HeightMode)
+ * @see com.vaadin.client.widgets.Escalator#setHeightMode(HeightMode)
  */
 public enum HeightMode {
     /**
