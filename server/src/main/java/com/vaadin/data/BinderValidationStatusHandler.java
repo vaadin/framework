@@ -21,7 +21,7 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Handler for {@link BinderValidationStatus} changes.
  * <p>
- * {{@link Binder#setValidationStatusHandler(BinderStatusHandler) Register} an
+ * {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler) Register} an
  * instance of this class to be able to customize validation status handling.
  * <p>
  * The default handler will show

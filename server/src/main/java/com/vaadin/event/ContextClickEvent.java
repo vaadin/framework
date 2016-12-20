@@ -85,7 +85,7 @@ public class ContextClickEvent extends ClickEvent {
          *
          * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
          *             the registration object returned from
-         *             {@link #addContextClickListener(FocusListener)}.
+         *             {@link #addContextClickListener(ContextClickListener)} .
          */
         @Deprecated
         public void removeContextClickListener(ContextClickListener listener);

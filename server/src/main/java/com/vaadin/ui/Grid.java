@@ -1070,9 +1070,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets strings describing back end properties to be used when sorting
-         * this column. This method is a short hand for
-         * {@link #setSortBuilder(Function)} that takes an array of strings and
-         * uses the same sorting direction for all of them.
+         * this column.
          *
          * @param properties
          *            the array of strings describing backend properties
@@ -1413,7 +1411,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * {@link #isHidable() hidable}.
          * <p>
          * The default value is <code>null</code>, and in that case the column's
-         * {@link #getHeaderCaption() header caption} is used.
+         * {@link #getCaption header caption} is used.
          * <p>
          * <em>NOTE:</em> setting this to empty string might cause the hiding
          * toggle to not render correctly.
@@ -2466,9 +2464,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Returns the footer section of this grid. The default footer contains a
-     * single row, set as the {@linkplain #setDefaultFooterRow(FooterRow)
-     * default row}.
+     * Returns the footer section of this grid.
      *
      * @return the footer section
      */
@@ -2758,7 +2754,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return a registration handle to remove the listener
      * @throws UnsupportedOperationException
      *             if selection has been disabled with
-     *             {@link SelectionMode.NONE}
+     *             {@link SelectionMode#NONE}
      */
     public Registration addSelectionListener(SelectionListener<T> listener)
             throws UnsupportedOperationException {

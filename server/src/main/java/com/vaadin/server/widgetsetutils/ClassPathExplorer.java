@@ -476,7 +476,7 @@ public class ClassPathExplorer {
     /**
      * Add a jar file to locations - see {@link #classpathLocations}.
      *
-     * @param name
+     * @param file
      * @param locations
      */
     private static void includeJar(File file, Map<String, URL> locations) {

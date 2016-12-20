@@ -536,7 +536,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
 
     /**
      * Remove a click listener from the component. The listener should earlier
-     * have been added using {@link #addListener(ClickListener)}.
+     * have been added using {@link #addClickListener(ClickListener)}.
      *
      * @param listener
      *            The listener to remove

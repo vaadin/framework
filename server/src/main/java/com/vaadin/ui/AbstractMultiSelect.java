@@ -237,7 +237,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
      * multiselect component.
      *
      * @return the item enabled provider, not {@code null}
-     * @see #setItemEnabledProvider(Predicate)
+     * @see #setItemEnabledProvider(SerializablePredicate)
      */
     protected SerializablePredicate<T> getItemEnabledProvider() {
         return itemEnabledProvider;

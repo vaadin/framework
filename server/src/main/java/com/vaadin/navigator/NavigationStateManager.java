@@ -47,7 +47,7 @@ public interface NavigationStateManager extends Serializable {
      * <p>
      * This method should be only called by a Navigator.
      *
-     * @param fragment
+     * @param state
      *            new view and parameter string, not null
      */
     public void setState(String state);
