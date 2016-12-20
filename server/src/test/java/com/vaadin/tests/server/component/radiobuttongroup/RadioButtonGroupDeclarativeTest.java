@@ -63,7 +63,7 @@ public class RadioButtonGroupDeclarativeTest
         group.setHtmlContentAllowed(true);
         group.setItemCaptionGenerator(item -> generateCaption(item, items));
 
-        testRead(design, group);
+        testRead(design, group, true);
         testWrite(design, group, true);
     }
 

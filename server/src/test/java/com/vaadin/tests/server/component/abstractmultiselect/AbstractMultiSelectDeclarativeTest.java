@@ -67,14 +67,13 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
         component.select("foobar");
         component.setItemCaptionGenerator(item -> item + "1");
 
-        DesignContext context = readComponentAndCompare(design, component);
+        DesignContext context = readComponentAndCompare(design, component,
+                ctxt -> configureContext(type, attribute, component, ctxt));
         Assert.assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();
-        context.setCustomAttribute(component, attribute, type);
-        context.setShouldWriteDataDelegate(
-                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        configureContext(type, attribute, component, context);
         testWrite(component, design, context);
     }
 
@@ -97,14 +96,13 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
         component.setValue(new HashSet<>(Arrays.asList("foo", "foobar")));
         component.setItemCaptionGenerator(item -> item + "1");
 
-        DesignContext context = readComponentAndCompare(design, component);
+        DesignContext context = readComponentAndCompare(design, component,
+                ctxt -> configureContext(type, attribute, component, ctxt));
         Assert.assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();
-        context.setCustomAttribute(component, attribute, type);
-        context.setShouldWriteDataDelegate(
-                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+        configureContext(type, attribute, component, context);
         testWrite(component, design, context);
     }
 
@@ -125,8 +123,15 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
         component.setItems(items);
         component.setReadOnly(true);
 
-        testRead(design, component);
+        testRead(design, component, true);
         testWrite(design, component, true);
+    }
+
+    private void configureContext(String type, String attribute, T component,
+            DesignContext context) {
+        context.setCustomAttribute(component, attribute, type);
+        context.setShouldWriteDataDelegate(
+                DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
     }
 
 }

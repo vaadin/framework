@@ -20,20 +20,25 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Listing;
+import com.vaadin.data.provider.Query;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.tests.design.DeclarativeTestBaseBase;
 import com.vaadin.tests.server.component.abstractcomponent.AbstractComponentDeclarativeTestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.IconGenerator;
 import com.vaadin.ui.ItemCaptionGenerator;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * {@link AbstractListing} component declarative test.
@@ -142,6 +147,33 @@ public abstract class AbstractListingDeclarativeTest<T extends AbstractListing &
             }
         }
         return super.acceptProperty(clazz, readMethod, writeMethod);
+    }
+
+    public DesignContext readComponentAndCompare(String design, T expected,
+            Consumer<DesignContext> configureContext) {
+        DesignContext context = super.readComponentAndCompare(design, expected);
+        configureContext.accept(context);
+        T read = (T) context.getRootComponent();
+        testReadData(design, expected, read, context);
+        return context;
+    }
+
+    public T testRead(String design, T expected, boolean testWrite) {
+        T read = testRead(design, expected);
+        if (testWrite) {
+            DesignContext context = new DesignContext();
+            context.setShouldWriteDataDelegate(
+                    DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
+            testReadData(design, expected, read, context);
+        }
+        return read;
+    }
+
+    private void testReadData(String design, T expected, T read,
+            DesignContext context) {
+        Assert.assertEquals(read.getDataProvider().size(new Query<>()),
+                expected.getDataProvider().size(new Query<>()));
+        testWrite(read, design, context);
     }
 
     private Method getIconGeneratorMethod(T component)
