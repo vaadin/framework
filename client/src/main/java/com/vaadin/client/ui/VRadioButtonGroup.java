@@ -152,7 +152,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 // radiobutton is disabled
                 return;
             }
-            if (BrowserInfo.get().isWebkit()) {
+            if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isIE11()) {
                 // Webkit does not focus non-text input elements on click
                 // (#11854)
                 source.setFocus(true);
