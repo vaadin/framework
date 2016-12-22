@@ -532,6 +532,11 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         possibleInputError = false;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 7.7.5
+     */
     @Override
     public boolean isWorkPending() {
         return scheduled;

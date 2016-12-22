@@ -85,9 +85,9 @@ import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.v7.data.sort.Sort;
 import com.vaadin.v7.data.sort.SortOrder;
-import com.vaadin.v7.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
@@ -97,9 +97,9 @@ import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.v7.event.SelectionEvent;
-import com.vaadin.v7.event.SortEvent;
 import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.event.SelectionEvent.SelectionNotifier;
+import com.vaadin.v7.event.SortEvent;
 import com.vaadin.v7.event.SortEvent.SortListener;
 import com.vaadin.v7.event.SortEvent.SortNotifier;
 import com.vaadin.v7.server.communication.data.DataGenerator;
@@ -5328,6 +5328,7 @@ public class Grid extends AbstractComponent
      *
      * @param mode
      *            a ColumnResizeMode value
+     * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
         getState().columnResizeMode = mode;
@@ -5338,6 +5339,7 @@ public class Grid extends AbstractComponent
      * {@link ColumnResizeMode#ANIMATED}.
      *
      * @return a ColumnResizeMode value
+     * @since 7.7.5
      */
     public ColumnResizeMode getColumnResizeMode() {
         return getState(false).columnResizeMode;

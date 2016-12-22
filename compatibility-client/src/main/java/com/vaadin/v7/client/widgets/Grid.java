@@ -6090,6 +6090,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param mode
      *            a ColumnResizeMode value
+     * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
         columnResizeMode = mode;
@@ -6100,6 +6101,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * {@link ColumnResizeMode.ANIMATED}.
      *
      * @return a ColumnResizeMode value
+     * @since 7.7.5
      */
     public ColumnResizeMode getColumnResizeMode() {
         return columnResizeMode;

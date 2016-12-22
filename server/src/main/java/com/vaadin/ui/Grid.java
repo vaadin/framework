@@ -2851,6 +2851,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param mode
      *            a ColumnResizeMode value
+     * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
         getState().columnResizeMode = mode;
@@ -2861,6 +2862,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * {@link ColumnResizeMode#ANIMATED}.
      *
      * @return a ColumnResizeMode value
+     * @since 7.7.5
      */
     public ColumnResizeMode getColumnResizeMode() {
         return getState(false).columnResizeMode;

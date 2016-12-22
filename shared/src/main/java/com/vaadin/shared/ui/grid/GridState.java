@@ -101,6 +101,8 @@ public class GridState extends AbstractSingleSelectState {
 
     /**
      * Column resize mode in grid.
+     * 
+     * @since 7.7.5
      */
     public ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
 
