@@ -14,9 +14,6 @@
  * the License.
  */
 
-/**
- *
- */
 package com.vaadin.shared.ui.ui;
 
 import com.vaadin.shared.Connector;

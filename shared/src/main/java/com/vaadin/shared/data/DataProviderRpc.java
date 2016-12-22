@@ -52,7 +52,7 @@ public interface DataProviderRpc extends ClientRpc {
      * @param rowDataJson
      *            the updated row data
      * @see com.vaadin.shared.ui.grid.GridState#JSONKEY_DATA
-     * @see com.vaadin.ui.components.grid.Renderer#encode(Object)
+     * @see com.vaadin.ui.Renderer#encode(Object)
      */
     @NoLayout
     public void setRowData(int firstRowIndex, JsonArray rowDataJson);

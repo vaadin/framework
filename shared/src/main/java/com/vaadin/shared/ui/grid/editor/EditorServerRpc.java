@@ -28,7 +28,7 @@ public interface EditorServerRpc extends ServerRpc {
     /**
      * Asks the server to open the editor and bind data to it. When a bind
      * request is sent, it must be acknowledged with a
-     * {@link EditorClientRpc#confirmBind() confirm call} before the client can
+     * {@link EditorClientRpc#confirmBind(boolean) confirm call} before the client can
      * open the editor.
      *
      * @param key
@@ -39,7 +39,7 @@ public interface EditorServerRpc extends ServerRpc {
     /**
      * Asks the server to save unsaved changes in the editor to the bean. When a
      * save request is sent, it must be acknowledged with a
-     * {@link EditorClientRpc#confirmSave() confirm call}.
+     * {@link EditorClientRpc#confirmSave(boolean) confirm call}.
      */
     void save();
 
