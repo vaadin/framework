@@ -5799,11 +5799,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         public void onStart() {
                             dragStarted();
                             dragger.getElement().appendChild(resizeElement);
-                            resizeElement.getStyle()
-                                    .setLeft((dragger.getElement()
-                                            .getOffsetWidth()
+                            resizeElement.getStyle().setLeft(
+                                    (dragger.getElement().getOffsetWidth()
                                             - resizeElement.getOffsetWidth())
-                                            * .5, Unit.PX);
+                                            * .5,
+                                    Unit.PX);
                             resizeElement.getStyle().setHeight(
                                     col.grid.getOffsetHeight(), Unit.PX);
                         }
@@ -6850,7 +6850,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return editor;
     }
 
-    protected Escalator getEscalator() {
+    /**
+     * Gets the {@link Escalator} used by this Grid instnace.
+     * 
+     * @return the escalator instance, never <code>null</code>
+     */
+    public Escalator getEscalator() {
         return escalator;
     }
 
