@@ -4138,6 +4138,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
     /** A set keeping track of the indices of all currently open details */
     private Set<Integer> visibleDetails = new HashSet<Integer>();
+    /** A set of indices of details to reopen after detach and on attach */
+    private Set<Integer> reattachVisibleDetails = new HashSet<Integer>();
 
     private boolean columnReorderingAllowed;
 
@@ -8763,11 +8765,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         // Grid was just attached to DOM. Column widths should be calculated.
         recalculateColumnWidths();
+        Set<Integer> details = new HashSet<Integer>(reattachVisibleDetails);
+        for (int row : details) {
+            setDetailsVisible(row, true);
+        }
+        reattachVisibleDetails = new HashSet<Integer>();
     }
 
     @Override
     protected void onDetach() {
         Set<Integer> details = new HashSet<Integer>(visibleDetails);
+        reattachVisibleDetails.addAll(details);
         for (int row : details) {
             setDetailsVisible(row, false);
         }
