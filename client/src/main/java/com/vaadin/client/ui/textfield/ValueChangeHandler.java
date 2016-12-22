@@ -134,6 +134,14 @@ public class ValueChangeHandler {
         this.valueChangeTimeout = valueChangeTimeout;
     }
 
+    /**
+     * Checks whether the value change is scheduled for sending.
+     * 
+     * @since 8.0.0
+     * 
+     * @return {@code true} if value change is scheduled for sending,
+     *         {@code false} otherwise
+     */
     public boolean isScheduled() {
         return scheduled;
     }
