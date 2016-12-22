@@ -14,7 +14,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-test-widget-set-testutil</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -32,12 +31,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
             </plugin>
         </plugins>
     </build>

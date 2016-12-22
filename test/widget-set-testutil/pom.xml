@@ -2,18 +2,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-test</artifactId>
-        <version>8.0-SNAPSHOT</version>
-    </parent>
+    <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test-widget-set-testutil</artifactId>
+    <version>8.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
+    <properties>
+        <vaadin.version>8.0-SNAPSHOT</vaadin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-bom</artifactId>
+                <version>${vaadin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench</artifactId>
+            <artifactId>vaadin-server</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -23,26 +41,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <!-- Disable jetty-plugin -->
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
-                <executions>
-                    <execution>
-                        <id>start-jetty</id>
-                        <phase />
-                    </execution>
-                    <execution>
-                        <id>stop-jetty</id>
-                        <phase />
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
