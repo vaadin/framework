@@ -112,9 +112,9 @@ def checkStagingContents(url, allowedArtifacts):
 
 def getStagingContentsHtml(repoUrl, allowedArtifacts, name):
     if checkStagingContents(repoUrl, allowedArtifacts):
-        return createTableRow(traffic_light.format(color="green"), "No extra artifacts found in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
+        return createTableRow(traffic_light.format(color="green"), "Expected artifacts found in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
     else:
-        return createTableRow(traffic_light.format(color="red"), "Extra artifacts found in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
+        return createTableRow(traffic_light.format(color="red"), "Extraneous or missing artifacts in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
 
 def completeArtifactName(artifactId, version):
     return 'com/vaadin/' + artifactId + '/' + version
@@ -125,7 +125,7 @@ def completeArtifactNames(artifactIds, version):
 
 allowedPluginArtifacts = completeArtifactNames([ 'vaadin-maven-plugin' ], args.version)
 allowedArchetypeArtifacts = completeArtifactNames([ 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet' ], args.version)
-allowedFrameworkArtifacts = completeArtifactNames([ 'vaadin-root', 'vaadin-bom', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes' ], args.version)
+allowedFrameworkArtifacts = completeArtifactNames([ 'vaadin-root', 'vaadin-bom', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes', 'vaadin-testbench-api' ], args.version)
 
 content = "<html><head></head><body><table>"
 traffic_light = "<svg width=\"20px\" height=\"20px\" style=\"padding-right:5px\"><circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"{color}\"/></svg>"
@@ -168,7 +168,7 @@ content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/iss
 
 content += createTableRow("", "<h2>Preparations before publishing</h2>")
 # close GitHub milestone
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a>"
+content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a>")
 # link to build dependencies tab to initiate publish step
 content += createTableRow("", "<a href=\"http://{}/viewLog.html?buildId={}&buildTypeId={}&tab=dependencies\"><h2>Start Publish Release from dependencies tab</h2></a>".format(args.teamcityUrl, args.buildId, args.buildTypeId))
 
