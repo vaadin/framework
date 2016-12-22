@@ -796,8 +796,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param renderer
          *            the type of value
          */
-        protected Column(String caption,
-                ValueProvider<T, ? extends V> valueProvider,
+        protected Column(ValueProvider<T, ? extends V> valueProvider,
                 Renderer<V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
@@ -1882,8 +1881,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             ValueProvider<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
-        Column<T, V> column = new Column<>("Column " + generatedIdentifier,
-                valueProvider, renderer);
+        Column<T, V> column = new Column<>(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
         return column;
     }
@@ -3023,7 +3021,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
             DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-            Column<T, String> column = new Column<>("", provider,
+            Column<T, String> column = new Column<>(provider,
                     new HtmlRenderer());
             addColumn(getGeneratedIdentifier(), column);
             if (id != null) {
