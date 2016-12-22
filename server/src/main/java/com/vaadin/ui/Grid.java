@@ -1411,7 +1411,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * {@link #isHidable() hidable}.
          * <p>
          * The default value is <code>null</code>, and in that case the column's
-         * {@link #getCaption header caption} is used.
+         * {@link #getCaption() header caption} is used.
          * <p>
          * <em>NOTE:</em> setting this to empty string might cause the hiding
          * toggle to not render correctly.

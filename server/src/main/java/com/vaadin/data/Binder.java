@@ -110,7 +110,7 @@ public class Binder<BEAN> implements Serializable {
          * instance representing the outcome of the validation.
          *
          * @see Binder#validate()
-         * @see Validator#apply
+         * @see Validator#apply(Object, ValueContext)
          *
          * @return the validation result.
          */
