@@ -135,6 +135,11 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
         sendValueChange();
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 8.0.0
+     */
     @Override
     public boolean isWorkPending() {
         return getValueChangeHandler().isScheduled();
