@@ -87,6 +87,7 @@ public class DragHandle {
      *            later) both to provide the "-dragged" style and to make sure
      *            that the drag handle can be properly styled (it's otherwise
      *            invisible)
+     * @since 7.7.5
      */
     public DragHandle(String baseName) {
         this(baseName, null);
@@ -185,6 +186,7 @@ public class DragHandle {
      *
      * @param dragHandleCallback
      *            the callback object to use (can be null)
+     * @since 7.7.5
      */
     public void setCallback(DragHandleCallback dragHandleCallback) {
         userCallback = dragHandleCallback;
