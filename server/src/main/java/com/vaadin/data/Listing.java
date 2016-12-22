@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.provider.BackEndDataProvider;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.ui.Component;
 
 /**
  * A generic interface for components that show a list of data.
@@ -34,7 +35,8 @@ import com.vaadin.data.provider.DataProvider;
  *            provider and filter
  * @since 8.0
  */
-public interface Listing<T, D extends DataProvider<T, ?>> extends Serializable {
+public interface Listing<T, D extends DataProvider<T, ?>>
+        extends Component, Serializable {
 
     /**
      * Returns the source of data items used by this listing.
