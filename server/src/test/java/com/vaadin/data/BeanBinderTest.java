@@ -61,20 +61,21 @@ public class BeanBinderTest
     public void bindInstanceFields_parameters_type_erased() {
         BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
         TestClass testClass = new TestClass();
-        otherBinder.forField(testClass.number).withConverter(
-                string -> Integer.parseInt(string),
-                integer -> Integer.toString(integer));
+        otherBinder.forField(testClass.number)
+                .withConverter(string -> Integer.parseInt(string),
+                        integer -> Integer.toString(integer))
+                .bind("number");
 
         // Should correctly bind the enum field without throwing
         otherBinder.bindInstanceFields(testClass);
     }
 
     @Test
-    public void bindInstanceFields_automatically_binds_incomplete_custom_bindings() {
+    public void bindInstanceFields_automatically_binds_incomplete_forMemberField_bindings() {
         BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
         TestClass testClass = new TestClass();
 
-        otherBinder.forField(testClass.number).withConverter(
+        otherBinder.forMemberField(testClass.number).withConverter(
                 string -> Integer.parseInt(string),
                 integer -> Integer.toString(integer));
         otherBinder.bindInstanceFields(testClass);
@@ -83,6 +84,20 @@ public class BeanBinderTest
         otherBinder.setBean(bean);
         testClass.number.setValue("50");
         assertEquals(50, bean.number);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void bindInstanceFields_does_not_automatically_bind_incomplete_forField_bindings() {
+        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        TestClass testClass = new TestClass();
+
+        otherBinder.forField(testClass.number).withConverter(
+                string -> Integer.parseInt(string),
+                integer -> Integer.toString(integer));
+
+        // Should throw an IllegalStateException since the binding for number is
+        // not completed with bind
+        otherBinder.bindInstanceFields(testClass);
     }
 
     @Test
@@ -230,7 +245,8 @@ public class BeanBinderTest
 
     private void assertInvalid(HasValue<?> field, String message) {
         BinderValidationStatus<?> status = binder.validate();
-        List<BindingValidationStatus<?>> errors = status.getFieldValidationErrors();
+        List<BindingValidationStatus<?>> errors = status
+                .getFieldValidationErrors();
         assertEquals(1, errors.size());
         assertSame(field, errors.get(0).getField());
         assertEquals(message, errors.get(0).getMessage().get());

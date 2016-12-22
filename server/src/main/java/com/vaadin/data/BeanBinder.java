@@ -162,8 +162,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
          * @throws IllegalArgumentException
          *             if the property has no accessible getter
          *
-         * @see BindingBuilder#bind(ValueProvider,
-         *      Setter)
+         * @see BindingBuilder#bind(ValueProvider, Setter)
          */
         public Binding<BEAN, TARGET> bind(String propertyName);
     }
@@ -256,14 +255,13 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                                 value));
             } finally {
                 getBinder().boundProperties.add(propertyName);
-                getBinder().tentativeBindings.remove(getField());
+                getBinder().incompleteMemberFieldBindings.remove(getField());
             }
         }
 
         @Override
         public Binding<BEAN, TARGET> bind(ValueProvider<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter) {
-            getBinder().tentativeBindings.remove(getField());
             return super.bind(getter, setter);
         }
 
@@ -327,8 +325,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     }
 
     private final Class<? extends BEAN> beanType;
-    private final Set<String> boundProperties;
-    private final Map<HasValue<?>, BeanBindingImpl<BEAN, ?, ?>> tentativeBindings;
+    private final Set<String> boundProperties = new HashSet<>();
+    private final Map<HasValue<?>, BeanBindingImpl<BEAN, ?, ?>> incompleteMemberFieldBindings = new IdentityHashMap<>();
 
     /**
      * Creates a new {@code BeanBinder} supporting beans of the given type.
@@ -339,14 +337,30 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     public BeanBinder(Class<? extends BEAN> beanType) {
         BeanUtil.checkBeanValidationAvailable();
         this.beanType = beanType;
-        boundProperties = new HashSet<>();
-        tentativeBindings = new IdentityHashMap<>();
     }
 
     @Override
     public <FIELDVALUE> BeanBindingBuilder<BEAN, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
         return (BeanBindingBuilder<BEAN, FIELDVALUE>) super.forField(field);
+    }
+
+    /**
+     * Creates a new binding for the given field. The returned builder may be
+     * further configured before invoking {@link #bindInstanceFields(Object)}.
+     * No explicit call to {@link BeanBindingBuilder#bind(String)} is needed to
+     * complete this binding.
+     *
+     * @param <FIELDVALUE>
+     *            the value type of the field
+     * @param field
+     *            the field to be bound, not null
+     * @return the new binding builder
+     */
+    public <FIELDVALUE> BeanBindingBuilder<BEAN, FIELDVALUE> forMemberField(
+            HasValue<FIELDVALUE> field) {
+        incompleteMemberFieldBindings.put(field, null);
+        return forField(field);
     }
 
     /**
@@ -394,7 +408,11 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         Objects.requireNonNull(converter, "converter cannot be null");
         BeanBindingImpl<BEAN, FIELDVALUE, TARGET> newBinding = new BeanBindingImpl<>(
                 this, field, converter, handler);
-        tentativeBindings.put(field, newBinding);
+        if (incompleteMemberFieldBindings.containsKey(field)) {
+            incompleteMemberFieldBindings.put(field, newBinding);
+        } else {
+            getIncompleteBindings().put(field, newBinding);
+        }
         return newBinding;
     }
 
@@ -453,11 +471,12 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                                 memberField, property, type)));
     }
 
-    private BeanBindingImpl<BEAN, ?, ?> getTentativeBinding(Field memberField,
-            Object objectWithMemberFields) {
+    @SuppressWarnings("unchecked")
+    private BeanBindingImpl<BEAN, ?, ?> getIncompleteMemberFieldBinding(
+            Field memberField, Object objectWithMemberFields) {
         memberField.setAccessible(true);
         try {
-            return tentativeBindings
+            return incompleteMemberFieldBindings
                     .get(memberField.get(objectWithMemberFields));
         } catch (IllegalArgumentException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -596,7 +615,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             return;
         }
 
-        BeanBindingImpl<BEAN, ?, ?> tentativeBinding = getTentativeBinding(
+        BeanBindingImpl<BEAN, ?, ?> tentativeBinding = getIncompleteMemberFieldBinding(
                 field, objectWithMemberFields);
         if (tentativeBinding != null) {
             tentativeBinding.bind(propertyName);
