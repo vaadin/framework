@@ -788,8 +788,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private String userId;
 
         /**
-         * Constructs a new Column configuration with given header caption,
-         * renderer and value provider.
+         * Constructs a new Column configuration with given renderer and
+         * value provider.
          *
          * @param valueProvider
          *            the function to get values from items
