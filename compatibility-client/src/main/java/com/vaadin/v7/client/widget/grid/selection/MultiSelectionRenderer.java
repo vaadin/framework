@@ -26,6 +26,7 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -45,6 +46,7 @@ import com.vaadin.v7.client.widget.grid.RendererCellReference;
 import com.vaadin.v7.client.widget.grid.events.GridEnabledEvent;
 import com.vaadin.v7.client.widget.grid.events.GridEnabledHandler;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.Multi.Batched;
+import com.vaadin.v7.client.widgets.Escalator.AbstractRowContainer;
 import com.vaadin.v7.client.widgets.Grid;
 
 /**
@@ -319,7 +321,7 @@ public class MultiSelectionRenderer<T>
 
             int constrainedPageY = Math.max(bodyAbsoluteTop,
                     Math.min(bodyAbsoluteBottom, pageY));
-            int logicalRow = getLogicalRowIndex(WidgetUtil
+            int logicalRow = getLogicalRowIndex(grid, WidgetUtil
                     .getElementFromPoint(initialPageX, constrainedPageY));
 
             int incrementOrDecrement = (logicalRow > lastModifiedLogicalRow) ? 1
@@ -586,8 +588,6 @@ public class MultiSelectionRenderer<T>
         }
     }
 
-    private static final String LOGICAL_ROW_PROPERTY_INT = "vEscalatorLogicalRow";
-
     private final Grid<T> grid;
     private HandlerRegistration nativePreviewHandlerRegistration;
 
@@ -633,8 +633,6 @@ public class MultiSelectionRenderer<T>
             CheckBox checkBox) {
         checkBox.setValue(data, false);
         checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
-        checkBox.getElement().setPropertyInt(LOGICAL_ROW_PROPERTY_INT,
-                cell.getRowIndex());
     }
 
     @Override
@@ -687,7 +685,7 @@ public class MultiSelectionRenderer<T>
         }
     }
 
-    private int getLogicalRowIndex(final Element target) {
+    private int getLogicalRowIndex(Grid<T> grid, final Element target) {
         if (target == null) {
             return -1;
         }
@@ -707,7 +705,8 @@ public class MultiSelectionRenderer<T>
                 final Element checkbox = td.getFirstChildElement();
                 assert checkbox != null : "Checkbox has disappeared";
 
-                return checkbox.getPropertyInt(LOGICAL_ROW_PROPERTY_INT);
+                return ((AbstractRowContainer) grid.getEscalator().getBody())
+                        .getLogicalRowIndex((TableRowElement) tr);
             }
             tr = tr.getNextSiblingElement();
         }

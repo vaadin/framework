@@ -6831,7 +6831,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return editor;
     }
 
-    protected Escalator getEscalator() {
+    /**
+     * Gets the {@link Escalator} used by this Grid instnace.
+     *
+     * @return the escalator instance, never <code>null</code>
+     */
+    public Escalator getEscalator() {
         return escalator;
     }
 
