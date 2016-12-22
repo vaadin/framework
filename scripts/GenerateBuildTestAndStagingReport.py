@@ -168,7 +168,7 @@ content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/iss
 
 content += createTableRow("", "<h2>Preparations before publishing</h2>")
 # close GitHub milestone
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a>"
+content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a>")
 # link to build dependencies tab to initiate publish step
 content += createTableRow("", "<a href=\"http://{}/viewLog.html?buildId={}&buildTypeId={}&tab=dependencies\"><h2>Start Publish Release from dependencies tab</h2></a>".format(args.teamcityUrl, args.buildId, args.buildTypeId))
 
