@@ -16,23 +16,15 @@
             <artifactId>vaadin-test-widget-set-testutil</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-test-widget-set-testutil</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
         <!-- Included to ensure AppWidgetset is an option -->
         <dependency>
-            <groupId>com.vaadin.addon</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-context-menu</artifactId>
-            <version>0.7.4</version>
+            <version>${contextmenu.version}</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client-compiled</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
     </dependencies>
@@ -42,6 +34,7 @@
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
+                <version>${vaadin.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -51,6 +44,12 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
