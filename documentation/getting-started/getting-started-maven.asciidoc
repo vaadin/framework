@@ -16,8 +16,6 @@ You can then import such a project in your IDE.
 In addition to regular Maven, you can use any Maven-compatible build or
 dependency management system, such as Ivy or Gradle. For Gradle, see the
 link:https://github.com/johndevs/gradle-vaadin-plugin[Gradle Vaadin Plugin].
-Vaadin Plugin for Eclipse uses Ivy for resolving dependencies in Vaadin
-projects, and it should provide you with the basic Ivy configuration.
 
 For an interactive guide, see the instructions at link:https://vaadin.com/maven[vaadin.com/maven].
 It automatically generates you the command to create a new project based on archetype selection.
@@ -50,8 +48,7 @@ See the list of available archetypes in <<dummy/../../../framework/getting-start
 
 [parameter]#archetypeVersion#::
 Version of the archetype to use.
-This should be [literal]#++LATEST++# for normal Vaadin releases.
-For prerelease versions it should be the exact version number, such as [literal]#++7.6.4++#.
+For prerelease versions it should be the exact version number, such as [literal]#++8.0.0.beta2++#.
 
 [parameter]#groupId#:: A Maven group ID for your project. It is normally your organization domain name
 in reverse order, such as com.example. The group ID is also used as a prefix for
@@ -71,14 +68,7 @@ version numbering format.
 
 
 
-Creating a project can take a while as Maven fetches all the dependencies. The
-created project structure is shown in
-<<figure.getting-started.maven.archetype.created>>.
-
-[[figure.getting-started.maven.archetype.created]]
-.A New Vaadin Project with Maven
-image::img/maven-project-created.png[scaledwidth=60%]
-
+Creating a project can take a while as Maven fetches all the dependencies.
 
 [[getting-started.maven.compiling]]
 == Compiling and Running the Application
