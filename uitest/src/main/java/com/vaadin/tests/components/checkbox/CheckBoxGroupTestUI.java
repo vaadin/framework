@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.checkbox;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.tests.components.abstractlisting.AbstractMultiSelectTestUI;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.IconGenerator;
@@ -60,7 +60,7 @@ public class CheckBoxGroupTestUI
             boolean activate, Object data) {
         if (activate) {
             group.setItemIconGenerator(
-                    item -> FontAwesome.values()[getIndex(item) + 1]);
+                    item -> VaadinIcons.values()[getIndex(item) + 1]);
         } else {
             group.setItemIconGenerator(DEFAULT_ICON_GENERATOR);
         }

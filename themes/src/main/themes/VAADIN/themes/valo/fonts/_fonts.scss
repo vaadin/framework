@@ -4,20 +4,27 @@
 @import "roboto/roboto";
 @import "lato/lato";
 @import "lora/lora";
+@import "../../../VAADIN/addons/vaadin-icons/vaadin-icons.scss";
 
-$v-font-awesome: true !default;
+$v-icons: true !default;
+$v-font-awesome: false !default;
 
-$fontawesome-pathPrefix: null;
+$font-icons-pathPrefix: null;
 
 @if $v-relative-paths == true {
-  $fontawesome-pathPrefix: "../../../";
+  $font-icons-pathPrefix: "../../../";
 }
 
 @mixin valo-fonts {
   // Valo Icons
-  @include v-font(ThemeIcons, "#{$fontawesome-pathPrefix}../valo/fonts/themeicons-webfont/themeicons-webfont");
+  @include v-font(ThemeIcons, "#{$font-icons-pathPrefix}../valo/fonts/themeicons-webfont/themeicons-webfont");
+  // Vaadin Icons
+  @if $v-icons {
+      @include vaadin-icons;
+  }
+  // FontAwesome
   @if $v-font-awesome {
-    @include v-font(FontAwesome, "#{$fontawesome-pathPrefix}../valo/fonts/fontawesome-webfont/fontawesome-webfont");
+    @include v-font(FontAwesome, "#{$font-icons-pathPrefix}../valo/fonts/fontawesome-webfont/fontawesome-webfont");
   }
 }
 
