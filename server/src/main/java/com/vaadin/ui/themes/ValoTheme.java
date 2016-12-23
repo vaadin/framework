@@ -1036,14 +1036,14 @@ public class ValoTheme {
      * <p>
      * The text content of the logo should be very short, since the logo area
      * only shows approximately three letters. Using one of the
-     * {@link FontAwesome} icons is a good way to quickly create a logo for your
-     * application.
+     * Vaadin Icons is a good way to quickly create a logo for your
+     * application. Vaadin Icons are included in the Valo theme.
      * <p>
      *
      * <h4>Example</h4>
      *
      * <pre>
-     * Label logo = new Label(FontAwesome.ROCKET.getHtml(), ContentMode.HTML);
+     * Label logo = new Label(VaadinIcons.ROCKET.getHtml(), ContentMode.HTML);
      * logo.setSizeUndefined();
      * logo.setPrimaryStyleName(ValoTheme.MENU_LOGO);
      * </pre>

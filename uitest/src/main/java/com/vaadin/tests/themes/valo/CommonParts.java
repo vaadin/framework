@@ -16,11 +16,11 @@
 package com.vaadin.tests.themes.valo;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Position;
@@ -267,7 +267,7 @@ public class CommonParts extends VerticalLayout implements View {
                         delay.setValue("");
                     }
                 });
-                clear.setIcon(FontAwesome.TIMES_CIRCLE);
+                clear.setIcon(VaadinIcons.CLOSE_CIRCLE);
                 clear.addStyleName("last");
                 clear.addStyleName(ValoTheme.BUTTON_SMALL);
                 clear.addStyleName(ValoTheme.BUTTON_ICON_ONLY);

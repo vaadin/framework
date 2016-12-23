@@ -101,14 +101,14 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         FONTICON {
             @Override
             public Resource parse(String value) {
-                final String address = (value.split("://", 2))[1];
+                final String address = value.split("://", 2)[1];
                 final String[] familyAndCode = address.split("/", 2);
                 final int codepoint = Integer.valueOf(familyAndCode[1], 16);
 
                 if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) {
                     return FontAwesome.fromCodepoint(codepoint);
                 }
-
+                // all vaadin icons should have a codepoint
                 FontIcon generic = new GenericFontIcon(familyAndCode[0],
                         codepoint);
                 return generic;
@@ -128,7 +128,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             public Resource parse(String value) {
                 // Deprecated, 7.4 syntax is
                 // font://"+FontAwesome.valueOf(foo) eg. "font://AMBULANCE"
-                final String iconName = (value.split("://", 2))[1];
+                final String iconName = value.split("://", 2)[1];
                 return FontAwesome.valueOf(iconName);
             }
 
