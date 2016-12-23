@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.menubar;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
@@ -27,7 +27,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 /**
  * A UI for testing VMenuBar.getSubPartElement(String). The UI contains two
  * MenuBars, one without icons and one containing items with and without icons.
- * Some of the icons are textual (using FontAwesome) and should behave like
+ * Some of the icons are textual (using VaadinIcons) and should behave like
  * items with image icons: the icon should not be considered to be a part of the
  * item's caption.
  *
@@ -44,13 +44,13 @@ public class MenuBarsWithNesting extends AbstractReindeerTestUI {
     public final static String[] itemNames = { "Icon item", "Arrow down",
             "Arrow up", "Warning" };
     private final static Resource[] itemIcons = {
-            new ThemeResource("window/img/restore.png"), FontAwesome.ARROW_DOWN,
-            FontAwesome.ARROW_UP, FontAwesome.WARNING };
+            new ThemeResource("window/img/restore.png"), VaadinIcons.ARROW_DOWN,
+            VaadinIcons.ARROW_UP, VaadinIcons.WARNING };
 
     // The last menu item is nested with the following submenu items.
     public final static String[] nestedItemnames = { "No icon", "Font icon",
             "Image icon" };
-    private final static Resource[] nestedItemIcons = { null, FontAwesome.LINK,
+    private final static Resource[] nestedItemIcons = { null, VaadinIcons.LINK,
             new ThemeResource("window/img/restore.png") };
 
     private MenuBar.Command selectionCommand;

@@ -57,6 +57,11 @@ import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.TwinColSelect;
 
+/**
+ * This is a legacy test ui for using font icons (font awesome).
+ * <p>
+ * {@link VaadinIconSet} is the newer one for testing valo+vaadin icons.
+ */
 public class FontIcons extends AbstractReindeerTestUI {
 
     @Override

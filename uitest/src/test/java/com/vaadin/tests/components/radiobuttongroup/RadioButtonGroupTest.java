@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.tests.components.radiobutton.RadioButtonGroupTestUI;
@@ -131,7 +131,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         assertEquals(20, icons.size());
 
         for (int i = 0; i < icons.size(); i++) {
-            Assert.assertEquals(FontAwesome.values()[i + 1].getCodepoint(),
+            Assert.assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
                     icons.get(i).getText().charAt(0));
         }
     }
