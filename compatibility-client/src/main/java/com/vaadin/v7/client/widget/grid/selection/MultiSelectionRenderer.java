@@ -666,7 +666,7 @@ public class MultiSelectionRenderer<T>
 
     private void startDragSelect(NativeEvent event, final Element target) {
         injectNativeHandler();
-        int logicalRowIndex = getLogicalRowIndex(target);
+        int logicalRowIndex = getLogicalRowIndex(grid, target);
         autoScrollHandler.start(logicalRowIndex);
         event.preventDefault();
         event.stopPropagation();

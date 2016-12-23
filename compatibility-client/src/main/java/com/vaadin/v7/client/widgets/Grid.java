@@ -6451,8 +6451,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         int columnIndex = columns.indexOf(column);
 
         // Remove from column configuration
-        escalator.getColumnConfiguration()
-                .removeColumns(getVisibleColumns().indexOf(column), 1);
+        int visibleColumnIndex = getVisibleColumns().indexOf(column);
+        if (visibleColumnIndex < 0) {
+            assert column.isHidden();
+            // Hidden columns are not included in Escalator
+        } else {
+            getEscalator().getColumnConfiguration()
+                    .removeColumns(visibleColumnIndex, 1);
+        }
 
         updateFrozenColumns();
 
