@@ -18,7 +18,7 @@ package com.vaadin.tests.components.radiobutton;
 import java.util.LinkedHashMap;
 import java.util.stream.IntStream;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
@@ -71,7 +71,7 @@ public class RadioButtonGroupTestUI
             boolean activate, Object data) {
         if (activate) {
             group.setItemIconGenerator(
-                    item -> FontAwesome.values()[getIndex(item) + 1]);
+                    item -> VaadinIcons.values()[getIndex(item) + 1]);
         } else {
             group.setItemIconGenerator(item -> null);
         }
