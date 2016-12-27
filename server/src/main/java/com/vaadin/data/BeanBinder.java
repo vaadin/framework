@@ -16,11 +16,8 @@
 
 package com.vaadin.data;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -227,29 +224,31 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @Override
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         public Binding<BEAN, TARGET> bind(String propertyName) {
+            Objects.requireNonNull(propertyName,
+                    "Property name cannot be null");
             checkUnbound();
 
-            BindingBuilder<BEAN, Object> finalBinding;
+            BinderPropertyDefinition<BEAN, ?> definition = getBinder().propertySet
+                    .getProperty(propertyName)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Could not resolve property name " + propertyName
+                                    + " from " + getBinder().propertySet));
 
-            PropertyDescriptor descriptor = getDescriptor(propertyName);
+            ValueProvider<BEAN, ?> getter = definition.getGetter();
+            Setter<BEAN, ?> setter = definition.getSetter()
+                    .orElse((bean, value) -> {
+                        // Setter ignores value
+                    });
 
-            Method getter = descriptor.getReadMethod();
-            Method setter = descriptor.getWriteMethod();
+            BindingBuilder finalBinding = withConverter(
+                    createConverter(definition.getType()), false);
 
-            finalBinding = withConverter(
-                    createConverter(getter.getReturnType()), false);
-
-            if (BeanUtil.checkBeanValidationAvailable()) {
-                finalBinding = finalBinding.withValidator(
-                        new BeanValidator(getBinder().beanType, propertyName));
-            }
+            finalBinding = definition.beforeBind(finalBinding);
 
             try {
-                return (Binding<BEAN, TARGET>) finalBinding.bind(
-                        bean -> invokeWrapExceptions(getter, bean),
-                        (bean, value) -> invokeWrapExceptions(setter, bean,
-                                value));
+                return finalBinding.bind(getter, setter);
             } finally {
                 getBinder().boundProperties.add(propertyName);
             }
@@ -260,61 +259,18 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             return (BeanBinder<BEAN>) super.getBinder();
         }
 
-        private static Object invokeWrapExceptions(Method method, Object target,
-                Object... parameters) {
-            if (method == null) {
-                return null;
-            }
-            try {
-                return method.invoke(target, parameters);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        private PropertyDescriptor getDescriptor(String propertyName) {
-            final Class<?> beanType = getBinder().beanType;
-            PropertyDescriptor descriptor = null;
-            try {
-                descriptor = BeanUtil.getPropertyDescriptor(beanType,
-                        propertyName);
-            } catch (IntrospectionException ie) {
-                throw new IllegalArgumentException(
-                        "Could not resolve bean property name (see the cause): "
-                                + beanType.getName() + "." + propertyName,
-                        ie);
-            }
-            if (descriptor == null) {
-                throw new IllegalArgumentException(
-                        "Could not resolve bean property name (please check spelling and getter visibility): "
-                                + beanType.getName() + "." + propertyName);
-            }
-            if (descriptor.getReadMethod() == null) {
-                throw new IllegalArgumentException(
-                        "Bean property has no accessible getter: "
-                                + beanType.getName() + "." + propertyName);
-            }
-            return descriptor;
-        }
-
         @SuppressWarnings("unchecked")
         private Converter<TARGET, Object> createConverter(Class<?> getterType) {
-            return Converter.from(fieldValue -> cast(fieldValue, getterType),
+            return Converter.from(
+                    fieldValue -> ReflectTools.castMaybePrimitive(fieldValue,
+                            getterType),
                     propertyValue -> (TARGET) propertyValue, exception -> {
                         throw new RuntimeException(exception);
                     });
         }
-
-        private <T> T cast(TARGET value, Class<T> clazz) {
-            if (clazz.isPrimitive()) {
-                return (T) ReflectTools.convertPrimitiveType(clazz).cast(value);
-            } else {
-                return clazz.cast(value);
-            }
-        }
     }
 
-    private final Class<? extends BEAN> beanType;
+    private final BinderPropertySet<BEAN> propertySet;
     private final Set<String> boundProperties;
 
     /**
@@ -325,7 +281,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
      */
     public BeanBinder(Class<? extends BEAN> beanType) {
         BeanUtil.checkBeanValidationAvailable();
-        this.beanType = beanType;
+        this.propertySet = BeanBinderPropertySet.get(beanType);
         boundProperties = new HashSet<>();
     }
 
@@ -553,7 +509,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
     private void handleProperty(Field field,
             BiConsumer<String, Class<?>> propertyHandler) {
-        Optional<PropertyDescriptor> descriptor = getPropertyDescriptor(field);
+        Optional<BinderPropertyDefinition<BEAN, ?>> descriptor = getPropertyDescriptor(
+                field);
 
         if (!descriptor.isPresent()) {
             return;
@@ -564,12 +521,12 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             return;
         }
 
-        propertyHandler.accept(propertyName,
-                descriptor.get().getPropertyType());
+        propertyHandler.accept(propertyName, descriptor.get().getType());
         boundProperties.add(propertyName);
     }
 
-    private Optional<PropertyDescriptor> getPropertyDescriptor(Field field) {
+    private Optional<BinderPropertyDefinition<BEAN, ?>> getPropertyDescriptor(
+            Field field) {
         PropertyId propertyIdAnnotation = field.getAnnotation(PropertyId.class);
 
         String propertyId;
@@ -580,19 +537,12 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             propertyId = field.getName();
         }
 
-        List<PropertyDescriptor> descriptors;
-        try {
-            descriptors = BeanUtil.getBeanPropertyDescriptors(beanType);
-        } catch (IntrospectionException e) {
-            throw new IllegalArgumentException(String.format(
-                    "Could not resolve bean '%s' properties (see the cause):",
-                    beanType.getName()), e);
-        }
-        Optional<PropertyDescriptor> propertyDescitpor = descriptors.stream()
-                .filter(descriptor -> minifyFieldName(descriptor.getName())
-                        .equals(minifyFieldName(propertyId)))
-                .findFirst();
-        return propertyDescitpor;
+        String minifiedFieldName = minifyFieldName(propertyId);
+
+        return propertySet.getProperties()
+                .map(BinderPropertyDefinition::getName)
+                .filter(name -> minifyFieldName(name).equals(minifiedFieldName))
+                .findFirst().flatMap(propertySet::getProperty);
     }
 
     private String minifyFieldName(String fieldName) {
