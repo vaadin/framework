@@ -625,9 +625,7 @@ public class Binder<BEAN> implements Serializable {
 
         @SuppressWarnings("unchecked")
         private Converter<TARGET, Object> createConverter(Class<?> getterType) {
-            return Converter.from(
-                    fieldValue -> ReflectTools.castMaybePrimitive(fieldValue,
-                            getterType),
+            return Converter.from(fieldValue -> getterType.cast(fieldValue),
                     propertyValue -> (TARGET) propertyValue, exception -> {
                         throw new RuntimeException(exception);
                     });

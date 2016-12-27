@@ -72,7 +72,7 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
             return bean -> {
                 Method readMethod = descriptor.getReadMethod();
                 Object value = invokeWrapExceptions(readMethod, bean);
-                return ReflectTools.castMaybePrimitive(value, getType());
+                return getType().cast(value);
             };
         }
 
@@ -90,7 +90,8 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
         @SuppressWarnings("unchecked")
         @Override
         public Class<V> getType() {
-            return (Class<V>) descriptor.getPropertyType();
+            return (Class<V>) ReflectTools
+                    .convertPrimitiveType(descriptor.getPropertyType());
         }
 
         @Override

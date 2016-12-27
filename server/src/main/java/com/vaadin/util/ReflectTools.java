@@ -214,25 +214,6 @@ public class ReflectTools implements Serializable {
         return type;
     }
 
-    /**
-     * Performs {@link Class#cast(Object)} but uses wrapper types instead of
-     * primitive types.
-     *
-     * @param value
-     *            the value to cast
-     * @param clazz
-     *            the type to cast to
-     * @return the provided value as the provided type
-     */
-    @SuppressWarnings("unchecked")
-    public static final <T> T castMaybePrimitive(Object value, Class<T> clazz) {
-        if (clazz.isPrimitive()) {
-            return (T) ReflectTools.convertPrimitiveType(clazz).cast(value);
-        } else {
-            return clazz.cast(value);
-        }
-    }
-
     private ReflectTools() {
     }
 }
