@@ -25,7 +25,7 @@ import com.vaadin.data.ValueContext;
 /**
  * A converter that converts from {@link String} to {@link Boolean} and back.
  * The String representation is given by {@link Boolean#toString()} or provided
- * in constructor {@link #StringToBooleanConverter(String, String)}.
+ * in constructor {@link StringToBooleanConverter#StringToBooleanConverter(String, String, String)}.
  * <p>
  * Leading and trailing white spaces are ignored when converting from a String.
  * </p>
@@ -109,7 +109,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     /**
      * Gets the locale-depended string representation for false. Default is
-     * locale-independent value provided by {@link #getFalseString()}
+     * locale-independent value {@code false}
      *
      * @param locale
      *            to be used
@@ -121,7 +121,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     /**
      * Gets the locale-depended string representation for true. Default is
-     * locale-independent value provided by {@link #getTrueString()}
+     * locale-independent value {@code true}
      *
      * @param locale
      *            to be used

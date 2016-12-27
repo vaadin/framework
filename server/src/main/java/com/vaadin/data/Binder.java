@@ -1018,7 +1018,8 @@ public class Binder<BEAN> implements Serializable {
      * automatically change {@code null} to a null representation provided by
      * {@link HasValue#getEmptyValue()}. This conversion is one-way only, if you
      * want to have a two-way mapping back to {@code null}, use
-     * {@link #forField(HasValue)}.
+     * {@link #forField(HasValue)} and
+     * {@link BindingBuilder#withNullRepresentation(Object))}.
      * <p>
      * When a bean is bound with {@link Binder#setBean(BEAN)}, the field value
      * is set to the return value of the given getter. The property value is

@@ -18,7 +18,6 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;

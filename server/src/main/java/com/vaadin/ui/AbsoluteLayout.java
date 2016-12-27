@@ -479,7 +479,7 @@ public class AbsoluteLayout extends AbstractLayout
          *
          * @param rightValue
          *            The value of the 'right' attribute
-         * @see #setRightUnits
+         * @see #setRightUnits(Unit)
          */
         public void setRightValue(Float rightValue) {
             this.rightValue = rightValue;
@@ -503,7 +503,7 @@ public class AbsoluteLayout extends AbstractLayout
          *
          * @param bottomValue
          *            The value of the 'bottom' attribute
-         * @see #setBottomUnits
+         * @see #setBottomUnits(Unit)
          */
         public void setBottomValue(Float bottomValue) {
             this.bottomValue = bottomValue;
@@ -527,7 +527,7 @@ public class AbsoluteLayout extends AbstractLayout
          *
          * @param leftValue
          *            The value of the 'left' CSS-attribute
-         * @see #setLeftUnits
+         * @see #setLeftUnits(Unit)
          */
         public void setLeftValue(Float leftValue) {
             this.leftValue = leftValue;
