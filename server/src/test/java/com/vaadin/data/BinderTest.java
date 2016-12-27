@@ -185,6 +185,37 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Assert.assertEquals("", nameField.getValue());
     }
 
+    @Test
+    public void refresh() {
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+        binder.forField(ageField).withConverter(new StringToIntegerConverter("")).bind(Person::getAge, Person::setAge);
+
+        Person person = new Person();
+
+        String fooName = "foo";
+        int fooAge = 42;
+        person.setFirstName(fooName);
+        person.setAge(fooAge);
+        binder.setBean(person);
+
+        Assert.assertEquals(fooName, nameField.getValue());
+        Assert.assertEquals(String.valueOf(fooAge), ageField.getValue());
+
+        String barName = "bar";
+        int barAge = 24;
+        person.setFirstName(barName);
+        person.setAge(barAge);
+
+        Assert.assertEquals(fooName, nameField.getValue());
+        Assert.assertEquals(String.valueOf(fooAge), ageField.getValue());
+
+        binder.refresh();
+
+        Assert.assertEquals(barName, nameField.getValue());
+        Assert.assertEquals(String.valueOf(barAge), ageField.getValue());
+
+    }
+
     protected void bindName() {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
         binder.setBean(item);

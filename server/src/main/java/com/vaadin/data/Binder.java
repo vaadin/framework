@@ -1093,7 +1093,7 @@ public class Binder<BEAN> implements Serializable {
         } else {
             doRemoveBean(false);
             this.bean = bean;
-            bindings.forEach(b -> b.initFieldValue(bean));
+            updateBindings(bean);
             // if there has been field value change listeners that trigger
             // validation, need to make sure the validation errors are cleared
             getValidationStatusHandler().statusChange(
@@ -1130,11 +1130,28 @@ public class Binder<BEAN> implements Serializable {
     public void readBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
         setHasChanges(false);
-        bindings.forEach(binding -> binding.initFieldValue(bean));
+        updateBindings(bean);
 
         getValidationStatusHandler().statusChange(
                 BinderValidationStatus.createUnresolvedStatus(this));
         fireStatusChangeEvent(false);
+    }
+
+    /**
+     * Updates the fields associated to this binder with the values read from the given bean.
+     *
+     * @param bean
+     *            the bean whose property values to read, not null
+     */
+    private void updateBindings(BEAN bean) {
+        bindings.forEach(binding -> binding.initFieldValue(bean));
+    }
+
+    /**
+     * Refreshes the fields associated with the {@link Binder} reading the values from the underlying bean.
+     */
+    public void refresh() {
+        updateBindings(getBean());
     }
 
     /**
