@@ -414,12 +414,13 @@ If some other part of the application is also using the same instance, then that
 == Binding Beans to Forms
 
 The business objects used in an application are in most cases implemented as Java beans or POJOs.
-There is special support for that kind of business object in [classname]#BeanBinder#.
-It can use reflection based on bean property names to bind values. This reduces the amount of code you have to write when binding to fields in the bean.
+There is special support for that kind of business object in [classname]#Binder#.
+It can use reflection based on bean property names to bind values.
+This reduces the amount of code you have to write when binding to fields in the bean.
 
 [source, java]
 ----
-BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+Binder<Person> binder = new Binder<>(Person.class);
 
 // Bind based on property name
 binder.bind(nameField, "name");
@@ -433,9 +434,9 @@ binder.forField(yearOfBirthField)
 ----
 
 [NOTE]
-[classname]#BeanBinder# uses strings to identify the properties so it is not refactor safe.
+Code using strings to identify properties will cause exceptions during runtime if the string contains a typo or if the name of the setter and getter methods have been changed without also updating the string.
 
-[classname]#BeanBinder# will automatically use JSR 303 Bean Validation annotations from the bean class if a Bean Validation implementation is available.
+Bindings created based on a property name will automatically use JSR 303 Bean Validation annotations from the bean class if a Bean Validation implementation is available.
 Constraints defined for properties in the bean will work in the same way as if configured when the binding is created.
 
 [source, java]
@@ -458,7 +459,7 @@ Constraint annotations can also be defined on the bean level instead of being de
 [NOTE]
 Bean level validation can only be performed once the bean has been updated. This means that this functionality can only be used together with `setBean`. You need to trigger validation manually if using `readBean` and `writeBean`.
 
-Validation errors caused by that bean level validation might not be directly associated with any field component shown in the user interface, so [classname]#BeanBinder# cannot know where such messages should be displayed.
+Validation errors caused by that bean level validation might not be directly associated with any field component shown in the user interface, so [classname]#Binder# cannot know where such messages should be displayed.
 
 Similarly to how the [methodname]#withStatusLabel# method can be used for defining where messages for a specific binding should be showed, we can also define a [classname]#Label# that is used for showing status messages that are not related to any specific field.
 
@@ -466,7 +467,7 @@ Similarly to how the [methodname]#withStatusLabel# method can be used for defini
 ----
 Label formStatusLabel = new Label();
 
-BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+Binder<Person> binder = new Binder<>(Person.class);
 
 binder.setStatusLabel(formStatusLabel);
 
@@ -538,14 +539,14 @@ public class PersonFormDesign extends FormLayout {
 }
 ----
 
-Based on those files, we can create a subclass of the design that uses a [classname]#BeanBinder# to automatically connect bean properties to field instances.
+Based on those files, we can create a subclass of the design that uses a [classname]#Binder# to automatically connect bean properties to field instances.
 This will look at all instance fields that are of a Field type in the class and try to find a bean property with the same name.
 
 [source, java]
 ----
 public class PersonForm extends PersonFormDesign {
-  private BeanBinder<Person> binder
-    = new BeanBinder<>(Person.class);
+  private Binder<Person> binder
+    = new Binder<>(Person.class);
 
   public PersonForm(Person person) {
     binder.bindInstanceFields(this);

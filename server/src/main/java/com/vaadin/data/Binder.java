@@ -16,10 +16,14 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,10 +32,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.googlecode.gentyref.GenericTypeReflector;
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.SerializableFunction;
@@ -43,6 +52,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Connects one or more {@code Field} components to properties of a backing data
@@ -173,6 +183,37 @@ public class Binder<BEAN> implements Serializable {
          */
         public Binding<BEAN, TARGET> bind(ValueProvider<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter);
+
+        /**
+         * Completes this binding by connecting the field to the property with
+         * the given name. The getter and setter of the property are looked up
+         * using a {@link BinderPropertySet}.
+         * <p>
+         * For a <code>Binder</code> created using the
+         * {@link Binder#Binder(Class)} constructor, introspection will be used
+         * to find a Java Bean property. If a JSR-303 bean validation
+         * implementation is present on the classpath, a {@link BeanValidator}
+         * is also added to the binding.
+         * <p>
+         * The property must have an accessible getter method. It need not have
+         * an accessible setter; in that case the property value is never
+         * updated and the binding is said to be <i>read-only</i>.
+         *
+         * @param propertyName
+         *            the name of the property to bind, not null
+         * @return the newly created binding
+         *
+         * @throws IllegalArgumentException
+         *             if the property name is invalid
+         * @throws IllegalArgumentException
+         *             if the property has no accessible getter
+         * @throws IllegalStateException
+         *             if the binder is not configured with an appropriate
+         *             {@link BinderPropertySet}
+         *
+         * @see Binder.BindingBuilder#bind(ValueProvider, Setter)
+         */
+        public Binding<BEAN, TARGET> bind(String propertyName);
 
         /**
          * Adds a validator to this binding. Validators are applied, in
@@ -549,6 +590,47 @@ public class Binder<BEAN> implements Serializable {
             bound = true;
 
             return binding;
+        }
+
+        @Override
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        public Binding<BEAN, TARGET> bind(String propertyName) {
+            Objects.requireNonNull(propertyName,
+                    "Property name cannot be null");
+            checkUnbound();
+
+            BinderPropertyDefinition<BEAN, ?> definition = getBinder().propertySet
+                    .getProperty(propertyName)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Could not resolve property name " + propertyName
+                                    + " from " + getBinder().propertySet));
+
+            ValueProvider<BEAN, ?> getter = definition.getGetter();
+            Setter<BEAN, ?> setter = definition.getSetter()
+                    .orElse((bean, value) -> {
+                        // Setter ignores value
+                    });
+
+            BindingBuilder finalBinding = withConverter(
+                    createConverter(definition.getType()), false);
+
+            finalBinding = definition.beforeBind(finalBinding);
+
+            try {
+                return finalBinding.bind(getter, setter);
+            } finally {
+                getBinder().boundProperties.add(propertyName);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private Converter<TARGET, Object> createConverter(Class<?> getterType) {
+            return Converter.from(
+                    fieldValue -> ReflectTools.castMaybePrimitive(fieldValue,
+                            getterType),
+                    propertyValue -> (TARGET) propertyValue, exception -> {
+                        throw new RuntimeException(exception);
+                    });
         }
 
         @Override
@@ -948,6 +1030,13 @@ public class Binder<BEAN> implements Serializable {
         }
     }
 
+    private final BinderPropertySet<BEAN> propertySet;
+
+    /**
+     * Property names that have been used for creating a binding.
+     */
+    private final Set<String> boundProperties = new HashSet<>();
+
     private BEAN bean;
 
     private final Set<BindingImpl<BEAN, ?, ?>> bindings = new LinkedHashSet<>();
@@ -963,6 +1052,82 @@ public class Binder<BEAN> implements Serializable {
     private BinderValidationStatusHandler<BEAN> statusHandler;
 
     private boolean hasChanges = false;
+
+    /**
+     * Creates a binder using a custom {@link BinderPropertySet} implementation
+     * for finding and resolving property names for
+     * {@link #bindInstanceFields(Object)}, {@link #bind(HasValue, String)} and
+     * {@link BindingBuilder#bind(String)}.
+     *
+     * @param propertySet
+     *            the binder property set implementation to use, not
+     *            <code>null</code>.
+     */
+    protected Binder(BinderPropertySet<BEAN> propertySet) {
+        Objects.requireNonNull(propertySet, "propertySet cannot be null");
+        this.propertySet = propertySet;
+    }
+
+    /**
+     * Creates a new binder that uses reflection based on the provided bean type
+     * to resolve bean properties. If a JSR-303 bean validation implementation
+     * is present on the classpath, a {@link BeanValidator} is added to each
+     * binding that is defined using a property name.
+     *
+     * @param beanType
+     *            the bean type to use, not <code>null</code>
+     */
+    public Binder(Class<BEAN> beanType) {
+        this(BeanBinderPropertySet.get(beanType));
+    }
+
+    /**
+     * Creates a new binder without support for creating bindings based on
+     * property names. Use an alternative constructor, such as
+     * {@link Binder#Binder(Class)}, to create a binder that support creating
+     * bindings based on instance fields through
+     * {@link #bindInstanceFields(Object)}, or based on a property name through
+     * {@link #bind(HasValue, String)} or {@link BindingBuilder#bind(String)}.
+     */
+    public Binder() {
+        this(new BinderPropertySet<BEAN>() {
+            @Override
+            public Stream<BinderPropertyDefinition<BEAN, ?>> getProperties() {
+                throw new IllegalStateException(
+                        "A Binder created with the default constructor doesn't support listing properties.");
+            }
+
+            @Override
+            public Optional<BinderPropertyDefinition<BEAN, ?>> getProperty(
+                    String name) {
+                throw new IllegalStateException(
+                        "A Binder created with the default constructor doesn't support finding properties by name.");
+            }
+        });
+    }
+
+    /**
+     * Creates a binder using a custom {@link BinderPropertySet} implementation
+     * for finding and resolving property names for
+     * {@link #bindInstanceFields(Object)}, {@link #bind(HasValue, String)} and
+     * {@link BindingBuilder#bind(String)}.
+     * <p>
+     * This functionality is provided as static method instead of as a public
+     * constructor in order to make it possible to use a custom property set
+     * without creating a subclass while still leaving the public constructors
+     * focused on the common use cases.
+     *
+     * @see Binder#Binder()
+     * @see Binder#Binder(Class)
+     *
+     * @param propertySet
+     *            the binder property set implementation to use, not
+     *            <code>null</code>.
+     */
+    public static <BEAN> Binder<BEAN> withPropertySet(
+            BinderPropertySet<BEAN> propertySet) {
+        return new Binder<>(propertySet);
+    }
 
     /**
      * Returns the bean that has been bound with {@link #bind}, or null if a
@@ -1062,6 +1227,42 @@ public class Binder<BEAN> implements Serializable {
             HasValue<FIELDVALUE> field, ValueProvider<BEAN, FIELDVALUE> getter,
             Setter<BEAN, FIELDVALUE> setter) {
         return forField(field).bind(getter, setter);
+    }
+
+    /**
+     * Binds the given field to the property with the given name. The getter and
+     * setter of the property are looked up using a {@link BinderPropertySet}.
+     * <p>
+     * For a <code>Binder</code> created using the {@link Binder#Binder(Class)}
+     * constructor, introspection will be used to find a Java Bean property. If
+     * a JSR-303 bean validation implementation is present on the classpath, a
+     * {@link BeanValidator} is also added to the binding.
+     * <p>
+     * The property must have an accessible getter method. It need not have an
+     * accessible setter; in that case the property value is never updated and
+     * the binding is said to be <i>read-only</i>.
+     *
+     * @param <FIELDVALUE>
+     *            the value type of the field to bind
+     * @param field
+     *            the field to bind, not null
+     * @param propertyName
+     *            the name of the property to bind, not null
+     * @return the newly created binding
+     *
+     * @throws IllegalArgumentException
+     *             if the property name is invalid
+     * @throws IllegalArgumentException
+     *             if the property has no accessible getter
+     * @throws IllegalStateException
+     *             if the binder is not configured with an appropriate
+     *             {@link BinderPropertySet}
+     *
+     * @see #bind(HasValue, ValueProvider, Setter)
+     */
+    public <FIELDVALUE> Binding<BEAN, FIELDVALUE> bind(
+            HasValue<FIELDVALUE> field, String propertyName) {
+        return forField(field).bind(propertyName);
     }
 
     /**
@@ -1693,6 +1894,217 @@ public class Binder<BEAN> implements Serializable {
                 nullRepresentationConverter);
         initialConverters.put(field, converter);
         return converter;
+    }
+
+    /**
+     * Binds member fields found in the given object.
+     * <p>
+     * This method processes all (Java) member fields whose type extends
+     * {@link HasValue} and that can be mapped to a property id. Property name
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. All non-null unbound fields for which a property
+     * name can be determined are bound to the property name using
+     * {@link BindingBuilder#bind(String)}.
+     * <p>
+     * For example:
+     *
+     * <pre>
+     * public class MyForm extends VerticalLayout {
+     * private TextField firstName = new TextField("First name");
+     * &#64;PropertyId("last")
+     * private TextField lastName = new TextField("Last name");
+     *
+     * MyForm myForm = new MyForm();
+     * ...
+     * binder.bindMemberFields(myForm);
+     * </pre>
+     *
+     * This binds the firstName TextField to a "firstName" property in the item,
+     * lastName TextField to a "last" property.
+     * <p>
+     * It's not always possible to bind a field to a property because their
+     * types are incompatible. E.g. custom converter is required to bind
+     * {@code HasValue<String>} and {@code Integer} property (that would be a
+     * case of "age" property). In such case {@link IllegalStateException} will
+     * be thrown unless the field has been configured manually before calling
+     * the {@link #bindInstanceFields(Object)} method.
+     * <p>
+     * It's always possible to do custom binding for any field: the
+     * {@link #bindInstanceFields(Object)} method doesn't override existing
+     * bindings.
+     *
+     * @param objectWithMemberFields
+     *            The object that contains (Java) member fields to bind
+     * @throws IllegalStateException
+     *             if there are incompatible HasValue<T> and property types
+     */
+    public void bindInstanceFields(Object objectWithMemberFields) {
+        Class<?> objectClass = objectWithMemberFields.getClass();
+
+        getFieldsInDeclareOrder(objectClass).stream()
+                .filter(memberField -> HasValue.class
+                        .isAssignableFrom(memberField.getType()))
+                .forEach(memberField -> handleProperty(memberField,
+                        (property, type) -> bindProperty(objectWithMemberFields,
+                                memberField, property, type)));
+    }
+
+    /**
+     * Binds {@code property} with {@code propertyType} to the field in the
+     * {@code objectWithMemberFields} instance using {@code memberField} as a
+     * reference to a member.
+     *
+     * @param objectWithMemberFields
+     *            the object that contains (Java) member fields to build and
+     *            bind
+     * @param memberField
+     *            reference to a member field to bind
+     * @param property
+     *            property name to bind
+     * @param propertyType
+     *            type of the property
+     */
+    private void bindProperty(Object objectWithMemberFields, Field memberField,
+            String property, Class<?> propertyType) {
+        Type valueType = GenericTypeReflector.getTypeParameter(
+                memberField.getGenericType(),
+                HasValue.class.getTypeParameters()[0]);
+        if (valueType == null) {
+            throw new IllegalStateException(String.format(
+                    "Unable to detect value type for the member '%s' in the "
+                            + "class '%s'.",
+                    memberField.getName(),
+                    objectWithMemberFields.getClass().getName()));
+        }
+        if (propertyType.equals(GenericTypeReflector.erase(valueType))) {
+            HasValue<?> field;
+            // Get the field from the object
+            try {
+                field = (HasValue<?>) ReflectTools.getJavaFieldValue(
+                        objectWithMemberFields, memberField, HasValue.class);
+            } catch (IllegalArgumentException | IllegalAccessException
+                    | InvocationTargetException e) {
+                // If we cannot determine the value, just skip the field
+                return;
+            }
+            if (field == null) {
+                field = makeFieldInstance(
+                        (Class<? extends HasValue<?>>) memberField.getType());
+                initializeField(objectWithMemberFields, memberField, field);
+            }
+            forField(field).bind(property);
+        } else {
+            throw new IllegalStateException(String.format(
+                    "Property type '%s' doesn't "
+                            + "match the field type '%s'. "
+                            + "Binding should be configured manually using converter.",
+                    propertyType.getName(), valueType.getTypeName()));
+        }
+    }
+
+    /**
+     * Makes an instance of the field type {@code fieldClass}.
+     * <p>
+     * The resulting field instance is used to bind a property to it using the
+     * {@link #bindInstanceFields(Object)} method.
+     * <p>
+     * The default implementation relies on the default constructor of the
+     * class. If there is no suitable default constructor or you want to
+     * configure the instantiated class then override this method and provide
+     * your own implementation.
+     *
+     * @see #bindInstanceFields(Object)
+     * @param fieldClass
+     *            type of the field
+     * @return a {@code fieldClass} instance object
+     */
+    private HasValue<?> makeFieldInstance(
+            Class<? extends HasValue<?>> fieldClass) {
+        try {
+            return fieldClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(
+                    String.format("Couldn't create an '%s' type instance",
+                            fieldClass.getName()),
+                    e);
+        }
+    }
+
+    /**
+     * Returns an array containing {@link Field} objects reflecting all the
+     * fields of the class or interface represented by this Class object. The
+     * elements in the array returned are sorted in declare order from sub class
+     * to super class.
+     *
+     * @param searchClass
+     *            class to introspect
+     * @return list of all fields in the class considering hierarchy
+     */
+    private List<Field> getFieldsInDeclareOrder(Class<?> searchClass) {
+        ArrayList<Field> memberFieldInOrder = new ArrayList<>();
+
+        while (searchClass != null) {
+            memberFieldInOrder
+                    .addAll(Arrays.asList(searchClass.getDeclaredFields()));
+            searchClass = searchClass.getSuperclass();
+        }
+        return memberFieldInOrder;
+    }
+
+    private void initializeField(Object objectWithMemberFields,
+            Field memberField, HasValue<?> value) {
+        try {
+            ReflectTools.setJavaFieldValue(objectWithMemberFields, memberField,
+                    value);
+        } catch (IllegalArgumentException | IllegalAccessException
+                | InvocationTargetException e) {
+            throw new IllegalStateException(
+                    String.format("Could not assign value to field '%s'",
+                            memberField.getName()),
+                    e);
+        }
+    }
+
+    private void handleProperty(Field field,
+            BiConsumer<String, Class<?>> propertyHandler) {
+        Optional<BinderPropertyDefinition<BEAN, ?>> descriptor = getPropertyDescriptor(
+                field);
+
+        if (!descriptor.isPresent()) {
+            return;
+        }
+
+        String propertyName = descriptor.get().getName();
+        if (boundProperties.contains(propertyName)) {
+            return;
+        }
+
+        propertyHandler.accept(propertyName, descriptor.get().getType());
+        boundProperties.add(propertyName);
+    }
+
+    private Optional<BinderPropertyDefinition<BEAN, ?>> getPropertyDescriptor(
+            Field field) {
+        PropertyId propertyIdAnnotation = field.getAnnotation(PropertyId.class);
+
+        String propertyId;
+        if (propertyIdAnnotation != null) {
+            // @PropertyId(propertyId) always overrides property id
+            propertyId = propertyIdAnnotation.value();
+        } else {
+            propertyId = field.getName();
+        }
+
+        String minifiedFieldName = minifyFieldName(propertyId);
+
+        return propertySet.getProperties()
+                .map(BinderPropertyDefinition::getName)
+                .filter(name -> minifyFieldName(name).equals(minifiedFieldName))
+                .findFirst().flatMap(propertySet::getProperty);
+    }
+
+    private String minifyFieldName(String fieldName) {
+        return fieldName.toLowerCase(Locale.ENGLISH).replace("_", "");
     }
 
 }

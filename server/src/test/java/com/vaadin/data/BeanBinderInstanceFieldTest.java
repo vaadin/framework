@@ -132,7 +132,7 @@ public class BeanBinderInstanceFieldTest {
     @Test
     public void bindInstanceFields_bindAllFields() {
         BindAllFields form = new BindAllFields();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
 
         Person person = new Person();
@@ -151,10 +151,17 @@ public class BeanBinderInstanceFieldTest {
         Assert.assertEquals(form.birthDate.getValue(), person.getBirthDate());
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void bind_instanceFields_noArgsConstructor() {
+        BindAllFields form = new BindAllFields();
+        Binder<Person> binder = new Binder<>();
+        binder.bindInstanceFields(form);
+    }
+
     @Test
     public void bindInstanceFields_bindOnlyOneFields() {
         BindOnlyOneField form = new BindOnlyOneField();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
 
         Person person = new Person();
@@ -174,7 +181,7 @@ public class BeanBinderInstanceFieldTest {
     @Test
     public void bindInstanceFields_bindNotHasValueField_fieldIsNull() {
         BindNoHasValueField form = new BindNoHasValueField();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
 
         Person person = new Person();
@@ -188,7 +195,7 @@ public class BeanBinderInstanceFieldTest {
     @Test
     public void bindInstanceFields_genericField() {
         BindGenericField form = new BindGenericField();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
 
         Person person = new Person();
@@ -206,49 +213,49 @@ public class BeanBinderInstanceFieldTest {
     @Test(expected = IllegalStateException.class)
     public void bindInstanceFields_genericFieldWithWrongTypeParameter() {
         BindGenericWrongTypeParameterField form = new BindGenericWrongTypeParameterField();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
     }
 
     @Test(expected = IllegalStateException.class)
     public void bindInstanceFields_generic() {
         BindGeneric<String> form = new BindGeneric<>();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
     }
 
     @Test(expected = IllegalStateException.class)
     public void bindInstanceFields_rawFieldType() {
         BindRaw form = new BindRaw();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
     }
 
     @Test(expected = IllegalStateException.class)
     public void bindInstanceFields_abstractFieldType() {
         BindAbstract form = new BindAbstract();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
     }
 
     @Test(expected = IllegalStateException.class)
     public void bindInstanceFields_noInstantiatableFieldType() {
         BindNonInstantiatableType form = new BindNonInstantiatableType();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
     }
 
     @Test(expected = IllegalStateException.class)
     public void bindInstanceFields_wrongFieldType() {
         BindWrongTypeParameterField form = new BindWrongTypeParameterField();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
     }
 
     @Test
     public void bindInstanceFields_complexGenericHierarchy() {
         BindComplextHierarchyGenericType form = new BindComplextHierarchyGenericType();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
 
         Person person = new Person();
@@ -266,7 +273,7 @@ public class BeanBinderInstanceFieldTest {
     @Test
     public void bindInstanceFields_bindNotHasValueField_fieldIsNotReplaced() {
         BindNoHasValueField form = new BindNoHasValueField();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
 
         String name = "foo";
         form.firstName = name;
@@ -284,7 +291,7 @@ public class BeanBinderInstanceFieldTest {
     @Test
     public void bindInstanceFields_bindAllFieldsUsingAnnotations() {
         BindFieldsUsingAnnotation form = new BindFieldsUsingAnnotation();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
 
         Person person = new Person();
@@ -308,7 +315,7 @@ public class BeanBinderInstanceFieldTest {
     @Test
     public void bindInstanceFields_bindNotBoundFieldsOnly_customBindingIsNotReplaced() {
         BindAllFields form = new BindAllFields();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
 
         TextField name = new TextField();
         form.firstName = name;
@@ -343,7 +350,7 @@ public class BeanBinderInstanceFieldTest {
     @Test
     public void bindInstanceFields_fieldsAreConfigured_customBindingIsNotReplaced() {
         BindOnlyOneField form = new BindOnlyOneField();
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
 
         TextField name = new TextField();
         form.firstName = name;

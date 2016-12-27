@@ -896,7 +896,7 @@ public class Person implements Serializable {
     ...]
 ----
 
-We can now use a [classname]#BeanBinder# in the [classname]#Grid# as
+We can now use a [classname]#Binder# in the [classname]#Grid# as
 follows:
 
 [source, java]
@@ -910,7 +910,7 @@ TextField nameEditor = new TextField();
 nameCol.setEditorField(nameEditor);
 
 // Enable bean validation for the data
-BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+Binder<Person> binder = new Binder<>(Person.class);
 
 // Have some extra validation in a field
 binder.addField(nameEditor, "name")
