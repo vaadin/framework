@@ -28,7 +28,7 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 
 /**
- * Converter for {@link ShortcutActions}.
+ * Converter for {@link ShortcutAction ShortcutActions}.
  *
  * @since 7.4
  * @author Vaadin Ltd
