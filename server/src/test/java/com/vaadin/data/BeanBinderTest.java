@@ -3,23 +3,19 @@ package com.vaadin.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.BeanBinder.BeanBindingBuilder;
-import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.TextField;
 
 public class BeanBinderTest
-        extends BinderTestBase<BeanBinder<BeanToValidate>, BeanToValidate> {
+        extends BinderTestBase<Binder<BeanToValidate>, BeanToValidate> {
 
     private enum TestEnum {
     }
@@ -52,7 +48,7 @@ public class BeanBinderTest
 
     @Before
     public void setUp() {
-        binder = new BeanBinder<>(BeanToValidate.class);
+        binder = new Binder<>(BeanToValidate.class);
         item = new BeanToValidate();
         item.setFirstname("Johannes");
         item.setAge(32);
@@ -60,11 +56,10 @@ public class BeanBinderTest
 
     @Test
     public void bindInstanceFields_parameters_type_erased() {
-        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        Binder<TestBean> otherBinder = new Binder<>(TestBean.class);
         TestClass testClass = new TestClass();
         otherBinder.forField(testClass.number)
-                .withConverter(new StringToIntegerConverter(""))
-                .bind("number");
+                .withConverter(new StringToIntegerConverter("")).bind("number");
 
         // Should correctly bind the enum field without throwing
         otherBinder.bindInstanceFields(testClass);
@@ -72,7 +67,7 @@ public class BeanBinderTest
 
     @Test
     public void bindInstanceFields_automatically_binds_incomplete_forMemberField_bindings() {
-        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        Binder<TestBean> otherBinder = new Binder<>(TestBean.class);
         TestClass testClass = new TestClass();
 
         otherBinder.forMemberField(testClass.number)
@@ -87,7 +82,7 @@ public class BeanBinderTest
 
     @Test(expected = IllegalStateException.class)
     public void bindInstanceFields_does_not_automatically_bind_incomplete_forField_bindings() {
-        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        Binder<TestBean> otherBinder = new Binder<>(TestBean.class);
         TestClass testClass = new TestClass();
 
         otherBinder.forField(testClass.number)
@@ -100,7 +95,7 @@ public class BeanBinderTest
 
     @Test(expected = IllegalStateException.class)
     public void incomplete_forMemberField_bindings() {
-        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        Binder<TestBean> otherBinder = new Binder<>(TestBean.class);
         TestClass testClass = new TestClass();
 
         otherBinder.forMemberField(testClass.number)
@@ -261,25 +256,5 @@ public class BeanBinderTest
         assertEquals(1, errors.size());
         assertSame(field, errors.get(0).getField());
         assertEquals(message, errors.get(0).getMessage().get());
-    }
-
-    @Test
-    public void beanBindingChainingMethods() {
-        Method[] methods = BeanBindingBuilder.class.getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            Method method = methods[i];
-            try {
-                Method actualMethod = BeanBindingBuilder.class.getMethod(
-                        method.getName(), method.getParameterTypes());
-
-                Assert.assertNotSame(
-                        actualMethod + " should be overridden in "
-                                + BeanBindingBuilder.class
-                                + " with more specific return type ",
-                        BindingBuilder.class, actualMethod.getReturnType());
-            } catch (NoSuchMethodException | SecurityException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }
