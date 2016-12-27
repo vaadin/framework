@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.calendar;
+package com.vaadin.tests.themes.valo;
 
 import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 

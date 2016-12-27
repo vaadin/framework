@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.calendar;
+package com.vaadin.tests.smoke;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +9,7 @@ import com.vaadin.v7.ui.Calendar;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
 import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
 
-public class CalendarReadOnly extends AbstractTestUI {
+public class CalendarSmoke extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -17,10 +17,6 @@ public class CalendarReadOnly extends AbstractTestUI {
 
         if (request.getParameter("readonly") != null) {
             calendar.setReadOnly(true);
-        }
-
-        if (request.getParameter("disabled") != null) {
-            calendar.setEnabled(false);
         }
 
         calendar.setFirstVisibleHourOfDay(8);
@@ -56,13 +52,4 @@ public class CalendarReadOnly extends AbstractTestUI {
         addComponent(calendar);
     }
 
-    @Override
-    protected Integer getTicketNumber() {
-        return 16523;
-    }
-
-    @Override
-    protected String getTestDescription() {
-        return "When set to readonly, you should still be able to navigate through the calendar.";
-    }
 }

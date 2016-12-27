@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.calendar;
+package com.vaadin.tests.smoke;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
@@ -14,100 +14,66 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.customelements.CalendarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class CalendarReadOnlyTest extends MultiBrowserTest {
+public class CalendarSmokeTest extends MultiBrowserTest {
 
-    @Override
-    public void setup() throws Exception {
-        super.setup();
+    @Test
+    public void calendarSmokeTest() {
+        openTestURL();
 
-        openTestURL("restartApplication&readonly");
+        smokeTest();
     }
 
     @Test
-    public void weekViewCanBeOpenedFromMonthView() {
+    public void readOnlyCalendarSmokeTest() {
+        openTestURL("restartApplication&readonly");
+
+        smokeTest();
+    }
+
+    private void smokeTest() {
         openWeekView();
 
         assertTrue("Calendar wasn't in week view.",
                 getCalendar().hasWeekView());
-    }
+        reload();
 
-    @Test
-    public void dayViewCanBeOpenedFromMonthView() {
         openDayView();
-
         assertTrue("Calendar wasn't in day view.", getCalendar().hasDayView());
-    }
+        reload();
 
-    @Test
-    public void dayViewCanBeOpenedFromWeekView() {
         openWeekView();
-
         getCalendar().getDayHeaders().get(0).click();
-
         assertTrue("Calendar wasn't in day view.", getCalendar().hasDayView());
-    }
+        reload();
 
-    @Test
-    public void weekViewCanBeBrowsedForwards() {
         openWeekView();
-
         String firstDayOfCurrentWeek = getVisibleFirstDay();
         getCalendar().next();
-
         String firstDayOfNextWeek = getVisibleFirstDay();
-
         assertThat("Week didn't change.", firstDayOfCurrentWeek,
                 is(not(firstDayOfNextWeek)));
-    }
+        reload();
 
-    @Test
-    public void weekViewCanBeBrowsedBackwards() {
-        openWeekView();
-
-        String firstDayOfCurrentWeek = getVisibleFirstDay();
-        getCalendar().back();
-
-        String firstDayOfPreviousWeek = getVisibleFirstDay();
-
-        assertThat("Week didn't change.", firstDayOfCurrentWeek,
-                is(not(firstDayOfPreviousWeek)));
-    }
-
-    @Test
-    public void dayViewCanBeBrowsedForwards() {
         openDayView();
-
         String currentDay = getVisibleFirstDay();
         getCalendar().next();
-
         String nextDay = getVisibleFirstDay();
-
         assertThat("Day didn't change.", currentDay, is(not(nextDay)));
-    }
+        reload();
 
-    @Test
-    public void dayViewCanBeBrowsedBackwards() {
         openDayView();
-
-        String currentDay = getVisibleFirstDay();
+        currentDay = getVisibleFirstDay();
         getCalendar().back();
-
         String previousDay = getVisibleFirstDay();
-
         assertThat("Day didn't change.", currentDay, is(not(previousDay)));
-    }
+        reload();
 
-    @Test
-    public void hiddenEventsCanBeExpanded() {
         WebElement dayWithEvents = getFirstDayWithEvents();
-
         assertThat("Incorrect event count.",
                 getVisibleEvents(dayWithEvents).size(), is(2));
-
         toggleExpandEvents(dayWithEvents).click();
         assertThat("Incorrect event count.",
                 getVisibleEvents(dayWithEvents).size(), is(4));
-
         toggleExpandEvents(dayWithEvents).click();
         assertThat("Incorrect event count.",
                 getVisibleEvents(dayWithEvents).size(), is(2));
@@ -137,6 +103,10 @@ public class CalendarReadOnlyTest extends MultiBrowserTest {
         }
 
         return null;
+    }
+
+    private void reload() {
+        getDriver().navigate().refresh();
     }
 
     private WebElement toggleExpandEvents(WebElement dayWithEvents) {
