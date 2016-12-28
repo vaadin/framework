@@ -4,7 +4,7 @@ The project currently supports running TestBench 3+ (java) tests. Each test cons
 
 All test UI classes go into uitest/src. These files are automatically packaged into a war file which is deployed to a Jetty server during the build process so that tests can open and interact with the UI:s. For development purposes, the Jetty server can be started in Eclipse, see running tests in Eclipse.
 
-The project is setup so that /run is mapped to a specialized servlet which allows you to add the UI you want to test to the URL as /run/<fully qualifiied UI class>?restartApplication, e.g. http://localhost:8888/run/com.vaadin.tests.component.label.LabelModes?restartApplication. The restartApplication parameter is needed because of the way this feature is hacked for Vaadin 7. Leaving out the parameter usually shows the wrong UI class or only an exception.
+The project is setup so that /run is mapped to a specialized servlet which allows you to add the UI you want to test to the URL, e.g. http://localhost:8888/run/com.vaadin.tests.component.label.LabelModes or just http://localhost:8888/run/LabelModes if there are no multiple classes named LabelModes. Because of caching, the ?restartApplication parameter is needed after the first run if want to you run multiple test classes. 
 
 ## Creating a new test
 Creating a new test involves two steps: Creating a test UI (typically this should be provided in the ticket) and creating a TestBench test for the UI.
@@ -29,7 +29,7 @@ There are a couple of helper UI super classes which you can use for the test. Yo
 ## Creating a TestBench test for a UI
 All new test for the projects must be created as TestBench3+ tests
 ### Test class naming
-TestBench 3+ tests follows a naming conventions which automatically maps the test to the UI class. The TB3 test class should be named **UIClassTest**, e.g. if UI is **LabelModes** then the TB3+ test is **LabelModesTest**. Inside the LabelModesTest class there are 1..N methods which test various aspects of the LabelModes UI.
+TestBench 3+ tests usually follow a naming convention which automatically maps the test to the UI class. By the convention, the TB3 test class should be named **UIClassTest**, e.g. if UI is **LabelModes** then the TB3+ test is **LabelModesTest**. Inside the LabelModesTest class there are 1..N methods which test various aspects of the LabelModes UI. This is the preferred way, but not strictly necessary; sometimes it's more conventient to use a different name for the UI and test class. In that case, remember to override the `AbstractTB3Test::getUIClass()` method in the test.  
 
 ### Super class
 There are a couple of super classes you can use for a TB3+ test:
@@ -48,9 +48,9 @@ The actual test is one method in the test class created for the given UI. The me
 
 “@Test” is needed for it to be run at all.
 
-“throws Exception” should always be added to avoid catching exceptions inside the test (exception == test fail).
+“throws Exception” should usually be added to avoid catching exceptions inside the test, as most often an exception means the test has failed. Unhandled exceptions will always fail the test; if you use checked exceptions, you'll need to handle them somehow or decide they're automatically failures on exception.
 
-The beginning of the test should open the UI class in the browser using openTestURL();
+The beginning of the test should request the UI using openTestURL();
 
     public void testLabelModes() throws Exception {
     // Causes the test to be opened with the debug console open. Typically not needed
@@ -92,7 +92,7 @@ Use ids in your UI class. Define the IDs as constants in the UI class. Use the c
         @Test
         public void testNativeButtonIconAltText() {
             openTestURL();
-            assertAltText(BUTTON_TEXT, "");
+            assertAltText(NativeButtonIconAndText.BUTTON_TEXT, "");
 
 
 ## Running the DevelopmentServerLauncher
@@ -119,6 +119,8 @@ Running remotely on a single browser (as described above) can be used to debug i
 A better option is to run the test on a local browser instance. To do this you need to add a `@RunLocally` annotation to the test class. @RunLocally uses Firefox by default but also support other browsers using `@RunLocally(CHROME)` and `@RunLocally(SAFARI)`.
 
 Some local configuration is needed for certain browsers, especially if you did not install them in the “standard” locations.
+
+**PhantomJS**: This is the default validation browser. Download it from the [PhantomJS site](http://phantomjs.org/download.html) and add the binary to your PATH. 
 
 **Firefox**: If you have Firefox in your PATH, this is everything you need. If Firefox cannot be started, add a **firefox.path** property to `/work/eclipse-run-selected-test.properties`, pointing to your Firefox binary (e.g.`firefox.path=/Applications/Firefox 17 ESR.app/Contents/MacOS/firefox`)
 
