@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.form;
+package com.vaadin.tests.smoke;
 
 import java.util.Arrays;
 
@@ -26,7 +26,7 @@ import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.Form;
 import com.vaadin.v7.ui.TextField;
 
-public class FormTooltips extends AbstractReindeerTestUI {
+public class FormSmoke extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
