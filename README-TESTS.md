@@ -4,7 +4,7 @@ The project currently supports running TestBench 3+ (java) tests. Each test cons
 
 All test UI classes go into uitest/src. These files are automatically packaged into a war file which is deployed to a Jetty server during the build process so that tests can open and interact with the UI:s. For development purposes, the Jetty server can be started in Eclipse, see running tests in Eclipse.
 
-The project is setup so that /run is mapped to a specialized servlet which allows you to add the UI you want to test to the URL, e.g. http://localhost:8888/run/com.vaadin.tests.component.label.LabelModes or just http://localhost:8888/run/LabelModes if there are no multiple classes named LabelModes. Because of caching, the ?restartApplication parameter is needed after the first run if want to you run multiple test classes. 
+The project is setup so that /run is mapped to a specialized servlet which allows you to add the UI you want to test to the URL, e.g. http://localhost:8888/run/com.vaadin.tests.component.label.LabelModes or just http://localhost:8888/run/LabelModes if there are no multiple classes named LabelModes. Because of caching, the ?restartApplication parameter is needed after the first run if you want to run multiple test classes.
 
 ## Creating a new test
 Creating a new test involves two steps: Creating a test UI (typically this should be provided in the ticket) and creating a TestBench test for the UI.
@@ -116,11 +116,11 @@ TB3+ tests are standard JUnit tests which can be run using the “Run as -> JUni
 #### Debugging remotely
 Running remotely on a single browser (as described above) can be used to debug issues with a given browser but with the downside that you cannot see what is happening with the browser. In theory this is possible if you figure out on what machine the test is run (no good way for this at the moment) and use VNC to connect to that.
 #### Debugging locally
-A better option is to run the test on a local browser instance. To do this you need to add a `@RunLocally` annotation to the test class. @RunLocally uses Firefox by default but also support other browsers using `@RunLocally(CHROME)` and `@RunLocally(SAFARI)`.
+A better option is to run the test on a local browser instance. To do this you need to add a `@RunLocally` annotation to the test class. @RunLocally uses Firefox by default but also supports other browsers using `@RunLocally(CHROME)`, `@RunLocally(SAFARI)` and `@RunLocally(PHANTOMJS)`.
 
 Some local configuration is needed for certain browsers, especially if you did not install them in the “standard” locations.
 
-**PhantomJS**: This is the default validation browser. Download it from the [PhantomJS site](http://phantomjs.org/download.html) and add the binary to your PATH. 
+**PhantomJS**: PhantomJS is a headless browser, good especially for fast validation. Download it from the [PhantomJS site](http://phantomjs.org/download.html) and add the binary to your PATH. 
 
 **Firefox**: If you have Firefox in your PATH, this is everything you need. If Firefox cannot be started, add a **firefox.path** property to `/work/eclipse-run-selected-test.properties`, pointing to your Firefox binary (e.g.`firefox.path=/Applications/Firefox 17 ESR.app/Contents/MacOS/firefox`)
 
