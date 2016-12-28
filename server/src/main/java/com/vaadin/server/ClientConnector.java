@@ -110,8 +110,7 @@ public interface ClientConnector extends Connector {
 
     /**
      * An error event for connector related errors. Use {@link #getConnector()}
-     * to find the connector where the error occurred or {@link #getParent()}
-     * to find the nearest parent connector.
+     * to find the connector where the error occurred.
      */
     public static class ConnectorErrorEvent
             extends com.vaadin.server.ErrorEvent {
