@@ -37,22 +37,6 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
         assertThatFirstCellHasText("4");
     }
 
-    @Test
-    public void emptySortingClearsIndicatorAndResetsSortingWithSQLContainer() {
-        uiClass = DisabledSortingTableSqlContainer.class;
-        openTestURL();
-
-        assertThatFirstCellHasText("1");
-
-        sortFirstColumnAscending();
-        assertThatFirstCellHasText("2");
-
-        disableSorting();
-        sortByEmptyArray();
-
-        assertThatFirstCellHasText("1");
-    }
-
     private void sortFirstColumnAscending() {
         getFirstColumnHeader().click();
         waitUntilHeaderHasExpectedClass("v-table-header-cell-asc");
