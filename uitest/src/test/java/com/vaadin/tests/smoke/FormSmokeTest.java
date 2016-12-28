@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.form;
+package com.vaadin.tests.smoke;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -23,7 +23,7 @@ import com.vaadin.testbench.elements.FormElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.TooltipTest;
 
-public class FormTooltipsTest extends TooltipTest {
+public class FormSmokeTest extends TooltipTest {
 
     @Test
     public void testTooltipConfiguration() throws Exception {
