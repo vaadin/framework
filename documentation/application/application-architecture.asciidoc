@@ -27,25 +27,15 @@ public class MyHierarchicalUI extends UI {
         setContent(content);   // Attach to the UI
 
         // Add some component
-        content.addComponent(new Label("Hello!"));
+        content.addComponent(new Label("<b>Hello!</b> - How are you?", 
+                ContentMode.HTML));
 
-        // Layout inside layout
-        HorizontalLayout hor = new HorizontalLayout();
-        hor.setSizeFull(); // Use all available space
-
-        // Couple of horizontally laid out components
-        Tree tree = new Tree("My Tree",
-                TreeExample.createTreeContent());
-        hor.addComponent(tree);
-
-        Table table = new Table("My Table",
-                TableExample.generateContent());
-        table.setSizeFull();
-        hor.addComponent(table);
-        hor.setExpandRatio(table, 1); // Expand to fill
-
-        content.addComponent(hor);
-        content.setExpandRatio(hor, 1); // Expand to fill
+        Grid<Person> grid = new Grid<>();
+        grid.setCaption("My Grid");
+        grid.setItems(GridExample.generateContent());
+        grid.setSizeFull();
+        content.addComponent(grid);
+        content.setExpandRatio(grid, 1); // Expand to fill
     }
 }
 ----
