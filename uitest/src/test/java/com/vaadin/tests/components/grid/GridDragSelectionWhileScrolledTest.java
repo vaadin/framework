@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridDragSelectionWhileScrolledTest extends MultiBrowserTest {

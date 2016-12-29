@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.customelements.NativeSelectElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

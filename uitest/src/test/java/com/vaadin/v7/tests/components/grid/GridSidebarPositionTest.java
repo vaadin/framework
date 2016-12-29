@@ -24,7 +24,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridSidebarPositionTest extends MultiBrowserTest {

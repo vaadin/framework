@@ -41,6 +41,10 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
         return optionTexts;
     }
 
+    public List<WebElement> getOptionElements() {
+        return findElements(bySelectOption);
+    }
+
     public void selectByText(String text) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();
@@ -71,6 +75,26 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
             }
         }
         return null;
+    }
+
+    /**
+     * Return list of the selected options in the checkbox group
+     *
+     * @return list of the selected options in the checkbox group
+     */
+    public List<String> getSelection() {
+        List<String> values = new ArrayList<>();
+        List<WebElement> options = findElements(bySelectOption);
+        for (WebElement option : options) {
+            WebElement checkedItem;
+            checkedItem = option.findElement(By.tagName("input"));
+            String checked = checkedItem.getAttribute("checked");
+            if (checked != null
+                    && checkedItem.getAttribute("checked").equals("true")) {
+                values.add(option.findElement(By.tagName("label")).getText());
+            }
+        }
+        return values;
     }
 
     /**

@@ -74,6 +74,26 @@ public class RadioButtonGroupElement extends AbstractSelectElement {
     }
 
     /**
+     * Return list of the selected options in the radiobutton group
+     *
+     * @return list of the selected options in the radiobutton group
+     */
+    public List<String> getSelection() {
+        List<String> values = new ArrayList<>();
+        List<WebElement> options = findElements(bySelectOption);
+        for (WebElement option : options) {
+            WebElement checkedItem;
+            checkedItem = option.findElement(By.tagName("input"));
+            String checked = checkedItem.getAttribute("checked");
+            if (checked != null
+                    && checkedItem.getAttribute("checked").equals("true")) {
+                values.add(option.findElement(By.tagName("label")).getText());
+            }
+        }
+        return values;
+    }
+
+    /**
      * Select option in the option group with the specified value
      *
      * @param chars

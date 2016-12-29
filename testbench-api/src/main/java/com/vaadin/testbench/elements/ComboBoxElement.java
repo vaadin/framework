@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Assert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -57,7 +58,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     /**
      * Selects, without filtering, the first option in the ComboBox which
      * matches the given text.
-     * 
+     *
      * @param text
      *            the text of the option to select
      */
@@ -96,7 +97,7 @@ public class ComboBoxElement extends AbstractSelectElement {
 
     /**
      * Checks if text input is allowed for the combo box.
-     * 
+     *
      * @return <code>true</code> if text input is allowed, <code>false</code>
      *         otherwise
      */
@@ -222,12 +223,50 @@ public class ComboBoxElement extends AbstractSelectElement {
      * @return the input field element
      */
     public WebElement getInputField() {
-        return findElement(By.xpath("input"));
+        return findElement(By.vaadin("#textbox"));
     }
 
     private void ensurePopupOpen() {
         if (!isElementPresent(bySuggestionPopup)) {
             openPopup();
+        }
+    }
+
+    @Override
+    public String getText() {
+        return getInputField().getAttribute("value");
+    }
+
+    @Override
+    public void clear() {
+        getInputField().clear();
+    }
+
+    @Override
+    public void sendKeys(CharSequence... keysToSend) {
+        sendKeys(50, keysToSend);
+    }
+
+    /**
+     * Use this method to simulate typing into an element, which may set its
+     * value.
+     *
+     * @param delay
+     *            delay after sending each individual key (mainly needed for
+     *            PhantomJS)
+     * @param keysToSend
+     *            keys to type into the element
+     */
+    public void sendKeys(int delay, CharSequence... keysToSend) {
+        WebElement input = getInputField();
+
+        for (CharSequence key : keysToSend) {
+            input.sendKeys(key);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                Assert.fail(e.getMessage());
+            }
         }
     }
 }

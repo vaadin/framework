@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
 public class GridSidebarContentTest extends GridBasicClientFeaturesTest {

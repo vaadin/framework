@@ -28,7 +28,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.RadioButtonGroupElement;
+import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.tests.components.radiobutton.RadioButtonGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

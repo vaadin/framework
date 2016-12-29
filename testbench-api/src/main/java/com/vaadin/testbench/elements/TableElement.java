@@ -147,4 +147,18 @@ public class TableElement extends AbstractSelectElement {
         }
     }
 
+    public CollapseMenu openCollapseMenu() {
+        getCollapseMenuToggle().click();
+        WebElement cm = getDriver()
+                .findElement(By.xpath("//*[@id='PID_VAADIN_CM']"));
+        return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenu.class);
+    }
+
+    public static class CollapseMenu extends ContextMenuElement {
+    }
+
+    public WebElement getCollapseMenuToggle() {
+        return findElement(By.className("v-table-column-selector"));
+    }
+
 }

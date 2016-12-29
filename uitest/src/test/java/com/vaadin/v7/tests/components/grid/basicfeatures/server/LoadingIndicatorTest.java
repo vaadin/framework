@@ -22,7 +22,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 
 public class LoadingIndicatorTest extends GridBasicFeaturesTest {

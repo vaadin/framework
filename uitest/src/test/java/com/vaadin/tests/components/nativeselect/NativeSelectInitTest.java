@@ -18,7 +18,7 @@ package com.vaadin.tests.components.nativeselect;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.NativeSelectElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

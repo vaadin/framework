@@ -7,6 +7,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.Table")
 public class TableElement extends com.vaadin.testbench.elements.TableElement {
+    @Override
     public CollapseMenu openCollapseMenu() {
         getCollapseMenuToggle().click();
         WebElement cm = getDriver()
@@ -14,9 +15,7 @@ public class TableElement extends com.vaadin.testbench.elements.TableElement {
         return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenu.class);
     }
 
-    public static class CollapseMenu extends ContextMenuElement {
-    }
-
+    @Override
     public WebElement getCollapseMenuToggle() {
         return findElement(By.className("v-table-column-selector"));
     }
