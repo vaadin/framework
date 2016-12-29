@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.Column;
 
 public class GridColumnAutoExpand extends AbstractReindeerTestUI {
 
@@ -30,16 +30,15 @@ public class GridColumnAutoExpand extends AbstractReindeerTestUI {
         layout.setMargin(true);
         addComponent(layout);
 
-        Grid grid = new Grid("Broken Grid with Caption");
+        Grid<String> grid = new Grid<>();
+        grid.setCaption("Broken Grid with Caption");
         grid.setWidth("100%");
         grid.setHeight("100px");
 
-        Column col1 = grid.addColumn("Col1");
-        col1.setWidth(100);
-
-        Column col2 = grid.addColumn("Col2");
-        col2.setMinimumWidth(100);
-        col2.setExpandRatio(1);
+        grid.addColumn(ValueProvider.identity()).setCaption("Col1")
+                .setWidth(100);
+        grid.addColumn(ValueProvider.identity()).setCaption("Col2")
+                .setMinimumWidth(100).setExpandRatio(1);
 
         layout.addComponent(grid);
     }

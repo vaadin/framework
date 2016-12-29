@@ -13,15 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import com.vaadin.testbench.parallel.TestCategory;
 
 @TestCategory("grid")
-public class GridColumnAutoWidthServerTest
+public class GridColumnAutoWidthClientTest
         extends AbstractGridColumnAutoWidthTest {
     @Override
     protected Class<?> getUIClass() {
-        return GridColumnAutoWidth.class;
+        return GridColumnAutoWidthClient.class;
     }
 }

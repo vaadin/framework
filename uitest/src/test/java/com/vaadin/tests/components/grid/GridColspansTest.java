@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,20 +37,14 @@ public class GridColspansTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testHeaderColSpans() {
+    public void testColSpans() {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
         assertEquals("5", grid.getHeaderCell(0, 1).getAttribute("colspan"));
         assertEquals("2", grid.getHeaderCell(1, 1).getAttribute("colspan"));
         assertEquals("3", grid.getHeaderCell(1, 3).getAttribute("colspan"));
-    }
 
-    @Test
-    public void testFooterColSpans() {
-        openTestURL();
-
-        GridElement grid = $(GridElement.class).first();
         assertEquals("5", grid.getFooterCell(1, 1).getAttribute("colspan"));
         assertEquals("2", grid.getFooterCell(0, 1).getAttribute("colspan"));
         assertEquals("3", grid.getFooterCell(0, 3).getAttribute("colspan"));
@@ -84,8 +78,8 @@ public class GridColspansTest extends MultiBrowserTest {
                 grid.getHeaderCell(2, 1).getText().toLowerCase());
         $(ButtonElement.class).get(1).click();
         headerCell = grid.getHeaderCell(1, 1);
-        assertEquals("Header text not changed on column reorder.", "address",
-                headerCell.getText().toLowerCase());
+        assertEquals("Joined Header text not changed on column reorder.",
+                "misc", headerCell.getText().toLowerCase());
         assertEquals("Unexpected colspan", "1",
                 headerCell.getAttribute("colspan"));
         headerCell = grid.getHeaderCell(1, 2);
@@ -94,7 +88,7 @@ public class GridColspansTest extends MultiBrowserTest {
         assertEquals("Unexpected colspan", "2",
                 headerCell.getAttribute("colspan"));
 
-        assertTrue("Error indicator not present",
+        assertFalse("Error indicator not present",
                 isElementPresent(By.className("v-errorindicator")));
 
     }

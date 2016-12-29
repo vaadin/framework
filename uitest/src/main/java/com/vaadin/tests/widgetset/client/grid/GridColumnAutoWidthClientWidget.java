@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.v7.client.renderers.HtmlRenderer;
-import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
-import com.vaadin.v7.client.widgets.Grid;
-import com.vaadin.v7.client.widgets.Grid.SelectionMode;
+import com.vaadin.client.renderers.HtmlRenderer;
+import com.vaadin.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.client.widget.grid.selection.SelectionModel;
+import com.vaadin.client.widgets.Grid;
 
 public class GridColumnAutoWidthClientWidget
         extends PureGWTTestApplication<Grid<List<String>>> {
@@ -45,7 +45,7 @@ public class GridColumnAutoWidthClientWidget
     public GridColumnAutoWidthClientWidget() {
         super(new Grid<List<String>>());
         grid = getTestedWidget();
-        grid.setSelectionMode(SelectionMode.NONE);
+        grid.setSelectionModel(new SelectionModel.NoSelectionModel<>());
         grid.setWidth("750px");
 
         List<List<String>> list = new ArrayList<>();

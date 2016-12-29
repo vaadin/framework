@@ -13,22 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.util.BeanItemContainer;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.DetailsGenerator;
-import com.vaadin.v7.ui.Grid.RowReference;
-import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.ui.renderers.NumberRenderer;
 
 public class GridDetailsDetach extends AbstractReindeerTestUI {
 
@@ -70,36 +68,30 @@ public class GridDetailsDetach extends AbstractReindeerTestUI {
         addComponent(layout);
     }
 
-    private Grid generateGrid() {
-        BeanItemContainer<GridExampleBean> container = new BeanItemContainer<>(
-                GridExampleBean.class);
+    private Grid<GridExampleBean> generateGrid() {
+        List<GridExampleBean> items = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
-            container.addItem(new GridExampleBean("Bean " + i, i * i, i / 10d));
+            items.add(new GridExampleBean("Bean " + i, i * i, i / 10d));
         }
 
-        final Grid grid = new Grid(container);
-        grid.setColumnOrder("name", "amount", "count");
+        final Grid<GridExampleBean> grid = new Grid<>();
+        grid.setItems(items);
+        grid.addColumn(GridExampleBean::getName);
+        grid.addColumn(GridExampleBean::getAmount, new NumberRenderer());
+        grid.addColumn(GridExampleBean::getCount, new NumberRenderer());
         grid.setSizeFull();
         grid.setSelectionMode(SelectionMode.NONE);
 
-        grid.setDetailsGenerator(new DetailsGenerator() {
-            @Override
-            public Component getDetails(RowReference rowReference) {
-                final GridExampleBean bean = (GridExampleBean) rowReference
-                        .getItemId();
-                VerticalLayout layout = new VerticalLayout(
-                        new Label("Extra data for " + bean.getName()));
-                layout.setMargin(true);
-                return layout;
-            }
+        grid.setDetailsGenerator(item -> {
+            VerticalLayout layout = new VerticalLayout(
+                    new Label("Extra data for " + item.getName()));
+            layout.setMargin(true);
+            return layout;
         });
 
-        grid.addItemClickListener(new ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                Object itemId = event.getItemId();
-                grid.setDetailsVisible(itemId, !grid.isDetailsVisible(itemId));
-            }
+        grid.addItemClickListener(event -> {
+            GridExampleBean item = event.getItem();
+            grid.setDetailsVisible(item, !grid.isDetailsVisible(item));
         });
         return grid;
     }

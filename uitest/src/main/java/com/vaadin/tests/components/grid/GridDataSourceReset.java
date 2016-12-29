@@ -13,45 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.data.util.BeanItemContainer;
-import com.vaadin.v7.ui.Grid;
+import com.vaadin.ui.Grid;
 
 public class GridDataSourceReset extends AbstractReindeerTestUI {
 
-    BeanItemContainer<ComplexPerson> container;
-    List<ComplexPerson> persons;
-    Grid grid;
+    private List<ComplexPerson> persons;
+    private Grid<ComplexPerson> grid;
 
     @Override
     protected void setup(VaadinRequest request) {
         persons = createPersons(10, new Random(1));
-        container = new BeanItemContainer<>(ComplexPerson.class, persons);
 
-        grid = new Grid(container);
-        grid.select(container.firstItemId());
-        addComponent(new Button("Remove first", new ClickListener() {
+        grid = new Grid<>();
+        ListDataProvider<ComplexPerson> provider = DataProvider.create(persons);
+        grid.setDataProvider(provider);
+        grid.getSelectionModel().select(persons.get(0));
+        addComponent(new Button("Remove first", event -> {
+            persons.remove(0);
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.removeAllItems();
-                persons.remove(0);
-
-                container.addAll(persons);
-                grid.select(container.firstItemId());
-            }
+            provider.refreshAll();
+            grid.getSelectionModel().select(persons.get(0));
         }));
+
         addComponent(grid);
     }
 
