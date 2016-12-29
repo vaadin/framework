@@ -197,7 +197,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 		@Override
 		public void popstate(String uri) {
 			getPage().updateLocation(uri, true, true);
-			
+
 		}
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
@@ -657,6 +657,10 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     private String embedId;
 
+    private String uiPathInfo;
+
+    private String uiRootPath;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -734,6 +738,21 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         getPage().init(request);
 
+        String uiPathInfo = (String) request
+                .getAttribute(UIProvider.UI_ROOT_PATH);
+        if (uiPathInfo != null) {
+            setUiPathInfo(uiPathInfo);
+        }
+
+        if (getSession().getConfiguration().isSendUrlsAsParameters()) {
+            String uiRootPath = getPage().getLocation().getPath();
+            if (getUiPathInfo() != null) {
+                uiRootPath = uiRootPath.substring(0,
+                        uiRootPath.indexOf(uiPathInfo) + uiPathInfo.length());
+            }
+            setUiRootPath(uiRootPath);
+        }
+
         // Call the init overridden by the application developer
         init(request);
 
@@ -742,6 +761,22 @@ public abstract class UI extends AbstractSingleComponentContainer
             // Kickstart navigation if a navigator was attached in init()
             navigator.navigateTo(navigator.getState());
         }
+    }
+
+    public void setUiRootPath(String uiRootPath) {
+        this.uiRootPath = uiRootPath;
+    }
+
+    public String getUiRootPath() {
+        return uiRootPath;
+    }
+
+    public void setUiPathInfo(String uiPathInfo) {
+        this.uiPathInfo = uiPathInfo;
+    }
+
+    public String getUiPathInfo() {
+        return uiPathInfo;
     }
 
     /**

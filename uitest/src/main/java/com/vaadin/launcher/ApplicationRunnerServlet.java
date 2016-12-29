@@ -52,6 +52,7 @@ import com.vaadin.server.SystemMessages;
 import com.vaadin.server.SystemMessagesInfo;
 import com.vaadin.server.SystemMessagesProvider;
 import com.vaadin.server.UIClassSelectionEvent;
+import com.vaadin.server.UICreateEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
@@ -266,6 +267,13 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         @Override
         public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
             return (Class<? extends UI>) classToRun;
+        }
+
+        @Override
+        public UI createInstance(UICreateEvent event) {
+            event.getRequest().setAttribute(UIProvider.UI_ROOT_PATH,
+                    "/" + event.getUIClass().getName());
+            return super.createInstance(event);
         }
     }
 

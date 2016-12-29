@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 
 import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,12 +99,22 @@ public class VaadinSessionTest implements Serializable {
             }
         };
 
+        IMocksControl control = EasyMock.createNiceControl();
+        DeploymentConfiguration dc = control
+                .createMock(DeploymentConfiguration.class);
+
         session = new VaadinSession(mockService);
+
         mockService.storeSession(session, mockWrappedSession);
 
         ui = new MockPageUI();
-        vaadinRequest = new VaadinServletRequest(
-                EasyMock.createMock(HttpServletRequest.class), mockService) {
+        HttpServletRequest request = control
+                .createMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter("v-loc"))
+                .andReturn("http://localhost/");
+        control.replay();
+
+        vaadinRequest = new VaadinServletRequest(request, mockService) {
             @Override
             public String getParameter(String name) {
                 if ("theme".equals(name) || "restartApplication".equals(name)
@@ -115,6 +126,14 @@ public class VaadinSessionTest implements Serializable {
                     return "1";
                 }
                 return super.getParameter(name);
+            }
+
+            @Override
+            public Object getAttribute(String name) {
+                if (name.equals("com.vaadin.server.UI_ROOT_PATH")) {
+                    return "/";
+                }
+                return super.getAttribute(name);
             }
 
             @Override
@@ -130,9 +149,10 @@ public class VaadinSessionTest implements Serializable {
 
         };
 
+        session.setConfiguration(dc);
+        ui.setSession(session);
         ui.doInit(vaadinRequest, session.getNextUIid(), null);
 
-        ui.setSession(session);
         session.addUI(ui);
 
     }
@@ -242,9 +262,6 @@ public class VaadinSessionTest implements Serializable {
     // VaadinSessionTest.this which isn't serializable
     private static class MockPageUI extends UI {
         Page page = new Page(this, getState(false).pageState) {
-            @Override
-            public void init(VaadinRequest request) {
-            }
         };
 
         @Override
