@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
-import com.vaadin.v7.ui.Grid.AbstractRenderer;
+import com.vaadin.tests.components.grid.CustomRenderer.Data;
+import com.vaadin.ui.renderers.AbstractRenderer;
 
-public class IntArrayRenderer extends AbstractRenderer<int[]> {
+public class IntArrayRenderer extends AbstractRenderer<Data, int[]> {
     public IntArrayRenderer() {
         super(int[].class, "");
     }

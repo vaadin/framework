@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 
@@ -43,13 +43,11 @@ public class CustomRendererTest extends MultiBrowserTest {
 
         GridElement grid = findGrid();
         assertEquals("Click me!", grid.getCell(0, 1).getText());
-        assertEquals(CustomRenderer.INIT_DEBUG_LABEL_CAPTION,
-                findDebugLabel().getText());
+        assertEquals("Debug label placeholder", findDebugLabel().getText());
 
         grid.getCell(0, 1).click();
         assertEquals("row: 0, key: 1", grid.getCell(0, 1).getText());
-        assertEquals("key: 1, itemId: " + CustomRenderer.ITEM_ID,
-                findDebugLabel().getText());
+        assertEquals("key: 1, itemId: test-data", findDebugLabel().getText());
     }
 
     @Test
@@ -65,6 +63,6 @@ public class CustomRendererTest extends MultiBrowserTest {
     }
 
     private LabelElement findDebugLabel() {
-        return $(LabelElement.class).id(CustomRenderer.DEBUG_LABEL_ID);
+        return $(LabelElement.class).id("debuglabel");
     }
 }
