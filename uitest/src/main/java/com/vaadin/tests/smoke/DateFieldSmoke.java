@@ -35,12 +35,17 @@ public class DateFieldSmoke extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
+        setLocale(Locale.ENGLISH);
+
         InlineDateField inline = new InlineDateField();
         PopupDateField popup = new PopupDateField();
 
         int year = 2016 - 1900;
         popup.setValue(new Date(year, 11, 28));
         inline.setValue(new Date(year, 11, 29));
+
+        popup.setDateFormat("MM/dd/yy");
+        inline.setDateFormat("MM/dd/yy");
 
         popup.addValueChangeListener(event -> log(
                 "Popup value is : " + FORMAT.format(popup.getValue())));
