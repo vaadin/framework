@@ -13,36 +13,53 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
+import com.vaadin.data.Binder;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.v7.data.util.BeanItemContainer;
-import com.vaadin.v7.ui.Grid;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.TextField;
 
 public class GridCheckBoxDisplay extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = -5575892909354637168L;
-    private BeanItemContainer<Todo> todoContainer = new BeanItemContainer<>(
-            Todo.class);
 
     @Override
     protected void setup(VaadinRequest request) {
-        todoContainer.addBean(new Todo("Done task", true));
-        todoContainer.addBean(new Todo("Not done", false));
+        List<Todo> items = Arrays.asList(new Todo("Done task", true),
+                new Todo("Not done", false));
 
-        Grid grid = new Grid(todoContainer);
+        Grid<Todo> grid = new Grid<>();
         grid.setSizeFull();
 
-        grid.setColumnOrder("done", "task");
-        grid.getColumn("done").setWidth(75);
-        grid.getColumn("task").setExpandRatio(1);
+        TextField taskField = new TextField();
+        CheckBox doneField = new CheckBox();
+        Binder<Todo> binder = new Binder<>();
+
+        binder.bind(taskField, Todo::getTask, Todo::setTask);
+        binder.bind(doneField, Todo::isDone, Todo::setDone);
+
+        grid.getEditor().setBinder(binder);
+        grid.getEditor().setEnabled(true);
+
+        Column<Todo, String> column = grid
+                .addColumn(todo -> String.valueOf(todo.isDone()));
+        column.setWidth(75);
+        column.setEditorComponent(doneField);
+
+        grid.addColumn(Todo::getTask).setExpandRatio(1)
+                .setEditorComponent(taskField);
 
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        grid.setEditorEnabled(true);
+        grid.setItems(items);
 
         getLayout().addComponent(grid);
         getLayout().setExpandRatio(grid, 1);

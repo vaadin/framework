@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +24,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.data.AbstractRemoteDataSource;
-import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
-import com.vaadin.v7.client.widgets.Grid;
-import com.vaadin.v7.client.widgets.Grid.Column;
+import com.vaadin.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.client.widgets.Grid;
 
 public class GridDataChangeHandlerWidget extends Composite {
 
@@ -95,7 +94,7 @@ public class GridDataChangeHandlerWidget extends Composite {
         panel.setWidget(grid);
         grid.setDataSource(new RemoteDelayedDataSource(
                 Arrays.asList("A", "B", "C", "D", "E")));
-        grid.addColumn(new Column<String, String>("letter") {
+        grid.addColumn(new Grid.Column<String, String>("letter") {
             @Override
             public String getValue(String row) {
                 return row;
