@@ -105,6 +105,9 @@ import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
 
+import elemental.client.Browser;
+import elemental.events.EventListener;
+
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, MayScrollChildren {
@@ -232,6 +235,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 }
             }
         });
+        
+    	Browser.getWindow().setOnpopstate(new EventListener() {
+			@Override
+			public void handleEvent(elemental.events.Event evt) {
+				getRpcProxy(UIServerRpc.class).popstate(Browser.getWindow().getLocation().toString());
+			}
+		});
+
     }
 
     private native void open(String url, String name)
@@ -400,6 +411,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             final ComponentConnector connector = (ComponentConnector) uidl
                     .getPaintableAttribute("scrollTo", getConnection());
             scrollIntoView(connector);
+        }
+        
+        if(uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
+        	Browser.getWindow().getHistory().pushState(null, "", uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
+        }
+        if(uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
+        	Browser.getWindow().getHistory().replaceState(null, "", uidl.getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (uidl.hasAttribute(UIConstants.LOCATION_VARIABLE)) {

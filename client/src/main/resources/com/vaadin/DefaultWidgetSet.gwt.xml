@@ -8,8 +8,7 @@
 
 	<inherits name="com.vaadin.Vaadin" />
 
-	<!-- Elemental is used for handling Json only -->
-	<inherits name="elemental.Json" />
+	<inherits name="elemental.Elemental" />
 
 	<inherits name="com.google.gwt.precompress.Precompress" />
 
