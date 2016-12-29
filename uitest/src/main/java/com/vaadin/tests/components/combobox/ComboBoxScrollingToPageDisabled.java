@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.ComponentTestCase;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 public class ComboBoxScrollingToPageDisabled
         extends ComponentTestCase<ComboBox> {
@@ -20,13 +23,31 @@ public class ComboBoxScrollingToPageDisabled
 
     @Override
     protected void initializeComponents() {
-        ComboBox s = createSelect(null);
+        final ComboBox s = createSelect(null);
         s.setScrollToSelectedItem(false);
         populate(s, 100);
-        Object selection = new ArrayList<Object>(s.getItemIds()).get(50);
+        final Object selection = new ArrayList<Object>(s.getItemIds()).get(50);
         s.setValue(selection);
         addTestComponent(s);
-    }
+        
+        Button button = new Button("Select first");
+        button.addClickListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				s.setValue(s.getItemIds().iterator().next());
+			}
+		});
+        addComponent(button);
+
+        Button button2 = new Button("Select index 50");
+        button2.addClickListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				s.setValue(selection);
+			}
+		});
+        addComponent(button2);
+}
 
     private void populate(ComboBox s, int nr) {
         for (int i = 0; i < nr; i++) {
