@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +23,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
+import com.vaadin.client.renderers.HtmlRenderer;
+import com.vaadin.client.widget.grid.selection.SelectionModel;
+import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Registration;
-import com.vaadin.v7.client.renderers.HtmlRenderer;
-import com.vaadin.v7.client.widgets.Grid;
-import com.vaadin.v7.client.widgets.Grid.SelectionMode;
 
 public class GridCellFocusOnResetSizeWidget
         extends PureGWTTestApplication<Grid<String[]>> {
@@ -90,7 +90,8 @@ public class GridCellFocusOnResetSizeWidget
 
     private class Col extends Grid.Column<String, String[]> {
         public Col(String header) {
-            super(header, new HtmlRenderer());
+            super(header);
+            setRenderer(new HtmlRenderer());
         }
 
         @Override
@@ -103,7 +104,7 @@ public class GridCellFocusOnResetSizeWidget
     public GridCellFocusOnResetSizeWidget() {
         super(new Grid<String[]>());
         grid = getTestedWidget();
-        grid.setSelectionMode(SelectionMode.NONE);
+        grid.setSelectionModel(new SelectionModel.NoSelectionModel<>());
         grid.setWidth("300px");
         grid.addColumn(new Col("Foo"));
         final MyDataSource dataSource = new MyDataSource();
