@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.tests.widgetset.client.v7.grid.GridColumnAutoWidthClientWidget;
+import com.vaadin.tests.widgetset.client.grid.GridColumnAutoWidthClientWidget;
 import com.vaadin.tests.widgetset.server.TestWidgetComponent;
 
 @Widgetset(TestingWidgetSet.NAME)
