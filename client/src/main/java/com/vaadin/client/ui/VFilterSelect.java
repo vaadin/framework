@@ -1869,7 +1869,6 @@ public class VFilterSelect extends Composite
             client.updateVariable(paintableId, "selected",
                     new String[] { selectedOptionKey }, immediate);
             afterUpdateClientVariables();
-
             // currentPage = -1; // forget the page
         }
 
@@ -2606,6 +2605,7 @@ public class VFilterSelect extends Composite
     public void setSelectedCaption(String selectedCaption) {
         explicitSelectedCaption = selectedCaption;
         if (selectedCaption != null) {
+            selectedOptionKey = null;
             setPromptingOff(selectedCaption);
         }
     }
