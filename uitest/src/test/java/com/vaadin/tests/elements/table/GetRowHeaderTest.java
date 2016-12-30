@@ -70,12 +70,12 @@ public class GetRowHeaderTest extends MultiBrowserTest {
          * Resize the handle back to initial value.
          */
         if (BrowserUtil.isIE(getDesiredCapabilities())) {
-            int initHanldeWidth = handle.getSize().width;
+            int initHandleWidth = handle.getSize().width;
             setElementWidth(handle, 20);
             handle = header.getResizeHandle();
             builder.clickAndHold(handle).moveByOffset(-20, 0).release().build()
                     .perform();
-            setElementWidth(handle, initHanldeWidth);
+            setElementWidth(handle, initHandleWidth);
         } else {
             builder.clickAndHold(handle).moveByOffset(-20, 0).release().build()
                     .perform();

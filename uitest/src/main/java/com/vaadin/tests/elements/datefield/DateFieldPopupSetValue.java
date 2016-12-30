@@ -1,7 +1,6 @@
 package com.vaadin.tests.elements.datefield;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
@@ -12,8 +11,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 
 public class DateFieldPopupSetValue extends AbstractTestUI {
-
-    public Calendar calendar = Calendar.getInstance();
 
     public static LocalDate initialDate = LocalDate.of(2015, 4, 12);
     public static Date changedDate = new Date(2015, 5, 11);

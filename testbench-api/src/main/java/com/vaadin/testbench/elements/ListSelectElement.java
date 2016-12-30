@@ -40,7 +40,7 @@ public class ListSelectElement extends AbstractSelectElement {
     }
 
     /**
-     * Selects the option(s) with the given text.
+     * Selects the option with the given text.
      * <p>
      * For a ListSelect in multi select mode, adds the given option(s) to the
      * current selection.
@@ -49,6 +49,10 @@ public class ListSelectElement extends AbstractSelectElement {
      *            the text of the option
      */
     public void selectByText(String text) {
+        if (isReadOnly()) {
+            throw new ReadOnlyException();
+        }
+
         select.selectByVisibleText(text);
         if (isPhantomJS() && select.isMultiple()) {
             // Phantom JS does not fire a change event when
