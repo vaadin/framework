@@ -1,5 +1,7 @@
 package com.vaadin.tests.elements.checkboxgroup;
 
+import java.util.Collections;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +25,15 @@ public class CheckBoxGroupSetValueTest extends MultiBrowserTest {
     @Test
     public void testSetValue() {
         group.setValue(NEW_VALUE);
-        Assert.assertEquals(NEW_VALUE, group.getValue());
+        Assert.assertEquals(Collections.singletonList(NEW_VALUE),
+                group.getSelection());
     }
 
     @Test
     public void testSelectByText() {
         group.selectByText(NEW_VALUE);
-        Assert.assertEquals(NEW_VALUE, group.getValue());
+        Assert.assertEquals(Collections.singletonList(NEW_VALUE),
+                group.getSelection());
     }
 
 }

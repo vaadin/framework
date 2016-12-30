@@ -23,8 +23,8 @@ public class GridUI extends AbstractTestUI {
         grid.addColumn(Item::getBar).setCaption("bar");
 
         grid.setDetailsGenerator(item -> {
-            return new Label("Foo = " + item.getFoo() + " Bar = "
-                    + item.getBar());
+            return new Label(
+                    "Foo = " + item.getFoo() + " Bar = " + item.getBar());
         });
         grid.addItemClickListener(event -> {
             if (event.getMouseEventDetails().isDoubleClick()) {
@@ -55,7 +55,7 @@ public class GridUI extends AbstractTestUI {
         return null;
     }
 
-    private class Item {
+    private static class Item {
         private String foo;
         private String bar;
 

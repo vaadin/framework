@@ -2,6 +2,8 @@ package com.vaadin.tests.elements.calendar;
 
 import static java.util.Calendar.DAY_OF_MONTH;
 
+import java.util.Locale;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -20,7 +22,7 @@ public class CalendarUI extends AbstractTestUI {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 java.util.Calendar javaCalendar = java.util.Calendar
-                        .getInstance();
+                        .getInstance(Locale.ENGLISH);
                 javaCalendar.set(DAY_OF_MONTH, 1);
                 calendar.setStartDate(javaCalendar.getTime());
                 javaCalendar.set(DAY_OF_MONTH,
