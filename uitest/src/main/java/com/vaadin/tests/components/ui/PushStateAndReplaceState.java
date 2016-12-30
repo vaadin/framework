@@ -34,6 +34,7 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
 		});
 		
 		replace = new CheckBox("replace");
+		replace.setId("replace");
 		addComponent(replace);
 
 		addComponent(createButton("test", "Move to ./test", Page.getCurrent().getLocation().toString() + "/test"));
