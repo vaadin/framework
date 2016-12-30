@@ -380,23 +380,18 @@ public abstract class AbstractListing<T> extends AbstractComponent
         setItemIconGenerator(
                 new DeclarativeIconGenerator<>(getItemIconGenerator()));
 
-        List<T> readItems = readItems(design, context);
-        if (!readItems.isEmpty() && this instanceof Listing) {
-            ((Listing<T, ?>) this).setItems(readItems);
-        }
+        readItems(design, context);
     }
 
     /**
-     * Reads the data source items from the {@code design}.
+     * Reads the data source items from the {@code design} and puts them into the data provider.
      *
      * @param design
      *            The element to obtain the state from
      * @param context
      *            The DesignContext instance used for parsing the design
-     *
-     * @return the items read from the design
      */
-    protected abstract List<T> readItems(Element design, DesignContext context);
+    protected abstract void readItems(Element design, DesignContext context);
 
     /**
      * Reads an Item from a design and inserts it into the data source.

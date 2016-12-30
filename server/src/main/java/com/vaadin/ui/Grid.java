@@ -2898,8 +2898,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
-        return Collections.emptyList();
+    protected void readItems(Element design, DesignContext context) {
     }
 
     @Override

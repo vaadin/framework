@@ -60,9 +60,8 @@ public class AbstractSingleSelectTest {
         }
 
         @Override
-        protected List<Person> readItems(Element design,
+        protected void readItems(Element design,
                 DesignContext context) {
-            return null;
         }
 
         @Override
@@ -254,9 +253,8 @@ public class AbstractSingleSelectTest {
             }
 
             @Override
-            protected List<String> readItems(Element design,
+            protected void readItems(Element design,
                     DesignContext context) {
-                return null;
             }
         };
 

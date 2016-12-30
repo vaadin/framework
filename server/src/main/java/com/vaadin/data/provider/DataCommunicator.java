@@ -460,6 +460,7 @@ public class DataCommunicator<T, F> extends AbstractExtension {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         this.dataProvider = dataProvider;
         detachDataProviderListener();
+        getKeyMapper().removeAll();
         /*
          * This introduces behavior which influence on the client-server
          * communication: now the very first response to the client will always

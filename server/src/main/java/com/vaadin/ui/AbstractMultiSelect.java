@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.vaadin.data.Listing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
@@ -423,14 +424,16 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         Set<T> selected = new HashSet<>();
         List<T> items = design.children().stream()
                 .map(child -> readItem(child, selected, context))
                 .collect(Collectors.toList());
+        if (!items.isEmpty() && this instanceof Listing) {
+            ((Listing<T, ?>) this).setItems(items);
+        }
         deselectAll();
         selected.forEach(this::select);
-        return items;
     }
 
     /**
