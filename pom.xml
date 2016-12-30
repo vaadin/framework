@@ -47,6 +47,12 @@
         
         <jetty.version>9.3.7.v20160115</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
+
+        <!-- Sonar properties -->
+        <sonar.java.source>8</sonar.java.source>
+        <sonar.analysis.mode>preview</sonar.analysis.mode>
+        <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
+        <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
