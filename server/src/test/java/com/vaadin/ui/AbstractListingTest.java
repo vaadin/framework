@@ -40,9 +40,8 @@ public class AbstractListingTest {
         }
 
         @Override
-        protected List<String> readItems(Element design,
+        protected void readItems(Element design,
                 DesignContext context) {
-            return null;
         }
 
         @Override

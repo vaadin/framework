@@ -612,9 +612,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         setStyleGenerator(new DeclarativeStyleGenerator<>(getStyleGenerator()));
-        return super.readItems(design, context);
+        super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
