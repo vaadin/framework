@@ -26,6 +26,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+
 /**
  *
  * @since
@@ -39,7 +40,7 @@ public class AbstractTextElementSetValue extends AbstractTestUI {
     Label[] eventCountLabels = new Label[comps.length + 1];
     int[] eventCounters = new int[comps.length + 1];
     public static final String INITIAL_VALUE = "initial value";
-    public static final LocalDate INITIAL_DATE = LocalDate.now();
+    public static final LocalDate INITIAL_DATE = LocalDate.of(2016, 5, 7);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -61,7 +62,7 @@ public class AbstractTextElementSetValue extends AbstractTestUI {
         DateField df = createDateField();
         addValueChangeListener(df, comps.length);
         addComponent(df);
-        eventCountLabels[comps.length].setCaption("event  count");
+        eventCountLabels[comps.length].setCaption("event count");
         addComponent(eventCountLabels[comps.length]);
 
     }
@@ -84,7 +85,6 @@ public class AbstractTextElementSetValue extends AbstractTestUI {
     protected String getTestDescription() {
         return "Test type method of AbstractTextField components";
     }
-
 
     @Override
     protected Integer getTicketNumber() {

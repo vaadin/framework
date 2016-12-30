@@ -27,11 +27,6 @@ import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class CompatibilityAbstractTextElementSetValueTest
         extends MultiBrowserTest {
     private final static String TYPED_STRING = "this is typed string";

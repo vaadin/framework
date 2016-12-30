@@ -6,7 +6,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableScrollTest extends MultiBrowserTest {
@@ -32,9 +31,6 @@ public class TableScrollTest extends MultiBrowserTest {
     private int getScrollTopValue(WebElement elem) {
         JavascriptExecutor js = getCommandExecutor();
         String jsScript = "return arguments[0].getElementsByClassName(\"v-scrollable\")[0].scrollTop;";
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            jsScript = "return arguments[0].querySelectorAll(\".v-scrollable\")[0].scrollTop;";
-        }
         Long scrollTop = (Long) js.executeScript(jsScript, elem);
         return scrollTop.intValue();
     }
@@ -42,9 +38,6 @@ public class TableScrollTest extends MultiBrowserTest {
     private int getScrollLeftValue(WebElement elem) {
         JavascriptExecutor js = getCommandExecutor();
         String jsScript = "return arguments[0].getElementsByClassName(\"v-scrollable\")[0].scrollLeft;";
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            jsScript = "return arguments[0].querySelectorAll(\".v-scrollable\")[0].scrollLeft;";
-        }
         Long scrollLeft = (Long) js.executeScript(jsScript, elem);
         return scrollLeft.intValue();
     }

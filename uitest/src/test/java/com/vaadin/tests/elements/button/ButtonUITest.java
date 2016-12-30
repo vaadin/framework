@@ -18,7 +18,7 @@ public class ButtonUITest extends MultiBrowserTest {
     @Test
     public void testButtonWithQUIETStyle() {
         ButtonElement button = $(ButtonElement.class)
-                .id(ButtonUI.QUITE_BUTTON_ID);
+                .id(ButtonUI.QUIET_BUTTON_ID);
         TextFieldElement field = $(TextFieldElement.class).first();
         button.click();
         Assert.assertEquals("Clicked", field.getValue());
@@ -27,7 +27,7 @@ public class ButtonUITest extends MultiBrowserTest {
     @Test
     public void testButtonWithQUIETStyleNoCaption() {
         ButtonElement button = $(ButtonElement.class)
-                .id(ButtonUI.QUITE_BUTTON_NO_CAPTION_ID);
+                .id(ButtonUI.QUIET_BUTTON_NO_CAPTION_ID);
         TextFieldElement field = $(TextFieldElement.class).first();
         button.click();
         Assert.assertEquals("Clicked", field.getValue());
