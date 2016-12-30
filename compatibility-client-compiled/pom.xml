@@ -15,6 +15,8 @@
         <widgetset.name>com.vaadin.v7.Vaadin7WidgetSet</widgetset.name>
         <widgetset.style>OBF</widgetset.style>
         <widgetset.local.workers>6</widgetset.local.workers>
+        <!-- These files are directly from Vaadin 7 -->
+        <sonar.skip>true</sonar.skip>
     </properties>
 
     <url>https://vaadin.com/</url>

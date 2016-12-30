@@ -12,6 +12,8 @@
     <packaging>jar</packaging>
     <properties>
         <skip.uitest.deployment>true</skip.uitest.deployment>
+        <!-- Don't care about coding style for tests -->
+        <sonar.skip>true</sonar.skip>
     </properties>
 
     <url>https://vaadin.com/</url>
