@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.elements.abstracttextfield;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
@@ -42,7 +41,7 @@ public class CompatibilityAbstractTextElementSetValue extends AbstractTestUI {
     Label[] eventCountLabels = new Label[comps.length + 1];
     int[] eventCounters = new int[comps.length + 1];
     public static final String INITIAL_VALUE = "initial value";
-    public static final Date INITIAL_DATE = Calendar.getInstance().getTime();
+    public static final Date INITIAL_DATE = new Date(2016, 5, 7);
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -3,7 +3,6 @@ package com.vaadin.tests.elements.listselect;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
@@ -22,7 +21,7 @@ public class ListSelectOptionClick extends AbstractTestUI {
         options.add("item1");
         options.add("item2");
         options.add("item3");
-        multiSelect.setDataProvider(new ListDataProvider<String>(options));
+        multiSelect.setItems(options);
         multiSelect.select("item1");
         multiSelect.addSelectionListener(event -> {
             counter++;
@@ -35,7 +34,7 @@ public class ListSelectOptionClick extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "Test that user can pick option from ListSelectElement by call click() method";
+        return "Test that user can pick option from ListSelectElement by calling the click() method";
     }
 
     @Override

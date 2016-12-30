@@ -37,7 +37,7 @@ public class MenuBarUITest extends MultiBrowserTest {
     }
 
     // Tests against bug #14568
-    // @Test
+    @Test
     public void testClickTopLevelItemHavingSubmenuItemFocused() {
         MenuBarElement menuBar = $(MenuBarElement.class).first();
 

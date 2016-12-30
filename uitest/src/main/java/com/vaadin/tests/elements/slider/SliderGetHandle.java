@@ -19,14 +19,4 @@ public class SliderGetHandle extends AbstractTestUI {
         addComponent(sl2);
     }
 
-    @Override
-    protected String getTestDescription() {
-        return "Check getHanler method works. Get handler and move it, check get Value return new value";
-    }
-
-    @Override
-    protected Integer getTicketNumber() {
-        return 13769;
-    }
-
 }

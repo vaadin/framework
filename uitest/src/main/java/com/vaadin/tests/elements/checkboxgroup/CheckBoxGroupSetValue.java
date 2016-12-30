@@ -22,7 +22,7 @@ public class CheckBoxGroupSetValue extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "Test CheckBoxGroup element setValue() and SelectByText()";
+        return "Test CheckBoxGroup element setValue() and selectByText()";
     }
 
     @Override

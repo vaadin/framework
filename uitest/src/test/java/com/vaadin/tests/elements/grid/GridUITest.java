@@ -1,7 +1,6 @@
 package com.vaadin.tests.elements.grid;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -11,7 +10,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class GridUITest extends MultiBrowserTest {
 
     @Test
-    @Ignore("API for getRowCount is missing in FW8 ATM")
     public void testRowCount() {
         openTestURL("rowCount=0");
         Assert.assertEquals(0, getRowCount());
@@ -32,7 +30,6 @@ public class GridUITest extends MultiBrowserTest {
     }
 
     @Test
-    @Ignore("API needed for getRows working is missing in FW8 ATM")
     public void testGetRows() {
         openTestURL("rowCount=0");
         Assert.assertEquals(0, checkRows());

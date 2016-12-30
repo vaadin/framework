@@ -31,8 +31,8 @@ public class ButtonUI extends AbstractTestUI {
 
     public static final String TEXT_FIELD_ID = "testTextfield";
     public static final String LABEL_ID = "testLabel";
-    public static String QUITE_BUTTON_ID = "quiteButton";
-    public static String QUITE_BUTTON_NO_CAPTION_ID = "quiteButton2";
+    public static String QUIET_BUTTON_ID = "quietButton";
+    public static String QUIET_BUTTON_NO_CAPTION_ID = "quietButton2";
     public static String NORMAL_BUTTON_ID = "normalButton";
 
     final TextField testedField = new TextField();
@@ -47,19 +47,19 @@ public class ButtonUI extends AbstractTestUI {
 
         testedField.setValue("");
 
-        Button quiteButton = new Button("Quite Button");
-        quiteButton.setId(QUITE_BUTTON_ID);
-        quiteButton.addStyleName(ValoTheme.BUTTON_QUIET);
-        addListener(quiteButton, "Clicked");
+        Button quietButton = new Button("Quiet Button");
+        quietButton.setId(QUIET_BUTTON_ID);
+        quietButton.addStyleName(ValoTheme.BUTTON_QUIET);
+        addListener(quietButton, "Clicked");
 
-        Button quiteButtonNoCaption = new Button("");
-        quiteButtonNoCaption.setId(QUITE_BUTTON_NO_CAPTION_ID);
-        quiteButtonNoCaption.addStyleName(ValoTheme.BUTTON_QUIET);
-        quiteButtonNoCaption.setIcon(FontAwesome.ANDROID);
-        addListener(quiteButtonNoCaption, "Clicked");
+        Button quietButtonNoCaption = new Button("");
+        quietButtonNoCaption.setId(QUIET_BUTTON_NO_CAPTION_ID);
+        quietButtonNoCaption.addStyleName(ValoTheme.BUTTON_QUIET);
+        quietButtonNoCaption.setIcon(FontAwesome.ANDROID);
+        addListener(quietButtonNoCaption, "Clicked");
 
-        addComponent(quiteButton);
-        addComponent(quiteButtonNoCaption);
+        addComponent(quietButton);
+        addComponent(quietButtonNoCaption);
         addComponent(addButtonWithDelay());
 
     }

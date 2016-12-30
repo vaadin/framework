@@ -55,11 +55,12 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the selected option in the option group
+     * Return list of the selected options in the checkbox group
      *
-     * @return value of the selected option in the option group
+     * @return list of the selected options in the checkbox group
      */
-    public String getValue() {
+    public List<String> getSelection() {
+        List<String> values = new ArrayList<>();
         List<WebElement> options = findElements(bySelectOption);
         for (WebElement option : options) {
             WebElement checkedItem;
@@ -67,14 +68,14 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
             String checked = checkedItem.getAttribute("checked");
             if (checked != null
                     && checkedItem.getAttribute("checked").equals("true")) {
-                return option.findElement(By.tagName("label")).getText();
+                values.add(option.findElement(By.tagName("label")).getText());
             }
         }
-        return null;
+        return values;
     }
 
     /**
-     * Select option in the option group with the specified value
+     * Select option in the option group with the specified value.
      *
      * @param chars
      *            value of the option in the option group which will be selected

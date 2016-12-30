@@ -11,7 +11,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class SliderGetHandleTest extends MultiBrowserTest {
 
     @Test
-    public void testGetHanlde() {
+    public void testGetHandle() {
         openTestURL();
 
         // get second slider, to check that getHandler get the handler
