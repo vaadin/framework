@@ -18,7 +18,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 @Title("My UI")
-@Theme("valo")
 public class HelloWorld extends UI {
     @Override
     protected void init(VaadinRequest request) {
@@ -69,25 +68,3 @@ deploy it to a server, as explained in
 <<dummy/../../../framework/application/application-environment#application.environment,"Deploying
 an Application">>. During development, you typically deploy to an application
 server integrated with the IDE.
-
-Developing a pure client-side application, you could write a Hello World just as
-easily, and also in Java:
-
-
-[source, java]
-----
-public class HelloWorld implements EntryPoint {
-    @Override
-    public void onModuleLoad() {
-        RootPanel.get().add(new Label("Hello, world!"));
-    }
-}
-----
-
-We do not set the title here, because it is usually defined in the HTML page in
-which the code is executed. The application would be compiled into JavaScript
-with the Vaadin Client Compiler (or GWT Compiler). It is more typical, however,
-to write client-side widgets, which you can then use from a server-side Vaadin
-application. For more information regarding client-side development, see
-<<dummy/../../../framework/clientside/clientside-overview.asciidoc#clientside.overview,"Client-Side
-Vaadin Development">>.
