@@ -20,7 +20,9 @@ import java.util.Objects;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
+import com.vaadin.data.HasFilterableDataProvider;
+import com.vaadin.data.HasItems;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
@@ -40,7 +42,7 @@ import com.vaadin.ui.declarative.DesignFormatter;
  * backend data items, selection logic, and server-client communication.
  * <p>
  * <strong>Note: </strong> concrete component implementations should implement
- * the {@link Listing} interface.
+ * the {@link HasDataProvider} or {@link HasFilterableDataProvider} interface.
  *
  * @author Vaadin Ltd.
  * @since 8.0
@@ -48,10 +50,9 @@ import com.vaadin.ui.declarative.DesignFormatter;
  * @param <T>
  *            the item data type
  *
- * @see Listing
  */
 public abstract class AbstractListing<T> extends AbstractComponent
-        implements Focusable {
+        implements Focusable, HasItems<T> {
     /**
      * The item icon caption provider.
      */
@@ -269,9 +270,10 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Writes listing specific state into the given design.
      * <p>
-     * This method is separated from {@link #writeDesign(Element, DesignContext)}
-     * to be overridable in subclasses that need to replace this, but still must
-     * be able to call {@code super.writeDesign(...)}.
+     * This method is separated from
+     * {@link #writeDesign(Element, DesignContext)} to be overridable in
+     * subclasses that need to replace this, but still must be able to call
+     * {@code super.writeDesign(...)}.
      *
      * @see #doReadDesign(Element, DesignContext)
      *

@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Listing;
 import com.vaadin.data.provider.Query;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -61,7 +60,7 @@ import com.vaadin.ui.declarative.DesignContext;
  *            a component type
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public abstract class AbstractListingDeclarativeTest<T extends AbstractListing & Listing>
+public abstract class AbstractListingDeclarativeTest<T extends AbstractListing>
         extends AbstractComponentDeclarativeTestBase<T> {
 
     private static final String EXTERNAL_URL = "http://example.com/example.gif";
@@ -171,8 +170,11 @@ public abstract class AbstractListingDeclarativeTest<T extends AbstractListing &
 
     private void testReadData(String design, T expected, T read,
             DesignContext context) {
-        Assert.assertEquals(read.getDataProvider().size(new Query<>()),
-                expected.getDataProvider().size(new Query<>()));
+        Assert.assertEquals(
+                read.getDataCommunicator().getDataProvider()
+                        .size(new Query<>()),
+                expected.getDataCommunicator().getDataProvider()
+                        .size(new Query<>()));
         testWrite(read, design, context);
     }
 

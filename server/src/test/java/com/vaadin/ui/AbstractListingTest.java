@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.BackEndDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
@@ -24,7 +24,7 @@ import elemental.json.JsonObject;
 public class AbstractListingTest {
 
     private final class TestListing extends AbstractSingleSelect<String>
-            implements Listing<String, DataProvider<String, ?>> {
+            implements HasDataProvider<String> {
 
         /**
          * Used to execute data generation

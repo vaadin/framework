@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel.Single;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.event.selection.SingleSelectionEvent;
@@ -211,9 +210,9 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
 
     /**
      * Sets the selection based on a client request. Does nothing if the select
-     * component is {@linkplain #isReadOnly()} or if the selection
-     * would not change. Otherwise updates the selection and fires a selection
-     * change event with {@code isUserOriginated == true}.
+     * component is {@linkplain #isReadOnly()} or if the selection would not
+     * change. Otherwise updates the selection and fires a selection change
+     * event with {@code isUserOriginated == true}.
      *
      * @param key
      *            the key of the item to select or {@code null} to clear
@@ -326,8 +325,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         List<T> items = design.children().stream()
                 .map(child -> readItem(child, selected, context))
                 .collect(Collectors.toList());
-        if (!items.isEmpty() && this instanceof Listing) {
-            ((Listing<T, ?>) this).setItems(items);
+        if (!items.isEmpty()) {
+            setItems(items);
         }
         selected.forEach(this::setValue);
     }
