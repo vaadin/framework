@@ -13,30 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import com.vaadin.testbench.customelements.GridElement;
-import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class GridEditorConverterNotFoundTest extends GridBasicFeaturesTest {
-
-    @Override
-    protected Class<?> getUIClass() {
-        // Use the correct UI with helpers from GridBasicFeatures
-        return GridEditorConverterNotFound.class;
-    }
+@TestCategory("grid")
+public class GridEditingWithNoScrollBarsTest extends MultiBrowserTest {
 
     @Test
-    public void testConverterNotFound() {
+    public void testEditorWideEnough() {
         openTestURL();
 
-        $(GridElement.class).first().getCell(0, 0).doubleClick();
-
-        assertEquals("1. com.vaadin.v7.data.Buffered$SourceException",
-                getLogRow(0));
+        GridElement grid = $(GridElement.class).first();
+        grid.getCell(1, 1).doubleClick();
+        assertEquals(grid.getEditor().getSize().width,
+                grid.getTableWrapper().getSize().width);
     }
 }
