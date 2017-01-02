@@ -102,7 +102,6 @@ seconds by default. The user can continue to interact with the application
 normally while the tray notification is displayed.
 
 
-ifdef::web[]
 [[application.notifications.customization]]
 == Customizing Notifications
 
@@ -140,7 +139,6 @@ also prevents interaction with other parts of the application window, which is
 the default behaviour for error notifications. It does not, however, add a close
 box that the error notification has.
 
-endif::web[]
 
 [[application.notifications.css]]
 == Styling with CSS
