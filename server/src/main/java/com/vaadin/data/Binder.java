@@ -1102,8 +1102,7 @@ public class Binder<BEAN> implements Serializable {
      *            bean
      */
     public void setBean(BEAN bean) {
-        checkBindingsCompleted(
-                "All bindings must be completed before calling setBean");
+        checkBindingsCompleted("setBean");
         if (bean == null) {
             if (this.bean != null) {
                 doRemoveBean(true);
@@ -1147,8 +1146,7 @@ public class Binder<BEAN> implements Serializable {
      */
     public void readBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
-        checkBindingsCompleted(
-                "All bindings must be completed before calling readBean");
+        checkBindingsCompleted("readBean");
         setHasChanges(false);
         bindings.forEach(binding -> binding.initFieldValue(bean));
 
@@ -1726,9 +1724,19 @@ public class Binder<BEAN> implements Serializable {
         return converter;
     }
 
-    protected void checkBindingsCompleted(String message) {
+    /**
+     * Throws if this binder has incomplete bindings.
+     * 
+     * @param methodName
+     *            name of the method where this call is originated from
+     * @throws IllegalStateException
+     *             if this binder has incomplete bindings
+     */
+    protected void checkBindingsCompleted(String methodName) {
         if (!incompleteBindings.isEmpty()) {
-            throw new IllegalStateException(message);
+            throw new IllegalStateException(
+                    "All bindings created with forField must be completed before calling "
+                            + methodName);
         }
     }
 }
