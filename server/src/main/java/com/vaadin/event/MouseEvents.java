@@ -46,17 +46,17 @@ public interface MouseEvents {
      */
     public static class ClickEvent extends Component.Event {
         /**
-         * @deprecated As of 7.0, use {@link Button#LEFT} instead.
+         * @deprecated As of 7.0, use {@link MouseButton#LEFT} instead.
          */
         @Deprecated
         public static final MouseButton BUTTON_LEFT = MouseButton.LEFT;
         /**
-         * @deprecated As of 7.0, use {@link Button#MIDDLE} instead.
+         * @deprecated As of 7.0, use {@link MouseButton#MIDDLE} instead.
          */
         @Deprecated
         public static final MouseButton BUTTON_MIDDLE = MouseButton.MIDDLE;
         /**
-         * @deprecated As of 7.0, use {@link Button#RIGHT} instead.
+         * @deprecated As of 7.0, use {@link MouseButton#RIGHT} instead.
          */
         @Deprecated
         public static final MouseButton BUTTON_RIGHT = MouseButton.RIGHT;
@@ -71,7 +71,7 @@ public interface MouseEvents {
         /**
          * Returns an identifier describing which mouse button the user pushed.
          * Compare with {@link MouseButton#LEFT},{@link MouseButton#MIDDLE},
-         * {@link Button#RIGHT} to find out which button it is.
+         * {@link MouseButton#RIGHT} to find out which button it is.
          *
          * @return one of {@link MouseButton#LEFT}, {@link MouseButton#MIDDLE},
          *         {@link MouseButton#RIGHT}.

@@ -655,7 +655,7 @@ public class FileUploadHandler implements RequestHandler {
      * Removes any possible path information from the filename and returns the
      * filename. Separators / and \\ are used.
      *
-     * @param name
+     * @param filename
      * @return
      */
     private static String removePath(String filename) {

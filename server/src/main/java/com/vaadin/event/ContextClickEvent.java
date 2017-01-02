@@ -18,7 +18,6 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -85,7 +84,7 @@ public class ContextClickEvent extends ClickEvent {
          *
          * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
          *             the registration object returned from
-         *             {@link #addContextClickListener(FocusListener)}.
+         *             {@link #addContextClickListener(ContextClickListener)} .
          */
         @Deprecated
         public void removeContextClickListener(ContextClickListener listener);

@@ -38,8 +38,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
     /**
      * Crate a new bootstrap page response.
      *
-     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest,
-     *      VaadinSession, Class)
+     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest, VaadinSession, Class, UIProvider)
      *
      * @param handler
      *            the bootstrap handler that is firing the event

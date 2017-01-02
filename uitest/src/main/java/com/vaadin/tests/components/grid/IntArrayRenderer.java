@@ -15,19 +15,11 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.tests.widgetset.client.grid.GridColumnAutoWidthClientWidget;
-import com.vaadin.tests.widgetset.server.TestWidgetComponent;
+import com.vaadin.tests.components.grid.CustomRendererUI.Data;
+import com.vaadin.ui.renderers.AbstractRenderer;
 
-@Widgetset(TestingWidgetSet.NAME)
-public class GridColumnAutoWidthClient extends AbstractTestUI {
-
-    @Override
-    protected void setup(VaadinRequest request) {
-        addComponent(
-                new TestWidgetComponent(GridColumnAutoWidthClientWidget.class));
+public class IntArrayRenderer extends AbstractRenderer<Data, int[]> {
+    public IntArrayRenderer() {
+        super(int[].class, "");
     }
 }

@@ -7,7 +7,7 @@ layout: page
 [[architecture.overview]]
 = Overview
 
-Vaadin provides two development models for web applications: for the client-side
+Vaadin Framework provides two development models for web applications: for the client-side
 (the browser) and for the server-side. The server-driven development model is
 the more powerful one, allowing application development solely on the
 server-side, by utilizing an AJAX-based Vaadin Client-Side Engine that renders

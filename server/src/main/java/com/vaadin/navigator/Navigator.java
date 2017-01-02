@@ -1021,7 +1021,6 @@ public class Navigator implements Serializable {
      * {@code parameters}.
      *
      * @since 7.6.7
-     * @return view change event
      */
     public void destroy() {
         stateManager.setNavigator(null);

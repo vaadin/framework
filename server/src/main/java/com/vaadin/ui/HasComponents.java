@@ -152,8 +152,6 @@ public interface HasComponents extends Component, Iterable<Component> {
         /**
          * Gets the component container.
          *
-         * @param the
-         *            component container.
          */
         public HasComponents getContainer() {
             return (HasComponents) getSource();
@@ -162,8 +160,6 @@ public interface HasComponents extends Component, Iterable<Component> {
         /**
          * Gets the attached component.
          *
-         * @param the
-         *            attach component.
          */
         public Component getAttachedComponent() {
             return component;
@@ -195,8 +191,6 @@ public interface HasComponents extends Component, Iterable<Component> {
         /**
          * Gets the component container.
          *
-         * @param the
-         *            component container.
          */
         public HasComponents getContainer() {
             return (HasComponents) getSource();

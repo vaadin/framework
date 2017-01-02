@@ -28,7 +28,7 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.util.ReflectTools;
 
 /**
- * Interface that serves as a wrapper for {@link Field} related events.
+ * Interface that serves as a wrapper for focus and blur events.
  */
 public interface FieldEvents {
 

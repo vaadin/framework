@@ -70,7 +70,7 @@ public abstract class BootstrapResponse extends EventObject {
     /**
      * Gets the request for which the generated bootstrap HTML will be the
      * response. This can be used to read request headers and other additional
-     * information. Please note that {@link VaadinRequest#getBrowserDetails()}
+     * information. Please note that {@link VaadinSession#getBrowser()}
      * will not be available because the bootstrap page is generated before the
      * bootstrap javascript has had a chance to send any information back to the
      * server.

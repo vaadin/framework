@@ -154,15 +154,10 @@ public abstract class LegacyApplication implements ErrorHandler {
     private int namelessUIIndex = 0;
 
     /**
-     * Adds a new browser level window to this application. Please note that UI
-     * doesn't have a name that is used in the URL - to add a named window you
-     * should instead use {@link #addWindow(UI, String)}
+     * Adds a new browser level window to this application.
      *
      * @param uI
      *            the UI window to add to the application
-     * @return returns the name that has been assigned to the window
-     *
-     * @see #addWindow(UI, String)
      */
     public void addWindow(LegacyWindow uI) {
         if (uI.getName() == null) {
@@ -178,7 +173,7 @@ public abstract class LegacyApplication implements ErrorHandler {
 
     /**
      * Removes the specified window from the application. This also removes all
-     * name mappings for the window (see {@link #addWindow(UI, String) and
+     * name mappings for the window (see {@link #addWindow(LegacyWindow)} and
      * #getWindowName(UI)}.
      *
      * <p>

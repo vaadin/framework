@@ -85,7 +85,7 @@ public class GridDetailsWidthTest extends SingleBrowserTest {
                 cell.getText());
         Assert.assertEquals("Details row was not in correct location",
                 cell.getLocation().getY() + cell.getSize().getHeight(),
-                spacer.getLocation().getY());
+                spacer.getLocation().getY(), 2);
 
     }
 

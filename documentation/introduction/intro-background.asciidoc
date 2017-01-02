@@ -90,12 +90,12 @@ steering committee. As a member of the committee, Vaadin can work towards the
 success of GWT as a foundation of the Java web development community.
 
 [[intro.background.vaadin8]]
-== Vaadin 8 Introduces New Data Binding API
+== Vaadin Framework 8 with New Data Binding API
 
-The biggest change in Vaadin 8 is the complete modernization of the data binding API.
-Binding components to data sources is one of the core features of the Vaadin Framework, as it eliminates the need to explicitly shuffle data between Vaadin components and data objects, typically beans.
+The biggest change in Vaadin Framework 8 is the complete modernization of the data binding API.
+Binding components to data sources is one of the core features of the Vaadin Framework, as it eliminates the need to explicitly shuffle data between components and data objects, typically beans.
 The old data model was designed in time before Java features such as generics.
 While the data model was improved over the years, it was fundamentally outdated and complex to use.
-The new data binding API works much more fluently in Java 8, especially with Java 8 features such as lambda expressions.
+The new data binding API works much more fluently in Java 8, especially with Java 8 features such as lambda expressions and streams.
 Consequently, to be able to fully use the new features of Java 8, we have raised the requirements from Java 6 to 8.
-The change should make Vaadin up to date with the most current Java technologies used by developers.
+The change should make Vaadin Framework up to date with the most current Java technologies used by developers.

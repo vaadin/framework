@@ -13,20 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
-import com.vaadin.tests.widgetset.client.v7.grid.RowAwareRendererConnector.RowAwareRendererRpc;
+import com.vaadin.tests.components.grid.CustomRendererUI.Data;
+import com.vaadin.tests.widgetset.client.EmptyEnum;
+import com.vaadin.tests.widgetset.client.grid.RowAwareRendererConnector.RowAwareRendererRpc;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.Grid.AbstractRenderer;
+import com.vaadin.ui.renderers.AbstractRenderer;
 
-public class RowAwareRenderer extends AbstractRenderer<Void> {
+public class RowAwareRenderer extends AbstractRenderer<Data, EmptyEnum> {
     public RowAwareRenderer(final Label debugLabel) {
-        super(Void.class, "");
+        super(EmptyEnum.class, "");
         registerRpc(new RowAwareRendererRpc() {
             @Override
             public void clicky(String key) {
-                Object itemId = getItemId(key);
-                debugLabel.setValue("key: " + key + ", itemId: " + itemId);
+                Data data = getParentGrid().getDataCommunicator().getKeyMapper()
+                        .get(key);
+                debugLabel.setValue("key: " + key + ", itemId: " + data);
             }
         });
     }

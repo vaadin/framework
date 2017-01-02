@@ -42,9 +42,6 @@ public class MetadataWriter implements Serializable {
      *            The writer used.
      * @param repaintAll
      *            Whether the client should repaint everything.
-     * @param analyzeLayouts
-     *            Whether detected layout problems should be reported in client
-     *            and server console.
      * @param async
      *            True if this message is sent by the server asynchronously,
      *            false if it is a response to a client message.

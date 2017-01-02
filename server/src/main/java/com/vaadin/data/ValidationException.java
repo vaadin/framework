@@ -82,7 +82,7 @@ public class ValidationException extends Exception {
     /**
      * Returns a list of the bean level validation errors which caused the
      * exception, or an empty list if the exception was caused by
-     * {@link #getBindingValidationErrors() binder level validation errors}.
+     * {@link #getFieldValidationErrors() field level validation errors}.
      *
      * @return binder validation errors list
      */

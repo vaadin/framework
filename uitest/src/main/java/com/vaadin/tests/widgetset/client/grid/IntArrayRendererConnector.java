@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
+import com.vaadin.client.connectors.grid.AbstractGridRendererConnector;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.client.connectors.AbstractGridRendererConnector;
-import com.vaadin.v7.client.renderers.Renderer;
-import com.vaadin.v7.client.widget.grid.RendererCellReference;
 
-@Connect(com.vaadin.v7.tests.components.grid.IntArrayRenderer.class)
+@Connect(com.vaadin.tests.components.grid.IntArrayRenderer.class)
 public class IntArrayRendererConnector
         extends AbstractGridRendererConnector<int[]> {
 

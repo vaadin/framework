@@ -79,7 +79,7 @@ incompatibility issues with Eclipse plugins installed by the package management
 of the operating system.
 
 [[installing.eclipse.plugin]]
-== Installing the Vaadin Plugin
+== Installing the Vaadin Eclipse Plugin
 
 You can install the plugin as follows:
 
@@ -90,9 +90,9 @@ You can install the plugin as follows:
 image::img/plugin-install-addsite.png[]
 +
 Enter a name such as "Vaadin Update Site" and the URL of the update site:
-http://vaadin.com/eclipse. If you want or need to use the latest unstable
+https://vaadin.com/eclipse. If you want or need to use the latest unstable
 plugin, which is usually more compatible with development and beta releases of
-Vaadin, you can use http://vaadin.com/eclipse/experimental and give it a
+Vaadin Framework, you can use https://vaadin.com/eclipse/experimental and give it a
 distinctive name such as "Vaadin Experimental Site". Then click [guibutton]#OK#.
 The Vaadin site should now appear in the [guilabel]#Available Software# window.
 
@@ -112,7 +112,7 @@ Then, click [guibutton]#Next#.
 [guibutton]#Restart#.
 
 More installation instructions for the Eclipse plugin can be found at
-http://vaadin.com/eclipse.
+https://vaadin.com/eclipse.
 
 
 

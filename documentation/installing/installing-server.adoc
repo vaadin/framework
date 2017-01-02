@@ -7,14 +7,9 @@ layout: page
 [[installing.server]]
 = Installing a Web Server
 
-You can run Vaadin applications in any Java servlet container that supports at least Servlet API 2.4.
-However, a server supporting Servlet API 3.0 is recommended.
-It is required for using Vaadin CDI, for which also a CDI container is required, a standard feature in Java EE 6 or newer servers.
-It is also required by the Vaadin Spring add-on.
+You can run Vaadin applications in any Java servlet container that supports at least Servlet API 3.0.
 Server push can benefit from using communication modes, such as WebSocket, enabled by features in some latest servers.
 For Java EE containers, at least Wildfly, Glassfish, and Apache TomEE Web Profile are recommended.
-
-Also, if you use Java 8 for Vaadin development, you need to make sure that the server supports it.
 
 Some Java IDEs have server integration, so we describe installation of the server before the IDEs.
 

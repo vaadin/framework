@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.customfield.CustomFieldState;
  * Customization of both the visual presentation and the logic of the field is
  * possible.
  * <p>
- * Subclasses must implement {@link #getType()} and {@link #initContent()}.
+ * Subclasses must implement {@link #initContent()}.
  * <p>
  * Most custom fields can simply compose a user interface that calls the methods
  * {@link #doSetValue(Object)} and {@link #getValue()} when necessary.
