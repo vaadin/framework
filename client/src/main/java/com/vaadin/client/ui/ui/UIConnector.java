@@ -46,12 +46,14 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Focusable;
@@ -103,7 +105,6 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
 
 import elemental.client.Browser;
-import elemental.events.EventListener;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
@@ -114,6 +115,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     private String activeTheme = null;
 
     private HandlerRegistration windowOrderRegistration;
+
+    /*
+     * Used to workaround IE bug related to popstate events and certain fragment
+     * only changes
+     */
+    private String currentLocation;
 
     private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
         @Override
@@ -232,13 +239,27 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 }
             }
         });
-        
-    	Browser.getWindow().setOnpopstate(new EventListener() {
-			@Override
-			public void handleEvent(elemental.events.Event evt) {
-				getRpcProxy(UIServerRpc.class).popstate(Browser.getWindow().getLocation().toString());
-			}
-		});
+
+        Browser.getWindow().setOnpopstate(evt -> {
+            final String newLocation = Browser.getWindow().getLocation()
+                    .toString();
+            getRpcProxy(UIServerRpc.class).popstate(newLocation);
+            currentLocation = newLocation;
+        });
+        // IE doesn't fire popstate correctly with certain hash changes.
+        // Simulate the missing event with History handler.
+        if (BrowserInfo.get().isIE()) {
+            History.addValueChangeHandler(evt -> {
+                final String newLocation = Browser.getWindow().getLocation()
+                        .toString();
+                if (!newLocation.equals(currentLocation)) {
+                    currentLocation = newLocation;
+                    getRpcProxy(UIServerRpc.class).popstate(
+                            Browser.getWindow().getLocation().toString());
+                }
+            });
+            currentLocation = Browser.getWindow().getLocation().toString();
+        }
 
     }
 
@@ -409,12 +430,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     .getPaintableAttribute("scrollTo", getConnection());
             scrollIntoView(connector);
         }
-        
-        if(uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
-        	Browser.getWindow().getHistory().pushState(null, "", uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
+
+        if (uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
+            Browser.getWindow().getHistory().pushState(null, "",
+                    uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
         }
-        if(uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
-        	Browser.getWindow().getHistory().replaceState(null, "", uidl.getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
+        if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
+            Browser.getWindow().getHistory().replaceState(null, "", uidl
+                    .getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (firstPaint) {
