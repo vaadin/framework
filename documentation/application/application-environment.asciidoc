@@ -7,7 +7,7 @@ layout: page
 [[application.environment]]
 = Deploying an Application
 
-Vaadin applications are deployed as __Java web applications__, which can contain
+Vaadin Framework applications are deployed as __Java web applications__, which can contain
 a number of servlets, each of which can be a Vaadin application or some other
 servlet, and static resources such as HTML files. Such a web application is
 normally packaged as a WAR (Web application ARchive) file, which can be deployed
@@ -27,8 +27,6 @@ Java web application. There exists also other kinds of web applications. To
 avoid confusion with the general meaning of "web application", we often refer to
 Java web applications with the slight misnomer "WAR" in this book.
 
-// TODO Vaadin 7: What is the relationship between servlet and application?
-
 [[application.environment.war-eclipse]]
 == Creating Deployable WAR in Eclipse
 
@@ -47,13 +45,13 @@ we give the instructions for Eclipse.
 The following files are required in a web application in order to run it.
 
 [filename]#WEB-INF/web.xml# (optional with Servlet 3.0)::
- his is the web application descriptor that defines how the application is rganized, that is, what servlets and such it has.
+ his is the web application descriptor that defines how the application is organized, that is, what servlets and such it has.
 You can refer to any Java book about the contents of this file.
 It is not needed if you define the Vaadin servlet with the [classname]#@WebServlet# annotation in Servlet API 3.0.
 
 [filename]#WEB-INF/lib/*.jar# ::
 These are the Vaadin libraries and their dependencies.
-They can be found in the installation package or as loaded by a dependency management system such as Maven or Ivy.
+They can be found in the installation package or as loaded by a dependency management system such as Maven.
 
 Your UI classes::
 You must include your UI classes either in a JAR file in [filename]#WEB-INF/lib# or as classes in [filename]#WEB-INF/classes#
@@ -110,8 +108,7 @@ web fragments, or programmatically. You can use both a [filename]#web.xml# and
 WebServlet in the same application. Settings in the [filename]#web.xml# override
 the ones given in annotations.
 
-The following example shows the basic contents of a deployment descriptor for a
-Servlet 2.4 application. You simply specify the UI class with the
+The following example shows the basic contents of a deployment descriptor. You simply specify the UI class with the
 [parameter]#UI# parameter for the [classname]#com.vaadin.server.VaadinServlet#.
 The servlet is then mapped to a URL path in a standard way for Java Servlets.
 
@@ -119,11 +116,11 @@ The servlet is then mapped to a URL path in a standard way for Java Servlets.
 ----
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;web-app
-  id="WebApp_ID" version="2.4"
+  id="WebApp_ID" version="**3.0**"
   xmlns="http://java.sun.com/xml/ns/j2ee"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"&gt;
+  xsi:schemaLocation="**http://java.sun.com/xml/ns/javaee
+      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd**"&gt;
 
   &lt;servlet&gt;
     &lt;servlet-name&gt;[replaceable]##myservlet##&lt;/servlet-name&gt;
@@ -155,23 +152,6 @@ Vaadin framework and is normally the same for all Vaadin projects. For some
 purposes, you may need to use a custom servlet class that extends the
 [classname]#VaadinServlet#. The class name must include the full package path.
 
-[[application.environment.web-xml.servlet]]
-=== Servlet API Version
-
-The descriptor example given above was for Servlet 2.4. For a later version,
-such as Servlet 3.0, you should use:
-
-[subs="normal"]
-----
-&lt;web-app
-  id="WebApp_ID" version="**3.0**"
-  xmlns="http://java.sun.com/xml/ns/j2ee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="**http://java.sun.com/xml/ns/javaee
-      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd**"&gt;
-----
-Servlet 3.0 support is useful for at least server push.
-
 
 [[application.environment.web-xml.widgetset]]
 === Widget Set
@@ -188,15 +168,7 @@ class MyUI extends UI {
     ...
 ----
 
-You can also define it in the [filename]#web.xml# descriptor for the servlet:
-
-[subs="normal"]
-----
-<init-param>
-  <param-name>widgetset</param-name>
-  <param-value>[replaceable]##com.example.myproject.MyWidgetSet##</param-value>
-</init-param>
-----
+You can also define it in the [filename]#web.xml# descriptor for the servlet.
 
 The name of a widget set is technically a Java class name with the same path as the widget set definition file, but without the [filename]#.gwt.xml# extension.
 
@@ -218,15 +190,7 @@ With [classname]#@WebServlet# annotation for the servlet class:
 ----
 @WebServlet(value = "**/++*++**", asyncSupported = true)
 ----
-In a [filename]#web.xml#:
 
-[subs="normal"]
-----
-  &lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;**myservlet**&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-  &lt;/servlet-mapping&gt;
-----
 The URL pattern is defined in the above examples as [literal]#++/*++#. This
 matches any URL under the project context. We defined above the project context
 as [literal]#++myproject++# so the URL for the page of the UI will be
@@ -252,21 +216,7 @@ multiple mappings as a list enclosed in curly braces as follows:
 @WebServlet(value = {"**/myui/++*++**", "/VAADIN/*"},
             asyncSupported = true)
 ----
-In a [filename]#web.xml#:
 
-[subs="normal"]
-----
-    ...
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;**myservlet**&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;**/myui/++*++**&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;**myservlet**&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/VAADIN/*&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-----
 If you have multiple servlets, you should specify only one
 [literal]#++/VAADIN/*++# mapping.It does not matter which servlet you map the
 pattern to, as long as it is a Vaadin servlet.
@@ -309,16 +259,7 @@ By default, Vaadin applications run in __debug mode__ (or __development mode__),
 which should be used during development. This enables various debugging
 features. For production use, you should have the
 [literal]#++productionMode=true++# setting in the
-[classname]#@VaadinServletConfiguration#, or in [filename]#web.xml#:
-
-
-----
-<context-param>
-  <param-name>productionMode</param-name>
-  <param-value>true</param-value>
-  <description>Vaadin production mode</description>
-</context-param>
-----
+[classname]#@VaadinServletConfiguration#.
 
 The parameter and the debug and production modes are described in more detail in
 <<dummy/../../../framework/advanced/advanced-debug#advanced.debug,"Debug Mode
@@ -333,17 +274,6 @@ Vaadin normally uses the [classname]#DefaultUIProvider# for creating
 can define its class with the [parameter]#UIProvider# parameter. The provider is
 registered in the [classname]#VaadinSession#.
 
-In a [filename]#web.xml#:
-
-[subs="normal"]
-----
-  &lt;servlet&gt;
-    ...
-    &lt;init-param&gt;
-      &lt;param-name&gt;UIProvider&lt;/param-name&gt;
-      &lt;param-value&gt;**com.ex.my.MyUIProvider**&lt;/param-value&gt;
-    &lt;/init-param&gt;
-----
 The parameter is logically associated with a particular servlet, but can be
 defined in the context as well.
 
@@ -363,35 +293,16 @@ The interval of the heartbeat requests can be specified in seconds with the
 entire web application or an init parameter for the individual servlet. The
 default value is 300 seconds (5 minutes).
 
-In a [filename]#web.xml#:
-
-
-----
-<context-param>
-  <param-name>heartbeatInterval</param-name>
-  <param-value>300</param-value>
-</context-param>
-----
-
 
 [[application.environment.parameters.session-timeout]]
 === Session Timeout After User Inactivity
 
+((("session-timeout")))
 In normal servlet operation, the session timeout defines the allowed time of
 inactivity after which the server should clean up the session. The inactivity is
 measured from the last server request. Different servlet containers use varying
 defaults for timeouts, such as 30 minutes for Apache Tomcat. You can set the
 timeout under [literal]#++<web-app>++# with:
-
-In a [filename]#web.xml#:
-
-((("session-timeout")))
-
-----
-<session-config>
-    <session-timeout>30</session-timeout>
-</session-config>
-----
 
 ((("Out of
 Sync")))
@@ -408,18 +319,6 @@ default), Vaadin closes the UIs and the session after the time specified in the
 [parameter]#session-timeout# parameter expires after the last non-heartbeat
 request.
 
-In a [filename]#web.xml#:
-
-
-----
-  <servlet>
-    ...
-    <init-param>
-      <param-name>closeIdleSessions</param-name>
-      <param-value>true</param-value>
-    </init-param>
-----
-
 
 [[application.environment.parameters.push]]
 === Push Mode
@@ -430,22 +329,9 @@ for a UI either with a [classname]#@Push# annotation for the UI or in the
 descriptor. The push mode is defined with a [parameter]#pushmode# parameter. The
 [literal]#++automatic++# mode pushes changes to the browser automatically after
 __access()__ finishes. With [literal]#++manual++# mode, you need to do the push
-explicitly with [methodname]#push()#. If you use a Servlet 3.0 compatible
-server, you also want to enable asynchronous processing with the
+explicitly with [methodname]#push()#. You can enable asynchronous processing with the
 [literal]#++async-supported++# parameter.
 
-In a [filename]#web.xml#:
-
-[subs="normal"]
-----
-&lt;servlet&gt;
-  ...
-  &lt;init-param&gt;
-    &lt;param-name&gt;pushmode&lt;/param-name&gt;
-    &lt;param-value&gt;**automatic**&lt;/param-value&gt;
-  &lt;/init-param&gt;
-  &lt;async-supported&gt;**true**&lt;/async-supported&gt;
-----
 
 [[application.environment.parameters.xsrf]]
 === Cross-Site Request Forgery Prevention
@@ -457,17 +343,6 @@ protection is normally enabled. However, it prevents some forms of testing of
 Vaadin applications, such as with JMeter. In such cases, you can disable the
 protection by setting the [parameter]#disable-xsrf-protection# parameter to
 [literal]#++true++#.
-
-In a [filename]#web.xml#:
-
-
-----
-<context-param>
-  <param-name>disable-xsrf-protection</param-name>
-  <param-value>true</param-value>
-</context-param>
-----
-
 
 
 [[application.environment.configuration]]
