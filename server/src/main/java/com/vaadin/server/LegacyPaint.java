@@ -37,7 +37,7 @@ public class LegacyPaint implements Serializable {
      *
      * <p>
      * <b>Do not override this to paint your component.</b> Override
-     * {@link #paintContent(PaintTarget)} instead.
+     * {@link LegacyComponent#paintContent(PaintTarget)} instead.
      * </p>
      *
      *

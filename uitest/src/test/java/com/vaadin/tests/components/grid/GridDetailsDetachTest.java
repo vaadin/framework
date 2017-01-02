@@ -50,8 +50,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
+        $(GridElement.class).first().getCell(1, 0).click();
         $(GridElement.class).first().getCell(3, 0).click();
-        $(GridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 
@@ -66,9 +66,9 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         List<WebElement> spacers = findElements(By.className("v-grid-spacer"));
         Assert.assertEquals("Not enough spacers in DOM", 2, spacers.size());
         Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 3", spacers.get(0).getText());
+                "Extra data for Bean 1", spacers.get(0).getText());
         Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 5", spacers.get(1).getText());
+                "Extra data for Bean 3", spacers.get(1).getText());
     }
 
     @Test
@@ -76,8 +76,8 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
+        $(GridElement.class).first().getCell(1, 0).click();
         $(GridElement.class).first().getCell(3, 0).click();
-        $(GridElement.class).first().getCell(5, 0).click();
 
         assertNoErrorNotifications();
 
@@ -89,9 +89,9 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         List<WebElement> spacers = findElements(By.className("v-grid-spacer"));
         Assert.assertEquals("Not enough spacers in DOM", 2, spacers.size());
         Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 3", spacers.get(0).getText());
+                "Extra data for Bean 1", spacers.get(0).getText());
         Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 5", spacers.get(1).getText());
+                "Extra data for Bean 3", spacers.get(1).getText());
     }
 
 }

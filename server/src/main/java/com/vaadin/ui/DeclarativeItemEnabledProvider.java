@@ -42,8 +42,6 @@ class DeclarativeItemEnabledProvider<T> implements SerializablePredicate<T> {
      *
      * @param item
      *            a data item
-     * @param caption
-     *            a caption for the {@code item}
      */
     protected void addDisabled(T item) {
         disabled.add(item);

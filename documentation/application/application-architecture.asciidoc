@@ -9,7 +9,7 @@ layout: page
 
 *_This section has not yet been updated to Vaadin Framework 8_*
 
-Vaadin user interfaces are built hierarchically from components, so that the
+Vaadin Framework user interfaces are built hierarchically from components, so that the
 leaf components are contained within layout components and other component
 containers. Building the hierarchy starts from the top (or bottom - whichever
 way you like to think about it), from the [classname]#UI# class of the
@@ -27,25 +27,15 @@ public class MyHierarchicalUI extends UI {
         setContent(content);   // Attach to the UI
 
         // Add some component
-        content.addComponent(new Label("Hello!"));
+        content.addComponent(new Label("<b>Hello!</b> - How are you?", 
+                ContentMode.HTML));
 
-        // Layout inside layout
-        HorizontalLayout hor = new HorizontalLayout();
-        hor.setSizeFull(); // Use all available space
-
-        // Couple of horizontally laid out components
-        Tree tree = new Tree("My Tree",
-                TreeExample.createTreeContent());
-        hor.addComponent(tree);
-
-        Table table = new Table("My Table",
-                TableExample.generateContent());
-        table.setSizeFull();
-        hor.addComponent(table);
-        hor.setExpandRatio(table, 1); // Expand to fill
-
-        content.addComponent(hor);
-        content.setExpandRatio(hor, 1); // Expand to fill
+        Grid<Person> grid = new Grid<>();
+        grid.setCaption("My Grid");
+        grid.setItems(GridExample.generateContent());
+        grid.setSizeFull();
+        content.addComponent(grid);
+        content.setExpandRatio(grid, 1); // Expand to fill
     }
 }
 ----
@@ -95,15 +85,6 @@ information about common architectures, see
 Application Architectures">>, which discusses layered architectures, the
 Model-View-Presenter (MVP) pattern, and so forth.
 
-ifdef::web[]
-The
-<<dummy/../../../framework/advanced/advanced-global#advanced.global,"Accessing
-Session-Global Data">> discusses the problem of passing essentially global
-references around, a common problem which is also visited in
-<<application.architecture.accessing>>.
-endif::web[]
-
-
 [[application.architecture.composition]]
 == Compositing Components
 
@@ -116,29 +97,23 @@ extend layout components to create composite components.
 [source, java]
 ----
 class MyView extends VerticalLayout {
-    TextField entry   = new TextField("Enter this");
-    Label     display = new Label("See this");
-    Button    click   = new Button("Click This");
+    TextField entry = new TextField("Enter this");
+    Label display = new Label("See this");
+    Button click = new Button("Click This");
 
     public MyView() {
         addComponent(entry);
         addComponent(display);
         addComponent(click);
 
-        // Configure it a bit
         setSizeFull();
         addStyleName("myview");
     }
 }
 
-// Use it
+// Create an instance of MyView
 Layout myview = new MyView();
 ----
-
-This composition pattern is especially supported for creating forms, as
-described in
-<<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding.formclass,"Binding
-Member Fields">>.
 
 While extending layouts is an easy way to make component composition, it is a
 good practice to encapsulate implementation details, such as the exact layout
@@ -151,9 +126,9 @@ content representation.
 [source, java]
 ----
 class MyView extends CustomComponent {
-    TextField entry   = new TextField("Enter this");
-    Label     display = new Label("See this");
-    Button    click   = new Button("Click This");
+    TextField entry = new TextField("Enter this");
+    Label display = new Label("See this");
+    Button click = new Button("Click This");
 
     public MyView() {
         Layout layout = new VerticalLayout();
@@ -163,12 +138,11 @@ class MyView extends CustomComponent {
         layout.addComponent(click);
 
         setCompositionRoot(layout);
-
         setSizeFull();
     }
 }
 
-// Use it
+// Create an instance of MyView
 MyView myview = new MyView();
 ----
 

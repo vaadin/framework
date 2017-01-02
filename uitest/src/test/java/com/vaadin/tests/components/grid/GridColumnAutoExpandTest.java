@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.customelements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -32,8 +32,18 @@ public class GridColumnAutoExpandTest extends MultiBrowserTest {
         GridCellElement headerCell = $(GridElement.class).first()
                 .getHeaderCell(0, 1);
 
-        assertTrue("Column did not expand as expected",
-                headerCell.getSize().getWidth() > 400);
+        waitUntil(new ExpectedCondition<Boolean>() {
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                return headerCell.getSize().getWidth() > 400;
+            }
+
+            @Override
+            public String toString() {
+                return "Column did not expand as expected";
+            }
+        });
     }
 
 }

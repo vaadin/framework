@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.SelectionModel;
 import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.SingleSelect;

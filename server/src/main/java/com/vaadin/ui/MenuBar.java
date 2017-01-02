@@ -468,7 +468,7 @@ public class MenuBar extends AbstractComponent
          * command associated with it. Icon and command can be null, but a
          * caption must be given.
          *
-         * @param text
+         * @param caption
          *            The text associated with the command
          * @param command
          *            The command to be fired
@@ -935,7 +935,6 @@ public class MenuBar extends AbstractComponent
          * The CSS style corresponding to the checked state is "-checked".
          * </p>
          *
-         * @return true if the item is checked, false otherwise
          * @since 6.6.2
          */
         public void setChecked(boolean checked) {

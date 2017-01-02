@@ -58,7 +58,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
      * <p>
      * Default value is {@link #DEFAULT}, which means that the select all is
      * only visible if an in-memory data provider is used
-     * {@link DataSource#isInMemory()}.
+     * {@link DataProvider#isInMemory()}.
      */
     public enum SelectAllCheckBoxVisibility {
         /**

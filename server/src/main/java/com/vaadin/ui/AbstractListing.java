@@ -138,9 +138,6 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
      * <p>
-     * <strong>Note:</strong> This constructor does not set a selection model
-     * for the new listing. The invoking constructor must explicitly call
-     * {@link #setSelectionModel(SelectionModel)}.
      */
     protected AbstractListing() {
         this(new DataCommunicator<>());
@@ -154,9 +151,6 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * {@code AbstractListing} with a custom communicator. In the common case
      * {@link AbstractListing#AbstractListing()} should be used.
      * <p>
-     * <strong>Note:</strong> This constructor does not set a selection model
-     * for the new listing. The invoking constructor must explicitly call
-     * {@link #setSelectionModel(SelectionModel)}.
      *
      * @param dataCommunicator
      *            the data communicator to use, not null
@@ -277,7 +271,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Writes listing specific state into the given design.
      * <p>
-     * This method is separated from {@link writeDesign(Element, DesignContext)}
+     * This method is separated from {@link #writeDesign(Element, DesignContext)}
      * to be overridable in subclasses that need to replace this, but still must
      * be able to call {@code super.writeDesign(...)}.
      *
@@ -357,7 +351,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Reads the listing specific state from the given design.
      * <p>
-     * This method is separated from {@link readDesign(Element, DesignContext)}
+     * This method is separated from {@link #readDesign(Element, DesignContext)}
      * to be overridable in subclasses that need to replace this, but still must
      * be able to call {@code super.readDesign(...)}.
      *

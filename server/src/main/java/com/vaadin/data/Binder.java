@@ -110,7 +110,7 @@ public class Binder<BEAN> implements Serializable {
          * instance representing the outcome of the validation.
          *
          * @see Binder#validate()
-         * @see Validator#apply(Object)
+         * @see Validator#apply(Object, ValueContext)
          *
          * @return the validation result.
          */
@@ -805,8 +805,7 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Handles the value change triggered by the bound field.
          *
-         * @param bean
-         *            the new value
+         * @param event
          */
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
@@ -1020,7 +1019,7 @@ public class Binder<BEAN> implements Serializable {
      * {@link HasValue#getEmptyValue()}. This conversion is one-way only, if you
      * want to have a two-way mapping back to {@code null}, use
      * {@link #forField(HasValue)} and
-     * {@link Binding#withNullRepresentation(Object))}.
+     * {@link BindingBuilder#withNullRepresentation(Object))}.
      * <p>
      * When a bean is bound with {@link Binder#setBean(BEAN)}, the field value
      * is set to the return value of the given getter. The property value is
@@ -1384,13 +1383,13 @@ public class Binder<BEAN> implements Serializable {
      * Only the one validation error message is shown in this label at a time.
      * <p>
      * This is a convenience method for
-     * {@link #setValidationStatusHandler(BinderStatusHandler)}, which means
+     * {@link #setValidationStatusHandler(BinderValidationStatusHandler)}, which means
      * that this method cannot be used after the handler has been set. Also the
      * handler cannot be set after this label has been set.
      *
      * @param statusLabel
      *            the status label to set
-     * @see #setValidationStatusHandler(BinderStatusHandler)
+     * @see #setValidationStatusHandler(BinderValidationStatusHandler)
      * @see BindingBuilder#withStatusLabel(Label)
      */
     public void setStatusLabel(Label statusLabel) {
@@ -1447,11 +1446,11 @@ public class Binder<BEAN> implements Serializable {
      * Gets the status handler of this form.
      * <p>
      * If none has been set with
-     * {@link #setValidationStatusHandler(BinderStatusHandler)}, the default
+     * {@link #setValidationStatusHandler(BinderValidationStatusHandler)}, the default
      * implementation is returned.
      *
      * @return the status handler used, never <code>null</code>
-     * @see #setValidationStatusHandler(BinderStatusHandler)
+     * @see #setValidationStatusHandler(BinderValidationStatusHandler)
      */
     public BinderValidationStatusHandler<BEAN> getValidationStatusHandler() {
         return Optional.ofNullable(statusHandler)

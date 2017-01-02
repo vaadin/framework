@@ -34,6 +34,8 @@ public class GridDetailsDetach extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
+        layout.setSpacing(false);
+        layout.setMargin(false);
         layout.setSizeFull();
 
         Button button = new Button("Test");
@@ -42,14 +44,14 @@ public class GridDetailsDetach extends AbstractTestUI {
 
         currentGrid = generateGrid();
         final VerticalLayout gridContainer = new VerticalLayout();
+        gridContainer.setSpacing(false);
+        gridContainer.setMargin(false);
         gridContainer.addComponent(currentGrid);
 
         button.addClickListener(event -> gridContainer
                 .replaceComponent(currentGrid, new Label("Foo")));
 
-        layout.addComponent(new Button("Reattach Grid", event ->
-
-        {
+        layout.addComponent(new Button("Reattach Grid", event -> {
             gridContainer.removeAllComponents();
             gridContainer.addComponent(currentGrid);
         }));
