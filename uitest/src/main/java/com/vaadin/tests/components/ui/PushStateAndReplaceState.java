@@ -3,8 +3,8 @@ package com.vaadin.tests.components.ui;
 import java.net.URI;
 
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.PopstateEvent;
-import com.vaadin.server.Page.PopstateListener;
+import com.vaadin.server.Page.PopStateEvent;
+import com.vaadin.server.Page.PopStateListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
@@ -24,10 +24,10 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
         addComponent(locationLabel);
         updateLabel();
 
-        getPage().addPopstateListener(new PopstateListener() {
+        getPage().addPopStateListener(new PopStateListener() {
 
             @Override
-            public void uriChanged(PopstateEvent event) {
+            public void uriChanged(PopStateEvent event) {
                 Notification.show("Popstate event");
                 updateLabel();
             }

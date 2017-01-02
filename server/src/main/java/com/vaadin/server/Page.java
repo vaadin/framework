@@ -251,7 +251,7 @@ public class Page implements Serializable {
      * changes.
      *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
-     * @deprecated Use {@link PopstateListener} instead
+     * @deprecated Use {@link PopStateListener} instead
      */
     @Deprecated
     @FunctionalInterface
@@ -278,11 +278,11 @@ public class Page implements Serializable {
      * Listener that that gets notified when the URI of the page changes due to
      * back/forward functionality of the browser.
      *
-     * @see Page#addPopstateListener(PopstateListener)
+     * @see Page#addPopStateListener(PopStateListener)
      * @since 8.0
      */
     @FunctionalInterface
-    public interface PopstateListener extends Serializable {
+    public interface PopStateListener extends Serializable {
         /**
          * Event handler method invoked when the URI fragment of the page
          * changes. Please note that the initial URI fragment has already been
@@ -294,11 +294,11 @@ public class Page implements Serializable {
          * @param event
          *            the URI fragment changed event
          */
-        public void uriChanged(PopstateEvent event);
+        public void uriChanged(PopStateEvent event);
     }
 
     private static final Method URI_CHANGED_METHOD = ReflectTools.findMethod(
-            Page.PopstateListener.class, "uriChanged", PopstateEvent.class);
+            Page.PopStateListener.class, "uriChanged", PopStateEvent.class);
 
     /**
      * Resources to be opened automatically on next repaint. The list is
@@ -361,10 +361,10 @@ public class Page implements Serializable {
      * popstate event) on the client side due to browsers back/forward
      * functionality.
      *
-     * @see Page#addPopstateListener(PopstateListener)
+     * @see Page#addPopStateListener(PopStateListener)
      * @since 8.0
      */
-    public static class PopstateEvent extends EventObject {
+    public static class PopStateEvent extends EventObject {
 
         /**
          * The new URI as String
@@ -379,7 +379,7 @@ public class Page implements Serializable {
          * @param uri
          *            the new uri
          */
-        public PopstateEvent(Page source, String uri) {
+        public PopStateEvent(Page source, String uri) {
             super(source);
             this.uri = uri;
         }
@@ -594,7 +594,7 @@ public class Page implements Serializable {
      * @param listener
      *            the URI fragment listener to add
      * @return a registration object for removing the listener
-     * @deprecated Use {@link Page#addPopstateListener(PopstateListener)}
+     * @deprecated Use {@link Page#addPopStateListener(PopStateListener)}
      *             instead
      */
     @Deprecated
@@ -621,8 +621,8 @@ public class Page implements Serializable {
      * @return a registration object for removing the listener
      * @since 8.0
      */
-    public Registration addPopstateListener(Page.PopstateListener listener) {
-        return addListener(PopstateEvent.class, listener, URI_CHANGED_METHOD);
+    public Registration addPopStateListener(Page.PopStateListener listener) {
+        return addListener(PopStateEvent.class, listener, URI_CHANGED_METHOD);
     }
 
     /**
@@ -1042,7 +1042,7 @@ public class Page implements Serializable {
      * Updates the browsers URI without causing actual page change. This method
      * is useful if you wish implement "deep linking" to your application.
      * Calling the method also adds a new entry to clients browser history and
-     * you can further use {@link PopstateListener} to track the usage of
+     * you can further use {@link PopStateListener} to track the usage of
      * back/forward feature in browser.
      * <p>
      * Note, the current implementation supports setting only one new uri in one
@@ -1065,7 +1065,7 @@ public class Page implements Serializable {
      * Updates the browsers URI without causing actual page change. This method
      * is useful if you wish implement "deep linking" to your application.
      * Calling the method also adds a new entry to clients browser history and
-     * you can further use {@link PopstateListener} to track the usage of
+     * you can further use {@link PopStateListener} to track the usage of
      * back/forward feature in browser.
      * <p>
      * Note, the current implementation supports setting only one new uri in one
@@ -1143,7 +1143,7 @@ public class Page implements Serializable {
      *            whether to fire {@link UriFragmentChangedEvent} if the URI
      *            fragment changes
      * @param firePopstate
-     *            whether to fire {@link PopstateEvent}
+     *            whether to fire {@link PopStateEvent}
      */
     public void updateLocation(String location, boolean fireEvents,
             boolean firePopstate) {
@@ -1156,7 +1156,7 @@ public class Page implements Serializable {
                 fireEvent(new UriFragmentChangedEvent(this, newUriFragment));
             }
             if (firePopstate) {
-                fireEvent(new PopstateEvent(this, location));
+                fireEvent(new PopStateEvent(this, location));
             }
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
