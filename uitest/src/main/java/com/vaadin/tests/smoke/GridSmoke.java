@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.smoke;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
@@ -22,7 +22,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
-public class GridAddRow extends AbstractReindeerTestUI {
+public class GridSmoke extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

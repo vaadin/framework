@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,24 +22,25 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
+import com.vaadin.client.connectors.grid.AbstractGridRendererConnector;
+import com.vaadin.client.renderers.ComplexRenderer;
+import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.grid.CellReference;
+import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.client.connectors.AbstractGridRendererConnector;
-import com.vaadin.v7.client.renderers.ComplexRenderer;
-import com.vaadin.v7.client.renderers.Renderer;
-import com.vaadin.v7.client.widget.grid.CellReference;
-import com.vaadin.v7.client.widget.grid.RendererCellReference;
+import com.vaadin.tests.widgetset.client.EmptyEnum;
 
 import elemental.json.JsonObject;
 
-@Connect(com.vaadin.v7.tests.components.grid.RowAwareRenderer.class)
+@Connect(com.vaadin.tests.components.grid.RowAwareRenderer.class)
 public class RowAwareRendererConnector
-        extends AbstractGridRendererConnector<Void> {
+        extends AbstractGridRendererConnector<EmptyEnum> {
     public interface RowAwareRendererRpc extends ServerRpc {
         void clicky(String key);
     }
 
-    public class RowAwareRenderer extends ComplexRenderer<Void> {
+    public class RowAwareRenderer extends ComplexRenderer<EmptyEnum> {
 
         @Override
         public Collection<String> getConsumedEvents() {
@@ -56,7 +57,7 @@ public class RowAwareRendererConnector
         }
 
         @Override
-        public void render(RendererCellReference cell, Void data) {
+        public void render(RendererCellReference cell, EmptyEnum data) {
             // NOOP
         }
 
@@ -72,7 +73,7 @@ public class RowAwareRendererConnector
     }
 
     @Override
-    protected Renderer<Void> createRenderer() {
+    protected Renderer<EmptyEnum> createRenderer() {
         // cannot use the default createRenderer as RowAwareRenderer needs a
         // reference to its connector - it has no "real" no-argument constructor
         return new RowAwareRenderer();

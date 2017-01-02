@@ -13,34 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.smoke;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.By;
 import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
-public class GridAddAndRemoveDataOnInitTest extends MultiBrowserTest {
-
+public class GridSmokeTest extends MultiBrowserTest {
     @Test
-    public void verifyGridSizes() {
+    public void testAddRow() {
         openTestURL();
 
-        GridElement gridAdd = $(GridElement.class).first();
-        if (!gridAdd.isElementPresent(By.vaadin("#cell[9][0]"))
-                || gridAdd.isElementPresent(By.vaadin("#cell[10][0]"))) {
-            Assert.fail("Grid with added data contained incorrect rows");
-        }
+        GridElement grid = $(GridElement.class).first();
 
-        GridElement gridRemove = $(GridElement.class).get(1);
-        if (!gridRemove.isElementPresent(By.vaadin("#cell[4][0]"))
-                || gridRemove.isElementPresent(By.vaadin("#cell[5][0]"))) {
-            Assert.fail("Grid with removed data contained incorrect rows");
-        }
+        Assert.assertEquals("Lorem", grid.getCell(0, 1).getText());
+        Assert.assertEquals("2", grid.getCell(1, 2).getText());
+
+        addRow();
+
+        Assert.assertEquals("Dolor", grid.getCell(2, 1).getText());
+
+        addRow();
+
+        Assert.assertEquals("Dolor", grid.getCell(3, 1).getText());
+    }
+
+    private void addRow() {
+        $(ButtonElement.class).caption("Add new row").first().click();
     }
 
 }
