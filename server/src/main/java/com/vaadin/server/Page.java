@@ -251,7 +251,9 @@ public class Page implements Serializable {
      * changes.
      *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
+     * @deprecated Use {@link PopstateListener} instead
      */
+    @Deprecated
     @FunctionalInterface
     public interface UriFragmentChangedListener extends Serializable {
         /**
@@ -273,8 +275,8 @@ public class Page implements Serializable {
                     "uriFragmentChanged", UriFragmentChangedEvent.class);
 
     /**
-     * Listener that that gets notified when the URI of the page
-     * changes due to back/forward functionality of the browser.
+     * Listener that that gets notified when the URI of the page changes due to
+     * back/forward functionality of the browser.
      *
      * @see Page#addPopstateListener(PopstateListener)
      * @since 8.0
@@ -295,9 +297,8 @@ public class Page implements Serializable {
         public void uriChanged(PopstateEvent event);
     }
 
-    private static final Method URI_CHANGED_METHOD = ReflectTools
-            .findMethod(Page.PopstateListener.class,
-                    "uriChanged", PopstateEvent.class);
+    private static final Method URI_CHANGED_METHOD = ReflectTools.findMethod(
+            Page.PopstateListener.class, "uriChanged", PopstateEvent.class);
 
     /**
      * Resources to be opened automatically on next repaint. The list is
@@ -354,7 +355,7 @@ public class Page implements Serializable {
             return uriFragment;
         }
     }
-    
+
     /**
      * Event fired when the URI of a <code>Page</code> changes (aka HTML 5
      * popstate event) on the client side due to browsers back/forward
@@ -557,8 +558,8 @@ public class Page implements Serializable {
 
     private String windowName;
 
-	private String newPushState;
-	private String newReplaceState;
+    private String newPushState;
+    private String newReplaceState;
 
     public Page(UI uI, PageState state) {
         this.uI = uI;
@@ -593,21 +594,24 @@ public class Page implements Serializable {
      * @param listener
      *            the URI fragment listener to add
      * @return a registration object for removing the listener
+     * @deprecated Use {@link Page#addPopstateListener(PopstateListener)}
+     *             instead
      */
+    @Deprecated
     public Registration addUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
         return addListener(UriFragmentChangedEvent.class, listener,
                 URI_FRAGMENT_CHANGED_METHOD);
     }
-    
+
     /**
-     * Adds a listener that gets notified every time the URI of this
-     * page is changed due to back/forward functionality of the browser. 
+     * Adds a listener that gets notified every time the URI of this page is
+     * changed due to back/forward functionality of the browser.
      * <p>
-     * Note that one only gets notified when the back/forward button
-     * affects history changes with-in same UI, created by
-     * {@link Page#pushState(String)} or  {@link Page#replaceState(String)}
-     * functions. 
+     * Note that one only gets notified when the back/forward button affects
+     * history changes with-in same UI, created by
+     * {@link Page#pushState(String)} or {@link Page#replaceState(String)}
+     * functions.
      *
      * @see #getLocation()
      * @see Registration
@@ -617,10 +621,8 @@ public class Page implements Serializable {
      * @return a registration object for removing the listener
      * @since 8.0
      */
-    public Registration addPopstateListener(
-            Page.PopstateListener listener) {
-        return addListener(PopstateEvent.class, listener,
-                URI_CHANGED_METHOD);
+    public Registration addPopstateListener(Page.PopstateListener listener) {
+        return addListener(PopstateEvent.class, listener, URI_CHANGED_METHOD);
     }
 
     /**
@@ -965,14 +967,15 @@ public class Page implements Serializable {
             target.endTag("notifications");
             notifications = null;
         }
-        
-        if(newPushState != null) {
-        	target.addAttribute(UIConstants.ATTRIBUTE_PUSH_STATE, newPushState);
-        	newPushState = null;
+
+        if (newPushState != null) {
+            target.addAttribute(UIConstants.ATTRIBUTE_PUSH_STATE, newPushState);
+            newPushState = null;
         }
-        if(newReplaceState != null) {
-        	target.addAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE, newReplaceState);
-        	newReplaceState = null;
+        if (newReplaceState != null) {
+            target.addAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE,
+                    newReplaceState);
+            newReplaceState = null;
         }
 
         if (styles != null) {
@@ -1034,83 +1037,83 @@ public class Page implements Serializable {
         }
         return location;
     }
-    
+
     /**
-	 * Updates the browsers URI without causing actual page change. This method
-	 * is useful if you wish implement "deep linking" to your application.
-	 * Calling the method also adds a new entry to clients browser history and
-	 * you can further use {@link PopstateListener} to track the usage of
-	 * back/forward feature in browser.
-	 * <p>
-	 * Note, the current implementation supports setting only one new uri in one
-	 * user interaction.
-	 * 
-	 * @param uri
-	 *            to be used for pushState operation. The URI is resolved over
-	 *            the current location. If the given URI is absolute, it must be
-	 *            of same origin as the current URI or the browser will not
-	 *            accept the new value.
+     * Updates the browsers URI without causing actual page change. This method
+     * is useful if you wish implement "deep linking" to your application.
+     * Calling the method also adds a new entry to clients browser history and
+     * you can further use {@link PopstateListener} to track the usage of
+     * back/forward feature in browser.
+     * <p>
+     * Note, the current implementation supports setting only one new uri in one
+     * user interaction.
+     *
+     * @param uri
+     *            to be used for pushState operation. The URI is resolved over
+     *            the current location. If the given URI is absolute, it must be
+     *            of same origin as the current URI or the browser will not
+     *            accept the new value.
      * @since 8.0
-	 */
+     */
     public void pushState(String uri) {
-    	newPushState = uri;
-    	uI.markAsDirty();
-    	location = location.resolve(uri);
-    }
-    
-    /**
-	 * Updates the browsers URI without causing actual page change. This method
-	 * is useful if you wish implement "deep linking" to your application.
-	 * Calling the method also adds a new entry to clients browser history and
-	 * you can further use {@link PopstateListener} to track the usage of
-	 * back/forward feature in browser.
-	 * <p>
-	 * Note, the current implementation supports setting only one new uri in one
-	 * user interaction.
-	 * 
-	 * @param uri
-	 *            the URI to be used for pushState operation. The URI is
-	 *            resolved over the current location. If the given URI is
-	 *            absolute, it must be of same origin as the current URI or the
-	 *            browser will not accept the new value.
-     * @since 8.0
-	 */
-     public void pushState(URI uri) {
-    	pushState(uri.toString());
+        newPushState = uri;
+        uI.markAsDirty();
+        location = location.resolve(uri);
     }
 
     /**
-	 * Updates the browsers URI without causing actual page change in the same
-	 * way as {@link #pushState(String)}, but does not add new entry to browsers
-	 * history.
-	 * 
-	 * @param uri
-	 *            the URI to be used for replaceState operation. The URI is
-	 *            resolved over the current location. If the given URI is
-	 *            absolute, it must be of same origin as the current URI or the
-	 *            browser will not accept the new value.
+     * Updates the browsers URI without causing actual page change. This method
+     * is useful if you wish implement "deep linking" to your application.
+     * Calling the method also adds a new entry to clients browser history and
+     * you can further use {@link PopstateListener} to track the usage of
+     * back/forward feature in browser.
+     * <p>
+     * Note, the current implementation supports setting only one new uri in one
+     * user interaction.
+     *
+     * @param uri
+     *            the URI to be used for pushState operation. The URI is
+     *            resolved over the current location. If the given URI is
+     *            absolute, it must be of same origin as the current URI or the
+     *            browser will not accept the new value.
      * @since 8.0
-	 */
-    public void replaceState(String uri) {
-    	newReplaceState = uri;
-    	uI.markAsDirty();
-    	location = location.resolve(uri);
+     */
+    public void pushState(URI uri) {
+        pushState(uri.toString());
     }
-    
+
     /**
-	 * Updates the browsers URI without causing actual page change in the same
-	 * way as {@link #pushState(URI)}, but does not add new entry to browsers
-	 * history.
-	 * 
-	 * @param uri
-	 *            the URI to be used for replaceState operation. The URI is
-	 *            resolved over the current location. If the given URI is
-	 *            absolute, it must be of same origin as the current URI or the
-	 *            browser will not accept the new value.
+     * Updates the browsers URI without causing actual page change in the same
+     * way as {@link #pushState(String)}, but does not add new entry to browsers
+     * history.
+     *
+     * @param uri
+     *            the URI to be used for replaceState operation. The URI is
+     *            resolved over the current location. If the given URI is
+     *            absolute, it must be of same origin as the current URI or the
+     *            browser will not accept the new value.
      * @since 8.0
-	 */
+     */
+    public void replaceState(String uri) {
+        newReplaceState = uri;
+        uI.markAsDirty();
+        location = location.resolve(uri);
+    }
+
+    /**
+     * Updates the browsers URI without causing actual page change in the same
+     * way as {@link #pushState(URI)}, but does not add new entry to browsers
+     * history.
+     *
+     * @param uri
+     *            the URI to be used for replaceState operation. The URI is
+     *            resolved over the current location. If the given URI is
+     *            absolute, it must be of same origin as the current URI or the
+     *            browser will not accept the new value.
+     * @since 8.0
+     */
     public void replaceState(URI uri) {
-    	replaceState(uri.toString());
+        replaceState(uri.toString());
     }
 
     /**
@@ -1142,7 +1145,8 @@ public class Page implements Serializable {
      * @param firePopstate
      *            whether to fire {@link PopstateEvent}
      */
-    public void updateLocation(String location, boolean fireEvents, boolean firePopstate) {
+    public void updateLocation(String location, boolean fireEvents,
+            boolean firePopstate) {
         try {
             String oldUriFragment = this.location.getFragment();
             this.location = new URI(location);
@@ -1151,8 +1155,8 @@ public class Page implements Serializable {
                     && !SharedUtil.equals(oldUriFragment, newUriFragment)) {
                 fireEvent(new UriFragmentChangedEvent(this, newUriFragment));
             }
-            if(firePopstate) {
-            	fireEvent(new PopstateEvent(this, location));
+            if (firePopstate) {
+                fireEvent(new PopstateEvent(this, location));
             }
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
