@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -31,8 +32,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.Listing;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SingleSelectionEvent;
@@ -51,7 +52,7 @@ public class AbstractSingleSelectTest {
     private List<Person> selectionChanges;
 
     private static class PersonListing extends AbstractSingleSelect<Person>
-            implements Listing<Person, DataProvider<Person, ?>> {
+            implements HasDataProvider<Person> {
 
         @Override
         protected Element writeItem(Element design, Person item,
@@ -257,6 +258,12 @@ public class AbstractSingleSelectTest {
             protected List<String> readItems(Element design,
                     DesignContext context) {
                 return null;
+            }
+
+            @Override
+            public void setItems(Collection<String> items) {
+                throw new UnsupportedOperationException(
+                        "Not needed in this test");
             }
         };
 

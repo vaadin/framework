@@ -16,6 +16,7 @@
 
 package com.vaadin.ui;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +26,8 @@ import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
+import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.data.HasValue;
-import com.vaadin.data.Listing;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataKeyMapper;
 import com.vaadin.data.provider.DataProvider;
@@ -64,7 +65,7 @@ import elemental.json.JsonObject;
 @SuppressWarnings("serial")
 public class ComboBox<T> extends AbstractSingleSelect<T>
         implements HasValue<T>, FieldEvents.BlurNotifier,
-        FieldEvents.FocusNotifier, Listing<T, DataProvider<T, String>> {
+        FieldEvents.FocusNotifier, HasFilterableDataProvider<T, String> {
 
     /**
      * Handler that adds a new item based on user input when the new items
@@ -222,14 +223,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         setDataProvider(provider);
     }
 
-    @Override
-    public void setItems(@SuppressWarnings("unchecked") T... items) {
-        DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> defaultFilterMethod
-                        .test(filterText, item));
-        setDataProvider(provider);
-    }
-
     /**
      * Sets the data items of this listing and a simple string filter with which
      * the item string and the text the user has input are compared.
@@ -265,10 +258,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      */
     public void setItems(CaptionFilter captionFilter,
             @SuppressWarnings("unchecked") T... items) {
-        DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> captionFilter.test(
-                        getItemCaptionGenerator().apply(item), filterText));
-        setDataProvider(provider);
+        setItems(captionFilter, Arrays.asList(items));
     }
 
     /**

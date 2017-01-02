@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -47,14 +47,13 @@ import com.vaadin.ui.declarative.DesignFormatter;
  * @since 8.0
  */
 public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
-        implements FocusNotifier, BlurNotifier, Listing<T, DataProvider<T, ?>> {
+        implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
 
     /**
      * Constructs a new CheckBoxGroup with caption.
      *
      * @param caption
      *            caption text
-     * @see Listing#setDataProvider(DataProvider)
      */
     public CheckBoxGroup(String caption) {
         this();
@@ -68,7 +67,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      *            the caption text
      * @param dataProvider
      *            the data provider, not null
-     * @see Listing#setDataProvider(DataProvider)
+     * @see HasDataProvider#setDataProvider(DataProvider)
      */
     public CheckBoxGroup(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
@@ -83,7 +82,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      *            the caption text
      * @param items
      *            the data items to use, not null
-     * @see Listing#setDataProvider(DataProvider)
+     * @see #setItems(Collection)
      */
     public CheckBoxGroup(String caption, Collection<T> items) {
         this(caption, DataProvider.create(items));
@@ -91,8 +90,6 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
 
     /**
      * Constructs a new CheckBoxGroup.
-     *
-     * @see Listing#setDataProvider(DataProvider)
      */
     public CheckBoxGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
