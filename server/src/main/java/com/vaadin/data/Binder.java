@@ -1534,10 +1534,16 @@ public class Binder<BEAN> implements Serializable {
     protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             BindingValidationStatusHandler handler) {
-        BindingBuilder<BEAN, TARGET> newBinding = new BindingBuilderImpl<>(this,
-                field, converter, handler);
+        BindingBuilder<BEAN, TARGET> newBinding = doCreateBinding(field,
+                converter, handler);
         incompleteBindings.put(field, newBinding);
         return newBinding;
+    }
+
+    protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> doCreateBinding(
+            HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
+            BindingValidationStatusHandler handler) {
+        return new BindingBuilderImpl<>(this, field, converter, handler);
     }
 
     /**
@@ -1594,15 +1600,6 @@ public class Binder<BEAN> implements Serializable {
      */
     protected Set<BindingImpl<BEAN, ?, ?>> getBindings() {
         return bindings;
-    }
-
-    /**
-     * Get all incomplete bindings of this binder.
-     * 
-     * @return a map from fields to their incomplete binding builders
-     */
-    protected Map<HasValue<?>, BindingBuilder<BEAN, ?>> getIncompleteBindings() {
-        return incompleteBindings;
     }
 
     /**

@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.vaadin.data.BeanBinder.BeanBindingBuilder;
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.TextField;
@@ -62,8 +63,7 @@ public class BeanBinderTest
         BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
         TestClass testClass = new TestClass();
         otherBinder.forField(testClass.number)
-                .withConverter(string -> Integer.parseInt(string),
-                        integer -> Integer.toString(integer))
+                .withConverter(new StringToIntegerConverter(""))
                 .bind("number");
 
         // Should correctly bind the enum field without throwing
@@ -75,9 +75,8 @@ public class BeanBinderTest
         BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
         TestClass testClass = new TestClass();
 
-        otherBinder.forMemberField(testClass.number).withConverter(
-                string -> Integer.parseInt(string),
-                integer -> Integer.toString(integer));
+        otherBinder.forMemberField(testClass.number)
+                .withConverter(new StringToIntegerConverter(""));
         otherBinder.bindInstanceFields(testClass);
 
         TestBean bean = new TestBean();
@@ -91,13 +90,25 @@ public class BeanBinderTest
         BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
         TestClass testClass = new TestClass();
 
-        otherBinder.forField(testClass.number).withConverter(
-                string -> Integer.parseInt(string),
-                integer -> Integer.toString(integer));
+        otherBinder.forField(testClass.number)
+                .withConverter(new StringToIntegerConverter(""));
 
         // Should throw an IllegalStateException since the binding for number is
         // not completed with bind
         otherBinder.bindInstanceFields(testClass);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void incomplete_forMemberField_bindings() {
+        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        TestClass testClass = new TestClass();
+
+        otherBinder.forMemberField(testClass.number)
+                .withConverter(new StringToIntegerConverter(""));
+
+        // Should throw an IllegalStateException since the forMemberField
+        // binding has not been completed
+        otherBinder.setBean(new TestBean());
     }
 
     @Test

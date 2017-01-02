@@ -260,12 +260,6 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
 
         @Override
-        public Binding<BEAN, TARGET> bind(ValueProvider<BEAN, TARGET> getter,
-                Setter<BEAN, TARGET> setter) {
-            return super.bind(getter, setter);
-        }
-
-        @Override
         protected BeanBinder<BEAN> getBinder() {
             return (BeanBinder<BEAN>) super.getBinder();
         }
@@ -348,14 +342,19 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     /**
      * Creates a new binding for the given field. The returned builder may be
      * further configured before invoking {@link #bindInstanceFields(Object)}.
-     * No explicit call to {@link BeanBindingBuilder#bind(String)} is needed to
-     * complete this binding.
+     * Unlike with the {@link #forField(HasValue)} method, no explicit call to
+     * {@link BeanBindingBuilder#bind(String)} is needed to complete this
+     * binding in the case that the name of the field matches a field name found
+     * in the bean.
      *
      * @param <FIELDVALUE>
      *            the value type of the field
      * @param field
      *            the field to be bound, not null
      * @return the new binding builder
+     * 
+     * @see #forField(HasValue)
+     * @see #bindInstanceFields(Object)
      */
     public <FIELDVALUE> BeanBindingBuilder<BEAN, FIELDVALUE> forMemberField(
             HasValue<FIELDVALUE> field) {
@@ -400,20 +399,29 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         return (BeanBinder<BEAN>) super.withValidator(validator);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected <FIELDVALUE, TARGET> BeanBindingImpl<BEAN, FIELDVALUE, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             BindingValidationStatusHandler handler) {
         Objects.requireNonNull(field, "field cannot be null");
         Objects.requireNonNull(converter, "converter cannot be null");
-        BeanBindingImpl<BEAN, FIELDVALUE, TARGET> newBinding = new BeanBindingImpl<>(
-                this, field, converter, handler);
         if (incompleteMemberFieldBindings.containsKey(field)) {
+            BeanBindingImpl<BEAN, FIELDVALUE, TARGET> newBinding = doCreateBinding(
+                    field, converter, handler);
             incompleteMemberFieldBindings.put(field, newBinding);
+            return newBinding;
         } else {
-            getIncompleteBindings().put(field, newBinding);
+            return (BeanBindingImpl<BEAN, FIELDVALUE, TARGET>) super.createBinding(
+                    field, converter, handler);
         }
-        return newBinding;
+    }
+
+    @Override
+    protected <FIELDVALUE, TARGET> BeanBindingImpl<BEAN, FIELDVALUE, TARGET> doCreateBinding(
+            HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
+            BindingValidationStatusHandler handler) {
+        return new BeanBindingImpl<>(this, field, converter, handler);
     }
 
     /**
@@ -585,6 +593,14 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
             searchClass = searchClass.getSuperclass();
         }
         return memberFieldInOrder;
+    }
+
+    @Override
+    protected void checkBindingsCompleted(String message) {
+        if (!incompleteMemberFieldBindings.isEmpty()) {
+            throw new IllegalStateException(message);
+        }
+        super.checkBindingsCompleted(message);
     }
 
     private void initializeField(Object objectWithMemberFields,
