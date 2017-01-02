@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 
 import org.junit.Test;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
@@ -21,10 +20,9 @@ public class PushStateAndReplaceStateTest extends MultiBrowserTest {
 
     	hitButton("test");
         
-        
         assertUri(getTestUrl() + "/test");
         
-        ((JavascriptExecutor) driver).executeScript("history.back()");
+        driver.navigate().back();
         
         driver.findElement(By.className("v-Notification")).getText().contains("Popstate event");
 
@@ -41,8 +39,8 @@ public class PushStateAndReplaceStateTest extends MultiBrowserTest {
     	assertUri(current.toString());
     	
     	// Now that last change was with replace state, two back calls should go to initial
-        ((JavascriptExecutor) driver).executeScript("history.back()");
-        ((JavascriptExecutor) driver).executeScript("history.back()");
+        driver.navigate().back();
+        driver.navigate().back();
         
     	assertUri(getTestUrl());
         

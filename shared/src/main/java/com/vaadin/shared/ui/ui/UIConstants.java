@@ -28,9 +28,6 @@ public class UIConstants implements Serializable {
     public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
 
     @Deprecated
-    public static final String LOCATION_VARIABLE = "location";
-
-    @Deprecated
     public static final String ATTRIBUTE_PUSH_STATE = "ps";
 
     @Deprecated

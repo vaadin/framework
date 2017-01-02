@@ -196,7 +196,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
 		@Override
 		public void popstate(String uri) {
-			getPage().updateLocation(uri, false, true);
+			getPage().updateLocation(uri, true, true);
 			
 		}
     };
@@ -443,11 +443,6 @@ public abstract class UI extends AbstractSingleComponentContainer
             actionManager.handleActions(variables, this);
         }
 
-        if (variables.containsKey(UIConstants.LOCATION_VARIABLE)) {
-            String location = (String) variables
-                    .get(UIConstants.LOCATION_VARIABLE);
-            getPage().updateLocation(location, true, false);
-        }
     }
 
     /*

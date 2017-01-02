@@ -680,6 +680,7 @@ public class Page implements Serializable {
         try {
             location = new URI(location.getScheme(),
                     location.getSchemeSpecificPart(), newUriFragment);
+            pushState(location);
         } catch (URISyntaxException e) {
             // This should not actually happen as the fragment syntax is not
             // constrained
@@ -688,7 +689,6 @@ public class Page implements Serializable {
         if (fireEvents) {
             fireEvent(new UriFragmentChangedEvent(this, newUriFragment));
         }
-        uI.markAsDirty();
     }
 
     private void fireEvent(EventObject event) {
@@ -964,11 +964,6 @@ public class Page implements Serializable {
             }
             target.endTag("notifications");
             notifications = null;
-        }
-
-        if (location != null) {
-            target.addAttribute(UIConstants.LOCATION_VARIABLE,
-                    location.toString());
         }
         
         if(newPushState != null) {
