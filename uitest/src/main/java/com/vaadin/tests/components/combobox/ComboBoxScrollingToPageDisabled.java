@@ -29,25 +29,25 @@ public class ComboBoxScrollingToPageDisabled
         final Object selection = new ArrayList<Object>(s.getItemIds()).get(50);
         s.setValue(selection);
         addTestComponent(s);
-        
+
         Button button = new Button("Select first");
         button.addClickListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				s.setValue(s.getItemIds().iterator().next());
-			}
-		});
+            @Override
+            public void buttonClick(ClickEvent event) {
+                s.setValue(s.getItemIds().iterator().next());
+            }
+        });
         addComponent(button);
 
         Button button2 = new Button("Select index 50");
         button2.addClickListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				s.setValue(selection);
-			}
-		});
+            @Override
+            public void buttonClick(ClickEvent event) {
+                s.setValue(selection);
+            }
+        });
         addComponent(button2);
-}
+    }
 
     private void populate(ComboBox s, int nr) {
         for (int i = 0; i < nr; i++) {
