@@ -52,8 +52,8 @@ public abstract class AbstractStringToNumberConverter<T>
     }
 
     /**
-     * Returns the format used by {@link #convertToPresentation(Object, Locale)}
-     * and {@link #convertToModel(Object, Locale)}.
+     * Returns the format used by {@link #convertToPresentation(Object, ValueContext)}
+     * and {@link #convertToModel(Object, ValueContext)}.
      *
      * @param locale
      *            The locale to use

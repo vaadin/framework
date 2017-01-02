@@ -311,9 +311,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     /**
      * Returns true if the user can enter text into the field to either filter
-     * the selections or enter a new value if {@link #isNewItemsAllowed()}
-     * returns true. If text input is disabled, the comboBox will work in the
-     * same way as a {@link NativeSelect}
+     * the selections or enter a new value if new item handler is set
+     * (see {@link #setNewItemHandler(NewItemHandler)}. If text input is disabled,
+     * the comboBox will work in the same way as a {@link NativeSelect}
      *
      * @return true if text input is allowed
      */
@@ -413,9 +413,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @param caption
      *            the caption to set, not {@code null}
-     * @see #getNullSelectionItemId()
      * @see #isSelected(Object)
-     * @see #select(Object)
      */
     public void setEmptySelectionCaption(String caption) {
         Objects.nonNull(caption);

@@ -367,13 +367,9 @@ public class JsonCodec implements Serializable {
      *
      * @param targetType
      *            The type that should be returned by this method
-     * @param valueAndType
-     *            The encoded value and type array
-     * @param application
-     *            A reference to the application
-     * @param enforceGenericsInCollections
-     *            true if generics should be enforce, false to only allow
-     *            internal types in collections
+     * @param restrictToInternalTypes
+     * @param encodedJsonValue
+     * @param connectorTracker
      * @return
      */
     public static Object decodeInternalType(Type targetType,
@@ -550,8 +546,8 @@ public class JsonCodec implements Serializable {
      * @param typeIndex
      *            The index of a generic type to use to define the child type
      *            that should be decoded
-     * @param encodedValueAndType
-     * @param application
+     * @param connectorTracker
+     * @param value
      * @return
      */
     private static Object decodeParametrizedType(Type targetType,

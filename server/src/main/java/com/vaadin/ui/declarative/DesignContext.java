@@ -354,7 +354,7 @@ public class DesignContext implements Serializable {
      * Returns the default instance for the given class. The instance must not
      * be modified by the caller.
      *
-     * @param abstractComponent
+     * @param component
      * @return the default instance for the given class. The return value must
      *         not be modified by the caller
      */

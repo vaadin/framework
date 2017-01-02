@@ -94,7 +94,7 @@ public class ConnectorTracker implements Serializable {
      * Map to track on which syncId each connector was removed.
      *
      * @see #getCurrentSyncId()
-     * @see #cleanConcurrentlyRemovedConnectorIds(long)
+     * @see #cleanConcurrentlyRemovedConnectorIds(int)
      */
     private final TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<>();
 

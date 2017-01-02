@@ -140,8 +140,7 @@ public class CustomComponent extends AbstractComponent
     }
 
     /**
-     * Gets the number of contained components. Consistent with the iterator
-     * returned by {@link #getComponentIterator()}.
+     * Gets the number of contained components.
      *
      * @return the number of contained components (zero or one)
      */

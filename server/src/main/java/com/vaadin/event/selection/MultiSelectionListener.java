@@ -31,7 +31,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the type of the selected item
  *
- * @see SelectionModel.Multi
+ * @see com.vaadin.data.SelectionModel.Multi
  * @see MultiSelectionEvent
  */
 @FunctionalInterface
