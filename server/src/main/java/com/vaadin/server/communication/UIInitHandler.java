@@ -211,10 +211,17 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // Set thread local here so it is available in init
         UI.setCurrent(ui);
 
-        ui.doInit(request, uiId.intValue(), embedId);
-
+        Exception initException = null;
+        try {
+            ui.doInit(request, uiId.intValue(), embedId);
+        } catch (Exception e) {
+            initException = e;
+        }
         session.addUI(ui);
-
+        if (initException != null) {
+            ui.getSession().getCommunicationManager()
+                    .handleConnectorRelatedException(ui, initException);
+        }
         // Warn if the window can't be preserved
         if (embedId == null
                 && vaadinService.preserveUIOnRefresh(provider, event)) {
