@@ -13,20 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
-import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.v7.ui.Grid;
+import com.vaadin.tests.util.Person;
+import com.vaadin.ui.Grid;
 
 public class GridEditorFrozenColumnsUI extends GridEditorUI {
 
     @Override
-    protected Grid createGrid(PersonContainer container) {
-        Grid grid = super.createGrid(container);
+    protected Grid<Person> createGrid() {
+        Grid<Person> grid = super.createGrid();
 
         grid.setFrozenColumnCount(2);
 
         grid.setWidth("600px");
+        grid.setHeight("100%");
 
         return grid;
     }

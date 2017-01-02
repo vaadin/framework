@@ -1,4 +1,4 @@
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ public class GridEditorMultiselectTest extends MultiBrowserTest {
         openTestURL();
         GridElement grid = openEditor();
         grid.getEditor().save();
+        waitForElementNotPresent(By.className("v-grid-editor-cells"));
         assertCheckboxesEnabled(grid, true);
     }
 
