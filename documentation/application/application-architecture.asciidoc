@@ -85,13 +85,6 @@ information about common architectures, see
 Application Architectures">>, which discusses layered architectures, the
 Model-View-Presenter (MVP) pattern, and so forth.
 
-The
-<<dummy/../../../framework/advanced/advanced-global#advanced.global,"Accessing
-Session-Global Data">> discusses the problem of passing essentially global
-references around, a common problem which is also visited in
-<<application.architecture.accessing>>.
-
-
 [[application.architecture.composition]]
 == Compositing Components
 
