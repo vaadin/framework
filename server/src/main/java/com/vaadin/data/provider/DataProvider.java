@@ -22,15 +22,17 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
+import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
 /**
  * A common interface for fetching data from a backend. The {@link DataProvider}
- * interface is used by {@link Listing} components. The listing component will
- * provide a {@link Query} object with request information, and the data
- * provider uses this information to return a stream containing requested beans.
+ * interface is used by listing components implementing {@link HasDataProvider}
+ * or {@link HasFilterableDataProvider}. The listing component will provide a
+ * {@link Query} object with request information, and the data provider uses
+ * this information to return a stream containing requested beans.
  * <p>
  * Vaadin comes with a ready-made solution for in-memory data, known as
  * {@link ListDataProvider} which can be created using static {@code create}

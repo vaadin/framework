@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -37,15 +38,13 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.Listing;
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 
 @RunWith(Parameterized.class)
-public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Listing<String, DataProvider<String, ?>>> {
+public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
 
     @Parameters(name = "{0}")
     public static Iterable<?> multiSelects() {
@@ -64,8 +63,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
     public void setUp() {
         selectToTest.deselectAll();
         // Intentional deviation from upcoming selection order
-        selectToTest.setDataProvider(
-                DataProvider.create("3", "2", "1", "5", "8", "7", "4", "6"));
+        selectToTest.setItems("3", "2", "1", "5", "8", "7", "4", "6");
         rpc = ComponentTest.getRpcProxy(selectToTest,
                 MultiSelectServerRpc.class);
     }
@@ -247,6 +245,12 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
             public Set<String> getSelectedItems() {
                 return set;
             }
+
+            @Override
+            public void setItems(Collection<String> items) {
+                throw new UnsupportedOperationException(
+                        "Not implemented for this test");
+            }
         };
 
         Assert.assertSame(set, select.getValue());
@@ -307,6 +311,12 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
             @Override
             public Set<String> getValue() {
                 return set;
+            }
+
+            @Override
+            public void setItems(Collection<String> items) {
+                throw new UnsupportedOperationException(
+                        "Not implemented for this test");
             }
         };
 

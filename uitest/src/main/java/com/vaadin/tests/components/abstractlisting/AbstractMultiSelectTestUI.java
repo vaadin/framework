@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.vaadin.data.Listing;
 import com.vaadin.ui.AbstractMultiSelect;
 import com.vaadin.ui.ItemCaptionGenerator;
 
-public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMultiSelect<Object> & Listing<Object, ?>>
+public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMultiSelect<Object>>
         extends AbstractListingTestUI<MULTISELECT> {
 
     protected final String selectionCategory = "Selection";
@@ -33,7 +32,8 @@ public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMult
                 "None", (abstractMultiSelect, captionGenerator, data) -> {
                     abstractMultiSelect
                             .setItemCaptionGenerator(captionGenerator);
-                    abstractMultiSelect.getDataProvider().refreshAll();
+                    abstractMultiSelect.getDataCommunicator().getDataProvider()
+                            .refreshAll();
                 }, true);
     }
 

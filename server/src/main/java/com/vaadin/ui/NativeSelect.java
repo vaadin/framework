@@ -18,7 +18,7 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -44,7 +44,7 @@ import com.vaadin.shared.ui.nativeselect.NativeSelectState;
  * @see com.vaadin.ui.ComboBox
  */
 public class NativeSelect<T> extends AbstractSingleSelect<T>
-        implements FocusNotifier, BlurNotifier, Listing<T, DataProvider<T, ?>> {
+        implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
 
     /**
      * Creates a new {@code NativeSelect} with an empty caption and no items.
