@@ -596,11 +596,14 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     }
 
     @Override
-    protected void checkBindingsCompleted(String message) {
+    protected void checkBindingsCompleted(String methodName) {
         if (!incompleteMemberFieldBindings.isEmpty()) {
-            throw new IllegalStateException(message);
+            throw new IllegalStateException(
+                    "All bindings created with forMemberField must "
+                            + "be completed with bindInstanceFields before calling "
+                            + methodName);
         }
-        super.checkBindingsCompleted(message);
+        super.checkBindingsCompleted(methodName);
     }
 
     private void initializeField(Object objectWithMemberFields,
