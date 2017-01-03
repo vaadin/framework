@@ -21,6 +21,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
+import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.data.Converter;
 import com.vaadin.data.ValueContext;
 import com.vaadin.shared.ui.AlignmentInfo;
@@ -115,8 +117,9 @@ public class DesignAttributeHandler implements Serializable {
                 success = false;
             } else {
                 // we have a value from design attributes, let's use that
-                Object param = getFormatter().parse(value,
-                        setter.getParameterTypes()[0]);
+                Type[] types = GenericTypeReflector
+                        .getExactParameterTypes(setter, target.getClass());
+                Object param = getFormatter().parse(value, (Class<?>) types[0]);
                 setter.invoke(target, param);
                 success = true;
             }
@@ -208,7 +211,9 @@ public class DesignAttributeHandler implements Serializable {
                 Object value = getter.invoke(component);
                 Object defaultValue = getter.invoke(defaultInstance);
                 writeAttribute(attribute, attr, value, defaultValue,
-                        (Class) getter.getReturnType(), context);
+                        (Class) GenericTypeReflector.getExactReturnType(getter,
+                                component.getClass()),
+                        context);
             } catch (Exception e) {
                 getLogger().log(Level.SEVERE,
                         "Failed to invoke getter for attribute " + attribute,

@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
  * This class provides date/time parsing services to all components on the
@@ -203,7 +203,7 @@ public class DateTimeService {
     }
 
     public static boolean isInRange(Date date, Date rangeStart, Date rangeEnd,
-            Resolution resolution) {
+            DateResolution resolution) {
         Date s;
         Date e;
         if (rangeStart.after(rangeEnd)) {
@@ -217,19 +217,19 @@ public class DateTimeService {
         long end = e.getYear() * 10000000000l;
         long target = date.getYear() * 10000000000l;
 
-        if (resolution == Resolution.YEAR) {
+        if (resolution == DateResolution.YEAR) {
             return (start <= target && end >= target);
         }
         start += s.getMonth() * 100000000l;
         end += e.getMonth() * 100000000l;
         target += date.getMonth() * 100000000l;
-        if (resolution == Resolution.MONTH) {
+        if (resolution == DateResolution.MONTH) {
             return (start <= target && end >= target);
         }
         start += s.getDate() * 1000000l;
         end += e.getDate() * 1000000l;
         target += date.getDate() * 1000000l;
-        if (resolution == Resolution.DAY) {
+        if (resolution == DateResolution.DAY) {
             return (start <= target && end >= target);
         }
         start += s.getHours() * 10000l;

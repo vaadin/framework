@@ -15,8 +15,12 @@
  */
 package com.vaadin.shared.ui.datefield;
 
-public class InlineDateFieldState extends AbstractTextualDateFieldState {
-    {
-        primaryStyleName = "v-inline-datefield";
-    }
+/**
+ * Shared state for the DateField component.
+ * 
+ * @author Vaadin Ltd
+ *
+ */
+public class LocalDateFieldState extends TextualDateFieldState {
+
 }
