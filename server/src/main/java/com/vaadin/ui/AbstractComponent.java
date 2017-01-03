@@ -1223,9 +1223,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Returns a collection of attributes that should not be handled by the
-     * basic implementation of the {@link #readDesign(Element, DesignContext)} and {@link #writeDesign(Element, DesignContext)}
-     * methods. Typically these are handled in a custom way in the overridden
-     * versions of the above methods
+     * basic implementation of the {@link #readDesign(Element, DesignContext)}
+     * and {@link #writeDesign(Element, DesignContext)} methods. Typically these
+     * are handled in a custom way in the overridden versions of the above
+     * methods
      *
      * @since 7.4
      *

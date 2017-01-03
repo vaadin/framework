@@ -6,12 +6,12 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 
-public class AbstractDateFieldTest<T extends AbstractDateField>
+public class AbstractDateFieldTest<T extends AbstractLocalDateField>
         extends AbstractFieldTest<T, LocalDate> {
 
     @SuppressWarnings("unchecked")
@@ -90,19 +90,19 @@ public class AbstractDateFieldTest<T extends AbstractDateField>
     }
 
     private void createResolutionSelectAction(String category) {
-        LinkedHashMap<String, Resolution> options = new LinkedHashMap<>();
-        options.put("Year", Resolution.YEAR);
-        options.put("Month", Resolution.MONTH);
-        options.put("Day", Resolution.DAY);
+        LinkedHashMap<String, DateResolution> options = new LinkedHashMap<>();
+        options.put("Year", DateResolution.YEAR);
+        options.put("Month", DateResolution.MONTH);
+        options.put("Day", DateResolution.DAY);
 
         createSelectAction("Resolution", category, options, "Year",
                 resolutionCommand);
     }
 
-    private Command<T, Resolution> resolutionCommand = new Command<T, Resolution>() {
+    private Command<T, DateResolution> resolutionCommand = new Command<T, DateResolution>() {
 
         @Override
-        public void execute(T c, Resolution value, Object data) {
+        public void execute(T c, DateResolution value, Object data) {
             c.setResolution(value);
 
         }

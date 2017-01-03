@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
@@ -20,7 +20,8 @@ public class DateFieldDayResolutionOffset extends AbstractReindeerTestUI {
         dateValue.setId("dateValue");
 
         final DateTimeFormatter dateformat = getDateFormat();
-        final AbstractDateField dateField = getDateField(dateformat);
+        final AbstractDateField<LocalDate, DateResolution> dateField = getDateField(
+                dateformat);
 
         addComponent(dateValue);
         addComponent(dateField);
@@ -29,11 +30,12 @@ public class DateFieldDayResolutionOffset extends AbstractReindeerTestUI {
                 .setValue(dateformat.format(dateField.getValue())));
     }
 
-    private AbstractDateField getDateField(DateTimeFormatter dateformat) {
-        final AbstractDateField dateField = new TestDateField();
+    private AbstractDateField<LocalDate, DateResolution> getDateField(
+            DateTimeFormatter dateformat) {
+        final AbstractDateField<LocalDate, DateResolution> dateField = new TestDateField();
         LocalDate initialDate = dateformat.parse(initialDateString,
                 LocalDate::from);
-        dateField.setResolution(Resolution.DAY);
+        dateField.setResolution(DateResolution.DAY);
         dateField.setValue(initialDate);
         return dateField;
     }

@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.InlineDateField;
@@ -51,7 +51,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
         pd.setWidth(width);
         pd.setValue(LocalDate.of(1970, 05, 23));
         pd.setLocale(locale);
-        pd.setResolution(Resolution.YEAR);
+        pd.setResolution(DateResolution.YEAR);
 
         return pd;
     }
@@ -70,10 +70,10 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     }
 
     private Component createResolutionSelectAction() {
-        LinkedHashMap<String, Resolution> options = new LinkedHashMap<>();
-        options.put("Year", Resolution.YEAR);
-        options.put("Month", Resolution.MONTH);
-        options.put("Day", Resolution.DAY);
+        LinkedHashMap<String, DateResolution> options = new LinkedHashMap<>();
+        options.put("Year", DateResolution.YEAR);
+        options.put("Month", DateResolution.MONTH);
+        options.put("Day", DateResolution.DAY);
         return createSelectAction("Resolution", options, "Year",
                 (field, value, data) -> field.setResolution(value));
     }

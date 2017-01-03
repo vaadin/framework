@@ -16,9 +16,9 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
@@ -32,8 +32,8 @@ public class DateFieldChangeResolution extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final AbstractDateField dateField = new DateField("Enter date");
-        dateField.setResolution(Resolution.YEAR);
+        final AbstractLocalDateField dateField = new DateField("Enter date");
+        dateField.setResolution(DateResolution.YEAR);
         dateField.setId(DATEFIELD_ID);
         addComponent(dateField);
 
@@ -41,7 +41,7 @@ public class DateFieldChangeResolution extends AbstractReindeerTestUI {
         addComponent(l);
         HorizontalLayout hlayout = new HorizontalLayout();
         addComponent(hlayout);
-        for (final Resolution value : Resolution.values()) {
+        for (final DateResolution value : DateResolution.values()) {
             String resolutionString = value.toString().toLowerCase();
             Button button = new Button(resolutionString);
             button.addClickListener(event -> dateField.setResolution(value));

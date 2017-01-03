@@ -22,12 +22,12 @@ import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 /**
  * A date entry component, which displays the actual date selector inline.
  *
- * @see AbstractDateField
+ * @see AbstractLocalDateField
  * @see DateField
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class InlineDateField extends AbstractDateField {
+public class InlineDateField extends AbstractLocalDateField {
 
     /**
      * Constructs an empty <code>InlineDateField</code> with no caption.
