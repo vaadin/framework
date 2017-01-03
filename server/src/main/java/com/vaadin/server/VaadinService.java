@@ -1861,7 +1861,8 @@ public abstract class VaadinService implements Serializable {
 
         FutureAccess pendingAccess;
         Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
-                .setCurrent(session);
+                .getInstances();
+        CurrentInstance.setCurrent(session);
         try {
             while ((pendingAccess = session.getPendingAccessQueue()
                     .poll()) != null) {
