@@ -39,7 +39,6 @@ and tries to restore the connection. After several retries, an error message is 
 You can customize the messages, timeouts, and the number of reconnect attempts in the [classname]#ReconnectDialogConfiguration#
 object, which you can access from your [classname]#UI# with [methodname]#getReconnectDialogConfiguration()#.
 
-ifdef::web[]
 [[application.errors.systemmessages]]
 == Customizing System Messages
 
@@ -48,43 +47,9 @@ usually requires restarting the application. Session timeout is perhaps the most
 typical such state.
 
 System messages are strings managed in the [classname]#SystemMessages# class.
-
-sessionExpired:: ((("session",
-"expiration")))
-((("session",
-"timeout")))
-The Vaadin session expired. A session expires if no server requests are made
-during the session timeout period. The session timeout can be configured with
-the [parameter]#session-timeout# parameter in [filename]#web.xml#, as described
-in
-<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
-a web.xml Deployment Descriptor">>.
-
-communicationError:: An unspecified communication problem between the Vaadin Client-Side Engine and
-the application server. The server may be unavailable or there is some other
-problem.
-
-authenticationError:: This error occurs if 401 (Unauthorized) response to a request is received from
-the server.
-
-internalError:: A serious internal problem, possibly indicating a bug in Vaadin Client-Side
-Engine or in some custom client-side code.
-
-outOfSync:: The client-side state is invalid with respect to server-side state.
-
-cookiesDisabled:: Informs the user that cookies are disabled in the browser and the application
-does not work without them.
-
-
-
 Each message has four properties: a short caption, the actual message, a URL to
 which to redirect after displaying the message, and property indicating whether
 the notification is enabled.
-
-Additional details may be written (in English) to the debug console window
-described in
-<<dummy/../../../framework/advanced/advanced-debug#advanced.debug,"Debug Mode
-and Window">>.
 
 You can override the default system messages by setting the
 [interfacename]#SystemMessagesProvider# in the [classname]#VaadinService#. You
@@ -120,9 +85,6 @@ See
 Servlet, Portlet, and Service">> for information about customizing Vaadin
 servlets.
 
-endif::web[]
-
-ifdef::web[]
 [[application.errors.unchecked-exceptions]]
 == Handling Uncaught Exceptions
 
@@ -132,12 +94,8 @@ application. Any such exceptions are eventually caught by the framework. It
 delegates the exceptions to the [classname]#DefaultErrorHandler#, which displays
 the error as a component error, that is, with a small red "!" -sign (depending
 on the theme). If the user hovers the mouse pointer over it, the entire
-backtrace of the exception is shown in a large tooltip box, as illustrated in
-<<figure.application.errors.unchecked-exceptions>>.
+backtrace of the exception is shown in a large tooltip box.
 
-[[figure.application.errors.unchecked-exceptions]]
-.Uncaught Exception in Component Error Indicator
-image::img/errorindicator-exception.png[]
 
 You can customize the default error handling by implementing a custom
 [interfacename]#ErrorHandler# and enabling it with
@@ -152,12 +110,8 @@ behavior of the default handler.
 ----
 // Here's some code that produces an uncaught exception
 final VerticalLayout layout = new VerticalLayout();
-final Button button = new Button("Click Me!",
-    new Button.ClickListener() {
-    public void buttonClick(ClickEvent event) {
-        ((String)null).length(); // Null-pointer exception
-    }
-});
+final Button button = new Button("Click Me!", event ->
+        ((String)null).length()); // Null-pointer exception
 layout.addComponent(button);
 
 // Configure the error handler for the UI
@@ -189,5 +143,3 @@ such as set the component error for the component where the exception was
 thrown. See the source code of the implementation for more details. You can call
 [methodname]#findAbstractComponent(event)# to find the component that caused the
 error. If the error is not associated with a component, it returns null.
-
-endif::web[]
