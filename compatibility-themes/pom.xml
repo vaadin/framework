@@ -14,6 +14,11 @@
     <url>https://vaadin.com/</url>
     <description>Vaadin compatibility themes</description>
 
+    <properties>
+        <!-- These files are directly from Vaadin 7 -->
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
     <dependencies>
         <!-- Maven plugin scans for vaadin-server... -->
         <dependency>

@@ -15,6 +15,9 @@
         <phantomjs.version>2.1.1</phantomjs.version>
         <vaadin.version>8.0-SNAPSHOT</vaadin.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <!-- Don't care about coding style for tests -->
+        <sonar.skip>true</sonar.skip>
+    </properties>
     </properties>
 
     <repositories>
