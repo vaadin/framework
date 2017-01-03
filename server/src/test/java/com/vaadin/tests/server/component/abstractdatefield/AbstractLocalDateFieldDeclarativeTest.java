@@ -20,9 +20,9 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.server.component.abstractfield.AbstractFieldDeclarativeTest;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 
 /**
  * Abstract test class which contains tests for declarative format for
@@ -36,7 +36,7 @@ import com.vaadin.ui.AbstractDateField;
  * @author Vaadin Ltd
  *
  */
-public abstract class AbstractDateFieldDeclarativeTest<T extends AbstractDateField>
+public abstract class AbstractLocalDateFieldDeclarativeTest<T extends AbstractLocalDateField>
         extends AbstractFieldDeclarativeTest<T, LocalDate> {
 
     @Override
@@ -60,7 +60,7 @@ public abstract class AbstractDateFieldDeclarativeTest<T extends AbstractDateFie
         LocalDate end = LocalDate.of(2019, 01, 15);
         LocalDate start = LocalDate.of(2001, 02, 11);
         String dateOutOfRange = "test date out of range";
-        Resolution resolution = Resolution.MONTH;
+        DateResolution resolution = DateResolution.MONTH;
         String dateFormat = "test format";
         boolean lenient = true;
         String parseErrorMsg = "test parse error";

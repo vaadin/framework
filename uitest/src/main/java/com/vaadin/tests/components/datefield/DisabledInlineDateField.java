@@ -19,14 +19,14 @@ import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.InlineDateField;
 
 public class DisabledInlineDateField extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        AbstractDateField df = new InlineDateField("Disabled");
+        AbstractLocalDateField df = new InlineDateField("Disabled");
         LocalDate date = LocalDate.of(2014, 6, 5);
         df.setValue(date);
         df.setEnabled(false);
