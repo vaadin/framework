@@ -17,7 +17,7 @@ package com.vaadin.v7.data.validator;
 
 import java.util.Date;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 
 /**
  * Validator for validating that a Date is inside a given range.

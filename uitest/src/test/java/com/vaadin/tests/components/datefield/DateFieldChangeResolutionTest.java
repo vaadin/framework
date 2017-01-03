@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -37,19 +37,19 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
     public void changeResolutionBetweenYearAndMonth() throws Exception {
         initialize();
         click(resolutionMonth);
-        checkHeaderAndBody(Resolution.MONTH, true);
+        checkHeaderAndBody(DateResolution.MONTH, true);
         click(resolutionYear);
-        checkHeaderAndBody(Resolution.YEAR, true);
+        checkHeaderAndBody(DateResolution.YEAR, true);
     }
 
     @Test
     public void changeResolutionToDayThenMonth() throws Exception {
         initialize();
-        checkHeaderAndBody(Resolution.YEAR, true); // check the initial state
+        checkHeaderAndBody(DateResolution.YEAR, true); // check the initial state
         click(resolutionDay);
-        checkHeaderAndBody(Resolution.DAY, true);
+        checkHeaderAndBody(DateResolution.DAY, true);
         click(resolutionMonth);
-        checkHeaderAndBody(Resolution.MONTH, true);
+        checkHeaderAndBody(DateResolution.MONTH, true);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
         // Change resolutions and check that the selected date is not lost and
         // that the calendar has the correct resolution.
         click(resolutionYear);
-        checkHeaderAndBody(Resolution.YEAR, false);
+        checkHeaderAndBody(DateResolution.YEAR, false);
     }
 
     private void initialize() {
@@ -81,19 +81,19 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
         resolutionYear = driver.findElement(By.id(BUTTON_BASE_ID + "year"));
     }
 
-    private void checkHeaderAndBody(Resolution resolution,
+    private void checkHeaderAndBody(DateResolution resolution,
             boolean textFieldIsEmpty) throws Exception {
         // Popup date field has all kinds of strange timers on the
         // client side
         sleep(100);
         // Open the popup calendar, perform checks and close the popup.
         openPopupDateField();
-        if (resolution.compareTo(Resolution.MONTH) <= 0) {
+        if (resolution.compareTo(DateResolution.MONTH) <= 0) {
             checkMonthHeader();
         } else {
             checkYearHeader();
         }
-        if (resolution.compareTo(Resolution.DAY) <= 0) {
+        if (resolution.compareTo(DateResolution.DAY) <= 0) {
             assertTrue(
                     "A calendar with the chosen resolution should have a body",
                     calendarHasBody());

@@ -16,27 +16,27 @@
 package com.vaadin.tests.components.datefield;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.VerticalLayout;
 
 public class PopupClosingWithEsc extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        AbstractDateField df1 = new TestDateField("Day");
+        AbstractLocalDateField df1 = new TestDateField("Day");
         df1.setId("day");
-        df1.setResolution(Resolution.DAY);
+        df1.setResolution(DateResolution.DAY);
 
-        AbstractDateField df2 = new TestDateField("Month");
+        AbstractLocalDateField df2 = new TestDateField("Month");
         df2.setId("month");
-        df2.setResolution(Resolution.MONTH);
+        df2.setResolution(DateResolution.MONTH);
 
-        AbstractDateField df3 = new TestDateField("Year");
+        AbstractLocalDateField df3 = new TestDateField("Year");
         df3.setId("year");
-        df3.setResolution(Resolution.YEAR);
+        df3.setResolution(DateResolution.YEAR);
 
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);

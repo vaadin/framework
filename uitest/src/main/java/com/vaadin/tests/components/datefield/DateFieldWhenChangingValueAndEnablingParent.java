@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.VerticalLayout;
@@ -22,8 +22,8 @@ public class DateFieldWhenChangingValueAndEnablingParent
         main.setMargin(true);
         setContent(main);
 
-        final AbstractDateField df1 = createDateField(true);
-        final AbstractDateField df2 = createDateField(false);
+        final AbstractLocalDateField df1 = createDateField(true);
+        final AbstractLocalDateField df2 = createDateField(false);
         final DateField pdf1 = createPopupDateField(true, true);
         final DateField pdf2 = createPopupDateField(true, false);
         final DateField pdf3 = createPopupDateField(false, true);
@@ -50,8 +50,8 @@ public class DateFieldWhenChangingValueAndEnablingParent
         });
     }
 
-    private AbstractDateField createDateField(boolean enabled) {
-        AbstractDateField df = new TestDateField(
+    private AbstractLocalDateField createDateField(boolean enabled) {
+        AbstractLocalDateField df = new TestDateField(
                 "DateField, " + (enabled ? "enabled" : "disabled"));
         df.setEnabled(enabled);
         df.setId("DATEFIELD_" + (enabled ? "ENABLED" : "DISABLED"));

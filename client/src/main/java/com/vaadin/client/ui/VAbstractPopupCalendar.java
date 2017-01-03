@@ -14,14 +14,14 @@
  * the License.
  */
 
-package com.vaadin.v7.client.ui;
+package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.Locale;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.Roles;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -48,33 +48,30 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.ui.Field;
-import com.vaadin.client.ui.SubPartAware;
-import com.vaadin.client.ui.VOverlay;
+import com.vaadin.client.ui.VAbstractCalendarPanel.FocusOutListener;
+import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
-import com.vaadin.v7.client.ui.VCalendarPanel.FocusOutListener;
-import com.vaadin.v7.client.ui.VCalendarPanel.SubmitListener;
-import com.vaadin.v7.shared.ui.datefield.PopupDateFieldState;
-import com.vaadin.v7.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
 /**
- * Represents a date selection component with a text field and a popup date
+ * Represents a date selection component with a text field and a popup date/time
  * selector.
  *
  * <b>Note:</b> To change the keyboard assignments used in the popup dialog you
- * should extend <code>com.vaadin.v7.client.ui.VCalendarPanel</code> and then
- * pass set it by calling the
- * <code>setCalendarPanel(VCalendarPanel panel)</code> method.
+ * should extend <code>com.vaadin.client.ui.VAbstractCalendarPanel</code> and
+ * then pass set it by calling the
+ * <code>setCalendarPanel(VAbstractCalendarPanel panel)</code> method.
  *
  */
-public class VPopupCalendar extends VTextualDate
+public abstract class VAbstractPopupCalendar<R extends Enum<R>>
+        extends VAbstractTextualDate<R>
         implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public VCalendarPanel calendar;
+    public VAbstractCalendarPanel<R> calendar;
 
     /** For internal use only. May be removed or replaced in the future. */
     public final VOverlay popup;
@@ -101,8 +98,11 @@ public class VPopupCalendar extends VTextualDate
 
     private Element descriptionForAssisitveDevicesElement;
 
-    public VPopupCalendar() {
-        super();
+    private final String CALENDAR_TOGGLE_ID = "popupButton";
+
+    public VAbstractPopupCalendar(VAbstractCalendarPanel<R> calendarPanel,
+            R resolution) {
+        super(resolution);
 
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
@@ -133,14 +133,14 @@ public class VPopupCalendar extends VTextualDate
         // Description of the usage of the widget for assisitve device users
         descriptionForAssisitveDevicesElement = DOM.createDiv();
         descriptionForAssisitveDevicesElement.setInnerText(
-                PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
+                TextualDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
         AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
         Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
                 Id.of(descriptionForAssisitveDevicesElement));
         AriaHelper.setVisibleForAssistiveDevicesOnly(
                 descriptionForAssisitveDevicesElement, true);
 
-        calendar = GWT.create(VCalendarPanel.class);
+        calendar = calendarPanel;
         calendar.setParentField(this);
         calendar.setFocusOutListener(new FocusOutListener() {
             @Override
@@ -223,34 +223,21 @@ public class VPopupCalendar extends VTextualDate
         Date currentDate = getCurrentDate();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
-            getClient().updateVariable(getId(), "year",
+            getClient().updateVariable(getId(),
+                    getResolutionVariable(
+                            calendar.getResolution(calendar::isYear)),
                     newDate.getYear() + 1900, false);
-            if (getCurrentResolution().getCalendarField() > Resolution.YEAR
-                    .getCalendarField()) {
-                getClient().updateVariable(getId(), "month",
+            if (!calendar.isYear(getCurrentResolution())) {
+                getClient().updateVariable(getId(),
+                        getResolutionVariable(
+                                calendar.getResolution(calendar::isMonth))
+                                        .toLowerCase(Locale.ENGLISH),
                         newDate.getMonth() + 1, false);
-                if (getCurrentResolution().getCalendarField() > Resolution.MONTH
-                        .getCalendarField()) {
-                    getClient().updateVariable(getId(), "day",
+                if (!calendar.isMonth(getCurrentResolution())) {
+                    getClient().updateVariable(getId(),
+                            getResolutionVariable(
+                                    calendar.getResolution(calendar::isDay)),
                             newDate.getDate(), false);
-                    if (getCurrentResolution()
-                            .getCalendarField() > Resolution.DAY
-                                    .getCalendarField()) {
-                        getClient().updateVariable(getId(), "hour",
-                                newDate.getHours(), false);
-                        if (getCurrentResolution()
-                                .getCalendarField() > Resolution.HOUR
-                                        .getCalendarField()) {
-                            getClient().updateVariable(getId(), "min",
-                                    newDate.getMinutes(), false);
-                            if (getCurrentResolution()
-                                    .getCalendarField() > Resolution.MINUTE
-                                            .getCalendarField()) {
-                                getClient().updateVariable(getId(), "sec",
-                                        newDate.getSeconds(), false);
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -259,7 +246,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Checks whether the text field is enabled.
      *
-     * @see VPopupCalendar#setTextFieldEnabled(boolean)
+     * @see VAbstractPopupCalendar#setTextFieldEnabled(boolean)
      * @return The current state of the text field.
      */
     public boolean isTextFieldEnabled() {
@@ -500,7 +487,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * For internal use only. May be removed or replaced in the future.
      *
-     * @see com.vaadin.v7.client.ui.VTextualDate#buildDate()
+     * @see com.vaadin.client.ui.VAbstractTextualDate#buildDate()
      */
     @Override
     public void buildDate() {
@@ -564,8 +551,6 @@ public class VPopupCalendar extends VTextualDate
             popup.hide(true);
         }
     }
-
-    private final String CALENDAR_TOGGLE_ID = "popupButton";
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(

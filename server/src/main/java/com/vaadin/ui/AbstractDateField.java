@@ -15,24 +15,31 @@
  */
 package com.vaadin.ui;
 
+import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAdjuster;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 
+import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.ValueContext;
-import com.vaadin.data.validator.DateRangeValidator;
+import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
@@ -43,9 +50,9 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
-import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.shared.ui.datefield.TextualDateFieldState;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -55,20 +62,26 @@ import com.vaadin.ui.declarative.DesignContext;
  * @author Vaadin Ltd
  *
  * @since 8.0
- *
+ * 
+ * @param <T>
+ *            type of date ({@code LocalDate} or {@code LocalDateTime}).
+ * @param <R>
+ *            resolution enumeration type
+ * 
  */
-public abstract class AbstractDateField extends AbstractField<LocalDate>
+public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
+        extends AbstractField<T>
         implements LegacyComponent, FocusNotifier, BlurNotifier {
 
     /**
      * Value of the field.
      */
-    private LocalDate value;
+    private T value;
 
     /**
      * Specified smallest modifiable unit for the date field.
      */
-    private Resolution resolution = Resolution.DAY;
+    private R resolution;
 
     /**
      * Overridden format string
@@ -94,8 +107,6 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
 
     private String defaultParseErrorMessage = "Date format not recognized";
 
-    private static Map<Resolution, String> variableNameForResolution = new HashMap<>();
-
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
     /**
@@ -105,42 +116,46 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      */
     private boolean preventValueChangeEvent;
 
-    static {
-        variableNameForResolution.put(Resolution.DAY, "day");
-        variableNameForResolution.put(Resolution.MONTH, "month");
-        variableNameForResolution.put(Resolution.YEAR, "year");
-    }
-
     /* Constructors */
 
     /**
-     * Constructs an empty <code>DateField</code> with no caption.
+     * Constructs an empty <code>AbstractDateField</code> with no caption and
+     * specified {@code resolution}.
+     * 
+     * @param resolution
+     *            initial resolution for the field
      */
-    public AbstractDateField() {
+    public AbstractDateField(R resolution) {
+        this.resolution = resolution;
     }
 
     /**
-     * Constructs an empty <code>DateField</code> with caption.
+     * Constructs an empty <code>AbstractDateField</code> with caption.
      *
      * @param caption
      *            the caption of the datefield.
+     * @param resolution
+     *            initial resolution for the field
      */
-    public AbstractDateField(String caption) {
+    public AbstractDateField(String caption, R resolution) {
+        this(resolution);
         setCaption(caption);
     }
 
     /**
-     * Constructs a new <code>DateField</code> with the given caption and
-     * initial text contents.
+     * Constructs a new <code>AbstractDateField</code> with the given caption
+     * and initial text contents.
      *
      * @param caption
      *            the caption <code>String</code> for the editor.
      * @param value
-     *            the LocalDate value.
+     *            the date/time value.
+     * @param resolution
+     *            initial resolution for the field
      */
-    public AbstractDateField(String caption, LocalDate value) {
+    public AbstractDateField(String caption, T value, R resolution) {
+        this(caption, resolution);
         setValue(value);
-        setCaption(caption);
     }
 
     /* Component basic features */
@@ -174,17 +189,16 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
          * app or refresh.
          */
 
-        final LocalDate currentDate = getValue();
+        final T currentDate = getValue();
 
         // Only paint variables for the resolution and up, e.g. Resolution DAY
         // paints DAY,MONTH,YEAR
-        for (Resolution res : Resolution
-                .getResolutionsHigherOrEqualTo(resolution)) {
+        for (R res : getResolutionsHigherOrEqualTo(getResolution())) {
             int value = -1;
             if (currentDate != null) {
-                value = getDateValue(currentDate, res);
+                value = getDatePart(currentDate, res);
             }
-            target.addVariable(this, variableNameForResolution.get(res), value);
+            target.addVariable(this, getResolutionVariable(res), value);
         }
     }
 
@@ -195,15 +209,15 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-
-        if (!isReadOnly() && (variables.containsKey("year")
-                || variables.containsKey("month")
-                || variables.containsKey("day")
+        Set<String> resolutionNames = getResolutions()
+                .map(this::getResolutionVariable).collect(Collectors.toSet());
+        resolutionNames.retainAll(variables.keySet());
+        if (!isReadOnly() && (!resolutionNames.isEmpty()
                 || variables.containsKey("dateString"))) {
 
             // Old and new dates
-            final LocalDate oldDate = getValue();
-            LocalDate newDate = null;
+            final T oldDate = getValue();
+            T newDate = null;
 
             // this enables analyzing invalid input on the server
             final String newDateString = (String) variables.get("dateString");
@@ -211,15 +225,15 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
 
             // Gets the new date in parts
             boolean hasChanges = false;
-            Map<Resolution, Integer> calendarFields = new HashMap<>();
+            Map<R, Integer> calendarFields = new HashMap<>();
 
-            for (Resolution resolution : Resolution
-                    .getResolutionsHigherOrEqualTo(getResolution())) {
+            for (R resolution : getResolutionsHigherOrEqualTo(
+                    getResolution())) {
                 // Only handle what the client is allowed to send. The same
                 // resolutions that are painted
-                String variableName = variableNameForResolution.get(resolution);
+                String variableName = getResolutionVariable(resolution);
 
-                Integer value = getDateValue(oldDate, resolution);
+                int value = getDatePart(oldDate, resolution);
                 if (variables.containsKey(variableName)) {
                     Integer newValue = (Integer) variables.get(variableName);
                     if (newValue >= 0) {
@@ -234,15 +248,12 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
             if (!hasChanges) {
                 newDate = null;
             } else {
-                newDate = LocalDate.of(calendarFields.get(Resolution.YEAR),
-                        calendarFields.getOrDefault(Resolution.MONTH, 1),
-                        calendarFields.getOrDefault(Resolution.DAY, 1));
+                newDate = buildDate(calendarFields);
             }
 
             if (newDate == null && dateString != null
                     && !dateString.isEmpty()) {
-                Result<LocalDate> parsedDate = handleUnparsableDateString(
-                        dateString);
+                Result<T> parsedDate = handleUnparsableDateString(dateString);
                 if (parsedDate.isError()) {
 
                     /*
@@ -332,8 +343,8 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      * @param startDate
      *            - the allowed range's start date
      */
-    public void setRangeStart(LocalDate startDate) {
-        Date date = convertLocalDate(startDate);
+    public void setRangeStart(T startDate) {
+        Date date = convertToDate(startDate);
         if (date != null && getState().rangeEnd != null
                 && date.after(getState().rangeEnd)) {
             throw new IllegalStateException(
@@ -367,21 +378,21 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
     /**
      * Gets the resolution.
      *
-     * @return int
+     * @return the date/time field resolution
      */
-    public Resolution getResolution() {
+    public R getResolution() {
         return resolution;
     }
 
     /**
      * Sets the resolution of the DateField.
      *
-     * The default resolution is {@link Resolution#DAY} since Vaadin 7.0.
+     * The default resolution is {@link DateResolution#DAY} since Vaadin 7.0.
      *
      * @param resolution
-     *            the resolution to set.
+     *            the resolution to set, not {@code null}
      */
-    public void setResolution(Resolution resolution) {
+    public void setResolution(R resolution) {
         this.resolution = resolution;
         markAsDirty();
     }
@@ -396,8 +407,8 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      *            - the allowed range's end date (inclusive, based on the
      *            current resolution)
      */
-    public void setRangeEnd(LocalDate endDate) {
-        Date date = convertLocalDate(endDate);
+    public void setRangeEnd(T endDate) {
+        Date date = convertToDate(endDate);
         if (date != null && getState().rangeStart != null
                 && getState().rangeStart.after(date)) {
             throw new IllegalStateException(
@@ -412,8 +423,8 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      *
      * @return the precise rangeStart used, may be null.
      */
-    public LocalDate getRangeStart() {
-        return convertDate(getState(false).rangeStart);
+    public T getRangeStart() {
+        return convertFromDate(getState(false).rangeStart);
     }
 
     /**
@@ -421,8 +432,8 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      *
      * @return the precise rangeEnd used, may be null.
      */
-    public LocalDate getRangeEnd() {
-        return convertDate(getState(false).rangeEnd);
+    public T getRangeEnd() {
+        return convertFromDate(getState(false).rangeEnd);
     }
 
     /**
@@ -482,7 +493,7 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
     }
 
     @Override
-    public LocalDate getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -494,7 +505,7 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      *            the new value, may be {@code null}
      */
     @Override
-    public void setValue(LocalDate value) {
+    public void setValue(T value) {
         /*
          * First handle special case when the client side component have a date
          * string but value is null (e.g. unparsable date string typed in by the
@@ -580,17 +591,28 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
         if (design.hasAttr("value") && !design.attr("value").isEmpty()) {
-            LocalDate date = DesignAttributeHandler.getFormatter()
-                    .parse(design.attr("value"), LocalDate.class);
-            // formatting will return null if it cannot parse the string
-            if (date == null) {
-                Logger.getLogger(AbstractDateField.class.getName()).info(
-                        "cannot parse " + design.attr("value") + " as date");
+            Type dateType = GenericTypeReflector.getTypeParameter(getClass(),
+                    AbstractDateField.class.getTypeParameters()[0]);
+            if (dateType instanceof Class<?>) {
+                Class<?> clazz = (Class<?>) dateType;
+                T date = (T) DesignAttributeHandler.getFormatter()
+                        .parse(design.attr("value"), clazz);
+                // formatting will return null if it cannot parse the string
+                if (date == null) {
+                    Logger.getLogger(AbstractDateField.class.getName())
+                            .info("cannot parse " + design.attr("value")
+                                    + " as date");
+                }
+                doSetValue(date);
+            } else {
+                throw new RuntimeException("Cannot detect resoluton type "
+                        + Optional.ofNullable(dateType).map(Type::getTypeName)
+                                .orElse(null));
             }
-            doSetValue(date);
         }
     }
 
@@ -629,22 +651,22 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
      *            date string to handle
      * @return result that contains parsed Date as a value or an error
      */
-    protected Result<LocalDate> handleUnparsableDateString(String dateString) {
+    protected Result<T> handleUnparsableDateString(String dateString) {
         return Result.error(getParseErrorMessage());
     }
 
     @Override
-    protected TextualDateFieldState getState() {
-        return (TextualDateFieldState) super.getState();
+    protected AbstractDateFieldState getState() {
+        return (AbstractDateFieldState) super.getState();
     }
 
     @Override
-    protected TextualDateFieldState getState(boolean markAsDirty) {
-        return (TextualDateFieldState) super.getState(markAsDirty);
+    protected AbstractDateFieldState getState(boolean markAsDirty) {
+        return (AbstractDateFieldState) super.getState(markAsDirty);
     }
 
     @Override
-    protected void doSetValue(LocalDate value) {
+    protected void doSetValue(T value) {
         // Also set the internal dateString
         if (value != null) {
             dateString = value.toString();
@@ -659,10 +681,7 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
             uiHasValidDateString = true;
             setComponentError(new UserError(currentParseErrorMessage));
         } else {
-            DateRangeValidator validator = new DateRangeValidator(
-                    getDateOutOfRangeMessage(),
-                    getDate(getRangeStart(), getResolution()),
-                    getDate(getRangeEnd(), getResolution()));
+            RangeValidator<T> validator = getRangeValidator();
             ValidationResult result = validator.apply(value,
                     new ValueContext(this));
             if (result.isError()) {
@@ -671,50 +690,80 @@ public abstract class AbstractDateField extends AbstractField<LocalDate>
         }
     }
 
-    private LocalDate getDate(LocalDate date, Resolution forResolution) {
-        if (date == null) {
-            return null;
-        }
-        if (forResolution == Resolution.YEAR) {
-            return date.withDayOfYear(1);
-        } else if (forResolution == Resolution.MONTH) {
-            return date.withDayOfMonth(1);
+    /**
+     * Returns a date integer value part for the given {@code date} for the
+     * given {@code resolution}.
+     * 
+     * @param date
+     *            the given date
+     * @param resolution
+     *            the resolution to extract a value from the date by
+     * @return the integer value part of the date by the given resolution
+     */
+    protected abstract int getDatePart(T date, R resolution);
+
+    /**
+     * Builds date by the given {@code resolutionValues} which is a map whose
+     * keys are resolution and integer values.
+     * <p>
+     * This is the opposite to {@link #getDatePart(Temporal, Enum)}.
+     * 
+     * @param resolutionValues
+     *            date values to construct a date
+     * @return date built from the given map of date values
+     */
+    protected abstract T buildDate(Map<R, Integer> resolutionValues);
+
+    /**
+     * Returns a custom date range validator which is applicable for the type
+     * {@code T}.
+     * 
+     * @return the date range validator
+     */
+    protected abstract RangeValidator<T> getRangeValidator();
+
+    /**
+     * Converts {@link Date} to date type {@code T}.
+     * 
+     * @param date
+     *            a date to convert
+     * @return object of type {@code T} representing the {@code date}
+     */
+    protected abstract T convertFromDate(Date date);
+
+    /**
+     * Converts the object of type {@code T} to {@link Date}.
+     * <p>
+     * This is the opposite to {@link #convertFromDate(Date)}.
+     * 
+     * @param date
+     *            the date of type {@code T}
+     * @return converted date of type {@code Date}
+     */
+    protected abstract Date convertToDate(T date);
+
+    private String getResolutionVariable(R resolution) {
+        return resolution.name().toLowerCase(Locale.ENGLISH);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Stream<R> getResolutions() {
+        Type resolutionType = GenericTypeReflector.getTypeParameter(getClass(),
+                AbstractDateField.class.getTypeParameters()[1]);
+        if (resolutionType instanceof Class<?>) {
+            Class<?> clazz = (Class<?>) resolutionType;
+            return Stream.of(clazz.getEnumConstants())
+                    .map(object -> (R) object);
         } else {
-            return date;
+            throw new RuntimeException("Cannot detect resoluton type "
+                    + Optional.ofNullable(resolutionType).map(Type::getTypeName)
+                            .orElse(null));
         }
     }
 
-    private int getDateValue(LocalDate date, Resolution resolution) {
-        LocalDate value = date;
-        if (value == null) {
-            value = LocalDate.of(1, 1, 1);
-        }
-        switch (resolution) {
-        case DAY:
-            return value.getDayOfMonth();
-        case MONTH:
-            return value.getMonthValue();
-        case YEAR:
-            return value.getYear();
-        default:
-            assert false : "Unexpected resolution argument " + resolution;
-            return -1;
-        }
-    }
-
-    private Date convertLocalDate(LocalDate date) {
-        if (date == null) {
-            return null;
-        }
-        return Date.from(date.atStartOfDay(ZoneOffset.UTC).toInstant());
-    }
-
-    private LocalDate convertDate(Date date) {
-        if (date == null) {
-            return null;
-        }
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.UTC)
-                .toLocalDate();
+    private Iterable<R> getResolutionsHigherOrEqualTo(R resoution) {
+        return getResolutions().skip(resolution.ordinal())
+                .collect(Collectors.toList());
     }
 
 }

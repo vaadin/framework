@@ -18,7 +18,7 @@ package com.vaadin.tests.components.datefield;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 
 public class DateFieldPopupClosing extends AbstractReindeerTestUI {
 
@@ -26,7 +26,7 @@ public class DateFieldPopupClosing extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final AbstractDateField df = new TestDateField();
+        final AbstractLocalDateField df = new TestDateField();
         df.setId(DATEFIELD_ID);
         addComponent(df);
     }

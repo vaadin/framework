@@ -19,12 +19,9 @@ package com.vaadin.client.ui;
 import java.util.Date;
 
 import com.google.gwt.aria.client.Roles;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -39,10 +36,20 @@ import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.ui.datefield.Resolution;
 
-public class VTextualDate extends VDateField implements Field, ChangeHandler,
-        Focusable, SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
+/**
+ * Abstract textual date field base implementation. Provides a text box as an
+ * editor for a date. The class is parameterized by the date resolution
+ * enumeration type.
+ * 
+ * @author Vaadin Ltd
+ *
+ * @param <R>
+ *            the resolution type which this field is based on (day, month, ...)
+ */
+public abstract class VAbstractTextualDate<R extends Enum<R>>
+        extends VDateField<R> implements Field, ChangeHandler, Focusable,
+        SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, KeyDownHandler {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
@@ -51,51 +58,30 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
     public final TextBox text;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String formatStr;
-
-    /** For internal use only. May be removed or replaced in the future. */
     public boolean lenient;
 
-    public VTextualDate() {
-        super();
+    private final String TEXTFIELD_ID = "field";
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public String formatStr;
+
+    public VAbstractTextualDate(R resoluton) {
+        super(resoluton);
         text = new TextBox();
         text.addChangeHandler(this);
-        text.addFocusHandler(new FocusHandler() {
-            @Override
-            public void onFocus(FocusEvent event) {
-                text.addStyleName(VTextField.CLASSNAME + "-"
-                        + VTextField.CLASSNAME_FOCUS);
-                if (getClient() != null && getClient()
-                        .hasEventListeners(VTextualDate.this, EventId.FOCUS)) {
-                    getClient().updateVariable(getId(), EventId.FOCUS, "",
-                            true);
-                }
-
-                // Needed for tooltip event handling
-                VTextualDate.this.fireEvent(event);
-            }
-        });
-        text.addBlurHandler(new BlurHandler() {
-            @Override
-            public void onBlur(BlurEvent event) {
-                text.removeStyleName(VTextField.CLASSNAME + "-"
-                        + VTextField.CLASSNAME_FOCUS);
-                String value = getText();
-                if (getClient() != null && getClient()
-                        .hasEventListeners(VTextualDate.this, EventId.BLUR)) {
-                    getClient().updateVariable(getId(), EventId.BLUR, "", true);
-                }
-
-                // Needed for tooltip event handling
-                VTextualDate.this.fireEvent(event);
-            }
-        });
+        text.addFocusHandler(
+                event -> fireBlurFocusEvent(event, true, EventId.FOCUS));
+        text.addBlurHandler(
+                event -> fireBlurFocusEvent(event, false, EventId.BLUR));
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
         add(text);
     }
 
+    /**
+     * Updates style names for the widget (and its children).
+     */
     protected void updateStyleNames() {
         if (text != null) {
             text.setStyleName(VTextField.CLASSNAME);
@@ -103,9 +89,14 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         }
     }
 
+    /**
+     * Gets the date format string for the current locale.
+     * 
+     * @return the format string
+     */
     protected String getFormatString() {
         if (formatStr == null) {
-            if (currentResolution == Resolution.YEAR) {
+            if (isYear(getCurrentResolution())) {
                 formatStr = "yyyy"; // force full year
             } else {
 
@@ -224,34 +215,39 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         getClient().updateVariable(getId(), "dateString", text.getText(),
                 false);
 
+        updateDateVariables();
+    }
+
+    /**
+     * Updates variables to send a response to the server.
+     * <p>
+     * The method can be overridden by subclasses to provide a custom logic for
+     * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
+     * method.
+     */
+    protected void updateDateVariables() {
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        getClient().updateVariable(getId(), "year",
+        getClient().updateVariable(getId(),
+                getResolutionVariable(getResolutions().filter(this::isYear)
+                        .findFirst().get()),
                 currentDate != null ? currentDate.getYear() + 1900 : -1,
-                currentResolution == Resolution.YEAR);
-        if (currentResolution.compareTo(Resolution.MONTH) <= 0) {
-            getClient().updateVariable(getId(), "month",
-                    currentDate != null ? currentDate.getMonth() + 1 : -1,
-                    currentResolution == Resolution.MONTH);
-        }
-        if (currentResolution.compareTo(Resolution.DAY) <= 0) {
-            getClient().updateVariable(getId(), "day",
-                    currentDate != null ? currentDate.getDate() : -1,
-                    currentResolution == Resolution.DAY);
-        }
+                isYear(getCurrentResolution()));
     }
 
-    private String cleanFormat(String format) {
-        // Remove unnecessary d & M if resolution is too low
-        if (currentResolution.compareTo(Resolution.DAY) > 0) {
-            format = format.replaceAll("d", "");
-        }
-        if (currentResolution.compareTo(Resolution.MONTH) > 0) {
-            format = format.replaceAll("M", "");
-        }
-
+    /**
+     * Clean date format string to make it suitable for
+     * {@link #getFormatString()}.
+     * 
+     * @see #getFormatString()
+     * 
+     * @param format
+     *            date format string
+     * @return cleaned up string
+     */
+    protected String cleanFormat(String format) {
         // Remove unsupported patterns
         // TODO support for 'G', era designator (used at least in Japan)
         format = format.replaceAll("[GzZwWkK]", "");
@@ -311,8 +307,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         this.text.setText(text);
     }
 
-    private final String TEXTFIELD_ID = "field";
-
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(
             String subPart) {
@@ -341,5 +335,23 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
             // input so we handle it using a key listener instead
             onChange(null);
         }
+    }
+
+    private void fireBlurFocusEvent(DomEvent<?> event,
+            boolean addFocusStyleName, String eventId) {
+        String styleName = VTextField.CLASSNAME + "-"
+                + VTextField.CLASSNAME_FOCUS;
+        if (addFocusStyleName) {
+            text.addStyleName(styleName);
+        } else {
+            text.removeStyleName(styleName);
+        }
+        if (getClient() != null && getClient()
+                .hasEventListeners(VAbstractTextualDate.this, eventId)) {
+            getClient().updateVariable(getId(), eventId, "", true);
+        }
+
+        // Needed for tooltip event handling
+        fireEvent(event);
     }
 }
