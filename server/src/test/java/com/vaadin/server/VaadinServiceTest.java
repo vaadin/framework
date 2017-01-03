@@ -26,6 +26,8 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.util.CurrentInstance;
+
 /**
  *
  * @author Vaadin Ltd
@@ -50,10 +52,7 @@ public class VaadinServiceTest {
 
     @Test
     public void testFireSessionDestroy() throws ServletException {
-        ServletConfig servletConfig = new MockServletConfig();
-        VaadinServlet servlet = new VaadinServlet();
-        servlet.init(servletConfig);
-        VaadinService service = servlet.getService();
+        VaadinService service = createService();
 
         TestSessionDestroyListener listener = new TestSessionDestroyListener();
 
@@ -140,4 +139,34 @@ public class VaadinServiceTest {
 
         assertThat(notification, containsString("\"url\":null"));
     }
+
+    @Test
+    public void currentInstancesAfterPendingAccessTasks() {
+        VaadinService service = createService();
+
+        MockVaadinSession session = new MockVaadinSession(service);
+        session.lock();
+        service.accessSession(session, () -> {
+            CurrentInstance.set(String.class, "Set in task");
+        });
+
+        CurrentInstance.set(String.class, "Original value");
+        service.runPendingAccessTasks(session);
+        Assert.assertEquals(
+                "Original CurrentInstance should be set after the task has been run",
+                "Original value", CurrentInstance.get(String.class));
+    }
+
+    private static VaadinService createService() {
+        ServletConfig servletConfig = new MockServletConfig();
+        VaadinServlet servlet = new VaadinServlet();
+        try {
+            servlet.init(servletConfig);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+        VaadinService service = servlet.getService();
+        return service;
+    }
+
 }
