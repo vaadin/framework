@@ -18,7 +18,7 @@ package com.vaadin.tests.components.datefield;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.VerticalLayout;
 
 public class AriaDisabled extends AbstractReindeerTestUI {
@@ -29,7 +29,7 @@ public class AriaDisabled extends AbstractReindeerTestUI {
         content.setMargin(true);
         content.setSpacing(true);
 
-        final AbstractDateField disabledDateField = new TestDateField(
+        final AbstractLocalDateField disabledDateField = new TestDateField(
                 "Disabled DateField");
         disabledDateField.setEnabled(false);
 

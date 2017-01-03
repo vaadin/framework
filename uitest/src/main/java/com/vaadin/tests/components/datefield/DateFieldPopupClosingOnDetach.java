@@ -21,7 +21,7 @@ import java.util.TimerTask;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 
 public class DateFieldPopupClosingOnDetach extends AbstractReindeerTestUI {
 
@@ -30,7 +30,7 @@ public class DateFieldPopupClosingOnDetach extends AbstractReindeerTestUI {
         // Use polling to notice the removal of DateField.
         getUI().setPollInterval(500);
 
-        final AbstractDateField df = new TestDateField();
+        final AbstractLocalDateField df = new TestDateField();
         getLayout().addLayoutClickListener(event -> {
             // Use a background Thread to remove the DateField 1 second
             // after being clicked.

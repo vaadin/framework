@@ -13,48 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.Map;
 
-import com.google.gwt.event.dom.client.DomEvent;
-import com.vaadin.client.ui.VCalendarPanel.FocusOutListener;
-import com.vaadin.client.ui.VCalendarPanel.SubmitListener;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.google.gwt.core.shared.GWT;
+import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
- * A client side implementation for InlineDateField
+ * @author Vaadin Ltd
+ *
  */
-public class VDateFieldCalendar extends VDateField {
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public final VCalendarPanel calendarPanel;
+public class VDateFieldCalendar
+        extends VAbstractDateFieldCalendar<DateResolution> {
 
     public VDateFieldCalendar() {
-        super();
-        calendarPanel = new VCalendarPanel();
-        calendarPanel.setParentField(this);
-        add(calendarPanel);
-        calendarPanel.setSubmitListener(new SubmitListener() {
-            @Override
-            public void onSubmit() {
-                updateValueFromPanel();
-            }
-
-            @Override
-            public void onCancel() {
-                // TODO Auto-generated method stub
-
-            }
-        });
-        calendarPanel.setFocusOutListener(new FocusOutListener() {
-            @Override
-            public boolean onFocusOut(DomEvent<?> event) {
-                updateValueFromPanel();
-                return false;
-            }
-        });
+        super(GWT.create(VDateCalendarPanel.class), DateResolution.YEAR);
     }
 
     /**
@@ -62,10 +37,9 @@ public class VDateFieldCalendar extends VDateField {
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-
+    @Override
     @SuppressWarnings("deprecation")
     public void updateValueFromPanel() {
-
         // If field is invisible at the beginning, client can still be null when
         // this function is called.
         if (getClient() == null) {
@@ -76,25 +50,48 @@ public class VDateFieldCalendar extends VDateField {
         Date currentDate = getCurrentDate();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            getClient().updateVariable(getId(), "year", date2.getYear() + 1900,
-                    false);
-            if (getCurrentResolution().compareTo(Resolution.YEAR) < 0) {
-                getClient().updateVariable(getId(), "month",
+            getClient().updateVariable(getId(),
+                    getResolutionVariable(DateResolution.YEAR),
+                    date2.getYear() + 1900, false);
+            if (getCurrentResolution().compareTo(DateResolution.YEAR) < 0) {
+                getClient().updateVariable(getId(),
+                        getResolutionVariable(DateResolution.MONTH),
                         date2.getMonth() + 1, false);
-                if (getCurrentResolution().compareTo(Resolution.MONTH) < 0) {
-                    getClient().updateVariable(getId(), "day", date2.getDate(),
-                            false);
+                if (getCurrentResolution()
+                        .compareTo(DateResolution.MONTH) < 0) {
+                    getClient().updateVariable(getId(),
+                            getResolutionVariable(DateResolution.DAY),
+                            date2.getDate(), false);
                 }
             }
             getClient().sendPendingVariableChanges();
         }
     }
 
-    public void setTabIndex(int tabIndex) {
-        calendarPanel.getElement().setTabIndex(tabIndex);
+    @Override
+    public void setCurrentResolution(DateResolution resolution) {
+        super.setCurrentResolution(
+                resolution == null ? DateResolution.YEAR : resolution);
     }
 
-    public int getTabIndex() {
-        return calendarPanel.getElement().getTabIndex();
+    @Override
+    public String resolutionAsString() {
+        return getResolutionVariable(getCurrentResolution());
     }
+
+    @Override
+    public boolean isYear(DateResolution resolution) {
+        return DateResolution.YEAR.equals(resolution);
+    }
+
+    @Override
+    protected DateResolution[] doGetResolutions() {
+        return DateResolution.values();
+    }
+
+    @Override
+    protected Date getDate(Map<DateResolution, Integer> dateVaules) {
+        return VTextualDate.makeDate(dateVaules);
+    }
+
 }

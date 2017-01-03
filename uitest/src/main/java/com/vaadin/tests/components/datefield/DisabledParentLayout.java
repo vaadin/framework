@@ -18,7 +18,7 @@ package com.vaadin.tests.components.datefield;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 
@@ -36,18 +36,13 @@ public class DisabledParentLayout extends AbstractReindeerTestUI {
         content.setMargin(true);
 
         final VerticalLayout pane = new VerticalLayout();
-        AbstractDateField dateField = new TestDateField();
+        AbstractLocalDateField dateField = new TestDateField();
         pane.addComponent(dateField);
 
         content.addComponent(pane);
 
         Button button = new Button("Test");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                pane.setEnabled(!pane.isEnabled());
-            }
-        });
+        button.addClickListener(event -> pane.setEnabled(!pane.isEnabled()));
         content.addComponent(button);
 
         addComponent(content);
