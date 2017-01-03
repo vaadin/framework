@@ -706,7 +706,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * updated in another widget in addition to the one returned by the
      * <code>Connector</code>'s {@link #getWidget()}, or if the prefix should be
      * different. For example see
-     * {@link com.vaadin.client.ui.datefield.DateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
+     * {@link com.vaadin.client.ui.datefield.TextualDateConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
      * </p>
      *
      * @param styleName

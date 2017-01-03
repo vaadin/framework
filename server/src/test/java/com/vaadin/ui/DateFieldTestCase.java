@@ -12,12 +12,12 @@ import org.junit.Test;
 
 public class DateFieldTestCase {
 
-    private AbstractDateField dateField;
+    private AbstractLocalDateField dateField;
     private LocalDate date;
 
     @Before
     public void setup() {
-        dateField = new AbstractDateField() {
+        dateField = new AbstractLocalDateField() {
         };
         date = LocalDate.now();
     }
