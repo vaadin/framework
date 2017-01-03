@@ -16,49 +16,170 @@
 
 package com.vaadin.client.ui.datefield;
 
+import java.util.Date;
+
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.VTextualDate;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.VAbstractCalendarPanel.FocusChangeListener;
+import com.vaadin.client.ui.VAbstractPopupCalendar;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
-public class TextualDateConnector extends AbstractDateFieldConnector {
+public abstract class TextualDateConnector<R extends Enum<R>>
+        extends AbstractTextualDateConnector<R> {
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        Resolution origRes = getWidget().getCurrentResolution();
-        String oldLocale = getWidget().getCurrentLocale();
-        super.updateFromUIDL(uidl, client);
-        if (origRes != getWidget().getCurrentResolution()
-                || oldLocale != getWidget().getCurrentLocale()) {
-            // force recreating format string
-            getWidget().formatStr = null;
-        }
-        if (uidl.hasAttribute("format")) {
-            getWidget().formatStr = uidl.getStringAttribute("format");
-        }
+    protected void init() {
+        getWidget().popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 
-        getWidget().lenient = !uidl.getBooleanAttribute("strict");
-
-        getWidget().buildDate();
-        // not a FocusWidget -> needs own tabindex handling
-        getWidget().text.setTabIndex(getState().tabIndex);
-
-        if (getWidget().isReadonly()) {
-            getWidget().text.addStyleDependentName("readonly");
-        } else {
-            getWidget().text.removeStyleDependentName("readonly");
-        }
-
+            @Override
+            public void onClose(CloseEvent<PopupPanel> event) {
+                /*
+                 * FIXME This is a hack so we do not have to rewrite half of the
+                 * datefield so values are not sent while selecting a date
+                 * (#6252).
+                 *
+                 * The datefield will now only set the date UIDL variables while
+                 * the user is selecting year/month/date/time and not send them
+                 * directly. Only when the user closes the popup (by clicking on
+                 * a day/enter/clicking outside of popup) then the new value is
+                 * communicated to the server.
+                 */
+                getConnection().getServerRpcQueue().flush();
+            }
+        });
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.vaadin.client.ui.VTextualDate#updateFromUIDL(com.vaadin
+     * .client.UIDL, com.vaadin.client.ApplicationConnection)
+     */
     @Override
-    public VTextualDate getWidget() {
-        return (VTextualDate) super.getWidget();
+    @SuppressWarnings("deprecation")
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+
+        String oldLocale = getWidget().getCurrentLocale();
+
+        getWidget().parsable = uidl.getBooleanAttribute("parsable");
+
+        super.updateFromUIDL(uidl, client);
+
+        getWidget().calendar
+                .setDateTimeService(getWidget().getDateTimeService());
+        getWidget().calendar
+                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
+        if (getWidget().calendar.getResolution() != getWidget()
+                .getCurrentResolution()) {
+            boolean hasSelectedDate = false;
+            getWidget().calendar
+                    .setResolution(getWidget().getCurrentResolution());
+            if (getWidget().calendar.getDate() != null
+                    && getWidget().getCurrentDate() != null) {
+                hasSelectedDate = true;
+                getWidget().calendar
+                        .setDate((Date) getWidget().getCurrentDate().clone());
+            }
+            // force re-render when changing resolution only
+            getWidget().calendar.renderCalendar(hasSelectedDate);
+        }
+
+        // Force re-render of calendar if locale has changed (#12153)
+        if (!getWidget().getCurrentLocale().equals(oldLocale)) {
+            getWidget().calendar.renderCalendar();
+        }
+
+        updateListeners();
+
+        if (getWidget().isReadonly()) {
+            getWidget().calendarToggle.addStyleName(
+                    VAbstractPopupCalendar.CLASSNAME + "-button-readonly");
+        } else {
+            getWidget().calendarToggle.removeStyleName(
+                    VAbstractPopupCalendar.CLASSNAME + "-button-readonly");
+        }
+
+        getWidget().setDescriptionForAssistiveDevices(
+                getState().descriptionForAssistiveDevices);
+
+        getWidget().setTextFieldTabIndex();
+    }
+
+    protected void updateListeners() {
+        if (resolutionAboveMonth()) {
+            getWidget().calendar
+                    .setFocusChangeListener(new FocusChangeListener() {
+                        @Override
+                        public void focusChanged(Date date) {
+
+                            getWidget().updateValue(date);
+                            getWidget().buildDate();
+                            Date date2 = getWidget().calendar.getDate();
+                            date2.setYear(date.getYear());
+                            date2.setMonth(date.getMonth());
+                        }
+                    });
+        } else {
+            getWidget().calendar.setFocusChangeListener(null);
+        }
+    }
+
+    protected abstract boolean resolutionAboveMonth();
+
+    @Override
+    public VAbstractPopupCalendar<R> getWidget() {
+        return (VAbstractPopupCalendar<R>) super.getWidget();
     }
 
     @Override
     public TextualDateFieldState getState() {
         return (TextualDateFieldState) super.getState();
     }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setTextFieldEnabled(getState().textFieldEnabled);
+        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
+        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
+    }
+
+    private Date nullSafeDateClone(Date date) {
+        if (date == null) {
+            return null;
+        } else {
+            return (Date) date.clone();
+        }
+    }
+
+    @Override
+    protected void setWidgetStyleName(String styleName, boolean add) {
+        super.setWidgetStyleName(styleName, add);
+
+        // update the style change to popup calendar widget
+        getWidget().popup.setStyleName(styleName, add);
+    }
+
+    @Override
+    protected void setWidgetStyleNameWithPrefix(String prefix, String styleName,
+            boolean add) {
+        super.setWidgetStyleNameWithPrefix(prefix, styleName, add);
+
+        // update the style change to popup calendar widget with the correct
+        // prefix
+        if (!styleName.startsWith("-")) {
+            getWidget().popup.setStyleName(
+                    getWidget().getStylePrimaryName() + "-popup-" + styleName,
+                    add);
+        } else {
+            getWidget().popup.setStyleName(
+                    getWidget().getStylePrimaryName() + "-popup" + styleName,
+                    add);
+        }
+    }
+
 }

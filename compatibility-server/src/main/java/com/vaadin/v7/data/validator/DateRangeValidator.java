@@ -17,7 +17,7 @@ package com.vaadin.v7.data.validator;
 
 import java.util.Date;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
  * Validator for validating that a Date is inside a given range.
@@ -55,7 +55,7 @@ public class DateRangeValidator extends RangeValidator<Date> {
      *            The maximum value to accept or null for no limit
      */
     public DateRangeValidator(String errorMessage, Date minValue, Date maxValue,
-            Resolution resolution) {
+            DateResolution resolution) {
         super(errorMessage, Date.class, minValue, maxValue);
     }
 

@@ -11,7 +11,7 @@ import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.v7.data.validator.DateRangeValidator;
 
 public class DateRangeValidatorTest {
@@ -31,13 +31,13 @@ public class DateRangeValidatorTest {
         endDate.set(2000, Calendar.FEBRUARY, 20, 12, 0, 0);
 
         cleanValidator = new DateRangeValidator("Given date outside range",
-                null, null, Resolution.DAY);
+                null, null, DateResolution.DAY);
         minValidator = new DateRangeValidator("Given date before startDate",
-                startDate.getTime(), null, Resolution.DAY);
+                startDate.getTime(), null, DateResolution.DAY);
         maxValidator = new DateRangeValidator("Given date after endDate", null,
-                endDate.getTime(), Resolution.DAY);
+                endDate.getTime(), DateResolution.DAY);
         minMaxValidator = new DateRangeValidator("Given date outside range",
-                startDate.getTime(), endDate.getTime(), Resolution.DAY);
+                startDate.getTime(), endDate.getTime(), DateResolution.DAY);
     }
 
     @Test

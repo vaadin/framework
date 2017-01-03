@@ -4,18 +4,18 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 
 public class CustomDateFormat extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         Locale locale = new Locale("fi", "FI");
-        AbstractDateField df = new TestDateField();
-        df.setResolution(Resolution.DAY);
+        AbstractLocalDateField df = new TestDateField();
+        df.setResolution(DateResolution.DAY);
         df.setLocale(locale);
         df.setWidth("300px");
 

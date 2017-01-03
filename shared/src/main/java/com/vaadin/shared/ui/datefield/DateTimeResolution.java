@@ -15,8 +15,13 @@
  */
 package com.vaadin.shared.ui.datefield;
 
-public class InlineDateFieldState extends AbstarctTextualDateFieldState {
-    {
-        primaryStyleName = "v-inline-datefield";
-    }
+/**
+ * Resolutions for DateTimeFields
+ *
+ * @author Vaadin Ltd.
+ * @since 8.0
+ */
+public enum DateTimeResolution {
+    SECOND, MINUTE, HOUR, DAY, MONTH, YEAR;
+
 }

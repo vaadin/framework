@@ -15,20 +15,27 @@
  */
 package com.vaadin.shared.ui.datefield;
 
-import com.vaadin.shared.annotations.DelegateToWidget;
+import java.util.Date;
+
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
 
-public class DateFieldState extends TextualDateFieldState {
-    public static final String DESCRIPTION_FOR_ASSISTIVE_DEVICES = "Arrow down key opens calendar element for choosing the date";
-
+public class AbstarctTextualDateFieldState extends AbstractFieldState {
     {
         primaryStyleName = "v-datefield";
     }
 
-    public boolean textFieldEnabled = true;
+    /*
+     * Start range that has been cleared, depending on the resolution of the
+     * date field
+     */
     @NoLayout
-    public String descriptionForAssistiveDevices = DESCRIPTION_FOR_ASSISTIVE_DEVICES;
+    public Date rangeStart = null;
+
+    /*
+     * End range that has been cleared, depending on the resolution of the date
+     * field
+     */
     @NoLayout
-    @DelegateToWidget
-    public String placeholder = null;
+    public Date rangeEnd = null;
 }

@@ -15,6 +15,12 @@
  */
 package com.vaadin.client.ui.datefield;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.Paintable;
@@ -22,12 +28,10 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VDateField;
-import com.vaadin.client.ui.VTextualDate;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
-import com.vaadin.shared.ui.datefield.Resolution;
 
-public class AbstractDateFieldConnector extends AbstractFieldConnector
-        implements Paintable {
+public abstract class AbstractDateFieldConnector<R extends Enum<R>>
+        extends AbstractFieldConnector implements Paintable {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -62,46 +66,42 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
                 uidl.getBooleanAttribute(DateFieldConstants.ATTR_WEEK_NUMBERS)
                         && getWidget().dts.getFirstDayOfWeek() == 1);
 
-        Resolution newResolution;
-        if (uidl.hasVariable("day")) {
-            newResolution = Resolution.DAY;
-        } else if (uidl.hasVariable("month")) {
-            newResolution = Resolution.MONTH;
-        } else {
-            newResolution = Resolution.YEAR;
-        }
-
         // Remove old stylename that indicates current resolution
-        setWidgetStyleName(
-                getWidget().getStylePrimaryName() + "-" + VDateField
-                        .resolutionToString(getWidget().getCurrentResolution()),
-                false);
+        setWidgetStyleName(getWidget().getStylePrimaryName() + "-"
+                + getWidget().resolutionAsString(), false);
 
-        getWidget().setCurrentResolution(newResolution);
+        updateResolution(uidl);
 
         // Add stylename that indicates current resolution
-        setWidgetStyleName(
-                getWidget().getStylePrimaryName() + "-" + VDateField
-                        .resolutionToString(getWidget().getCurrentResolution()),
-                true);
+        setWidgetStyleName(getWidget().getStylePrimaryName() + "-"
+                + getWidget().resolutionAsString(), true);
 
-        final Resolution resolution = getWidget().getCurrentResolution();
-        final int year = uidl.getIntVariable("year");
-        final int month = resolution.compareTo(Resolution.MONTH) <= 0
-                ? uidl.getIntVariable("month") : -1;
-        final int day = resolution.compareTo(Resolution.DAY) <= 0
-                ? uidl.getIntVariable("day") : -1;
-
-        // Construct new date for this datefield (only if not null)
-        if (year > -1) {
-            getWidget().setCurrentDate(VTextualDate.getTime(year, month, day));
-        } else {
-            getWidget().setCurrentDate(null);
-        }
+        getWidget().setCurrentDate(getTimeValues(uidl));
     }
 
+    private void updateResolution(UIDL uidl) {
+        Optional<R> newResolution = getWidget().getResolutions().filter(
+                res -> uidl.hasVariable(getWidget().getResolutionVariable(res)))
+                .findFirst();
+
+        getWidget().setCurrentResolution(newResolution.orElse(null));
+    }
+
+    protected Map<R, Integer> getTimeValues(UIDL uidl) {
+        Stream<R> resolutions = getWidget().getResolutions();
+        R resolution = getWidget().getCurrentResolution();
+        return resolutions
+                .collect(Collectors.toMap(Function.identity(),
+                        res -> (resolution.compareTo(res) <= 0)
+                                ? uidl.getIntVariable(
+                                        getWidget().getResolutionVariable(res))
+                                : -1));
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
-    public VDateField getWidget() {
-        return (VDateField) super.getWidget();
+    public VDateField<R> getWidget() {
+        return (VDateField<R>) super.getWidget();
     }
+
 }

@@ -17,14 +17,17 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.shared.ui.datefield.Resolution;
 
-public class VDateField extends FlowPanel implements Field, HasEnabled {
+public abstract class VDateField<R extends Enum<R>> extends FlowPanel
+        implements Field, HasEnabled {
 
     public static final String CLASSNAME = "v-datefield";
 
@@ -34,18 +37,7 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public static String resolutionToString(Resolution res) {
-        if (res == Resolution.DAY) {
-            return "day";
-        }
-        if (res == Resolution.MONTH) {
-            return "month";
-        }
-        return "year";
-    }
-
-    protected Resolution currentResolution = Resolution.YEAR;
+    private R currentResolution;
 
     protected String currentLocale;
 
@@ -64,33 +56,17 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
 
     protected boolean showISOWeekNumbers = false;
 
-    public VDateField() {
+    public VDateField(R resolution) {
         setStyleName(CLASSNAME);
         dts = new DateTimeService();
+        currentResolution = resolution;
     }
 
-    /**
-     * For internal use only. May be removed or replaced in the future.
-     */
-    public static Date getTime(int year, int month, int day) {
-        Date date = new Date(2000 - 1900, 0, 1);
-        if (year >= 0) {
-            date.setYear(year - 1900);
-        }
-        if (month >= 0) {
-            date.setMonth(month - 1);
-        }
-        if (day >= 0) {
-            date.setDate(day);
-        }
-        return date;
-    }
-
-    public Resolution getCurrentResolution() {
+    public R getCurrentResolution() {
         return currentResolution;
     }
 
-    public void setCurrentResolution(Resolution currentResolution) {
+    public void setCurrentResolution(R currentResolution) {
         this.currentResolution = currentResolution;
     }
 
@@ -108,6 +84,10 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
 
     public void setCurrentDate(Date date) {
         this.date = date;
+    }
+
+    public void setCurrentDate(Map<R, Integer> dateValues) {
+        setCurrentDate(getDate(dateValues));
     }
 
     public boolean isReadonly() {
@@ -182,4 +162,21 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
     protected void setDate(Date date) {
         this.date = date;
     }
+
+    public String getResolutionVariable(R resolution) {
+        return resolution.name().toLowerCase(Locale.ENGLISH);
+    }
+
+    public Stream<R> getResolutions() {
+        return Stream.of(doGetResolutions()).sorted();
+    }
+
+    public abstract String resolutionAsString();
+
+    public abstract boolean isYear(R resolution);
+
+    protected abstract Date getDate(Map<R, Integer> dateVaules);
+
+    protected abstract R[] doGetResolutions();
+
 }
