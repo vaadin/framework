@@ -924,8 +924,7 @@ grid.setEditorBinder(binder);
 
 To use bean validation as in the example above, you need to include an
 implementation of the Bean Validation API in the classpath, as described in
-<<dummy/../../../framework/datamodel/datamodel-itembinding#datamodel.itembinding.beanvalidation,"Bean
-Validation">>.
+<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">>.
 
 
 ifdef::web[]

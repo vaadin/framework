@@ -72,7 +72,7 @@ panel.setContent(
 As the size of the [classname]#Panel# in the above example is fixed and the
 width of [classname]#Label# is the default undefined, the [classname]#Label#
  will overflow the layout horizontally and be truncated.
-<<figure.components.label>>.
+//<<figure.components.label>>.
 
 ////
 // TODO update figure to match new label settings in Vaadin Framwork 8

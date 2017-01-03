@@ -45,8 +45,6 @@ The result is shown in <<figure.components.checkbox.basic>>.
 .An Example of a Check Box
 image::img/checkbox-example1.png[width=35%, scaledwidth=50%]
 
-For an example on the use of check boxes in a table, see
-<<dummy/../../../framework/components/components-table#components.table,"Table">>.
 
 == CSS Style Rules
 

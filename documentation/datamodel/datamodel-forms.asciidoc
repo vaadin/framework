@@ -97,6 +97,7 @@ binder.bind(nameField,
 `Binder` supports checking the validity of the user's input and converting the values between the type used in business objects and the bound UI components.
 These to concepts go hand in hand since validation can be based on a converted value, and being able to convert a value is a kind of validation.
 
+[[datamodel.forms.validation]]
 === Validation
 
 An application typically has some restrictions on exactly what kinds of values the user is allowed to enter into different fields.
@@ -198,6 +199,7 @@ returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
 departing.addValueChangeListener(event -> returnBinding.validate());
 ----
 
+[[datamodel.forms.conversion]]
 === Conversion
 
 You can also bind application data to a UI field component even though the types do not match.
@@ -411,6 +413,7 @@ Button saveButton = new Button("Save", event -> {
 When using the `setBean` method, the business object instance will be updated whenever the user changes the value in any bound field.
 If some other part of the application is also using the same instance, then that part might show changes before the user has clicked the save button.
 
+[[datamodel.forms.beans]]
 == Binding Beans to Forms
 
 The business objects used in an application are in most cases implemented as Java beans or POJOs.
