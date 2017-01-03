@@ -17,7 +17,7 @@ package com.vaadin.tests.server.component.datefield;
 
 import org.junit.Test;
 
-import com.vaadin.tests.server.component.abstractdatefield.AbstractDateFieldDeclarativeTest;
+import com.vaadin.tests.server.component.abstractdatefield.AbstractLocalDateFieldDeclarativeTest;
 import com.vaadin.ui.DateField;
 
 /**
@@ -27,7 +27,7 @@ import com.vaadin.ui.DateField;
  * @author Vaadin Ltd
  */
 public class DateFieldDeclarativeTest
-        extends AbstractDateFieldDeclarativeTest<DateField> {
+        extends AbstractLocalDateFieldDeclarativeTest<DateField> {
 
     @Test
     public void remainingAttributes()
