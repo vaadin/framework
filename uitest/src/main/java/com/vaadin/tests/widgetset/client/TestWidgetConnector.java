@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -35,6 +36,11 @@ import com.vaadin.tests.widgetset.server.TestWidgetComponent;
 public class TestWidgetConnector extends AbstractComponentConnector {
     public static class SubPartAwareSimplePanel extends SimplePanel
             implements SubPartAware {
+
+        public SubPartAwareSimplePanel() {
+            getElement().getStyle().setPosition(Position.ABSOLUTE);
+        }
+
         @Override
         public Element getSubPartElement(String subPart) {
             Widget target = getWidget();

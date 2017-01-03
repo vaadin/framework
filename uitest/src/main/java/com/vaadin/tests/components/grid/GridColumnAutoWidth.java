@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.renderers.HtmlRenderer;
 
-public class GridColumnAutoWidth extends AbstractTestUI {
+public class GridColumnAutoWidth extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Grid<Object> grid = new Grid<>();

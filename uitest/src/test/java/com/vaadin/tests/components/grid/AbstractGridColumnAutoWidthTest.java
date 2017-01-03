@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
-    public static final int TOTAL_MARGIN_PX = 37;
+    public static final int TOTAL_MARGIN_PX = 21;
 
     @Before
     public void before() {
@@ -93,6 +94,13 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
     @Test
     public void testColumnsRenderCorrectly() throws IOException {
+        WebElement loadingIndicator = findElement(
+                By.className("v-loading-indicator"));
+        Pattern pattern = Pattern.compile("display: *none;");
+        waitUntil(driver -> {
+            return pattern.matcher(loadingIndicator.getAttribute("style"))
+                    .find();
+        });
         compareScreen("grid-v8-initialRender");
     }
 
