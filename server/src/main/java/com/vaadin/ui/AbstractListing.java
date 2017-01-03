@@ -22,7 +22,6 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Listing;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
@@ -374,10 +373,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
         setItemIconGenerator(
                 new DeclarativeIconGenerator<>(getItemIconGenerator()));
 
-        List<T> readItems = readItems(design, context);
-        if (!readItems.isEmpty() && this instanceof Listing) {
-            ((Listing<T, ?>) this).setItems(readItems);
-        }
+        readItems(design, context);
     }
 
     /**

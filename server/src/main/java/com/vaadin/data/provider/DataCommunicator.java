@@ -178,6 +178,12 @@ public class DataCommunicator<T, F> extends AbstractExtension {
             // Drop the registered key
             getKeyMapper().remove(data);
         }
+
+        @Override
+        public void destroyAllData() {
+            activeData.clear();
+            getKeyMapper().removeAll();
+        }
     }
 
     private final Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
@@ -354,6 +360,13 @@ public class DataCommunicator<T, F> extends AbstractExtension {
         }
     }
 
+    private void dropAllData() {
+        for (DataGenerator<T> g : generators) {
+            g.destroyAllData();
+        }
+        handler.destroyAllData();
+    }
+
     /**
      * Informs the DataProvider that the collection has changed.
      */
@@ -460,6 +473,7 @@ public class DataCommunicator<T, F> extends AbstractExtension {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         this.dataProvider = dataProvider;
         detachDataProviderListener();
+        dropAllData();
         /*
          * This introduces behavior which influence on the client-server
          * communication: now the very first response to the client will always
