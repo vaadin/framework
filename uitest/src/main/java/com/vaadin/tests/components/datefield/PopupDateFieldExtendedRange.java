@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -52,7 +52,7 @@ public class PopupDateFieldExtendedRange extends AbstractReindeerTestUI {
 
     private DateField makeDateField() {
         DateField pdf = new DateField();
-        pdf.setResolution(Resolution.DAY);
+        pdf.setResolution(DateResolution.DAY);
         pdf.setValue(LocalDate.of(2011, 1, 1));
         return pdf;
     }

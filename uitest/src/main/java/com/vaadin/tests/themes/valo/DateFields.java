@@ -22,7 +22,7 @@ import java.util.Locale;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
@@ -90,58 +90,58 @@ public class DateFields extends VerticalLayout implements View {
 
         date = new TestDateField("Day resolution");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         row.addComponent(date);
 
         date = new TestDateField("Month resolution");
         setDate(date);
-        date.setResolution(Resolution.MONTH);
+        date.setResolution(DateResolution.MONTH);
         row.addComponent(date);
 
         date = new TestDateField("Year resolution");
         setDate(date);
-        date.setResolution(Resolution.YEAR);
+        date.setResolution(DateResolution.YEAR);
         row.addComponent(date);
 
         date = new TestDateField("Custom color");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName("color1");
         row.addComponent(date);
 
         date = new TestDateField("Custom color");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName("color2");
         row.addComponent(date);
 
         date = new TestDateField("Custom color");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName("color3");
         row.addComponent(date);
 
         date = new TestDateField("Small");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_SMALL);
         row.addComponent(date);
 
         date = new TestDateField("Large");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_LARGE);
         row.addComponent(date);
 
         date = new TestDateField("Borderless");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
         row.addComponent(date);
 
         date = new TestDateField("Week numbers");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.setLocale(new Locale("fi", "fi"));
         date.setShowISOWeekNumbers(true);
         row.addComponent(date);
@@ -153,13 +153,13 @@ public class DateFields extends VerticalLayout implements View {
 
         date = new TestDateField("Tiny");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_TINY);
         row.addComponent(date);
 
         date = new TestDateField("Huge");
         setDate(date);
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         date.addStyleName(ValoTheme.DATEFIELD_HUGE);
         row.addComponent(date);
 

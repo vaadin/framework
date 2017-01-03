@@ -13,34 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.datefield;
+package com.vaadin.client.ui;
 
-import com.vaadin.client.ui.VPopupCalendar;
-import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.DateResolution;
-import com.vaadin.shared.ui.datefield.LocalDateFieldState;
-import com.vaadin.ui.AbstractLocalDateField;
 
 /**
  * @author Vaadin Ltd
  *
  */
-@Connect(AbstractLocalDateField.class)
-public class DateFieldConnector extends TextualDateConnector<DateResolution> {
+public class VDateCalendarPanel extends VAbstractCalendarPanel<DateResolution> {
 
     @Override
-    protected boolean isResolutionAboveMonth() {
-        return getWidget().getCurrentResolution()
-                .compareTo(DateResolution.MONTH) >= 0;
+    protected boolean acceptDayFocus() {
+        return isDay(getResolution());
     }
 
     @Override
-    public VPopupCalendar getWidget() {
-        return (VPopupCalendar) super.getWidget();
+    protected boolean isDay(DateResolution resolution) {
+        return DateResolution.DAY.equals(resolution);
     }
 
     @Override
-    public LocalDateFieldState getState() {
-        return (LocalDateFieldState) super.getState();
+    protected boolean isMonth(DateResolution resolution) {
+        return DateResolution.MONTH.equals(resolution);
     }
+
+    @Override
+    protected boolean isBelowMonth(DateResolution resolution) {
+        return isDay(resolution);
+    }
+
 }
