@@ -132,6 +132,13 @@ public class Binder<BEAN> implements Serializable {
     public interface BindingBuilder<BEAN, TARGET> extends Serializable {
 
         /**
+         * Gets the field the binding is being built for.
+         *
+         * @return the field this binding is being built for
+         */
+        public HasValue<?> getField();
+
+        /**
          * Completes this binding using the given getter and setter functions
          * representing a backing bean property. The functions are used to
          * update the field value from the property and to store the field value
@@ -547,6 +554,7 @@ public class Binder<BEAN> implements Serializable {
             getBinder().fireStatusChangeEvent(false);
 
             bound = true;
+            getBinder().incompleteBindings.remove(getField());
 
             return binding;
         }
@@ -649,6 +657,11 @@ public class Binder<BEAN> implements Serializable {
                 throw new IllegalStateException(
                         "cannot modify binding: already bound to a property");
             }
+        }
+
+        @Override
+        public HasValue<FIELDVALUE> getField() {
+            return field;
         }
     }
 
@@ -951,6 +964,8 @@ public class Binder<BEAN> implements Serializable {
 
     private final Set<BindingImpl<BEAN, ?, ?>> bindings = new LinkedHashSet<>();
 
+    private final Map<HasValue<?>, BindingBuilder<BEAN, ?>> incompleteBindings = new IdentityHashMap<>();
+
     private final List<Validator<? super BEAN>> validators = new ArrayList<>();
 
     private final Map<HasValue<?>, ConverterDelegate<?>> initialConverters = new IdentityHashMap<>();
@@ -1085,6 +1100,7 @@ public class Binder<BEAN> implements Serializable {
      *            bean
      */
     public void setBean(BEAN bean) {
+        checkBindingsCompleted("setBean");
         if (bean == null) {
             if (this.bean != null) {
                 doRemoveBean(true);
@@ -1128,6 +1144,7 @@ public class Binder<BEAN> implements Serializable {
      */
     public void readBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
+        checkBindingsCompleted("readBean");
         setHasChanges(false);
         bindings.forEach(binding -> binding.initFieldValue(bean));
 
@@ -1510,6 +1527,15 @@ public class Binder<BEAN> implements Serializable {
     protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             BindingValidationStatusHandler handler) {
+        BindingBuilder<BEAN, TARGET> newBinding = doCreateBinding(field,
+                converter, handler);
+        incompleteBindings.put(field, newBinding);
+        return newBinding;
+    }
+
+    protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> doCreateBinding(
+            HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
+            BindingValidationStatusHandler handler) {
         return new BindingBuilderImpl<>(this, field, converter, handler);
     }
 
@@ -1694,4 +1720,19 @@ public class Binder<BEAN> implements Serializable {
         return converter;
     }
 
+    /**
+     * Throws if this binder has incomplete bindings.
+     * 
+     * @param methodName
+     *            name of the method where this call is originated from
+     * @throws IllegalStateException
+     *             if this binder has incomplete bindings
+     */
+    protected void checkBindingsCompleted(String methodName) {
+        if (!incompleteBindings.isEmpty()) {
+            throw new IllegalStateException(
+                    "All bindings created with forField must be completed before calling "
+                            + methodName);
+        }
+    }
 }
