@@ -4,7 +4,7 @@ order: 120
 layout: page
 ---
 
-[[intalling.idea]]
+[[installing.idea]]
 = Installing and Configuring IntelliJ IDEA
 
 With IntelliJ IDEA, you have two choices: use the commercial Ultimate Edition or the free Community Edition.
