@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class GridDetailsWidthTest extends SingleBrowserTest {
                 cell.getText());
         Assert.assertEquals("Details row was not in correct location",
                 cell.getLocation().getY() + cell.getSize().getHeight(),
-                spacer.getLocation().getY());
+                spacer.getLocation().getY(), 2);
 
     }
 
