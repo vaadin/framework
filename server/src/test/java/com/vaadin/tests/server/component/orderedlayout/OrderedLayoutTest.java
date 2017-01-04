@@ -2,6 +2,7 @@ package com.vaadin.tests.server.component.orderedlayout;
 
 import java.util.Iterator;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -48,4 +49,32 @@ public class OrderedLayoutTest {
 
         return components;
     }
+
+    @Test
+    public void testExpandMethod() {
+
+        VerticalLayout vl = new VerticalLayout();
+        Label component = new Label();
+        Label another = new Label();
+        vl.addComponent(component);
+        vl.expand(component, another);
+
+        Assert.assertEquals(1, vl.getExpandRatio(component), 0.0001);
+        Assert.assertEquals(1, vl.getExpandRatio(another), 0.0001);
+        Assert.assertEquals(100, vl.getHeight(), 0.0001);
+        Assert.assertSame(vl, another.getParent());
+
+        HorizontalLayout hl = new HorizontalLayout();
+        component = new Label();
+        another = new Label();
+        hl.addComponent(component);
+        hl.expand(component, another);
+
+        Assert.assertEquals(1, hl.getExpandRatio(component), 0.0001);
+        Assert.assertEquals(1, hl.getExpandRatio(another), 0.0001);
+        Assert.assertEquals(100, hl.getWidth(), 0.0001);
+        Assert.assertSame(hl, another.getParent());
+
+    }
+
 }

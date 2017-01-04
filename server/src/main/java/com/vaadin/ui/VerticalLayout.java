@@ -62,4 +62,33 @@ public class VerticalLayout extends AbstractOrderedLayout {
     protected VerticalLayoutState getState(boolean markAsDirty) {
         return (VerticalLayoutState) super.getState(markAsDirty);
     }
+
+    /**
+     * Expands given the components to consume all available space. The method
+     * basically uses {@link #setExpandRatio(Component, float)} method and
+     * configures both given components and this component so that all available
+     * space is distributed to given components. The method also adds given
+     * components to layout if they are not added yet.
+     *
+     * @param componentsToExpand
+     *            the component(s) which should be expanded
+     */
+    public void expand(Component... componentsToExpand) {
+        configureParentForExapntion();
+        for (Component component : componentsToExpand) {
+            if (component.getParent() != this) {
+                addComponent(component);
+            }
+            setExpandRatio(component, 1);
+            component.setHeight(100, Unit.PERCENTAGE);
+        }
+    }
+
+    private void configureParentForExapntion() {
+        if (getHeight() < 0) {
+            // Make full height if no other size is set
+            setHeight(100, Unit.PERCENTAGE);
+        }
+    }
+
 }
