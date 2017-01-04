@@ -11,9 +11,7 @@ For a better overview on how selection works, see link:../datamodel/datamodel-se
 
 Vaadin offers many alternative ways for selecting one or more items. The core
 library includes the following selection components, all based on either
-`AbstractSingleSelect` or `AbstractMultiSelect` class:
-
-// TODO Only use section numbers here, prefixed with "Section", not include section title
+[classname]#AbstractSingleSelect# or [classname]#AbstractMultiSelect# class:
 
 [classname]#ComboBox# (<<components-combobox#components.combobox,"ComboBox">>)::
 A drop-down list with a text box, where the user can type text to find matching items.
@@ -74,13 +72,12 @@ ComboBox<Planet> select = new ComboBox<>("My Select");
 // Add an items to the ComboBox
 select.setItems(planets);
 
-select.setItemCaptionGenerator(planet -> planet.getName());
-// or even select.setItemCaptionGenerator(Planet::getName);
+select.setItemCaptionGenerator(Planet::getName);
 
 // Select the first
 select.setSelectedItem(planets.get(0));
 // or
-select.setValue(planets.get(0));
+// select.setValue(planets.get(0));
 ----
 
 In addition to a caption, an item can have an icon. The icon is set with
@@ -93,78 +90,8 @@ retrieved with [methodname]#toString()# method from the item. This is useful
 for simple objects like String or Integers, but also for objects that have
 human readable output for [methodname]#toString()# .
 
-[source, java]
-----
-ComboBox<Planet> select = new ComboBox<>("Inner Planets");
-
-// A class that implements toString()
-class Planet implements Serializable {
-    String planetName;
-
-    Planet(String name) {
-        planetName = name;
-    }
-
-    public String toString () {
-        return "The Planet " + planetName;
-    }
-}
-
-// Use such objects as items
-List<Planet> planets = new ArrayList<>();
-planets.add(new Planet("Mercury"));
-planets.add(new Planet("Venus"));
-planets.add(new Planet("Earth"));
-
-select.setItems(planets);
-----
-
 Using a field of a item as caption: the caption is retrieved using the
-[interfacename]#ItemCaptionGenerator# typically given as Java 8 lambda.
-
-[source, java]
-----
-// A class that implements toString()
-class Planet implements Serializable {
-    Integer id;
-    String planetName;
-
-    Planet(Integer id, String name) {
-        this.id = id
-        this.planetName = name;
-    }
-
-    public String toString () {
-        return "The Planet " + planetName;
-    }
-
-    public Integer getId () {
-        return id;
-    }
-
-
-    public String getName () {
-        return planetName;
-    }
-
-}
-
-// Put some example data
-List<Planet> planets = new ArrayList<>();
-planets.add(new Planet(1, "Mercury"));
-planets.add(new Planet(2, "Venus"));
-planets.add(new Planet(3, "Earth"));
-planets.add(new Planet(4, "Mars"));
-
-// Create a selection component
-ComboBox<Planet> select =
-    new ComboBox<>("Planets");
-
-// Set the caption generator to read the
-// caption directly from the 'name'
-// property of the bean
-select.setItemCaptionGenerator(Planet::getName);
-----
+[interfacename]#ItemCaptionGenerator# typically given as a lambda or a method reference.
 
 
 [[components.selection.item-icons]]
@@ -178,67 +105,14 @@ support images inside the native [literal]#++select++#
 elements.
 
 
-[[components.selection.newitems]]
-== Allowing Adding New Items
-
-[classname]#ComboBox# allows the user to add new items, when the user types
-in a value and presses kbd:[Enter]. You need to enable this with
-[methodname]#setNewItemHandler()#.
-
-Adding new items is not possible if the selection component is read-only. An
-attempt to do so may result in an exception.
-
-[[components.selection.newitems.handling]]
-=== Handling New Items
-
-Adding new items is handled by a [interfacename]#NewItemHandler#, which gets the
-item caption string as parameter for the [methodname]#accept(String)# method.
-
-ifdef::web[]
-
-[source, java]
-----
-// List of planets
-List<Planet> planets = new ArrayList<>();
-planets.add(new Planet(1, "Mercury"));
-planets.add(new Planet(2, "Venus"));
-planets.add(new Planet(3, "Earth"));
-planets.add(new Planet(4, "Mars"));
-
-ComboBox<Planet> select =
-    new ComboBox<>("Select or Add a Planet");
-select.setItems(planets);
-
-// Use the name property for item captions
-select.setItemCaptionGenerator(Planet::getName);
-
-// Allow adding new items and add
-// handling for new items
-select.setNewItemHandler(inputString -> {
-
-    // Create a new bean - can't set all properties
-    Planet newPlanet = new Planet(0, inputString);
-    planets.add(newPlanet);
-
-    // Update combobox content
-    select.setItems(planets);
-
-    // Remember to set the selection to the new item
-    select.select(newPlanet);
-
-    Notification.show("Added new planet called " +
-                      inputString);
-});
-
-
 [[components.selection.getset]]
 == Getting and Setting Selection
 
 For a better overview on how selection works, see link:../datamodel/datamodel-selection.asciidoc[Selecting items]
 
 You can get selected the item with [methodname]#getValue()# of the
-[classname]#HasValue# interface that returns either a single selected item
-(case of `SingleSelect`) or a collection of selected items (case of `MultiSelect`).
+[interfacename]#HasValue# interface that returns either a single selected item
+(case of [interfacename]#SingleSelect#) or a collection of selected items (case of [interfacename]#MultiSelect#).
 You can select an item with the corresponding [methodname]#setValue()# method.
 
 The [classname]#ComboBox# and [classname]#NativeSelect# will show empty
@@ -246,14 +120,14 @@ selection when no actual item is selected.
 
 
 [[components.selection.valuechange]]
-== Handling Selection Changes
+== Handling Selection Events
 
-You can access the currently selected item with the [methodname]#getValue()# (`SingleSelect`) or
-[methodname]#getSelectedItems()# (`MultiSelect`) method of the component. Also, when
-handling selection changes with a
+You can access the currently selected item with the [methodname]#getValue()# ([interfacename]#SingleSelect#) or
+[methodname]#getSelectedItems()# ([interfacename]#MultiSelect#) method of the component. Also, when
+handling selection events with a
 [classname]#SelectionListener#, the
 [classname]#SelectionEvent# will have the selected items of the event. Single- and Multiselect
-components have their own more specific listener and event types, `SingleSelectionListener` for `SingleSelectionEvent` and `MultiSelectionListener` for `MultiSelectionEvent` respectively. Both can be added with the `addSelectionListener` method.
+components have their own more specific listener and event types, [interfacename]#SingleSelectionListener# for [classname]#SingleSelectionEvent# and [interfacename]#MultiSelectionListener# for [classname]#MultiSelectionEvent# respectively. Both can be added with the [methodname]#addSelectionListener# method.
 
 
 [source, java]
@@ -262,7 +136,7 @@ components have their own more specific listener and event types, `SingleSelecti
 ComboBox<String> select = new ComboBox<>("My Select");
 select.setItems("Io", "Europa", "Ganymedes", "Callisto");
 
-// Handle selection change
+// Handle selection event
 select.addSelectionListener(event ->
     layout.addComponent(new Label("Selected " +
         event.getSelectedItem().orElse("none")));
@@ -276,10 +150,6 @@ The result of user interaction is shown in
 image::img/select-selected1.png[width=30%, scaledwidth=40%]
 
 
-----
-endif::web[]
-
-
 [[components.selection.multiple]]
 == Multiple Selection
 
@@ -290,12 +160,12 @@ Some selection components, such as [classname]#CheckBoxGroup#,
 they extend [classname]#AbstractMultiSelect# class.
 
 
-Multiselect components use the `MultiSelect` interface which extends `HasValue`.
-This provides more fine grained API for selection. You can get and set the selection with the [methodname]#MultiSelect.getSelectedItems()# and
-[methodname]#SelectionModel.Multi.selectItems()# methods.
+Multiselect components use the [interfacename]#MultiSelect# interface which extends [interfacename]#HasValue#.
+This provides more fine grained API for selection. You can get and set the selection with the [methodname]#getSelectedItems()# and
+[methodname]#select()# methods.
 
-A change in the selection will trigger a [classname]#SelectionChange#, which
-you can handle with a [classname]#SelectionChangeListener#. The
+A change in the selection will trigger a [classname]#SelectionEvent#, which
+you can handle with a [classname]#SelectionListener#. The
 following example shows how to handle selection changes with a listener.
 
 

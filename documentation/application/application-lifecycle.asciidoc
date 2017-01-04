@@ -235,10 +235,6 @@ one returns a UI (otherwise they return null). You can add a UI provider to a
 session most conveniently by implementing a custom servlet and adding the UI
 provider to sessions in a [interfacename]#SessionInitListener#.
 
-You can find an example of custom UI providers in
-<<dummy/../../../mobile/mobile-features#mobile.features.fallback,"Providing a
-Fallback UI">>.
-
 
 [[application.lifecycle.ui.preserving]]
 === Preserving UI on Refresh
