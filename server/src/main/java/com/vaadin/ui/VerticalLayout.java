@@ -74,7 +74,7 @@ public class VerticalLayout extends AbstractOrderedLayout {
      *            the component(s) which should be expanded
      */
     public void expand(Component... componentsToExpand) {
-        configureParentForExapntion();
+        configureParentForExpansion();
         for (Component component : componentsToExpand) {
             if (component.getParent() != this) {
                 addComponent(component);
@@ -84,7 +84,7 @@ public class VerticalLayout extends AbstractOrderedLayout {
         }
     }
 
-    private void configureParentForExapntion() {
+    private void configureParentForExpansion() {
         if (getHeight() < 0) {
             // Make full height if no other size is set
             setHeight(100, Unit.PERCENTAGE);

@@ -71,7 +71,7 @@ public class HorizontalLayout extends AbstractOrderedLayout {
      *            the component(s) which should be expanded
      */
     public void expand(Component... componentsToExpand) {
-        configureParentForExapntion();
+        configureParentForExpansion();
         for (Component component : componentsToExpand) {
             if (component.getParent() != this) {
                 addComponent(component);
@@ -81,7 +81,7 @@ public class HorizontalLayout extends AbstractOrderedLayout {
         }
     }
 
-    private void configureParentForExapntion() {
+    private void configureParentForExpansion() {
         if (getWidth() < 0) {
             // Make full width if no other size is set
             setWidth(100, Unit.PERCENTAGE);
