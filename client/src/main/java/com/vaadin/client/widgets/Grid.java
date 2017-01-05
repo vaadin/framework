@@ -5801,11 +5801,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         public void onStart() {
                             dragStarted();
                             dragger.getElement().appendChild(resizeElement);
-                            resizeElement.getStyle()
-                                    .setLeft((dragger.getElement()
-                                            .getOffsetWidth()
+                            resizeElement.getStyle().setLeft(
+                                    (dragger.getElement().getOffsetWidth()
                                             - resizeElement.getOffsetWidth())
-                                            * .5, Unit.PX);
+                                            * .5,
+                                    Unit.PX);
                             resizeElement.getStyle().setHeight(
                                     col.grid.getOffsetHeight(), Unit.PX);
                         }
@@ -6465,8 +6465,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         int columnIndex = columns.indexOf(column);
 
         // Remove from column configuration
-        escalator.getColumnConfiguration()
-                .removeColumns(getVisibleColumns().indexOf(column), 1);
+        int visibleColumnIndex = getVisibleColumns().indexOf(column);
+        if (visibleColumnIndex < 0) {
+            assert column.isHidden();
+            // Hidden columns are not included in Escalator
+        } else {
+            getEscalator().getColumnConfiguration().removeColumns(visibleColumnIndex,
+                    1);
+        }
 
         updateFrozenColumns();
 
@@ -6846,7 +6852,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return editor;
     }
 
-    protected Escalator getEscalator() {
+    /**
+     * Gets the {@link Escalator} used by this Grid instnace.
+     * 
+     * @return the escalator instance, never <code>null</code>
+     */
+    public Escalator getEscalator() {
         return escalator;
     }
 
