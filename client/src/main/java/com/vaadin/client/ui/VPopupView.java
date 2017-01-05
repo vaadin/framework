@@ -373,9 +373,14 @@ public class VPopupView extends HTML
                 }
             } else if (popupComponentWidget2 instanceof HasWidgets) {
                 HasWidgets hw = (HasWidgets) popupComponentWidget2;
-                Iterator<Widget> iterator = hw.iterator();
-                while (iterator.hasNext()) {
-                    checkForRTE(iterator.next());
+                try {
+                    Iterator<Widget> iterator = hw.iterator();
+                    while (iterator.hasNext()) {
+                        checkForRTE(iterator.next());
+                    }
+                } catch (UnsupportedOperationException e) {
+                    // At least Grid refuses to provide child widgets through
+                    // iterator()
                 }
             }
         }
