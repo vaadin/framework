@@ -7,8 +7,6 @@ layout: page
 [[components.grid]]
 = [classname]#Grid#
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 ifdef::web[]
 [.sampler]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/grid"]
@@ -41,21 +39,16 @@ Grid is fully themeable with CSS and style names can be set for all grid
 elements. For data rows and cells, the styles can be generated with a row or
 cell style generator.
 
-Finally, [classname]#Grid# is designed to be extensible and used just as well
-for client-side development - its GWT API is nearly identical to the server-side
-API, including data binding.
-
-
 [[components.grid.data]]
 == Binding to Data
 
-[classname]#Grid# is normally used by binding it to a container data source,
+[classname]#Grid# is normally used by binding it to a ,
 described in
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
-By default, it is bound to List of items. You can set the items in the constructor or with
+<<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.dataproviders,"Showing Many Items in a Listing">>.
+By default, it is bound to List of items. You can set the items with the
 [methodname]#setItems()# method.
 
-For example, if you have a list of beans, you could add to a [classname]#Grid# as follows
+For example, if you have a list of beans, you show them in a [classname]#Grid# as follows
 
 
 [source, java]
@@ -67,163 +60,162 @@ List<Person> people = Lists.newArrayList(
     new Person("Johannes Kepler", 1571));
 
 // Create a grid bound to the list
-Grid<Person> grid = new Grid<>(people);
+Grid<Person> grid = new Grid<>();
+grid.setItems(people);
 grid.addColumn("Name", Person::getName);
 grid.addColumn("Year of birth", Person::getBirthYear);
 layout.addComponent(grid);
 ----
-
-In addition to list you can pass items individually:
-
-[source, java]
-----
-grid.setItems(new Person("Nicolaus Copernicus", 1543),
-              new Person("Galileo Galilei", 1564));
-----
-
-Note that you can not use [methodname]#addRow()# to add items if the container
-is read-only or has read-only columns, such as generated columns.
-
 
 
 [[components.grid.selection]]
 == Handling Selection Changes
 
 Selection in [classname]#Grid# is handled a bit differently from other selection
-components, as it is not an [classname]#AbstractSelect#. Grid supports both
-single and multiple selection, defined by the __selection model__. Selection
-events can be handled with a [interfacename]#SelectionListener#.
+components, as it is not a [classname]#HasValue#. Grid supports
+single, multiple, or no-selection, each defined by a specific selection model. Each
+selection model has a specific API depending on the type of the selection.
+
+For basic usage, switching between the built-in selection models is possible by using the
+[method]#setSelectionMode(SelectionMode)#. Possible options are [literal]#++SINGLE++# (default),
+[literal]#++MULTI++#, or [literal]#++NONE++#.
+
+Listening to selection changes in any selection model is possible with a [classname]#SelectionListener#,
+which provides a generic [classname]#SelectionEvent# which for getting the selected value or values.
+Note that the listener is actually attached to the selection model and not the grid,
+and will stop getting any events if the selection mode is changed.
+
+[source, java]
+----
+Grid<Person> grid = new Grid<>();
+
+// switch to multiselect mode
+grid.setSelectionMode(SelectionMode.MULTI);
+
+grid.addSelectionListener(event -> {
+    Set<Person> selected = event.getAllSelectedItems();
+    Notification.show(selected.size() + " items selected");
+}
+----
+
+Programmatically selecting the value is possible via [methodname]#select(T)#.
+In multiselect mode, this will add the given item to the selection.
+
+[source, java]
+----
+// in single-select, only one item is selected
+grid.select(defaultPerson);
+
+// switch to multi select, clears selection
+grid.setSelectionMode(SelectionMode.MULTI);
+// Select items 2-4
+people.subList(2,3).forEach(grid::select);
+----
+
+The current selection can be obtained from the [classname]#Grid# by
+[methodname]#getSelected()#, and the returned [classname]#Set# contains either
+only one item (in single-selection mode) or several items (in multi-selection mode).
+
+[WARNING]
+====
+If you change selection mode for a grid, it will clear the selection
+and fire a selection event. To keep the previous selection you must
+reset the selection afterwards using the [methodname]#select()# method.
+====
+
+[WARNING]
+====
+If you change the grid's items with [methodname]#setItems()# or the used
+[classname]#DataProvider#, it will clear the selection and fire a selection event.
+To keep the previous selection you must reset the selection afterwards
+using the [methodname]#select()# method.
+====
+
 
 [[components.grid.selection.mode]]
 === Selection Models
 
-A [classname]#Grid# can be set to be in [literal]#++SINGLE++# (default),
-[literal]#++MULTI++#, or [literal]#++NONE++# selection mode, defined in the
-[interfacename]#SelectionMode# enum.
+For more control over the selection, you can access the used selection model with
+[methodname]#getSelectionModel()#. The return type is [classname]#GridSelectionModel#
+which has generic selection model API, but you can cast that to the specific selection model type,
+typically either [classname]#SingleSelectionModel# or [classname]#MultiSelectionModel#.
 
-
-[source, java]
-----
-// Use single-selection mode (default)
-grid.setSelectionMode(SelectionMode.SINGLE);
-----
-
-Empty (null) selection is allowed by default, but can be disabled
-with [methodname]#setDeselectAllowed()# in single-selection mode.
+The selection model is also returned by the [methodname]#setSelectionMode(SelectionMode)# method.
 
 [source, java]
 ----
-// Pre-select 3rd item from the person list
-grid.select(personList.get(2));
+// the default selection model
+SingleSelectionModel<Person> defaultModel =
+      (SingleSelectionModel<Person>) grid.getSelectionModel();
 
+// Use multi-selection mode
+MultiSelectionModel<Person> selectionModel = 
+      (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
+// Select items 2-4
+people.subList(2,3).forEach(grid::select);
 ----
 
 
-[[components.grid.selection.single]]
-=== Handling Selection
+==== Single Selection Model
 
-Changes in the selection can be handled with a
-[interfacename]#SelectionListener#. You need to implement the
-[methodname]#select()# method, which gets a [classname]#SelectionEvent# as
-parameter. In addition to selection, you can handle clicks on rows or cells with
-a [interfacename]#CellClickListener#.
+By obtaining a reference to the [classname]#SingleSelectionModel#,
+you can access more fine grained API for the single-select case.
 
-You can get the new selection from the selection event with
-[methodname]#getSelected()#, which returns a set of items, or more simply
-from the grid.
+The [methodname]#addSingleSelect(SingleSelectionListener)# method provides access to
+[classname]#SingleSelectionEvent#, which has some extra API for more convenience.
 
-For example:
+In single-select mode, it is possible to control whether the empty (null) selection is allowed.
+By default it is enabled, but can be disabled with [methodname]#setDeselectAllowed()#.
 
 [source, java]
 ----
-grid.addSelectionListener(selectionEvent -> {
-    // Get selection from the selection model
-    Collection<Person> selectedPersons =
-        selectionEvent.getSelected();
-    if (!selectedPersons.isEmpty())
-        Notification.show("Selected " + selectedPersons);
-    else
-        Notification.show("Nothing selected");
-});
+// preselect value
+grid.select(defaultItem);
+
+SingleSelectionModel<Person> singleSelect =
+      (SingleSelectionModel<Person>) grid.getSelectionModel();
+// disallow empty selection
+singleSelect.setDeselectAllowed(false);
 ----
 
-The current selection can be obtained from the [classname]#Grid# object by
-[methodname]#getSelectedItem()# or [methodname]#getSelectedItems()#, which return
-one (in single-selection mode) or all (in multi-selection mode) selected items.
-
-
-[WARNING]
-====
-If you change the data source for a grid, it will clear the selection. To keep
-the previous selection you must reset the selection afterwards using the
-[methodname]#select()# method.
-====
 
 [[components.grid.selection.multi]]
-=== Multiple Selection
+=== Multi-Selection Model
 
-In the multiple selection mode, a user can select multiple items by clicking on
+In the multi-selection mode, a user can select multiple items by clicking on
 the checkboxes in the leftmost column, or by using the kbd:[Space] to select/deselect the currently focused row.
 Space bar is the default key for toggling the selection, but it can be customized.
 
 [[figure.components.grid.selection.multi]]
-.Multiple Selection in  [classname]#Grid#
+.Multiple Selection in [classname]#Grid#
 image::img/grid-selection-multi.png[width=50%, scaledwidth=75%]
 
-You can use [methodname]#select()# to add items to the selection.
+By obtaining a reference to the [classname]#MultiSelectionModel#,
+you can access more fine grained API for the multi-select case.
 
+The [classname]#MultiSelectionModel# provides [methodname]#addMultiSelect(MultiSelectionListener)#
+access to [classname]#MultiSelectionEvent#, which allows to easily access differences in the selection change.
 
 [source, java]
 ----
 // Grid in multi-selection mode
-Grid<Person> grid = Grid<>(personList)
-grid.setSelectionMode(SelectionMode.MULTI);
+Grid<Person> grid = Grid<>()
+grid.setItems(people);
+MultiSelectionModel<Person> selectionModel 
+      = (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
 
-// Items 2-4
-personList.subList(2,3).forEach(grid::select);
+selectionModel.selectAll();
 
-----
-
-The current selection can be read with [methodname]#getSelected()#
-in the [classname]#Grid#.
-
-
-[source, java]
-----
-// Allow deleting the selected items
-Button delSelected = new Button("Delete Selected", e -> {
-    // Delete all selected data items
-    for (Person person: selection.getSelected())
-        personList.remove(person);
-
-    // Disable after deleting
-    e.getButton().setEnabled(false);
-
-    // Reset grid content from the list
-    grid.setItems(personList);
-});
-delSelected.setEnabled(!grid.getSelected().isEmpty());
-----
-
-Changes in the selection can be handled with a
-[interfacename]#SelectionListener#. The selection event object provides
-[methodname]#getAdded()# and [methodname]#getRemoved()# to allow determining the
-differences in the selection change.
-
-
-[source, java]
-----
-// Handle selection changes
-grid.addSelectionListener(selection -> { // Java 8
-    Notification.show(selection.getAdded().size() +
-                      " items added, " +
-                      selection.getRemoved().size() +
-                      " removed.");
+selectionModel.addMultiSelectionListener(event -> {
+    Notification.show(selection.getAddedSelection().size()
+                      + " items added, "
+                      + selection.getRemovedSelection().size()
+                      + " removed.");
 
     // Allow deleting only if there's any selected
     deleteSelected.setEnabled(
          grid.getSelectedRows().size() > 0);
-});
+};
 ----
 
 
@@ -392,31 +384,23 @@ value. This allows having images, HTML, and buttons in grid cells.
 image::img/grid-renderers.png[width=75%, scaledwidth=100%]
 
 Renderers implement the [interfacename]#Renderer# interface.
+Renderers require a specific data type for the column.
 You set the column renderer in the [classname]#Grid.Column# object as follows:
 
 [source, java]
 ----
-
-Column<Integer> bornColumn = grid.addColumn(Person:getBirthYear);
-
-...
-Grid.Column bornColumn = grid.getColumn("born");
-bornColumn.setRenderer(new NumberRenderer("born in %d AD"));
+// the type of birthYear is a number
+Column<Integer> bornColumn = grid.addColumn(Person:getBirthYear,
+      new NumberRenderer("born in %d AD"));
 ----
-
-Renderers require a specific data type for the column. To convert to a property
-type to a type required by a renderer, you can pass an optional
-[interfacename]#Converter# to [methodname]#setRenderer()#, as described later in
-this section. A converter can also be used to (pre)format the property values.
-The converter is run on the server-side, before sending the values to the
-client-side to be rendered with the renderer.
-
 The following renderers are available, as defined in the server-side
 [package]#com.vaadin.ui.renderers# package:
 
+[classname]#TextRenderer#:: The default renderer, displays plain text as is. Any HTML markup is quoted.
+
+
 [classname]#ButtonRenderer#:: Renders the data value as the caption of a button. A [interfacename]#RendererClickListener# can be given to handle the button clicks.
 
-ifdef::web[]
 +
 Typically, a button renderer is used to display buttons for operating on a data
 item, such as edit, view, delete, etc. It is not meaningful to store the button
@@ -435,13 +419,12 @@ people.add(new Person("Johannes Kepler", 1571));
 Grid<Person> grid = new Grid(people);
 
 // Render a button that deletes the data row (item)
-grid.addColumn(person -> "Delete" )
-    .setRenderer(new ButtonRenderer(clickEvent -> {
-        people.remove(clickEvent.getValue());
-        grid.setItems(people);
+grid.addColumn(person -> "Delete", 
+      new ButtonRenderer(clickEvent -> {
+          people.remove(clickEvent.getValue());
+          grid.setItems(people);
     });
 ----
-endif::web[]
 
 [classname]#ImageRenderer#:: Renders the cell as an image.
 The column type must be a [interfacename]#Resource#, as described in
@@ -449,7 +432,6 @@ The column type must be a [interfacename]#Resource#, as described in
 [classname]#ExternalResource# are currently supported for images in
 [classname]#Grid#.
 
-ifdef::web[]
 +
 [source, java]
 ----
@@ -457,71 +439,36 @@ Column<ThemeResource> imageColumn = grid.addColumn("picture",
     p -> new ThemeResource("img/"+p.getLastname()+".jpg"));
 imageColumn.setRenderer(new ImageRenderer());
 ----
-+
-You also need to define the row heights so that the images fit there. You can
-set it in the theme for all data cells or for the column containing the images.
-
-+
-For the latter way, first define a CSS style name for grid and the column:
-
-
-+
-[source, java]
-----
-grid.setStyleName("gridwithpics128px");
-imageColumn.setCellStyleGenerator(cell -> "imagecol");
-----
-ifdef::web[]
-+
-Then, define the style in CSS (Sass):
-endif::web[]
-
-
-+
-[source, css]
-----
-.gridwithpics128px .imagecol {
-    height: 128px;
-    background: black;
-    text-align: center;
-}
-----
-endif::web[]
 
 [classname]#DateRenderer#:: Formats a column with a [classname]#Date# type using string formatter. The
 format string is same as for [methodname]#String.format()# in Java API. The date
 is passed in the parameter index 1, which can be omitted if there is only one
 format specifier, such as "[literal]#++%tF++#".
 
-ifdef::web[]
 +
 [source, java]
 ----
-Grid.Column<Date> bornColumn = grid.addColumn(person:getBirthDate);
-bornColumn.setRenderer(
-    new DateRenderer("%1$tB %1$te, %1$tY",
+Grid.Column<Date> bornColumn = grid.addColumn(person:getBirthDate,
+      new DateRenderer("%1$tB %1$te, %1$tY",
                      Locale.ENGLISH));
 ----
 
 +
 Optionally, a locale can be given. Otherwise, the default locale (in the
 component tree) is used.
-endif::web[]
 
 [classname]#HTMLRenderer#:: Renders the cell as HTML.
 This allows formatting the cell content, as well as using HTML features such as hyperlinks.
 
-ifdef::web[]
 +
 Set the renderer in the [classname]#Grid.Column# object:
 +
 [source, java]
 ----
 Column<String> htmlColumn grid.addColumn(person ->
-      "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>");
-htmlColumn.setRenderer(new HtmlRenderer());
+      "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>",
+      new HtmlRenderer());
 ----
-endif::web[]
 
 [classname]#NumberRenderer#:: Formats column values with a numeric type extending [classname]#Number#:
 [classname]#Integer#, [classname]#Double#, etc. The format can be specified
@@ -529,59 +476,18 @@ either by the subclasses of [classname]#java.text.NumberFormat#, namely
 [classname]#DecimalFormat# and [classname]#ChoiceFormat#, or by
 [methodname]#String.format()#.
 
-ifdef::web[]
 +
 For example:
 +
 [source, java]
 ----
-// Define some columns
-Column<String> nameCol = grid.addColumn(person::getName);
-Column<Integer> bornCol = grid.addColumn(person:getBirthYear);
-Column<Integer> slettersCol = grid.addColumn("sletters");
-Column<Double> ratingCol = grid.addColumn("rating");
-
-// Use decimal format
-bornCol.setRenderer(new NumberRenderer(
-    new DecimalFormat("in #### AD")));
-
-// Use textual formatting on numeric ranges
-slettersCol.setRenderer(new NumberRenderer(
-    new ChoiceFormat("0#none|1#one|2#multiple")));
-
 // Use String.format() formatting
-ratingCol.setRenderer(new NumberRenderer(
-    "%02.4f", Locale.ENGLISH));
-
-// Add some data rows
-grid.addItems(new Person("Nicolaus Copernicus", 1473, 2, 0.4),
-              new Person("Galileo Galilei",     1564, 0, 4.2),
-              new Person("Johannes Kepler",     1571, 1, 2.3));
-
+Column<Double> ratingCol = grid.addColumn("rating",
+      new NumberRenderer("%02.4f", Locale.ENGLISH));
 ----
-endif::web[]
+
 [classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
 must be between 0.0 and 1.0.
-
-ifdef::web[]
-+
-For example:
-+
-[source, java]
-----
-// Define some columns
-Column<String> nameCol = grid.addColumn(person::getName);
-Column<Double> ratingCol = grid.addColumn("rating");
-ratingCol.setRenderer(new ProgressBarRenderer());
-
-// Add some data rows
-grid.addItems(new Person("Nicolaus Copernicus", 0.4),
-              new Person("Galileo Galilei",     4.2),
-              new Person("Johannes Kepler",     2.3));
-----
-endif::web[]
-[classname]#TextRenderer#:: Displays plain text as is. Any HTML markup is quoted.
-
 
 
 [[components.grid.renderer.custom]]
@@ -677,10 +583,10 @@ yearsCell.setHtml("<b>Years</b>");
 === Components in Header or Footer
 
 You can set a component in a header or footer cell with
-[methodname]#setComponent()#. Often, this feature is used to allow filtering, as
-described in <<components.grid.filtering>>, which also gives an example of the
-use.
+[methodname]#setComponent()#. Often, this feature is used to allow filtering.
 
+////
+// commented out until filtering is sorted for 8
 [[components.grid.filtering]]
 == Filtering
 
@@ -699,10 +605,11 @@ as follows:
 [source, java]
 ----
 // Have a list of persons
-List<Person> persons = exampleDataSource();
+List<Person> people = getPeople();
 
 // Create a grid bound to it
-Grid<Person> grid = new Grid(persons);
+Grid<Person> grid = new Grid<>();
+grid.setItems(people);
 grid.setSelectionMode(SelectionMode.NONE);
 grid.setWidth("500px");
 grid.setHeight("300px");
@@ -730,9 +637,10 @@ for (Column<?> col: grid.getColumns()) {
 
     });
     cell.setComponent(filterField);
-
 }
 ----
+////
+
 
 [[components.grid.sorting]]
 == Sorting
@@ -773,78 +681,73 @@ grid.sort(Sort.by(cityColumn, SortDirection.ASCENDING)
               .then(nameColumn, SortDirection.DESCENDING));
 ----
 
+
 [[components.grid.editing]]
-== Editing
+== Editing Items Inside Grid
 
 Grid supports line-based editing, where double-clicking a row opens the row
 editor. In the editor, the input fields can be edited, as well as navigated with
 kbd:[Tab] and kbd:[Shift+Tab] keys. If validation fails, an error is displayed and the user
 can correct the inputs.
 
-To enable editing, you need to call [methodname]#setEditorEnabled(true)# for the
-grid.
+The [classname]#Editor# is accessible via [methodname]#getEditor()#, and to enable editing, you need to call [methodname]#setEnabled(true) on it.
 
+The editor is based on [classname]#Binder# which is used to bind the data
+to the editor. See <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder.
+The [classname]#Binder# needs to be set with [methodname]#setBinder# in [classname]#Editor#.
 
 [source, java]
 ----
-Grid<Person> grid = new Grid(persons);
-grid.setEditorEnabled(true);
+List<Todo> items = Arrays.asList(new Todo("Done task", true),
+        new Todo("Not done", false));
+
+Grid<Todo> grid = new Grid<>();
+
+TextField taskField = new TextField();
+CheckBox doneField = new CheckBox();
+Binder<Todo> binder = new Binder<>();
+
+binder.bind(taskField, Todo::getTask, Todo::setTask);
+binder.bind(doneField, Todo::isDone, Todo::setDone);
+
+grid.getEditor().setBinder(binder);
+grid.getEditor().setEnabled(true);
+
+Column<Todo, String> column = grid
+        .addColumn(todo -> String.valueOf(todo.isDone()));
+column.setWidth(75);
+column.setEditorComponent(doneField);
+
+grid.addColumn(Todo::getTask).setEditorComponent(taskField);
 ----
 
-Grid supports two row editor modes - buffered and unbuffered. The default mode is
-buffered. The mode can be changed with [methodname]#setBuffered(false)#
+It is possible to customize the used editor component for each column and row,
+by using [methodname]#setEditorComponentGenerator(EditorComponentGenerator)# in
+[classname]#Column#.
+
 
 [[components.grid.editing.buffered]]
-=== Buffered Mode
+=== Buffered / Unbuffered Mode
 
-The editor has a [guibutton]#Save# button that commits
-the data item to the container data source and closes the editor. The
-[guibutton]#Cancel# button discards the changes and exits the editor.
+Grid supports two editor modes - buffered and unbuffered. The default mode is
+buffered. The mode can be changed with [methodname]#setBuffered(false)#.
 
-A row under editing is illustrated in <<figure.components.grid.editing>>.
+In the buffered mode, editor has two buttons visible: a [guibutton]#Save# button that commits
+the modifications to the bean and closes the editor and a [guibutton]#Cancel# button
+discards the changes and exits the editor.
+
+Editor in buffered mode is illustrated in <<figure.components.grid.editing>>.
 
 [[figure.components.grid.editing]]
 .Editing a Grid Row
 image::img/grid-editor-basic.png[width=50%, scaledwidth=75%]
 
-[[components.grid.editing.unbuffered]]
-=== Unbuffered Mode
 
-The editor has no buttons and all changed data is committed directly
-to the container. If another row is clicked, the editor for the current row is closed and
+In the unbuffered mode, the editor has no buttons and all changed data is committed directly
+to the data provider. If another row is clicked, the editor for the current row is closed and
 a row editor for the clicked row is opened.
 
-[[components.grid.editing.fields]]
-=== Editor Fields
 
-The editor fields are configured in [classname]#Column#and bound to
-the bean data source with a [classname]#Binder#, which
-also handles tasks such as validation, as explained later.
-
-To disable editing in a particular column, you can call
-[methodname]#setEditorField()# in the [classname]#Column# object with
-[parameter]#null# parameter.
-
-In the following example, we configure a field with validation and styling:
-
-
-[source, java]
-----
-// Create an editor for name
-TextField nameEditor = new TextField();
-
-// Custom CSS style
-nameEditor.addStyleName("nameeditor");
-
-// Add editor to name column
-nameColumn.setEditorField(nameEditor);
-----
-
-Setting an editor field to [parameter]#null# deletes the currently existing
-editor field and makes the column non-editable.
-
-
-ifdef::web[]
 [[components.grid.editing.captions]]
 === Customizing Editor Buttons
 
@@ -854,80 +757,14 @@ set their captions with [methodname]#setEditorSaveCaption()# and
 
 In the following example, we demonstrate one way to translate the captions:
 
-
 [source, java]
 ----
-// Captions are stored in a resource bundle
-ResourceBundle bundle = ResourceBundle.getBundle(
-    MyAppCaptions.class.getName(),
-    Locale.forLanguageTag("fi")); // Finnish
-
 // Localize the editor button captions
-grid.setEditorSaveCaption(
-    bundle.getString(MyAppCaptions.SaveKey));
-grid.setEditorCancelCaption(
-    bundle.getString(MyAppCaptions.CancelKey));
+grid.getEditor().setSaveCaption("Tallenna");
+grid.getEditor().setCancelCaption("Peruuta"));
 ----
 
-endif::web[]
 
-[[components.grid.editing.fieldgroup]]
-=== Binding to Data with a Binder
-
-Data binding to the item under editing is handled with a
-[classname]#Binder#, which you need to set with
-[methodname]#setEditorFieldGroup#. This is mostly useful when using
-special-purpose, such as to enable bean validation.
-
-For example, assuming that we want to enable bean validation for a bean such as
-the following:
-
-
-[source, java]
-----
-public class Person implements Serializable {
-    @NotNull
-    @Size(min=2, max=10)
-    private String name;
-
-    @Min(1)
-    @Max(130)
-    private int age;
-    ...]
-----
-
-We can now use a [classname]#BeanBinder# in the [classname]#Grid# as
-follows:
-
-[source, java]
-----
-Grid<Person> grid = new Grid(examplePersonList());
-Column<String> nameCol = grid.addColumn(Person::getName);
-Column<Integer> ageCol = grid.addColumn(Person::getAge);
-grid.setEditorEnabled(true);
-
-TextField nameEditor = new TextField();
-nameCol.setEditorField(nameEditor);
-
-// Enable bean validation for the data
-BeanBinder<Person> binder = new BeanBinder<>(Person.class);
-
-// Have some extra validation in a field
-binder.addField(nameEditor, "name")
-    .withValidator(new RegexpValidator(
-        "^\\p{Alpha}+ \\p{Alpha}+$",
-        "Need first and last name"));
-
-grid.setEditorBinder(binder);
-
-----
-
-To use bean validation as in the example above, you need to include an
-implementation of the Bean Validation API in the classpath, as described in
-<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">>.
-
-
-ifdef::web[]
 [[components.grid.editing.validation]]
 === Handling Validation Errors
 
@@ -939,18 +776,18 @@ first error in the editor.
 .Editing a Grid Row
 image::img/grid-editor-errors.png[width=50%, scaledwidth=75%]
 
-You can modify the error handling by implementing a custom
-[interfacename]#EditorErrorHandler# or by extending the
-[classname]#DefaultEditorErrorHandler#.
-
-endif::web[]
+You can modify the error message by implementing a custom
+[interfacename]#EditorErrorGenerator# with for the [classname]#Editor#.
 
 
+////
+// Not supported in 8
 [[components.grid.scrolling]]
 == Programmatic Scrolling
 
 You can scroll to first item with [methodname]#scrollToStart()#, to end with
 [methodname]#scrollToEnd()#, or to a specific row with [methodname]#scrollTo()#.
+////
 
 
 [[components.grid.stylegeneration]]
