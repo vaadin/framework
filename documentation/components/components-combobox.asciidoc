@@ -75,7 +75,6 @@ select.setItemCaptionGenerator(Planet::getName);
 // handling for new items
 select.setNewItemHandler(inputString -> {
 
-    // Create a new bean - can't set all properties
     Planet newPlanet = new Planet(planets.size(), inputString);
     planets.add(newPlanet);
 
