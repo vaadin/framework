@@ -48,7 +48,7 @@ String[] tabs = {"Earth", "Mars", "Jupiter", "Saturn"};
 for (String caption: tabs) {
     String basename = "img/planets/" + caption;
     VerticalLayout tab = new VerticalLayout();
-    tab.addComponent(new Embedded(null,
+    tab.addComponent(new Image(null,
             new ThemeResource(basename + ".jpg")));
     accordion.addTab(tab, caption,
             new ThemeResource(basename + "_symbol.png"));

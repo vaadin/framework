@@ -115,12 +115,11 @@ image::img/csslayout-getcss.png[width=60%, scaledwidth=100%]
 [[layout.csslayout.compatibility]]
 == Browser Compatibility
 
-The stregth of the [classname]#CssLayout# is also its weakness. Much of the
-logic behind the other layout components is there to give nice default behaviour
-and to handle the differences in different browsers. Some browsers, no need to
-say which, are notoriously incompatible with the CSS standards, so they require
-a lot of custom CSS. You may need to make use of the browser-specific style
-classes in the root element of the application.
+The strength of the [classname]#CssLayout# is also its weakness. Much of the
+logic behind the other layout components is there to give nice default behavior
+and to handle the differences in different browsers. With [classname]#CssLayout#,
+you may need to make use of the browser-specific style classes in the root
+element of the application to write browser specific CSS rules.
 // TODO: ... described in <<advanced.browserinfo>>
 Some features in the other layouts are not even solvable in pure CSS, at least
 in all browsers.
