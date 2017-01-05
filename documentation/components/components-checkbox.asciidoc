@@ -34,9 +34,6 @@ checkbox2.setValue(true);
 
 checkbox1.addValueChangeListener(event ->
     checkbox2.setValue(! checkbox1.getValue()));
-
-checkbox2.addValueChangeListener(event ->
-    checkbox1.setValue(! checkbox2.getValue()));
 ----
 
 The result is shown in <<figure.components.checkbox.basic>>.

@@ -42,11 +42,10 @@ programmatically by calling [methodname]#setPopupVisible(true)#. For example:
 [source, java]
 ----
 // A pop-up view without minimalized representation
-PopupView popup = new PopupView(null,
-    new Table(null, TableExample.generateContent()));
+PopupView popup = new PopupView(null, myComponent);
 
 // A component to open the view
-Button button = new Button("Show table", click ->
+Button button = new Button("Show details", click ->
      popup.setPopupVisible(true));
 
 layout.addComponents(button, popup);

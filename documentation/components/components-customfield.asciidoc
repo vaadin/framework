@@ -8,17 +8,12 @@ layout: page
 = Composite Fields with [classname]#CustomField#
 
 The [classname]#CustomField# is a way to create composite components as with [classname]#CustomComponent#, except that it implements the [interfacename]#Field# interface and inherits [classname]#AbstractField#, described in <<dummy/../../../framework/components/components-fields#components.fields,"Field Components">>.
-A field allows editing a property value in the Vaadin data model, and can be bound to data with field groups, as described in <<dummy/../../../framework/datamodel/datamodel-forms#datamodel.forms, "Binding Data to Forms">>.
-The field values are buffered and can be validated with validators.
+A field allows editing a property value in the data model, and can be bound to data with [classname]#Binder#, as described in <<dummy/../../../framework/datamodel/datamodel-forms#datamodel.forms, "Binding Data to Forms">>.
 
-A composite field class must implement the [methodname]#getType()# and [methodname]#initContent()# methods.
-The latter should return the content composite of the field.
-It is typically a layout component, but can be any component.
+A composite field class must implement [methodname]#initContent()# method.
+It should return the content composite of the field.
 
-It is also possible to override [methodname]#validate()#,
-[methodname]#setInternalValue()#, [methodname]#commit()#,
-[methodname]#setPropertyDataSource#, [methodname]#isEmpty()# and other methods
-to implement different functionalities in the field. Methods overriding
+Methods overriding
 [methodname]#setInternalValue()# should call the superclass method.
 
 [[components.customfield.basic]]
@@ -38,33 +33,31 @@ We customize the [methodname]#setValue()# method to reflect the state back to th
 [source, Java]
 ----
 public class BooleanField extends CustomField<Boolean> {
-    Button button = new Button();
-
-    public BooleanField() {
-        setValue(true); // On by default
-    }
+    private final Button button = new Button("Off");
+    private boolean value;
 
     @Override
     protected Component initContent() {
-        // Flip the field value on click
-        button.addClickListener(click ->
-            setValue(! (Boolean) getValue()));
+        button.addClickListener(event -> {
+            setValue(!getValue());
+            button.setCaption(getValue() ? "On" : "Off");
+        });
 
-        return new VerticalLayout(
-            new Label("Click the button"), button);
+        VerticalLayout layout = new VerticalLayout();
+        layout.addComponent(new Label("Click the button"));
+        layout.addComponent(button);
+        return layout;
     }
 
     @Override
-    public Class<Boolean> getType() {
-        return Boolean.class;
+    public Boolean getValue() {
+        return value;
     }
 
     @Override
-    public void setValue(Boolean newFieldValue)
-        throws com.vaadin.data.Property.ReadOnlyException,
-        ConversionException {
-        button.setCaption(newFieldValue? "On" : "Off");
-        super.setValue(newFieldValue);
+    protected void doSetValue(Boolean value) {
+        this.value = value;
+        button.setCaption(value ? "On" : "Off");
     }
 }
 ----

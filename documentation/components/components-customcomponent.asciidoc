@@ -39,7 +39,6 @@ class MyComposite extends CustomComponent {
 
         // Compose from multiple components
         Label label = new Label(message);
-        label.setSizeUndefined(); // Shrink
         panelContent.addComponent(label);
         panelContent.addComponent(new Button("Ok"));
 

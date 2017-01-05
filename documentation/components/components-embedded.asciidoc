@@ -109,27 +109,6 @@ imageResource.setFilename(makeImageFilename());
 ----
 
 
-
-[[components.embedded.flash]]
-== Adobe [classname]#Flash# Graphics
-
-The [classname]#Flash# component allows embedding Adobe Flash animations in
-Vaadin UIs.
-
-
-[source, java]
-----
-Flash flash = new Flash(null,
-    new ThemeResource("img/vaadin_spin.swf"));
-layout.addComponent(flash);
-----
-
-You can set Flash parameters with [methodname]#setParameter()#, which takes a
-parameter's name and value as strings. You can also set the
-[parameter]#codeBase#, [parameter]#archive#, and [parameter]#standBy# attributes
-for the Flash object element in HTML.
-
-
 [[components.embedded.browserframe]]
 == [classname]#BrowserFrame#
 
@@ -158,24 +137,10 @@ Notice that web pages can prevent embedding them in an &lt;iframe&gt;.
 
 The generic [classname]#Embedded# component allows embedding all sorts of
 objects, such as SVG graphics, Java applets, and PDF documents, in addition to
-the images, Flash graphics, and browser frames which you can embed with the
+the images, and browser frames which you can embed with the
 specialized components.
 
-For example, to display a Flash animation:
-
-
-[source, java]
-----
-// A resource reference to some object
-Resource res = new ThemeResource("img/vaadin_spin.swf");
-
-// Display the object
-Embedded object = new Embedded("My Object", res);
-layout.addComponent(object);
-----
-
-Or an SVG image:
-
+Display an SVG image:
 
 [source, java]
 ----
@@ -189,7 +154,7 @@ layout.addComponent(object);
 ----
 
 The MIME type of the objects is usually detected automatically from the filename
-extension with the [classname]#FileTypeResolver# utility in Vaadin. If not, you
+extension with the [classname]#FileTypeResolver# utility in Framework. If not, you
 can set it explicitly with [methodname]#setMimeType()#, as was done in the
 example above (where it was actually unnecessary).
 

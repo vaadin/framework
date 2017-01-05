@@ -7,8 +7,6 @@ layout: page
 [[components.combobox]]
 = [classname]#ComboBox#
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 ifdef::web[]
 [.sampler]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/combo-box"]
@@ -28,7 +26,7 @@ image::img/combobox-basic.png[width=35%, scaledwidth=50%]
 == Filtered Selection
 
 [classname]#ComboBox# allows filtering the items available for selection in the
-drop-down list by the text entered in the input box.
+drop-down list by the text entered in the input box. To apply custom filtering, the [methodname]#setItems(CaptionFilter, Collection)# can be used. When using a [classname]#DataProvider#, the filtering is delegated to it.
 
 [[figure.components.combobox.filter]]
 .Filtered Selection in [classname]#ComboBox#
@@ -40,32 +38,6 @@ next or previous page. The list selection can also be done with the arrow keys
 on the keyboard. The shown items are loaded from the server as needed, so the
 number of items held in the component can be quite large. The number of matching
 items is displayed by the drop-down list.
-
-Filtering is enabled by setting a __filtering mode__ with
-[methodname]#setFilteringMode()#.
-
-
-[source, java]
-----
-cb.setFilteringMode(FilteringMode.CONTAINS);
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.select.combobox.filtering[on-line example, window="_blank"].
-
-The modes defined in the [classname]#FilteringMode# enum are as follows:
-
-[parameter]#CONTAINS#:: Matches any item that contains the string given in the text field part of the
-component.
-
-[parameter]#STARTSWITH#:: Matches only items that begin with the given string.
-
-[parameter]#OFF# (default):: Filtering is by default off and all items are shown all the time.
-
-
-
-The above example uses the containment filter that matches to all items
-containing the input string. As shown in <<figure.components.combobox.filter>>
-below, when we type some text in the input area, the drop-down list will show
-all the matching items.
 
 [[components.combobox.newitems]]
 == Allowing Adding New Items
@@ -91,7 +63,6 @@ List<Planet> planets = new ArrayList<>();
 planets.add(new Planet(1, "Mercury"));
 planets.add(new Planet(2, "Venus"));
 planets.add(new Planet(3, "Earth"));
-planets.add(new Planet(4, "Mars"));
 
 ComboBox<Planet> select =
     new ComboBox<>("Select or Add a Planet");
@@ -113,9 +84,6 @@ select.setNewItemHandler(inputString -> {
 
     // Remember to set the selection to the new item
     select.select(newPlanet);
-
-    Notification.show("Added new planet called " +
-                      inputString);
 });
 ----
 
