@@ -14,11 +14,12 @@ library includes the following selection components, all based on either
 [classname]#AbstractSingleSelect# or [classname]#AbstractMultiSelect# class:
 
 [classname]#ComboBox# (<<components-combobox#components.combobox,"ComboBox">>)::
-A drop-down list with a text box, where the user can type text to find matching items.
+A drop-down list with a text box, where the user can type text to find matching items and
+select one item.
 The component also provides a placeholder and the user can enter new items.
 
 [classname]#ListSelect# (<<components-listselect#components.listselect,"ListSelect">>)::
-A vertical list box for selecting items in either single or multiple selection mode.
+A vertical list box for selecting items in multiple selection mode.
 
 [classname]#NativeSelect# (<<components-nativeselect#components.nativeselect, "NativeSelect">>)::
 Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode.

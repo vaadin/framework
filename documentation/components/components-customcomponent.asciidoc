@@ -34,12 +34,10 @@ class MyComposite extends CustomComponent {
         // A layout structure used for composition
         Panel panel = new Panel("My Custom Component");
         VerticalLayout panelContent = new VerticalLayout();
-        panelContent.setMargin(true); // Very useful
         panel.setContent(panelContent);
 
         // Compose from multiple components
         Label label = new Label(message);
-        label.setSizeUndefined(); // Shrink
         panelContent.addComponent(label);
         panelContent.addComponent(new Button("Ok"));
 

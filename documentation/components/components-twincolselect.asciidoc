@@ -15,9 +15,9 @@ endif::web[]
 The [classname]#TwinColSelect# field provides a multiple selection component
 that shows two lists side by side, with the left column containing unselected
 items and the right column the selected items. The user can select items from
-the list on the left and click on the "&gt;&gt;" button to move them to the list on
+the list on the left and click on the "&gt;" button to move them to the list on
 the right. Items can be deselected by selecting them in the right list and
-clicking on the "&lt;&lt;" button.
+clicking on the "&lt;" button.
 
 [[figure.components.twincolselect.basic]]
 .Twin Column Selection
