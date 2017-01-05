@@ -2,18 +2,15 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.*;
 import org.apache.tools.ant.taskdefs.Java;
 
-public class GridDetailsReattach extends UI {
+public class GridDetailsReattach extends AbstractTestUI {
 
-    @Override
-    protected void init(VaadinRequest request) {
-
-        final HorizontalLayout root = new HorizontalLayout();
-        setContent(root);
-
-        final VerticalLayout verticalMain = new VerticalLayout();
+	@Override
+	protected void setup(VaadinRequest request) {
+		final VerticalLayout verticalMain = new VerticalLayout();
 
         final VerticalLayout layoutWithGrid = new VerticalLayout();
 
@@ -38,13 +35,15 @@ public class GridDetailsReattach extends UI {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                layoutWithGrid.setCaption("Caption added to 'layoutWithGrid' layout");
+                // This causes a relayout, which detaches and reattaches the grid
+            	layoutWithGrid.setCaption("Caption added to 'layoutWithGrid' layout");
             }
         });
         layoutWithGrid.addComponent(addCaptionToLayoutWithGridButton);
 
         verticalMain.addComponent(layoutWithGrid);
 
-        root.addComponent(verticalMain);
-    }
+        addComponent(verticalMain);
+		
+	}
 }
