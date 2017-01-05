@@ -6,11 +6,13 @@ layout: page
 
 [[components.overview]]
 = Overview
+__this section is not finished yet__
+
 
 Vaadin provides a comprehensive set of user interface components and allows you
 to define custom components.
 
-The component hierarchy of Vaadin is presented in the next three diagrams:
+The component hierarchy of Vaadin is presented in the next four diagrams:
 
 * <<figure.uicomponents>>
 illustrates the inheritance
@@ -23,9 +25,17 @@ presents fields bound to single values
 * <<figure.uiselects>>
 lists components presenting lists of data.
 
+* <<figure.uicontainers>>
+conainers to arrange components.
+
 Interfaces are displayed
-with a dotted outline, abstract classes in gray, and regular classes in blue. An annotated
+with a dotted outline, abstract classes in gray, and regular classes in blue.
+////
+TODO outdated information. Uncomment when fixed.
+ An annotated
 version of the diagram is featured in the __Vaadin Cheat Sheet__.
+////
+
 
 [[figure.uicomponents]]
 .User Interface Component Class Hierarchy
@@ -38,6 +48,10 @@ image::img/field-class-hierarchy.png[width=100%, scaledwidth=100%]
 [[figure.uiselects]]
 .Lists Component Class Hierarchy
 image::img/selects-class-hierarchy.png[width=100%, scaledwidth=100%]
+
+[[figure.uicontainers]]
+.Container Class Hierarchy
+image::img/component-container-class-hierarchy.png[width=100%, scaledwidth=100%]
 
 
 ((("[classname]#Component#")))
@@ -87,7 +101,8 @@ in
 <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
 Vaadin Add-ons">>.
 
-
+////
+TODO outdated information. Uncomment when fixed.
 [NOTE]
 .Vaadin Cheat Sheet and Refcard
 ====
@@ -99,3 +114,4 @@ The diagram is also included in the six-page DZone Refcard, which you can find
 at https://vaadin.com/refcard.
 
 ====
+////
