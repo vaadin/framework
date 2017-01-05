@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.NativeSelect;
+import com.vaadin.v7.ui.NativeSelect;
 
 public class NativeSelects extends ComponentTestCase<NativeSelect> {
 
@@ -99,7 +99,7 @@ public class NativeSelects extends ComponentTestCase<NativeSelect> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for Labels in different configurations";
     }
 

@@ -51,8 +51,8 @@ public class ResourceDownload extends TestBase {
         b = new Button("Test", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ResourceDownload.this.getMainWindow().showNotification(
-                        "Still working");
+                ResourceDownload.this.getMainWindow()
+                        .showNotification("Still working");
             }
 
         });

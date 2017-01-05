@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,18 +27,19 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class SplitPanels extends VerticalLayout implements View {
     public SplitPanels() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Split Panels");
         h1.addStyleName(ValoTheme.LABEL_H1);
         addComponent(h1);
 
-        addComponent(new Label(
-                "Outlines are just to show the areas of the SplitPanels. They are not part of the actual component style."));
+        Label label = new Label(
+                "Outlines are just to show the areas of the SplitPanels. They are not part of the actual component style.");
+        label.setWidth("100%");
+        addComponent(label);
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         row.setMargin(new MarginInfo(true, false, false, false));
         addComponent(row);
 
@@ -80,9 +81,11 @@ public class SplitPanels extends VerticalLayout implements View {
     VerticalLayout getContent() {
         return new VerticalLayout() {
             {
-                setMargin(true);
-                addComponent(new Label(
-                        "Fictum,  deserunt mollit anim laborum astutumque!"));
+                setSpacing(false);
+                Label label = new Label(
+                        "Fictum,  deserunt mollit anim laborum astutumque!");
+                label.setWidth("100%");
+                addComponent(label);
             }
         };
     }

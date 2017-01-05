@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.vaadin.tests.components.absolutelayout;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -26,11 +26,11 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
 
-public class AbsoluteLayoutHideComponent extends AbstractTestUI {
+public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
 
     private AbsoluteLayout mainLayout;
     private VerticalLayout topBar = new VerticalLayout();
@@ -41,7 +41,6 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         mainLayout = new AbsoluteLayout();
-        mainLayout.setImmediate(true);
         mainLayout.setWidth("100%");
         mainLayout.setHeight("100%");
 
@@ -70,7 +69,6 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
         // btnLogin
         Button btnLogin = new Button();
         btnLogin.setCaption("Login");
-        btnLogin.setImmediate(false);
         btnLogin.setWidth("-1px");
         btnLogin.setHeight("-1px");
         btnLogin.addClickListener(new Button.ClickListener() {
@@ -89,8 +87,8 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
         // =====> THIS CODE generates error
         // WITHOUT THIS CODE works fine
 
-        Embedded e = new Embedded("", new ThemeResource(
-                "../runo/icons/64/ok.png"));
+        Embedded e = new Embedded("",
+                new ThemeResource("../runo/icons/64/ok.png"));
         // e.setMimeType("image/jpg");
         e.setWidth("100%");
         e.setHeight("100%");
@@ -112,7 +110,6 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
         GridLayout gridButtons = new GridLayout(2, 3);
 
         Button btn1 = new Button("Button one");
-        btn1.setImmediate(true);
         btn1.addClickListener(new Button.ClickListener() {
 
             @Override
@@ -122,7 +119,6 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
         gridButtons.addComponent(btn1, 0, 0);
 
         Button btn2 = new Button("Button two");
-        btn2.setImmediate(true);
         btn2.addClickListener(new Button.ClickListener() {
 
             @Override
@@ -132,7 +128,6 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
         gridButtons.addComponent(btn2, 0, 1);
 
         Button btn3 = new Button("Button three");
-        btn3.setImmediate(true);
         btn3.addClickListener(new Button.ClickListener() {
 
             @Override

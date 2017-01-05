@@ -7,24 +7,22 @@ import java.util.LinkedHashMap;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HasComponents.ComponentAttachEvent;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HasComponents.ComponentAttachListener;
-import com.vaadin.ui.HasComponents.ComponentDetachEvent;
 import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public abstract class AbstractComponentContainerTest<T extends AbstractComponentContainer>
-        extends AbstractComponentTest<T> implements ComponentAttachListener,
-        ComponentDetachListener {
+        extends AbstractComponentTest<T>
+        implements ComponentAttachListener, ComponentDetachListener {
 
     private String CATEGORY_COMPONENT_CONTAINER_FEATURES = "Component container features";
     private Command<T, ComponentSize> addButtonCommand = new Command<T, ComponentSize>() {
@@ -85,7 +83,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private Command<T, ComponentSize> addPopupDateFieldCommand = new Command<T, ComponentSize>() {
         @Override
         public void execute(T c, ComponentSize size, Object data) {
-            PopupDateField tf = new PopupDateField();
+            DateField tf = new DateField();
             c.addComponent(tf);
             size.apply(tf);
         }
@@ -147,9 +145,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.addComponentAttachListener(
+                        AbstractComponentContainerTest.this);
             } else {
-                c.removeListener((ComponentAttachListener) AbstractComponentContainerTest.this);
+                c.removeComponentAttachListener(
+                        AbstractComponentContainerTest.this);
             }
         }
     };
@@ -159,9 +159,11 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.addComponentDetachListener(
+                        AbstractComponentContainerTest.this);
             } else {
-                c.removeListener((ComponentDetachListener) AbstractComponentContainerTest.this);
+                c.removeComponentDetachListener(
+                        AbstractComponentContainerTest.this);
             }
         }
     };
@@ -290,7 +292,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         String subCategory = "Add component";
         createCategory(subCategory, category);
 
-        LinkedHashMap<String, Command<T, ComponentSize>> addCommands = new LinkedHashMap<String, AbstractComponentTestCase.Command<T, ComponentSize>>();
+        LinkedHashMap<String, Command<T, ComponentSize>> addCommands = new LinkedHashMap<>();
         addCommands.put("Button", addButtonCommand);
         addCommands.put("NativeButton", addNativeButtonCommand);
         addCommands.put("TextField", addTextFieldCommand);
@@ -303,7 +305,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         addCommands.put("VerticalSplitPanel", addVerticalSplitPanelCommand);
         addCommands.put("HorizontalSplitPanel", addHorizontalSplitPanelCommand);
 
-        HashSet<String> noVerticalSize = new HashSet<String>();
+        HashSet<String> noVerticalSize = new HashSet<>();
         noVerticalSize.add("TextField");
         noVerticalSize.add("Button");
 
@@ -312,8 +314,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         // addCommands.put("VerticalLayout", addVerticalLayoutCommand);
 
         ComponentSize[] sizes = new ComponentSize[] {
-                new ComponentSize(null, null),
-                new ComponentSize("200px", null),
+                new ComponentSize(null, null), new ComponentSize("200px", null),
                 new ComponentSize("100%", null),
                 new ComponentSize(null, "200px"),
                 new ComponentSize(null, "100%"),
@@ -352,8 +353,8 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
             createClickAction("auto", componentHeightCategory,
                     setComponentHeight, Integer.valueOf(i), null);
-            createClickAction("auto", componentWidthCategory,
-                    setComponentWidth, Integer.valueOf(i), null);
+            createClickAction("auto", componentWidthCategory, setComponentWidth,
+                    Integer.valueOf(i), null);
             for (String option : options) {
                 createClickAction(option, componentHeightCategory,
                         setComponentHeight, Integer.valueOf(i), option);

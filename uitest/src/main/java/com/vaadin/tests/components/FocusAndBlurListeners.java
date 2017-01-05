@@ -6,18 +6,18 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class FocusAndBlurListeners extends TestBase {
 
@@ -37,7 +37,6 @@ public class FocusAndBlurListeners extends TestBase {
             Label msg = new Label(new Date() + " Blurred "
                     + event.getComponent().getCaption());
             messages.addComponentAsFirst(msg);
-
         }
     };
     private VerticalLayout messages = new VerticalLayout();
@@ -49,7 +48,7 @@ public class FocusAndBlurListeners extends TestBase {
         TextField tf = new TextField("TextField");
         l.addComponent(tf);
 
-        DateField df = new DateField("DateField");
+        AbstractDateField df = new TestDateField("DateField");
         l.addComponent(df);
 
         ComboBox cb = new ComboBox("ComboBox");
@@ -72,7 +71,7 @@ public class FocusAndBlurListeners extends TestBase {
         ogm.setMultiSelect(true);
         l.addComponent(ogm);
 
-        btn.addListener(new ClickListener() {
+        btn.addClickListener(new ClickListener() {
 
             private int i;
 
@@ -83,22 +82,22 @@ public class FocusAndBlurListeners extends TestBase {
             }
         });
 
-        tf.addListener(focusListener);
-        tf.addListener(blurListener);
-        df.addListener(focusListener);
-        df.addListener(blurListener);
-        cb.addListener(focusListener);
-        cb.addListener(blurListener);
-        btn.addListener(focusListener);
-        btn.addListener(blurListener);
-        nbtn.addListener(focusListener);
-        nbtn.addListener(blurListener);
-        chkb.addListener(focusListener);
-        chkb.addListener(blurListener);
-        og.addListener(focusListener);
-        og.addListener(blurListener);
-        ogm.addListener(focusListener);
-        ogm.addListener(blurListener);
+        tf.addFocusListener(focusListener);
+        tf.addBlurListener(blurListener);
+        df.addFocusListener(focusListener);
+        df.addBlurListener(blurListener);
+        cb.addFocusListener(focusListener);
+        cb.addBlurListener(blurListener);
+        btn.addFocusListener(focusListener);
+        btn.addBlurListener(blurListener);
+        nbtn.addFocusListener(focusListener);
+        nbtn.addBlurListener(blurListener);
+        chkb.addFocusListener(focusListener);
+        chkb.addBlurListener(blurListener);
+        og.addFocusListener(focusListener);
+        og.addBlurListener(blurListener);
+        ogm.addFocusListener(focusListener);
+        ogm.addBlurListener(blurListener);
 
         l.addComponent(messages);
 

@@ -4,11 +4,14 @@ order: 120
 layout: page
 ---
 
-[[intalling.idea]]
+[[installing.idea]]
 = Installing and Configuring IntelliJ IDEA
 
 With IntelliJ IDEA, you have two choices: use the commercial Ultimate Edition or the free Community Edition.
 In the following, we cover the installation and configuration of them both.
+
+.Installing the IntelliJ IDEA toolchain
+image::img/installation-intellij-hi.png[width=100%, scaledwidth=100%]
 
 The Ultimate Edition::
 The Ultimate Edition includes built-in support for creating Vaadin applications and running or debugging them in an integrated application server.

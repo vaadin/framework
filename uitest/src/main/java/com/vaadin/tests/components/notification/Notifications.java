@@ -5,10 +5,10 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextArea;
 
 public class Notifications extends TestBase implements ClickListener {
 
@@ -30,8 +30,8 @@ public class Notifications extends TestBase implements ClickListener {
                 .getItemProperty(CAPTION).setValue("Humanized");
         type.addItem(Notification.TYPE_ERROR_MESSAGE).getItemProperty(CAPTION)
                 .setValue("Error");
-        type.addItem(Notification.TYPE_WARNING_MESSAGE)
-                .getItemProperty(CAPTION).setValue("Warning");
+        type.addItem(Notification.TYPE_WARNING_MESSAGE).getItemProperty(CAPTION)
+                .setValue("Warning");
         type.addItem(Notification.TYPE_TRAY_NOTIFICATION)
                 .getItemProperty(CAPTION).setValue("Tray");
         type.setValue(type.getItemIds().iterator().next());
@@ -53,7 +53,8 @@ public class Notifications extends TestBase implements ClickListener {
 
     @Override
     public void buttonClick(ClickEvent event) {
-        Notification n = new Notification(tf.getValue(), (Type) type.getValue());
+        Notification n = new Notification(tf.getValue(),
+                (Type) type.getValue());
         n.setHtmlContentAllowed(true);
         n.show(Page.getCurrent());
     }

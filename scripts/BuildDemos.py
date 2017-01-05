@@ -9,7 +9,7 @@
 # pip install requests
 # Deploy depends on .deployUrl and .deployCredentials files in home folder
 
-import sys, os
+import sys, os, pickle
 from os.path import join, isfile
 from fnmatch import fnmatch
 from xml.etree.ElementTree import ElementTree
@@ -17,12 +17,21 @@ from xml.etree.ElementTree import ElementTree
 # Validated demos. name -> git url
 demos = {
 	"dashboard" : "https://github.com/vaadin/dashboard-demo.git",
-	"parking" : "https://github.com/vaadin/parking-demo.git",
 	"addressbook" : "https://github.com/vaadin/addressbook.git",
-	"grid-gwt" : "https://github.com/vaadin/grid-gwt.git",
+	"framework8-demo" : "https://github.com/vaadin/framework8-demo",
 	"sampler" : "demos/sampler"
 #	"my-demo" : ("my_demo_url_or_path", "my-demo-dev-branch")
 }
+
+status_dump = {"messages": []}
+
+def dump_status(error_occurred):
+	status_dump["error"] = error_occurred
+	pickle.dump(status_dump, open("result/demo_validation_status.pickle", "wb"))
+
+def log_status(log_string):
+	status_dump["messages"].append(log_string)
+	print(log_string)
 
 def checkout(folder, url, repoBranch = "master"):
 	Repo.clone_from(url, join(resultPath, folder), branch = repoBranch)
@@ -32,7 +41,8 @@ if __name__ == "__main__":
 	try:
 		from git import Repo
 	except:
-		print("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
+		log_status("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
+		dump_status(True)
 		sys.exit(1)
 	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile, parser
 	from DeployHelpers import deployWar
@@ -41,7 +51,6 @@ if __name__ == "__main__":
 	args = getArgs()
 	demosFailed = False
 	ignoredDemos = args.ignore.split(",")
-	
 	wars = []
 
 	for demo in demos:
@@ -58,13 +67,13 @@ if __name__ == "__main__":
 				updateRepositories(join(resultPath, demo), args.pluginRepo, postfix="plugin")
 			mavenValidate(demo, logFile=getLogFile(demo))
 			wars.extend(copyWarFiles(demo))
-			print("%s demo validation succeeded!" % (demo))
+			log_status("%s demo validation succeeded!" % (demo))
 		except Exception as e:
-			print("%s demo validation failed: %s" % (demo, e))
+			log_status("%s demo validation failed: %s" % (demo, e))
 			if demo not in ignoredDemos:
 				demosFailed = True
 		except EnvironmentError as e:
-			print("%s demo validation failed: %s" % (demo, e))
+			log_status("%s demo validation failed: %s" % (demo, e))
 			if demo not in ignoredDemos:
 				demosFailed = True
 		try:
@@ -77,8 +86,11 @@ if __name__ == "__main__":
 		try:
 			deployWar(war)
 		except Exception as e:
-			print("War %s failed to deploy: %s" % (war, e))
+			log_status("War %s failed to deploy: %s" % (war, e))
 			demosFailed = True
 
 	if demosFailed:
+		dump_status(True)
 		sys.exit(1)
+
+	dump_status(False)

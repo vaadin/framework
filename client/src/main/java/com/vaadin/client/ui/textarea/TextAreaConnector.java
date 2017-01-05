@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,18 +16,19 @@
 
 package com.vaadin.client.ui.textarea;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.vaadin.client.WidgetUtil.CssSize;
+import com.vaadin.client.event.InputEvent;
 import com.vaadin.client.ui.VTextArea;
-import com.vaadin.client.ui.textfield.TextFieldConnector;
+import com.vaadin.client.ui.textfield.AbstractTextFieldConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.textarea.TextAreaServerRpc;
 import com.vaadin.shared.ui.textarea.TextAreaState;
 import com.vaadin.ui.TextArea;
 
 @Connect(TextArea.class)
-public class TextAreaConnector extends TextFieldConnector {
+public class TextAreaConnector extends AbstractTextFieldConnector {
 
     @Override
     public TextAreaState getState() {
@@ -42,6 +43,10 @@ public class TextAreaConnector extends TextFieldConnector {
     @Override
     protected void init() {
         super.init();
+        getWidget().addChangeHandler(event -> sendValueChange());
+        getWidget().addDomHandler(event -> {
+            getValueChangeHandler().scheduleValueChange();
+        }, InputEvent.getType());
 
         getWidget().addMouseUpHandler(new ResizeMouseUpHandler());
     }
@@ -53,39 +58,24 @@ public class TextAreaConnector extends TextFieldConnector {
 
         @Override
         public void onMouseUp(MouseUpEvent event) {
-            Element element = getWidget().getElement();
+            Style elementStyle = getWidget().getElement().getStyle();
 
-            updateSize(element.getStyle().getHeight(), getState().height,
-                    "height");
-            updateSize(element.getStyle().getWidth(), getState().width, "width");
-        }
+            String newHeight = elementStyle.getHeight();
+            String newWidth = elementStyle.getWidth();
 
-        /*
-         * Update the specified size on the server.
-         */
-        private void updateSize(String sizeText, String stateSizeText,
-                String sizeType) {
-
-            CssSize stateSize = CssSize.fromString(stateSizeText);
-            CssSize newSize = CssSize.fromString(sizeText);
-
-            if (stateSize == null && newSize == null) {
-                return;
-
-            } else if (newSize == null) {
-                sizeText = "";
-
-                // Else, if the current stateSize is null, just go ahead and set
-                // the newSize, so no check on stateSize is needed.
-
-            } else if (stateSize != null && stateSize.equals(newSize)) {
-                return;
+            if (newHeight == null) {
+                newHeight = "";
+            }
+            if (newWidth == null) {
+                newWidth = "";
             }
 
-            getConnection().updateVariable(getConnectorId(), sizeType,
-                    sizeText, false);
+            if (!newHeight.equals(getState().height)) {
+                getRpcProxy(TextAreaServerRpc.class).setHeight(newHeight);
+            }
+            if (!newWidth.equals(getState().width)) {
+                getRpcProxy(TextAreaServerRpc.class).setWidth(newWidth);
+            }
         }
-
     }
-
 }

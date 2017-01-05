@@ -3,18 +3,18 @@ package com.vaadin.tests;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.data.Container.ItemSetChangeEvent;
-import com.vaadin.data.Container.ItemSetChangeListener;
-import com.vaadin.data.Container.PropertySetChangeEvent;
-import com.vaadin.data.Container.PropertySetChangeListener;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Select;
+import com.vaadin.v7.data.Container.ItemSetChangeEvent;
+import com.vaadin.v7.data.Container.ItemSetChangeListener;
+import com.vaadin.v7.data.Container.PropertySetChangeEvent;
+import com.vaadin.v7.data.Container.PropertySetChangeListener;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Select;
 
 public class ListenerOrder extends com.vaadin.server.LegacyApplication
         implements Button.ClickListener, PropertySetChangeListener,
@@ -24,7 +24,7 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
 
     Select s1;
 
-    HashMap<String, Integer> buttonListeners = new HashMap<String, Integer>();
+    HashMap<String, Integer> buttonListeners = new HashMap<>();
 
     @Override
     public void init() {
@@ -47,18 +47,18 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
         MyClickListener mutualListener = new MyClickListener("mutual1");
 
         addListeners(b1, 1);
-        b1.addListener(mutualListener);
-        b1.addListener(mutualListener);
-        b1.addListener(this);
-        b1.addListener(mutualListener);
+        b1.addClickListener(mutualListener);
+        b1.addClickListener(mutualListener);
+        b1.addClickListener(this);
+        b1.addClickListener(mutualListener);
         Button.ClickListener b1Listener = addListeners(b1, 3);
-        b1.addListener(mutualListener);
-        b1.addListener(this);
+        b1.addClickListener(mutualListener);
+        b1.addClickListener(this);
         // b1.addListener((ValueChangeListener) this);
-        b1.addListener(mutualListener);
-        b1.removeListener(b1Listener);
+        b1.addClickListener(mutualListener);
+        b1.removeClickListener(b1Listener);
         // remove non-existing listener
-        b1.removeListener(new Button.ClickListener() {
+        b1.removeClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
             }
@@ -89,7 +89,8 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
         s1.addListener((ValueChangeListener) this);
 
         Item i = s1.getItem("second");
-        for (Iterator<?> it = i.getItemPropertyIds().iterator(); it.hasNext();) {
+        for (Iterator<?> it = i.getItemPropertyIds().iterator(); it
+                .hasNext();) {
             Object o = it.next();
             System.out.println("[" + o + "]");
         }
@@ -102,7 +103,7 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
         Button.ClickListener listener = null;
         for (int i = 0; i < count; i++) {
             listener = new MyClickListener(name);
-            b.addListener(listener);
+            b.addClickListener(listener);
         }
         // return last listener added
         return listener;

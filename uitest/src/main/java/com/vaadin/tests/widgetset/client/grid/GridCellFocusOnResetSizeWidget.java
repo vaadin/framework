@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,16 +24,17 @@ import com.google.gwt.user.client.ui.Button;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.HtmlRenderer;
+import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.client.widgets.Grid.SelectionMode;
+import com.vaadin.shared.Registration;
 
-public class GridCellFocusOnResetSizeWidget extends
-        PureGWTTestApplication<Grid<String[]>> {
+public class GridCellFocusOnResetSizeWidget
+        extends PureGWTTestApplication<Grid<String[]>> {
 
     private Grid<String[]> grid;
 
     private final class MyDataSource implements DataSource<String[]> {
-        List<String[]> rows = new ArrayList<String[]>();
+        List<String[]> rows = new ArrayList<>();
         int ROWS_MAX = 10;
         int size = ROWS_MAX;
         DataChangeHandler handler = null;
@@ -54,8 +55,10 @@ public class GridCellFocusOnResetSizeWidget extends
         }
 
         @Override
-        public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
+        public Registration addDataChangeHandler(
+                DataChangeHandler dataChangeHandler) {
             handler = dataChangeHandler;
+            return null;
         }
 
         @Override
@@ -78,11 +81,17 @@ public class GridCellFocusOnResetSizeWidget extends
             }
             handler.resetDataAndSize(size);
         }
+
+        @Override
+        public boolean isWaitingForData() {
+            return false;
+        }
     }
 
     private class Col extends Grid.Column<String, String[]> {
         public Col(String header) {
-            super(header, new HtmlRenderer());
+            super(header);
+            setRenderer(new HtmlRenderer());
         }
 
         @Override
@@ -95,7 +104,7 @@ public class GridCellFocusOnResetSizeWidget extends
     public GridCellFocusOnResetSizeWidget() {
         super(new Grid<String[]>());
         grid = getTestedWidget();
-        grid.setSelectionMode(SelectionMode.NONE);
+        grid.setSelectionModel(new SelectionModel.NoSelectionModel<>());
         grid.setWidth("300px");
         grid.addColumn(new Col("Foo"));
         final MyDataSource dataSource = new MyDataSource();

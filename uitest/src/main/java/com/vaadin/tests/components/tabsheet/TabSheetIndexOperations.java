@@ -59,9 +59,8 @@ public class TabSheetIndexOperations extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         getMainWindow().showNotification(
-                                "Index: "
-                                        + tabs.getTabPosition(tabs.getTab(tabs
-                                                .getSelectedTab())));
+                                "Index: " + tabs.getTabPosition(
+                                        tabs.getTab(tabs.getSelectedTab())));
 
                     }
                 });

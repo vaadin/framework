@@ -2,8 +2,8 @@ package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextArea;
 
 public class VerticalRelativeChildren extends TestBase {
 

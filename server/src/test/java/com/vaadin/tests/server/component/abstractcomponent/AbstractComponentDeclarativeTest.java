@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,8 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.lang.reflect.Field;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.jsoup.nodes.Attributes;
@@ -41,17 +40,18 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Test cases for reading and writing the properties of AbstractComponent.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
-public class AbstractComponentDeclarativeTest extends
-        DeclarativeTestBase<AbstractComponent> {
+public class AbstractComponentDeclarativeTest
+        extends DeclarativeTestBase<AbstractComponent> {
 
     private AbstractComponent component;
 
@@ -73,7 +73,7 @@ public class AbstractComponentDeclarativeTest extends
     public void testProperties() {
         String design = "<vaadin-label id=\"testId\" primary-style-name=\"test-style\" "
                 + "caption=\"test-caption\" locale=\"fi_FI\" description=\"test-description\" "
-                + "error=\"<div>test-error</div>\" immediate />";
+                + "error=\"<div>test-error</div>\" />";
         component.setId("testId");
         component.setPrimaryStyleName("test-style");
         component.setCaption("test-caption");
@@ -82,7 +82,6 @@ public class AbstractComponentDeclarativeTest extends
         component.setComponentError(new UserError("<div>test-error</div>",
                 com.vaadin.server.AbstractErrorMessage.ContentMode.HTML,
                 ErrorLevel.ERROR));
-        component.setImmediate(true);
         testRead(design, component);
         testWrite(design, component);
     }
@@ -97,21 +96,19 @@ public class AbstractComponentDeclarativeTest extends
                 "<vaadin-label immediate />" };
         Boolean[] explicitImmediate = { null, Boolean.FALSE, Boolean.TRUE,
                 Boolean.TRUE };
-        boolean[] immediate = { false, false, true, true };
-        for (int i = 0; i < design.length; i++) {
+        boolean[] immediate = { true, false, true, true };
+        for (String design1 : design) {
             component = (AbstractComponent) Design
-                    .read(new ByteArrayInputStream(design[i].getBytes(Charset
-                            .forName("UTF-8"))));
-            assertEquals(immediate[i], component.isImmediate());
-            assertEquals(explicitImmediate[i], getExplicitImmediate(component));
+                    .read(new ByteArrayInputStream(
+                            design1.getBytes(StandardCharsets.UTF_8)));
         }
     }
 
     @Test
     public void testExternalIcon() {
         String design = "<vaadin-label icon=\"http://example.com/example.gif\"/>";
-        component
-                .setIcon(new ExternalResource("http://example.com/example.gif"));
+        component.setIcon(
+                new ExternalResource("http://example.com/example.gif"));
         testRead(design, component);
         testWrite(design, component);
     }
@@ -151,7 +148,8 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testSizeAuto() {
-        String design = "<vaadin-label size-auto />";
+        component = new Panel();
+        String design = "<vaadin-panel size-auto />";
         component.setSizeUndefined();
         testRead(design, component);
         testWrite(design, component);
@@ -191,7 +189,8 @@ public class AbstractComponentDeclarativeTest extends
 
     @Test
     public void testWidthAuto() {
-        String design = "<vaadin-label height=\"20px\"/ width-auto />";
+        component = new Panel();
+        String design = "<vaadin-panel height=\"20px\"/ width-auto />";
         component.setCaptionAsHtml(false);
         component.setHeight("20px");
         component.setWidth(null);
@@ -220,8 +219,8 @@ public class AbstractComponentDeclarativeTest extends
         Responsive.makeResponsive(component);
         Element design = createDesign(true);
         component.readDesign(design, new DesignContext());
-        assertEquals("Component should have only one extension", 1, component
-                .getExtensions().size());
+        assertEquals("Component should have only one extension", 1,
+                component.getExtensions().size());
     }
 
     @Test
@@ -243,15 +242,4 @@ public class AbstractComponentDeclarativeTest extends
         return node;
     }
 
-    private Boolean getExplicitImmediate(AbstractComponent component) {
-        try {
-            Field immediate = AbstractComponent.class
-                    .getDeclaredField("explicitImmediateValue");
-            immediate.setAccessible(true);
-            return (Boolean) immediate.get(component);
-        } catch (Exception e) {
-            throw new RuntimeException(
-                    "Getting the field explicitImmediateValue failed.");
-        }
-    }
 }

@@ -6,7 +6,7 @@ import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class Buttons2<T extends Button> extends AbstractComponentTest<T>
         implements ClickListener {
@@ -24,9 +24,9 @@ public class Buttons2<T extends Button> extends AbstractComponentTest<T>
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((Button.ClickListener) Buttons2.this);
+                c.addClickListener(Buttons2.this);
             } else {
-                c.removeListener((Button.ClickListener) Buttons2.this);
+                c.removeClickListener(Buttons2.this);
             }
 
         }

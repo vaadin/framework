@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.NativeEvent;
 
 /**
  * Helper class to access html5 style drag events.
- * 
+ *
  * TODO Gears support ?
  */
 public class VHtml5DragEvent extends NativeEvent {
@@ -41,7 +41,7 @@ public class VHtml5DragEvent extends NativeEvent {
 
     /**
      * Works on FF 3.6 and possibly with gears.
-     * 
+     *
      * @param index
      * @return
      */
@@ -79,6 +79,35 @@ public class VHtml5DragEvent extends NativeEvent {
     /*-{
             return this.dataTransfer.files[fileIndex];
      }-*/;
+
+    /**
+     * Detects if dropped element is a file. <br>
+     * Always returns <code>true</code> on Safari even if the dropped element is
+     * a folder.
+     */
+    public final native boolean isFile(int fileIndex)
+    /*-{
+        // Chrome >= v21 and Opera >= v?
+        if (this.dataTransfer.items) {
+            var item = this.dataTransfer.items[fileIndex];
+            if (typeof item.webkitGetAsEntry == "function") {
+                var entry = item.webkitGetAsEntry();
+                if (typeof entry !== "undefined" && entry !== null) {
+                    return entry.isFile;
+                }
+            }
+        }
+
+        // Zero sized files without a type are also likely to be folders
+        var file = this.dataTransfer.files[fileIndex];
+        if (file.size == 0 && !file.type) {
+            return false;
+        }
+
+        // TODO Make it detect folders on all browsers
+
+        return true;
+    }-*/;
 
     public final native void setHtml5DataFlavor(String flavor, String data)
     /*-{

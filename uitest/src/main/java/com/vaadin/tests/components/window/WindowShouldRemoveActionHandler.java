@@ -9,14 +9,14 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
-public class WindowShouldRemoveActionHandler extends AbstractTestUI {
+public class WindowShouldRemoveActionHandler extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {
@@ -68,7 +68,7 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
         removeActionHandler(actionHandlers.remove(actionHandlers.size() - 1));
     }
 
-    private List<Handler> actionHandlers = new ArrayList<Handler>();
+    private List<Handler> actionHandlers = new ArrayList<>();
 
     public void add() {
         Handler actionHandler = new Handler() {
@@ -81,7 +81,8 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Handling action " + action.getCaption());
             }
 
@@ -101,7 +102,8 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Handling action " + action.getCaption());
             }
 
@@ -113,8 +115,8 @@ public class WindowShouldRemoveActionHandler extends AbstractTestUI {
     private void addHandler(Handler actionHandler) {
         actionHandlers.add(actionHandler);
         addActionHandler(actionHandler);
-        state.setValue("An UI with " + actionHandlers.size()
-                + " action handlers");
+        state.setValue(
+                "An UI with " + actionHandlers.size() + " action handlers");
 
     }
 }

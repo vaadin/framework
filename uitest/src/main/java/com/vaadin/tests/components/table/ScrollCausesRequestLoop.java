@@ -3,12 +3,12 @@ package com.vaadin.tests.components.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
 public class ScrollCausesRequestLoop extends AbstractTestCase {
 
@@ -55,7 +55,7 @@ public class ScrollCausesRequestLoop extends AbstractTestCase {
 
     private static List<Person> createData() {
         int count = 500;
-        List<Person> data = new ArrayList<Person>(count);
+        List<Person> data = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             data.add(new Person("Person", "" + i, "Email", "Phone", "Street",
                     12345, "City"));

@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -12,7 +12,7 @@ import com.vaadin.ui.VerticalLayout;
  * Main UI class
  */
 @SuppressWarnings("serial")
-public class GridLayoutWithNonIntegerWidth extends AbstractTestUI {
+public class GridLayoutWithNonIntegerWidth extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -33,7 +33,7 @@ public class GridLayoutWithNonIntegerWidth extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -43,7 +43,7 @@ public class GridLayoutWithNonIntegerWidth extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

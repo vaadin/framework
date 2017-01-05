@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.Converter;
+import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
@@ -35,7 +37,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 /**
  * A converter for {@link Resource} implementations supported by
  * {@link DesignAttributeHandler}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -43,9 +45,7 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 public class DesignResourceConverter implements Converter<String, Resource> {
 
     @Override
-    public Resource convertToModel(String value,
-            Class<? extends Resource> targetType, Locale locale)
-            throws Converter.ConversionException {
+    public Result<Resource> convertToModel(String value, ValueContext context) {
         if (!value.contains("://")) {
             // assume it'is "file://" protocol, one that is used to access a
             // file on a given path on the server, this will later be striped
@@ -57,35 +57,22 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         try {
             ResourceConverterByProtocol converter = ResourceConverterByProtocol
                     .valueOf(protocol.toUpperCase(Locale.ENGLISH));
-            return converter.parse(value);
+            return Result.ok(converter.parse(value));
         } catch (IllegalArgumentException iae) {
-            throw new ConversionException("Unrecognized protocol: " + protocol,
-                    iae);
+            return Result.error("Unrecognized protocol: " + protocol);
         }
     }
 
     @Override
-    public String convertToPresentation(Resource value,
-            Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+    public String convertToPresentation(Resource value, ValueContext context) {
         ResourceConverterByProtocol byType = ResourceConverterByProtocol
                 .byType(value.getClass());
         if (byType != null) {
             return byType.format(value);
         } else {
-            throw new Converter.ConversionException("unknown Resource type - "
-                    + value.getClass().getName());
+            throw new IllegalArgumentException(
+                    "unknown Resource type - " + value.getClass().getName());
         }
-    }
-
-    @Override
-    public Class<Resource> getModelType() {
-        return Resource.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
     private static interface ProtocolResourceConverter extends Serializable {
@@ -94,8 +81,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         public Resource parse(String value);
     }
 
-    private static enum ResourceConverterByProtocol implements
-            ProtocolResourceConverter {
+    private static enum ResourceConverterByProtocol
+            implements ProtocolResourceConverter {
 
         HTTP, HTTPS, FTP, FTPS, THEME {
 
@@ -107,8 +94,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             }
 
             @Override
-            public String format(Resource value)
-                    throws Converter.ConversionException {
+            public String format(Resource value) {
                 return new ResourceReference(value, null, null).getURL();
             }
         },
@@ -120,13 +106,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                 final int codepoint = Integer.valueOf(familyAndCode[1], 16);
 
                 if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) {
-                    try {
-                        return FontAwesome.fromCodepoint(codepoint);
-                    } catch (IllegalArgumentException iae) {
-                        throw new ConversionException(
-                                "Unknown codepoint in FontAwesome: "
-                                        + codepoint, iae);
-                    }
+                    return FontAwesome.fromCodepoint(codepoint);
                 }
 
                 FontIcon generic = new GenericFontIcon(familyAndCode[0],
@@ -136,8 +116,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             }
 
             @Override
-            public String format(Resource value)
-                    throws Converter.ConversionException {
+            public String format(Resource value) {
                 FontIcon icon = (FontIcon) value;
                 return new ResourceReference(icon, null, null).getURL();
 
@@ -150,21 +129,14 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                 // Deprecated, 7.4 syntax is
                 // font://"+FontAwesome.valueOf(foo) eg. "font://AMBULANCE"
                 final String iconName = (value.split("://", 2))[1];
-
-                try {
-                    return FontAwesome.valueOf(iconName);
-                } catch (IllegalArgumentException iae) {
-                    throw new ConversionException("Unknown FontIcon constant: "
-                            + iconName, iae);
-                }
+                return FontAwesome.valueOf(iconName);
             }
 
             @Override
-            public String format(Resource value)
-                    throws Converter.ConversionException {
-                throw new UnsupportedOperationException("Use "
-                        + ResourceConverterByProtocol.FONTICON.toString()
-                        + " instead");
+            public String format(Resource value) {
+                throw new UnsupportedOperationException(
+                        "Use " + ResourceConverterByProtocol.FONTICON.toString()
+                                + " instead");
             }
         },
         FILE {
@@ -174,8 +146,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             }
 
             @Override
-            public String format(Resource value)
-                    throws Converter.ConversionException {
+            public String format(Resource value) {
                 String path = ((FileResource) value).getSourceFile().getPath();
                 if (File.separatorChar != '/') {
                     // make sure we use '/' as file separator in templates
@@ -194,13 +165,12 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         }
 
         @Override
-        public String format(Resource value)
-                throws Converter.ConversionException {
+        public String format(Resource value) {
             // default behavior for HTTP, HTTPS, FTP and FTPS
             return ((ExternalResource) value).getURL();
         }
 
-        private static Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<Class<? extends Resource>, ResourceConverterByProtocol>();
+        private static final Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<>();
         static {
             typeToConverter.put(ExternalResource.class, HTTP);
             // ^ any of non-specialized would actually work

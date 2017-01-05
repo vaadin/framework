@@ -1,12 +1,12 @@
-/* 
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+/*
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,6 +24,7 @@ import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
+
 import elemental.json.JsonArray;
 
 @JavaScript({
@@ -34,8 +35,8 @@ public class Flot extends AbstractJavaScriptComponent {
         registerRpc(new FlotClickRpc() {
             @Override
             public void onPlotClick(int seriesIndex, int dataIndex) {
-                Notification.show("Clicked on [" + seriesIndex + ", "
-                        + dataIndex + "]");
+                Notification.show(
+                        "Clicked on [" + seriesIndex + ", " + dataIndex + "]");
             }
         });
         addFunction("onPlotClick", new JavaScriptFunction() {
@@ -43,14 +44,14 @@ public class Flot extends AbstractJavaScriptComponent {
             public void call(JsonArray arguments) {
                 int seriesIndex = (int) arguments.getNumber(0);
                 int dataIndex = (int) arguments.getNumber(1);
-                Notification.show("Clicked on [" + seriesIndex + ", "
-                        + dataIndex + "]");
+                Notification.show(
+                        "Clicked on [" + seriesIndex + ", " + dataIndex + "]");
             }
         });
     }
 
     public void addSeries(double... points) {
-        List<List<Double>> pointList = new ArrayList<List<Double>>();
+        List<List<Double>> pointList = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             pointList.add(Arrays.asList(Double.valueOf(i),
                     Double.valueOf(points[i])));

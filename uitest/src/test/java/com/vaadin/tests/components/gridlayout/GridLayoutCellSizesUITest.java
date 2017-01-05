@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -90,9 +90,9 @@ public class GridLayoutCellSizesUITest extends MultiBrowserTest {
 
     private void assertNotMatchesSmallHeight(int firstSlotHeight, int i,
             String id) {
-        Assert.assertNotEquals("Big slot '" + id
-                + "' matched small slots in height", firstSlotHeight,
-                getSlotHeight(i));
+        Assert.assertNotEquals(
+                "Big slot '" + id + "' matched small slots in height",
+                firstSlotHeight, getSlotHeight(i));
     }
 
     private int getSlotHeight(int slot) {

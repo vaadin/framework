@@ -1,12 +1,12 @@
 /*
  * Copyright 2012 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,7 +45,8 @@ public class BootstrapListenerCode {
         }
 
         @Override
-        public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
+        public void modifyBootstrapFragment(
+                BootstrapFragmentResponse response) {
             // Wrap the fragment in a custom div element
             Element myDiv = new Element(Tag.valueOf("div"), "");
             List<Node> nodes = response.getFragmentNodes();
@@ -66,8 +67,8 @@ class MyVaadinServlet extends VaadinServlet {
             @Override
             public void sessionInit(SessionInitEvent event)
                     throws ServiceException {
-                event.getSession().addBootstrapListener(
-                        BootstrapListenerCode.listener);
+                event.getSession()
+                        .addBootstrapListener(BootstrapListenerCode.listener);
             }
         });
     }
@@ -83,8 +84,8 @@ class MyVaadinPortlet extends VaadinPortlet {
             @Override
             public void sessionInit(SessionInitEvent event)
                     throws ServiceException {
-                event.getSession().addBootstrapListener(
-                        BootstrapListenerCode.listener);
+                event.getSession()
+                        .addBootstrapListener(BootstrapListenerCode.listener);
             }
         });
     }

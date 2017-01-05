@@ -60,7 +60,7 @@ default theme.
 
 [[figure.accordion.example1]]
 .An Accordion
-image::img/accordion-example1.png[]
+image::img/accordion-example1.png[width=40%, scaledwidth=55%]
 
 == CSS Style Rules
 
@@ -84,7 +84,3 @@ content area element.
 
 The selected item (tab) has also the [literal]#++v-accordion-open++# style. The
 content area is not shown for the closed items.
-
-
-
-

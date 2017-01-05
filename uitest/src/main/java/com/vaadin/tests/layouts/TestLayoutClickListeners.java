@@ -3,7 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,11 +12,11 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextArea;
 
-public class TestLayoutClickListeners extends AbstractTestUIWithLog {
+public class TestLayoutClickListeners extends AbstractReindeerTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -36,10 +36,12 @@ public class TestLayoutClickListeners extends AbstractTestUIWithLog {
         al.setStyleName("borders");
         al.setWidth("300px");
         al.setHeight("500px");
-        al.addComponent(new TextField("This is its caption",
-                "This is a textfield"), "top: 60px; left: 0px; width: 100px;");
-        al.addComponent(new TextField("Another textfield caption",
-                "This is another textfield"),
+        al.addComponent(
+                new TextField("This is its caption", "This is a textfield"),
+                "top: 60px; left: 0px; width: 100px;");
+        al.addComponent(
+                new TextField("Another textfield caption",
+                        "This is another textfield"),
                 "top: 120px; left: 20px; width: 100px;");
 
         al.addComponent(new Button("A button with its own click listener",
@@ -71,8 +73,8 @@ public class TestLayoutClickListeners extends AbstractTestUIWithLog {
         cl.setStyleName("borders");
         cl.setWidth("300px");
         cl.setHeight("500px");
-        cl.addComponent(new TextField("This is its caption",
-                "This is a textfield"));
+        cl.addComponent(
+                new TextField("This is its caption", "This is a textfield"));
         cl.addComponent(new TextField("Another textfield caption",
                 "This is another textfield"));
 

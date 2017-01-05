@@ -35,7 +35,7 @@ import com.vaadin.ui.Window;
 public class TestSampler extends TabSheet {
     public static final String ICON_URL = "../runo/icons/16/help.png";
 
-    private List<Component> components = new ArrayList<Component>();
+    private List<Component> components = new ArrayList<>();
 
     private ComponentContainer currentTab;
 
@@ -163,7 +163,8 @@ public class TestSampler extends TabSheet {
         createComponentLayout(caption, hl);
     }
 
-    private void createComponentLayout(String caption, ComponentContainer layout) {
+    private void createComponentLayout(String caption,
+            ComponentContainer layout) {
         addTab(layout, caption);
         currentTab = layout;
     }
@@ -177,7 +178,7 @@ public class TestSampler extends TabSheet {
 
     /**
      * Register a component to the TestSampler for style name changes/additions.
-     * 
+     *
      * @param component
      */
     public void registerComponent(Component component) {

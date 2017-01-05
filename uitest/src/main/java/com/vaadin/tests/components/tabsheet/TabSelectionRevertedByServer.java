@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
@@ -14,14 +14,14 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 /**
  * TabSheet test in case user selects a tab and on the selection listener the
  * selected tab is changed to another one.
- * 
+ *
  * This test used to cause nonfunctional TabSheet if the current tab was 1, user
  * selects 5, then the selection listener will revert the selected tab to 1.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
-public class TabSelectionRevertedByServer extends AbstractTestUI {
+public class TabSelectionRevertedByServer extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

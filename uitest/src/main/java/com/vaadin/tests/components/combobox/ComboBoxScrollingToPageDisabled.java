@@ -1,15 +1,14 @@
 package com.vaadin.tests.components.combobox;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 
-public class ComboBoxScrollingToPageDisabled extends
-        ComponentTestCase<ComboBox> {
+public class ComboBoxScrollingToPageDisabled
+        extends ComponentTestCase<ComboBox> {
 
     private static final Object CAPTION = "caption";
 
@@ -20,50 +19,34 @@ public class ComboBoxScrollingToPageDisabled extends
 
     @Override
     protected void initializeComponents() {
-        ComboBox s = createSelect(null);
+        ComboBox<String> s = createSelect(null);
         s.setScrollToSelectedItem(false);
         populate(s, 100);
-        Object selection = new ArrayList<Object>(s.getItemIds()).get(50);
-        s.setValue(selection);
+        s.setValue("Item 50");
         addTestComponent(s);
     }
 
     private void populate(ComboBox s, int nr) {
+        List<String> items = new ArrayList<>();
         for (int i = 0; i < nr; i++) {
-            addItem(s, "Item " + i);
+            items.add("Item " + i);
         }
+        s.setItems(items);
     }
 
-    @SuppressWarnings("unchecked")
-    private void addItem(ComboBox s, String string) {
-        Object id = s.addItem();
-        s.getItem(id).getItemProperty(CAPTION).setValue(string);
-
-    }
-
-    private ComboBox createSelect(String caption) {
-        final ComboBox cb = new ComboBox();
-        cb.setImmediate(true);
-        cb.addContainerProperty(CAPTION, String.class, "");
-        cb.setItemCaptionPropertyId(CAPTION);
+    private ComboBox<String> createSelect(String caption) {
+        final ComboBox<String> cb = new ComboBox<>();
         cb.setCaption(caption);
-        cb.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Notification.show("Value now:" + cb.getValue() + " "
-                        + cb.getItemCaption(cb.getValue()));
-
-            }
-        });
+        cb.addValueChangeListener(event -> Notification
+                .show("Value now:" + cb.getValue() + " " + cb.getValue()));
         return cb;
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Test that selected value appears on the client "
                 + "side even though setScrollToSelectedItem(false) "
-                + "has been called. Textbox should containe 'Item 50'.";
+                + "has been called. Textbox should contain 'Item 50'.";
     }
 
     @Override

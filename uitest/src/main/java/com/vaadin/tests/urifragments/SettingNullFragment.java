@@ -2,12 +2,12 @@ package com.vaadin.tests.urifragments;
 
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
 @SuppressWarnings("serial")
-public class SettingNullFragment extends AbstractTestUI {
+public class SettingNullFragment extends AbstractReindeerTestUI {
 
     protected static final String BUTTON_FRAG_1_ID = "buttonFrag1";
     protected static final String BUTTON_NULL_FRAGMENT_ID = "buttonNullFragment";

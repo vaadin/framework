@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableModifyAndSetCollapsed extends TestBase {
 
@@ -33,8 +33,8 @@ public class TreeTableModifyAndSetCollapsed extends TestBase {
                 int parentId = counter++;
                 Item parent = container.addItem(parentId);
                 tt.setCollapsed(parentId, false);
-                parent.getItemProperty("value").setValue(
-                        "parent " + (counter++) + "");
+                parent.getItemProperty("value")
+                        .setValue("parent " + (counter++) + "");
                 for (int i = 0; i < 4; i++) {
                     int childId = counter++;
                     Item child = container.addItem(childId);

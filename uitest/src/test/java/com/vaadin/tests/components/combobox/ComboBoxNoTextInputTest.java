@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,8 +21,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxNoTextInputTest extends MultiBrowserTest {
@@ -42,7 +42,8 @@ public class ComboBoxNoTextInputTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testComboBoxWithTextInputNoPopupOpensOnClick() throws Exception {
+    public void testComboBoxWithTextInputNoPopupOpensOnClick()
+            throws Exception {
         openTestURL();
 
         // click and check that no popup appears

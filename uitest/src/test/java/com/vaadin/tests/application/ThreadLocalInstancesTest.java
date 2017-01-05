@@ -21,8 +21,8 @@ public class ThreadLocalInstancesTest extends MultiBrowserTest {
         assertLogText("8. this root in root init", 8);
         assertLogText("9. some app in root paint", 7);
         assertLogText("10. this root in root paint", 6);
-        assertLogText("11. some app in background thread", 5);
-        assertLogText("12. this root in background thread", 4);
+        assertLogText("11. null app in background thread", 5);
+        assertLogText("12. null root in background thread", 4);
         assertLogText("13. some app in resource handler", 3);
         assertLogText("14. this root in resource handler", 2);
         assertLogText("15. some app in button listener", 1);

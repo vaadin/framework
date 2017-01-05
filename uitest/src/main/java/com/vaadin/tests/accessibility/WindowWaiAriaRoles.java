@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import java.util.Stack;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowRole;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -30,12 +30,12 @@ import com.vaadin.ui.Window;
  *
  * @author Vaadin Ltd
  */
-public class WindowWaiAriaRoles extends AbstractTestUI {
-    Stack<Window> windows = new Stack<Window>();
+public class WindowWaiAriaRoles extends AbstractReindeerTestUI {
+    Stack<Window> windows = new Stack<>();
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -86,7 +86,7 @@ public class WindowWaiAriaRoles extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -96,7 +96,7 @@ public class WindowWaiAriaRoles extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

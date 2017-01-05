@@ -10,8 +10,8 @@ import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
-public class AbstractComponentContainerListenersTest extends
-        AbstractListenerMethodsTestBase {
+public class AbstractComponentContainerListenersTest
+        extends AbstractListenerMethodsTestBase {
 
     @Test
     public void testComponentDetachListenerAddGetRemove() throws Exception {

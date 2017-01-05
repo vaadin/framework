@@ -1,12 +1,12 @@
-/* 
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+/*
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,17 +21,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
@@ -39,8 +33,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Table;
 
 public class TestSizeableIncomponents extends LegacyApplication {
 
@@ -69,7 +69,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
         select.setWidth("400px");
 
         prev = new Button("<<-|");
-        prev.addListener(new Button.ClickListener() {
+        prev.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 Object cur = select.getValue();
@@ -85,7 +85,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
             }
         });
         next = new Button("|->>");
-        next.addListener(new Button.ClickListener() {
+        next.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 Object cur = select.getValue();
@@ -233,7 +233,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
     class Testable {
 
         private Class<?> classToTest;
-        private ArrayList<Configuration> configurations = new ArrayList<Configuration>();
+        private ArrayList<Configuration> configurations = new ArrayList<>();
 
         Testable(Class<?> c) {
             classToTest = c;
@@ -262,13 +262,13 @@ public class TestSizeableIncomponents extends LegacyApplication {
         /**
          * Instantiates and populates component with test data to be ready for
          * testing.
-         * 
+         *
          * @return
          * @throws InstantiationException
          * @throws IllegalAccessException
          */
-        public Component getComponent() throws InstantiationException,
-                IllegalAccessException {
+        public Component getComponent()
+                throws InstantiationException, IllegalAccessException {
             Component c = (Component) classToTest.newInstance();
 
             if (c instanceof Button) {
@@ -277,21 +277,24 @@ public class TestSizeableIncomponents extends LegacyApplication {
             if (AbstractSelect.class.isAssignableFrom(c.getClass())) {
                 if (c instanceof Table) {
                     Table new_name = (Table) c;
-                    new_name.setContainerDataSource(TestForTablesInitialColumnWidthLogicRendering
-                            .getTestTable(5, 100).getContainerDataSource());
+                    new_name.setContainerDataSource(
+                            TestForTablesInitialColumnWidthLogicRendering
+                                    .getTestTable(5, 100)
+                                    .getContainerDataSource());
 
                 } else {
                     AbstractSelect new_name = (AbstractSelect) c;
                     Container cont = TestForTablesInitialColumnWidthLogicRendering
                             .getTestTable(2, 8).getContainerDataSource();
                     new_name.setContainerDataSource(cont);
-                    new_name.setItemCaptionPropertyId(cont
-                            .getContainerPropertyIds().iterator().next());
+                    new_name.setItemCaptionPropertyId(
+                            cont.getContainerPropertyIds().iterator().next());
 
                 }
             } else if (c instanceof ComponentContainer) {
                 ComponentContainer new_name = (ComponentContainer) c;
-                new_name.addComponent(new Label("component 1 in test container"));
+                new_name.addComponent(
+                        new Label("component 1 in test container"));
                 new_name.addComponent(new Button("component 2"));
             } else if (c instanceof Embedded) {
                 Embedded em = (Embedded) c;

@@ -1,20 +1,18 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.AbstractSelect.ItemDescriptionGenerator;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
-public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
+public class TableItemDescriptionGeneratorUI extends AbstractReindeerTestUI {
 
     private final String TEXT_PROPERTY_ID = "Text";
     private final String GEN_WIDGET_PROPERTY_ID = "Generated component";
@@ -28,38 +26,18 @@ public class TableItemDescriptionGeneratorUI extends AbstractTestUI {
         final Table table = createTable();
         table.setId("table");
         componentDescription = new CheckBox("Tooltip on components");
-        componentDescription.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setContainerDataSource(createContainer(componentDescription
-                        .getValue()));
-            }
-        });
-        componentDescription.setImmediate(true);
+        componentDescription
+                .addValueChangeListener(event -> table.setContainerDataSource(
+                        createContainer(componentDescription.getValue())));
         componentDescription.setValue(true);
         tableCellItemDescription = new CheckBox("Tooltip on table cells");
         tableCellItemDescription
-                .addValueChangeListener(new ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.refreshRowCache();
-                    }
-                });
-        tableCellItemDescription.setImmediate(true);
+                .addValueChangeListener(event -> table.refreshRowCache());
         tableCellItemDescription.setValue(true);
 
         tableRowItemDescription = new CheckBox("Tooltip on table Rows");
         tableRowItemDescription
-                .addValueChangeListener(new ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.refreshRowCache();
-                    }
-                });
-        tableRowItemDescription.setImmediate(true);
+                .addValueChangeListener(event -> table.refreshRowCache());
         tableRowItemDescription.setValue(true);
 
         addComponent(componentDescription);

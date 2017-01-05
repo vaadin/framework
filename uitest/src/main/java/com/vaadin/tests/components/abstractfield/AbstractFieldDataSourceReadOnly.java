@@ -1,17 +1,16 @@
 package com.vaadin.tests.components.abstractfield;
 
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.ui.TextField;
 
 public class AbstractFieldDataSourceReadOnly extends TestBase {
 
     private static class StateHolder {
-        private ObjectProperty<String> textField = new ObjectProperty<String>(
-                "");
+        private ObjectProperty<String> textField = new ObjectProperty<>("");
 
         public ObjectProperty<String> getTextField() {
             return textField;

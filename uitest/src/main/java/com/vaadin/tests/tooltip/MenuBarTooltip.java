@@ -1,10 +1,10 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.MenuBar;
 
-public class MenuBarTooltip extends AbstractTestUI {
+public class MenuBarTooltip extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -13,10 +13,12 @@ public class MenuBarTooltip extends AbstractTestUI {
         MenuBar.MenuItem menuitem = menubar.addItem("Menu item", null, null);
         menuitem.setDescription("Menu item description");
 
-        MenuBar.MenuItem submenuitem1 = menuitem.addItem("Submenu item 1", null, null);
+        MenuBar.MenuItem submenuitem1 = menuitem.addItem("Submenu item 1", null,
+                null);
         submenuitem1.setDescription("Submenu item 1 description");
 
-        MenuBar.MenuItem submenuitem2 = menuitem.addItem("Submenu item 2", null, null);
+        MenuBar.MenuItem submenuitem2 = menuitem.addItem("Submenu item 2", null,
+                null);
         submenuitem2.setDescription("Submenu item 2 description");
 
         addComponent(menubar);

@@ -40,40 +40,6 @@
         </security-role-ref>
     </portlet>
 
-    <portlet>
-        <portlet-name>Vaadin Liferay Theme Portlet</portlet-name>
-        <display-name>Vaadin Liferay Theme</display-name>
-
-        <portlet-class>com.vaadin.server.LegacyVaadinPortlet</portlet-class>
-        <init-param>
-            <name>application</name>
-            <value>com.vaadin.tests.integration.LiferayThemeDemo</value>
-        </init-param>
-
-        <supports>
-            <mime-type>text/html</mime-type>
-            <portlet-mode>view</portlet-mode>
-        </supports>
-
-        <portlet-info>
-            <title>Vaadin Liferay Theme</title>
-            <short-title>Vaadin Liferay Theme</short-title>
-        </portlet-info>
-
-        <security-role-ref>
-            <role-name>administrator</role-name>
-        </security-role-ref>
-        <security-role-ref>
-            <role-name>guest</role-name>
-        </security-role-ref>
-        <security-role-ref>
-            <role-name>power-user</role-name>
-        </security-role-ref>
-        <security-role-ref>
-            <role-name>user</role-name>
-        </security-role-ref>
-    </portlet>
-
     <!-- This can be used to work around an issue in liferay 5.0-5.1.1 <container-runtime-option> 
         <name>javax.portlet.escapeXml</name> <value>false</value> </container-runtime-option> -->
 </portlet-app>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,6 +48,7 @@ import com.vaadin.client.communication.JSONSerializer;
 import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.metadata.TypeDataStore.MethodAttribute;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.UnknownExtensionConnector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -57,19 +58,21 @@ import elemental.json.JsonValue;
 public class ConnectorBundle {
     private static final String FAIL_IF_NOT_SERIALIZABLE = "vFailIfNotSerializable";
 
+    static final String OLD_RENDERER_CONNECTOR_NAME = "com.vaadin.v7.client.connectors.AbstractRendererConnector";
+
     public static final Comparator<JClassType> jClassComparator = new Comparator<JClassType>() {
         @Override
         public int compare(JClassType o1, JClassType o2) {
-            return o1.getQualifiedSourceName().compareTo(
-                    o2.getQualifiedSourceName());
+            return o1.getQualifiedSourceName()
+                    .compareTo(o2.getQualifiedSourceName());
         }
     };
 
     public static final Comparator<JMethod> jMethodComparator = new Comparator<JMethod>() {
         @Override
         public int compare(JMethod o1, JMethod o2) {
-            return o1.getReadableDeclaration().compareTo(
-                    o2.getReadableDeclaration());
+            return o1.getReadableDeclaration()
+                    .compareTo(o2.getReadableDeclaration());
         }
     };
 
@@ -78,10 +81,10 @@ public class ConnectorBundle {
     private final Collection<TypeVisitor> visitors;
     private final Map<JType, JClassType> customSerializers;
 
-    private final Set<JType> hasSerializeSupport = new HashSet<JType>();
-    private final Set<JType> needsSerializeSupport = new HashSet<JType>();
+    private final Set<JType> hasSerializeSupport = new HashSet<>();
+    private final Set<JType> needsSerializeSupport = new HashSet<>();
 
-    private final Map<JType, GeneratedSerializer> serializers = new TreeMap<JType, GeneratedSerializer>(
+    private final Map<JType, GeneratedSerializer> serializers = new TreeMap<>(
             new Comparator<JType>() {
                 @Override
                 public int compare(JType o1, JType o2) {
@@ -89,32 +92,32 @@ public class ConnectorBundle {
                 }
             });
 
-    private final Map<JClassType, Map<JMethod, Set<MethodAttribute>>> methodAttributes = new TreeMap<JClassType, Map<JMethod, Set<MethodAttribute>>>(
+    private final Map<JClassType, Map<JMethod, Set<MethodAttribute>>> methodAttributes = new TreeMap<>(
             jClassComparator);
-    private final Set<JClassType> needsSuperClass = new TreeSet<JClassType>(
+    private final Set<JClassType> needsSuperClass = new TreeSet<>(
             jClassComparator);
-    private final Set<JClassType> needsGwtConstructor = new TreeSet<JClassType>(
+    private final Set<JClassType> needsGwtConstructor = new TreeSet<>(
             jClassComparator);
-    private final Set<JClassType> visitedTypes = new HashSet<JClassType>();
+    private final Set<JClassType> visitedTypes = new HashSet<>();
 
-    private final Set<JClassType> needsProxySupport = new TreeSet<JClassType>(
-            jClassComparator);
-
-    private final Map<JClassType, JType> presentationTypes = new TreeMap<JClassType, JType>(
-            jClassComparator);
-    private final Map<JClassType, Set<String>> identifiers = new TreeMap<JClassType, Set<String>>(
-            jClassComparator);
-    private final Map<JClassType, Set<JMethod>> needsReturnType = new TreeMap<JClassType, Set<JMethod>>(
-            jClassComparator);
-    private final Map<JClassType, Set<JMethod>> needsInvoker = new TreeMap<JClassType, Set<JMethod>>(
-            jClassComparator);
-    private final Map<JClassType, Set<JMethod>> needsParamTypes = new TreeMap<JClassType, Set<JMethod>>(
-            jClassComparator);
-    private final Map<JClassType, Set<JMethod>> needsOnStateChange = new TreeMap<JClassType, Set<JMethod>>(
+    private final Set<JClassType> needsProxySupport = new TreeSet<>(
             jClassComparator);
 
-    private final Set<Property> needsProperty = new TreeSet<Property>();
-    private final Map<JClassType, Set<Property>> needsDelegateToWidget = new TreeMap<JClassType, Set<Property>>(
+    private final Map<JClassType, JType> presentationTypes = new TreeMap<>(
+            jClassComparator);
+    private final Map<JClassType, Set<String>> identifiers = new TreeMap<>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsReturnType = new TreeMap<>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsInvoker = new TreeMap<>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsParamTypes = new TreeMap<>(
+            jClassComparator);
+    private final Map<JClassType, Set<JMethod>> needsOnStateChange = new TreeMap<>(
+            jClassComparator);
+
+    private final Set<Property> needsProperty = new TreeSet<>();
+    private final Map<JClassType, Set<Property>> needsDelegateToWidget = new TreeMap<>(
             jClassComparator);
 
     private ConnectorBundle(String name, ConnectorBundle previousBundle,
@@ -138,12 +141,13 @@ public class ConnectorBundle {
 
     private static Map<JType, JClassType> findCustomSerializers(
             TypeOracle oracle) throws NotFoundException {
-        Map<JType, JClassType> serializers = new HashMap<JType, JClassType>();
+        Map<JType, JClassType> serializers = new HashMap<>();
 
-        JClassType serializerInterface = oracle.findType(JSONSerializer.class
-                .getName());
+        JClassType serializerInterface = oracle
+                .findType(JSONSerializer.class.getName());
         JType[] deserializeParamTypes = new JType[] {
-                oracle.findType(com.vaadin.client.metadata.Type.class.getName()),
+                oracle.findType(
+                        com.vaadin.client.metadata.Type.class.getName()),
                 oracle.findType(JsonValue.class.getName()),
                 oracle.findType(ApplicationConnection.class.getName()) };
         String deserializeMethodName = "deserialize";
@@ -152,8 +156,8 @@ public class ConnectorBundle {
                 deserializeParamTypes);
 
         for (JClassType serializer : serializerInterface.getSubtypes()) {
-            JMethod deserializeMethod = serializer.findMethod(
-                    deserializeMethodName, deserializeParamTypes);
+            JMethod deserializeMethod = serializer
+                    .findMethod(deserializeMethodName, deserializeParamTypes);
             if (deserializeMethod == null) {
                 continue;
             }
@@ -309,21 +313,18 @@ public class ConnectorBundle {
 
     private void checkSerializable(TreeLogger logger, JClassType type)
             throws UnableToCompleteException {
-        JClassType javaSerializable = type.getOracle().findType(
-                Serializable.class.getName());
+        JClassType javaSerializable = type.getOracle()
+                .findType(Serializable.class.getName());
         boolean serializable = type.isAssignableTo(javaSerializable);
         if (!serializable) {
-            boolean abortCompile = "true".equals(System
-                    .getProperty(FAIL_IF_NOT_SERIALIZABLE));
-            logger.log(
-                    abortCompile ? Type.ERROR : Type.WARN,
-                    type
-                            + " is used in RPC or shared state but does not implement "
-                            + Serializable.class.getName()
-                            + ". Communication will work but the Application on server side cannot be serialized if it refers to objects of this type. "
-                            + "If the system property "
-                            + FAIL_IF_NOT_SERIALIZABLE
-                            + " is set to \"true\", this causes the compilation to fail instead of just emitting a warning.");
+            boolean abortCompile = "true"
+                    .equals(System.getProperty(FAIL_IF_NOT_SERIALIZABLE));
+            logger.log(abortCompile ? Type.ERROR : Type.WARN, type
+                    + " is used in RPC or shared state but does not implement "
+                    + Serializable.class.getName()
+                    + ". Communication will work but the Application on server side cannot be serialized if it refers to objects of this type. "
+                    + "If the system property " + FAIL_IF_NOT_SERIALIZABLE
+                    + " is set to \"true\", this causes the compilation to fail instead of just emitting a warning.");
             if (abortCompile) {
                 throw new UnableToCompleteException();
             }
@@ -406,7 +407,7 @@ public class ConnectorBundle {
     }
 
     public Collection<Property> getProperties(JClassType type) {
-        Set<Property> properties = new TreeSet<Property>();
+        Set<Property> properties = new TreeSet<>();
 
         properties.addAll(MethodProperty.findProperties(type));
         properties.addAll(FieldProperty.findProperties(type));
@@ -469,7 +470,9 @@ public class ConnectorBundle {
     private static boolean isConnected(JClassType type) {
         return type.isAnnotationPresent(Connect.class)
                 || type.getQualifiedSourceName().equals(
-                        UnknownComponentConnector.class.getCanonicalName());
+                        UnknownComponentConnector.class.getCanonicalName())
+                || type.getQualifiedSourceName().equals(
+                        UnknownExtensionConnector.class.getCanonicalName());
     }
 
     public static boolean isConnectedComponentConnector(JClassType type) {
@@ -477,8 +480,7 @@ public class ConnectorBundle {
     }
 
     public static boolean isConnectedRendererConnector(JClassType type) {
-        return isConnected(type)
-                && isType(type, AbstractRendererConnector.class);
+        return isConnected(type) && isRendererType(type);
     }
 
     private static boolean isInterfaceType(JClassType type, Class<?> class1) {
@@ -494,6 +496,22 @@ public class ConnectorBundle {
         }
     }
 
+    private static boolean isRendererType(JClassType type) {
+        TypeOracle oracle = type.getOracle();
+        boolean isNew = false, isOld = false;
+        try {
+            isNew = oracle.getType(AbstractRendererConnector.class.getName())
+                    .isAssignableFrom(type);
+        } catch (NotFoundException e) {
+        }
+        try {
+            isOld = oracle.getType(OLD_RENDERER_CONNECTOR_NAME)
+                    .isAssignableFrom(type);
+        } catch (NotFoundException e) {
+        }
+        return isNew || isOld;
+    }
+
     public void setNeedsInvoker(JClassType type, JMethod method) {
         if (!isNeedsInvoker(type, method)) {
             addMapping(needsInvoker, type, method);
@@ -503,16 +521,17 @@ public class ConnectorBundle {
     private <K> void addMapping(Map<K, Set<String>> map, K key, String value) {
         Set<String> set = map.get(key);
         if (set == null) {
-            set = new TreeSet<String>();
+            set = new TreeSet<>();
             map.put(key, set);
         }
         set.add(value);
     }
 
-    private <K> void addMapping(Map<K, Set<JMethod>> map, K key, JMethod value) {
+    private <K> void addMapping(Map<K, Set<JMethod>> map, K key,
+            JMethod value) {
         Set<JMethod> set = map.get(key);
         if (set == null) {
-            set = new TreeSet<JMethod>(jMethodComparator);
+            set = new TreeSet<>(jMethodComparator);
             map.put(key, set);
         }
         set.add(value);
@@ -579,22 +598,20 @@ public class ConnectorBundle {
             Map<JMethod, Set<MethodAttribute>> typeData = methodAttributes
                     .get(type);
             if (typeData == null) {
-                typeData = new TreeMap<JMethod, Set<MethodAttribute>>(
-                        jMethodComparator);
+                typeData = new TreeMap<>(jMethodComparator);
                 methodAttributes.put(type, typeData);
             }
 
             Map<JMethod, Set<MethodAttribute>> methods = methodAttributes
                     .get(type);
             if (methods == null) {
-                methods = new TreeMap<JMethod, Set<MethodAttribute>>(
-                        jMethodComparator);
+                methods = new TreeMap<>(jMethodComparator);
                 methodAttributes.put(type, methods);
             }
 
             Set<MethodAttribute> attributes = methods.get(method);
             if (attributes == null) {
-                attributes = new TreeSet<MethodAttribute>();
+                attributes = new TreeSet<>();
                 methods.put(method, attributes);
             }
 
@@ -609,9 +626,8 @@ public class ConnectorBundle {
         if (typeData != null && hasMapping(typeData, method, methodAttribute)) {
             return true;
         } else {
-            return previousBundle != null
-                    && previousBundle.hasMethodAttribute(type, method,
-                            methodAttribute);
+            return previousBundle != null && previousBundle
+                    .hasMethodAttribute(type, method, methodAttribute);
         }
     }
 
@@ -625,7 +641,7 @@ public class ConnectorBundle {
         }
     }
 
-    private static Set<Class<?>> frameworkHandledTypes = new LinkedHashSet<Class<?>>();
+    private static Set<Class<?>> frameworkHandledTypes = new LinkedHashSet<>();
     {
         frameworkHandledTypes.add(String.class);
         frameworkHandledTypes.add(Boolean.class);
@@ -672,7 +688,7 @@ public class ConnectorBundle {
 
     public void setNeedsDelegateToWidget(Property property, JClassType type) {
         if (!isNeedsDelegateToWidget(type)) {
-            TreeSet<Property> set = new TreeSet<Property>();
+            TreeSet<Property> set = new TreeSet<>();
             set.add(property);
             needsDelegateToWidget.put(type, set);
         } else if (!needsDelegateToWidget.get(type).contains(property)) {
@@ -699,7 +715,8 @@ public class ConnectorBundle {
         }
     }
 
-    private boolean isNeedsOnStateChangeHandler(JClassType type, JMethod method) {
+    private boolean isNeedsOnStateChangeHandler(JClassType type,
+            JMethod method) {
         if (hasMapping(needsOnStateChange, type, method)) {
             return true;
         } else {

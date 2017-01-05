@@ -11,8 +11,8 @@ public class PopupViewInEmbeddedApplication extends TestBase {
 
     @Override
     protected void setup() {
-        PopupView pop = new PopupView("Click me!", new Label(
-                "I popped up, woohoo!"));
+        PopupView pop = new PopupView("Click me!",
+                new Label("I popped up, woohoo!"));
         addComponent(pop);
     }
 

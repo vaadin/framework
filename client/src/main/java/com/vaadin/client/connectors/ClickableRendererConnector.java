@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,41 +15,43 @@
  */
 package com.vaadin.client.connectors;
 
-import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.renderers.ClickableRenderer;
+import com.vaadin.client.connectors.grid.AbstractGridRendererConnector;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickEvent;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
+import com.vaadin.shared.ui.grid.renderers.ClickableRendererState;
 import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 
 import elemental.json.JsonObject;
 
 /**
  * An abstract base class for {@link ClickableRenderer} connectors.
- * 
+ *
  * @param <T>
  *            the presentation type of the renderer
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public abstract class ClickableRendererConnector<T> extends
-        AbstractRendererConnector<T> {
+public abstract class ClickableRendererConnector<T>
+        extends AbstractGridRendererConnector<T> {
 
-    HandlerRegistration clickRegistration;
+    private HandlerRegistration clickRegistration;
 
     @Override
     protected void init() {
-        clickRegistration = addClickHandler(new RendererClickHandler<JsonObject>() {
-            @Override
-            public void onClick(RendererClickEvent<JsonObject> event) {
-                getRpcProxy(RendererClickRpc.class).click(
-                        getRowKey(event.getCell().getRow()),
-                        getColumnId(event.getCell().getColumn()),
-                        MouseEventDetailsBuilder.buildMouseEventDetails(event
-                                .getNativeEvent()));
-            }
-        });
+        clickRegistration = addClickHandler(
+                new RendererClickHandler<JsonObject>() {
+                    @Override
+                    public void onClick(RendererClickEvent<JsonObject> event) {
+                        getRpcProxy(RendererClickRpc.class).click(
+                                getRowKey(event.getCell().getRow()),
+                                getColumnId(event.getCell().getColumn()),
+                                MouseEventDetailsBuilder.buildMouseEventDetails(
+                                        event.getNativeEvent()));
+                    }
+                });
     }
 
     @Override
@@ -59,4 +61,9 @@ public abstract class ClickableRendererConnector<T> extends
 
     protected abstract HandlerRegistration addClickHandler(
             RendererClickHandler<JsonObject> handler);
+
+    @Override
+    public ClickableRendererState getState() {
+        return (ClickableRendererState) super.getState();
+    }
 }

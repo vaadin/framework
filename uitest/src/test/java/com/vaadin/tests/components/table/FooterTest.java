@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,16 +25,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests Table Footer
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -61,17 +60,11 @@ public class FooterTest extends MultiBrowserTest {
         CheckBoxElement checkBox = $(CheckBoxElement.class).first();
         checkBox.click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("no-footer");
-        }
+        compareScreen("no-footer");
 
         checkBox.click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col2-col3-a");
-        }
+        compareScreen("footer-col1-col2-col3-a");
 
         table = $(TableElement.class).first();
 
@@ -88,20 +81,14 @@ public class FooterTest extends MultiBrowserTest {
         // hide col2
         findElements(By.className("gwt-MenuItem")).get(1).click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col3");
-        }
+        compareScreen("footer-col1-col3");
 
         // open table column selector menu
         table.findElement(By.className("v-table-column-selector")).click();
         // show col2
         findElements(By.className("gwt-MenuItem")).get(1).click();
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col2-col3-b");
-        }
+        compareScreen("footer-col1-col2-col3-b");
 
         TextFieldElement tf = $(TextFieldElement.class).first();
         tf.clear();
@@ -167,10 +154,7 @@ public class FooterTest extends MultiBrowserTest {
         footer1 = table.getFooterCell(0);
         assertEquals("Footer1", footer1.getText());
 
-        if (!BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // excluded IE8 since its screenshots varies from run-to-run
-            compareScreen("footer-col1-col2-col3-c");
-        }
+        compareScreen("footer-col1-col2-col3-c");
     }
 
     private void waitUntiltextFieldIsChangedTo(final TextFieldElement tf,
@@ -204,8 +188,8 @@ public class FooterTest extends MultiBrowserTest {
             @Override
             public String toString() {
                 // Timed out after 10 seconds waiting for ...
-                return String.format("footer cell %s's text was'%s'",
-                        "" + cell, footerCell.getText());
+                return String.format("footer cell %s's text was'%s'", "" + cell,
+                        footerCell.getText());
             }
         });
     }

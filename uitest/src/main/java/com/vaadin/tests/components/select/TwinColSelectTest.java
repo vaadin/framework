@@ -2,7 +2,7 @@ package com.vaadin.tests.components.select;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.TwinColSelect;
 
 public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
 
@@ -10,13 +10,6 @@ public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
         @Override
         public void execute(TwinColSelect c, Integer value, Object data) {
             c.setRows(value);
-        }
-    };
-
-    private Command<TwinColSelect, Integer> colsCommand = new Command<TwinColSelect, Integer>() {
-        @Override
-        public void execute(TwinColSelect c, Integer value, Object data) {
-            c.setColumns(value);
         }
     };
 
@@ -45,18 +38,12 @@ public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
     protected void createActions() {
         super.createActions();
         createRowsAction(CATEGORY_FEATURES);
-        createColsAction(CATEGORY_FEATURES);
         createCaptionActions(CATEGORY_FEATURES);
     }
 
     private void createRowsAction(String category) {
         LinkedHashMap<String, Integer> options = createIntegerOptions(20);
         createSelectAction("Rows", category, options, "0", rowsCommand);
-    }
-
-    private void createColsAction(String category) {
-        LinkedHashMap<String, Integer> options = createIntegerOptions(20);
-        createSelectAction("Columns", category, options, "0", colsCommand);
     }
 
     private void createCaptionActions(String category) {

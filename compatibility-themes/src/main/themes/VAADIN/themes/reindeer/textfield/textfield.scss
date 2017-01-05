@@ -1,0 +1,120 @@
+@mixin reindeer-textfield($primaryStyleName : v-textfield) {
+
+/* Textfield on blue background */
+.blue .#{$primaryStyleName},
+.blue .v-textarea {
+	border-color: #92a2aa;
+	border-top-color: #7c8a90;
+	border-bottom-color: #a1b3bc;
+}
+/* Default & white background */
+.#{$primaryStyleName},
+.v-textarea,
+.white .#{$primaryStyleName},
+.white .v-textarea {
+	border: 1px solid #bcbdbe;
+	border-top-color: #a2a3a4;
+	border-bottom-color: #d2d3d4;
+	background: #fff;
+	background-repeat: repeat-x;
+	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	margin: 0;
+	height: 23px;
+	line-height: normal;
+}
+.v-textarea,
+.white .v-textarea {
+	background-image: none;
+	height: auto;
+}
+/* Need more specific selector because of #2384 fixes in base/common/common.css */
+&.v-app input.#{$primaryStyleName},
+.v-window input.#{$primaryStyleName},
+&.v-app textarea.v-textarea,
+.v-window textarea.v-textarea  {
+	padding: 3px 3px 4px;
+}
+&.v-app input.#{$primaryStyleName}.v-widget,
+.v-window input.#{$primaryStyleName}.v-widget {
+	height: 24px;
+}
+&.v-app .#{$primaryStyleName}-focus,
+.v-window .#{$primaryStyleName}-focus,
+.v-popupview-popup .#{$primaryStyleName}-focus,
+&.v-app .v-textarea-focus,
+.v-window .v-textarea-focus,
+.v-popupview-popup .v-textarea-focus {
+	border-color: #5b97d0;
+	border-top-color: #4f83b4;
+	border-bottom-color: #5ca0df;
+	outline: none;
+	background-color: #fff;
+}
+input.#{$primaryStyleName}-prompt,
+textarea.v-textarea-prompt {
+	font-style: normal;
+	color: #999;
+}
+/* Small style textfield */
+&.v-app input.#{$primaryStyleName}-small {
+	font-size: 11px;
+	line-height: normal;
+	height: auto;
+	padding: 2px;
+}
+&.v-app textarea.v-textarea-small {
+	font-size: 11px;
+}
+&.v-app .v-table  input.#{$primaryStyleName}.v-widget,
+.v-window .v-table input.#{$primaryStyleName}.v-widget {
+	padding: 1px 2px;
+	height: auto;
+	line-height: normal;
+}
+.v-table-cell-wrapper > input.#{$primaryStyleName} {
+	margin-top: -2px;
+	margin-bottom: -2px;
+}
+/* Textfield on black background */
+.black .#{$primaryStyleName},
+.black .v-textarea {
+	border-color: #38393a;
+	border-top-color: #2c2d2e;
+	border-bottom-color: #3e3f3f;
+	background: #151717;
+	background-image: url(img/bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 22px */
+	color: #c9ccce;
+	text-shadow: #000 0 0 1px;
+}
+.black .v-textarea {
+	background-image: none;
+}
+&.v-app .black .#{$primaryStyleName}-focus,
+.v-window-black .#{$primaryStyleName}-focus,
+.v-window .black .#{$primaryStyleName}-focus,
+.v-popupview-popup .black .#{$primaryStyleName}-focus,
+&.v-app .black .v-textarea-focus,
+.v-window-black .v-textarea-focus,
+.v-window .black .v-textarea-focus,
+.v-popupview-popup .black .v-textarea-focus {
+	border-color: #4b7192;
+	border-top-color: #3b5a75;
+	border-bottom-color: #507596;
+	background-color: #151717;
+}
+.black input.#{$primaryStyleName}-prompt {
+	color: #5f6366;
+}
+/* Readonly */
+input.#{$primaryStyleName}-readonly,
+.black input.#{$primaryStyleName}-readonly,
+textarea.v-textarea-readonly,
+.black textarea.v-textarea-readonly {
+	border: none;
+	background: transparent;
+}
+
+}

@@ -70,13 +70,13 @@ public class DisableEnableCascade extends TestBase {
         if (target.isEnabled()) {
             target.setEnabled(false);
             button.setCaption(button.getCaption().replace("Disable", "Enable"));
-            target.setCaption(target.getCaption()
-                    .replace("enabled", "disabled"));
+            target.setCaption(
+                    target.getCaption().replace("enabled", "disabled"));
         } else {
             target.setEnabled(true);
             button.setCaption(button.getCaption().replace("Enable", "Disable"));
-            target.setCaption(target.getCaption()
-                    .replace("disabled", "enabled"));
+            target.setCaption(
+                    target.getCaption().replace("disabled", "enabled"));
         }
     }
 

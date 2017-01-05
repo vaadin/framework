@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -32,15 +32,15 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 /**
  *
  * Base class for Layout tests.
  */
-public abstract class BaseLayoutTestUI extends AbstractTestUI {
+public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
     protected static final String FOLDER_16_PNG = "../icons/runo/16/folder.png";
     protected static final String CALENDAR_32_PNG = "../runo/icons/16/calendar.png";
     protected static final String LOCK_16_PNG = "../runo/icons/16/lock.png";
@@ -74,6 +74,10 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
         try {
             l1 = (AbstractOrderedLayout) layoutClass.newInstance();
             l2 = (AbstractOrderedLayout) layoutClass.newInstance();
+            l1.setMargin(false);
+            l1.setSpacing(false);
+            l2.setMargin(false);
+            l2.setSpacing(false);
         } catch (InstantiationException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -141,14 +145,17 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
         Button btn3 = new SetSizeButton("75%");
         Button btn4 = new SetSizeButton("100%");
 
+        Label spacer = new Label(
+                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
+                ContentMode.HTML);
+        spacer.setWidth("100%");
+
         l1.addComponent(btn1);
         l1.addComponent(btn2);
         l1.addComponent(btn3);
         l1.addComponent(btn4);
         l2.addComponent(c1);
-        l2.addComponent(new Label(
-                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
-                ContentMode.HTML));
+        l2.addComponent(spacer);
         l2.addComponent(c2);
         l2.setExpandRatio(c1, 0.5f);
         l2.setExpandRatio(c2, 0.5f);
@@ -177,10 +184,16 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
     protected AbstractLayout createLabelsFields(
             Class<? extends AbstractComponent> compType, boolean useIcon,
             String ErrorMessage) {
-        AbstractLayout mainLayout = new VerticalLayout();
+        AbstractOrderedLayout mainLayout = new VerticalLayout();
+        mainLayout.setSpacing(false);
+        mainLayout.setMargin(false);
         AbstractLayout curLayout = null;
         try {
             curLayout = layoutClass.newInstance();
+            if (curLayout instanceof AbstractOrderedLayout) {
+                ((AbstractOrderedLayout) curLayout).setMargin(false);
+                ((AbstractOrderedLayout) curLayout).setSpacing(false);
+            }
         } catch (InstantiationException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -229,12 +242,14 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
     @Override
     protected void setup(VaadinRequest request) {
+        mainLayout.setMargin(false);
+        mainLayout.setSpacing(false);
         mainLayout.addComponent(l1);
         mainLayout.addComponent(l2);
         addComponent(mainLayout);
@@ -242,7 +257,7 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -276,7 +291,7 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

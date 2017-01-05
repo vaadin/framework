@@ -7,7 +7,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Runo;
+import com.vaadin.v7.ui.themes.Runo;
 
 @Theme("runo")
 public class ExtraScrollbarsInTabSheet extends UI {

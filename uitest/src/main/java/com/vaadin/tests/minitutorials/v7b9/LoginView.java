@@ -8,10 +8,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
 
 public class LoginView extends Panel implements View {
 
@@ -33,8 +33,8 @@ public class LoginView extends Panel implements View {
                 Notification.show("Ok, let's pretend you're " + email);
 
                 // indicate the user is logged in
-                ((NavigationtestUI) UI.getCurrent()).setLoggedInUser(email
-                        .getValue());
+                ((NavigationtestUI) UI.getCurrent())
+                        .setLoggedInUser(email.getValue());
 
                 // navigate back to the intended place
                 navigator.navigateTo(fragmentAndParameters);

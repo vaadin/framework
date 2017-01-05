@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,15 +15,13 @@
  */
 
 /**
- * 
+ *
  */
 package com.vaadin.tests.push;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
@@ -33,14 +31,16 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PushConfiguration;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextField;
 
 /**
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
@@ -69,7 +69,7 @@ public class PushConfigurator extends VerticalLayout {
     private void refreshStatus() {
         PushConfiguration pc = ui.getPushConfiguration();
         String value = "";
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         names.addAll(pc.getParameterNames());
         Collections.sort(names);
         for (String param : names) {
@@ -113,8 +113,8 @@ public class PushConfigurator extends VerticalLayout {
         pushMode.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                ui.getPushConfiguration().setPushMode(
-                        (PushMode) pushMode.getValue());
+                ui.getPushConfiguration()
+                        .setPushMode((PushMode) pushMode.getValue());
                 refreshStatus();
             }
         });

@@ -237,7 +237,8 @@ $valo-menu-background-color: scale-color($v-app-background-color, $lightness: if
         @include transition(all 300ms);
       }
 
-      .valo-menu-visible .valo-menuitems {
+      .valo-menu-visible .valo-menuitems,
+      .valo-menu-hover:hover .valo-menuitems {
         @include transform(translatex(0%));
       }
     }

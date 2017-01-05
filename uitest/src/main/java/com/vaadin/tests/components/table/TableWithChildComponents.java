@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -8,10 +7,12 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
 
-public class TableWithChildComponents extends TestBase implements ClickListener {
+public class TableWithChildComponents extends TestBase
+        implements ClickListener {
 
     private static final String COL2 = "Column 2 - generated";
     private static final String COL1 = "Column 1 - components";
@@ -30,16 +31,15 @@ public class TableWithChildComponents extends TestBase implements ClickListener 
             @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
-                return new Button(
-                        "Item id: " + itemId + " column: " + columnId,
+                return new Button("Item id: " + itemId + " column: " + columnId,
                         TableWithChildComponents.this);
             }
         });
 
         for (int i = 0; i < 100; i++) {
             Item item = table.addItem("Row " + i);
-            item.getItemProperty(COL1).setValue(
-                    new NativeButton("Row " + i + " native", this));
+            item.getItemProperty(COL1)
+                    .setValue(new NativeButton("Row " + i + " native", this));
         }
 
         addComponent(table);

@@ -51,11 +51,9 @@ public class DragAndDropFiles extends TestBase {
                         Html5File file = files[i];
                         // Max 1 MB files are uploaded
                         if (file.getFileSize() > 1024 * 1024) {
-                            getMainWindow()
-                                    .showNotification(
-                                            "File "
-                                                    + file.getFileName()
-                                                    + " was too large, not transferred to the server side.");
+                            getMainWindow().showNotification("File "
+                                    + file.getFileName()
+                                    + " was too large, not transferred to the server side.");
                             continue;
                         }
 
@@ -72,32 +70,33 @@ public class DragAndDropFiles extends TestBase {
                             }
 
                             @Override
-                            public void onProgress(StreamingProgressEvent event) {
-                                System.err.println("Progress"
-                                        + event.getBytesReceived());
+                            public void onProgress(
+                                    StreamingProgressEvent event) {
+                                System.err.println(
+                                        "Progress" + event.getBytesReceived());
                             }
 
                             @Override
                             public void streamingStarted(
                                     StreamingStartEvent event) {
-                                getMainWindow().showNotification(
-                                        "Started uploading "
+                                getMainWindow()
+                                        .showNotification("Started uploading "
                                                 + event.getFileName());
                             }
 
                             @Override
                             public void streamingFinished(
                                     StreamingEndEvent event) {
-                                getMainWindow().showNotification(
-                                        "Finished uploading "
+                                getMainWindow()
+                                        .showNotification("Finished uploading "
                                                 + event.getFileName());
                             }
 
                             @Override
                             public void streamingFailed(
                                     StreamingErrorEvent event) {
-                                getMainWindow().showNotification(
-                                        "Failed uploading "
+                                getMainWindow()
+                                        .showNotification("Failed uploading "
                                                 + event.getFileName());
                             }
 

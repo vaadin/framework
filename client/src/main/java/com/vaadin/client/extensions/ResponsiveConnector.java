@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,8 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -29,19 +27,20 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.extension.responsive.ResponsiveState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
  * The client side connector for the Responsive extension.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.2
  */
 @SuppressWarnings("GwtInconsistentSerializableClass")
 @Connect(Responsive.class)
-public class ResponsiveConnector extends AbstractExtensionConnector implements
-        ElementResizeListener {
+public class ResponsiveConnector extends AbstractExtensionConnector
+        implements ElementResizeListener {
 
     /**
      * The target component which we will monitor for width changes
@@ -99,7 +98,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
     /**
      * Construct the list of selectors that should be matched against in the
      * range selectors
-     * 
+     *
      * @return The selectors in a comma delimited string.
      */
     protected String constructSelectorsForTarget() {
@@ -192,7 +191,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
      * Process an individual stylesheet object. Any @import statements are
      * handled recursively. Regular rule declarations are searched for
      * 'width-range' and 'height-range' attribute selectors.
-     * 
+     *
      * @param sheet
      */
     private static native void searchStylesheetForBreakPoints(
@@ -206,7 +205,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         // Get all the rulesets from the stylesheet
         var theRules = new Array();
         var IEOrEdge = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE()() || @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isEdge()();
-        var IE8 = @com.vaadin.client.BrowserInfo::get()().@com.vaadin.client.BrowserInfo::isIE8()();
 
         try {
             if (sheet.cssRules) {
@@ -219,18 +217,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
             @ResponsiveConnector::warning(*)("Can't process styles from " + sheet.href +
                 ", probably because of cross domain issues: " + e);
             return;
-        }
-
-        // Special import handling for IE8
-        if (IE8) {
-            try {
-                for(var i = 0, len = sheet.imports.length; i < len; i++) {
-                    @com.vaadin.client.extensions.ResponsiveConnector::searchStylesheetForBreakPoints(Lcom/google/gwt/core/client/JavaScriptObject;)(sheet.imports[i]);
-                }
-            } catch(e) {
-                // This is added due to IE8 failing to handle imports of some sheets for unknown reason (throws a permission denied exception)
-                @com.vaadin.client.extensions.ResponsiveConnector::error(Ljava/lang/String;)("Failed to handle imports of CSS style sheet: " + sheet.href);
-            }
         }
 
         // Loop through the rulesets
@@ -268,7 +254,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
                 // Loop all the selectors in this ruleset
                 for(var k = 0, len2 = haystack.length; k < len2; k++) {
-                    
+
                     // Split the haystack into parts.
                     var widthRange = haystack[k].match(/\[width-range.*?\]/);
                     var heightRange = haystack[k].match(/\[height-range.*?\]/);
@@ -276,13 +262,13 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
                     if (selector != null) {
                         selector = selector[1];
-                        
+
                         // Check for width-ranges.
                         if (widthRange != null) {
                             var minMax = widthRange[0].match(/\[width-range~?=["|'](.*?)-(.*?)["|']\]/i);
                             var min = minMax[1];
                             var max = minMax[2];
-                            
+
                             pushToCache(widthRanges, selector, min, max);
                         }
 
@@ -291,7 +277,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
                             var minMax = heightRange[0].match(/\[height-range~?=["|'](.*?)-(.*?)["|']\]/i);
                             var min = minMax[1];
                             var max = minMax[2];
-    
+
                             pushToCache(heightRanges, selector, min, max);
                         }
                     }
@@ -303,7 +289,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
     /**
      * Get all matching ranges from the cache for this particular instance.
-     * 
+     *
      * @param selectors
      */
     private native void getBreakPointsFor(final String selectors)
@@ -346,14 +332,17 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
         updateRanges();
     }
 
+    @Override
+    public ResponsiveState getState() {
+        return (ResponsiveState) super.getState();
+    }
+
     private void updateRanges() {
         LayoutManager layoutManager = LayoutManager.get(getConnection());
         com.google.gwt.user.client.Element element = target.getWidget()
                 .getElement();
         int width = layoutManager.getOuterWidth(element);
         int height = layoutManager.getOuterHeight(element);
-
-        boolean forceRedraw = false;
 
         String oldWidthRanges = currentWidthRanges;
         String oldHeightRanges = currentHeightRanges;
@@ -363,7 +352,6 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
         if (!"".equals(currentWidthRanges)) {
             element.setAttribute("width-range", currentWidthRanges);
-            forceRedraw = true;
         } else {
             element.removeAttribute("width-range");
         }
@@ -373,36 +361,16 @@ public class ResponsiveConnector extends AbstractExtensionConnector implements
 
         if (!"".equals(currentHeightRanges)) {
             element.setAttribute("height-range", currentHeightRanges);
-            forceRedraw = true;
         } else {
             element.removeAttribute("height-range");
-        }
-
-        if (forceRedraw) {
-            forceRedrawIfIE8(element);
         }
 
         // If a new breakpoint is triggered, ensure all sizes are updated in
         // case some new styles are applied
         if (!currentWidthRanges.equals(oldWidthRanges)
                 || !currentHeightRanges.equals(oldHeightRanges)) {
-            layoutManager
-                    .setNeedsMeasureRecursively(ResponsiveConnector.this.target);
-        }
-    }
-
-    /**
-     * Forces IE8 to reinterpret CSS rules.
-     * {@link com.vaadin.client.WidgetUtil#forceIE8Redraw(com.google.gwt.dom.client.Element)}
-     * doesn't work in this case.
-     * 
-     * @param element
-     *            the element to redraw
-     */
-    private void forceRedrawIfIE8(Element element) {
-        if (BrowserInfo.get().isIE8()) {
-            element.addClassName("foo");
-            element.removeClassName("foo");
+            layoutManager.setNeedsMeasureRecursively(
+                    ResponsiveConnector.this.target);
         }
     }
 

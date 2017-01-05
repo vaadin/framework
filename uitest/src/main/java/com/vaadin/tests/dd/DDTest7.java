@@ -4,9 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
@@ -14,10 +11,13 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Table;
 
 public class DDTest7 extends TestBase {
 
@@ -31,22 +31,18 @@ public class DDTest7 extends TestBase {
     protected void setup() {
         UI w = getLayout().getUI();
 
-        TestUtils
-                .injectCSS(
-                        w,
-                        ".v-table-row-drag-middle .v-table-cell-content {"
-                                + "        background-color: inherit ; border-bottom: 1px solid cyan;"
-                                + "}"
-                                + ".v-table-row-drag-middle .v-table-cell-wrapper {"
-                                + "        margin-bottom: -1px;"
-                                + "}"
-                                + ""
-                                // always show the drop hint below
-                                + ".v-table-row-drag-top .v-table-cell-content {"
-                                + "border-top: 0; margin-top:0;border-bottom:1px solid cyan;"
-                                + "        margin-bottom: -1px;" + "}" + ""
+        TestUtils.injectCSS(w,
+                ".v-table-row-drag-middle .v-table-cell-content {"
+                        + "        background-color: inherit ; border-bottom: 1px solid cyan;"
+                        + "}"
+                        + ".v-table-row-drag-middle .v-table-cell-wrapper {"
+                        + "        margin-bottom: -1px;" + "}" + ""
+                        // always show the drop hint below
+                        + ".v-table-row-drag-top .v-table-cell-content {"
+                        + "border-top: 0; margin-top:0;border-bottom:1px solid cyan;"
+                        + "        margin-bottom: -1px;" + "}" + ""
 
-                );
+        );
 
         // hl.addComponent(tree1);
         hl.addComponent(table);
@@ -81,7 +77,7 @@ public class DDTest7 extends TestBase {
                             .getItem(draggedItemId).getItemProperty("Weight")
                             .getValue();
 
-                    HashSet<Object> accepted = new HashSet<Object>();
+                    HashSet<Object> accepted = new HashSet<>();
                     for (Object itemId : visibleItemIds) {
                         Item item = table.getItem(itemId);
                         Integer w = (Integer) item.getItemProperty("Weight")
@@ -171,8 +167,8 @@ public class DDTest7 extends TestBase {
         for (int i = 0; i < 40; i++) {
             Item addItem = table.addItem("Item" + i);
             Person p = testData.getIdByIndex(i);
-            addItem.getItemProperty("Name").setValue(
-                    p.getFirstName() + " " + p.getLastName());
+            addItem.getItemProperty("Name")
+                    .setValue(p.getFirstName() + " " + p.getLastName());
             addItem.getItemProperty("Weight").setValue(50 + r.nextInt(60));
         }
 

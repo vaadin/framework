@@ -64,7 +64,7 @@ public class CheckBoxes extends ComponentTestCase<CheckBox> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for CheckBoxes in different configurations";
     }
 

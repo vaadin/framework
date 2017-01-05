@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,9 @@ import java.util.logging.Logger;
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JavaScriptConnectorState;
+import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
@@ -48,7 +50,7 @@ import elemental.json.JsonValue;
  * {@link com.vaadin.client.ApplicationConnection}.
  * <p>
  * TODO Document better!
- * 
+ *
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
@@ -56,22 +58,19 @@ import elemental.json.JsonValue;
 public class LegacyCommunicationManager implements Serializable {
 
     // TODO Refactor (#11410)
-    private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<Integer, ClientCache>();
+    private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<>();
 
     /**
      * The session this communication manager is used for
      */
     private final VaadinSession session;
 
-    // TODO Refactor (#11412)
-    private String requestThemeName;
-
     // TODO Refactor (#11413)
-    private Map<String, Class<?>> publishedFileContexts = new HashMap<String, Class<?>>();
+    private final Map<String, Class<?>> publishedFileContexts = new HashMap<>();
 
     /**
      * TODO New constructor - document me!
-     * 
+     *
      * @param session
      */
     public LegacyCommunicationManager(VaadinSession session) {
@@ -82,7 +81,7 @@ public class LegacyCommunicationManager implements Serializable {
         return session;
     }
 
-    private static final ConcurrentHashMap<Class<? extends SharedState>, JsonValue> referenceDiffStates = new ConcurrentHashMap<Class<? extends SharedState>, JsonValue>();
+    private static final ConcurrentHashMap<Class<? extends SharedState>, JsonValue> referenceDiffStates = new ConcurrentHashMap<>();
 
     /**
      * @deprecated As of 7.1. See #11411.
@@ -94,9 +93,8 @@ public class LegacyCommunicationManager implements Serializable {
         ConnectorTracker connectorTracker = uI.getConnectorTracker();
         Class<? extends SharedState> stateType = connector.getStateType();
         JsonValue diffState = connectorTracker.getDiffState(connector);
-        boolean supportsDiffState = !JavaScriptConnectorState.class
-                .isAssignableFrom(stateType);
-        if (diffState == null && supportsDiffState) {
+
+        if (diffState == null) {
             // Use an empty state object as reference for full
             // repaints
             diffState = referenceDiffStates.get(stateType);
@@ -107,15 +105,24 @@ public class LegacyCommunicationManager implements Serializable {
         }
         EncodeResult encodeResult = JsonCodec.encode(state, diffState,
                 stateType, uI.getConnectorTracker());
-        if (supportsDiffState) {
-            connectorTracker.setDiffState(connector,
-                    (JsonObject) encodeResult.getEncodedValue());
-        }
+        connectorTracker.setDiffState(connector,
+                (JsonObject) encodeResult.getEncodedValue());
+
         return (JsonObject) encodeResult.getDiff();
     }
 
     private static JsonValue createReferenceDiffStateState(
             Class<? extends SharedState> stateType) {
+        if (JavaScriptConnectorState.class.isAssignableFrom(stateType)) {
+            /*
+             * For JS state types, we should only include the framework-provided
+             * state fields in the reference diffstate since other fields are
+             * not know by the client and would therefore not get the right
+             * initial value if it would be recorded in the diffstate.
+             */
+            stateType = findJsStateReferenceType(stateType);
+        }
+
         try {
             SharedState referenceState = stateType.newInstance();
             EncodeResult encodeResult = JsonCodec.encode(referenceState, null,
@@ -130,10 +137,39 @@ public class LegacyCommunicationManager implements Serializable {
     }
 
     /**
+     * Finds the highest super class which implements
+     * {@link JavaScriptConnectorState}. In practice, this finds either
+     * {@link JavaScriptComponentState} or {@link JavaScriptExtensionState}.
+     * This is used to find which state properties the client side knows
+     * something about.
+     *
+     * @param stateType
+     *            the state type for which the reference type should be found
+     * @return the found reference type
+     */
+    private static Class<? extends SharedState> findJsStateReferenceType(
+            Class<? extends SharedState> stateType) {
+        assert JavaScriptConnectorState.class.isAssignableFrom(stateType);
+
+        Class<?> type = stateType;
+
+        while (type != null) {
+            Class<?> superclass = type.getSuperclass();
+            if (!JavaScriptConnectorState.class.isAssignableFrom(superclass)) {
+                break;
+            }
+
+            type = superclass;
+        }
+
+        return type.asSubclass(SharedState.class);
+    }
+
+    /**
      * Resolves a dependency URI, registering the URI with this
      * {@code LegacyCommunicationManager} if needed and returns a fully
      * qualified URI.
-     * 
+     *
      * @deprecated As of 7.1. See #11413.
      */
     @Deprecated
@@ -174,10 +210,9 @@ public class LegacyCommunicationManager implements Serializable {
         if (publishedFileContexts.containsKey(name)) {
             Class<?> oldContext = publishedFileContexts.get(name);
             if (oldContext != context) {
-                getLogger()
-                        .log(Level.WARNING,
-                                "{0} published by both {1} and {2}. File from {2} will be used.",
-                                new Object[] { name, context, oldContext });
+                getLogger().log(Level.WARNING,
+                        "{0} published by both {1} and {2}. File from {2} will be used.",
+                        new Object[] { name, context, oldContext });
             }
         } else {
             publishedFileContexts.put(name, context);
@@ -205,16 +240,17 @@ public class LegacyCommunicationManager implements Serializable {
      * {@link #isComponentVisibleToClient(Component)} is used. For other types
      * of connectors, the contextual visibility of its first Component ancestor
      * is used. If no Component ancestor is found, the connector is not visible.
-     * 
+     *
      * @deprecated As of 7.1. See #11411.
-     * 
+     *
      * @param connector
      *            The connector to check
      * @return <code>true</code> if the connector is visible to the client,
      *         <code>false</code> otherwise
      */
     @Deprecated
-    public static boolean isConnectorVisibleToClient(ClientConnector connector) {
+    public static boolean isConnectorVisibleToClient(
+            ClientConnector connector) {
         if (connector instanceof Component) {
             return isComponentVisibleToClient((Component) connector);
         } else {
@@ -230,9 +266,9 @@ public class LegacyCommunicationManager implements Serializable {
     /**
      * Checks if the component should be visible to the client. Returns false if
      * the child should not be sent to the client, true otherwise.
-     * 
+     *
      * @deprecated As of 7.1. See #11411.
-     * 
+     *
      * @param child
      *            The child to check
      * @return true if the child is visible to the client, false otherwise
@@ -264,27 +300,6 @@ public class LegacyCommunicationManager implements Serializable {
     }
 
     /**
-     * @deprecated As of 7.1. See #11412.
-     */
-    @Deprecated
-    public String getTheme(UI uI) {
-        String themeName = uI.getTheme();
-        String requestThemeName = getRequestTheme();
-
-        if (requestThemeName != null) {
-            themeName = requestThemeName;
-        }
-        if (themeName == null) {
-            themeName = VaadinServlet.getDefaultTheme();
-        }
-        return themeName;
-    }
-
-    private String getRequestTheme() {
-        return requestThemeName;
-    }
-
-    /**
      * @deprecated As of 7.1. In 7.2 and later, use
      *             {@link ConnectorTracker#getConnector(String)
      *             uI.getConnectorTracker().getConnector(connectorId)} instead.
@@ -299,15 +314,15 @@ public class LegacyCommunicationManager implements Serializable {
      * @deprecated As of 7.1. Will be removed in the future.
      */
     @Deprecated
-    public static class InvalidUIDLSecurityKeyException extends
-            GeneralSecurityException {
+    public static class InvalidUIDLSecurityKeyException
+            extends GeneralSecurityException {
 
         public InvalidUIDLSecurityKeyException(String message) {
             super(message);
         }
     }
 
-    private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<Class<? extends ClientConnector>, Integer>();
+    private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<>();
     private int nextTypeKey = 0;
 
     /**
@@ -330,19 +345,19 @@ public class LegacyCommunicationManager implements Serializable {
     /**
      * Helper class for terminal to keep track of data that client is expected
      * to know.
-     * 
+     *
      * TODO make customlayout templates (from theme) to be cached here.
-     * 
+     *
      * @deprecated As of 7.1. See #11410.
      */
     @Deprecated
     public class ClientCache implements Serializable {
 
-        private final Set<Object> res = new HashSet<Object>();
+        private final Set<Object> res = new HashSet<>();
 
         /**
-         * 
-         * @param paintable
+         *
+         * @param object
          * @return true if the given class was added to cache
          */
         public boolean cache(Object object) {
@@ -363,17 +378,17 @@ public class LegacyCommunicationManager implements Serializable {
      * @deprecated As of 7.1. See #11411.
      */
     @Deprecated
-    public String getStreamVariableTargetUrl(ClientConnector owner,
-            String name, StreamVariable value) {
+    public String getStreamVariableTargetUrl(ClientConnector owner, String name,
+            StreamVariable value) {
         /*
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
-         * 
+         *
          * eg. APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY]
-         * 
+         *
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).
-         * 
+         *
          * NAME and PID from URI forms a key to fetch StreamVariable when
          * handling post
          */
@@ -394,9 +409,9 @@ public class LegacyCommunicationManager implements Serializable {
     /**
      * Handles an exception related to a connector by invoking the appropriate
      * error handler.
-     * 
+     *
      * @deprecated As of 7.1. See #11411.
-     * 
+     *
      * @param throwable
      *            the exception to handle
      * @param connector
@@ -413,10 +428,9 @@ public class LegacyCommunicationManager implements Serializable {
     /**
      * Requests that the given UI should be fully re-rendered on the client
      * side.
-     * 
-     * @since 7.1
-     * @deprecated. As of 7.1. Should be refactored once locales are fixed
-     *              (#11378)
+     *
+     * @since 7.1 @deprecated. As of 7.1. Should be refactored once locales are
+     *        fixed (#11378)
      */
     @Deprecated
     public void repaintAll(UI ui) {

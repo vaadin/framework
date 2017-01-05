@@ -12,7 +12,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class CSSInjectTest extends TestBase {
 
@@ -65,8 +65,8 @@ public class CSSInjectTest extends TestBase {
 
                                     @Override
                                     public InputStream getStream() {
-                                        return new ByteArrayInputStream(css
-                                                .getBytes());
+                                        return new ByteArrayInputStream(
+                                                css.getBytes());
                                     }
                                 }, UUID.randomUUID().toString() + ".css"));
 
@@ -75,8 +75,8 @@ public class CSSInjectTest extends TestBase {
                 });
         addComponent(injectRandom);
 
-        addComponent(new Button("Inject initial again!",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Inject initial again!", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         stylesheet.add(initialResource);

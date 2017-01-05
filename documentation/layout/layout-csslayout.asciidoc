@@ -49,7 +49,7 @@ nearly always needed.
 
 [[figure.layout.csslayout.basic]]
 .Basic Use of [classname]#CssLayout#
-image::img/csslayout-basic.png[]
+image::img/csslayout-basic.png[width=60%, scaledwidth=100%]
 
 The [literal]#++display++# attribute of [classname]#CssLayout# is
 [literal]#++inline-block++# by default, so the components are laid out
@@ -109,7 +109,7 @@ file:
 
 [[figure.layout.csslayout.getcss]]
 .Use of [methodname]#getCss()# and line wrap
-image::img/csslayout-getcss.png[]
+image::img/csslayout-getcss.png[width=60%, scaledwidth=100%]
 
 
 [[layout.csslayout.compatibility]]
@@ -164,7 +164,7 @@ The example would now be rendered as shown in
 
 [[figure.layout.csslayout.styling]]
 .Styling [classname]#CssLayout#
-image::img/csslayout-styling.png[]
+image::img/csslayout-styling.png[width=50%, scaledwidth=70%]
 
 Captions and icons that are managed by the layout are contained in an element
 with [literal]#++v-caption++# style. These caption elements are contained flat

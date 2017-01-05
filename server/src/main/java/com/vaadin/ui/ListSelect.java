@@ -1,102 +1,107 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.ui;
 
 import java.util.Collection;
 
-import com.vaadin.data.Container;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
+import com.vaadin.data.Listing;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.shared.ui.listselect.ListSelectState;
 
 /**
  * This is a simple list select without, for instance, support for new items,
  * lazyloading, and other advanced features.
+ *
+ * @author Vaadin Ltd
+ *
+ * @param <T>
+ *            item type
  */
-@SuppressWarnings("serial")
-public class ListSelect extends AbstractSelect {
+public class ListSelect<T> extends AbstractMultiSelect<T>
+        implements Listing<T, DataProvider<T, ?>> {
 
-    private int columns = 0;
-    private int rows = 0;
+    /** Default number of rows visible for select. */
+    // protected to allow javadoc linking
+    protected static final int DEFAULT_ROWS = 10;
 
+    /**
+     * Constructs a new ListSelect.
+     */
     public ListSelect() {
-        super();
+        setRows(DEFAULT_ROWS);
     }
 
-    public ListSelect(String caption, Collection<?> options) {
-        super(caption, options);
-    }
-
-    public ListSelect(String caption, Container dataSource) {
-        super(caption, dataSource);
-    }
-
+    /**
+     * Constructs a new ListSelect with the given caption.
+     *
+     * @param caption
+     *            the caption to set, can be {@code null}
+     */
     public ListSelect(String caption) {
-        super(caption);
+        this();
+        setCaption(caption);
     }
 
     /**
-     * Sets the width of the component so that it can display approximately the
-     * given number of letters.
+     * Constructs a new ListSelect with caption and data provider for options.
+     *
+     * @param caption
+     *            the caption to set, can be {@code null}
+     * @param dataProvider
+     *            the data provider, not {@code null}
+     */
+    public ListSelect(String caption, DataProvider<T, ?> dataProvider) {
+        this(caption);
+        setDataProvider(dataProvider);
+    }
+
+    /**
+     * Constructs a new ListSelect with caption and the given options.
+     *
+     * @param caption
+     *            the caption to set, can be {@code null}
+     * @param options
+     *            the options, cannot be {@code null}
+     */
+    public ListSelect(String caption, Collection<T> options) {
+        this(caption, DataProvider.create(options));
+    }
+
+    /**
+     * Returns the number of rows in the select.
      * <p>
-     * Calling {@code setColumns(10);} is equivalent to calling
-     * {@code setWidth("10em");}
-     * </p>
-     * 
-     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
-     *             characters that will be displayed. It is better to use
-     *             setWidth together with "em" to control the width of the
-     *             field.
-     * @param columns
-     *            the number of columns to set.
+     * Default value is {@link #DEFAULT_ROWS}
+     *
+     * @return the number of rows visible
      */
-    @Deprecated
-    public void setColumns(int columns) {
-        if (columns < 0) {
-            columns = 0;
-        }
-        if (this.columns != columns) {
-            this.columns = columns;
-            markAsDirty();
-        }
-    }
-
-    /**
-     * Gets the number of columns for the component.
-     * 
-     * @see #setColumns(int)
-     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
-     *             characters that will be displayed. It is better to use
-     *             setWidth together with "em" to control the width of the
-     *             field.
-     */
-    @Deprecated
-    public int getColumns() {
-        return columns;
-    }
-
     public int getRows() {
-        return rows;
+        return getState(false).rows;
     }
 
     /**
-     * Sets the number of rows in the editor. If the number of rows is set 0,
+     * Sets the number of rows in the select. If the number of rows is set to 0,
      * the actual number of displayed rows is determined implicitly by the
-     * adapter.
-     * 
+     * select.
+     * <p>
+     * If a height if set (using {@link #setHeight(String)} or
+     * {@link #setHeight(float, Unit)}) it overrides the number of rows. Leave
+     * the height undefined to use this method.
+     * <p>
+     * Default value is {@link #DEFAULT_ROWS}
+     *
      * @param rows
      *            the number of rows to set.
      */
@@ -104,23 +109,28 @@ public class ListSelect extends AbstractSelect {
         if (rows < 0) {
             rows = 0;
         }
-        if (this.rows != rows) {
-            this.rows = rows;
-            markAsDirty();
+        if (getState(false).rows != rows) {
+            getState().rows = rows;
         }
     }
 
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute("type", "list");
-        // Adds the number of columns
-        if (columns != 0) {
-            target.addAttribute("cols", columns);
-        }
-        // Adds the number of rows
-        if (rows != 0) {
-            target.addAttribute("rows", rows);
-        }
-        super.paintContent(target);
+    protected ListSelectState getState() {
+        return (ListSelectState) super.getState();
+    }
+
+    @Override
+    protected ListSelectState getState(boolean markAsDirty) {
+        return (ListSelectState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public DataProvider<T, ?> getDataProvider() {
+        return internalGetDataProvider();
+    }
+
+    @Override
+    public void setDataProvider(DataProvider<T, ?> dataProvider) {
+        internalSetDataProvider(dataProvider);
     }
 }

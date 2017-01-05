@@ -14,10 +14,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
 
 public class NavigatorTest extends UI {
 
@@ -37,9 +37,8 @@ public class NavigatorTest extends UI {
         @Override
         public void enter(ViewChangeEvent event) {
             String params = event.getParameters();
-            log.log("Navigated to ListView "
-                    + (params.isEmpty() ? "without params" : "with params "
-                            + params));
+            log.log("Navigated to ListView " + (params.isEmpty()
+                    ? "without params" : "with params " + params));
             removeAllItems();
             for (String arg : params.split(",")) {
                 addItem(arg.split("=|$", 2), arg);
@@ -52,9 +51,8 @@ public class NavigatorTest extends UI {
         @Override
         public void enter(ViewChangeEvent event) {
             String params = event.getParameters();
-            log.log("Navigated to EditView "
-                    + (params.isEmpty() ? "without params" : "with params "
-                            + params));
+            log.log("Navigated to EditView " + (params.isEmpty()
+                    ? "without params" : "with params " + params));
             setValue("Displaying edit view with parameters " + params);
         }
     }
@@ -75,9 +73,8 @@ public class NavigatorTest extends UI {
         @Override
         public void enter(ViewChangeEvent event) {
             String params = event.getParameters();
-            log.log("Navigated to DefaultView "
-                    + (params.isEmpty() ? "without params" : "with params "
-                            + params));
+            log.log("Navigated to DefaultView " + (params.isEmpty()
+                    ? "without params" : "with params " + params));
             setValue("Default view: " + event.getParameters());
         }
     }
@@ -110,9 +107,6 @@ public class NavigatorTest extends UI {
             return true;
         }
 
-        @Override
-        public void afterViewChange(ViewChangeEvent event) {
-        }
     }
 
     class NaviButton extends Button {

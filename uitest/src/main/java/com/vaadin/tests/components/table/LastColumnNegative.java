@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 public class LastColumnNegative extends TestBase {
     Table table = setupTable();
@@ -48,11 +48,8 @@ public class LastColumnNegative extends TestBase {
     private Table setupTable() {
         IndexedContainer container = new IndexedContainer();
 
-        container
-                .addContainerProperty(
-                        "fileName",
-                        String.class,
-                        "Long enough string to cause a scrollbar when the window is set to a dencently small size.");
+        container.addContainerProperty("fileName", String.class,
+                "Long enough string to cause a scrollbar when the window is set to a dencently small size.");
         container.addContainerProperty("size", Long.class, 23958l);
         container.addItem();
         container.addItem();

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,7 @@ import org.jsoup.nodes.Element;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
-import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
@@ -39,6 +39,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ComponentConstants;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetClientRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
@@ -47,42 +48,38 @@ import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
-import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.ui.themes.Runo;
 
 /**
  * TabSheet component.
- * 
+ *
  * Tabs are typically identified by the component contained on the tab (see
  * {@link ComponentContainer}), and tab metadata (including caption, icon,
  * visibility, enabledness, closability etc.) is kept in separate {@link Tab}
  * instances.
- * 
+ *
  * Tabs added with {@link #addComponent(Component)} get the caption and the icon
  * of the component at the time when the component is created, and these are not
  * automatically updated after tab creation.
- * 
+ *
  * A tab sheet can have multiple tab selection listeners and one tab close
  * handler ({@link CloseHandler}), which by default removes the tab from the
  * TabSheet.
- * 
+ *
  * The {@link TabSheet} can be styled with the .v-tabsheet, .v-tabsheet-tabs and
- * .v-tabsheet-content styles. Themes may also have pre-defined variations of
- * the tab sheet presentation, such as {@link Reindeer#TABSHEET_BORDERLESS},
- * {@link Runo#TABSHEET_SMALL} and several other styles in {@link Reindeer}.
- * 
+ * .v-tabsheet-content styles.
+ *
  * The current implementation does not load the tabs to the UI before the first
  * time they are shown, but this may change in future releases.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public class TabSheet extends AbstractComponentContainer implements Focusable,
-        FocusNotifier, BlurNotifier, SelectiveRenderer {
+public class TabSheet extends AbstractComponentContainer
+        implements Focusable, FocusNotifier, BlurNotifier, SelectiveRenderer {
 
     /**
      * Client to server RPC implementation for TabSheet.
-     * 
+     *
      * @since 7.2
      */
     protected class TabsheetServerRpcImpl implements TabsheetServerRpc {
@@ -106,12 +103,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * there is a {@link Tab} object in tabs for each tab with meta-data about
      * the tab.
      */
-    private final ArrayList<Component> components = new ArrayList<Component>();
+    private final ArrayList<Component> components = new ArrayList<>();
 
     /**
      * Map containing information related to the tabs (caption, icon etc).
      */
-    private final HashMap<Component, Tab> tabs = new HashMap<Component, Tab>();
+    private final HashMap<Component, Tab> tabs = new HashMap<>();
 
     /**
      * Selected tab content component.
@@ -122,7 +119,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Mapper between server-side component instances (tab contents) and keys
      * given to the client that identify tabs.
      */
-    private final KeyMapper<Component> keyMapper = new KeyMapper<Component>();
+    private final KeyMapper<Component> keyMapper = new KeyMapper<>();
 
     /**
      * Handler to be called when a tab is closed.
@@ -137,23 +134,16 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         super();
 
         registerRpc(rpc);
-        registerRpc(focusBlurRpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
         // expand horizontally by default
         setWidth(100, UNITS_PERCENTAGE);
-        setImmediate(true);
-        setCloseHandler(new CloseHandler() {
-
-            @Override
-            public void onTabClose(TabSheet tabsheet, Component c) {
-                tabsheet.removeComponent(c);
-            }
-        });
+        setCloseHandler(TabSheet::removeComponent);
     }
 
     /**
      * Constructs a new TabSheet containing the given components.
-     * 
+     *
      * @param components
      *            The components to add to the tab sheet. Each component will be
      *            added to a separate tab.
@@ -166,7 +156,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Gets the component container iterator for going through all the
      * components (tab contents).
-     * 
+     *
      * @return the unmodifiable Iterator of the tab content components
      */
 
@@ -178,7 +168,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Gets the number of contained components (tabs). Consistent with the
      * iterator returned by {@link #getComponentIterator()}.
-     * 
+     *
      * @return the number of contained components
      */
 
@@ -189,10 +179,10 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Removes a component and its corresponding tab.
-     * 
+     *
      * If the tab was selected, the first eligible (visible and enabled)
      * remaining tab is selected.
-     * 
+     *
      * @param component
      *            the component to be removed.
      */
@@ -216,7 +206,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                     setSelected(null);
                 } else {
 
-                    int newSelectedIndex = selectedTabIndexAfterTabRemove(componentIndex);
+                    int newSelectedIndex = selectedTabIndexAfterTabRemove(
+                            componentIndex);
 
                     // Make sure the component actually exists, in case someone
                     // override it and provide a non existing component.
@@ -245,11 +236,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Called when a selected tab is removed to specify the new tab to select.
      * Can be overridden to provide another algorithm that calculates the new
      * selection.
-     * 
+     *
      * Current implementation will choose the first enabled tab to the right of
      * the removed tab if it's not the last one, otherwise will choose the
      * closer enabled tab to the left.
-     * 
+     *
      * @since 7.4
      * @param removedTabIndex
      *            the index of the selected tab which was just remove.
@@ -284,7 +275,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * If the tab was selected, the first eligible (visible and enabled)
      * remaining tab is selected.
      * </p>
-     * 
+     *
      * @see #addTab(Component)
      * @see #addTab(Component, String, Resource)
      * @see #addComponent(Component)
@@ -299,9 +290,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Adds a new tab into TabSheet. Component caption and icon are copied to
      * the tab metadata at creation time.
-     * 
+     *
      * @see #addTab(Component)
-     * 
+     *
      * @param c
      *            the component to be added.
      */
@@ -313,13 +304,13 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Adds a new tab into TabSheet.
-     * 
+     *
      * The first tab added to a tab sheet is automatically selected and a tab
      * selection event is fired.
-     * 
+     *
      * If the component is already present in the tab sheet, changes its caption
      * and returns the corresponding (old) tab, preserving other tab metadata.
-     * 
+     *
      * @param c
      *            the component to be added onto tab - should not be null.
      * @param caption
@@ -333,14 +324,14 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Adds a new tab into TabSheet.
-     * 
+     *
      * The first tab added to a tab sheet is automatically selected and a tab
      * selection event is fired.
-     * 
+     *
      * If the component is already present in the tab sheet, changes its caption
      * and icon and returns the corresponding (old) tab, preserving other tab
      * metadata.
-     * 
+     *
      * @param c
      *            the component to be added onto tab - should not be null.
      * @param caption
@@ -357,14 +348,14 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Adds a new tab into TabSheet.
-     * 
+     *
      * The first tab added to a tab sheet is automatically selected and a tab
      * selection event is fired.
-     * 
+     *
      * If the component is already present in the tab sheet, changes its caption
      * and icon and returns the corresponding (old) tab, preserving other tab
      * metadata like the position.
-     * 
+     *
      * @param tabComponent
      *            the component to be added onto tab - should not be null.
      * @param caption
@@ -409,9 +400,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Adds a new tab into TabSheet. Component caption and icon are copied to
      * the tab metadata at creation time.
-     * 
+     *
      * If the tab sheet already contains the component, its tab is returned.
-     * 
+     *
      * @param c
      *            the component to be added onto tab - should not be null.
      * @return the created {@link Tab}
@@ -423,9 +414,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Adds a new tab into TabSheet. Component caption and icon are copied to
      * the tab metadata at creation time.
-     * 
+     *
      * If the tab sheet already contains the component, its tab is returned.
-     * 
+     *
      * @param component
      *            the component to be added onto tab - should not be null.
      * @param position
@@ -446,10 +437,10 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Moves all components from another container to this container. The
      * components are removed from the other container.
-     * 
+     *
      * If the source container is a {@link TabSheet}, component captions and
      * icons are copied from it.
-     * 
+     *
      * @param source
      *            the container components are removed from.
      */
@@ -476,7 +467,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Are the tab selection parts ("tabs") hidden.
-     * 
+     *
      * @return true if the tabs are hidden in the UI
      * @deprecated as of 7.5, use {@link #isTabsVisible()} instead
      */
@@ -487,7 +478,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Hides or shows the tab selection parts ("tabs").
-     * 
+     *
      * @param tabsHidden
      *            true if the tabs should be hidden
      * @deprecated as of 7.5, use {@link #setTabsVisible(boolean)} instead
@@ -499,7 +490,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Sets whether the tab selection part should be shown in the UI
-     * 
+     *
      * @since 7.5
      * @param tabsVisible
      *            true if the tabs should be shown in the UI, false otherwise
@@ -522,7 +513,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Returns the {@link Tab} (metadata) for a component. The {@link Tab}
      * object can be used for setting caption,icon, etc for the tab.
-     * 
+     *
      * @param c
      *            the component
      * @return The tab instance associated with the given component, or null if
@@ -535,7 +526,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Returns the {@link Tab} (metadata) for a component. The {@link Tab}
      * object can be used for setting caption,icon, etc for the tab.
-     * 
+     *
      * @param position
      *            the position of the tab
      * @return The tab in the given position, or null if the position is out of
@@ -552,7 +543,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Sets the selected tab. The tab is identified by the tab content
      * component. Does nothing if the tabsheet doesn't contain the component.
-     * 
+     *
      * @param c
      */
     public void setSelectedTab(Component c) {
@@ -568,7 +559,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Sets the selected tab in the TabSheet. Ensures that the selected tab is
      * repainted if needed.
-     * 
+     *
      * @param component
      *            The new selection or null for no selection
      */
@@ -599,7 +590,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Sets the selected tab. The tab is identified by the corresponding
      * {@link Tab Tab} instance. Does nothing if the tabsheet doesn't contain
      * the given tab.
-     * 
+     *
      * @param tab
      */
     public void setSelectedTab(Tab tab) {
@@ -611,7 +602,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Sets the selected tab, identified by its position. Does nothing if the
      * position is out of bounds.
-     * 
+     *
      * @param position
      */
     public void setSelectedTab(int position) {
@@ -623,15 +614,16 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * the previously selected component is not visible and enabled. The first
      * visible and enabled tab is selected if the current selection is empty or
      * invalid.
-     * 
+     *
      * This method does not fire tab change events, but the caller should do so
      * if appropriate.
-     * 
+     *
      * @return true if selection was changed, false otherwise
      */
     private boolean updateSelection() {
         Component originalSelection = selected;
-        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
+        for (final Iterator<Component> i = getComponentIterator(); i
+                .hasNext();) {
             final Component component = i.next();
 
             Tab tab = tabs.get(component);
@@ -668,7 +660,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Gets the selected tab content component.
-     * 
+     *
      * @return the selected tab contents
      */
     public Component getSelectedTab() {
@@ -677,35 +669,27 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     private TabsheetServerRpcImpl rpc = new TabsheetServerRpcImpl();
 
-    private FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(
-            this) {
-
-        @Override
-        protected void fireEvent(Event event) {
-            TabSheet.this.fireEvent(event);
-        }
-    };
-
     /**
      * Replaces a component (tab content) with another. This can be used to
      * change tab contents or to rearrange tabs. The tab position and some
      * metadata are preserved when moving components within the same
      * {@link TabSheet}.
-     * 
+     *
      * If the oldComponent is not present in the tab sheet, the new one is added
      * at the end.
-     * 
+     *
      * If the oldComponent is already in the tab sheet but the newComponent
      * isn't, the old tab is replaced with a new one, and the caption and icon
      * of the old one are copied to the new tab.
-     * 
+     *
      * If both old and new components are present, their positions are swapped.
-     * 
+     *
      * {@inheritDoc}
      */
 
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
         boolean selectAfterInserting = false;
 
         if (selected == oldComponent) {
@@ -720,9 +704,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         int newLocation = -1;
         int location = 0;
 
-        for (final Iterator<Component> i = components.iterator(); i.hasNext();) {
-            final Component component = i.next();
-
+        for (final Component component : components) {
             if (component == oldComponent) {
                 oldLocation = location;
             }
@@ -755,8 +737,10 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
             if (selectAfterInserting) {
                 setSelected(newComponent);
-                //SelectedTabChangeEvent should be fired here as selected Tab is changed.
-                //Other cases are handled implicitly by removeComponent() and addComponent()addTab()
+                // SelectedTabChangeEvent should be fired here as selected Tab
+                // is changed.
+                // Other cases are handled implicitly by removeComponent() and
+                // addComponent()addTab()
                 fireSelectedTabChange();
             }
 
@@ -779,7 +763,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         try {
             SELECTED_TAB_CHANGE_METHOD = SelectedTabChangeListener.class
                     .getDeclaredMethod("selectedTabChange",
-                            new Class[] { SelectedTabChangeEvent.class });
+                            SelectedTabChangeEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
@@ -790,7 +774,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * Selected tab change event. This event is sent when the selected (shown)
      * tab in the tab sheet is changed.
-     * 
+     *
      * @author Vaadin Ltd.
      * @since 3.0
      */
@@ -798,7 +782,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * New instance of selected tab change event
-         * 
+         *
          * @param source
          *            the Source of the event.
          */
@@ -808,7 +792,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * TabSheet where the event occurred.
-         * 
+         *
          * @return the Source of the event.
          */
         public TabSheet getTabSheet() {
@@ -820,16 +804,17 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Selected tab change event listener. The listener is called whenever
      * another tab is selected, including when adding the first tab to a
      * tabsheet.
-     * 
+     *
      * @author Vaadin Ltd.
-     * 
+     *
      * @since 3.0
      */
+    @FunctionalInterface
     public interface SelectedTabChangeListener extends Serializable {
 
         /**
          * Selected (shown) tab in tab sheet has has been changed.
-         * 
+         *
          * @param event
          *            the selected tab change event.
          */
@@ -837,44 +822,36 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     }
 
     /**
-     * Adds a tab selection listener
-     * 
+     * Adds a tab selection listener.
+     *
+     * @see Registration
+     *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
+     * @return a registration object for removing the listener
      */
-    public void addSelectedTabChangeListener(SelectedTabChangeListener listener) {
-        addListener(SelectedTabChangeEvent.class, listener,
+    public Registration addSelectedTabChangeListener(
+            SelectedTabChangeListener listener) {
+        return addListener(SelectedTabChangeEvent.class, listener,
                 SELECTED_TAB_CHANGE_METHOD);
     }
 
     /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addSelectedTabChangeListener(SelectedTabChangeListener)}
-     **/
-    @Deprecated
-    public void addListener(SelectedTabChangeListener listener) {
-        addSelectedTabChangeListener(listener);
-    }
-
-    /**
-     * Removes a tab selection listener
-     * 
+     * Removes a tab selection listener.
+     *
      * @param listener
      *            the Listener to be removed.
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #removeSelectedTabChangeListener(SelectedTabChangeListener)}
+     *             .
      */
+    @Deprecated
     public void removeSelectedTabChangeListener(
             SelectedTabChangeListener listener) {
         removeListener(SelectedTabChangeEvent.class, listener,
                 SELECTED_TAB_CHANGE_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeSelectedTabChangeListener(SelectedTabChangeListener)}
-     **/
-    @Deprecated
-    public void removeListener(SelectedTabChangeListener listener) {
-        removeSelectedTabChangeListener(listener);
     }
 
     /**
@@ -886,11 +863,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Tab meta-data for a component in a {@link TabSheet}.
-     * 
+     *
      * The meta-data includes the tab caption, icon, visibility and enabledness,
      * closability, description (tooltip) and an optional component error shown
      * in the tab.
-     * 
+     *
      * Tabs are identified by the component contained on them in most cases, and
      * the meta-data can be obtained with {@link TabSheet#getTab(Component)}.
      */
@@ -898,7 +875,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Returns the visible status for the tab. An invisible tab is not shown
          * in the tab bar and cannot be selected.
-         * 
+         *
          * @return true for visible, false for hidden
          */
         public boolean isVisible();
@@ -907,7 +884,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * Sets the visible status for the tab. An invisible tab is not shown in
          * the tab bar and cannot be selected, selection is changed
          * automatically when there is an attempt to select an invisible tab.
-         * 
+         *
          * @param visible
          *            true for visible, false for hidden
          */
@@ -915,7 +892,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Returns the closability status for the tab.
-         * 
+         *
          * @return true if the tab is allowed to be closed by the end user,
          *         false for not allowing closing
          */
@@ -928,7 +905,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * <p>
          * Note! Currently only supported by TabSheet, not Accordion.
          * </p>
-         * 
+         *
          * @param closable
          *            true if the end user is allowed to close the tab, false
          *            for not allowing to close. Should default to false.
@@ -938,7 +915,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Set the component that should automatically focused when the tab is
          * selected.
-         * 
+         *
          * @param component
          *            the component to focus
          */
@@ -947,7 +924,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Get the component that should be automatically focused when the tab
          * is selected.
-         * 
+         *
          * @return the focusable component
          */
         public Focusable getDefaultFocusComponent();
@@ -955,7 +932,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Returns the enabled status for the tab. A disabled tab is shown as
          * such in the tab bar and cannot be selected.
-         * 
+         *
          * @return true for enabled, false for disabled
          */
         public boolean isEnabled();
@@ -963,7 +940,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Sets the enabled status for the tab. A disabled tab is shown as such
          * in the tab bar and cannot be selected.
-         * 
+         *
          * @param enabled
          *            true for enabled, false for disabled
          */
@@ -971,7 +948,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Sets the caption for the tab.
-         * 
+         *
          * @param caption
          *            the caption to set
          */
@@ -989,7 +966,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Sets the icon for the tab.
-         * 
+         *
          * @param icon
          *            the icon to set
          */
@@ -997,7 +974,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Sets the icon and alt text for the tab.
-         * 
+         *
          * @param icon
          *            the icon to set
          */
@@ -1005,16 +982,16 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Gets the icon alt text for the tab.
-         * 
+         *
          * @since 7.2
          */
         public String getIconAlternateText();
 
         /**
          * Sets the icon alt text for the tab.
-         * 
+         *
          * @since 7.2
-         * 
+         *
          * @param iconAltText
          *            the icon to set
          */
@@ -1024,7 +1001,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * Gets the description for the tab. The description can be used to
          * briefly describe the state of the tab to the user, and is typically
          * shown as a tooltip when hovering over the tab.
-         * 
+         *
          * @return the description for the tab
          */
         public String getDescription();
@@ -1033,7 +1010,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * Sets the description for the tab. The description can be used to
          * briefly describe the state of the tab to the user, and is typically
          * shown as a tooltip when hovering over the tab.
-         * 
+         *
          * @param description
          *            the new description string for the tab.
          */
@@ -1043,9 +1020,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * Sets an error indicator to be shown in the tab. This can be used e.g.
          * to communicate to the user that there is a problem in the contents of
          * the tab.
-         * 
+         *
          * @see AbstractComponent#setComponentError(ErrorMessage)
-         * 
+         *
          * @param componentError
          *            error message or null for none
          */
@@ -1053,9 +1030,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Gets the current error message shown for the tab.
-         * 
+         *
          * TODO currently not sent to the client
-         * 
+         *
          * @see AbstractComponent#setComponentError(ErrorMessage)
          */
         public ErrorMessage getComponentError();
@@ -1068,7 +1045,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Sets a style name for the tab. The style name will be rendered as a
          * HTML class name, which can be used in a CSS definition.
-         * 
+         *
          * <pre>
          * Tab tab = tabsheet.addTab(tabContent, &quot;Tab text&quot;);
          * tab.setStyleName(&quot;mystyle&quot;);
@@ -1080,16 +1057,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * {@code v-tabsheet-tabitemcell-mystyle}" style. You could then style
          * the component with:
          * </p>
-         * 
+         *
          * <pre>
          * .v-tabsheet-tabitemcell-mystyle {font-style: italic;}
          * </pre>
-         * 
-         * <p>
-         * This method will trigger a {@link RepaintRequestEvent} on the
-         * TabSheet to which the Tab belongs.
-         * </p>
-         * 
+         *
          * @param styleName
          *            the new style to be set for tab
          * @see #getStyleName()
@@ -1099,7 +1071,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Gets the user-defined CSS style name of the tab. Built-in style names
          * defined in Vaadin or GWT are not returned.
-         * 
+         *
          * @return the style name or of the tab
          * @see #setStyleName(String)
          */
@@ -1109,7 +1081,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * Adds an unique id for component that is used in the client-side for
          * testing purposes. Keeping identifiers unique is the responsibility of
          * the programmer.
-         * 
+         *
          * @param id
          *            An alphanumeric id
          */
@@ -1117,7 +1089,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         /**
          * Gets currently set debug identifier
-         * 
+         *
          * @return current id, null if not set
          */
         public String getId();
@@ -1128,7 +1100,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
     public class TabSheetTabImpl implements Tab {
 
-        private TabState tabState;
+        private final TabState tabState;
 
         private Focusable defaultFocus;
 
@@ -1257,8 +1229,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
 
-            String formattedHtmlMessage = componentError != null ? componentError
-                    .getFormattedHtmlMessage() : null;
+            String formattedHtmlMessage = componentError != null
+                    ? componentError.getFormattedHtmlMessage() : null;
             tabState.componentError = formattedHtmlMessage;
 
             markAsDirty();
@@ -1312,17 +1284,18 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * CloseHandler is used to process tab closing events. Default behavior is
      * to remove the tab from the TabSheet.
-     * 
+     *
      * @author Jouni Koivuviita / Vaadin Ltd.
      * @since 6.2.0
-     * 
+     *
      */
+    @FunctionalInterface
     public interface CloseHandler extends Serializable {
 
         /**
          * Called when a user has pressed the close icon of a tab in the client
          * side widget.
-         * 
+         *
          * @param tabsheet
          *            the TabSheet to which the tab belongs to
          * @param tabContent
@@ -1336,12 +1309,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Provide a custom {@link CloseHandler} for this TabSheet if you wish to
      * perform some additional tasks when a user clicks on a tabs close button,
      * e.g. show a confirmation dialogue before removing the tab.
-     * 
+     *
      * To remove the tab, if you provide your own close handler, you must call
      * {@link #removeComponent(Component)} yourself.
-     * 
+     *
      * The default CloseHandler for TabSheet will only remove the tab.
-     * 
+     *
      * @param handler
      */
     public void setCloseHandler(CloseHandler handler) {
@@ -1350,7 +1323,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Sets the position of the tab.
-     * 
+     *
      * @param tab
      *            The tab
      * @param position
@@ -1367,7 +1340,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Gets the position of the tab
-     * 
+     *
      * @param tab
      *            The tab
      * @return
@@ -1392,64 +1365,15 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     }
 
     @Override
-    public void addBlurListener(BlurListener listener) {
-        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+    public Registration addBlurListener(BlurListener listener) {
+        return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
     @Override
-    @Deprecated
-    public void addListener(BlurListener listener) {
-        addBlurListener(listener);
-    }
-
-    @Override
-    public void removeBlurListener(BlurListener listener) {
-        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(BlurListener listener) {
-        removeBlurListener(listener);
-    }
-
-    @Override
-    public void addFocusListener(FocusListener listener) {
-        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+    public Registration addFocusListener(FocusListener listener) {
+        return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(FocusListener listener) {
-        addFocusListener(listener);
-    }
-
-    @Override
-    public void removeFocusListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(FocusListener listener) {
-        removeFocusListener(listener);
     }
 
     @Override
@@ -1459,7 +1383,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Copies properties from one Tab to another.
-     * 
+     *
      * @param from
      *            The tab whose data to copy.
      * @param to
@@ -1488,7 +1412,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -1498,8 +1422,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // create new tabs
         for (Element tab : design.children()) {
             if (!tab.tagName().equals("tab")) {
-                throw new DesignException("Invalid tag name for tabsheet tab "
-                        + tab.tagName());
+                throw new DesignException(
+                        "Invalid tag name for tabsheet tab " + tab.tagName());
             }
             readTabFromDesign(tab, designContext);
         }
@@ -1507,9 +1431,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Reads the given tab element from design
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @param tabElement
      *            the element to be read
      * @param designContext
@@ -1527,32 +1451,32 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         Component child = designContext.readDesign(content);
         Tab tab = this.addTab(child);
         if (attr.hasKey("visible")) {
-            tab.setVisible(DesignAttributeHandler.readAttribute("visible",
-                    attr, Boolean.class));
+            tab.setVisible(DesignAttributeHandler.readAttribute("visible", attr,
+                    Boolean.class));
         }
         if (attr.hasKey("closable")) {
             tab.setClosable(DesignAttributeHandler.readAttribute("closable",
                     attr, Boolean.class));
         }
         if (attr.hasKey("caption")) {
-            tab.setCaption(DesignAttributeHandler.readAttribute("caption",
-                    attr, String.class));
+            tab.setCaption(DesignAttributeHandler.readAttribute("caption", attr,
+                    String.class));
         }
         if (attr.hasKey("enabled")) {
-            tab.setEnabled(DesignAttributeHandler.readAttribute("enabled",
-                    attr, Boolean.class));
+            tab.setEnabled(DesignAttributeHandler.readAttribute("enabled", attr,
+                    Boolean.class));
         }
         if (attr.hasKey("icon")) {
             tab.setIcon(DesignAttributeHandler.readAttribute("icon", attr,
                     Resource.class));
         }
         if (attr.hasKey("icon-alt")) {
-            tab.setIconAlternateText(DesignAttributeHandler.readAttribute(
-                    "icon-alt", attr, String.class));
+            tab.setIconAlternateText(DesignAttributeHandler
+                    .readAttribute("icon-alt", attr, String.class));
         }
         if (attr.hasKey("description")) {
-            tab.setDescription(DesignAttributeHandler.readAttribute(
-                    "description", attr, String.class));
+            tab.setDescription(DesignAttributeHandler
+                    .readAttribute("description", attr, String.class));
         }
         if (attr.hasKey("style-name")) {
             tab.setStyleName(DesignAttributeHandler.readAttribute("style-name",
@@ -1573,7 +1497,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Writes the given tab to design
-     * 
+     *
      * @since 7.4
      * @param design
      *            the design node for tabsheet
@@ -1593,35 +1517,38 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         Attributes attr = tabElement.attributes();
         // write attributes
         DesignAttributeHandler.writeAttribute("visible", attr, tab.isVisible(),
-                def.isVisible(), Boolean.class);
+                def.isVisible(), Boolean.class, designContext);
         DesignAttributeHandler.writeAttribute("closable", attr,
-                tab.isClosable(), def.isClosable(), Boolean.class);
-        DesignAttributeHandler.writeAttribute("caption", attr,
-                tab.getCaption(), def.getCaption(), String.class);
+                tab.isClosable(), def.isClosable(), Boolean.class,
+                designContext);
+        DesignAttributeHandler.writeAttribute("caption", attr, tab.getCaption(),
+                def.getCaption(), String.class, designContext);
         DesignAttributeHandler.writeAttribute("enabled", attr, tab.isEnabled(),
-                def.isEnabled(), Boolean.class);
+                def.isEnabled(), Boolean.class, designContext);
         DesignAttributeHandler.writeAttribute("icon", attr, tab.getIcon(),
-                def.getIcon(), Resource.class);
+                def.getIcon(), Resource.class, designContext);
         DesignAttributeHandler.writeAttribute("icon-alt", attr,
                 tab.getIconAlternateText(), def.getIconAlternateText(),
-                String.class);
+                String.class, designContext);
         DesignAttributeHandler.writeAttribute("description", attr,
-                tab.getDescription(), def.getDescription(), String.class);
+                tab.getDescription(), def.getDescription(), String.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("style-name", attr,
-                tab.getStyleName(), def.getStyleName(), String.class);
+                tab.getStyleName(), def.getStyleName(), String.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("id", attr, tab.getId(),
-                def.getId(), String.class);
+                def.getId(), String.class, designContext);
         if (getSelectedTab() != null
                 && getSelectedTab().equals(tab.getComponent())) {
             // use write attribute to get consistent handling for boolean
-            DesignAttributeHandler.writeAttribute("selected", attr, true,
-                    false, boolean.class);
+            DesignAttributeHandler.writeAttribute("selected", attr, true, false,
+                    boolean.class, designContext);
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
      */
     @Override
@@ -1633,14 +1560,14 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        TabSheet def = (TabSheet) designContext.getDefaultInstance(this);
+        TabSheet def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
 
         // write tabs
@@ -1661,7 +1588,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * false, the content is rendered in the browser as plain text.
      * <p>
      * The default is false, i.e. render tab captions as plain text
-     * 
+     *
      * @param tabCaptionsAsHtml
      *            true if the tab captions are rendered as HTML, false if
      *            rendered as plain text
@@ -1675,7 +1602,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Checks whether HTML is allowed in the tab captions.
      * <p>
      * The default is false, i.e. render tab captions as plain text
-     * 
+     *
      * @return true if the tab captions are rendered as HTML, false if rendered
      *         as plain text
      * @since 7.4

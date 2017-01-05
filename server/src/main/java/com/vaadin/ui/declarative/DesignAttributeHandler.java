@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,8 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.Converter;
+import com.vaadin.data.ValueContext;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Alignment;
@@ -45,7 +46,7 @@ import com.vaadin.ui.Alignment;
  * Default attribute handler implementation used when parsing designs to
  * component trees. Handles all the component attributes that do not require
  * custom handling.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -55,15 +56,15 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<Class<?>, AttributeCacheEntry>();
+    private final static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
 
     // translates string <-> object
-    private static DesignFormatter FORMATTER = new DesignFormatter();
+    private final static DesignFormatter FORMATTER = new DesignFormatter();
 
     /**
      * Returns the currently used formatter. All primitive types and all types
      * needed by Vaadin components are handled by that formatter.
-     * 
+     *
      * @return An instance of the formatter.
      */
     public static DesignFormatter getFormatter() {
@@ -72,7 +73,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Clears the children and attributes of the given element
-     * 
+     *
      * @param design
      *            the element to be cleared
      */
@@ -81,7 +82,7 @@ public class DesignAttributeHandler implements Serializable {
         for (Attribute a : attr.asList()) {
             attr.remove(a.getKey());
         }
-        List<Node> children = new ArrayList<Node>();
+        List<Node> children = new ArrayList<>();
         children.addAll(design.childNodes());
         for (Node node : children) {
             node.remove();
@@ -90,7 +91,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Assigns the specified design attribute to the given component.
-     * 
+     *
      * @param target
      *            the target to which the attribute should be set
      * @param attribute
@@ -107,7 +108,8 @@ public class DesignAttributeHandler implements Serializable {
         }
         boolean success = false;
         try {
-            Method setter = findSetterForAttribute(target.getClass(), attribute);
+            Method setter = findSetterForAttribute(target.getClass(),
+                    attribute);
             if (setter == null) {
                 // if we don't have the setter, there is no point in continuing
                 success = false;
@@ -119,15 +121,12 @@ public class DesignAttributeHandler implements Serializable {
                 success = true;
             }
         } catch (Exception e) {
-            getLogger().log(
-                    Level.WARNING,
-                    "Failed to set value \"" + value + "\" to attribute "
-                            + attribute, e);
+            getLogger().log(Level.WARNING, "Failed to set value \"" + value
+                    + "\" to attribute " + attribute, e);
         }
         if (!success) {
-            getLogger().info(
-                    "property " + attribute
-                            + " ignored by default attribute handler");
+            getLogger().info("property " + attribute
+                    + " ignored by default attribute handler");
         }
         return success;
     }
@@ -135,7 +134,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Searches for supported setter and getter types from the specified class
      * and returns the list of corresponding design attributes
-     * 
+     *
      * @param clazz
      *            the class scanned for setters
      * @return the list of supported design attributes
@@ -149,7 +148,7 @@ public class DesignAttributeHandler implements Serializable {
      * Resolves the supported attributes and corresponding getters and setters
      * for the class using introspection. After resolving, the information is
      * cached internally by this class
-     * 
+     *
      * @param clazz
      *            the class to resolve the supported attributes for
      */
@@ -170,11 +169,12 @@ public class DesignAttributeHandler implements Serializable {
                             + clazz.getName());
         }
         AttributeCacheEntry entry = new AttributeCacheEntry();
-        for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+        for (PropertyDescriptor descriptor : beanInfo
+                .getPropertyDescriptors()) {
             Method getter = descriptor.getReadMethod();
             Method setter = descriptor.getWriteMethod();
-            if (getter != null && setter != null
-                    && getFormatter().canConvert(descriptor.getPropertyType())) {
+            if (getter != null && setter != null && getFormatter()
+                    .canConvert(descriptor.getPropertyType())) {
                 String attribute = toAttributeName(descriptor.getName());
                 entry.addAttribute(attribute, getter, setter);
             }
@@ -185,7 +185,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Writes the specified attribute to the design if it differs from the
      * default value got from the <code> defaultInstance <code>
-     * 
+     *
      * @param component
      *            the component used to get the attribute value
      * @param attribute
@@ -197,7 +197,7 @@ public class DesignAttributeHandler implements Serializable {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void writeAttribute(Object component, String attribute,
-            Attributes attr, Object defaultInstance) {
+            Attributes attr, Object defaultInstance, DesignContext context) {
         Method getter = findGetterForAttribute(component.getClass(), attribute);
         if (getter == null) {
             getLogger().warning(
@@ -208,12 +208,11 @@ public class DesignAttributeHandler implements Serializable {
                 Object value = getter.invoke(component);
                 Object defaultValue = getter.invoke(defaultInstance);
                 writeAttribute(attribute, attr, value, defaultValue,
-                        (Class) getter.getReturnType());
+                        (Class) getter.getReturnType(), context);
             } catch (Exception e) {
-                getLogger()
-                        .log(Level.SEVERE,
-                                "Failed to invoke getter for attribute "
-                                        + attribute, e);
+                getLogger().log(Level.SEVERE,
+                        "Failed to invoke getter for attribute " + attribute,
+                        e);
             }
         }
     }
@@ -221,7 +220,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Writes the given attribute value to a set of attributes if it differs
      * from the default attribute value.
-     * 
+     *
      * @param attribute
      *            the attribute key
      * @param attributes
@@ -234,15 +233,17 @@ public class DesignAttributeHandler implements Serializable {
      *            the type of the input value
      */
     public static <T> void writeAttribute(String attribute,
-            Attributes attributes, T value, T defaultValue, Class<T> inputType) {
+            Attributes attributes, T value, T defaultValue, Class<T> inputType,
+            DesignContext context) {
         if (!getFormatter().canConvert(inputType)) {
-            throw new IllegalArgumentException("input type: "
-                    + inputType.getName() + " not supported");
+            throw new IllegalArgumentException(
+                    "input type: " + inputType.getName() + " not supported");
         }
-        if (!SharedUtil.equals(value, defaultValue)) {
+        if (context.shouldWriteDefaultValues()
+                || !SharedUtil.equals(value, defaultValue)) {
             String attributeValue = toAttributeValue(inputType, value);
-            if ("".equals(attributeValue)
-                    && (inputType == boolean.class || inputType == Boolean.class)) {
+            if ("".equals(attributeValue) && (inputType == boolean.class
+                    || inputType == Boolean.class)) {
                 attributes.put(attribute, true);
             } else {
                 attributes.put(attribute, attributeValue);
@@ -253,7 +254,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Reads the given attribute from a set of attributes. If attribute does not
      * exist return a given default value.
-     * 
+     *
      * @param attribute
      *            the attribute key
      * @param attributes
@@ -276,7 +277,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Reads the given attribute from a set of attributes.
-     * 
+     *
      * @param attribute
      *            the attribute key
      * @param attributes
@@ -288,8 +289,8 @@ public class DesignAttributeHandler implements Serializable {
     public static <T> T readAttribute(String attribute, Attributes attributes,
             Class<T> outputType) {
         if (!getFormatter().canConvert(outputType)) {
-            throw new IllegalArgumentException("output type: "
-                    + outputType.getName() + " not supported");
+            throw new IllegalArgumentException(
+                    "output type: " + outputType.getName() + " not supported");
         }
         if (!attributes.hasKey(attribute)) {
             return null;
@@ -298,8 +299,8 @@ public class DesignAttributeHandler implements Serializable {
                 String value = attributes.get(attribute);
                 return getFormatter().parse(value, outputType);
             } catch (Exception e) {
-                throw new DesignException("Failed to read attribute "
-                        + attribute, e);
+                throw new DesignException(
+                        "Failed to read attribute " + attribute, e);
             }
         }
     }
@@ -308,7 +309,7 @@ public class DesignAttributeHandler implements Serializable {
      * Returns the design attribute name corresponding the given method name.
      * For example given a method name <code>setPrimaryStyleName</code> the
      * return value would be <code>primary-style-name</code>
-     * 
+     *
      * @param propertyName
      *            the property name returned by {@link IntroSpector}
      * @return the design attribute name corresponding the given method name
@@ -330,7 +331,7 @@ public class DesignAttributeHandler implements Serializable {
      * Replaces subsequent UPPERCASE strings of length 2 or more followed either
      * by another uppercase letter or an end of string. This is to generalise
      * handling of method names like <tt>showISOWeekNumbers</tt>.
-     * 
+     *
      * @param param
      *            Input string.
      * @return Input string with sequences of UPPERCASE turned into Normalcase.
@@ -346,13 +347,12 @@ public class DesignAttributeHandler implements Serializable {
             // if this is a beginning of the string, the whole matched group is
             // written in lower case
             if (matcher.group(1).isEmpty()) {
-                matcher.appendReplacement(result, matched.toLowerCase()
-                        + matcher.group(3));
+                matcher.appendReplacement(result,
+                        matched.toLowerCase() + matcher.group(3));
                 // otherwise the first character of the group stays uppercase,
                 // while the others are lower case
             } else {
-                matcher.appendReplacement(
-                        result,
+                matcher.appendReplacement(result,
                         matcher.group(1) + matched.substring(0, 1)
                                 + matched.substring(1).toLowerCase()
                                 + matcher.group(3));
@@ -368,7 +368,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Serializes the given value to valid design attribute representation
-     * 
+     *
      * @param sourceType
      *            the type of the value
      * @param value
@@ -381,10 +381,11 @@ public class DesignAttributeHandler implements Serializable {
             // value is not null. How to represent null value in attributes?
             return "";
         }
-        Converter<String, Object> converter = getFormatter().findConverterFor(
-                sourceType);
+        @SuppressWarnings("unchecked")
+        Converter<String, Object> converter = getFormatter()
+                .findConverterFor(sourceType);
         if (converter != null) {
-            return converter.convertToPresentation(value, String.class, null);
+            return converter.convertToPresentation(value, new ValueContext());
         } else {
             return value.toString();
         }
@@ -393,7 +394,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Returns a setter that can be used for assigning the given design
      * attribute to the class
-     * 
+     *
      * @param clazz
      *            the class that is scanned for setters
      * @param attribute
@@ -409,7 +410,7 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Returns a getter that can be used for reading the given design attribute
      * value from the class
-     * 
+     *
      * @param clazz
      *            the class that is scanned for getters
      * @param attribute
@@ -425,13 +426,14 @@ public class DesignAttributeHandler implements Serializable {
     /**
      * Cache object for caching supported attributes and their getters and
      * setters
-     * 
+     *
      * @author Vaadin Ltd
      */
     private static class AttributeCacheEntry implements Serializable {
-        private Map<String, Method[]> accessMethods = new ConcurrentHashMap<String, Method[]>();
+        private final Map<String, Method[]> accessMethods = new ConcurrentHashMap<>();
 
-        private void addAttribute(String attribute, Method getter, Method setter) {
+        private void addAttribute(String attribute, Method getter,
+                Method setter) {
             Method[] methods = new Method[2];
             methods[0] = getter;
             methods[1] = setter;
@@ -439,7 +441,7 @@ public class DesignAttributeHandler implements Serializable {
         }
 
         private Collection<String> getAttributes() {
-            ArrayList<String> attributes = new ArrayList<String>();
+            ArrayList<String> attributes = new ArrayList<>();
             attributes.addAll(accessMethods.keySet());
             return attributes;
         }
@@ -457,7 +459,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Read the alignment from the given child component attributes.
-     * 
+     *
      * @since 7.6.4
      * @param attr
      *            the child component attributes
@@ -485,14 +487,15 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Writes the alignment to the given child element attributes.
-     * 
+     *
      * @since 7.6.4
      * @param childElement
      *            the child element
      * @param alignment
      *            the component alignment
      */
-    public static void writeAlignment(Element childElement, Alignment alignment) {
+    public static void writeAlignment(Element childElement,
+            Alignment alignment) {
         if (alignment.isMiddle()) {
             childElement.attr(":middle", true);
         } else if (alignment.isBottom()) {
@@ -503,6 +506,9 @@ public class DesignAttributeHandler implements Serializable {
         } else if (alignment.isRight()) {
             childElement.attr(":right", true);
         }
+    }
+
+    private DesignAttributeHandler() {
     }
 
 }

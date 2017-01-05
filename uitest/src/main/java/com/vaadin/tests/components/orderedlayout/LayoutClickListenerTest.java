@@ -10,10 +10,10 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.TextField;
 
 public class LayoutClickListenerTest extends TestBase {
 
@@ -58,7 +58,7 @@ public class LayoutClickListenerTest extends TestBase {
         layout.addComponent(nestedLayout);
 
         // Listen for layout click events
-        layout.addListener(new LayoutClickListener() {
+        layout.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(LayoutClickEvent event) {
 
@@ -67,8 +67,8 @@ public class LayoutClickListenerTest extends TestBase {
 
                 if (clickedComponent == null) {
                     // Not over any child component
-                    LayoutClickListenerTest.this.addComponent(new Label(
-                            "The click was not over any component."));
+                    LayoutClickListenerTest.this.addComponent(
+                            new Label("The click was not over any component."));
                 } else {
                     // Over a child component
                     String message = "The click was over a "

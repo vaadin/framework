@@ -1,13 +1,19 @@
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class FirstTabNotVisibleWhenTabsheetNotClipped extends AbstractTestUI {
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
+
+public class FirstTabNotVisibleWhenTabsheetNotClipped
+        extends AbstractReindeerTestUI {
 
     private TabSheet.Tab firstNotClippedTab;
     private TabSheet.Tab firstClippedTab;
@@ -65,7 +71,7 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped extends AbstractTestUI {
 
         TabSheet tabsheet = new TabSheet();
         String[] letters = { "A", "B", "C", "D" };
-        HashMap<String, TabSheet.Tab> tabMap = new HashMap<String, TabSheet.Tab>();
+        HashMap<String, TabSheet.Tab> tabMap = new HashMap<>();
 
         for (String letter : letters) {
             VerticalLayout vLayout = new VerticalLayout();
@@ -124,7 +130,7 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "TabSheet should display re-shown tab if there's room for it";
     }
 }

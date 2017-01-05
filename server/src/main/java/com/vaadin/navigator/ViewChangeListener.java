@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,13 +21,18 @@ import java.util.EventObject;
 
 /**
  * Interface for listening to View changes before and after they occur.
- * 
+ * <p>
  * Implementations of this interface can also block navigation between views
- * before it is performed.
- * 
+ * before it is performed (using {@link #beforeViewChange(ViewChangeEvent)}).
+ * <p>
+ * The interface contains two methods {@link #beforeViewChange(ViewChangeEvent)}
+ * and {@link #afterViewChange(ViewChangeEvent)}. The latter one has default
+ * empty implementation.
+ *
  * @author Vaadin Ltd
  * @since 7.0
  */
+@FunctionalInterface
 public interface ViewChangeListener extends Serializable {
 
     /**
@@ -41,7 +46,7 @@ public interface ViewChangeListener extends Serializable {
 
         /**
          * Create a new view change event.
-         * 
+         *
          * @param navigator
          *            Navigator that triggered the event, not null
          */
@@ -56,7 +61,7 @@ public interface ViewChangeListener extends Serializable {
 
         /**
          * Returns the navigator that triggered this event.
-         * 
+         *
          * @return Navigator (not null)
          */
         public Navigator getNavigator() {
@@ -65,7 +70,7 @@ public interface ViewChangeListener extends Serializable {
 
         /**
          * Returns the view being deactivated.
-         * 
+         *
          * @return old View
          */
         public View getOldView() {
@@ -74,7 +79,7 @@ public interface ViewChangeListener extends Serializable {
 
         /**
          * Returns the view being activated.
-         * 
+         *
          * @return new View
          */
         public View getNewView() {
@@ -83,7 +88,7 @@ public interface ViewChangeListener extends Serializable {
 
         /**
          * Returns the view name of the view being activated.
-         * 
+         *
          * @return view name of the new View
          */
         public String getViewName() {
@@ -92,7 +97,7 @@ public interface ViewChangeListener extends Serializable {
 
         /**
          * Returns the parameters for the view being activated.
-         * 
+         *
          * @return navigation parameters (potentially bookmarkable) for the new
          *         view
          */
@@ -111,7 +116,7 @@ public interface ViewChangeListener extends Serializable {
      * know the view in question), it should return true. If any listener
      * returns false, the view change is not allowed and
      * <code>afterViewChange()</code> methods are not called.
-     * 
+     *
      * @param event
      *            view change event
      * @return true if the view change should be allowed or this listener does
@@ -124,10 +129,14 @@ public interface ViewChangeListener extends Serializable {
      * method blocked the view change, this method is not called. Be careful of
      * unbounded recursion if you decide to change the view again in the
      * listener.
-     * 
+     * <p>
+     * By default it does nothing. Override it in your listener if you need this
+     * functionality.
+     *
      * @param event
      *            view change event
      */
-    public void afterViewChange(ViewChangeEvent event);
+    public default void afterViewChange(ViewChangeEvent event) {
+    }
 
 }

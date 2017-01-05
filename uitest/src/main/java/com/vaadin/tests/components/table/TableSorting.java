@@ -2,12 +2,12 @@ package com.vaadin.tests.components.table;
 
 import java.io.Serializable;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
 public class TableSorting extends TestBase {
 
@@ -16,7 +16,7 @@ public class TableSorting extends TestBase {
         final Label showID = new Label("");
         final Table testTable = new Table();
 
-        BeanItemContainer<TestItem> cont = new BeanItemContainer<TestItem>(
+        BeanItemContainer<TestItem> cont = new BeanItemContainer<>(
                 TestItem.class);
 
         for (int i = 0; i < 20; i++) {
@@ -34,8 +34,8 @@ public class TableSorting extends TestBase {
         testTable.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                System.out.println("ValueChanged: "
-                        + testTable.getValue().toString());
+                System.out.println(
+                        "ValueChanged: " + testTable.getValue().toString());
                 showID.setCaption("ID: " + testTable.getValue().toString());
             }
         });

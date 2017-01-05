@@ -3,14 +3,14 @@ package com.vaadin.tests.components.table;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Table;
 
 public class TableMultiSelectSimple extends TestBase {
     Log log = new Log(3);
@@ -30,8 +30,8 @@ public class TableMultiSelectSimple extends TestBase {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                TreeSet<?> sorted = new TreeSet<Object>((Set<?>) event
-                        .getProperty().getValue());
+                TreeSet<?> sorted = new TreeSet<Object>(
+                        (Set<?>) event.getProperty().getValue());
                 log.log("Selected value: " + sorted);
             }
         });

@@ -15,11 +15,11 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.v7.ui.themes.BaseTheme;
 
 public class PopupViewOffScreen extends TestBase {
 
-    private List<PopupView> popupViews = new ArrayList<PopupView>();
+    private List<PopupView> popupViews = new ArrayList<>();
 
     @Override
     protected String getDescription() {

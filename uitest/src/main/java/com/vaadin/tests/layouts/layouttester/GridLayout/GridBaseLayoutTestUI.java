@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -86,14 +86,17 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
         Button btn3 = new SetSizeButton("75%");
         Button btn4 = new SetSizeButton("100%");
 
+        Label spacer = new Label(
+                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
+                ContentMode.HTML);
+        spacer.setWidth("100%");
+
         layout.addComponent(btn1);
         layout.addComponent(btn2);
         layout.addComponent(btn3);
         layout.addComponent(btn4);
         layout.addComponent(c1);
-        layout.addComponent(new Label(
-                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
-                ContentMode.HTML));
+        layout.addComponent(spacer);
         layout.addComponent(c2);
         btn2.addClickListener(new ClickListener() {
 

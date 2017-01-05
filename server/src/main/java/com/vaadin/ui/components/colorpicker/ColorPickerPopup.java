@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,26 +15,26 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Slider;
@@ -45,25 +45,12 @@ import com.vaadin.ui.Window;
 
 /**
  * A component that represents color selection popup within a color picker.
- * 
+ *
  * @since 7.0.0
  */
-public class ColorPickerPopup extends Window implements ClickListener,
-        ColorChangeListener, ColorSelector {
+public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     private static final String STYLENAME = "v-colorpicker-popup";
-
-    private static final Method COLOR_CHANGE_METHOD;
-    static {
-        try {
-            COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
-                    "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in ColorPicker");
-        }
-    }
 
     /** The tabs. */
     private final TabSheet tabs = new TabSheet();
@@ -132,7 +119,11 @@ public class ColorPickerPopup extends Window implements ClickListener,
     private ColorPickerSelect colorSelect;
 
     /** The selectors. */
-    private final Set<ColorSelector> selectors = new HashSet<ColorSelector>();
+    private final Set<HasValue<Color>> selectors = new HashSet<>();
+
+    private boolean readOnly;
+
+    private boolean required;
 
     /**
      * Set true while the slider values are updated after colorChange. When
@@ -154,14 +145,16 @@ public class ColorPickerPopup extends Window implements ClickListener,
         setContent(layout);
         setStyleName(STYLENAME);
         setResizable(false);
-        setImmediate(true);
         // Create the history
         history = new ColorPickerHistory();
-        history.addColorChangeListener(this);
+        history.addValueChangeListener(this::colorChanged);
     }
 
     /**
      * Instantiates a new color picker popup.
+     *
+     * @param initialColor
+     *            the initially selected color
      */
     public ColorPickerPopup(Color initialColor) {
         this();
@@ -174,21 +167,22 @@ public class ColorPickerPopup extends Window implements ClickListener,
         rgbPreview = new ColorPickerPreview(selectedColor);
         rgbPreview.setWidth("240px");
         rgbPreview.setHeight("20px");
-        rgbPreview.addColorChangeListener(this);
+        rgbPreview.addValueChangeListener(this::colorChanged);
         selectors.add(rgbPreview);
 
         // Create the preview on the hsv tab
         hsvPreview = new ColorPickerPreview(selectedColor);
         hsvPreview.setWidth("240px");
         hsvPreview.setHeight("20px");
-        hsvPreview.addColorChangeListener(this);
+        hsvPreview.addValueChangeListener(this::colorChanged);
         selectors.add(hsvPreview);
 
         // Create the preview on the swatches tab
         selPreview = new ColorPickerPreview(selectedColor);
         selPreview.setWidth("100%");
         selPreview.setHeight("20px");
-        selPreview.addColorChangeListener(this);
+        selPreview.setRequiredIndicatorVisible(required);
+        selPreview.addValueChangeListener(this::colorChanged);
         selectors.add(selPreview);
 
         // Create the tabs
@@ -211,7 +205,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         history.setHeight("22px");
 
         // Create the default colors
-        List<Color> defaultColors = new ArrayList<Color>();
+        List<Color> defaultColors = new ArrayList<>();
         defaultColors.add(Color.BLACK);
         defaultColors.add(Color.WHITE);
 
@@ -230,8 +224,8 @@ public class ColorPickerPopup extends Window implements ClickListener,
         layout.addComponent(historyContainer);
 
         // Add the resize button for the history
-        resize.addClickListener(this);
-        resize.setData(new Boolean(false));
+        resize.addClickListener(this::resizeButtonClick);
+        resize.setData(false);
         resize.setWidth("100%");
         resize.setHeight("10px");
         resize.setPrimaryStyleName("resize-button");
@@ -239,10 +233,10 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
         // Add the buttons
         ok.setWidth("70px");
-        ok.addClickListener(this);
+        ok.addClickListener(this::okButtonClick);
 
         cancel.setWidth("70px");
-        cancel.addClickListener(this);
+        cancel.addClickListener(this::cancelButtonClick);
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.addComponent(ok);
@@ -256,7 +250,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
     /**
      * Creates the RGB tab.
-     * 
+     *
      * @return the component
      */
     private Component createRGBTab(Color color) {
@@ -266,9 +260,9 @@ public class ColorPickerPopup extends Window implements ClickListener,
         rgbLayout.setStyleName("rgbtab");
 
         // Add the RGB color gradient
-        rgbGradient = new ColorPickerGradient("rgb-gradient", RGBConverter);
-        rgbGradient.setColor(color);
-        rgbGradient.addColorChangeListener(this);
+        rgbGradient = new ColorPickerGradient("rgb-gradient", rgbConverter);
+        rgbGradient.setValue(color);
+        rgbGradient.addValueChangeListener(this::colorChanged);
         rgbLayout.addComponent(rgbGradient);
         selectors.add(rgbGradient);
 
@@ -281,42 +275,33 @@ public class ColorPickerPopup extends Window implements ClickListener,
         blueSlider = createRGBSlider("Blue", "blue");
         setRgbSliderValues(color);
 
-        redSlider.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                double red = (Double) event.getProperty().getValue();
-                if (!updatingColors) {
-                    Color newColor = new Color((int) red, selectedColor
-                            .getGreen(), selectedColor.getBlue());
-                    setColor(newColor);
-                }
+        redSlider.addValueChangeListener(e -> {
+            double red = e.getValue();
+            if (!updatingColors) {
+                Color newColor = new Color((int) red, selectedColor.getGreen(),
+                        selectedColor.getBlue());
+                setValue(newColor);
             }
         });
 
         sliders.addComponent(redSlider);
 
-        greenSlider.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                double green = (Double) event.getProperty().getValue();
-                if (!updatingColors) {
-                    Color newColor = new Color(selectedColor.getRed(),
-                            (int) green, selectedColor.getBlue());
-                    setColor(newColor);
-                }
+        greenSlider.addValueChangeListener(e -> {
+            double green = e.getValue();
+            if (!updatingColors) {
+                Color newColor = new Color(selectedColor.getRed(), (int) green,
+                        selectedColor.getBlue());
+                setValue(newColor);
             }
         });
         sliders.addComponent(greenSlider);
 
-        blueSlider.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                double blue = (Double) event.getProperty().getValue();
-                if (!updatingColors) {
-                    Color newColor = new Color(selectedColor.getRed(),
-                            selectedColor.getGreen(), (int) blue);
-                    setColor(newColor);
-                }
+        blueSlider.addValueChangeListener(e -> {
+            double blue = e.getValue();
+            if (!updatingColors) {
+                Color newColor = new Color(selectedColor.getRed(),
+                        selectedColor.getGreen(), (int) blue);
+                setValue(newColor);
             }
         });
         sliders.addComponent(blueSlider);
@@ -328,7 +313,6 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
     private Slider createRGBSlider(String caption, String styleName) {
         Slider redSlider = new Slider(caption, 0, 255);
-        redSlider.setImmediate(true);
         redSlider.setStyleName("rgb-slider");
         redSlider.setWidth("220px");
         redSlider.addStyleName(styleName);
@@ -337,7 +321,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
     /**
      * Creates the hsv tab.
-     * 
+     *
      * @return the component
      */
     private Component createHSVTab(Color color) {
@@ -347,9 +331,9 @@ public class ColorPickerPopup extends Window implements ClickListener,
         hsvLayout.setStyleName("hsvtab");
 
         // Add the hsv gradient
-        hsvGradient = new ColorPickerGradient("hsv-gradient", HSVConverter);
-        hsvGradient.setColor(color);
-        hsvGradient.addColorChangeListener(this);
+        hsvGradient = new ColorPickerGradient("hsv-gradient", hsvConverter);
+        hsvGradient.setValue(color);
+        hsvGradient.addValueChangeListener(this::colorChanged);
         hsvLayout.addComponent(hsvGradient);
         selectors.add(hsvGradient);
 
@@ -366,74 +350,62 @@ public class ColorPickerPopup extends Window implements ClickListener,
         hueSlider.setStyleName("hsv-slider");
         hueSlider.addStyleName("hue-slider");
         hueSlider.setWidth("220px");
-        hueSlider.setImmediate(true);
-        hueSlider.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (!updatingColors) {
-                    float hue = (Float.parseFloat(event.getProperty()
-                            .getValue().toString())) / 360f;
-                    float saturation = (Float.parseFloat(saturationSlider
-                            .getValue().toString())) / 100f;
-                    float value = (Float.parseFloat(valueSlider.getValue()
-                            .toString())) / 100f;
+        hueSlider.addValueChangeListener(event -> {
+            if (!updatingColors) {
+                float hue = Float.parseFloat(event.getValue().toString())
+                        / 360f;
+                float saturation = Float.parseFloat(
+                        saturationSlider.getValue().toString()) / 100f;
+                float value = Float
+                        .parseFloat(valueSlider.getValue().toString()) / 100f;
 
-                    // Set the color
-                    Color color = new Color(Color.HSVtoRGB(hue, saturation,
-                            value));
-                    setColor(color);
+                // Set the color
+                Color newColor = new Color(
+                        Color.HSVtoRGB(hue, saturation, value));
+                setValue(newColor);
 
-                    /*
-                     * Set the background color of the hue gradient. This has to
-                     * be done here since in the conversion the base color
-                     * information is lost when color is black/white
-                     */
-                    Color bgColor = new Color(Color.HSVtoRGB(hue, 1f, 1f));
-                    hsvGradient.setBackgroundColor(bgColor);
-                }
+                /*
+                 * Set the background color of the hue gradient. This has to be
+                 * done here since in the conversion the base color information
+                 * is lost when color is black/white
+                 */
+                Color bgColor = new Color(Color.HSVtoRGB(hue, 1f, 1f));
+                hsvGradient.setBackgroundColor(bgColor);
             }
         });
         sliders.addComponent(hueSlider);
 
         saturationSlider.setStyleName("hsv-slider");
         saturationSlider.setWidth("220px");
-        saturationSlider.setImmediate(true);
-        saturationSlider.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (!updatingColors) {
-                    float hue = (Float.parseFloat(hueSlider.getValue()
-                            .toString())) / 360f;
-                    float saturation = (Float.parseFloat(event.getProperty()
-                            .getValue().toString())) / 100f;
-                    float value = (Float.parseFloat(valueSlider.getValue()
-                            .toString())) / 100f;
-                    Color color = new Color(Color.HSVtoRGB(hue, saturation,
-                            value));
-                    setColor(color);
-                }
+        saturationSlider.addValueChangeListener(event -> {
+            if (!updatingColors) {
+                float hue = Float.parseFloat(hueSlider.getValue().toString())
+                        / 360f;
+                float saturation = Float.parseFloat(event.getValue().toString())
+                        / 100f;
+                float value = Float
+                        .parseFloat(valueSlider.getValue().toString()) / 100f;
+                Color newColor = new Color(
+                        Color.HSVtoRGB(hue, saturation, value));
+                setValue(newColor);
             }
         });
         sliders.addComponent(saturationSlider);
 
         valueSlider.setStyleName("hsv-slider");
         valueSlider.setWidth("220px");
-        valueSlider.setImmediate(true);
-        valueSlider.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (!updatingColors) {
-                    float hue = (Float.parseFloat(hueSlider.getValue()
-                            .toString())) / 360f;
-                    float saturation = (Float.parseFloat(saturationSlider
-                            .getValue().toString())) / 100f;
-                    float value = (Float.parseFloat(event.getProperty()
-                            .getValue().toString())) / 100f;
+        valueSlider.addValueChangeListener(event -> {
+            if (!updatingColors) {
+                float hue = Float.parseFloat(hueSlider.getValue().toString())
+                        / 360f;
+                float saturation = Float.parseFloat(
+                        saturationSlider.getValue().toString()) / 100f;
+                float value = Float.parseFloat(event.getValue().toString())
+                        / 100f;
 
-                    Color color = new Color(Color.HSVtoRGB(hue, saturation,
-                            value));
-                    setColor(color);
-                }
+                Color newColor = new Color(
+                        Color.HSVtoRGB(hue, saturation, value));
+                setValue(newColor);
             }
         });
 
@@ -445,7 +417,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
     /**
      * Creates the select tab.
-     * 
+     *
      * @return the component
      */
     private Component createSelectTab() {
@@ -455,96 +427,93 @@ public class ColorPickerPopup extends Window implements ClickListener,
         selLayout.addStyleName("seltab");
 
         colorSelect = new ColorPickerSelect();
-        colorSelect.addColorChangeListener(this);
+        colorSelect.addValueChangeListener(this::colorChanged);
         selLayout.addComponent(colorSelect);
 
         return selLayout;
     }
 
-    @Override
-    public void buttonClick(ClickEvent event) {
-        // History resize was clicked
-        if (event.getButton() == resize) {
-            boolean state = (Boolean) resize.getData();
+    private void resizeButtonClick(ClickEvent event) {
 
-            // minimize
-            if (state) {
-                historyContainer.setHeight("27px");
-                history.setHeight("22px");
-
-                // maximize
-            } else {
-                historyContainer.setHeight("90px");
-                history.setHeight("85px");
-            }
-
-            resize.setData(new Boolean(!state));
+        boolean minimize = (Boolean) resize.getData();
+        if (minimize) {
+            historyContainer.setHeight("27px");
+            history.setHeight("22px");
+        } else {
+            historyContainer.setHeight("90px");
+            history.setHeight("85px");
         }
 
-        // Ok button was clicked
-        else if (event.getButton() == ok) {
-            history.setColor(getColor());
-            fireColorChanged();
-            close();
-        }
-
-        // Cancel button was clicked
-        else if (event.getButton() == cancel) {
-            close();
-        }
-
+        resize.setData(!minimize);
     }
 
-    /**
-     * Notifies the listeners that the color changed
-     */
-    public void fireColorChanged() {
-        fireEvent(new ColorChangeEvent(this, getColor()));
+    private void okButtonClick(ClickEvent event) {
+        fireEvent(new ValueChangeEvent<>(this, true));
+        close();
+    }
+
+    private void cancelButtonClick(ClickEvent event) {
+        close();
     }
 
     /**
      * Gets the history.
-     * 
+     *
      * @return the history
      */
     public ColorPickerHistory getHistory() {
         return history;
     }
 
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param color
+     *            the new value, not {@code null}
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
+     */
     @Override
-    public void setColor(Color color) {
-        if (color == null) {
-            return;
-        }
+    public void setValue(Color color) {
+        Objects.requireNonNull(color, "color cannot be null");
 
         selectedColor = color;
 
-        hsvGradient.setColor(selectedColor);
-        hsvPreview.setColor(selectedColor);
+        hsvGradient.setValue(selectedColor);
+        hsvPreview.setValue(selectedColor);
 
-        rgbGradient.setColor(selectedColor);
-        rgbPreview.setColor(selectedColor);
+        rgbGradient.setValue(selectedColor);
+        rgbPreview.setValue(selectedColor);
 
-        selPreview.setColor(selectedColor);
+        selPreview.setValue(selectedColor);
     }
 
     @Override
-    public Color getColor() {
+    public Color getValue() {
         return selectedColor;
+    }
+
+    @Override
+    public Registration addValueChangeListener(
+            ValueChangeListener<Color> listener) {
+        Objects.requireNonNull(listener, "listener cannot be null");
+        return addListener(ValueChangeEvent.class, listener,
+                ValueChangeListener.VALUE_CHANGE_METHOD);
     }
 
     /**
      * Gets the color history.
-     * 
+     *
      * @return the color history
      */
     public List<Color> getColorHistory() {
         return Collections.unmodifiableList(history.getHistory());
     }
 
-    @Override
-    public void colorChanged(ColorChangeEvent event) {
-        setColor(event.getColor());
+    private void colorChanged(ValueChangeEvent<Color> event) {
+        setValue(event.getValue());
 
         updatingColors = true;
 
@@ -554,10 +523,10 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
         updatingColors = false;
 
-        for (ColorSelector s : selectors) {
+        for (HasValue<Color> s : selectors) {
             if (event.getSource() != s && s != this
-                    && s.getColor() != selectedColor) {
-                s.setColor(selectedColor);
+                    && s.getValue() != selectedColor) {
+                s.setValue(selectedColor);
             }
         }
     }
@@ -568,10 +537,10 @@ public class ColorPickerPopup extends Window implements ClickListener,
             blueSlider.setValue(((Integer) color.getBlue()).doubleValue());
             greenSlider.setValue(((Integer) color.getGreen()).doubleValue());
         } catch (ValueOutOfBoundsException e) {
-            getLogger().log(
-                    Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "Unable to set RGB color value to " + color.getRed() + ","
-                            + color.getGreen() + "," + color.getBlue(), e);
+                            + color.getGreen() + "," + color.getBlue(),
+                    e);
         }
     }
 
@@ -581,34 +550,21 @@ public class ColorPickerPopup extends Window implements ClickListener,
             saturationSlider.setValue(((Float) (hsv[1] * 100f)).doubleValue());
             valueSlider.setValue(((Float) (hsv[2] * 100f)).doubleValue());
         } catch (ValueOutOfBoundsException e) {
-            getLogger().log(
-                    Level.WARNING,
-                    "Unable to set HSV color value to " + hsv[0] + "," + hsv[1]
-                            + "," + hsv[2], e);
+            getLogger().log(Level.WARNING, "Unable to set HSV color value to "
+                    + hsv[0] + "," + hsv[1] + "," + hsv[2], e);
         }
-    }
-
-    @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
-        addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
-    }
-
-    @Override
-    public void removeColorChangeListener(ColorChangeListener listener) {
-        removeListener(ColorChangeEvent.class, listener);
     }
 
     /**
      * Checks the visibility of the given tab
-     * 
+     *
      * @param tab
      *            The tab to check
      * @return true if tab is visible, false otherwise
      */
-    private boolean tabIsVisible(Component tab) {
-        Iterator<Component> tabIterator = tabs.getComponentIterator();
-        while (tabIterator.hasNext()) {
-            if (tabIterator.next() == tab) {
+    private boolean isTabVisible(Component tab) {
+        for (Component child : tabs) {
+            if (child == tab) {
                 return true;
             }
         }
@@ -616,79 +572,65 @@ public class ColorPickerPopup extends Window implements ClickListener,
     }
 
     /**
-     * How many tabs are visible
-     * 
-     * @return The number of tabs visible
-     */
-    private int tabsNumVisible() {
-        Iterator<Component> tabIterator = tabs.getComponentIterator();
-        int tabCounter = 0;
-        while (tabIterator.hasNext()) {
-            tabIterator.next();
-            tabCounter++;
-        }
-        return tabCounter;
-    }
-
-    /**
      * Checks if tabs are needed and hides them if not
      */
     private void checkIfTabsNeeded() {
-        tabs.hideTabs(tabsNumVisible() == 1);
+        tabs.setTabsVisible(tabs.getComponentCount() > 1);
     }
 
     /**
-     * Set RGB tab visibility
-     * 
+     * Sets the RGB tab visibility.
+     *
      * @param visible
      *            The visibility of the RGB tab
      */
     public void setRGBTabVisible(boolean visible) {
-        if (visible && !tabIsVisible(rgbTab)) {
+        if (visible && !isTabVisible(rgbTab)) {
             tabs.addTab(rgbTab, "RGB", null);
             checkIfTabsNeeded();
-        } else if (!visible && tabIsVisible(rgbTab)) {
+        } else if (!visible && isTabVisible(rgbTab)) {
             tabs.removeComponent(rgbTab);
             checkIfTabsNeeded();
         }
     }
 
     /**
-     * Set HSV tab visibility
-     * 
+     * Sets the HSV tab visibility.
+     *
      * @param visible
      *            The visibility of the HSV tab
      */
     public void setHSVTabVisible(boolean visible) {
-        if (visible && !tabIsVisible(hsvTab)) {
+        if (visible && !isTabVisible(hsvTab)) {
             tabs.addTab(hsvTab, "HSV", null);
             checkIfTabsNeeded();
-        } else if (!visible && tabIsVisible(hsvTab)) {
+        } else if (!visible && isTabVisible(hsvTab)) {
             tabs.removeComponent(hsvTab);
             checkIfTabsNeeded();
         }
     }
 
     /**
-     * Set Swatches tab visibility
-     * 
+     * Sets the visibility of the Swatches tab.
+     *
      * @param visible
      *            The visibility of the Swatches tab
      */
     public void setSwatchesTabVisible(boolean visible) {
-        if (visible && !tabIsVisible(swatchesTab)) {
+        if (visible && !isTabVisible(swatchesTab)) {
             tabs.addTab(swatchesTab, "Swatches", null);
             checkIfTabsNeeded();
-        } else if (!visible && tabIsVisible(swatchesTab)) {
+        } else if (!visible && isTabVisible(swatchesTab)) {
             tabs.removeComponent(swatchesTab);
             checkIfTabsNeeded();
         }
     }
 
     /**
-     * Set the History visibility
-     * 
+     * Sets the visibility of the History.
+     *
      * @param visible
+     *            {@code true} to show the history, {@code false} to hide it
      */
     public void setHistoryVisible(boolean visible) {
         historyContainer.setVisible(visible);
@@ -696,9 +638,10 @@ public class ColorPickerPopup extends Window implements ClickListener,
     }
 
     /**
-     * Set the preview visibility
-     * 
+     * Sets the preview visibility.
+     *
      * @param visible
+     *            {@code true} to show the preview, {@code false} to hide it
      */
     public void setPreviewVisible(boolean visible) {
         hsvPreview.setVisible(visible);
@@ -706,12 +649,12 @@ public class ColorPickerPopup extends Window implements ClickListener,
         selPreview.setVisible(visible);
     }
 
-    /** RGB color converter */
-    private Coordinates2Color RGBConverter = new Coordinates2Color() {
+    /** An RGB color converter. */
+    private Coordinates2Color rgbConverter = new Coordinates2Color() {
 
         @Override
         public Color calculate(int x, int y) {
-            float h = (x / 220f);
+            float h = x / 220f;
             float s = 1f;
             float v = 1f;
 
@@ -743,8 +686,8 @@ public class ColorPickerPopup extends Window implements ClickListener,
         }
     };
 
-    /** HSV color converter */
-    Coordinates2Color HSVConverter = new Coordinates2Color() {
+    /** An HSV color converter. */
+    private Coordinates2Color hsvConverter = new Coordinates2Color() {
         @Override
         public int[] calculate(Color color) {
 
@@ -763,16 +706,62 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
         @Override
         public Color calculate(int x, int y) {
-            float saturation = 1f - (y / 220.0f);
-            float value = (x / 220.0f);
-            float hue = Float.parseFloat(hueSlider.getValue().toString()) / 360f;
+            float saturation = 1f - y / 220.0f;
+            float value = x / 220.0f;
+            float hue = Float.parseFloat(hueSlider.getValue().toString())
+                    / 360f;
 
             Color color = new Color(Color.HSVtoRGB(hue, saturation, value));
             return color;
         }
     };
 
+    @Override
+    public void setRequiredIndicatorVisible(boolean visible) {
+        required = visible;
+        if (selPreview != null) {
+            selPreview.setRequiredIndicatorVisible(required);
+        }
+    }
+
+    @Override
+    public boolean isRequiredIndicatorVisible() {
+        return required;
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(ColorPickerPopup.class.getName());
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+        updateColorComponents();
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    private void updateColorComponents() {
+        if (getContent() != null) {
+            updateColorComponents(getContent());
+        }
+    }
+
+    private void updateColorComponents(Component component) {
+        if (component instanceof HasValue<?>) {
+            ((HasValue<?>) component).setReadOnly(isReadOnly());
+            ((HasValue<?>) component)
+                    .setRequiredIndicatorVisible(isRequiredIndicatorVisible());
+        }
+        if (component instanceof HasComponents) {
+            Iterator<Component> iterator = ((HasComponents) component)
+                    .iterator();
+            while (iterator.hasNext()) {
+                updateColorComponents(iterator.next());
+            }
+        }
     }
 }

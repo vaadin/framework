@@ -1,22 +1,21 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.MethodProperty;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Tree;
 
-public class ItemClickEvents extends AbstractTestUI {
+public class ItemClickEvents extends AbstractReindeerTestUI {
 
     private Tree tree;
     private Table table;
@@ -58,9 +57,7 @@ public class ItemClickEvents extends AbstractTestUI {
         tree.setParent("2. Child 1", "Root 2");
         tree.addItem("2. Child 2");
         tree.setParent("2. Child 2", "Root 2");
-        tree.addContainerProperty(
-                "icon",
-                ExternalResource.class,
+        tree.addContainerProperty("icon", ExternalResource.class,
                 new ExternalResource(
                         "https://vaadin.com/vaadin-theme/images/vaadin-logo.png"));
 
@@ -135,22 +132,31 @@ public class ItemClickEvents extends AbstractTestUI {
 
     }
 
-    private static HorizontalLayout createHorizontalLayout(Component c) {
+    private static HorizontalLayout createHorizontalLayout(AbstractSelect c) {
         HorizontalLayout layout = new HorizontalLayout();
-        CheckBox b = new CheckBox("immediate", new MethodProperty<Boolean>(c,
-                "immediate"));
-        b.setImmediate(true);
+        CheckBox b = new CheckBox("immediate");
+        b.setValue(c.isImmediate());
+        b.addValueChangeListener(event -> c.setImmediate(event.getValue()));
         layout.addComponent(b);
-        b = new CheckBox("selectable", new MethodProperty<Boolean>(c,
-                "selectable"));
-        b.setImmediate(true);
+        b = new CheckBox("selectable");
+        if (c instanceof Table) {
+            b.setValue(((Table) c).isSelectable());
+            b.addValueChangeListener(
+                    event -> ((Table) c).setSelectable(event.getValue()));
+        } else if (c instanceof Tree) {
+            b.setValue(((Tree) c).isSelectable());
+            b.addValueChangeListener(
+                    event -> ((Tree) c).setSelectable(event.getValue()));
+        }
         layout.addComponent(b);
-        b = new CheckBox("nullsel", new MethodProperty<Boolean>(c,
-                "nullSelectionAllowed"));
-        b.setImmediate(true);
+        b = new CheckBox("nullsel");
+        b.setValue(c.isNullSelectionAllowed());
+        b.addValueChangeListener(
+                event -> c.setNullSelectionAllowed(event.getValue()));
         layout.addComponent(b);
-        b = new CheckBox("multi", new MethodProperty<Boolean>(c, "multiSelect"));
-        b.setImmediate(true);
+        b = new CheckBox("multi");
+        b.setValue(c.isMultiSelect());
+        b.addValueChangeListener(event -> c.setMultiSelect(event.getValue()));
         layout.addComponent(b);
         return layout;
     }

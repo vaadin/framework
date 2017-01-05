@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.NativeSelect;
 
 public class ModalWindowNativeSelect extends TestBase {
 

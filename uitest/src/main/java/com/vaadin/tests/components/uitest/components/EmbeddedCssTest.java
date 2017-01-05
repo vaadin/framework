@@ -10,8 +10,8 @@ public class EmbeddedCssTest {
     private int debugIdCounter = 0;
 
     public EmbeddedCssTest(TestSampler parent) {
-        Embedded e = new Embedded("Embedded with a caption", new ThemeResource(
-                parent.ICON_URL));
+        Embedded e = new Embedded("Embedded with a caption",
+                new ThemeResource(parent.ICON_URL));
         e.setId("embedded" + debugIdCounter);
         parent.addComponent(e);
 

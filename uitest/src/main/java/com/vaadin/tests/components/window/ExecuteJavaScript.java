@@ -27,7 +27,7 @@ public class ExecuteJavaScript extends AbstractTestCase {
 
     private Button createScriptButton(final String script) {
         Button b = new Button(script);
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

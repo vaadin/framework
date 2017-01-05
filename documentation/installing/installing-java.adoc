@@ -8,7 +8,7 @@ layout: page
 = Installing Java SDK
 
 A Java SDK is required by Vaadin and also by any of the Java IDEs.
-Vaadin is compatible with Java 1.6 and later editions, be we recommend using Java 8 for Vaadin development.
+Vaadin Framework 8 requires Java 8.
 Java EE 7 is required for proper server push support with WebSockets.
 
 [[installing.java.windows]]
@@ -27,12 +27,10 @@ The default options are fine.
 
 Most Linux systems either have JDK preinstalled or allow installing it through a
 package management system. Notice however that they have OpenJDK as the default
-Java implementation. While it is known to have worked with Vaadin and possibly
+Java implementation. While it is known to have worked with Vaadin Framework and possibly
 also with the development toolchain, we do not especially support it.
 
-Regarding OS X, notice that JDK 1.6 or newer is included in OS X 10.6 and newer.
-
-Otherwise:
+Depending on your OS distribution, you may have to download Java JDK 8:
 
 . Download Oracle Java SE 8.0 from
 link:http://www.oracle.com/technetwork/java/javase/downloads/index.html[http://www.oracle.com/technetwork/java/javase/downloads/]

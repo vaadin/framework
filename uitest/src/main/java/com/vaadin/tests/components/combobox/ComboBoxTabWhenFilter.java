@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,20 +15,20 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.TextField;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * A test case for typing in combo box input field fast plus then press TAB.
  * When type fast and then press tab didn't add new item. Uses SlowComboBox,
  * which has a delay in setVariables method
  */
-public class ComboBoxTabWhenFilter extends AbstractTestUI {
+public class ComboBoxTabWhenFilter extends AbstractReindeerTestUI {
     public static final String DESCRIPTION = "Adding new item by typing fast plus then press TAB, very quickly, should add new item and change focus.";
 
     @Override

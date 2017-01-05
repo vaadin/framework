@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.ClickRpc;
  * We test that AbstractClientConnector has a suitable isThis method which is
  * needed to correctly perform an equals check between a proxy and it's
  * underlying instance.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class AbstractClientConnectorTest {
@@ -46,8 +46,9 @@ public class AbstractClientConnectorTest {
             Assert.fail("expected exception");
         } catch (Exception expected) {
             Assert.assertEquals(
-                    expected.getMessage(),
-                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
+                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) "
+                            + "if the Rpc implementation implements more than one interface",
+                    expected.getMessage());
         }
     }
 
@@ -69,8 +70,8 @@ public class AbstractClientConnectorTest {
         verify(mock, times(1)).registerRpc(implementation, ClickRpc.class);
     }
 
-    private class ServerRpcLastMock implements Comparable<ServerRpcLastMock>,
-            ClickRpc {
+    private class ServerRpcLastMock
+            implements Comparable<ServerRpcLastMock>, ClickRpc {
         private static final long serialVersionUID = -2822356895755286180L;
 
         @Override

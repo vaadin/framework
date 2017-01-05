@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.optiongroup;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class OptionGroupMultipleValueChange extends TestBase {
 
@@ -22,7 +22,8 @@ public class OptionGroupMultipleValueChange extends TestBase {
     @Override
     protected void setup() {
         final OptionGroup og = new OptionGroup();
-        og.addItem("Clicking on the text might cause an extra valuechange event");
+        og.addItem(
+                "Clicking on the text might cause an extra valuechange event");
         og.addItem("Second option, same thing");
         og.setImmediate(true);
         addComponent(og);

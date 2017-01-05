@@ -154,8 +154,8 @@ public class DefaultButtonExample extends CustomComponent
     HorizontalLayout buttons = new HorizontalLayout();
 
     // Create buttons and define their listener methods.
-    Button ok = new Button("OK", this, "okHandler");
-    Button cancel = new Button("Cancel", this, "cancelHandler");
+    Button ok = new Button("OK", event -> okHandler());
+    Button cancel = new Button("Cancel", event -> cancelHandler());
 
     // Have the unmodified Enter key cause an event
     Action action_ok = new ShortcutAction("Default key",

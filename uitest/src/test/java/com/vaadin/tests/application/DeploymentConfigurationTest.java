@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,15 +24,15 @@ import java.util.List;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class DeploymentConfigurationTest extends MultiBrowserTest {
+public class DeploymentConfigurationTest extends SingleBrowserTest {
 
     @Test
     public void testParameters() {
         openTestURL();
-        List<String> texts = new ArrayList<String>(Arrays.asList(
-                "Init parameters:", "legacyPropertyToString: false",
+        List<String> texts = new ArrayList<>(Arrays.asList("Init parameters:",
+                "widgetset: com.vaadin.v7.Vaadin7WidgetSet",
                 "closeIdleSessions: true", "productionMode: false",
                 "testParam: 42", "heartbeatInterval: 301",
                 "resourceCacheTime: 3601"));

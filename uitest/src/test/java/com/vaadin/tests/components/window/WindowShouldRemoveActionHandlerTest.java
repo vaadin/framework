@@ -23,7 +23,8 @@ public class WindowShouldRemoveActionHandlerTest extends MultiBrowserTest {
         removeActionHandler();
         removeActionHandler();
 
-        assertState("An UI with 3 action handlers - Removed handler - Removed handler");
+        assertState(
+                "An UI with 3 action handlers - Removed handler - Removed handler");
         addActionHandler();
 
         assertState("An UI with 2 action handlers");

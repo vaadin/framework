@@ -28,8 +28,7 @@ public class LongNotifications extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
 
-                        getMainWindow().showNotification(
-                                text,
+                        getMainWindow().showNotification(text,
                                 "This is description for the same notifications."
                                         + text,
                                 Notification.TYPE_HUMANIZED_MESSAGE);
@@ -56,12 +55,10 @@ public class LongNotifications extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
 
-                        getMainWindow()
-                                .showNotification(
-                                        text,
-                                        "This is description for the same notifications."
-                                                + text,
-                                        Notification.TYPE_ERROR_MESSAGE);
+                        getMainWindow().showNotification(text,
+                                "This is description for the same notifications."
+                                        + text,
+                                Notification.TYPE_ERROR_MESSAGE);
                     }
                 });
         getLayout().addComponent(b);

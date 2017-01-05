@@ -42,7 +42,8 @@ public class Buttons extends ComponentTestCase<Button> {
 
             l = createButton(
                     "This is a 100% wide button with fixed 65px height. "
-                            + LoremIpsum.get(5000), nat);
+                            + LoremIpsum.get(5000),
+                    nat);
             l.setWidth("100%");
             l.setHeight("65px");
 
@@ -63,7 +64,7 @@ public class Buttons extends ComponentTestCase<Button> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for Buttons in different configurations";
     }
 

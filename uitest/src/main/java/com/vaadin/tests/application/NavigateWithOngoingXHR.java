@@ -1,12 +1,12 @@
 /*
  * Copyright 2012 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,12 +24,12 @@ import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
+import com.vaadin.v7.ui.ProgressIndicator;
 
-public class NavigateWithOngoingXHR extends AbstractTestUI {
+public class NavigateWithOngoingXHR extends AbstractReindeerTestUI {
     private final RequestHandler slowRequestHandler = new RequestHandler() {
         @Override
         public boolean handleRequest(VaadinSession session,
@@ -85,10 +85,10 @@ public class NavigateWithOngoingXHR extends AbstractTestUI {
         });
 
         // Hacky URLs that are might not work in all deployment scenarios
-        addComponent(new Link("Navigate away", new ExternalResource(
-                "slowRequestHandler")));
-        addComponent(new Link("Start download", new ExternalResource(
-                "slowRequestHandler?download")));
+        addComponent(new Link("Navigate away",
+                new ExternalResource("slowRequestHandler")));
+        addComponent(new Link("Start download",
+                new ExternalResource("slowRequestHandler?download")));
     }
 
     @Override

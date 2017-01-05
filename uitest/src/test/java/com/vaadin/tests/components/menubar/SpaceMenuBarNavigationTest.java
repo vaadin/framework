@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,8 +42,8 @@ public class SpaceMenuBarNavigationTest extends MultiBrowserTest {
         menu.sendKeys(Keys.ARROW_RIGHT);
         menu.sendKeys(Keys.ENTER);
 
-        List<WebElement> captions = driver.findElements(By
-                .className("v-menubar-menuitem-caption"));
+        List<WebElement> captions = driver
+                .findElements(By.className("v-menubar-menuitem-caption"));
         boolean found = false;
 
         for (WebElement caption : captions) {

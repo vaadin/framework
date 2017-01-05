@@ -1,15 +1,14 @@
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.*;
-
-import javax.servlet.annotation.WebServlet;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class FirstTabNotVisibleInTabsheet extends AbstractTestUI {
+public class FirstTabNotVisibleInTabsheet extends AbstractReindeerTestUI {
 
     private TabSheet.Tab firstTab;
 
@@ -25,8 +24,8 @@ public class FirstTabNotVisibleInTabsheet extends AbstractTestUI {
             tabSheet.addTab(new Label("visible tab " + i), "visible tab " + i);
         }
 
-        addComponent(new VerticalLayout(tabSheet, new Button(
-                "Toggle first tab", new Button.ClickListener() {
+        addComponent(new VerticalLayout(tabSheet,
+                new Button("Toggle first tab", new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent event) {
                         firstTab.setVisible(!firstTab.isVisible());

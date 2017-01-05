@@ -16,15 +16,15 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
 
-public class PopupViewInTable extends AbstractTestUI {
+public class PopupViewInTable extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -41,8 +41,8 @@ public class PopupViewInTable extends AbstractTestUI {
     }
 
     private Component createContent() {
-        VerticalLayout vl = new VerticalLayout(new Label("Hello"), new Button(
-                "World"));
+        VerticalLayout vl = new VerticalLayout(new Label("Hello"),
+                new Button("World"));
         return vl;
     }
 

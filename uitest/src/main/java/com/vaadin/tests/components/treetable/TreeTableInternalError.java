@@ -5,9 +5,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableInternalError extends TestBase {
     private TreeTable t;
@@ -66,7 +66,7 @@ public class TreeTableInternalError extends TestBase {
 
     public class ButtonColumnGenerator implements ColumnGenerator {
         @Override
-        public Component generateCell(final com.vaadin.ui.Table source,
+        public Component generateCell(final com.vaadin.v7.ui.Table source,
                 final Object itemId, Object columnId) {
             String identifier = "Expand/Collapse";
             Button btnCol = new NativeButton(identifier);

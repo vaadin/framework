@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,14 +25,14 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * Event object describing a change in Grid row selection state.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
 @SuppressWarnings("rawtypes")
 public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
-    private static final Type<SelectionHandler> eventType = new Type<SelectionHandler>();
+    private static final Type<SelectionHandler> eventType = new Type<>();
 
     private final Grid<T> grid;
     private final List<T> added;
@@ -41,7 +41,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Creates an event with a single added or removed row.
-     * 
+     *
      * @param grid
      *            grid reference, used for getSource
      * @param added
@@ -72,7 +72,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Creates an event where several rows have been added or removed.
-     * 
+     *
      * @param grid
      *            Grid reference, used for getSource
      * @param added
@@ -92,13 +92,13 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
         this.batched = batched;
 
         if (added != null) {
-            this.added = new ArrayList<T>(added);
+            this.added = new ArrayList<>(added);
         } else {
             this.added = Collections.emptyList();
         }
 
         if (removed != null) {
-            this.removed = new ArrayList<T>(removed);
+            this.removed = new ArrayList<>(removed);
         } else {
             this.removed = Collections.emptyList();
         }
@@ -106,7 +106,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
     /**
      * Gets a reference to the Grid object that fired this event.
-     * 
+     *
      * @return a grid reference
      */
     @Override
@@ -117,7 +117,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     /**
      * Gets all rows added to the selection since the last
      * {@link SelectionEvent} .
-     * 
+     *
      * @return a collection of added rows. Empty collection if no rows were
      *         added.
      */
@@ -128,7 +128,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     /**
      * Gets all rows removed from the selection since the last
      * {@link SelectionEvent}.
-     * 
+     *
      * @return a collection of removed rows. Empty collection if no rows were
      *         removed.
      */
@@ -137,17 +137,8 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     }
 
     /**
-     * Gets currently selected rows.
-     * 
-     * @return a non-null collection containing all currently selected rows.
-     */
-    public Collection<T> getSelected() {
-        return grid.getSelectedRows();
-    }
-
-    /**
      * Gets a type identifier for this event.
-     * 
+     *
      * @return a {@link Type} identifier.
      */
     public static Type<SelectionHandler> getType() {
@@ -168,7 +159,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
     /**
      * Checks if this selection change event is fired during a batched
      * selection/deselection operation.
-     * 
+     *
      * @return <code>true</code> iff this event is fired during a batched
      *         selection/deselection operation
      */

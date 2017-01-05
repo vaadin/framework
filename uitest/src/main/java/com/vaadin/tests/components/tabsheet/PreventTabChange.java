@@ -7,8 +7,8 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 
-public class PreventTabChange extends TestBase implements
-        SelectedTabChangeListener {
+public class PreventTabChange extends TestBase
+        implements SelectedTabChangeListener {
 
     private TabSheet tabSheet;
 

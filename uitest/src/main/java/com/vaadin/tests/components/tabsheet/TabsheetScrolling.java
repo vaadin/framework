@@ -76,7 +76,8 @@ public class TabsheetScrolling extends TestBase {
                 new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        int lastFixed = fixedSizeTabSheet.getComponentCount() - 1;
+                        int lastFixed = fixedSizeTabSheet.getComponentCount()
+                                - 1;
                         fixedSizeTabSheet.setSelectedTab(lastFixed);
                         int lastAuto = autoWideTabSheet.getComponentCount() - 1;
                         autoWideTabSheet.setSelectedTab(lastAuto);

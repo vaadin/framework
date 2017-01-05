@@ -7,8 +7,8 @@ import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 
-public class VMyDropTarget extends Composite implements VHasDropHandler,
-        VDropHandler {
+public class VMyDropTarget extends Composite
+        implements VHasDropHandler, VDropHandler {
 
     ApplicationConnection client;
 

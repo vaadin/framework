@@ -2,19 +2,18 @@ package com.vaadin.tests.components.table;
 
 import java.util.Arrays;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.Table;
 
 public class TableUndefinedSize extends TestBase {
 
@@ -37,8 +36,8 @@ public class TableUndefinedSize extends TestBase {
 
         log = new Log(5);
 
-        controls.addComponent(new Button("Fixed size (200x200)",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Fixed size (200x200)", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("200px");
@@ -47,8 +46,8 @@ public class TableUndefinedSize extends TestBase {
                     }
                 }));
 
-        controls.addComponent(new Button("Fixed size (600x200)",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Fixed size (600x200)", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("600px");
@@ -57,8 +56,8 @@ public class TableUndefinedSize extends TestBase {
                     }
                 }));
 
-        controls.addComponent(new Button("Undefined size",
-                new Button.ClickListener() {
+        controls.addComponent(
+                new Button("Undefined size", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setSizeUndefined();
@@ -66,15 +65,15 @@ public class TableUndefinedSize extends TestBase {
                     }
                 }));
 
-        NativeSelect pageLength = new NativeSelect("PageLength", Arrays.asList(
-                0, 1, 2, 4, 8, 10));
+        NativeSelect pageLength = new NativeSelect("PageLength",
+                Arrays.asList(0, 1, 2, 4, 8, 10));
         pageLength.setImmediate(true);
         pageLength.setNullSelectionAllowed(false);
         pageLength.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                int pageLength = Integer.valueOf(event.getProperty().getValue()
-                        .toString());
+                int pageLength = Integer
+                        .valueOf(event.getProperty().getValue().toString());
                 tbl.setPageLength(pageLength);
                 log.log("Page length: " + pageLength);
             }
@@ -83,59 +82,44 @@ public class TableUndefinedSize extends TestBase {
 
         CheckBox cb = new CheckBox("Column 1");
         cb.setValue(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
-                tbl.setColumnCollapsed("Column 1", !value);
-                if (value) {
-                    log.log("Column 1 visible");
-                } else {
-                    log.log("Column 1 hidden");
-                }
+        cb.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
+            tbl.setColumnCollapsed("Column 1", !value);
+            if (value) {
+                log.log("Column 1 visible");
+            } else {
+                log.log("Column 1 hidden");
             }
         });
-        cb.setImmediate(true);
         visibilities.addComponent(cb);
 
         cb = new CheckBox("Column 2");
         cb.setValue(true);
-        cb.addListener(new ValueChangeListener() {
+        cb.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
+            tbl.setColumnCollapsed("Column 2", !value);
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
-                tbl.setColumnCollapsed("Column 2", !value);
-
-                if (value) {
-                    log.log("Column 2 visible");
-                } else {
-                    log.log("Column 2 hidden");
-                }
+            if (value) {
+                log.log("Column 2 visible");
+            } else {
+                log.log("Column 2 hidden");
             }
         });
-        cb.setImmediate(true);
         visibilities.addComponent(cb);
 
         cb = new CheckBox("Column 3");
         cb.setValue(true);
-        cb.addListener(new ValueChangeListener() {
+        cb.addValueChangeListener(event -> {
+            Boolean value = event.getValue();
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = (Boolean) event.getProperty().getValue();
+            tbl.setColumnCollapsed("Column 3", !value);
 
-                tbl.setColumnCollapsed("Column 3", !value);
-
-                if (value) {
-                    log.log("Column 3 visible");
-                } else {
-                    log.log("Column 3 hidden");
-                }
+            if (value) {
+                log.log("Column 3 visible");
+            } else {
+                log.log("Column 3 hidden");
             }
         });
-        cb.setImmediate(true);
         visibilities.addComponent(cb);
 
         addComponent(log);

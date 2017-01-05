@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ReloadWidgetsTest extends MultiBrowserTest {
@@ -64,8 +64,8 @@ public class ReloadWidgetsTest extends MultiBrowserTest {
         waitUntil(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver input) {
-                List<WebElement> elements = findElements(By
-                        .className("v-table-scrollposition"));
+                List<WebElement> elements = findElements(
+                        By.className("v-table-scrollposition"));
                 return elements.isEmpty() || !elements.get(0).isDisplayed();
             }
 

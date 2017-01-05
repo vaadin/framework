@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class HtmlOptionGroupItems extends ComponentTestCase<OptionGroup> {
 
@@ -101,7 +101,7 @@ public class HtmlOptionGroupItems extends ComponentTestCase<OptionGroup> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Test case for html items in an OptionGroup";
     }
 }

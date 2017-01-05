@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,11 +21,11 @@ import java.util.List;
 
 import com.vaadin.client.renderers.HtmlRenderer;
 import com.vaadin.client.widget.grid.datasources.ListDataSource;
+import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.client.widgets.Grid.SelectionMode;
 
-public class GridColumnAutoWidthClientWidget extends
-        PureGWTTestApplication<Grid<List<String>>> {
+public class GridColumnAutoWidthClientWidget
+        extends PureGWTTestApplication<Grid<List<String>>> {
 
     private Grid<List<String>> grid;
 
@@ -45,19 +45,19 @@ public class GridColumnAutoWidthClientWidget extends
     public GridColumnAutoWidthClientWidget() {
         super(new Grid<List<String>>());
         grid = getTestedWidget();
-        grid.setSelectionMode(SelectionMode.NONE);
+        grid.setSelectionModel(new SelectionModel.NoSelectionModel<>());
         grid.setWidth("750px");
-
-        List<List<String>> list = new ArrayList<List<String>>();
-        list.add(Arrays.asList("equal length", "a very long cell content",
-                "short", "fixed width narrow", "fixed width wide"));
-        grid.setDataSource(new ListDataSource<List<String>>(list));
 
         addColumn("equal length");
         addColumn("short");
         addColumn("a very long header content");
         addColumn("fixed width narrow").setWidth(50);
         addColumn("fixed width wide").setWidth(200);
+
+        List<List<String>> list = new ArrayList<>();
+        list.add(Arrays.asList("equal length", "a very long cell content",
+                "short", "fixed width narrow", "fixed width wide"));
+        grid.setDataSource(new ListDataSource<>(list));
 
         addNorth(grid, 400);
     }

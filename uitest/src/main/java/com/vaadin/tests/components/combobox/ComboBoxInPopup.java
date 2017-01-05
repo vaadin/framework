@@ -34,12 +34,9 @@ public class ComboBoxInPopup extends TestBase {
     }
 
     private Component createComboBox() {
-        ComboBox cb = new ComboBox("A combo box");
-
-        cb.addItem("Yes");
-        cb.addItem("No");
-        cb.addItem("Maybe");
-        return cb;
+        ComboBox<String> comboBox = new ComboBox<String>("A combo box");
+        comboBox.setItems("Yes", "No", "Maybe");
+        return comboBox;
     }
 
     @Override

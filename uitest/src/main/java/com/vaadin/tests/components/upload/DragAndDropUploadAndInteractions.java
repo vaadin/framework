@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.upload;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -25,10 +26,12 @@ public class DragAndDropUploadAndInteractions extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox comboBox = new ComboBox();
+        ComboBox<String> comboBox = new ComboBox<>();
+        List<String> items = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            comboBox.addItem("Test " + i);
+            items.add("Test " + i);
         }
+        comboBox.setItems(items);
         addComponent(comboBox);
         Button b = new Button("Dummy");
         addComponent(b);

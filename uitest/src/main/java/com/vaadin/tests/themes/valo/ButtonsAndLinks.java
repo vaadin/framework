@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,16 +28,16 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
 public class ButtonsAndLinks extends VerticalLayout implements View {
     /**
- * 
- */
+    *
+    */
     public ButtonsAndLinks() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Buttons");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -45,7 +45,6 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         Button button = new Button("Normal");
@@ -154,15 +153,14 @@ public class ButtonsAndLinks extends VerticalLayout implements View {
 
         row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
-        Link link = new Link("vaadin.com", new ExternalResource(
-                "https://vaadin.com"));
+        Link link = new Link("vaadin.com",
+                new ExternalResource("https://vaadin.com"));
         row.addComponent(link);
 
-        link = new Link("Link with icon", new ExternalResource(
-                "https://vaadin.com"));
+        link = new Link("Link with icon",
+                new ExternalResource("https://vaadin.com"));
         link.addStyleName("color3");
         link.setIcon(testIcon.get());
         row.addComponent(link);

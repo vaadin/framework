@@ -63,7 +63,7 @@ $valo-global-included: false !default;
         @include user-select(text);
       }
 
-      // Removes clear button from input fields introduced by IE10
+      // Removes clear button from input fields
       input::-ms-clear {
         display: none;
       }
@@ -281,32 +281,6 @@ $valo-shared-pathPrefix: null;
 
   @include valo-loading-bar;
 
-
-  // Fallback spinner for browsers without CSS animations
-  .v-ie8 &,
-  .v-ie9 & {
-    .v-loading-indicator,
-    .v-loading-indicator-delay,
-    .v-loading-indicator-wait {
-      width: 28px !important;
-      height: 28px;
-      padding: round($v-unit-size/4);
-      background: #fff url(#{$valo-shared-pathPrefix}img/spinner.gif) no-repeat 50%;
-      border-radius: $v-border-radius;
-      top: round($v-unit-size/4);
-      right: round($v-unit-size/4);
-      left: auto;
-      filter: alpha(opacity=50);
-
-      &[style*="none"] {
-        display: none !important;
-      }
-    }
-
-    .v-loading-indicator-wait {
-      filter: alpha(opacity=100);
-    }
-  }
 
   .v-scrollable:focus {
     outline: none;

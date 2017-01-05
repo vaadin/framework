@@ -11,10 +11,10 @@
 /.externalToolBuilders
 /extras
 
-/uitest/src/main/themes/**/styles.css
+uitest/src/main/themes/VAADIN/themes/**/styles.css
 
 # Persisted scss cache files
-/uitest/src/main/themes/**/styles.scss.cache
+uitest/src/main/themes/VAADIN/themes/**/styles.scss.cache
 
 # /build/
 /build/result

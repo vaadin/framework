@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,23 +15,25 @@
  */
 package com.vaadin.data.validator;
 
+import java.util.Comparator;
+
 /**
  * Validator for validating that an {@link Integer} is inside a given range.
- * 
+ *
  * @author Vaadin Ltd.
- * @since 5.4
+ * @since 8.0
  */
 @SuppressWarnings("serial")
 public class IntegerRangeValidator extends RangeValidator<Integer> {
 
     /**
      * Creates a validator for checking that an Integer is within a given range.
-     * 
+     *
      * By default the range is inclusive i.e. both minValue and maxValue are
      * valid values. Use {@link #setMinValueIncluded(boolean)} or
      * {@link #setMaxValueIncluded(boolean)} to change it.
-     * 
-     * 
+     *
+     *
      * @param errorMessage
      *            the message to display in case the value does not validate.
      * @param minValue
@@ -41,7 +43,7 @@ public class IntegerRangeValidator extends RangeValidator<Integer> {
      */
     public IntegerRangeValidator(String errorMessage, Integer minValue,
             Integer maxValue) {
-        super(errorMessage, Integer.class, minValue, maxValue);
+        super(errorMessage, Comparator.naturalOrder(), minValue, maxValue);
     }
 
 }

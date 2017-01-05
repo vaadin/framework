@@ -10,12 +10,11 @@ layout: page
 Web applications can display various __resources__, such as images, other
 embedded content, or downloadable files, that the browser has to load from the
 server. Image resources are typically displayed with the [classname]#Image#
-component or as component icons. Flash animations can be displayed with
-[classname]#Flash#, embedded browser frames with [classname]#BrowserFrame#, and
+component or as component icons. Embedded browser frames can be displayed with [classname]#BrowserFrame#, and
 other content with the [classname]#Embedded# component, as described in
 <<dummy/../../../framework/components/components-embedded#components.embedded,"Embedded
 Resources">>. Downloadable files are usually provided by clicking a
-[classname]#Link#.
+[classname]#Link# or using the [classname]#FileDownloader# extension.
 
 There are several ways to how such resources can be provided by the web server.
 Static resources can be provided without having to ask for them from the
@@ -46,7 +45,7 @@ The resource classes in Vaadin are grouped under two interfaces: a generic
 
 [[figure.resource.classdiagram]]
 .Resource Interface and Class Diagram
-image::img/resource_classdiagram-hi.png[width=70%, scaledwidth=90%]
+image::img/resource_classdiagram-hi.png[width=80%, scaledwidth=100%]
 
 [[application.resources.file]]
 == File Resources
@@ -85,15 +84,8 @@ Image image = new Image("Image from file", resource);
 // Let the user view the file in browser or download it
 Link link = new Link("Link to the image file", resource);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.resources.fileresource[on-line example, window="_blank"].
 
-The result, as well as the folder structure where the file is stored under a
-regular Eclipse Vaadin project, is shown in
-<<figure.application.resources.file>>.
-
-[[figure.application.resources.file]]
-.File Resource
-image::img/resource-fileresource.png[width=50%, scaledwidth=80%]
+In a Maven based Vaadin project the image file should be located inside [filename]#src/main/webapp/WEB-INF/images/image.png#. 
 
 
 [[application.resources.class]]
@@ -114,7 +106,6 @@ and displays it in an [classname]#Image# component.
 layout.addComponent(new Image(null,
         new ClassResource("smiley.jpg")));
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.resources.classresource[on-line example, window="_blank"].
 
 
 [[application.resources.theme]]
@@ -136,14 +127,6 @@ ThemeResource resource = new ThemeResource("img/themeimage.png");
 // Use the resource
 Image image = new Image("My Theme Image", resource);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.resources.themeresource[on-line example, window="_blank"].
-
-The result is shown in <<figure.application.resources.theme>>, also illustrating
-the folder structure for the theme resource file in an Eclipse project.
-
-[[figure.application.resources.theme]]
-.Theme Resources
-image::img/resource-themeimage.png[width=40%, scaledwidth=70%]
 
 To use theme resources, you must set the theme for the UI. See
 <<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>
@@ -162,41 +145,46 @@ the [classname]#StreamResource.StreamSource# interface and its
 The following example demonstrates the creation of a simple image in PNG image
 format.
 
-
 [source, java]
 ----
 import java.awt.image.*;
 
-public class MyImageSource
-             implements StreamResource.StreamSource {
+public class MyImageSource implements StreamSource {
     ByteArrayOutputStream imagebuffer = null;
     int reloads = 0;
 
-    /* We need to implement this method that returns
-     * the resource as a stream. */
+    // This method generates the stream contents
     public InputStream getStream () {
-        /* Create an image and draw something on it. */
-        BufferedImage image = new BufferedImage (200, 200,
-                               BufferedImage.TYPE_INT_RGB);
-        Graphics drawable = image.getGraphics();
-        drawable.setColor(Color.lightGray);
-        drawable.fillRect(0,0,200,200);
-        drawable.setColor(Color.yellow);
-        drawable.fillOval(25,25,150,150);
-        drawable.setColor(Color.blue);
-        drawable.drawRect(0,0,199,199);
-        drawable.setColor(Color.black);
-        drawable.drawString("Reloads="+reloads, 75, 100);
+        // Create an image
+        BufferedImage image = new BufferedImage (400, 400,
+                                  BufferedImage.TYPE_INT_RGB);
+        Graphics2D drawable = image.createGraphics();
+
+        // Draw something static
+        drawable.setStroke(new BasicStroke(5));
+        drawable.setColor(Color.WHITE);
+        drawable.fillRect(0, 0, 400, 400);
+        drawable.setColor(Color.BLACK);
+        drawable.drawOval(50, 50, 300, 300);
+
+        // Draw something dynamic
+        drawable.setFont(new Font("Montserrat",
+                                  Font.PLAIN, 48));
+        drawable.drawString("Reloads=" + reloads, 75, 216);
         reloads++;
+        drawable.setColor(new Color(0, 165, 235));
+        int x= (int) (200-10 + 150*Math.sin(reloads * 0.3));
+        int y= (int) (200-10 + 150*Math.cos(reloads * 0.3));
+        drawable.fillOval(x, y, 20, 20);
 
         try {
-            /* Write the image to a buffer. */
+            // Write the image to a buffer
             imagebuffer = new ByteArrayOutputStream();
             ImageIO.write(image, "png", imagebuffer);
 
-            /* Return a stream from the buffer. */
+            // Return a stream from the buffer
             return new ByteArrayInputStream(
-                         imagebuffer.toByteArray());
+                imagebuffer.toByteArray());
         } catch (IOException e) {
             return null;
         }
@@ -215,11 +203,11 @@ Below we display the image with the [classname]#Image# component.
 [source, java]
 ----
 // Create an instance of our stream source.
-StreamResource.StreamSource imagesource = new MyImageSource ();
+StreamSource imagesource = new MyImageSource();
 
-// Create a resource that uses the stream source and give it a name.
-// The constructor will automatically register the resource in
-// the application.
+// Create a resource that uses the stream source and give it
+// a name. The constructor will automatically register the
+// resource in the application.
 StreamResource resource =
         new StreamResource(imagesource, "myimage.png");
 
@@ -231,8 +219,8 @@ layout.addComponent(new Image("Image title", resource));
 The resulting image is shown in <<figure.application.resource.stream>>.
 
 [[figure.application.resource.stream]]
-.A Stream Resource
-image::img/application_streamresource.png[]
+.A stream resource
+image::img/application_streamresource.png[width=25%, scaledwidth=25%]
 
 Another way to create dynamic content is a request handler, described in
 <<dummy/../../../framework/advanced/advanced-requesthandler#advanced.requesthandler,"Request

@@ -2,9 +2,6 @@ package com.vaadin.tests.dd;
 
 import java.util.Collection;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -12,16 +9,19 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeTargetDetails;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
  */
-public class DDTest8 extends AbstractTestUI {
+public class DDTest8 extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -51,9 +51,9 @@ public class DDTest8 extends AbstractTestUI {
     /**
      * Moves items in tree (and could work in Table too). Also supports
      * "building" tree.
-     * 
+     *
      * TODO fix algorithm, broken in some cases.
-     * 
+     *
      * @param tree
      * @param container
      * @return drop handler
@@ -76,10 +76,8 @@ public class DDTest8 extends AbstractTestUI {
                             Collection<?> itemPropertyIds = item
                                     .getItemPropertyIds();
                             for (Object propId : itemPropertyIds) {
-                                addItem.getItemProperty(propId)
-                                        .setValue(
-                                                item.getItemProperty(propId)
-                                                        .getValue());
+                                addItem.getItemProperty(propId).setValue(item
+                                        .getItemProperty(propId).getValue());
                             }
                         }
                         idx.setParent(childId, itemId);
@@ -116,10 +114,8 @@ public class DDTest8 extends AbstractTestUI {
                         Collection<?> itemPropertyIds = item
                                 .getItemPropertyIds();
                         for (Object propertyId : itemPropertyIds) {
-                            addedItem.getItemProperty(propertyId)
-                                    .setValue(
-                                            item.getItemProperty(propertyId)
-                                                    .getValue());
+                            addedItem.getItemProperty(propertyId).setValue(item
+                                    .getItemProperty(propertyId).getValue());
                         }
                         copyChildren(source, target, childId);
                     }
@@ -166,8 +162,9 @@ public class DDTest8 extends AbstractTestUI {
 
             @Override
             public AcceptCriterion getAcceptCriterion() {
-                return new Or(new AbstractSelect.TargetItemIs(tree, "Foo",
-                        "Bar"), new AbstractSelect.AcceptItem(tree, "Foo"),
+                return new Or(
+                        new AbstractSelect.TargetItemIs(tree, "Foo", "Bar"),
+                        new AbstractSelect.AcceptItem(tree, "Foo"),
                         tree.new TargetInSubtree("Bar5") //
                 );
             }

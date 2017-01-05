@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,13 +40,13 @@ public class LinkTest extends AbstractComponentTest<Link> {
     }
 
     private void createTargetSelect(String category) {
-        LinkedHashMap<String, Resource> options = new LinkedHashMap<String, Resource>();
+        LinkedHashMap<String, Resource> options = new LinkedHashMap<>();
         options.put("-", null);
-        options.put("https://vaadin.com", new ExternalResource(
-                "https://vaadin.com"));
+        options.put("https://vaadin.com",
+                new ExternalResource("https://vaadin.com"));
         options.put("32x32 theme icon", ICON_32_ATTENTION_PNG_CACHEABLE);
-        options.put("linktest-target.html", new ClassResource(
-                "linktest-target.html"));
+        options.put("linktest-target.html",
+                new ClassResource("linktest-target.html"));
 
         createSelectAction("Link target", category, options,
                 "https://vaadin.com", linkTargetCommand, null);

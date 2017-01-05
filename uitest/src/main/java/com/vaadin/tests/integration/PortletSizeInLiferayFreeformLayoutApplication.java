@@ -8,11 +8,11 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * On Liferay in a freeform layout, this application should get its height from
  * the height of the portlet container in the Liferay layout.
- * 
+ *
  * See ticket #5521.
  */
-public class PortletSizeInLiferayFreeformLayoutApplication extends
-        LegacyApplication {
+public class PortletSizeInLiferayFreeformLayoutApplication
+        extends LegacyApplication {
     @Override
     public void init() {
         LegacyWindow mainWindow = new LegacyWindow("Portlet5521 Application");

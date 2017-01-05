@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,35 +17,32 @@ package com.vaadin.tests.server.component.datefield;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.server.component.abstractdatefield.AbstractDateFieldDeclarativeTest;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.declarative.Design;
 
 /**
- * Tests the declarative support for implementations of {@link DateField}.
- * 
+ * Tests the declarative support for implementations of
+ * {@link AbstractDateField}.
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class InlineDateFieldDeclarativeTest extends
-        DeclarativeTestBase<InlineDateField> {
+public class InlineDateFieldDeclarativeTest
+        extends AbstractDateFieldDeclarativeTest<InlineDateField> {
 
     @Test
     public void testInlineDateFieldToFromDesign() throws Exception {
         InlineDateField field = new InlineDateField("Day is",
-                new SimpleDateFormat("yyyy-MM-dd").parse("2003-02-27"));
-        field.setResolution(Resolution.DAY);
+                LocalDate.of(2003, 2, 27));
         field.setShowISOWeekNumbers(true);
-        field.setRangeStart(new SimpleDateFormat("yyyy-MM-dd")
-                .parse("2001-02-27"));
-        field.setRangeEnd(new SimpleDateFormat("yyyy-MM-dd")
-                .parse("2011-02-27"));
+        field.setRangeStart(LocalDate.of(2001, 2, 27));
+        field.setRangeEnd(LocalDate.of(20011, 2, 27));
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Design.write(field, bos);
@@ -57,6 +54,16 @@ public class InlineDateFieldDeclarativeTest extends
         assertEquals(field.getValue(), result.getValue());
         assertEquals(field.getRangeStart(), result.getRangeStart());
         assertEquals(field.getRangeEnd(), result.getRangeEnd());
+    }
+
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-inline-date-field";
+    }
+
+    @Override
+    protected Class<? extends InlineDateField> getComponentClass() {
+        return InlineDateField.class;
     }
 
 }

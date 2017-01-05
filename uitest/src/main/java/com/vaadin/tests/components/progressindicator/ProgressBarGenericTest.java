@@ -2,10 +2,11 @@ package com.vaadin.tests.components.progressindicator;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
-import com.vaadin.ui.ProgressBar;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
+import com.vaadin.v7.ui.ProgressBar;
 
-public class ProgressBarGenericTest extends AbstractFieldTest<ProgressBar> {
+public class ProgressBarGenericTest
+        extends LegacyAbstractFieldTest<ProgressBar> {
 
     private Command<ProgressBar, Boolean> indeterminate = new Command<ProgressBar, Boolean>() {
 
@@ -33,7 +34,7 @@ public class ProgressBarGenericTest extends AbstractFieldTest<ProgressBar> {
      * @since
      */
     protected void createPrimaryStyleNameSelect() {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         String primaryStyle = getComponent().getPrimaryStyleName();
         options.put(primaryStyle, primaryStyle);
         options.put(primaryStyle + "-foo", primaryStyle + "-foo");
@@ -44,7 +45,7 @@ public class ProgressBarGenericTest extends AbstractFieldTest<ProgressBar> {
     }
 
     private void createValueSelection(String categorySelection) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
         options.put("null", null);
         for (float f = 0; f <= 1; f += 0.1) {
             options.put("" + f, f);

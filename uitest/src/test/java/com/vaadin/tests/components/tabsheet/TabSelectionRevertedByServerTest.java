@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -64,8 +64,8 @@ public class TabSelectionRevertedByServerTest extends MultiBrowserTest {
         TestBenchElement tabWrong = tab(wrongIndex);
         String attributeClassWrong = tabWrong.getAttribute("class");
 
-        Assert.assertTrue("Tab " + wrongIndex
-                + " should be selected when click on Tab 4",
+        Assert.assertTrue(
+                "Tab " + wrongIndex + " should be selected when click on Tab 4",
                 !attributeClassWrong
                         .contains("v-tabsheet-tabitemcell-selected"));
     }
@@ -99,8 +99,8 @@ public class TabSelectionRevertedByServerTest extends MultiBrowserTest {
     private TestBenchElement tab(int index) {
         By by = By.className("v-tabsheet-tabitemcell");
 
-        TestBenchElement element = (TestBenchElement) getDriver().findElements(
-                by).get(index - 1);
+        TestBenchElement element = (TestBenchElement) getDriver()
+                .findElements(by).get(index - 1);
 
         String expected = "Tab " + index;
         Assert.assertEquals(expected,

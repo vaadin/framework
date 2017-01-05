@@ -3,27 +3,36 @@ package com.vaadin.tests.data.converter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.StringToDoubleConverter;
 
-public class StringToDoubleConverterTest {
+public class StringToDoubleConverterTest extends AbstractConverterTest {
 
-    StringToDoubleConverter converter = new StringToDoubleConverter();
-
-    @Test
-    public void testNullConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel(null, Double.class, null));
+    @Override
+    protected StringToDoubleConverter getConverter() {
+        return new StringToDoubleConverter("Failed");
     }
 
     @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel("", Double.class, null));
+        assertValue(null,
+                getConverter().convertToModel("", new ValueContext()));
     }
 
     @Test
     public void testValueConversion() {
-        Double value = converter.convertToModel("10", Double.class, null);
-        Assert.assertEquals(10.0d, value, 0.01d);
+        Result<Double> value = getConverter().convertToModel("10",
+                new ValueContext());
+        assertValue(10.0d, value);
     }
+
+    @Test
+    public void testErrorMessage() {
+        Result<Double> result = getConverter().convertToModel("abc",
+                new ValueContext());
+        Assert.assertTrue(result.isError());
+        Assert.assertEquals("Failed", result.getMessage().get());
+    }
+
 }

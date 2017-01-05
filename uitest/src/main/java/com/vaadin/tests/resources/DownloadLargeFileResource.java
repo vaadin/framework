@@ -17,10 +17,9 @@ public class DownloadLargeFileResource extends TestBase {
 
     @Override
     protected void setup() {
-        Button b = new Button(
-                "Download a "
-                        + String.format("%.1f", fileSize / 1024.0 / 1024.0)
-                        + "MB file", new Button.ClickListener() {
+        Button b = new Button("Download a "
+                + String.format("%.1f", fileSize / 1024.0 / 1024.0) + "MB file",
+                new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

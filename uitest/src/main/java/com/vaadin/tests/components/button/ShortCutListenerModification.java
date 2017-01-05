@@ -12,8 +12,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-public class ShortCutListenerModification extends TestBase implements
-        ClickListener {
+public class ShortCutListenerModification extends TestBase
+        implements ClickListener {
 
     @Override
     protected String getDescription() {
@@ -41,8 +41,8 @@ public class ShortCutListenerModification extends TestBase implements
             Button button1 = new Button("b1 (CTRL-C)");
             Button button2 = new Button("b2 (CTRL-V)");
 
-            button1.addListener(this);
-            button2.addListener(this);
+            button1.addClickListener(this);
+            button2.addClickListener(this);
 
             button1.setClickShortcut(KeyCode.C, ModifierKey.CTRL);
             button2.setClickShortcut(KeyCode.V, ModifierKey.CTRL);

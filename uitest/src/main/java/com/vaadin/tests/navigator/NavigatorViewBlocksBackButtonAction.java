@@ -5,7 +5,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -13,7 +13,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class NavigatorViewBlocksBackButtonAction extends AbstractTestUI {
+public class NavigatorViewBlocksBackButtonAction
+        extends AbstractReindeerTestUI {
 
     private Navigator navigator;
 
@@ -55,8 +56,8 @@ public class NavigatorViewBlocksBackButtonAction extends AbstractTestUI {
 
     }
 
-    class ViewWithPromptedLeave extends VerticalLayout implements View,
-            ViewChangeListener {
+    class ViewWithPromptedLeave extends VerticalLayout
+            implements View, ViewChangeListener {
 
         public static final String NAME = "prompted";
 
@@ -89,17 +90,17 @@ public class NavigatorViewBlocksBackButtonAction extends AbstractTestUI {
                 confirmationWindow.setContent(confirmationWindowLayout);
                 confirmationWindowLayout.setMargin(true);
                 confirmationWindowLayout.setSpacing(true);
-                confirmationWindowLayout.addComponent(new Label(
-                        "Really exit this view?"));
-                confirmationWindowLayout.addComponent(new Button("Yeah, sure!",
-                        new Button.ClickListener() {
+                confirmationWindowLayout
+                        .addComponent(new Label("Really exit this view?"));
+                confirmationWindowLayout.addComponent(
+                        new Button("Yeah, sure!", new Button.ClickListener() {
 
                             @Override
                             public void buttonClick(ClickEvent buttonEvent) {
                                 okToLeave = true;
                                 getUI().removeWindow(confirmationWindow);
-                                event.getNavigator().navigateTo(
-                                        event.getViewName() + "/"
+                                event.getNavigator()
+                                        .navigateTo(event.getViewName() + "/"
                                                 + event.getParameters());
                             }
                         }));

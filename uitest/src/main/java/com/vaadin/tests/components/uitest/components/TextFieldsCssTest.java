@@ -5,10 +5,10 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.themes.ChameleonTheme;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.themes.ChameleonTheme;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class TextFieldsCssTest extends GridLayout {
 
@@ -56,7 +56,7 @@ public class TextFieldsCssTest extends GridLayout {
         }
 
         if (inputPrompt != null) {
-            tf.setInputPrompt(inputPrompt);
+            tf.setPlaceholder(inputPrompt);
         }
 
         addComponent(tf);
@@ -71,8 +71,8 @@ public class TextFieldsCssTest extends GridLayout {
 
     @Override
     public void addComponent(Component component, int column1, int row1,
-            int column2, int row2) throws OverlapsException,
-            OutOfBoundsException {
+            int column2, int row2)
+            throws OverlapsException, OutOfBoundsException {
 
         parent.registerComponent(component);
         super.addComponent(component, column1, row1, column2, row2);

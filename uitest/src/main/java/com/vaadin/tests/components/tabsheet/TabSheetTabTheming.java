@@ -11,7 +11,8 @@ public class TabSheetTabTheming extends TestBase {
         TabSheet tabsheet = new TabSheet();
         tabsheet.setStyleName("pg");
         tabsheet.addTab(new Label(), "Brown fox and the fence", null);
-        tabsheet.addTab(new Label(), "Something about using all the keys", null);
+        tabsheet.addTab(new Label(), "Something about using all the keys",
+                null);
         addComponent(tabsheet);
         setTheme("tests-tickets");
     }

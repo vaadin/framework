@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,8 +35,9 @@ public class WindowWaiAriaRolesTest extends MultiBrowserTest {
 
         $(ButtonElement.class).caption("Regular").first().click();
         String role = getWindowRole();
-        Assert.assertTrue("Dialog has incorrect role '" + role
-                + "', expected 'dialog'", "dialog".equals(role));
+        Assert.assertTrue(
+                "Dialog has incorrect role '" + role + "', expected 'dialog'",
+                "dialog".equals(role));
     }
 
     @Test
@@ -44,8 +45,10 @@ public class WindowWaiAriaRolesTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).caption("Alert").first().click();
         String role = getWindowRole();
-        Assert.assertTrue("Dialog has incorrect role '" + role
-                + "', expected 'alertdialog'", "alertdialog".equals(role));
+        Assert.assertTrue(
+                "Dialog has incorrect role '" + role
+                        + "', expected 'alertdialog'",
+                "alertdialog".equals(role));
     }
 
     public String getWindowRole() {

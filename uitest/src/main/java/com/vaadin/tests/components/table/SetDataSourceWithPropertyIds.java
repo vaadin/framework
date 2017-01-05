@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.CacheUpdateException;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.CacheUpdateException;
 
-public class SetDataSourceWithPropertyIds extends AbstractTestUI {
+public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {
@@ -72,7 +72,7 @@ public class SetDataSourceWithPropertyIds extends AbstractTestUI {
             table.setVisibleColumns(new String[] { "jobId" });
             label.setValue("no Exception");
         } catch (CacheUpdateException e) {
-            ArrayList<String> propertyIds = new ArrayList<String>();
+            ArrayList<String> propertyIds = new ArrayList<>();
             propertyIds.add("jobId");
             table.setContainerDataSource(jobContainer, propertyIds);
             label.setValue("Exception caught");
@@ -81,7 +81,7 @@ public class SetDataSourceWithPropertyIds extends AbstractTestUI {
 
     private List<JobsBean> getBeanList() {
 
-        List<JobsBean> list = new ArrayList<JobsBean>();
+        List<JobsBean> list = new ArrayList<>();
         JobsBean jobsBean = new JobsBean();
         jobsBean.setJobId("1");
         list.add(jobsBean);

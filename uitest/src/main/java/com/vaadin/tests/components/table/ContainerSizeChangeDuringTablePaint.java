@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,18 +18,19 @@ package com.vaadin.tests.components.table;
 
 import java.util.Iterator;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
-public class ContainerSizeChangeDuringTablePaint extends AbstractTestUI {
+public class ContainerSizeChangeDuringTablePaint
+        extends AbstractReindeerTestUI {
 
     /**
      * A test {@link Table} that simply acts a hook for when Vaadin starts
@@ -111,8 +112,8 @@ public class ContainerSizeChangeDuringTablePaint extends AbstractTestUI {
                         addItem(container, "A", "New", "Row");
                         container.sabotageNextPaint();
 
-                        event.getButton().setCaption(
-                                "Event was fired successfully.");
+                        event.getButton()
+                                .setCaption("Event was fired successfully.");
                     }
                 });
         button.setId("addRow");

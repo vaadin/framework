@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -35,7 +35,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test for removing a shortcut listener from Panel.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
@@ -55,7 +55,6 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
         List<DesiredCapabilities> list = super.getBrowsersToTest();
         // For some reason the shortcut isn't working for these browsers when
         // tested through TestBench:
-        list.remove(Browser.IE8.getDesiredCapabilities());
         list.remove(Browser.FIREFOX.getDesiredCapabilities());
         list.remove(Browser.CHROME.getDesiredCapabilities());
         return list;
@@ -63,8 +62,9 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
 
     @Test
     public void testToggleWithShortcut() {
-        assertThat(panel.findElement(By.className("v-panel-caption"))
-                .findElement(By.tagName("span")).getText(),
+        assertThat(
+                panel.findElement(By.className("v-panel-caption"))
+                        .findElement(By.tagName("span")).getText(),
                 is("No shortcut effects (press 'A')"));
 
         attemptShortcut("A on");
@@ -81,10 +81,7 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
         attemptShortcut("A on");
 
         // add a bit more delay to make sure the caption doesn't change later
-        try {
-            sleep(2000);
-        } catch (InterruptedException ignore) {
-        }
+        sleep(2000);
 
         assertThat(panel.findElement(By.className("v-panel-caption"))
                 .findElement(By.tagName("span")).getText(), is("A on"));

@@ -1,17 +1,15 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 
-public class ComboBoxSuggestionPopupClose extends AbstractTestUI {
+public class ComboBoxSuggestionPopupClose extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final ComboBox select = new ComboBox("ComboBox");
-        select.addItem("one");
-        select.addItem("two");
-        select.addItem("three");
+        final ComboBox<String> select = new ComboBox<>("ComboBox");
+        select.setItems("one", "two", "three");
         addComponent(select);
     }
 

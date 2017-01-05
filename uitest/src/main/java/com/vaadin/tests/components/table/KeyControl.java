@@ -2,15 +2,15 @@ package com.vaadin.tests.components.table;
 
 import java.util.Set;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
 public class KeyControl extends TestBase {
@@ -45,7 +45,8 @@ public class KeyControl extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 @SuppressWarnings("unchecked")
                 Set<String> value = (Set<String>) table1.getValue();
-                selected1.setValue(value.toString() + " TOTAL: " + value.size());
+                selected1
+                        .setValue(value.toString() + " TOTAL: " + value.size());
             }
         });
 

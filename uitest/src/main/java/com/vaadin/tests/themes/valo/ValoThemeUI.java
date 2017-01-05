@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,13 +22,6 @@ import java.util.Map.Entry;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.navigator.Navigator;
@@ -39,6 +32,8 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -51,10 +46,17 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.NativeSelect;
 
 @Theme("tests-valo")
 @Title("Valo Theme Test")
@@ -63,16 +65,10 @@ public class ValoThemeUI extends UI {
 
     private boolean testMode = false;
 
-    private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<String, String>();
+    private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<>();
     static {
         themeVariants.put("tests-valo", "Default");
-        themeVariants.put("tests-valo-blueprint", "Blueprint");
         themeVariants.put("tests-valo-dark", "Dark");
-        themeVariants.put("tests-valo-facebook", "Facebook");
-        themeVariants.put("tests-valo-flatdark", "Flat dark");
-        themeVariants.put("tests-valo-flat", "Flat");
-        themeVariants.put("tests-valo-light", "Light");
-        themeVariants.put("tests-valo-metro", "Metro");
     }
     private TestIcon testIcon = new TestIcon(100);
 
@@ -84,7 +80,7 @@ public class ValoThemeUI extends UI {
         menu.setId("testMenu");
     }
     private Navigator navigator;
-    private LinkedHashMap<String, String> menuItems = new LinkedHashMap<String, String>();
+    private LinkedHashMap<String, String> menuItems = new LinkedHashMap<>();
 
     @Override
     protected void init(VaadinRequest request) {
@@ -92,8 +88,8 @@ public class ValoThemeUI extends UI {
             testMode = true;
 
             if (browserCantRenderFontsConsistently()) {
-                getPage().getStyles().add(
-                        ".v-app.v-app.v-app {font-family: Sans-Serif;}");
+                getPage().getStyles()
+                        .add(".v-app.v-app.v-app {font-family: Sans-Serif;}");
             }
         }
 
@@ -159,9 +155,8 @@ public class ValoThemeUI extends UI {
                         for (Iterator<Component> it = menuItemsLayout
                                 .iterator(); it.hasNext();) {
                             Component c = it.next();
-                            if (c.getCaption() != null
-                                    && c.getCaption().startsWith(
-                                            item.getValue())) {
+                            if (c.getCaption() != null && c.getCaption()
+                                    .startsWith(item.getValue())) {
                                 c.addStyleName("selected");
                                 break;
                             }
@@ -180,12 +175,8 @@ public class ValoThemeUI extends UI {
         // disable it to have consistent screenshots
         // https://github.com/ariya/phantomjs/issues/10592
 
-        // IE8 also has randomness in its font rendering...
-
         return getPage().getWebBrowser().getBrowserApplication()
-                .contains("PhantomJS")
-                || (getPage().getWebBrowser().isIE() && getPage()
-                        .getWebBrowser().getBrowserMajorVersion() <= 9);
+                .contains("PhantomJS");
     }
 
     static boolean isTestMode() {
@@ -206,7 +197,7 @@ public class ValoThemeUI extends UI {
         b.setIcon(FontAwesome.TH_LIST);
         b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
         b.addStyleName("selected");
-        b.setHtmlContentAllowed(true);
+        b.setCaptionAsHtml(true);
         menu.addComponent(b);
 
         b = new Button("API");
@@ -249,6 +240,7 @@ public class ValoThemeUI extends UI {
 
         HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
+        top.setSpacing(false);
         top.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
         top.addStyleName(ValoTheme.MENU_TITLE);
         menu.addComponent(top);
@@ -281,8 +273,9 @@ public class ValoThemeUI extends UI {
         StringGenerator sg = new StringGenerator();
         MenuItem settingsItem = settings.addItem(
                 sg.nextString(true) + " " + sg.nextString(true)
-                        + sg.nextString(false), new ThemeResource(
-                        "../tests-valo/img/profile-pic-300px.jpg"), null);
+                        + sg.nextString(false),
+                new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
+                null);
         settingsItem.addItem("Edit Profile", null);
         settingsItem.addItem("Preferences", null);
         settingsItem.addSeparator();
@@ -303,9 +296,9 @@ public class ValoThemeUI extends UI {
                 menuItemsLayout.addComponent(label);
             }
             if (item.getKey().equals("panels")) {
-                label.setValue(label.getValue()
-                        + " <span class=\"valo-menu-badge\">" + count
-                        + "</span>");
+                label.setValue(
+                        label.getValue() + " <span class=\"valo-menu-badge\">"
+                                + count + "</span>");
                 count = 0;
                 label = new Label("Containers", ContentMode.HTML);
                 label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
@@ -314,9 +307,9 @@ public class ValoThemeUI extends UI {
                 menuItemsLayout.addComponent(label);
             }
             if (item.getKey().equals("calendar")) {
-                label.setValue(label.getValue()
-                        + " <span class=\"valo-menu-badge\">" + count
-                        + "</span>");
+                label.setValue(
+                        label.getValue() + " <span class=\"valo-menu-badge\">"
+                                + count + "</span>");
                 count = 0;
                 label = new Label("Other", ContentMode.HTML);
                 label.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
@@ -334,7 +327,7 @@ public class ValoThemeUI extends UI {
                 b.setCaption(b.getCaption()
                         + " <span class=\"valo-menu-badge\">123</span>");
             }
-            b.setHtmlContentAllowed(true);
+            b.setCaptionAsHtml(true);
             b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
             b.setIcon(testIcon.get());
             menuItemsLayout.addComponent(b);
@@ -347,6 +340,18 @@ public class ValoThemeUI extends UI {
     }
 
     private Component createThemeSelect() {
+        // Keep theme select the same size as in the current screenshots
+        double width = 96;
+        WebBrowser browser = VaadinSession.getCurrent().getBrowser();
+        if (browser.isChrome()) {
+            width = 95;
+        } else if (browser.isIE()) {
+            width = 95.39;
+        } else if (browser.isFirefox()) {
+            width = 98;
+        }
+        getPage().getStyles()
+                .add("#themeSelect select {width: " + width + "px;}");
         final NativeSelect ns = new NativeSelect();
         ns.setNullSelectionAllowed(false);
         ns.setId("themeSelect");
@@ -404,16 +409,16 @@ public class ValoThemeUI extends UI {
         container.addContainerProperty(CAPTION_PROPERTY, String.class, null);
         container.addContainerProperty(ICON_PROPERTY, Resource.class, null);
         container.addContainerProperty(INDEX_PROPERTY, Integer.class, null);
-        container
-                .addContainerProperty(DESCRIPTION_PROPERTY, String.class, null);
+        container.addContainerProperty(DESCRIPTION_PROPERTY, String.class,
+                null);
         for (int i = 1; i < size + 1; i++) {
             Item item = container.addItem(i);
-            item.getItemProperty(CAPTION_PROPERTY).setValue(
-                    sg.nextString(true) + " " + sg.nextString(false));
+            item.getItemProperty(CAPTION_PROPERTY)
+                    .setValue(sg.nextString(true) + " " + sg.nextString(false));
             item.getItemProperty(INDEX_PROPERTY).setValue(i);
-            item.getItemProperty(DESCRIPTION_PROPERTY).setValue(
-                    sg.nextString(true) + " " + sg.nextString(false) + " "
-                            + sg.nextString(false));
+            item.getItemProperty(DESCRIPTION_PROPERTY)
+                    .setValue(sg.nextString(true) + " " + sg.nextString(false)
+                            + " " + sg.nextString(false));
             item.getItemProperty(ICON_PROPERTY).setValue(testIcon.get());
         }
         container.getItem(container.getIdByIndex(0))
@@ -426,28 +431,28 @@ public class ValoThemeUI extends UI {
                     Item child = container.addItem(id);
                     child.getItemProperty(CAPTION_PROPERTY).setValue(
                             sg.nextString(true) + " " + sg.nextString(false));
-                    child.getItemProperty(ICON_PROPERTY).setValue(
-                            testIcon.get());
+                    child.getItemProperty(ICON_PROPERTY)
+                            .setValue(testIcon.get());
                     ((Hierarchical) container).setParent(id, i);
 
                     for (int k = 1; k < 6; k++) {
                         String id2 = id + " -> " + k;
                         child = container.addItem(id2);
-                        child.getItemProperty(CAPTION_PROPERTY).setValue(
-                                sg.nextString(true) + " "
+                        child.getItemProperty(CAPTION_PROPERTY)
+                                .setValue(sg.nextString(true) + " "
                                         + sg.nextString(false));
-                        child.getItemProperty(ICON_PROPERTY).setValue(
-                                testIcon.get());
+                        child.getItemProperty(ICON_PROPERTY)
+                                .setValue(testIcon.get());
                         ((Hierarchical) container).setParent(id2, id);
 
                         for (int l = 1; l < 5; l++) {
                             String id3 = id2 + " -> " + l;
                             child = container.addItem(id3);
-                            child.getItemProperty(CAPTION_PROPERTY).setValue(
-                                    sg.nextString(true) + " "
+                            child.getItemProperty(CAPTION_PROPERTY)
+                                    .setValue(sg.nextString(true) + " "
                                             + sg.nextString(false));
-                            child.getItemProperty(ICON_PROPERTY).setValue(
-                                    testIcon.get());
+                            child.getItemProperty(ICON_PROPERTY)
+                                    .setValue(testIcon.get());
                             ((Hierarchical) container).setParent(id3, id2);
                         }
                     }

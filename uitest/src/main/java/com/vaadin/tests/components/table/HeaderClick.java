@@ -1,18 +1,16 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.HeaderClickEvent;
 
-public class HeaderClick extends AbstractTestUI {
+public class HeaderClick extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -35,44 +33,20 @@ public class HeaderClick extends AbstractTestUI {
         });
 
         CheckBox immediateCheckbox = new CheckBox("Immediate");
-        immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
-        immediateCheckbox
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.setImmediate((Boolean) event.getProperty()
-                                .getValue());
-                    }
-                });
+        immediateCheckbox.addValueChangeListener(
+                event -> table.setImmediate(event.getValue()));
 
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
-        sortEnabledCheckbox.setImmediate(true);
         sortEnabledCheckbox.setValue(table.isSortEnabled());
-        sortEnabledCheckbox
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.setSortEnabled((Boolean) event.getProperty()
-                                .getValue());
-                    }
-                });
+        sortEnabledCheckbox.addValueChangeListener(
+                event -> table.setSortEnabled(event.getValue()));
 
         CheckBox columnReorderingCheckbox = new CheckBox(
                 "Column reordering allowed");
-        columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
-        columnReorderingCheckbox
-                .addValueChangeListener(new Property.ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.setColumnReorderingAllowed((Boolean) event
-                                .getProperty().getValue());
-                    }
-                });
+        columnReorderingCheckbox.addValueChangeListener(
+                event -> table.setColumnReorderingAllowed(event.getValue()));
 
         addComponent(immediateCheckbox);
         addComponent(sortEnabledCheckbox);
@@ -83,7 +57,7 @@ public class HeaderClick extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Tests the header click listener";
     }
 

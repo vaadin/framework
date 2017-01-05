@@ -16,7 +16,7 @@ public class NotificationsAndModalWindow extends TestBase {
                 Notification.TYPE_WARNING_MESSAGE);
 
         Button b = new Button("Button");
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 Window w = new Window("This is a window");

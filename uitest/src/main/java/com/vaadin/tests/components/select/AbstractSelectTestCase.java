@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
 import com.vaadin.server.Resource;
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickNotifier;
+import com.vaadin.v7.ui.AbstractSelect;
 
-public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
-        AbstractFieldTest<T> implements ItemClickListener {
+public abstract class AbstractSelectTestCase<T extends AbstractSelect>
+        extends LegacyAbstractFieldTest<T> implements ItemClickListener {
 
     public static final String CATEGORY_DATA_SOURCE = "Data source";
 
@@ -25,7 +25,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected static class ContextMenu {
 
-        private List<Action> items = new ArrayList<Action>();
+        private List<Action> items = new ArrayList<>();
 
         public ContextMenu(String caption, Resource icon) {
             addItem(caption, icon);
@@ -67,12 +67,13 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     }
 
     protected void createMultiSelectCheckbox(String category) {
-        createBooleanAction("Multi select", category, false, multiselectCommand);
+        createBooleanAction("Multi select", category, false,
+                multiselectCommand);
 
     }
 
     protected void createNullSelectItemId(String category) {
-        LinkedHashMap<String, Object> options = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> options = new LinkedHashMap<>();
         options.put("- None -", null);
         for (Object id : (getComponent()).getContainerDataSource()
                 .getContainerPropertyIds()) {
@@ -101,15 +102,15 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
         for (int i = 1; i <= items; i++) {
             Item item = c.addItem("Item " + i);
             for (int j = 1; j <= properties; j++) {
-                item.getItemProperty("Property " + j).setValue(
-                        "Item " + i + "," + j);
+                item.getItemProperty("Property " + j)
+                        .setValue("Item " + i + "," + j);
             }
         }
 
     }
 
     protected void createItemsInContainerSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         for (int i = 0; i <= 10; i++) {
             options.put(String.valueOf(i), i);
         }
@@ -124,7 +125,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
     }
 
     protected void createPropertiesInContainerSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> options = new LinkedHashMap<>();
         options.put("0", 0);
         for (int i = 0; i <= 10; i++) {
             options.put(String.valueOf(i), i);

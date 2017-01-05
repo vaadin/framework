@@ -1,12 +1,8 @@
 package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -25,27 +21,15 @@ public class GridLayoutWithCheckbox extends UI {
         Label l = new Label("Textfield 1:");
         grid.addComponent(l, 0, 0);
         TextField textfield = new TextField();
-        textfield.addTextChangeListener(new TextChangeListener() {
-
-            @Override
-            public void textChange(TextChangeEvent event) {
-
-            }
+        textfield.addValueChangeListener(listener -> {
         });
-        textfield.setTextChangeEventMode(TextChangeEventMode.EAGER);
+        textfield.setValueChangeMode(ValueChangeMode.EAGER);
         grid.addComponent(textfield, 1, 0);
 
         l = new Label("CheckBox:");
         grid.addComponent(l, 0, 1);
         CheckBox checkBox = new CheckBox();
         grid.addComponent(checkBox, 1, 2);
-        checkBox.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-
-            }
-        });
         Window window = new Window();
         window.setWidth(300.0f, Unit.PIXELS);
         window.setContent(grid);

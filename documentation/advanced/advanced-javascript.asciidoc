@@ -17,8 +17,8 @@ code.
 You can make JavaScript calls from the server-side with the
 [methodname]#execute()# method in the [classname]#JavaScript# class. You can get
 a [classname]#JavaScript# instance from the current [classname]#Page# object
-with [methodname]#getJavaScript()#.//TODO Check that the API is
-so.
+with [methodname]#getJavaScript()#. 
+//TODO Check that the API is so.
 
 
 [source, java]

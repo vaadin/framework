@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,7 @@
  */
 
 /**
- * 
+ *
  */
 package com.vaadin.tests.push;
 
@@ -29,8 +29,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.ui.TextField;
 
 public abstract class PushLargeData extends AbstractTestUIWithLog {
 
@@ -84,11 +84,12 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
                 Integer pushSize = (Integer) dataSize.getConvertedValue();
                 Integer pushInterval = (Integer) interval.getConvertedValue();
                 Integer pushDuration = (Integer) duration.getConvertedValue();
-                PushRunnable r = new PushRunnable(pushSize, pushInterval,
-                        pushDuration);
+                PushRunnable r = new PushRunnable(getUI(), pushSize,
+                        pushInterval, pushDuration);
                 executor.execute(r);
                 log.log("Starting push, size: " + pushSize + ", interval: "
-                        + pushInterval + "ms, duration: " + pushDuration + "ms");
+                        + pushInterval + "ms, duration: " + pushDuration
+                        + "ms");
             }
         });
         addComponent(b);
@@ -114,11 +115,14 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
         private Integer size;
         private Integer interval;
         private Integer duration;
+        private final UI ui;
 
-        public PushRunnable(Integer size, Integer interval, Integer duration) {
+        public PushRunnable(UI ui, Integer size, Integer interval,
+                Integer duration) {
             this.size = size;
             this.interval = interval;
             this.duration = duration;
+            this.ui = ui;
         }
 
         @Override
@@ -128,15 +132,15 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
             int packageIndex = 1;
             while (System.currentTimeMillis() < endTime) {
                 final int idx = packageIndex++;
-                UI.getCurrent().access(new Runnable() {
+                ui.access(new Runnable() {
                     @Override
                     public void run() {
-                        PushLargeData ui = (PushLargeData) UI.getCurrent();
+                        PushLargeData pushUi = (PushLargeData) ui;
                         // Using description as it is not rendered to the DOM
                         // immediately
-                        ui.getDataLabel().setDescription(
+                        pushUi.getDataLabel().setDescription(
                                 System.currentTimeMillis() + ": " + data);
-                        ui.log("Package " + idx + " pushed");
+                        pushUi.log("Package " + idx + " pushed");
                     }
                 });
                 try {
@@ -145,11 +149,11 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
                     return;
                 }
             }
-            UI.getCurrent().access(new Runnable() {
+            ui.access(new Runnable() {
                 @Override
                 public void run() {
-                    PushLargeData ui = (PushLargeData) UI.getCurrent();
-                    ui.log("Push complete");
+                    PushLargeData pushUi = (PushLargeData) ui;
+                    pushUi.log("Push complete");
                 }
             });
 

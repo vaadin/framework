@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,8 +30,8 @@ public class TooltipAndJavascriptTest extends MultiBrowserTest {
     public void ensureTooltipInOverlay() throws InterruptedException {
         openTestURL();
         $(ButtonElement.class).first().showTooltip();
-        WebElement tooltip = findElement(By
-                .cssSelector(".v-overlay-container .v-tooltip"));
+        WebElement tooltip = findElement(
+                By.cssSelector(".v-overlay-container .v-tooltip"));
         WebElement overlayContainer = getParent(tooltip);
         Assert.assertTrue("v-overlay-container did not receive theme",
                 hasClass(overlayContainer, "reindeer"));
@@ -48,7 +48,7 @@ public class TooltipAndJavascriptTest extends MultiBrowserTest {
     }
 
     private WebElement getParent(WebElement element) {
-        return (WebElement) ((JavascriptExecutor) getDriver()).executeScript(
-                "return arguments[0].parentNode;", element);
+        return (WebElement) ((JavascriptExecutor) getDriver())
+                .executeScript("return arguments[0].parentNode;", element);
     }
 }

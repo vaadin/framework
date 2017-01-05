@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Container.Filter;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
 /**
  * Test for #8291 and #7666: NegativeArraySizeException when Table scrolled to
@@ -64,7 +64,7 @@ public class TableReduceContainerSize extends TestBase {
             final Label label = new Label();
             addComponent(label);
             Button button = new Button("Click");
-            button.addListener(new Button.ClickListener() {
+            button.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     try {
@@ -73,14 +73,14 @@ public class TableReduceContainerSize extends TestBase {
                         label.setValue("Index: "
                                 + table.getCurrentPageFirstItemIndex());
                     } catch (Exception e) {
-                        label.setValue("Exception: "
-                                + e.getClass().getSimpleName());
+                        label.setValue(
+                                "Exception: " + e.getClass().getSimpleName());
                     }
                 }
             });
             addComponent(button);
             Button button2 = new Button("Filter");
-            button2.addListener(new Button.ClickListener() {
+            button2.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     try {
@@ -95,8 +95,8 @@ public class TableReduceContainerSize extends TestBase {
                         label.setValue("Index: "
                                 + table.getCurrentPageFirstItemIndex());
                     } catch (Exception e) {
-                        label.setValue("Exception: "
-                                + e.getClass().getSimpleName());
+                        label.setValue(
+                                "Exception: " + e.getClass().getSimpleName());
                     }
                 }
             });
@@ -105,7 +105,7 @@ public class TableReduceContainerSize extends TestBase {
     }
 
     private static List<TestObject> createData(int count) {
-        ArrayList<TestObject> data = new ArrayList<TestObject>(count);
+        ArrayList<TestObject> data = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             data.add(new TestObject("string-" + i, new Date(), i));
         }

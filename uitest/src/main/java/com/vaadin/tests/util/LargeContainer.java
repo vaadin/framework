@@ -5,15 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.ContainerHelpers;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractContainer;
-import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.ContainerHelpers;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.AbstractContainer;
+import com.vaadin.v7.data.util.ObjectProperty;
 
-public class LargeContainer extends AbstractContainer implements
-        Container.Indexed {
+public class LargeContainer extends AbstractContainer
+        implements Container.Indexed {
 
     public class TestItem implements Item {
 
@@ -25,7 +25,7 @@ public class LargeContainer extends AbstractContainer implements
 
         @Override
         public Property<?> getItemProperty(Object propertyId) {
-            ObjectProperty<String> property = new ObjectProperty<String>(
+            ObjectProperty<String> property = new ObjectProperty<>(
                     containerPropertyIdDefaults.get(propertyId) + " (item "
                             + itemId + ")");
             return property;
@@ -55,8 +55,8 @@ public class LargeContainer extends AbstractContainer implements
 
     private int size = 1000;
 
-    private Map<Object, Class<?>> containerPropertyIdTypes = new HashMap<Object, Class<?>>();
-    private Map<Object, Object> containerPropertyIdDefaults = new HashMap<Object, Object>();
+    private Map<Object, Class<?>> containerPropertyIdTypes = new HashMap<>();
+    private Map<Object, Object> containerPropertyIdDefaults = new HashMap<>();
 
     @Override
     public Object nextItemId(Object itemId) {

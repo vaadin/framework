@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 /**
  *
@@ -54,9 +54,11 @@ public class BaseLayoutForSpacingMargin extends BaseLayoutTestUI {
         l2.setMargin(false);
         l2.setSpacing(false);
         // Must add something around the hr to avoid the margins collapsing
-        l2.addComponent(new Label(
+        Label spacer = new Label(
                 "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
-                ContentMode.HTML));
+                ContentMode.HTML);
+        spacer.setWidth("100%");
+        l2.addComponent(spacer);
         l2.addComponent(t2);
         final Button btn1 = new Button("Toggle margin on/off");
         btn1.addClickListener(new ClickListener() {

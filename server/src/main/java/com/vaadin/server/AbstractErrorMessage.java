@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,15 +21,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.Buffered;
-import com.vaadin.data.Validator;
-
 /**
  * Base class for component error messages.
- * 
+ *
  * This class is used on the server side to construct the error messages to send
  * to the client.
- * 
+ *
  * @since 7.0
  */
 public abstract class AbstractErrorMessage implements ErrorMessage {
@@ -46,7 +43,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
 
         /**
          * Content mode, where the error contains HTML.
-         * 
+         *
          */
         HTML,
     }
@@ -66,7 +63,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
      */
     private ErrorLevel level = ErrorLevel.ERROR;
 
-    private List<ErrorMessage> causes = new ArrayList<ErrorMessage>();
+    private final List<ErrorMessage> causes = new ArrayList<>();
 
     protected AbstractErrorMessage(String message) {
         this.message = message;
@@ -86,7 +83,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         return level;
     }
 
-    protected void setErrorLevel(ErrorLevel level) {
+    public void setErrorLevel(ErrorLevel level) {
         this.level = level;
     }
 
@@ -102,7 +99,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         return causes;
     }
 
-    protected void addCause(ErrorMessage cause) {
+    public void addCause(ErrorMessage cause) {
         causes.add(cause);
     }
 
@@ -143,34 +140,14 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         return result;
     }
 
-    // TODO replace this with a helper method elsewhere?
     public static ErrorMessage getErrorMessageForException(Throwable t) {
         if (null == t) {
             return null;
         } else if (t instanceof ErrorMessage) {
             // legacy case for custom error messages
             return (ErrorMessage) t;
-        } else if (t instanceof Validator.InvalidValueException) {
-            UserError error = new UserError(
-                    ((Validator.InvalidValueException) t).getHtmlMessage(),
-                    ContentMode.HTML, ErrorLevel.ERROR);
-            for (Validator.InvalidValueException nestedException : ((Validator.InvalidValueException) t)
-                    .getCauses()) {
-                error.addCause(getErrorMessageForException(nestedException));
-            }
-            return error;
-        } else if (t instanceof Buffered.SourceException) {
-            // no message, only the causes to be painted
-            UserError error = new UserError(null);
-            // in practice, this was always ERROR in Vaadin 6 unless tweaked in
-            // custom exceptions implementing ErrorMessage
-            error.setErrorLevel(ErrorLevel.ERROR);
-            // causes
-            for (Throwable nestedException : ((Buffered.SourceException) t)
-                    .getCauses()) {
-                error.addCause(getErrorMessageForException(nestedException));
-            }
-            return error;
+        } else if (t instanceof ErrorMessageProducer) {
+            return ((ErrorMessageProducer) t).getErrorMessage();
         } else {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);

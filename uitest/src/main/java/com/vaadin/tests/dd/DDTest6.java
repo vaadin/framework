@@ -10,13 +10,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -42,12 +37,17 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeTargetDetails;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 
 public class DDTest6 extends TestBase {
 
@@ -79,7 +79,7 @@ public class DDTest6 extends TestBase {
         tree1 = new Tree("Volume 1");
         tree1.setImmediate(true);
 
-        fs1 = new BeanItemContainer<File>(File.class);
+        fs1 = new BeanItemContainer<>(File.class);
         tree1.setContainerDataSource(fs1);
         for (int i = 0; i < files.length; i++) {
             fs1.addBean(files[i]);
@@ -110,11 +110,13 @@ public class DDTest6 extends TestBase {
                 TreeTargetDetails dropTargetData = (TreeTargetDetails) dropEvent
                         .getTargetDetails();
                 folder = (Folder) dropTargetData.getItemIdInto();
-                if (dropEvent.getTransferable() instanceof DataBoundTransferable) {
+                if (dropEvent
+                        .getTransferable() instanceof DataBoundTransferable) {
                     DataBoundTransferable transferable = (DataBoundTransferable) dropEvent
                             .getTransferable();
                     file = (File) transferable.getItemId();
-                } else if (dropEvent.getTransferable().getSourceComponent() instanceof FileIcon) {
+                } else if (dropEvent.getTransferable()
+                        .getSourceComponent() instanceof FileIcon) {
                     FileIcon draggedIcon = (FileIcon) dropEvent
                             .getTransferable().getSourceComponent();
                     file = draggedIcon.file;
@@ -131,7 +133,8 @@ public class DDTest6 extends TestBase {
             private Action[] actions = new Action[] { new Action("Remove") };
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 ContainerHierarchicalWrapper containerDataSource = (ContainerHierarchicalWrapper) tree1
                         .getContainerDataSource();
                 containerDataSource.removeItemRecursively(target);
@@ -163,15 +166,12 @@ public class DDTest6 extends TestBase {
 
         getLayout().setSizeFull();
         getLayout().addComponent(sp);
-        TestUtils
-                .injectCSS(
-                        getLayout().getUI(),
-                        ""
-                                + ".v-tree .v-icon {height:16px;} "
-                                + ".v-tree-node-caption-drag-top {/*border-top: none;*/} "
-                                + ".v-tree-node-caption-drag-bottom {border-bottom: none ;} "
-                                + ".v-tree-node-caption-drag-center {background-color: transparent;}"
-                                + ".v-tree-node-caption-dragfolder { background-color: cyan;} ");
+        TestUtils.injectCSS(getLayout().getUI(), ""
+                + ".v-tree .v-icon {height:16px;} "
+                + ".v-tree-node-caption-drag-top {/*border-top: none;*/} "
+                + ".v-tree-node-caption-drag-bottom {border-bottom: none ;} "
+                + ".v-tree-node-caption-drag-center {background-color: transparent;}"
+                + ".v-tree-node-caption-dragfolder { background-color: cyan;} ");
 
     }
 
@@ -256,7 +256,8 @@ public class DDTest6 extends TestBase {
     private void openFile(File file) {
         // ATM supports only images.
         if (file.getType().equals("image/png")) {
-            Embedded embedded = new Embedded(file.getName(), file.getResource());
+            Embedded embedded = new Embedded(file.getName(),
+                    file.getResource());
             VerticalLayout layout = new VerticalLayout();
             layout.setMargin(true);
             Window w = new Window(file.getName(), layout);
@@ -296,7 +297,7 @@ public class DDTest6 extends TestBase {
 
     static class FolderView extends DragAndDropWrapper implements DropHandler {
 
-        static final HashMap<Folder, FolderView> views = new HashMap<Folder, FolderView>();
+        static final HashMap<Folder, FolderView> views = new HashMap<>();
 
         public static FolderView get(Folder f) {
 
@@ -331,8 +332,9 @@ public class DDTest6 extends TestBase {
 
         @SuppressWarnings("static-access")
         void reload() {
-            Collection<?> children = folder == null ? DDTest6.get().tree1
-                    .rootItemIds() : DDTest6.get().tree1.getChildren(folder);
+            Collection<?> children = folder == null
+                    ? DDTest6.get().tree1.rootItemIds()
+                    : DDTest6.get().tree1.getChildren(folder);
             if (children == null) {
                 l.removeAllComponents();
                 return;
@@ -340,7 +342,7 @@ public class DDTest6 extends TestBase {
                 // make modifiable
                 children = new HashSet<Object>(children);
             }
-            Set<Component> removed = new HashSet<Component>();
+            Set<Component> removed = new HashSet<>();
             for (Iterator<Component> componentIterator = l
                     .getComponentIterator(); componentIterator.hasNext();) {
                 FileIcon next = (FileIcon) componentIterator.next();
@@ -370,7 +372,8 @@ public class DDTest6 extends TestBase {
         @SuppressWarnings("static-access")
         public void drop(DragAndDropEvent dropEvent) {
 
-            if (dropEvent.getTransferable().getSourceComponent() instanceof FileIcon) {
+            if (dropEvent.getTransferable()
+                    .getSourceComponent() instanceof FileIcon) {
                 // update the position
 
                 DragAndDropWrapper.WrapperTransferable transferable = (WrapperTransferable) dropEvent
@@ -389,12 +392,14 @@ public class DDTest6 extends TestBase {
                 int deltaY = mouseEvent.getClientY()
                         - mouseDownEvent.getClientY();
 
-                ComponentPosition position = l.getPosition(transferable
-                        .getSourceComponent());
+                ComponentPosition position = l
+                        .getPosition(transferable.getSourceComponent());
                 position.setTop(position.getTopValue() + deltaY, UNITS_PIXELS);
-                position.setLeft(position.getLeftValue() + deltaX, UNITS_PIXELS);
+                position.setLeft(position.getLeftValue() + deltaX,
+                        UNITS_PIXELS);
 
-            } else if (dropEvent.getTransferable().getSourceComponent() == tree1) {
+            } else if (dropEvent.getTransferable()
+                    .getSourceComponent() == tree1) {
 
                 // dragged something from tree to the folder shown
 
@@ -425,7 +430,8 @@ public class DDTest6 extends TestBase {
                             }
 
                             @Override
-                            public void onProgress(StreamingProgressEvent event) {
+                            public void onProgress(
+                                    StreamingProgressEvent event) {
                             }
 
                             @Override
@@ -492,7 +498,7 @@ public class DDTest6 extends TestBase {
             l.addComponent(new Embedded(null, icon2));
             l.addComponent(new Label(name));
 
-            l.addListener(new LayoutClickListener() {
+            l.addLayoutClickListener(new LayoutClickListener() {
                 @Override
                 @SuppressWarnings("static-access")
                 public void layoutClick(LayoutClickEvent event) {
@@ -536,7 +542,8 @@ public class DDTest6 extends TestBase {
                     public void drop(DragAndDropEvent dropEvent) {
                         File f = null;
 
-                        if (dropEvent.getTransferable().getSourceComponent() instanceof FileIcon) {
+                        if (dropEvent.getTransferable()
+                                .getSourceComponent() instanceof FileIcon) {
                             FileIcon new_name = (FileIcon) dropEvent
                                     .getTransferable().getSourceComponent();
                             f = new_name.file;

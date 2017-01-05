@@ -3,10 +3,10 @@ package com.vaadin.tests.components.combobox;
 import java.util.LinkedHashMap;
 
 import com.vaadin.server.Resource;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.ComboBox.ItemStyleGenerator;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox.ItemStyleGenerator;
 
 public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
 
@@ -68,7 +68,7 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
     }
 
     private void createFilteringModeAction(String category) {
-        LinkedHashMap<String, FilteringMode> options = new LinkedHashMap<String, FilteringMode>();
+        LinkedHashMap<String, FilteringMode> options = new LinkedHashMap<>();
         options.put("Off", FilteringMode.OFF);
         options.put("Contains", FilteringMode.CONTAINS);
         options.put("Starts with", FilteringMode.STARTSWITH);
@@ -79,7 +79,7 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
     }
 
     private void createItemStyleGeneratorAction(String category) {
-        LinkedHashMap<String, ItemStyleGenerator> options = new LinkedHashMap<String, ItemStyleGenerator>();
+        LinkedHashMap<String, ItemStyleGenerator> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("Bold fives", new ItemStyleGenerator() {
             @Override
@@ -96,7 +96,7 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
     }
 
     private void createInputPromptAction(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("Enter a value", "Enter a value");
         options.put("- Click here -", "- Click here -");

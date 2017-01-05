@@ -4,7 +4,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 public class AddNonRenderedRow extends TestBase {
     int index = 0;
@@ -21,7 +21,7 @@ public class AddNonRenderedRow extends TestBase {
         }
 
         Button addrowButton = new Button("Add row");
-        addrowButton.addListener(new ClickListener() {
+        addrowButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent pEvent) {
                 addRow();

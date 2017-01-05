@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,18 +22,18 @@ import java.util.Set;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
 
-public class TableMoveFocusWithSelection extends AbstractTestUI {
+public class TableMoveFocusWithSelection extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -57,7 +57,7 @@ public class TableMoveFocusWithSelection extends AbstractTestUI {
                 @Override
                 public void layoutClick(LayoutClickEvent event) {
                     if (t.isMultiSelect()) {
-                        Set<Object> values = new HashSet<Object>(
+                        Set<Object> values = new HashSet<>(
                                 (Set<Object>) t.getValue());
                         values.add(l.getData());
                         t.setValue(values);
@@ -72,9 +72,8 @@ public class TableMoveFocusWithSelection extends AbstractTestUI {
         addComponent(t);
 
         // Select mode
-        Button toggleSelectMode = new Button(
-                t.isMultiSelect() ? "Press to use single select"
-                        : "Press to use multi select");
+        Button toggleSelectMode = new Button(t.isMultiSelect()
+                ? "Press to use single select" : "Press to use multi select");
         toggleSelectMode.setId("toggle-mode");
         toggleSelectMode.addClickListener(new ClickListener() {
 
@@ -104,7 +103,7 @@ public class TableMoveFocusWithSelection extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -114,7 +113,7 @@ public class TableMoveFocusWithSelection extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

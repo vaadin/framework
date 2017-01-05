@@ -3,7 +3,7 @@ package com.vaadin.tests.components.tabsheet;
 import java.util.ArrayList;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -11,13 +11,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
-public class TabKeyboardNavigationWaiAria extends AbstractTestUI {
+public class TabKeyboardNavigationWaiAria extends AbstractReindeerTestUI {
 
     int index = 1;
-    ArrayList<Component> tabs = new ArrayList<Component>();
+    ArrayList<Component> tabs = new ArrayList<>();
     TabSheet ts = new TabSheet();
 
     @Override

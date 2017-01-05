@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -40,8 +40,8 @@ public class ComboBoxSuggestionPopupCloseTest extends MultiBrowserTest {
 
         waitForElementVisible(By.className("v-filterselect"));
 
-        selectTextbox = $(ComboBoxElement.class).first().findElement(
-                By.vaadin("#textbox"));
+        selectTextbox = $(ComboBoxElement.class).first()
+                .findElement(By.vaadin("#textbox"));
         selectTextbox.click();
 
         // open popup and select first element
@@ -50,7 +50,8 @@ public class ComboBoxSuggestionPopupCloseTest extends MultiBrowserTest {
         // open popup and hit enter to close it
         sendKeys(new Keys[] { ARROW_DOWN, ENTER });
 
-        assertFalse(isElementPresent(By.className("v-filterselect-suggestmenu")));
+        assertFalse(
+                isElementPresent(By.className("v-filterselect-suggestmenu")));
 
     }
 

@@ -25,7 +25,8 @@ public class TestFileUpload extends TestBase implements Receiver {
         Upload u = new Upload("Upload", new Upload.Receiver() {
 
             @Override
-            public OutputStream receiveUpload(String filename, String mimeType) {
+            public OutputStream receiveUpload(String filename,
+                    String mimeType) {
                 return baos;
             }
         });
@@ -52,6 +53,7 @@ public class TestFileUpload extends TestBase implements Receiver {
                 baos.reset();
             }
         });
+        u.setImmediateMode(false);
 
         addComponent(log);
         addComponent(u);

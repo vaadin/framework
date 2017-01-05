@@ -1,15 +1,15 @@
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.PropertyId;
-import com.vaadin.data.util.BeanItem;
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.TextField;
 
 public class FormBuilderWithNestedProperties extends TestBase {
 
@@ -20,16 +20,16 @@ public class FormBuilderWithNestedProperties extends TestBase {
 
     @Override
     protected void setup() {
-        FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
+        FieldGroup fieldGroup = new BeanFieldGroup<>(Person.class);
         fieldGroup.buildAndBindMemberFields(this);
 
         addComponent(firstName);
         addComponent(lastName);
         addComponent(streetAddress);
 
-        fieldGroup.setItemDataSource(new BeanItem<Person>(new Person("Who",
-                "me?", "email", 1, Sex.MALE, new Address("street name", 202020,
-                        "City", Country.FINLAND))));
+        fieldGroup.setItemDataSource(new BeanItem<>(new Person("Who", "me?",
+                "email", 1, Sex.MALE,
+                new Address("street name", 202020, "City", Country.FINLAND))));
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Validates button Widths for Buttons or Native Buttons, inside or outside
  * tables.
- * 
+ *
  * @since 7.2
  * @author Vaadin Ltd
  */
@@ -55,8 +55,8 @@ public class ButtonUndefinedWidthTest extends MultiBrowserTest {
         getDriver().findElement(By.className("v-app")).click();
 
         // check button widths in VerticalLayout
-        VerticalLayoutElement vLayout = $(VerticalLayoutElement.class).$(
-                VerticalLayoutElement.class).first();
+        VerticalLayoutElement vLayout = $(VerticalLayoutElement.class)
+                .$(VerticalLayoutElement.class).first();
         int containerWidth = vLayout.getSize().getWidth();
 
         NativeButtonElement nativeButton = vLayout.$(NativeButtonElement.class)
@@ -71,12 +71,12 @@ public class ButtonUndefinedWidthTest extends MultiBrowserTest {
 
         // check button widths in table, also make sure that there is some
         // spacing between the table edges and buttons
-        List<WebElement> rows = findElements(By
-                .className("v-table-cell-content"));
+        List<WebElement> rows = findElements(
+                By.className("v-table-cell-content"));
         int rowWidth = rows.get(0).getSize().getWidth();
 
-        List<WebElement> rowWrappers = findElements(By
-                .className("v-table-cell-wrapper"));
+        List<WebElement> rowWrappers = findElements(
+                By.className("v-table-cell-wrapper"));
         WebElement row = rowWrappers.get(0);
 
         containerWidth = row.getSize().getWidth();

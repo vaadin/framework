@@ -2,8 +2,8 @@ package com.vaadin.tests.components.combobox;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.customelements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 public class ComboBoxItemIconTest extends MultiBrowserTest {
     @Test

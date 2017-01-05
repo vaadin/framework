@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,34 +16,50 @@
 package com.vaadin.tests.components.grid;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.Binder;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.TextField;
 
-public class GridCheckBoxDisplay extends AbstractTestUI {
+public class GridCheckBoxDisplay extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = -5575892909354637168L;
-    private BeanItemContainer<Todo> todoContainer = new BeanItemContainer<Todo>(
-            Todo.class);
 
     @Override
     protected void setup(VaadinRequest request) {
-        todoContainer.addBean(new Todo("Done task", true));
-        todoContainer.addBean(new Todo("Not done", false));
+        List<Todo> items = Arrays.asList(new Todo("Done task", true),
+                new Todo("Not done", false));
 
-        Grid grid = new Grid(todoContainer);
+        Grid<Todo> grid = new Grid<>();
         grid.setSizeFull();
 
-        grid.setColumnOrder("done", "task");
-        grid.getColumn("done").setWidth(75);
-        grid.getColumn("task").setExpandRatio(1);
+        TextField taskField = new TextField();
+        CheckBox doneField = new CheckBox();
+        Binder<Todo> binder = new Binder<>();
+
+        binder.bind(taskField, Todo::getTask, Todo::setTask);
+        binder.bind(doneField, Todo::isDone, Todo::setDone);
+
+        grid.getEditor().setBinder(binder);
+        grid.getEditor().setEnabled(true);
+
+        Column<Todo, String> column = grid
+                .addColumn(todo -> String.valueOf(todo.isDone()));
+        column.setWidth(75);
+        column.setEditorComponent(doneField);
+
+        grid.addColumn(Todo::getTask).setExpandRatio(1)
+                .setEditorComponent(taskField);
 
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        grid.setEditorEnabled(true);
-        grid.setImmediate(true);
+        grid.setItems(items);
 
         getLayout().addComponent(grid);
         getLayout().setExpandRatio(grid, 1);
@@ -56,7 +72,7 @@ public class GridCheckBoxDisplay extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Verify that checkbox state is correct for all items in editor";
     }
 

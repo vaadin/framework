@@ -278,6 +278,7 @@ references (injecting A to B and B to A) will not work, and neither do CDI
 interceptors and decorators.
 
 (((range="endofrange", startref="term.advanced.cdi.scopes.uiscoped")))
+
 [classname]#@NormalUIScoped#([package]#com.vaadin.cdi#):: As [classname]#@UIScoped#, but injecting a managed bean having this annotation
 injects a proxy for the bean instead of a direct reference. This is the normal
 behaviour with CDI, as many CDI features utilize the proxy.
@@ -325,6 +326,7 @@ Note that referencing application-scoped beans is not thread-safe and access
 must be synchronized.
 
 (((range="endofrange", startref="term.advanced.cdi.scopes.applicationscoped")))
+
 [classname]#@SessionScoped#:: ((("[classname]#@SessionScoped#", id="term.advanced.cdi.scopes.sessionscoped", range="startofrange")))
 
 

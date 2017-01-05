@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,23 +31,18 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
@@ -59,9 +54,8 @@ import com.vaadin.shared.ui.window.WindowState;
 
 @Connect(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractSingleComponentContainerConnector
-        implements Paintable, BeforeShortcutActionListener,
-        SimpleManagedLayout, PostLayoutListener, MayScrollChildren,
-        WindowMoveHandler {
+        implements Paintable, SimpleManagedLayout, PostLayoutListener,
+        MayScrollChildren, WindowMoveHandler {
 
     private Node windowClone;
 
@@ -73,8 +67,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         }
     };
 
-    abstract class WindowEventHandler implements ClickHandler,
-            DoubleClickHandler {
+    abstract class WindowEventHandler
+            implements ClickHandler, DoubleClickHandler {
     }
 
     private WindowEventHandler maximizeRestoreClickHandler = new WindowEventHandler() {
@@ -185,18 +179,13 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     }
 
     @Override
-    public void onBeforeShortcutAction(Event e) {
-        // NOP, nothing to update just avoid workaround ( causes excess
-        // blur/focus )
-    }
-
-    @Override
     public VWindow getWidget() {
         return (VWindow) super.getWidget();
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
         getWidget().contentPanel.setWidget(getContentWidget());
 
@@ -228,7 +217,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         }
 
         ComponentConnector content = getContent();
-        boolean hasContent = (content != null);
+        boolean hasContent = content != null;
         Element contentElement = window.contentPanel.getElement();
 
         Style contentStyle = window.contents.getStyle();
@@ -246,8 +235,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         int minHeight = footerHeight + headerHeight;
 
         getWidget().getElement().getStyle().setPropertyPx("minWidth", minWidth);
-        getWidget().getElement().getStyle()
-                .setPropertyPx("minHeight", minHeight);
+        getWidget().getElement().getStyle().setPropertyPx("minHeight",
+                minHeight);
 
         /*
          * Must set absolute position if the child has relative height and
@@ -259,10 +248,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             Element layoutElement = content.getWidget().getElement();
             Style childStyle = layoutElement.getStyle();
 
-            // IE8 needs some hackery to measure its content correctly
-            WidgetUtil.forceIE8Redraw(layoutElement);
-
-            if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
+            if (content.isRelativeHeight()) {
                 childStyle.setPosition(Position.ABSOLUTE);
 
                 Style wrapperStyle = contentElement.getStyle();
@@ -289,8 +275,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         VWindow window = getWidget();
 
         if (!window.isAttached()) {
-            Logger.getLogger(WindowConnector.class.getName()).warning(
-                    "Called postLayout to detached Window.");
+            Logger.getLogger(WindowConnector.class.getName())
+                    .warning("Called postLayout to detached Window.");
             return;
         }
         if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
@@ -311,8 +297,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             // have to replace them with stubs in the clone. And we can't just
             // erase them, because there are corresponding player widgets to
             // animate
-            windowClone = cloneNodeFilteringMedia(getWidget().getElement()
-                    .getFirstChild());
+            windowClone = cloneNodeFilteringMedia(
+                    getWidget().getElement().getFirstChild());
         }
     }
 
@@ -328,7 +314,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                 }
                 Element newEl = DOM.createElement(old.getTagName());
                 if (old.hasAttribute("controls")) {
-                    newEl.setAttribute("controls", old.getAttribute("controls"));
+                    newEl.setAttribute("controls",
+                            old.getAttribute("controls"));
                 }
                 if (old.hasAttribute("style")) {
                     newEl.setAttribute("style", old.getAttribute("style"));
@@ -373,10 +360,11 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         window.resizeLazy = state.resizeLazy;
 
-        window.setDraggable(state.draggable
-                && state.windowMode == WindowMode.NORMAL);
+        window.setDraggable(
+                state.draggable && state.windowMode == WindowMode.NORMAL);
 
-        window.updateMaximizeRestoreClassName(state.resizable, state.windowMode);
+        window.updateMaximizeRestoreClassName(state.resizable,
+                state.windowMode);
 
         // Caption must be set before required header size is measured. If
         // the caption attribute is missing the caption should be cleared.
@@ -394,13 +382,12 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         window.setTabStopEnabled(getState().assistiveTabStop);
         window.setTabStopTopAssistiveText(getState().assistiveTabStopTopText);
-        window.setTabStopBottomAssistiveText(getState().assistiveTabStopBottomText);
+        window.setTabStopBottomAssistiveText(
+                getState().assistiveTabStopBottomText);
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        window.immediate = state.immediate;
-
-        window.setClosable(!isReadOnly());
+        window.setClosable(state.closable);
         // initialize position from state
         updateWindowPosition();
 
@@ -459,14 +446,15 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         WindowState state = getState();
 
         // update draggable on widget
-        window.setDraggable(state.draggable
-                && state.windowMode == WindowMode.NORMAL);
+        window.setDraggable(
+                state.draggable && state.windowMode == WindowMode.NORMAL);
         // update resizable on widget
-        window.setResizable(state.resizable
-                && state.windowMode == WindowMode.NORMAL);
+        window.setResizable(
+                state.resizable && state.windowMode == WindowMode.NORMAL);
         updateComponentSize();
         updateWindowPosition();
-        window.updateMaximizeRestoreClassName(state.resizable, state.windowMode);
+        window.updateMaximizeRestoreClassName(state.resizable,
+                state.windowMode);
         window.updateContentsSize();
     }
 
@@ -483,8 +471,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             VWindow window = getWidget();
             window.bringToFront();
 
-            getRpcProxy(WindowServerRpc.class).windowModeChanged(
-                    state.windowMode);
+            getRpcProxy(WindowServerRpc.class)
+                    .windowModeChanged(state.windowMode);
         }
     }
 
@@ -508,8 +496,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void onWindowMove(WindowMoveEvent event) {
-        RpcProxy.create(WindowServerRpc.class, this).windowMoved(
-                event.getNewX(), event.getNewY());
-
+        getRpcProxy(WindowServerRpc.class).windowMoved(event.getNewX(),
+                event.getNewY());
     }
 }

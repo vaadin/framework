@@ -2,11 +2,11 @@ package com.vaadin.tests.components.combobox;
 
 import java.util.Arrays;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Select;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.TextField;
 
 public class ComboBoxTextFieldEventOrder extends TestBase {
 
@@ -14,8 +14,8 @@ public class ComboBoxTextFieldEventOrder extends TestBase {
     protected void setup() {
         TextField textField = new TextField("text field");
         textField.setImmediate(true);
-        final Select select = new Select("select", Arrays.asList("1", "2", "3",
-                "4"));
+        final Select select = new Select("select",
+                Arrays.asList("1", "2", "3", "4"));
         textField.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {

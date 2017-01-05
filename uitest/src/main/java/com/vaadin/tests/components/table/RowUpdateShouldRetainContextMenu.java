@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.ProgressIndicator;
+import com.vaadin.v7.ui.Table;
 
 public class RowUpdateShouldRetainContextMenu extends TestBase {
 
@@ -54,7 +54,8 @@ public class RowUpdateShouldRetainContextMenu extends TestBase {
 
         table.addActionHandler(new Action.Handler() {
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
             }
 
             @Override

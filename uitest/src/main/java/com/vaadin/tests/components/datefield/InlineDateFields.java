@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -46,10 +46,10 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
 
     private InlineDateField createInlineDateField(String caption, String width,
             Locale locale) {
-        InlineDateField pd = new InlineDateField(caption + "("
-                + locale.toString() + ")");
+        InlineDateField pd = new InlineDateField(
+                caption + "(" + locale.toString() + ")");
         pd.setWidth(width);
-        pd.setValue(new Date(12312312313L));
+        pd.setValue(LocalDate.of(1970, 05, 23));
         pd.setLocale(locale);
         pd.setResolution(Resolution.YEAR);
 
@@ -57,7 +57,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for InlineDateFields in different configurations";
     }
 
@@ -70,27 +70,16 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     }
 
     private Component createResolutionSelectAction() {
-        LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
+        LinkedHashMap<String, Resolution> options = new LinkedHashMap<>();
         options.put("Year", Resolution.YEAR);
         options.put("Month", Resolution.MONTH);
         options.put("Day", Resolution.DAY);
-        options.put("Hour", Resolution.HOUR);
-        options.put("Min", Resolution.MINUTE);
-        options.put("Sec", Resolution.SECOND);
         return createSelectAction("Resolution", options, "Year",
-                new Command<InlineDateField, Resolution>() {
-
-                    @Override
-                    public void execute(InlineDateField c, Resolution value,
-                            Object data) {
-                        c.setResolution(value);
-
-                    }
-                });
+                (field, value, data) -> field.setResolution(value));
     }
 
     private Component createLocaleSelectAction() {
-        LinkedHashMap<String, Locale> options = new LinkedHashMap<String, Locale>();
+        LinkedHashMap<String, Locale> options = new LinkedHashMap<>();
         for (Locale locale : LOCALES) {
             options.put(locale.toString(), locale);
         }

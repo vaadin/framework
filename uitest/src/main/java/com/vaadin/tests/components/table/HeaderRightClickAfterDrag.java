@@ -1,21 +1,20 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
-public class HeaderRightClickAfterDrag extends AbstractTestUI {
+public class HeaderRightClickAfterDrag extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         Table table = new Table();
-        table.setContainerDataSource(new BeanItemContainer<TestBean>(
-                TestBean.class));
+        table.setContainerDataSource(new BeanItemContainer<>(TestBean.class));
         for (int i = 0; i < 10; i++) {
             table.addItem(new TestBean(i));
         }
@@ -25,12 +24,11 @@ public class HeaderRightClickAfterDrag extends AbstractTestUI {
         table.addHeaderClickListener(new Table.HeaderClickListener() {
             @Override
             public void headerClick(Table.HeaderClickEvent event) {
-                if (MouseEventDetails.MouseButton.RIGHT.equals(event
-                        .getButton())) {
+                if (MouseEventDetails.MouseButton.RIGHT
+                        .equals(event.getButton())) {
                     Window window = new Window("Right-clicked:", new Label(
-                            "<center>"
-                                    + event.getPropertyId().toString()
-                                            .toUpperCase() + "</center>",
+                            "<center>" + event.getPropertyId().toString()
+                                    .toUpperCase() + "</center>",
                             ContentMode.HTML));
                     window.setPositionX(event.getClientX());
                     window.setPositionY(event.getClientY());

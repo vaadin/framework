@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,11 @@
 package com.vaadin.client.ui.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,7 +35,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -38,6 +42,7 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -48,10 +53,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Focusable;
@@ -77,14 +80,19 @@ import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
+import com.vaadin.client.ui.window.WindowOrderEvent;
+import com.vaadin.client.ui.window.WindowOrderHandler;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.WindowOrderRpc;
 import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.PageClientRpc;
@@ -105,6 +113,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     private String activeTheme = null;
 
+    private HandlerRegistration windowOrderRegistration;
+
     private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
         @Override
         public void onStateChanged(StateChangeEvent stateChangeEvent) {
@@ -114,9 +124,33 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     };
 
+    private WindowOrderHandler windowOrderHandler = new WindowOrderHandler() {
+
+        @Override
+        public void onWindowOrderChange(WindowOrderEvent event) {
+            VWindow[] windows = event.getWindows();
+            HashMap<Integer, Connector> orders = new HashMap<>();
+            boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
+            for (VWindow window : windows) {
+                Connector connector = Util.findConnectorFor(window);
+                orders.put(window.getWindowOrder(), connector);
+                if (connector instanceof AbstractConnector
+                        && ((AbstractConnector) connector)
+                                .hasEventListener(EventId.WINDOW_ORDER)) {
+                    hasEventListener = true;
+                }
+            }
+            if (hasEventListener) {
+                getRpcProxy(WindowOrderRpc.class).windowOrderChanged(orders);
+            }
+        }
+    };
+
     @Override
     protected void init() {
         super.init();
+        windowOrderRegistration = VWindow
+                .addWindowOrderHandler(windowOrderHandler);
         registerRpc(PageClientRpc.class, new PageClientRpc() {
 
             @Override
@@ -161,7 +195,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             @Override
             public void reportLayoutProblems(String json) {
-                VConsole.printLayoutProblems(getValueMap(json), getConnection());
+                VConsole.printLayoutProblems(getValueMap(json),
+                        getConnection());
             }
 
             private native ValueMap getValueMap(String json)
@@ -176,9 +211,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getRpcProxy(UIServerRpc.class).resize(event.getHeight(),
                         event.getWidth(), Window.getClientWidth(),
                         Window.getClientHeight());
-                if (getState().immediate || getPageState().hasResizeListeners) {
-                    getConnection().getServerRpcQueue().flush();
-                }
+                getConnection().getServerRpcQueue().flush();
             }
         });
         getWidget().addScrollHandler(new ScrollHandler() {
@@ -212,7 +245,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         boolean firstPaint = getWidget().connection == null;
         getWidget().connection = client;
 
-        getWidget().immediate = getState().immediate;
         getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
         // this also implicitly removes old styles
         String styles = "";
@@ -239,8 +271,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         while (childIndex < uidl.getChildCount()
                 && "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
             final UIDL open = uidl.getChildUIDL(childIndex);
-            final String url = client.translateVaadinUri(open
-                    .getStringAttribute("src"));
+            final String url = client
+                    .translateVaadinUri(open.getStringAttribute("src"));
             final String target = open.getStringAttribute("name");
             if (target == null) {
                 // source will be opened to this browser window, but we may have
@@ -265,7 +297,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 }
                 if (alwaysAsPopup) {
                     if (open.hasAttribute("border")) {
-                        if (open.getStringAttribute("border").equals("minimal")) {
+                        if (open.getStringAttribute("border")
+                                .equals("minimal")) {
                             options = "menubar=yes,location=no,status=no";
                         } else {
                             options = "menubar=no,location=no,status=no";
@@ -350,8 +383,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                                         + " but it is not focusable. The widget should implement either "
                                         + com.google.gwt.user.client.ui.Focusable.class
                                                 .getName()
-                                        + " or "
-                                        + Focusable.class.getName());
+                                        + " or " + Focusable.class.getName());
                     }
                 }
             });
@@ -378,8 +410,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             int fragmentIndex = location.indexOf('#');
             if (fragmentIndex >= 0) {
                 // Decode fragment to avoid double encoding (#10769)
-                newFragment = URL.decodePathSegment(location
-                        .substring(fragmentIndex + 1));
+                newFragment = URL.decodePathSegment(
+                        location.substring(fragmentIndex + 1));
 
                 if (newFragment.isEmpty()
                         && Location.getHref().indexOf('#') == -1) {
@@ -415,7 +447,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Reads CSS strings and resources injected by {@link Styles#inject} from
      * the UIDL stream.
-     * 
+     *
      * @param uidl
      *            The uidl which contains "css-resource" and "css-string" tags
      */
@@ -429,11 +461,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             // Check if we have resources to inject
             if (cssInjectionsUidl.getTag().equals("css-resource")) {
-                String url = getWidget().connection
-                        .translateVaadinUri(cssInjectionsUidl
-                                .getStringAttribute("url"));
-                LinkElement link = LinkElement.as(DOM
-                        .createElement(LinkElement.TAG));
+                String url = getWidget().connection.translateVaadinUri(
+                        cssInjectionsUidl.getStringAttribute("url"));
+                LinkElement link = LinkElement
+                        .as(DOM.createElement(LinkElement.TAG));
                 link.setRel("stylesheet");
                 link.setHref(url);
                 link.setType("text/css");
@@ -451,7 +482,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Internal helper to get the <head> tag of the page
-     * 
+     *
      * @since 7.3
      * @return the head element
      */
@@ -462,14 +493,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Internal helper for removing any stylesheet with the given URL
-     * 
+     *
      * @since 7.3
      * @param url
      *            the url to match with existing stylesheets
      */
     private void removeStylesheet(String url) {
-        NodeList<Element> linkTags = getHead().getElementsByTagName(
-                LinkElement.TAG);
+        NodeList<Element> linkTags = getHead()
+                .getElementsByTagName(LinkElement.TAG);
         for (int i = 0; i < linkTags.getLength(); i++) {
             LinkElement link = LinkElement.as(linkTags.getItem(i));
             if (!"stylesheet".equals(link.getRel())) {
@@ -486,17 +517,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
-        // Create a style tag for style injections so they don't end up in
-        // the theme tag in IE8-IE10 (we don't want to wipe them out if we
-        // change theme).
-        // StyleInjectorImplIE always injects to the last style tag on the page.
-        if (BrowserInfo.get().isIE()
-                && BrowserInfo.get().getBrowserMajorVersion() < 11) {
-            StyleElement style = Document.get().createStyleElement();
-            style.setType("text/css");
-            getHead().appendChild(style);
-        }
-
         Widget shortcutContextWidget = getWidget();
         if (applicationConnection.getConfiguration().isStandalone()) {
             // Listen to body for standalone apps (#19392)
@@ -506,15 +526,17 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         shortcutContextWidget.addDomHandler(new KeyDownHandler() {
             @Override
             public void onKeyDown(KeyDownEvent event) {
+                if (VWindow.isModalWindowOpen()) {
+                    return;
+                }
                 if (getWidget().actionHandler != null) {
-                    Element target = Element.as(event.getNativeEvent()
-                            .getEventTarget());
+                    Element target = Element
+                            .as(event.getNativeEvent().getEventTarget());
                     if (target == Document.get().getBody()
                             || getWidget().getElement().isOrHasChild(target)) {
                         // Only react to body and elements inside the UI
-                        getWidget().actionHandler
-                                .handleKeyboardEvent((Event) event
-                                        .getNativeEvent().cast());
+                        getWidget().actionHandler.handleKeyboardEvent(
+                                (Event) event.getNativeEvent().cast());
                     }
 
                 }
@@ -612,7 +634,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
          * height. Assuming v-ui does not have an undefined width for now, see
          * #8460.
          */
-        if (child.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
+        if (child.isRelativeHeight()) {
             childStyle.setPosition(Position.ABSOLUTE);
         } else {
             childStyle.clearPosition();
@@ -621,7 +643,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Checks if the given sub window is a child of this UI Connector
-     * 
+     *
      * @deprecated Should be replaced by a more generic mechanism for getting
      *             non-ComponentConnector children
      * @param wc
@@ -635,11 +657,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Return an iterator for current subwindows. This method is meant for
      * testing purposes only.
-     * 
+     *
      * @return
      */
     public List<WindowConnector> getSubWindows() {
-        ArrayList<WindowConnector> windows = new ArrayList<WindowConnector>();
+        ArrayList<WindowConnector> windows = new ArrayList<>();
         for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);
@@ -662,7 +684,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * public API instead of their state object directly. The page state might
      * not be an independent state object but can be embedded in UI state.
      * </p>
-     * 
+     *
      * @since 7.1
      * @return state object of the page
      */
@@ -671,7 +693,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         ComponentConnector oldChild = null;
         ComponentConnector newChild = getContent();
 
@@ -719,6 +742,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             }
         }
 
+        setWindowOrderAndPosition();
+
         // Close removed sub windows
         for (ComponentConnector c : event.getOldChildren()) {
             if (c.getParent() != this && c instanceof WindowConnector) {
@@ -739,10 +764,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Tries to scroll the viewport so that the given connector is in view.
-     * 
+     *
      * @param componentConnector
      *            The connector which should be visible
-     * 
+     *
      */
     public void scrollIntoView(final ComponentConnector componentConnector) {
         if (componentConnector == null) {
@@ -763,14 +788,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (stateChangeEvent.hasPropertyChanged("tooltipConfiguration")) {
             getConnection().getVTooltip().setCloseTimeout(
                     getState().tooltipConfiguration.closeTimeout);
-            getConnection().getVTooltip().setOpenDelay(
-                    getState().tooltipConfiguration.openDelay);
+            getConnection().getVTooltip()
+                    .setOpenDelay(getState().tooltipConfiguration.openDelay);
             getConnection().getVTooltip().setQuickOpenDelay(
                     getState().tooltipConfiguration.quickOpenDelay);
             getConnection().getVTooltip().setQuickOpenTimeout(
                     getState().tooltipConfiguration.quickOpenTimeout);
-            getConnection().getVTooltip().setMaxWidth(
-                    getState().tooltipConfiguration.maxWidth);
+            getConnection().getVTooltip()
+                    .setMaxWidth(getState().tooltipConfiguration.maxWidth);
         }
 
         if (stateChangeEvent
@@ -798,7 +823,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getConnection().getMessageSender().setPushEnabled(
                     getState().pushConfiguration.mode.isEnabled());
         }
-        if (stateChangeEvent.hasPropertyChanged("reconnectDialogConfiguration")) {
+        if (stateChangeEvent
+                .hasPropertyChanged("reconnectDialogConfiguration")) {
             getConnection().getConnectionStateHandler().configurationUpdated();
         }
 
@@ -831,15 +857,15 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             pollTimer.scheduleRepeating(getState().pollInterval);
         } else {
             // Ensure no more polls are sent as polling has been disabled
-            getConnection().getServerRpcQueue().removeMatching(
-                    new MethodInvocation(getConnectorId(), UIServerRpc.class
-                            .getName(), "poll"));
+            getConnection().getServerRpcQueue()
+                    .removeMatching(new MethodInvocation(getConnectorId(),
+                            UIServerRpc.class.getName(), "poll"));
         }
     }
 
     /**
      * Invokes the layout analyzer on the server
-     * 
+     *
      * @since 7.1
      */
     public void analyzeLayouts() {
@@ -850,20 +876,20 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * Sends a request to the server to print details to console that will help
      * the developer to locate the corresponding server-side connector in the
      * source code.
-     * 
+     *
      * @since 7.1
      * @param serverConnector
      *            the connector to locate
      */
     public void showServerDebugInfo(ServerConnector serverConnector) {
-        getRpcProxy(DebugWindowServerRpc.class).showServerDebugInfo(
-                serverConnector);
+        getRpcProxy(DebugWindowServerRpc.class)
+                .showServerDebugInfo(serverConnector);
     }
 
     /**
      * Sends a request to the server to print a design to the console for the
      * given component.
-     * 
+     *
      * @since 7.5
      * @param connector
      *            the component connector to output a declarative design for
@@ -908,7 +934,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Loads the new theme and removes references to the old theme
-     * 
+     *
      * @since 7.4.3
      * @param oldTheme
      *            The name of the old theme
@@ -929,11 +955,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             if (tagToReplace == null) {
                 getLogger()
-                        .warning(
-                                "Did not find the link tag for the old theme ("
-                                        + oldThemeUrl
-                                        + "), adding a new stylesheet for the new theme ("
-                                        + newThemeUrl + ")");
+                        .warning("Did not find the link tag for the old theme ("
+                                + oldThemeUrl
+                                + "), adding a new stylesheet for the new theme ("
+                                + newThemeUrl + ")");
             }
         }
 
@@ -950,7 +975,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     private void updateVaadinFavicon(String newTheme) {
-        NodeList<Element> iconElements = querySelectorAll("link[rel~=\"icon\"]");
+        NodeList<Element> iconElements = querySelectorAll(
+                "link[rel~=\"icon\"]");
         for (int i = 0; i < iconElements.getLength(); i++) {
             Element iconElement = iconElements.getItem(i);
 
@@ -971,15 +997,15 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Finds a link tag for a style sheet with the given URL
-     * 
+     *
      * @since 7.3
      * @param url
      *            the URL of the style sheet
      * @return the link tag or null if no matching link tag was found
      */
     private LinkElement findStylesheetTag(String url) {
-        NodeList<Element> linkTags = getHead().getElementsByTagName(
-                LinkElement.TAG);
+        NodeList<Element> linkTags = getHead()
+                .getElementsByTagName(LinkElement.TAG);
         for (int i = 0; i < linkTags.getLength(); i++) {
             final LinkElement link = LinkElement.as(linkTags.getItem(i));
             if ("stylesheet".equals(link.getRel())
@@ -994,7 +1020,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Loads the given theme and replaces the given link element with the new
      * theme link element.
-     * 
+     *
      * @param newTheme
      *            The name of the new theme
      * @param newThemeUrl
@@ -1014,22 +1040,20 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
                     @Override
                     public void onLoad(ResourceLoadEvent event) {
-                        getLogger().info(
-                                "Loading of " + newTheme + " from "
-                                        + newThemeUrl + " completed");
+                        getLogger().info("Loading of " + newTheme + " from "
+                                + newThemeUrl + " completed");
 
                         if (tagToReplace != null) {
-                            tagToReplace.getParentElement().removeChild(
-                                    tagToReplace);
+                            tagToReplace.getParentElement()
+                                    .removeChild(tagToReplace);
                         }
                         activateTheme(newTheme);
                     }
 
                     @Override
                     public void onError(ResourceLoadEvent event) {
-                        getLogger().warning(
-                                "Could not load theme from "
-                                        + getThemeUrl(newTheme));
+                        getLogger().warning("Could not load theme from "
+                                + getThemeUrl(newTheme));
                     }
                 }, null);
 
@@ -1043,7 +1067,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     /**
      * Activates the new theme. Assumes the theme has been loaded and taken into
      * use in the browser.
-     * 
+     *
      * @since 7.4.3
      * @param newTheme
      *            The name of the new theme
@@ -1051,8 +1075,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     protected void activateTheme(String newTheme) {
         if (activeTheme != null) {
             getWidget().getParent().removeStyleName(activeTheme);
-            VOverlay.getOverlayContainer(getConnection()).removeClassName(
-                    activeTheme);
+            VOverlay.getOverlayContainer(getConnection())
+                    .removeClassName(activeTheme);
         }
 
         String oldThemeBase = getConnection().translateVaadinUri("theme://");
@@ -1061,8 +1085,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         if (newTheme != null) {
             getWidget().getParent().addStyleName(newTheme);
-            VOverlay.getOverlayContainer(getConnection()).addClassName(
-                    activeTheme);
+            VOverlay.getOverlayContainer(getConnection())
+                    .addClassName(activeTheme);
 
             updateVaadinFavicon(newTheme);
 
@@ -1079,9 +1103,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Force a full recursive recheck of every connector's state variables.
-     * 
+     *
      * @see #forceStateChange()
-     * 
+     *
      * @since 7.3
      */
     protected static void forceStateChangeRecursively(
@@ -1102,16 +1126,16 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Internal helper to get the theme URL for a given theme
-     * 
+     *
      * @since 7.3
      * @param theme
      *            the name of the theme
      * @return The URL the theme can be loaded from
      */
     private String getThemeUrl(String theme) {
-        String themeUrl = getConnection().translateVaadinUri(
-                ApplicationConstants.VAADIN_PROTOCOL_PREFIX + "themes/" + theme
-                        + "/styles" + ".css");
+        String themeUrl = getConnection()
+                .translateVaadinUri(ApplicationConstants.VAADIN_PROTOCOL_PREFIX
+                        + "themes/" + theme + "/styles" + ".css");
         // Parameter appended to bypass caches after version upgrade.
         themeUrl += "?v=" + Version.getFullVersion();
         return themeUrl;
@@ -1120,7 +1144,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     /**
      * Returns the name of the theme currently in used by the UI
-     * 
+     *
      * @since 7.3
      * @return the theme name used by this UI
      */
@@ -1141,4 +1165,50 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         getRpcProxy(UIServerRpc.class).acknowledge();
 
     }
+
+    private void setWindowOrderAndPosition() {
+        if (windowOrderRegistration != null) {
+            windowOrderRegistration.removeHandler();
+        }
+        WindowOrderCollector collector = new WindowOrderCollector();
+        HandlerRegistration registration = VWindow
+                .addWindowOrderHandler(collector);
+        for (ComponentConnector c : getChildComponents()) {
+            if (c instanceof WindowConnector) {
+                WindowConnector wc = (WindowConnector) c;
+                wc.setWindowOrderAndPosition();
+            }
+        }
+        windowOrderHandler.onWindowOrderChange(
+                new WindowOrderEvent(collector.getWindows()));
+        registration.removeHandler();
+        windowOrderRegistration = VWindow
+                .addWindowOrderHandler(windowOrderHandler);
+    }
+
+    private static class WindowOrderCollector
+            implements WindowOrderHandler, Comparator<VWindow> {
+
+        private HashSet<VWindow> windows = new HashSet<>();
+
+        @Override
+        public void onWindowOrderChange(WindowOrderEvent event) {
+            windows.addAll(Arrays.asList(event.getWindows()));
+        }
+
+        @Override
+        public int compare(VWindow window1, VWindow window2) {
+            if (window1.getWindowOrder() == window2.getWindowOrder()) {
+                return 0;
+            }
+            return window1.getWindowOrder() > window2.getWindowOrder() ? 1 : -1;
+        }
+
+        ArrayList<VWindow> getWindows() {
+            ArrayList<VWindow> result = new ArrayList<>();
+            result.addAll(windows);
+            Collections.sort(result, this);
+            return result;
+        }
+    };
 }

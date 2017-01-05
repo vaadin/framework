@@ -1,10 +1,13 @@
 package com.vaadin.tests.components.ui;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
-public class ComponentMissingFromDefaultWidgetset extends AbstractTestUI {
+@Widgetset("com.vaadin.DefaultWidgetSet")
+public class ComponentMissingFromDefaultWidgetset
+        extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

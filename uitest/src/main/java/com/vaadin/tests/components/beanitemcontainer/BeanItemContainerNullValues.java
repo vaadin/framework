@@ -3,7 +3,7 @@ package com.vaadin.tests.components.beanitemcontainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 public class BeanItemContainerNullValues extends TestBase {
 
@@ -23,8 +23,8 @@ public class BeanItemContainerNullValues extends TestBase {
     protected void setup() {
         table = new Table();
         table.setSortDisabled(false);
-        table.setContainerDataSource(BeanItemContainerGenerator
-                .createContainer(100, 1));
+        table.setContainerDataSource(
+                BeanItemContainerGenerator.createContainer(100, 1));
         table.setColumnCollapsingAllowed(true);
 
         Button b = new Button("Disable sorting", new Button.ClickListener() {

@@ -54,7 +54,8 @@ public class OrderedLayoutComponentOrdering extends TestBase {
         move.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                hl.addComponentAsFirst(hl.getComponent(hl.getComponentCount() - 1));
+                hl.addComponentAsFirst(
+                        hl.getComponent(hl.getComponentCount() - 1));
             }
         });
         addComponent(move);

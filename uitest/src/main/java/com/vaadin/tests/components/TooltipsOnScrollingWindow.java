@@ -9,13 +9,11 @@ public class TooltipsOnScrollingWindow extends TestBase {
     @Override
     protected void setup() {
 
-        TestUtils
-                .injectCSS(
-                        getMainWindow(),
-                        ".v-generated-body { overflow: auto; } "
-                                + ".v-app, .v-ui { overflow: visible !important;}"
-                                + ".hoverable-label { position: fixed; bottom: 10px; right: 10px;  }"
-                                + ".hidden-label { position: absolute; top: 2000px; left: 2000px;}");
+        TestUtils.injectCSS(getMainWindow(),
+                ".v-generated-body { overflow: auto; } "
+                        + ".v-app, .v-ui { overflow: visible !important;}"
+                        + ".hoverable-label { position: fixed; bottom: 10px; right: 10px;  }"
+                        + ".hidden-label { position: absolute; top: 2000px; left: 2000px;}");
 
         getLayout().getParent().setHeight("4000px");
         getLayout().getParent().setWidth("4000px");

@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Select;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Select;
+import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
 public class ColumnHeaderAlignments extends TestBase {
@@ -25,7 +25,6 @@ public class ColumnHeaderAlignments extends TestBase {
         theme.addItem("reindeer");
         theme.addItem("runo");
         theme.addItem("base");
-        theme.addItem("liferay");
         theme.setValue("reindeer");
         theme.setNullSelectionAllowed(false);
         theme.setImmediate(true);
@@ -37,17 +36,12 @@ public class ColumnHeaderAlignments extends TestBase {
         });
         addComponent(theme);
         CheckBox footers = new CheckBox("Show footers");
-        footers.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean visible = (Boolean) event.getProperty().getValue();
-                fooTable.setFooterVisible(visible);
-                barTable.setFooterVisible(visible);
-                bazTable.setFooterVisible(visible);
-            }
+        footers.addValueChangeListener(event -> {
+            boolean visible = event.getValue();
+            fooTable.setFooterVisible(visible);
+            barTable.setFooterVisible(visible);
+            bazTable.setFooterVisible(visible);
         });
-        footers.setImmediate(true);
         addComponent(footers);
         HorizontalLayout tables = new HorizontalLayout();
         fooTable = createTable(null);

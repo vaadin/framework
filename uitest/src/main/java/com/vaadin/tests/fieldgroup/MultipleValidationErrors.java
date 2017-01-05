@@ -1,18 +1,19 @@
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.Validator;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.BeanValidator;
-import com.vaadin.server.AbstractErrorMessage;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import org.apache.commons.lang.StringEscapeUtils;
 
-public class MultipleValidationErrors extends AbstractTestUI {
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.validator.BeanValidator;
+import com.vaadin.v7.ui.TextField;
+
+public class MultipleValidationErrors extends AbstractReindeerTestUI {
 
     public static final String FIRST_NAME_NOT_NULL_VALIDATION_MESSAGE = "first name is null";
     public static final String LAST_NAME_NOT_NULL_VALIDATION_MESSAGE = "last name is null";
@@ -21,7 +22,7 @@ public class MultipleValidationErrors extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        BeanItem<PersonBeanWithValidationAnnotations> item = new BeanItem<PersonBeanWithValidationAnnotations>(
+        BeanItem<PersonBeanWithValidationAnnotations> item = new BeanItem<>(
                 new PersonBeanWithValidationAnnotations());
         final FieldGroup fieldGroup = new FieldGroup(item);
 
@@ -39,8 +40,8 @@ public class MultipleValidationErrors extends AbstractTestUI {
                 try {
                     fieldGroup.commit();
                 } catch (FieldGroup.CommitException e) {
-                    if (e.getCause() != null
-                            && e.getCause() instanceof Validator.InvalidValueException) {
+                    if (e.getCause() != null && e
+                            .getCause() instanceof Validator.InvalidValueException) {
                         validationErrors.setValue(StringEscapeUtils
                                 .unescapeHtml(AbstractErrorMessage
                                         .getErrorMessageForException(

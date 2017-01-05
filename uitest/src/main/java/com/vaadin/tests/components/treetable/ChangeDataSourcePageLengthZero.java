@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.TreeTable;
 
 public class ChangeDataSourcePageLengthZero extends TestBase {
     @Override
@@ -20,21 +20,21 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
         setupContainer(tt, 20);
         addComponent(tt);
         Button page1 = new Button("Set new data source (20 items)");
-        page1.addListener(new Button.ClickListener() {
+        page1.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 setupContainer(tt, 20);
             }
         });
         Button page2 = new Button("Set new data source (10 items)");
-        page2.addListener(new Button.ClickListener() {
+        page2.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 setupContainer(tt, 10);
             }
         });
         Button addButton = new Button("Add item");
-        addButton.addListener(new Button.ClickListener() {
+        addButton.addClickListener(new Button.ClickListener() {
             private int i = 1;
 
             @Override
@@ -43,9 +43,9 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
                         .getContainerDataSource();
                 Object itemId = container.addItem();
                 container.getContainerProperty(itemId, "i").setValue(i++);
-                container.getContainerProperty(itemId, "link").setValue(
-                        new Link(String.valueOf(i + 1), new ExternalResource(
-                                "http://www.google.fi")));
+                container.getContainerProperty(itemId, "link")
+                        .setValue(new Link(String.valueOf(i + 1),
+                                new ExternalResource("http://www.google.fi")));
                 container.setChildrenAllowed(itemId, false);
                 container.setParent(itemId, null);
             }
@@ -68,9 +68,9 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
         for (int i = 0; i < num; i++) {
             Object item = container.addItem();
             container.getContainerProperty(item, "i").setValue(i + 1);
-            container.getContainerProperty(item, "link").setValue(
-                    new Link(String.valueOf(i + 1), new ExternalResource(
-                            "http://www.google.fi")));
+            container.getContainerProperty(item, "link")
+                    .setValue(new Link(String.valueOf(i + 1),
+                            new ExternalResource("http://www.google.fi")));
             if (i > 0 && (i + 1) % 2 == 0) {
                 container.setChildrenAllowed(item, false);
                 container.setParent(item, previous);

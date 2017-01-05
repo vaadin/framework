@@ -3,9 +3,9 @@ package com.vaadin.tests.components.window;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.Table;
 
 public class SubWindowWithUndefinedHeight extends TestBase {
 
@@ -40,21 +40,23 @@ public class SubWindowWithUndefinedHeight extends TestBase {
         final TabSheet tabsheet = new TabSheet();
         tabsheet.addComponent(tabButton);
         tabsheet.addComponent(table);
-        tabsheet.addListener(new TabSheet.SelectedTabChangeListener() {
-            @Override
-            public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
-                if (tabsheet.getSelectedTab() == tabButton) {
-                    tabsheet.setSizeUndefined();
-                    layout.setSizeUndefined();
-                    subwindow.setSizeUndefined();
-                } else if (tabsheet.getSelectedTab() == table) {
-                    subwindow.setWidth("500px");
-                    subwindow.setHeight("500px");
-                    layout.setSizeFull();
-                    tabsheet.setSizeFull();
-                }
-            }
-        });
+        tabsheet.addSelectedTabChangeListener(
+                new TabSheet.SelectedTabChangeListener() {
+                    @Override
+                    public void selectedTabChange(
+                            TabSheet.SelectedTabChangeEvent event) {
+                        if (tabsheet.getSelectedTab() == tabButton) {
+                            tabsheet.setSizeUndefined();
+                            layout.setSizeUndefined();
+                            subwindow.setSizeUndefined();
+                        } else if (tabsheet.getSelectedTab() == table) {
+                            subwindow.setWidth("500px");
+                            subwindow.setHeight("500px");
+                            layout.setSizeFull();
+                            tabsheet.setSizeFull();
+                        }
+                    }
+                });
         layout.addComponent(tabsheet);
 
         Button button = new Button("click me", new Button.ClickListener() {

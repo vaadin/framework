@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.orderedlayout;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Tree;
 
 public class HorizontalRelativeSizeWithoutExpand extends UI {
 
@@ -25,7 +25,7 @@ public class HorizontalRelativeSizeWithoutExpand extends UI {
         verticalLayout1.setSizeFull();
         Tree tree = new Tree();
         tree.setSizeFull();
-        tree.setContainerDataSource(new BeanItemContainer<String>(String.class));
+        tree.setContainerDataSource(new BeanItemContainer<>(String.class));
         String a = "aaaaaaaaaaaaaaaaaaaaaaaa";
         String b = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
         String c = "ccccccccccccccccccccccccccccccccccccccccccccccccc";

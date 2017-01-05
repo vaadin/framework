@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,7 +18,7 @@ package com.vaadin.ui.renderers;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.vaadin.ui.Grid.AbstractRenderer;
+import com.vaadin.shared.ui.grid.renderers.NumberRendererState;
 
 import elemental.json.JsonValue;
 
@@ -28,7 +28,7 @@ import elemental.json.JsonValue;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class NumberRenderer extends AbstractRenderer<Number> {
+public class NumberRenderer extends AbstractRenderer<Object, Number> {
     private final Locale locale;
     private final NumberFormat numberFormat;
     private final String formatString;
@@ -128,9 +128,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      *            the format string with which to format the number
      * @throws IllegalArgumentException
      *             if {@code formatString} is {@code null}
-     * @see <a
-     *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     * @see <a href=
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public NumberRenderer(String formatString) throws IllegalArgumentException {
         this(formatString, Locale.getDefault(), "");
@@ -148,9 +148,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      *            the locale in which to present numbers
      * @throws IllegalArgumentException
      *             if either argument is {@code null}
-     * @see <a
-     *      href="http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">Format
-     *      String Syntax</a>
+     * @see <a href=
+     *      "http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax">
+     *      Format String Syntax</a>
      */
     public NumberRenderer(String formatString, Locale locale,
             String nullRepresentation) {
@@ -179,9 +179,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
         } else if (numberFormat != null) {
             stringValue = numberFormat.format(value);
         } else {
-            throw new IllegalStateException(String.format("Internal bug: "
-                    + "%s is in an illegal state: "
-                    + "[locale: %s, numberFormat: %s, formatString: %s]",
+            throw new IllegalStateException(String.format(
+                    "Internal bug: " + "%s is in an illegal state: "
+                            + "[locale: %s, numberFormat: %s, formatString: %s]",
                     getClass().getSimpleName(), locale, numberFormat,
                     formatString));
         }
@@ -203,5 +203,15 @@ public class NumberRenderer extends AbstractRenderer<Number> {
     @Override
     public String getNullRepresentation() {
         return super.getNullRepresentation();
+    }
+
+    @Override
+    protected NumberRendererState getState() {
+        return (NumberRendererState) super.getState();
+    }
+
+    @Override
+    protected NumberRendererState getState(boolean markAsDirty) {
+        return (NumberRendererState) super.getState(markAsDirty);
     }
 }

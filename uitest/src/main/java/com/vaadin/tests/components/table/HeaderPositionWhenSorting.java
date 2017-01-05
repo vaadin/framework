@@ -1,22 +1,20 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.ui.Table;
 
-public class HeaderPositionWhenSorting extends AbstractTestUI implements
-        Action.Handler, ItemClickListener {
+public class HeaderPositionWhenSorting extends AbstractReindeerTestUI
+        implements Action.Handler, ItemClickListener {
 
     private Table table;
     private boolean actionHandlerHasActions = false;
@@ -24,51 +22,33 @@ public class HeaderPositionWhenSorting extends AbstractTestUI implements
     @Override
     protected void setup(VaadinRequest request) {
         CheckBox cb = new CheckBox("Item click listener");
-        cb.setImmediate(true);
-        cb.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) event.getProperty().getValue())) {
-                    table.addItemClickListener(HeaderPositionWhenSorting.this);
-                } else {
-                    table.removeItemClickListener(HeaderPositionWhenSorting.this);
-                }
-
+        cb.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                table.addItemClickListener(HeaderPositionWhenSorting.this);
+            } else {
+                table.removeItemClickListener(HeaderPositionWhenSorting.this);
             }
         });
         addComponent(cb);
 
         CheckBox cbActionHandler = new CheckBox("Action handler");
-        cbActionHandler.setImmediate(true);
-        cbActionHandler.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((Boolean) event.getProperty().getValue())) {
-                    table.addActionHandler(HeaderPositionWhenSorting.this);
-                } else {
-                    table.removeActionHandler(HeaderPositionWhenSorting.this);
-                }
-
+        cbActionHandler.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                table.addActionHandler(HeaderPositionWhenSorting.this);
+            } else {
+                table.removeActionHandler(HeaderPositionWhenSorting.this);
             }
         });
         addComponent(cbActionHandler);
 
-        CheckBox cbActionHasActions = new CheckBox("Action handler has actions");
-        cbActionHasActions.setImmediate(true);
-        cbActionHasActions.addValueChangeListener(new ValueChangeListener() {
+        CheckBox cbActionHasActions = new CheckBox(
+                "Action handler has actions");
+        cbActionHasActions.addValueChangeListener(event -> {
+            actionHandlerHasActions = event.getValue();
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                actionHandlerHasActions = ((Boolean) event.getProperty()
-                        .getValue());
-
-                // Workaround to ensure actions are repainted
-                removeComponent(table);
-                addComponent(table);
-
-            }
+            // Workaround to ensure actions are repainted
+            removeComponent(table);
+            addComponent(table);
         });
         addComponent(cbActionHasActions);
 
@@ -128,8 +108,10 @@ public class HeaderPositionWhenSorting extends AbstractTestUI implements
     }
 
     @Override
-    public String getDescription() {
-        return "Table should only prevent the browser context menu when the right click is used for some Table specific operation. In practice these are either action handlers/context menu or item click listeners (right click). Note that item click listeners affects rows only, not the body.";
+    protected String getTestDescription() {
+        return "Table should only prevent the browser context menu when the right click is used for some Table specific operation. "
+                + "In practice these are either action handlers/context menu or item click listeners (right click). "
+                + "Note that item click listeners affects rows only, not the body.";
     }
 
     @Override

@@ -8,8 +8,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.SerializationUtils;
 
 import com.vaadin.annotations.Push;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -33,12 +31,8 @@ public class PushRemoveConnectors extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         final CheckBox pollingEnabled = new CheckBox("Polling enabled");
-        pollingEnabled.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setPollInterval(pollingEnabled.getValue() ? 1000 : -1);
-            }
-        });
+        pollingEnabled.addValueChangeListener(event -> setPollInterval(
+                pollingEnabled.getValue() ? 1000 : -1));
 
         Button start = new Button("start");
         start.setId(START);
@@ -50,6 +44,7 @@ public class PushRemoveConnectors extends AbstractTestUIWithLog {
                     @Override
                     public void run() {
                         access(new Runnable() {
+                            @Override
                             public void run() {
                                 populate();
                                 log("Serialized session size: "

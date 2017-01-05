@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,8 +24,8 @@ package com.vaadin.server;
  * BootstrapHandler.
  * <p>
  * This class is intended primarily for internal use. It is recommended to
- * implement WidgetsetInfo directly rather than extending or using this
- * class outside the framework, and this class is subject to changes.
+ * implement WidgetsetInfo directly rather than extending or using this class
+ * outside the framework, and this class is subject to changes.
  *
  * @since 7.7
  */

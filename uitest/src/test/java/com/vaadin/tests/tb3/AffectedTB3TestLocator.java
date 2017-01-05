@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
         testClasses
                 .addAll(getTestClassesWithAffectedPackageName(allTestClasses));
 
-        List<Class<? extends T>> affectedTestClasses = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> affectedTestClasses = new ArrayList<>();
         affectedTestClasses.addAll(testClasses);
 
         return affectedTestClasses;
@@ -57,7 +57,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
 
     private <T> List<Class<? extends T>> getTestClassesWithAffectedPackageName(
             List<Class<? extends T>> classes) {
-        List<Class<? extends T>> affectedTestClasses = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> affectedTestClasses = new ArrayList<>();
         List<String> affectedFiles = getAffectedFiles();
 
         for (Class c : classes) {
@@ -79,7 +79,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
     }
 
     private List<String> getAffectedFiles() {
-        List<String> affectedFilePaths = new ArrayList<String>();
+        List<String> affectedFilePaths = new ArrayList<>();
 
         for (String path : changedTB3TestLocator.getChangedFilePaths()) {
             if (!path.toLowerCase().contains("test")) {

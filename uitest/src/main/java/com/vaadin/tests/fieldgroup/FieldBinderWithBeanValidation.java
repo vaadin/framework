@@ -1,9 +1,5 @@
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
@@ -13,9 +9,13 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class FieldBinderWithBeanValidation extends TestBase {
 
@@ -31,7 +31,7 @@ public class FieldBinderWithBeanValidation extends TestBase {
     protected void setup() {
         addComponent(log);
 
-        final BeanFieldGroup<PersonWithBeanValidationAnnotations> fieldGroup = new BeanFieldGroup<PersonWithBeanValidationAnnotations>(
+        final BeanFieldGroup<PersonWithBeanValidationAnnotations> fieldGroup = new BeanFieldGroup<>(
                 PersonWithBeanValidationAnnotations.class);
 
         fieldGroup.buildAndBindMemberFields(this);
@@ -82,11 +82,9 @@ public class FieldBinderWithBeanValidation extends TestBase {
         sex.setPageLength(0);
 
         PersonWithBeanValidationAnnotations p = new PersonWithBeanValidationAnnotations(
-                "John", "Doe", "john@doe.com", 64, Sex.MALE, new Address(
-                        "John street", 11223, "John's town", Country.USA));
-        fieldGroup
-                .setItemDataSource(new BeanItem<PersonWithBeanValidationAnnotations>(
-                        p));
+                "John", "Doe", "john@doe.com", 64, Sex.MALE,
+                new Address("John street", 11223, "John's town", Country.USA));
+        fieldGroup.setItemDataSource(new BeanItem<>(p));
     }
 
     public static PersonWithBeanValidationAnnotations getPerson(

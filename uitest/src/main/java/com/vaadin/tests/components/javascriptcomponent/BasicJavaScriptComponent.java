@@ -1,12 +1,12 @@
-/* 
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+/*
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,7 @@ import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.JavaScriptComponentState;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Button;
@@ -41,14 +41,14 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
-public class BasicJavaScriptComponent extends AbstractTestUI {
+public class BasicJavaScriptComponent extends AbstractReindeerTestUI {
 
     public interface TestRpc extends ServerRpc, ClientRpc {
         public void sendRpc(String message);
     }
 
     public static class TestState extends JavaScriptComponentState {
-        private List<String> messages = new ArrayList<String>();
+        private List<String> messages = new ArrayList<>();
         private URLReference url;
 
         public List<String> getMessages() {
@@ -95,8 +95,8 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
                     HasComponents parent = getParent();
                     int i = 1;
                     while (parent != null) {
-                        if (!parentIds.getString(i).equals(
-                                parent.getConnectorId())) {
+                        if (!parentIds.getString(i)
+                                .equals(parent.getConnectorId())) {
                             log.log("parentIds[" + i + "] doesn't match");
                         }
                         i++;
@@ -134,10 +134,8 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
             getRpcProxy(TestRpc.class).sendRpc("RPC message");
             callFunction("messageToClient", "Callback message");
 
-            getState()
-                    .setMessages(
-                            Arrays.asList("First state message",
-                                    "Second state message"));
+            getState().setMessages(Arrays.asList("First state message",
+                    "Second state message"));
             // Dummy resource used to test URL translation
             Resource resource = new ConnectorResource() {
                 @Override

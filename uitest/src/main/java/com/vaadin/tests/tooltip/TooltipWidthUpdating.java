@@ -1,19 +1,19 @@
 package com.vaadin.tests.tooltip;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test to see if the width of the tooltip element is updated if a narrower
  * tooltip is opened to replace a tooltip with wider content.
- * 
+ *
  * @author Vaadin Ltd
  */
-public class TooltipWidthUpdating extends AbstractTestUI {
+public class TooltipWidthUpdating extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = 1L;
     protected static final String SHORT_TOOLTIP_TEXT = "This is a short tooltip";
@@ -30,7 +30,8 @@ public class TooltipWidthUpdating extends AbstractTestUI {
         getTooltipConfiguration().setMaxWidth(MAX_WIDTH);
         getTooltipConfiguration().setCloseTimeout(200);
 
-        NativeButton componentWithLongTooltip = new NativeButton("Long tooltip");
+        NativeButton componentWithLongTooltip = new NativeButton(
+                "Long tooltip");
         componentWithLongTooltip.setId("longTooltip");
         componentWithLongTooltip.setDescription(LONG_TOOLTIP_TEXT);
 

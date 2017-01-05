@@ -1,16 +1,16 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
-public class ShowLastItem extends AbstractTestUI {
+public class ShowLastItem extends AbstractReindeerTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -35,7 +35,8 @@ public class ShowLastItem extends AbstractTestUI {
                 table.addItem(itemId).getItemProperty("Col")
                         .setValue(String.valueOf(itemId));
 
-                table.setCurrentPageFirstItemIndex(table.getItemIds().size() - 1);
+                table.setCurrentPageFirstItemIndex(
+                        table.getItemIds().size() - 1);
             }
         });
 
@@ -45,7 +46,7 @@ public class ShowLastItem extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -55,7 +56,7 @@ public class ShowLastItem extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,8 +42,8 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.ShouldWriteDataDelegate;
 
 public abstract class DeclarativeTestBaseBase<T extends Component> {
-    private static final class AlwaysWriteDelegate implements
-            ShouldWriteDataDelegate {
+    private static final class AlwaysWriteDelegate
+            implements ShouldWriteDataDelegate {
         private static final long serialVersionUID = -6345914431997793599L;
 
         @Override
@@ -60,8 +60,8 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
     protected T read(String design) {
         try {
-            return (T) Design.read(new ByteArrayInputStream(design
-                    .getBytes("UTF-8")));
+            return (T) Design
+                    .read(new ByteArrayInputStream(design.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -102,11 +102,11 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
     protected void assertEquals(String message, Object o1, Object o2) {
         if (o1 == null) {
-            Assert.assertEquals(message, null, o2);
+            Assert.assertNull(message, o2);
             return;
         }
         if (o2 == null) {
-            Assert.assertEquals(message, null, o1);
+            Assert.assertNull(message, o1);
             return;
         }
 
@@ -136,16 +136,18 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     }
 
     private List<EqualsAsserter<Object>> getComparators(Object o1) {
-        List<EqualsAsserter<Object>> result = new ArrayList<EqualsAsserter<Object>>();
+        List<EqualsAsserter<Object>> result = new ArrayList<>();
         getComparators(o1.getClass(), result);
         return result;
     }
 
-    private void getComparators(Class<?> c, List<EqualsAsserter<Object>> result) {
+    private void getComparators(Class<?> c,
+            List<EqualsAsserter<Object>> result) {
         if (c == null || !isVaadin(c)) {
             return;
         }
-        EqualsAsserter<Object> comparator = (EqualsAsserter<Object>) getComparator(c);
+        EqualsAsserter<Object> comparator = (EqualsAsserter<Object>) getComparator(
+                c);
         if (c.getSuperclass() != Object.class) {
             getComparators(c.getSuperclass(), result);
         }
@@ -167,7 +169,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     }
 
     public static class TestLogHandler {
-        final List<String> messages = new ArrayList<String>();
+        final List<String> messages = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
             public void publish(LogRecord record) {
@@ -211,17 +213,26 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         return read;
     }
 
-    public void testWrite(String design, T expected) {
+    public DesignContext readComponentAndCompare(String design, T expected) {
         TestLogHandler l = new TestLogHandler();
-        testWrite(design, expected, false);
+        DesignContext context = readAndReturnContext(design);
+        assertEquals(expected, context.getRootComponent());
+        Assert.assertEquals("", l.getMessages());
+        return context;
+    }
+
+    public void testWrite(String expected, T component) {
+        TestLogHandler l = new TestLogHandler();
+        testWrite(expected, component, false);
         Assert.assertEquals("", l.getMessages());
     }
 
-    public void testWrite(String design, T expected, boolean writeData) {
-        String written = write(expected, writeData);
+    public void testWrite(String expectedDesign, T component,
+            boolean writeData) {
+        String written = write(component, writeData);
 
         Element producedElem = Jsoup.parse(written).body().child(0);
-        Element comparableElem = Jsoup.parse(design).body().child(0);
+        Element comparableElem = Jsoup.parse(expectedDesign).body().child(0);
 
         String produced = elementToHtml(producedElem);
         String comparable = elementToHtml(comparableElem);
@@ -256,8 +267,8 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
      * include close tags
      */
     private String elementToHtml(Element producedElem, StringBuilder sb) {
-        HashSet<String> booleanAttributes = new HashSet<String>();
-        ArrayList<String> names = new ArrayList<String>();
+        HashSet<String> booleanAttributes = new HashSet<>();
+        ArrayList<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
             if (a instanceof BooleanAttribute) {
@@ -266,7 +277,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         }
         Collections.sort(names);
 
-        sb.append("<" + producedElem.tagName() + "");
+        sb.append("<").append(producedElem.tagName()).append("");
         for (String attrName : names) {
             sb.append(" ").append(attrName);
             if (!booleanAttributes.contains(attrName)) {

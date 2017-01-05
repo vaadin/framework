@@ -1,13 +1,11 @@
 package com.vaadin.tests.layouts.gridlayout;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.AbstractTB3Test;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
-
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridLayoutWidthChangeTest extends MultiBrowserTest {
 
@@ -17,8 +15,8 @@ public class GridLayoutWidthChangeTest extends MultiBrowserTest {
 
         compareScreen("initial");
 
-        $(ButtonElement.class).caption("Reduce GridLayout parent width")
-                .first().click();
+        $(ButtonElement.class).caption("Reduce GridLayout parent width").first()
+                .click();
 
         compareScreen("buttonMoved");
     }

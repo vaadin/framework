@@ -10,8 +10,8 @@ import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Layout.SpacingHandler;
 
-public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
-        AbstractComponentContainerTest<T> {
+public abstract class AbstractLayoutTest<T extends AbstractLayout>
+        extends AbstractComponentContainerTest<T> {
 
     protected static final String CATEGORY_LAYOUT_FEATURES = "Layout features";
     private Command<T, MarginInfo> marginCommand = new Command<T, MarginInfo>() {
@@ -56,7 +56,7 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
     }
 
     private void createMarginsSelect(String category) {
-        LinkedHashMap<String, MarginInfo> options = new LinkedHashMap<String, MarginInfo>();
+        LinkedHashMap<String, MarginInfo> options = new LinkedHashMap<>();
         options.put("off", new MarginInfo(false));
         options.put("all", new MarginInfo(true));
         options.put("left", new MarginInfo(false, false, false, true));
@@ -77,7 +77,7 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
         String alignmentCategory = "Component alignment";
         createCategory(alignmentCategory, category);
 
-        LinkedHashMap<String, Alignment> options = new LinkedHashMap<String, Alignment>();
+        LinkedHashMap<String, Alignment> options = new LinkedHashMap<>();
         options.put("Top left", Alignment.TOP_LEFT);
         options.put("Top center", Alignment.TOP_CENTER);
         options.put("Top right", Alignment.TOP_RIGHT);

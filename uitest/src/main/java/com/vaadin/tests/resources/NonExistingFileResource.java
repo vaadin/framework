@@ -21,12 +21,13 @@ public class NonExistingFileResource extends TestBase {
 
     private Button createButton(final String filename) {
         Button b = new Button("Download " + filename);
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                FileResource res = new FileResource(new File(VaadinService
-                        .getCurrent().getBaseDirectory() + "/" + filename));
+                FileResource res = new FileResource(
+                        new File(VaadinService.getCurrent().getBaseDirectory()
+                                + "/" + filename));
                 getMainWindow().open(res);
 
             }

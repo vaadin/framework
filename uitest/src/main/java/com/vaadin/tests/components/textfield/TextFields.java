@@ -26,7 +26,7 @@ public class TextFields extends ComponentTestCase<TextField> {
         addTestComponent(tf);
 
         tf = createTextField("TextField with input prompt");
-        tf.setInputPrompt("Please enter a value");
+        tf.setPlaceholder("Please enter a value");
         addTestComponent(tf);
 
         tf = createTextField("100px wide textfield");
@@ -46,7 +46,7 @@ public class TextFields extends ComponentTestCase<TextField> {
         addTestComponent(tf);
 
         tf = createTextField(null, "No caption and input prompt");
-        tf.setInputPrompt("Enter a value");
+        tf.setPlaceholder("Enter a value");
         addTestComponent(tf);
 
     }

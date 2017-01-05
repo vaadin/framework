@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,6 +41,7 @@ import com.vaadin.navigator.ViewProvider;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
 import com.vaadin.ui.Component;
@@ -114,9 +115,9 @@ public class NavigatorTest {
     }
 
     public static class ViewChangeTestListener implements ViewChangeListener {
-        private final LinkedList<ViewChangeEvent> referenceEvents = new LinkedList<ViewChangeListener.ViewChangeEvent>();
-        private final LinkedList<Boolean> referenceIsCheck = new LinkedList<Boolean>();
-        private final LinkedList<Boolean> checkReturnValues = new LinkedList<Boolean>();
+        private final LinkedList<ViewChangeEvent> referenceEvents = new LinkedList<>();
+        private final LinkedList<Boolean> referenceIsCheck = new LinkedList<>();
+        private final LinkedList<Boolean> checkReturnValues = new LinkedList<>();
 
         public void addExpectedIsViewChangeAllowed(ViewChangeEvent event,
                 boolean returnValue) {
@@ -151,7 +152,8 @@ public class NavigatorTest {
             if (!stringEquals(reference.getViewName(), event.getViewName())) {
                 return false;
             }
-            if (!stringEquals(reference.getParameters(), event.getParameters())) {
+            if (!stringEquals(reference.getParameters(),
+                    event.getParameters())) {
                 return false;
             }
             return true;
@@ -215,7 +217,7 @@ public class NavigatorTest {
             return page;
         }
 
-        private Page page;
+        private final Page page;
     }
 
     private static class TestPage extends Page {
@@ -225,9 +227,10 @@ public class NavigatorTest {
         }
 
         @Override
-        public void addUriFragmentChangedListener(
+        public Registration addUriFragmentChangedListener(
                 UriFragmentChangedListener listener) {
             addUriFragmentCalled = true;
+            return () -> removeUriFragmentCalled = true;
         }
 
         @Override
@@ -253,14 +256,13 @@ public class NavigatorTest {
         EasyMock.reportMatcher(new IArgumentMatcher() {
             @Override
             public void appendTo(StringBuffer buffer) {
-                buffer.append("paramsIs(\"" + expected + "\")");
+                buffer.append("paramsIs(\"").append(expected).append("\")");
             }
 
             @Override
             public boolean matches(Object actual) {
-                return actual instanceof ViewChangeEvent
-                        && expected.equals(((ViewChangeEvent) actual)
-                                .getParameters());
+                return actual instanceof ViewChangeEvent && expected
+                        .equals(((ViewChangeEvent) actual).getParameters());
             }
         });
         return null;
@@ -299,10 +301,11 @@ public class NavigatorTest {
         UriFragmentManager manager = (UriFragmentManager) navigator
                 .getStateManager();
 
-        manager.uriFragmentChanged(EasyMock
-                .createMock(UriFragmentChangedEvent.class));
-        Assert.fail("Expected null pointer exception after call uriFragmentChanged "
-                + "for destroyed navigator");
+        manager.uriFragmentChanged(
+                EasyMock.createMock(UriFragmentChangedEvent.class));
+        Assert.fail(
+                "Expected null pointer exception after call uriFragmentChanged "
+                        + "for destroyed navigator");
     }
 
     @Test
@@ -336,8 +339,8 @@ public class NavigatorTest {
         manager.setState("test2");
         EasyMock.expect(manager.getState()).andReturn("test2");
 
-        EasyMock.expect(provider.getViewName("test1/params"))
-                .andReturn("test1").times(2);
+        EasyMock.expect(provider.getViewName("test1/params")).andReturn("test1")
+                .times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("test2");
         view1.enter(eventParametersEqual("params"));
@@ -389,8 +392,8 @@ public class NavigatorTest {
         display.showView(view1);
         manager.setState("test1");
 
-        EasyMock.expect(provider.getViewName("test1/params"))
-                .andReturn("test1").times(2);
+        EasyMock.expect(provider.getViewName("test1/params")).andReturn("test1")
+                .times(2);
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("test2");
         view1.enter(eventParametersEqual("params"));
@@ -582,8 +585,8 @@ public class NavigatorTest {
 
         navigator.addView("test", view);
 
-        assertEquals("Registered view instance not returned by navigator",
-                view, navigator.getView("test"));
+        assertEquals("Registered view instance not returned by navigator", view,
+                navigator.getView("test"));
     }
 
     @Test
@@ -738,8 +741,8 @@ public class NavigatorTest {
                 TestView2.class, navigator.getView("test/subview/").getClass());
         assertEquals(
                 "Incorrect view name found for subview string with parameters",
-                TestView2.class, navigator.getView("test/subview/parameters")
-                        .getClass());
+                TestView2.class,
+                navigator.getView("test/subview/parameters").getClass());
         assertEquals("Incorrect view name found for top level view string",
                 TestView.class, navigator.getView("test").getClass());
         assertEquals(
@@ -747,8 +750,8 @@ public class NavigatorTest {
                 TestView.class, navigator.getView("test/").getClass());
         assertEquals(
                 "Incorrect view name found for top level view string with parameters starting like subview name",
-                TestView.class, navigator.getView("test/subviewnothere")
-                        .getClass());
+                TestView.class,
+                navigator.getView("test/subviewnothere").getClass());
     }
 
     @Test
@@ -758,8 +761,8 @@ public class NavigatorTest {
         navigator.addView("test/subview", TestView2.class);
         navigator.addView("test", TestView.class);
 
-        assertEquals("Incorrect view name found", TestView.class, navigator
-                .getView("test").getClass());
+        assertEquals("Incorrect view name found", TestView.class,
+                navigator.getView("test").getClass());
 
         // other order
 
@@ -768,8 +771,8 @@ public class NavigatorTest {
         navigator2.addView("test", TestView.class);
         navigator2.addView("test/subview", TestView2.class);
 
-        assertEquals("Incorrect view name found", TestView.class, navigator2
-                .getView("test").getClass());
+        assertEquals("Incorrect view name found", TestView.class,
+                navigator2.getView("test").getClass());
     }
 
     @Test
@@ -801,10 +804,10 @@ public class NavigatorTest {
         EasyMock.replay(errorView2);
 
         ViewProvider errorProvider = EasyMock.createMock(ViewProvider.class);
-        EasyMock.expect(errorProvider.getView("doesnotexist2")).andReturn(
-                errorView2);
-        EasyMock.expect(errorProvider.getViewName("doesnotexist2")).andReturn(
-                "doesnotexist2");
+        EasyMock.expect(errorProvider.getView("doesnotexist2"))
+                .andReturn(errorView2);
+        EasyMock.expect(errorProvider.getViewName("doesnotexist2"))
+                .andReturn("doesnotexist2");
         EasyMock.replay(errorProvider);
 
         navigator.setErrorProvider(errorProvider);
@@ -891,7 +894,7 @@ public class NavigatorTest {
             @Override
             protected void navigateTo(View view, String viewName,
                     String parameters) {
-                count[0] = count[0] + 1;
+                count[0] += 1;
                 super.navigateTo(view, viewName, parameters);
             }
         };

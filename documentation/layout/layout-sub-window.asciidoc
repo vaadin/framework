@@ -19,7 +19,7 @@ and restoring sub-windows, as well as scrolling the window content.
 
 [[figure.layout.sub-window.basic]]
 .A Sub-Window
-image::img/subwindow-basic.png[]
+image::img/subwindow-basic.png[width=50%, scaledwidth=70%]
 
 Sub-windows are typically used for __Dialog Windows__ and __Multiple Document
 Interface__ applications. Sub-windows are by default not modal; you can set them
@@ -42,20 +42,20 @@ public static class SubWindowUI extends UI {
     protected void init(VaadinRequest request) {
         // Some other UI content
         setContent(new Label("Here's my UI"));
-        
+
         // Create a sub-window and set the content
         Window subWindow = new Window("Sub-window");
         VerticalLayout subContent = new VerticalLayout();
         subContent.setMargin(true);
         subWindow.setContent(subContent);
-        
+
         // Put some components in it
         subContent.addComponent(new Label("Meatball sub"));
         subContent.addComponent(new Button("Awlright"));
-        
+
         // Center it in the browser window
         subWindow.center();
-        
+
         // Open it in the UI
         addWindow(subWindow);
     }
@@ -99,7 +99,7 @@ class MySub extends Window {
         content.addComponent(new Label("Just say it's OK!"));
         content.setMargin(true);
         setContent(content);
-        
+
         // Disable the close button
         setClosable(false);
 
@@ -125,7 +125,7 @@ final Button open = new Button("Open Sub-Window");
 open.addClickListener(new ClickListener() {
     public void buttonClick(ClickEvent event) {
         MySub sub = new MySub();
-        
+
         // Add it to the root component
         UI.getCurrent().addWindow(sub);
     }
@@ -197,7 +197,7 @@ You can make a sub-window modal with [methodname]#setModal(true)#.
 
 [[figure.layout.sub-window.modal]]
 .Modal Sub-Window
-image::img/subwindow-modal.png[]
+image::img/subwindow-modal.png[width=70%, scaledwidth=100%]
 
 Depending on the theme, the parent window may be grayed when the modal window is
 open.
@@ -211,9 +211,3 @@ circumvented with client-side attack code. You should not trust in the modality
 of child windows in security-critical situations such as login windows.
 
 ====
-
-
-
-
-
-

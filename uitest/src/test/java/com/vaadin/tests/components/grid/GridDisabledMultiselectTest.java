@@ -39,7 +39,7 @@ public class GridDisabledMultiselectTest extends MultiBrowserTest {
     }
 
     private WebElement getFirstSelectCheckBox() {
-        return findCheckBoxes().get(1);
+        return findCheckBoxes().get(0);
     }
 
     @Test
@@ -70,11 +70,10 @@ public class GridDisabledMultiselectTest extends MultiBrowserTest {
         setMultiselect();
         disable();
 
-        WebElement firstCheckBoxSpan
-                = findElements(By.cssSelector("span")).get(1);
-        new Actions(driver).moveToElement(firstCheckBoxSpan, 1, 1)
-                           .click()
-                           .perform();
+        WebElement firstCheckBoxSpan = findElements(By.cssSelector("span"))
+                .get(1);
+        new Actions(driver).moveToElement(firstCheckBoxSpan, 1, 1).click()
+                .perform();
 
         assertThat(getFirstSelectCheckBox().isSelected(), is(false));
     }

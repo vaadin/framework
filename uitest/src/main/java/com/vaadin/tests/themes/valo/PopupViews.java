@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class PopupViews extends VerticalLayout implements View {
     public PopupViews() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Popup Views");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -36,7 +36,6 @@ public class PopupViews extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         PopupView pv = new PopupView(new Content() {
@@ -44,7 +43,7 @@ public class PopupViews extends VerticalLayout implements View {
             public Component getPopupComponent() {
                 return new VerticalLayout() {
                     {
-                        setMargin(true);
+                        setSpacing(false);
                         setWidth("300px");
                         addComponent(new Label(
                                 "Fictum,  deserunt mollit anim laborum astutumque! Magna pars studiorum, prodita quaerimus."));
@@ -73,12 +72,14 @@ public class PopupViews extends VerticalLayout implements View {
                 }
                 return new VerticalLayout() {
                     {
-                        setMargin(true);
-                        addComponent(new Label(
-                                "<h3>Thanks for waiting!</h3><p>You've opened this popup <b>"
-                                        + ++count + " time"
-                                        + (count > 1 ? "s" : " only")
-                                        + "</b>.</p>", ContentMode.HTML));
+                        setSpacing(false);
+                        addComponent(
+                                new Label(
+                                        "<h3>Thanks for waiting!</h3><p>You've opened this popup <b>"
+                                                + ++count + " time"
+                                                + (count > 1 ? "s" : " only")
+                                                + "</b>.</p>",
+                                        ContentMode.HTML));
                     }
                 };
             }

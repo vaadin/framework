@@ -1,16 +1,12 @@
 package com.vaadin.tests.components.richtextarea;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
-import com.vaadin.tests.components.AbstractComponentTest;
-import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
+import com.vaadin.v7.ui.ProgressIndicator;
 
-public class RichTextAreaUpdateWhileTyping extends AbstractTestUI {
+public class RichTextAreaUpdateWhileTyping extends AbstractReindeerTestUI {
 
     private RichTextArea rta;
 
@@ -34,7 +30,6 @@ public class RichTextAreaUpdateWhileTyping extends AbstractTestUI {
 
         rta = new RichTextArea();
         rta.setId("rta");
-        rta.setImmediate(true);
         addComponent(rta);
     }
 

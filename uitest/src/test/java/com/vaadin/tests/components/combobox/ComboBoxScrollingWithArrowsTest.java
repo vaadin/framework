@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,19 +15,20 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * When pressed down key, while positioned on the last item - should show next
@@ -72,8 +73,8 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
     }
 
     private String getSelectedItemText() {
-        List<WebElement> items = driver.findElements(By
-                .className("gwt-MenuItem-selected"));
+        List<WebElement> items = driver
+                .findElements(By.className("gwt-MenuItem-selected"));
         return items.get(0).getText();
     }
 

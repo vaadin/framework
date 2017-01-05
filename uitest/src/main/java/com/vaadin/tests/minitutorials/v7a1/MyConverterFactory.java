@@ -1,7 +1,7 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.DefaultConverterFactory;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
 
 public class MyConverterFactory extends DefaultConverterFactory {
     @Override

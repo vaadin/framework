@@ -18,7 +18,7 @@ public class CustomComponentSizeUpdate extends TestBase {
         cc.setWidth("500px");
         cc.setHeight("500px");
 
-        nb.addListener(new ClickListener() {
+        nb.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

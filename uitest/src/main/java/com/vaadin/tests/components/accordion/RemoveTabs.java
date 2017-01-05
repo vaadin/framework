@@ -109,7 +109,7 @@ public class RemoveTabs extends TestBase {
         AbstractComponentContainer container = accordion;
 
         if (container != null) {
-            List<Component> c = new ArrayList<Component>();
+            List<Component> c = new ArrayList<>();
             Iterator<Component> i = container.iterator();
             while (i.hasNext()) {
                 Component comp = i.next();

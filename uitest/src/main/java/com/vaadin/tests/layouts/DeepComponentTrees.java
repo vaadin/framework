@@ -1,16 +1,16 @@
 package com.vaadin.tests.layouts;
 
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.ComboBox;
 
 public class DeepComponentTrees extends TestBase {
 
@@ -44,7 +44,7 @@ public class DeepComponentTrees extends TestBase {
         root.setWidth("600px");
         root.setHeight("200px");
         final Button b = new Button("Go try your luck with " + i + " layouts!");
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

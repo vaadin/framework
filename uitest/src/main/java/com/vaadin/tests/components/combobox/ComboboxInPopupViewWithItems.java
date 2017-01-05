@@ -6,7 +6,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class ComboboxInPopupViewWithItems extends TestBase {
 
@@ -29,8 +29,8 @@ public class ComboboxInPopupViewWithItems extends TestBase {
 
     class PopupContent implements PopupView.Content {
 
-        private final ComboBox cb = new ComboBox(null, Arrays.asList("Item 1",
-                "Item 2", "Item 3"));
+        private final ComboBox<String> cb = new ComboBox<>(null,
+                Arrays.asList("Item 1", "Item 2", "Item 3"));
 
         @Override
         public String getMinimizedValueAsHTML() {

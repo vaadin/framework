@@ -3,7 +3,7 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldMaxLengthRemovedFromDOM extends TestBase {
 

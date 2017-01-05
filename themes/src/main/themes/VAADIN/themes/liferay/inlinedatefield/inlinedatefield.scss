@@ -1,8 +1,0 @@
-@mixin liferay-inlinedatefield ($primaryStyleName : v-inline-datefield) {
-    
-    @include liferay-datefield(v-inline-datefield);
-    
-    .#{$primaryStyleName} {
-        line-height:19px; /* Override popup datefields line-height:0 to get correct line heights */
-    }        
-}

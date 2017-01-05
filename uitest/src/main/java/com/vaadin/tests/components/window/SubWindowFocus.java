@@ -6,9 +6,9 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.TextField;
 
 public class SubWindowFocus extends TestBase {
 
@@ -71,8 +71,8 @@ public class SubWindowFocus extends TestBase {
                         if (action == esc) {
                             getMainWindow().removeWindow(win);
                         } else {
-                            getMainWindow().showNotification(
-                                    action.getCaption());
+                            getMainWindow()
+                                    .showNotification(action.getCaption());
                         }
 
                     }

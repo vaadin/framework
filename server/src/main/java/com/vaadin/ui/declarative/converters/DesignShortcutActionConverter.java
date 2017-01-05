@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,29 +17,30 @@ package com.vaadin.ui.declarative.converters;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.Converter;
+import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 
 /**
- * Converter for {@link ShortcutActions}.
- * 
+ * Converter for {@link ShortcutAction ShortcutActions}.
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignShortcutActionConverter implements
-        Converter<String, ShortcutAction> {
+public class DesignShortcutActionConverter
+        implements Converter<String, ShortcutAction> {
 
     private final Map<Integer, String> keyCodeMap;
     private final Map<String, Integer> presentationMap;
 
     public DesignShortcutActionConverter() {
-        HashMap<Integer, String> codes = new HashMap<Integer, String>();
+        HashMap<Integer, String> codes = new HashMap<>();
         // map modifiers
         codes.put(ModifierKey.ALT, "alt");
         codes.put(ModifierKey.CTRL, "ctrl");
@@ -111,7 +112,7 @@ public class DesignShortcutActionConverter implements
 
         keyCodeMap = Collections.unmodifiableMap(codes);
 
-        HashMap<String, Integer> presentations = new HashMap<String, Integer>();
+        HashMap<String, Integer> presentations = new HashMap<>();
         for (Entry<Integer, String> entry : keyCodeMap.entrySet()) {
             presentations.put(entry.getValue(), entry.getKey());
         }
@@ -120,11 +121,10 @@ public class DesignShortcutActionConverter implements
     }
 
     @Override
-    public ShortcutAction convertToModel(String value,
-            Class<? extends ShortcutAction> targetType, Locale locale)
-            throws Converter.ConversionException {
+    public Result<ShortcutAction> convertToModel(String value,
+            ValueContext context) {
         if (value.length() == 0) {
-            return null;
+            return Result.ok(null);
         }
 
         String[] data = value.split(" ", 2);
@@ -135,8 +135,8 @@ public class DesignShortcutActionConverter implements
             String keyCodePart = parts[parts.length - 1];
             int keyCode = getKeycodeForString(keyCodePart);
             if (keyCode < 0) {
-                throw new IllegalArgumentException("Invalid key '"
-                        + keyCodePart + "'");
+                throw new IllegalArgumentException(
+                        "Invalid key '" + keyCodePart + "'");
             }
             // handle modifiers
             int[] modifiers = null;
@@ -148,21 +148,20 @@ public class DesignShortcutActionConverter implements
                 if (modifier > 0) {
                     modifiers[i] = modifier;
                 } else {
-                    throw new IllegalArgumentException("Invalid modifier '"
-                            + parts[i] + "'");
+                    throw new IllegalArgumentException(
+                            "Invalid modifier '" + parts[i] + "'");
                 }
             }
-            return new ShortcutAction(data.length == 2 ? data[1] : null,
-                    keyCode, modifiers);
+            return Result.ok(new ShortcutAction(
+                    data.length == 2 ? data[1] : null, keyCode, modifiers));
         } catch (Exception e) {
-            throw new ConversionException("Invalid shortcut '" + value + "'", e);
+            return Result.error("Invalid shortcut '" + value + "'");
         }
     }
 
     @Override
     public String convertToPresentation(ShortcutAction value,
-            Class<? extends String> targetType, Locale locale)
-            throws Converter.ConversionException {
+            ValueContext context) {
         StringBuilder sb = new StringBuilder();
         // handle modifiers
         if (value.getModifiers() != null) {
@@ -176,16 +175,6 @@ public class DesignShortcutActionConverter implements
             sb.append(" ").append(value.getCaption());
         }
         return sb.toString();
-    }
-
-    @Override
-    public Class<ShortcutAction> getModelType() {
-        return ShortcutAction.class;
-    }
-
-    @Override
-    public Class<String> getPresentationType() {
-        return String.class;
     }
 
     public int getKeycodeForString(String attributePresentation) {

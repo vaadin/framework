@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,16 +15,14 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 
-public class GridLayoutScrollPosition extends AbstractTestUI {
+public class GridLayoutScrollPosition extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -46,7 +44,6 @@ public class GridLayoutScrollPosition extends AbstractTestUI {
                 "Hide / Show toggleable components");
         visibilityToggleCheckBox.setId("visibility-toggle");
         visibilityToggleCheckBox.setHeight("2000px");
-        visibilityToggleCheckBox.setImmediate(true);
         visibilityToggleCheckBox.setValue(false); // Initially unchecked
         gridLayout.addComponent(visibilityToggleCheckBox);
 
@@ -55,14 +52,8 @@ public class GridLayoutScrollPosition extends AbstractTestUI {
         toggleableLabel.setVisible(false); // Initially hidden
         gridLayout.addComponent(toggleableLabel);
 
-        visibilityToggleCheckBox
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        toggleableLabel.setVisible(visibilityToggleCheckBox
-                                .getValue());
-                    }
-                });
+        visibilityToggleCheckBox.addValueChangeListener(event -> toggleableLabel
+                .setVisible(visibilityToggleCheckBox.getValue()));
 
     }
 

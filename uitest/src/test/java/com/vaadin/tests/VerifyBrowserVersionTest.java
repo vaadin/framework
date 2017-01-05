@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,8 +39,8 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
         if (BrowserUtil.isChrome(getDesiredCapabilities())) {
             // Chrome version does not necessarily match the desired version
             // because of auto updates...
-            browserIdentifier = getExpectedUserAgentString(getDesiredCapabilities())
-                    + "50";
+            browserIdentifier = getExpectedUserAgentString(
+                    getDesiredCapabilities()) + "55";
         } else {
             browserIdentifier = getExpectedUserAgentString(desiredCapabilities)
                     + desiredCapabilities.getVersion();
@@ -54,13 +54,8 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
 
     private String getExpectedUserAgentString(DesiredCapabilities dCap) {
         if (BrowserUtil.isIE(dCap)) {
-            if (!BrowserUtil.isIE(dCap, 11)) {
-                // IE8-10
-                return "MSIE ";
-            } else {
-                // IE11
-                return "Trident/7.0; rv:";
-            }
+            // IE11
+            return "Trident/7.0; rv:";
         } else if (BrowserUtil.isFirefox(dCap)) {
             return "Firefox/";
         } else if (BrowserUtil.isChrome(dCap)) {

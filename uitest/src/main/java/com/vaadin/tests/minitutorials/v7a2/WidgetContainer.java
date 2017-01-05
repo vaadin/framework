@@ -9,7 +9,7 @@ import com.vaadin.ui.Component;
 
 public class WidgetContainer extends AbstractComponentContainer {
 
-    List<Component> children = new ArrayList<Component>();
+    List<Component> children = new ArrayList<>();
 
     @Override
     public void addComponent(Component c) {
@@ -24,7 +24,8 @@ public class WidgetContainer extends AbstractComponentContainer {
     }
 
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
         int index = children.indexOf(oldComponent);
         if (index != -1) {
             children.remove(index);

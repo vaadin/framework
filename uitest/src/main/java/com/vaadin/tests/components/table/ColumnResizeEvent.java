@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnResizeListener;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnResizeListener;
 
 @SuppressWarnings("serial")
 public class ColumnResizeEvent extends TestBase {
@@ -85,20 +85,21 @@ public class ColumnResizeEvent extends TestBase {
 
         table.addListener(new ColumnResizeListener() {
             @Override
-            public void columnResize(com.vaadin.ui.Table.ColumnResizeEvent event) {
+            public void columnResize(
+                    com.vaadin.v7.ui.Table.ColumnResizeEvent event) {
 
                 if (event.getPropertyId().equals("firstname")) {
-                    column1Width.setValue(event.getCurrentWidth()
-                            + "px (previously " + event.getPreviousWidth()
-                            + "px)");
+                    column1Width.setValue(
+                            event.getCurrentWidth() + "px (previously "
+                                    + event.getPreviousWidth() + "px)");
                 } else if (event.getPropertyId().equals("lastname")) {
-                    column2Width.setValue(event.getCurrentWidth()
-                            + "px (previously " + event.getPreviousWidth()
-                            + "px)");
+                    column2Width.setValue(
+                            event.getCurrentWidth() + "px (previously "
+                                    + event.getPreviousWidth() + "px)");
                 } else if (event.getPropertyId().equals("150pxfixedCol")) {
-                    column3Width.setValue(event.getCurrentWidth()
-                            + "px (previously " + event.getPreviousWidth()
-                            + "px)");
+                    column3Width.setValue(
+                            event.getCurrentWidth() + "px (previously "
+                                    + event.getPreviousWidth() + "px)");
                 }
             }
         });

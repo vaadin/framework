@@ -1,7 +1,7 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 public class MultipleDebugIds extends TestBase {
 

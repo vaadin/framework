@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,39 +42,40 @@ import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
 import com.vaadin.server.communication.PortletListenerNotifier;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 /**
  * An implementation of {@link VaadinSession} for JSR-286 portlet environments.
- * 
+ *
  * This is automatically registered as a {@link HttpSessionBindingListener} when
  * {@link PortletSession#setAttribute()} is called with the context as value.
- * 
+ *
  * Only the documented parts of this class should be considered as stable public
  * API.
- * 
+ *
  * Note also that some methods and/or nested interfaces might move to
  * {@link VaadinPortletService} in future minor or major versions of Vaadin. In
  * these cases, a deprecated redirection for backwards compatibility will be
  * used in VaadinPortletSession for a transition period.
- * 
+ *
  * @since 7.0
  */
 @SuppressWarnings("serial")
 public class VaadinPortletSession extends VaadinSession {
 
-    private final Set<PortletListener> portletListeners = new LinkedHashSet<PortletListener>();
+    private final Set<PortletListener> portletListeners = new LinkedHashSet<>();
 
-    private final Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
-    private final Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
+    private final Map<String, QName> eventActionDestinationMap = new HashMap<>();
+    private final Map<String, Serializable> eventActionValueMap = new HashMap<>();
 
-    private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
-    private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
+    private final Map<String, String> sharedParameterActionNameMap = new HashMap<>();
+    private final Map<String, String> sharedParameterActionValueMap = new HashMap<>();
 
     /**
      * Create a portlet service session for the given portlet service
-     * 
+     *
      * @param service
      *            the portlet service to which the new session belongs
      */
@@ -84,7 +85,7 @@ public class VaadinPortletSession extends VaadinSession {
 
     /**
      * Returns the underlying portlet session.
-     * 
+     *
      * @return portlet session
      */
     public PortletSession getPortletSession() {
@@ -108,7 +109,7 @@ public class VaadinPortletSession extends VaadinSession {
     /**
      * Returns the JSR-286 portlet configuration that provides access to the
      * portlet context and init parameters.
-     * 
+     *
      * @return portlet configuration
      */
     public PortletConfig getPortletConfig() {
@@ -119,21 +120,26 @@ public class VaadinPortletSession extends VaadinSession {
 
     /**
      * Adds a listener for various types of portlet requests.
-     * 
+     *
      * @param listener
      *            to add
      */
-    public void addPortletListener(PortletListener listener) {
+    public Registration addPortletListener(PortletListener listener) {
         portletListeners.add(listener);
+        return () -> portletListeners.remove(listener);
     }
 
     /**
      * Removes a portlet request listener registered with
      * {@link #addPortletListener(PortletListener)}.
-     * 
+     *
      * @param listener
      *            to remove
+     * @deprecated Use a {@link Registration} object returned by
+     *             {@link #addPortletListener(PortletListener)} to remove a
+     *             listener
      */
+    @Deprecated
     public void removePortletListener(PortletListener listener) {
         portletListeners.remove(listener);
     }
@@ -143,10 +149,9 @@ public class VaadinPortletSession extends VaadinSession {
      */
     public void firePortletRenderRequest(UI uI, RenderRequest request,
             RenderResponse response) {
-        for (PortletListener l : new ArrayList<PortletListener>(
-                portletListeners)) {
-            l.handleRenderRequest(request, new RestrictedRenderResponse(
-                    response), uI);
+        for (PortletListener l : new ArrayList<>(portletListeners)) {
+            l.handleRenderRequest(request,
+                    new RestrictedRenderResponse(response), uI);
         }
     }
 
@@ -172,8 +177,7 @@ public class VaadinPortletSession extends VaadinSession {
             sharedParameterActionValueMap.remove(key);
         } else {
             // normal action request, notify listeners
-            for (PortletListener l : new ArrayList<PortletListener>(
-                    portletListeners)) {
+            for (PortletListener l : new ArrayList<>(portletListeners)) {
                 l.handleActionRequest(request, response, uI);
             }
         }
@@ -184,8 +188,7 @@ public class VaadinPortletSession extends VaadinSession {
      */
     public void firePortletEventRequest(UI uI, EventRequest request,
             EventResponse response) {
-        for (PortletListener l : new ArrayList<PortletListener>(
-                portletListeners)) {
+        for (PortletListener l : new ArrayList<>(portletListeners)) {
             l.handleEventRequest(request, response, uI);
         }
     }
@@ -195,8 +198,7 @@ public class VaadinPortletSession extends VaadinSession {
      */
     public void firePortletResourceRequest(UI uI, ResourceRequest request,
             ResourceResponse response) {
-        for (PortletListener l : new ArrayList<PortletListener>(
-                portletListeners)) {
+        for (PortletListener l : new ArrayList<>(portletListeners)) {
             l.handleResourceRequest(request, response, uI);
         }
     }
@@ -207,11 +209,11 @@ public class VaadinPortletSession extends VaadinSession {
      * {@link PortletListenerNotifier} after the session is locked and the
      * corresponding UI has been found (if already created) but before other
      * request processing takes place.
-     * 
+     *
      * Direct rendering of output is not possible in a portlet listener and the
      * JSR-286 limitations on allowed operations in each phase or portlet
      * request processing must be respected by the listeners.
-     * 
+     *
      * Note that internal action requests used by the framework to trigger
      * events or set shared parameters do not call the action request listener
      * but will result in a later event or render request that will trigger the
@@ -234,11 +236,11 @@ public class VaadinPortletSession extends VaadinSession {
 
     /**
      * Creates a new action URL.
-     * 
+     *
      * Creating an action URL is only supported when processing a suitable
      * request (render or resource request, including normal Vaadin UIDL
      * processing) and will return null if not processing a suitable request.
-     * 
+     *
      * @param action
      *            the action parameter (javax.portlet.action parameter value in
      *            JSR-286)
@@ -259,18 +261,18 @@ public class VaadinPortletSession extends VaadinSession {
 
     /**
      * Sends a portlet event to the indicated destination.
-     * 
+     *
      * Internally, an action may be created and opened, as an event cannot be
      * sent directly from all types of requests.
-     * 
+     *
      * Sending portlet events from background threads is not supported.
-     * 
+     *
      * The event destinations and values need to be kept in the context until
      * sent. Any memory leaks if the action fails are limited to the session.
-     * 
+     *
      * Event names for events sent and received by a portlet need to be declared
      * in portlet.xml .
-     * 
+     *
      * @param uI
      *            a window in which a temporary action URL can be opened if
      *            necessary
@@ -286,7 +288,7 @@ public class VaadinPortletSession extends VaadinSession {
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
             while (eventActionDestinationMap.containsKey(actionKey)) {
-                actionKey = actionKey + ".";
+                actionKey += ".";
             }
             PortletURL actionUrl = generateActionURL(actionKey);
             if (actionUrl != null) {
@@ -309,19 +311,19 @@ public class VaadinPortletSession extends VaadinSession {
 
     /**
      * Sets a shared portlet parameter.
-     * 
+     *
      * Internally, an action may be created and opened, as shared parameters
      * cannot be set directly from all types of requests.
-     * 
+     *
      * Setting shared render parameters from background threads is not
      * supported.
-     * 
+     *
      * The parameters and values need to be kept in the context until sent. Any
      * memory leaks if the action fails are limited to the session.
-     * 
+     *
      * Shared parameters set or read by a portlet need to be declared in
      * portlet.xml .
-     * 
+     *
      * @param uI
      *            a window in which a temporary action URL can be opened if
      *            necessary
@@ -336,7 +338,7 @@ public class VaadinPortletSession extends VaadinSession {
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
             while (sharedParameterActionNameMap.containsKey(actionKey)) {
-                actionKey = actionKey + ".";
+                actionKey += ".";
             }
             PortletURL actionUrl = generateActionURL(actionKey);
             if (actionUrl != null) {
@@ -359,13 +361,13 @@ public class VaadinPortletSession extends VaadinSession {
 
     /**
      * Sets the portlet mode. This may trigger a new render request.
-     * 
+     *
      * Currently, this is only supported when working with a
      * {@link StateAwareResponse} (an action request or an event request).
      * Portlet mode change in background threads is not supported.
-     * 
+     *
      * Portlet modes used by a portlet need to be declared in portlet.xml .
-     * 
+     *
      * @param uI
      *            a window in which the render URL can be opened if necessary
      * @param portletMode

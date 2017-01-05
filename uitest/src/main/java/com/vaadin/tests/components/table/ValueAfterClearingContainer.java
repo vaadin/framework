@@ -1,14 +1,14 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.Table;
 
 public class ValueAfterClearingContainer extends TestBase {
 
@@ -35,15 +35,10 @@ public class ValueAfterClearingContainer extends TestBase {
 
         addComponent(table);
         final CheckBox multiselect = new CheckBox("Multiselect");
-        multiselect.setImmediate(true);
         multiselect.setId("multiselect");
-        multiselect.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Boolean value = multiselect.getValue();
-                table.setMultiSelect(value == null ? false : value);
-            }
+        multiselect.addValueChangeListener(event -> {
+            Boolean value = multiselect.getValue();
+            table.setMultiSelect(value == null ? false : value);
         });
         addComponent(multiselect);
         Button addItemsButton = new Button("Add table items",
@@ -51,8 +46,8 @@ public class ValueAfterClearingContainer extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         if (!table.getItemIds().isEmpty()) {
-                            Notification
-                                    .show("Only possible when the table is empty");
+                            Notification.show(
+                                    "Only possible when the table is empty");
                             return;
                         } else {
                             for (int i = 0; i < 5; i++) {

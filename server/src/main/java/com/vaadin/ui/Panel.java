@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,6 +31,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Scrollable;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
@@ -38,13 +39,13 @@ import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Panel - a simple single component container.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Panel extends AbstractSingleComponentContainer implements
-        Scrollable, Action.Notifier, Focusable, LegacyComponent {
+public class Panel extends AbstractSingleComponentContainer
+        implements Scrollable, Action.Notifier, Focusable, LegacyComponent {
 
     /**
      * Keeps track of the Actions added to this component, and manages the
@@ -52,11 +53,8 @@ public class Panel extends AbstractSingleComponentContainer implements
      */
     protected ActionManager actionManager;
 
-    private PanelServerRpc rpc = new PanelServerRpc() {
-        @Override
-        public void click(MouseEventDetails mouseDetails) {
-            fireEvent(new ClickEvent(Panel.this, mouseDetails));
-        }
+    private PanelServerRpc rpc = (MouseEventDetails mouseDetails) -> {
+        fireEvent(new ClickEvent(Panel.this, mouseDetails));
     };
 
     /**
@@ -68,7 +66,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /**
      * Creates a new empty panel which contains the given content.
-     * 
+     *
      * @param content
      *            the content for the panel.
      */
@@ -81,7 +79,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /**
      * Creates a new empty panel with caption.
-     * 
+     *
      * @param caption
      *            the caption used in the panel (HTML).
      */
@@ -91,7 +89,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /**
      * Creates a new empty panel with the given caption and content.
-     * 
+     *
      * @param caption
      *            the caption of the panel (HTML).
      * @param content
@@ -104,11 +102,11 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /**
      * Sets the caption of the panel.
-     * 
+     *
      * Note that the caption is interpreted as HTML and therefore care should be
      * taken not to enable HTML injection and XSS attacks using panel captions.
      * This behavior may change in future versions.
-     * 
+     *
      * @see AbstractComponent#setCaption(String)
      */
     @Override
@@ -118,7 +116,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.LegacyComponent#paintContent(com.vaadin.server
      * .PaintTarget)
      */
@@ -132,7 +130,7 @@ public class Panel extends AbstractSingleComponentContainer implements
     /**
      * Called when one or more variables handled by the implementing class are
      * changed.
-     * 
+     *
      * @see com.vaadin.server.VariableOwner#changeVariables(Object, Map)
      */
     @Override
@@ -170,7 +168,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Scrollable#setScrollable(boolean)
      */
     @Override
@@ -180,7 +178,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Scrollable#setScrollable(boolean)
      */
     @Override
@@ -190,7 +188,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Scrollable#setScrollLeft(int)
      */
     @Override
@@ -204,7 +202,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Scrollable#setScrollTop(int)
      */
     @Override
@@ -267,45 +265,32 @@ public class Panel extends AbstractSingleComponentContainer implements
      * user clicks inside the Panel. Also when the click targets a component
      * inside the Panel, provided the targeted component does not prevent the
      * click event from propagating.
-     * 
-     * Use {@link #removeListener(ClickListener)} to remove the listener.
-     * 
+     *
+     * @see Registration
+     *
      * @param listener
-     *            The listener to add
+     *            The listener to add, not null
+     * @return a registration object for removing the listener
      */
-    public void addClickListener(ClickListener listener) {
-        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
-                ClickListener.clickMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addClickListener(ClickListener)}
-     **/
-    @Deprecated
-    public void addListener(ClickListener listener) {
-        addClickListener(listener);
+    public Registration addClickListener(ClickListener listener) {
+        return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener, ClickListener.clickMethod);
     }
 
     /**
      * Remove a click listener from the Panel. The listener should earlier have
-     * been added using {@link #addListener(ClickListener)}.
-     * 
+     * been added using {@link #addClickListener(ClickListener)}.
+     *
      * @param listener
      *            The listener to remove
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addClickListener(ClickListener)}.
      */
+    @Deprecated
     public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeClickListener(ClickListener)}
-     **/
-    @Deprecated
-    public void removeListener(ClickListener listener) {
-        removeClickListener(listener);
     }
 
     /**
@@ -326,7 +311,7 @@ public class Panel extends AbstractSingleComponentContainer implements
 
     /**
      * Moves keyboard focus to the component. {@see Focusable#focus()}
-     * 
+     *
      */
     @Override
     public void focus() {
@@ -358,7 +343,7 @@ public class Panel extends AbstractSingleComponentContainer implements
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         // handle tabindex
-        Panel def = (Panel) designContext.getDefaultInstance(this);
+        Panel def = designContext.getDefaultInstance(this);
     }
 
 }

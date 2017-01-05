@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,9 +27,9 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.tb3.PrivateTB3Configuration;
+import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
-public class JSPIntegrationTest extends PrivateTB3Configuration {
+public class JSPIntegrationTest extends SingleBrowserTestPhantomJS2 {
 
     final String appRunnerTestUrl = getBaseURL() + "/run/Buttons";
     final String jspUrl = getBaseURL() + "/statictestfiles/vaadinsessions.jsp";
@@ -57,8 +57,8 @@ public class JSPIntegrationTest extends PrivateTB3Configuration {
         // Should now have two services with 2 + 1 UIs
         List<UIData> threeUIs = getUIs();
         assertEquals(3, threeUIs.size());
-        Set<String> serviceNames = new HashSet<String>();
-        Set<Integer> uiIds = new HashSet<Integer>();
+        Set<String> serviceNames = new HashSet<>();
+        Set<Integer> uiIds = new HashSet<>();
         for (UIData uiData : threeUIs) {
             serviceNames.add(uiData.serviceName);
             uiIds.add(uiData.uiId);
@@ -76,11 +76,11 @@ public class JSPIntegrationTest extends PrivateTB3Configuration {
     }
 
     private List<UIData> getUIs() {
-        List<UIData> uis = new ArrayList<UIData>();
+        List<UIData> uis = new ArrayList<>();
 
         getDriver().get(jspUrl);
-        List<WebElement> rows = getDriver().findElements(
-                By.xpath("//tr[@class='uirow']"));
+        List<WebElement> rows = getDriver()
+                .findElements(By.xpath("//tr[@class='uirow']"));
         for (WebElement row : rows) {
             UIData data = new UIData();
             List<WebElement> tds = row.findElements(By.xpath("./td"));

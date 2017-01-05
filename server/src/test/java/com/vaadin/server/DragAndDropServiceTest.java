@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,22 +34,22 @@ import com.vaadin.ui.AbstractComponent;
 
 /**
  * Tests for {@link DragAndDropService}.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class DragAndDropServiceTest {
 
     @Test
     public void changeVariables_isSourceConnectorEnabledCalled() {
-        final List<Level> levels = new ArrayList<Level>();
-        Logger.getLogger(DragAndDropService.class.getName()).addHandler(
-                new StreamHandler() {
+        final List<Level> levels = new ArrayList<>();
+        Logger.getLogger(DragAndDropService.class.getName())
+                .addHandler(new StreamHandler() {
                     @Override
                     public synchronized void publish(LogRecord record) {
                         levels.add(record.getLevel());
                     }
                 });
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         final boolean[] isConnectorEnabledCalled = new boolean[1];
         AbstractComponent component = new AbstractComponent() {
             @Override
@@ -73,15 +73,15 @@ public class DragAndDropServiceTest {
 
     @Test
     public void changeVariables_isTargetConnectorEnabledCalled() {
-        final List<Level> levels = new ArrayList<Level>();
-        Logger.getLogger(DragAndDropService.class.getName()).addHandler(
-                new StreamHandler() {
+        final List<Level> levels = new ArrayList<>();
+        Logger.getLogger(DragAndDropService.class.getName())
+                .addHandler(new StreamHandler() {
                     @Override
                     public void publish(LogRecord record) {
                         levels.add(record.getLevel());
                     }
                 });
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         TestDropTarget target = new TestDropTarget();
         variables.put("dhowner", target);
 
@@ -96,8 +96,8 @@ public class DragAndDropServiceTest {
 
     }
 
-    private static class TestDropTarget extends AbstractComponent implements
-            com.vaadin.event.dd.DropTarget {
+    private static class TestDropTarget extends AbstractComponent
+            implements com.vaadin.event.dd.DropTarget {
         @Override
         public boolean isConnectorEnabled() {
             isConnectorEnabledCalled = true;

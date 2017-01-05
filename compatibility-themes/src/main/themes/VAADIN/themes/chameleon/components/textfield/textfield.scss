@@ -1,0 +1,131 @@
+@mixin chameleon-textfield($primaryStyleName : v-textfield) {
+
+input.#{$primaryStyleName},
+textarea.v-textarea,
+.v-filterselect {
+	line-height: normal;
+	border: 1px solid #b3b3b3;
+	border-top-color: #808080;
+	border-color: rgba(0,0,0,.3);
+	border-top-color: rgba(0,0,0,.5);
+	background: #fff url(../../img/input-bg.png) repeat-x;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+	margin: 0;
+	}
+
+input.#{$primaryStyleName}[type="text"],
+textarea.v-textarea,
+.v-filterselect {
+	padding-bottom: .1em;
+	padding-top: .1em;
+	padding-left: .2em;
+	padding-right: .2em;
+	}
+
+input.#{$primaryStyleName}[type="text"] {
+	height: 1.2em;
+	}
+
+input.v-widget.#{$primaryStyleName}[type="text"],
+.v-filterselect {
+	height: 1.7em;
+	}
+
+&.v-app input.#{$primaryStyleName},
+&.v-app textarea.v-textarea,
+&.v-app input.v-filterselect-input {
+	color: #222;
+	}
+
+.v-ie & input.#{$primaryStyleName},
+.v-ie & textarea.v-textarea,
+.v-ie & .v-filterselect {
+	border-top-color: #808080;
+	}
+
+&.v-app input.#{$primaryStyleName}-prompt,
+&.v-app textarea.v-textarea-prompt {
+	font-style: normal;
+	color: #999;
+	}
+
+input.#{$primaryStyleName}-focus,
+textarea.v-textarea-focus {
+	background-color: #fffce1;
+	}
+
+
+/*******************************************************************************
+ * Readonly
+ ******************************************************************************/
+input.#{$primaryStyleName}-readonly,
+textarea.v-textarea-readonly {
+	border: none;
+	background: transparent;
+	}
+
+
+/*******************************************************************************
+ * Small
+ ******************************************************************************/
+&.v-app input.#{$primaryStyleName}-small,
+&.v-app textarea.v-textarea-small,
+.v-filterselect-small .v-filterselect-input {
+	font-size: $chameleon-font-size-small;
+	}
+
+/*******************************************************************************
+ * Big (and big search)
+ ******************************************************************************/
+&.v-app input.#{$primaryStyleName}-big,
+&.v-app textarea.v-textarea-big,
+.v-filterselect-big .v-filterselect-input {
+	font-size: $chameleon-font-size-big;
+	}
+
+input.#{$primaryStyleName}-big[type=text],
+.v-datefield-big input.v-datefield-textfield[type=text] {
+	padding: .3em;
+	}
+
+textarea.v-textarea,
+.v-filterselect-big {
+	padding: .3em;
+	}
+
+input.#{$primaryStyleName}-big.#{$primaryStyleName}-search,
+.v-filterselect-search.v-filterselect-big {
+	background-image: url(../../img/magnifier-big.png);
+	background-repeat: no-repeat;
+	background-position: 4px 50%;
+	}
+
+input.#{$primaryStyleName}-big.#{$primaryStyleName}-search[type=text] {
+	padding-left: 26px;
+	}
+
+.v-filterselect-search.v-filterselect-big {
+	padding-left: 26px;
+	}
+
+
+/*******************************************************************************
+ * Search
+ ******************************************************************************/
+input.#{$primaryStyleName}-search,
+.v-filterselect-search {
+	background-image: url(../../img/magnifier.png);
+	background-repeat: no-repeat;
+	background-position: 3px 50%;
+	}
+
+input.#{$primaryStyleName}-search[type=text],
+.v-filterselect-search {
+	padding-left: 17px;
+	}
+
+}

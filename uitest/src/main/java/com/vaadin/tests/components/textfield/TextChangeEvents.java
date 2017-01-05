@@ -1,87 +1,81 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.tests.util.Log;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ValueChangeMode;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
-public class TextChangeEvents extends TestBase {
-    Log l = new Log(10);
+public class TextChangeEvents extends AbstractTestUIWithLog {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
 
-        TextField tf = new TextField("Default");
+        TextField textField = new TextField("Default");
 
-        TextChangeListener inputEventListener = new TextChangeListener() {
+        ValueChangeListener<String> listener = event -> log(
+                "Text change event for  " + event.getComponent().getCaption()
+                        + ", text content currently:'" + event.getValue()
+                        + "' Cursor at index:"
+                        + ((AbstractTextField) event.getSource())
+                                .getCursorPosition());
 
-            @Override
-            public void textChange(TextChangeEvent event) {
-                l.log("Text change event for  "
-                        + event.getComponent().getCaption()
-                        + ", text content currently:'" + event.getText()
-                        + "' Cursor at index:" + event.getCursorPosition());
-            }
-        };
-
-        tf.addListener(inputEventListener);
-
-        getLayout().addComponent(tf);
+        textField.addValueChangeListener(listener);
+        addComponent(textField);
 
         TextField eager = new TextField("Eager");
-        eager.addListener(inputEventListener);
-        eager.setTextChangeEventMode(TextChangeEventMode.EAGER);
-        getLayout().addComponent(eager);
+        eager.addValueChangeListener(listener);
+        eager.setValueChangeMode(ValueChangeMode.EAGER);
+        addComponent(eager);
 
-        TextField to = new TextField("Timeout 3s");
-        to.addListener(inputEventListener);
-        to.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
-        to.setTextChangeTimeout(3000);
-        getLayout().addComponent(to);
+        TextField timeout = new TextField("Timeout 3s");
+        timeout.addValueChangeListener(listener);
+        timeout.setValueChangeMode(ValueChangeMode.EAGER);
+        timeout.setValueChangeTimeout(3000);
+        addComponent(timeout);
 
-        TextArea ta = new TextArea("Default text area");
-        ta.addListener(inputEventListener);
-        getLayout().addComponent(ta);
+        TextArea textArea = new TextArea("Default text area");
+        textArea.addValueChangeListener(listener);
+        addComponent(textArea);
+
+        TextArea textAreaTimeout = new TextArea("Timeout 3s");
+        textAreaTimeout.addValueChangeListener(listener);
+        textAreaTimeout.setValueChangeMode(ValueChangeMode.TIMEOUT);
+        textAreaTimeout.setValueChangeTimeout(3000);
+        addComponent(textAreaTimeout);
 
         VaadinDeveloperNameField vd = new VaadinDeveloperNameField();
-        vd.addListener(inputEventListener);
-        getLayout().addComponent(vd);
-
-        getLayout().addComponent(l);
+        vd.addValueChangeListener(listener);
+        addComponent(vd);
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "Simple TextChangeEvent test cases.";
-    }
-
-    @Override
-    protected Integer getTicketNumber() {
-        return null;
     }
 
     /**
      * "Autosuggest"
-     * 
+     *
      * Known issue is timing if suggestion comes while typing more content. IMO
      * we will not support this kind of features in default TextField, but
      * hopefully make it easily extendable to perfect suggest feature. MT
      * 2010-10
-     * 
+     *
      */
-    private class VaadinDeveloperNameField extends TextField implements
-            TextChangeListener {
+    private class VaadinDeveloperNameField extends TextField
+            implements HasValue.ValueChangeListener<String> {
         private String[] names = new String[] { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
 
         public VaadinDeveloperNameField() {
             setCaption("Start typing 'old' Vaadin developers.");
-            addListener((TextChangeListener) this);
+            addValueChangeListener(this);
             setStyleName("nomatch");
         }
 
@@ -93,12 +87,13 @@ public class TextChangeEvents extends TestBase {
         }
 
         @Override
-        public void textChange(TextChangeEvent event) {
-            boolean atTheEndOfText = event.getText().length() == getCursorPosition();
-            String match = findMatch(event.getText());
+        public void valueChange(HasValue.ValueChangeEvent<String> event) {
+            boolean atTheEndOfText = event.getValue()
+                    .length() == getCursorPosition();
+            String match = findMatch(event.getValue());
             if (match != null) {
                 setStyleName("match");
-                String curText = event.getText();
+                String curText = event.getValue();
                 int matchlenght = curText.length();
                 // autocomplete if garret is at the end of the text
                 if (atTheEndOfText) {
@@ -111,7 +106,7 @@ public class TextChangeEvents extends TestBase {
 
         private void suggest(String match, int matchlenght) {
             setValue(match);
-            setSelectionRange(matchlenght, match.length() - matchlenght);
+            setSelection(matchlenght, match.length() - matchlenght);
         }
 
         private String findMatch(String currentTextContent) {
@@ -124,6 +119,7 @@ public class TextChangeEvents extends TestBase {
             }
             return null;
         }
+
     }
 
 }

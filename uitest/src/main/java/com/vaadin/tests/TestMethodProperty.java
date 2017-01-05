@@ -1,6 +1,6 @@
 package com.vaadin.tests;
 
-import com.vaadin.data.util.MethodProperty;
+import com.vaadin.v7.data.util.MethodProperty;
 
 public class TestMethodProperty {
 
@@ -11,7 +11,7 @@ public class TestMethodProperty {
 
         MyTest myTest = new MyTest();
 
-        MethodProperty<Integer> methodProperty2 = new MethodProperty<Integer>(
+        MethodProperty<Integer> methodProperty2 = new MethodProperty<>(
                 Integer.TYPE, myTest, "getInt", "setInt", new Object[0],
                 new Object[] { null }, 0);
 

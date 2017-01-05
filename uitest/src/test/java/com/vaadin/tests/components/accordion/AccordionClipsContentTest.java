@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,11 +34,6 @@ public class AccordionClipsContentTest extends MultiBrowserTest {
                 "Add component", "NativeButton", "auto x auto");
 
         $(NativeButtonElement.class).first().click();
-
-        // Give the button time to pop back up in IE8.
-        // If this sleep causes issues, next best thing is to click outside the
-        // button to remove focus - needs new screenshots for all browsers.
-        Thread.sleep(10);
 
         compareScreen("button-clicked");
     }

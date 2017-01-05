@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,7 +20,6 @@ import com.vaadin.server.JavaScriptCallbackHelper;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.ui.Grid.AbstractRenderer;
 import com.vaadin.ui.JavaScriptFunction;
 
 import elemental.json.Json;
@@ -42,7 +41,7 @@ import elemental.json.JsonValue;
  * <code>com_example_SuperRenderer</code> will also be attempted if
  * <code>com_example_MyRenderer</code> has not been defined.
  * <p>
- * 
+ *
  * In addition to the general JavaScript extension functionality explained in
  * {@link AbstractJavaScriptExtension}, this class also provides some
  * functionality specific for renderers.
@@ -90,7 +89,7 @@ import elemental.json.JsonValue;
  * {@link com.vaadin.client.renderers.ComplexRenderer#onBrowserEvent(com.vaadin.client.widget.grid.CellReference, com.google.gwt.dom.client.NativeEvent)}
  * .</li>
  * </ul>
- * 
+ *
  * <p>
  * The cell object passed to functions defined by the renderer has these
  * properties:
@@ -105,20 +104,26 @@ import elemental.json.JsonValue;
  * supported in the object passed to the <code>render</code> function - other
  * functions should not use the property. Readable and writable.
  * </ul>
- * 
+ *
+ * @param <T>
+ *            the grid type this renderer can be attached to
+ * @param <V>
+ *            the type this renderer knows how to present
+ *
  * @author Vaadin Ltd
- * @since 7.4
+ * @since 8.0
  */
-public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> {
+public abstract class AbstractJavaScriptRenderer<T, V>
+        extends AbstractRenderer<T, V> {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
 
-    protected AbstractJavaScriptRenderer(Class<T> presentationType,
+    protected AbstractJavaScriptRenderer(Class<V> presentationType,
             String nullRepresentation) {
         super(presentationType, nullRepresentation);
     }
 
-    protected AbstractJavaScriptRenderer(Class<T> presentationType) {
+    protected AbstractJavaScriptRenderer(Class<V> presentationType) {
         super(presentationType, null);
     }
 
@@ -136,14 +141,15 @@ public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> 
      * available as <code>this</code>). Calling that JavaScript function will
      * cause the call method in the registered {@link JavaScriptFunction} to be
      * invoked with the same arguments.
-     * 
+     *
      * @param functionName
      *            the name that should be used for client-side callback
      * @param function
      *            the {@link JavaScriptFunction} object that will be invoked
      *            when the JavaScript function is called
      */
-    protected void addFunction(String functionName, JavaScriptFunction function) {
+    protected void addFunction(String functionName,
+            JavaScriptFunction function) {
         callbackHelper.registerCallback(functionName, function);
     }
 
@@ -156,7 +162,7 @@ public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> 
      * before sending. This can be done either with
      * {@link JsonCodec#encode(Object, JsonValue, java.lang.reflect.Type, com.vaadin.ui.ConnectorTracker)}
      * or using the factory methods in {@link Json}.
-     * 
+     *
      * @param name
      *            the name of the function
      * @param arguments
@@ -169,5 +175,10 @@ public abstract class AbstractJavaScriptRenderer<T> extends AbstractRenderer<T> 
     @Override
     protected JavaScriptExtensionState getState() {
         return (JavaScriptExtensionState) super.getState();
+    }
+
+    @Override
+    protected JavaScriptExtensionState getState(boolean markAsDirty) {
+        return (JavaScriptExtensionState) super.getState(markAsDirty);
     }
 }

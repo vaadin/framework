@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,12 +32,12 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 
-public class GridLayoutDeclarativeTest extends
-        DeclarativeMarginTestBase<GridLayout> {
+public class GridLayoutDeclarativeTest
+        extends DeclarativeMarginTestBase<GridLayout> {
 
     @Test
     public void testMargins() {
-        testMargins("vaadin-grid-layout");
+        testMargins("vaadin-grid-layout", false);
     }
 
     @Test
@@ -272,7 +272,8 @@ public class GridLayoutDeclarativeTest extends
         context.setRootComponent(layout);
         Design.write(context, out);
 
-        ByteArrayInputStream input = new ByteArrayInputStream(out.toByteArray());
+        ByteArrayInputStream input = new ByteArrayInputStream(
+                out.toByteArray());
         Component component = Design.read(input);
         GridLayout readLayout = (GridLayout) component;
 
@@ -300,5 +301,27 @@ public class GridLayoutDeclarativeTest extends
 
         testWrite(design, gl);
         testRead(design, gl);
+    }
+
+    @Test
+    public void testGridLayoutMargins() throws IOException {
+        String design = "<vaadin-grid-layout _id=\"marginComponent\"margin>"
+                + "<row><column><vaadin-grid-layout _id=\"marginLeftComponent\" margin-left></vaadin-grid-layout></column></row>"
+                + "<row><column><vaadin-grid-layout _id=\"marginRightComponent\" margin-right></vaadin-grid-layout></column></row>"
+                + "<row><column><vaadin-grid-layout _id=\"marginTopComponent\" margin-top></vaadin-grid-layout></column></row>"
+                + "<row><column><vaadin-grid-layout _id=\"marginBottomComponent\" margin-bottom></vaadin-grid-layout></column></row>"
+                + "</vaadin-grid-layout>";
+        DesignContext context = Design
+                .read(new ByteArrayInputStream(design.getBytes("UTF-8")), null);
+        Assert.assertEquals(null, context.getCustomAttributes(
+                context.getComponentByLocalId("marginComponent")));
+        Assert.assertEquals(null, context.getCustomAttributes(
+                context.getComponentByLocalId("marginLeftComponent")));
+        Assert.assertEquals(null, context.getCustomAttributes(
+                context.getComponentByLocalId("marginRightComponent")));
+        Assert.assertEquals(null, context.getCustomAttributes(
+                context.getComponentByLocalId("marginTopComponent")));
+        Assert.assertEquals(null, context.getCustomAttributes(
+                context.getComponentByLocalId("marginBottomComponent")));
     }
 }

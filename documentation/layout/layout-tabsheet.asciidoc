@@ -20,7 +20,7 @@ navigation buttons will appear.
 
 [[figure.tabsheet.example1]]
 .A Simple TabSheet Layout
-image::img/tabsheet-example1.png[]
+image::img/tabsheet-example1.png[width=50%, scaledwidth=70%]
 
 [[layout.tabsheet.adding]]
 == Adding Tabs
@@ -95,9 +95,8 @@ there is only one tab.
 ifdef::web[]
 [[figure.tabsheet.example2]]
 .A TabSheet with Hidden and Disabled Tabs
-image::img/tabsheet-example2.png[]
+image::img/tabsheet-example2.png[width=50%, scaledwidth=70%]
 endif::web[]
-
 
 
 [[layout.tabsheet.events]]
@@ -135,20 +134,20 @@ tabsheet.addSelectedTabChangeListener(
     public void selectedTabChange(SelectedTabChangeEvent event) {
         // Find the tabsheet
         TabSheet tabsheet = event.getTabSheet();
-        
+
         // Find the tab (here we know it's a layout)
         Layout tab = (Layout) tabsheet.getSelectedTab();
 
         // Get the tab caption from the tab object
         String caption = tabsheet.getTab(tab).getCaption();
-        
+
         // Fill the tab content
         tab.removeAllComponents();
         tab.addComponent(new Image(null,
             new ThemeResource("img/planets/"+caption+".jpg")));
     }
 });
-        
+
 // Have some tabs
 String[] tabs = {"Mercury", "Venus", "Earth", "Mars"};
 for (String caption: tabs)
@@ -174,7 +173,7 @@ tabsheet.getTab(tabComponent).setClosable(true);
 
 [[figure.layout.tabsheet.closing]]
 .TabSheet with Closable Tabs
-image::img/tabsheet-tabclose.png[]
+image::img/tabsheet-tabclose.png[width=50%, scaledwidth=70%]
 
 [[layout.tabsheet.closing.handling]]
 === Handling Tab Close Events
@@ -194,7 +193,7 @@ tabsheet.setCloseHandler(new CloseHandler() {
                            Component tabContent) {
         Tab tab = tabsheet.getTab(tabContent);
         Notification.show("Closing " + tab.getCaption());
-        
+
         // We need to close it explicitly in the handler
         tabsheet.removeTab(tab);
     }
@@ -250,6 +249,3 @@ The content area where the tab contents are shown can be styled with
 [literal]#++v-tabsheet-deco++#.
 
 endif::web[]
-
-
-

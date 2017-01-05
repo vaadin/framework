@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,76 +16,66 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.shared.ui.colorpicker.AbstractColorPickerState;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
-import com.vaadin.shared.ui.colorpicker.ColorPickerState;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
-import com.vaadin.ui.components.colorpicker.ColorChangeEvent;
-import com.vaadin.ui.components.colorpicker.ColorChangeListener;
 import com.vaadin.ui.components.colorpicker.ColorPickerPopup;
-import com.vaadin.ui.components.colorpicker.ColorSelector;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * An abstract class that defines default implementation for a color picker
  * component.
- * 
+ *
  * @since 7.0.0
  */
-public abstract class AbstractColorPicker extends AbstractComponent implements
-        CloseListener, ColorSelector {
-    private static final Method COLOR_CHANGE_METHOD;
-    static {
-        try {
-            COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
-                    "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in ColorPicker");
-        }
-    }
+public abstract class AbstractColorPicker extends AbstractField<Color> {
 
     /**
-     * Interface for converting 2d-coordinates to a Color
+     * Interface for converting 2d-coordinates to a Color.
      */
     public interface Coordinates2Color extends Serializable {
 
         /**
-         * Calculate color from coordinates
-         * 
+         * Calculates a color from coordinates.
+         *
          * @param x
          *            the x-coordinate
          * @param y
          *            the y-coordinate
-         * 
+         *
          * @return the color
          */
         public Color calculate(int x, int y);
 
         /**
-         * Calculate coordinates from color
-         * 
+         * Calculates coordinates from a color.
+         *
          * @param c
          *            the c
-         * 
+         *
          * @return the integer array with the coordinates
          */
         public int[] calculate(Color c);
     }
 
+    /**
+     * The style of the color picker popup.
+     */
     public enum PopupStyle {
-        POPUP_NORMAL("normal"), POPUP_SIMPLE("simple");
+        /** A full popup with all tabs visible. */
+        POPUP_NORMAL("normal"),
 
-        private String style;
+        /** A simple popup with only the swatches (palette) tab. */
+        POPUP_SIMPLE("simple");
+
+        private final String style;
 
         PopupStyle(String styleName) {
             style = styleName;
@@ -97,13 +87,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         }
     }
 
-    private ColorPickerServerRpc rpc = new ColorPickerServerRpc() {
-
-        @Override
-        public void openPopup(boolean open) {
-            showPopup(open);
-        }
-    };
+    private ColorPickerServerRpc rpc = this::showPopup;
 
     protected static final String STYLENAME_DEFAULT = "v-colorpicker";
     protected static final String STYLENAME_BUTTON = "v-button";
@@ -111,16 +95,14 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     protected PopupStyle popupStyle = PopupStyle.POPUP_NORMAL;
 
-    /** The popup window. */
     private ColorPickerPopup window;
 
-    /** The color. */
+    /** The currently selected color. */
     protected Color color;
 
-    /** The UI. */
     private UI parent;
 
-    protected String popupCaption = null;
+    private String popupCaption = null;
     private int positionX = 0;
     private int positionY = 0;
 
@@ -139,7 +121,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Instantiates a new color picker.
-     * 
+     *
      * @param popupCaption
      *            the caption of the popup window
      */
@@ -149,7 +131,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
     /**
      * Instantiates a new color picker.
-     * 
+     *
      * @param popupCaption
      *            the caption of the popup window
      * @param initialColor
@@ -158,33 +140,45 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     public AbstractColorPicker(String popupCaption, Color initialColor) {
         super();
         registerRpc(rpc);
-        setColor(initialColor);
+        setValue(initialColor);
         this.popupCaption = popupCaption;
         setDefaultStyles();
         setCaption("");
     }
 
+    /**
+     * Returns the current selected color of this color picker.
+     *
+     * @return the selected color, not null
+     */
     @Override
-    public void setColor(Color color) {
-        this.color = color;
-
-        if (window != null) {
-            window.setColor(color);
-        }
-        getState().color = color.getCSS();
+    public Color getValue() {
+        return color;
     }
 
+    /**
+     * Sets the selected color of this color picker. If the new color is not
+     * equal to getValue(), fires a {@link ValueChangeEvent}.
+     *
+     * @param color
+     *            the new selected color, not null
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
+     */
     @Override
-    public Color getColor() {
-        return color;
+    public void setValue(Color color) {
+        Objects.requireNonNull(color, "color cannot be null");
+        super.setValue(color);
     }
 
     /**
      * Set true if the component should show a default caption (css-code for the
      * currently selected color, e.g. #ffffff) when no other caption is
      * available.
-     * 
+     *
      * @param enabled
+     *            {@code true} to enable the default caption, {@code false} to
+     *            disable
      */
     public void setDefaultCaptionEnabled(boolean enabled) {
         getState().showDefaultCaption = enabled;
@@ -193,14 +187,17 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Returns true if the component shows the default caption (css-code for the
      * currently selected color, e.g. #ffffff) if no other caption is available.
+     *
+     * @return {@code true} if the default caption is enabled, {@code false}
+     *         otherwise
      */
     public boolean isDefaultCaptionEnabled() {
         return getState(false).showDefaultCaption;
     }
 
     /**
-     * Sets the position of the popup window
-     * 
+     * Sets the position of the popup window.
+     *
      * @param x
      *            the x-coordinate
      * @param y
@@ -216,74 +213,40 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         }
     }
 
-    @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
-        addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
-    }
-
-    @Override
-    public void removeColorChangeListener(ColorChangeListener listener) {
-        removeListener(ColorChangeEvent.class, listener);
-    }
-
-    @Override
-    public void windowClose(CloseEvent e) {
-        if (e.getWindow() == window) {
-            getState().popupVisible = false;
-        }
-    }
-
     /**
-     * Fired when a color change event occurs
-     * 
-     * @param event
-     *            The color change event
-     */
-    protected void colorChanged(ColorChangeEvent event) {
-        setColor(event.getColor());
-        fireColorChanged();
-    }
-
-    /**
-     * Notifies the listeners that the selected color has changed
-     */
-    public void fireColorChanged() {
-        fireEvent(new ColorChangeEvent(this, color));
-    }
-
-    /**
-     * The style for the popup window
-     * 
+     * Sets the style of the popup window.
+     *
      * @param style
-     *            The style
+     *            the popup window style
      */
     public void setPopupStyle(PopupStyle style) {
         popupStyle = style;
 
         switch (style) {
-        case POPUP_NORMAL: {
+        case POPUP_NORMAL:
             setRGBVisibility(true);
             setHSVVisibility(true);
             setSwatchesVisibility(true);
             setHistoryVisibility(true);
             setTextfieldVisibility(true);
             break;
-        }
 
-        case POPUP_SIMPLE: {
+        case POPUP_SIMPLE:
             setRGBVisibility(false);
             setHSVVisibility(false);
             setSwatchesVisibility(true);
             setHistoryVisibility(false);
             setTextfieldVisibility(false);
             break;
-        }
+
+        default:
+            assert false : "Unknown popup style " + style;
         }
     }
 
     /**
-     * Gets the style for the popup window
-     * 
+     * Gets the style for the popup window.
+     *
      * @since 7.5.0
      * @return popup window style
      */
@@ -292,10 +255,10 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Set the visibility of the RGB Tab
-     * 
+     * Sets the visibility of the RGB tab.
+     *
      * @param visible
-     *            The visibility
+     *            {@code true} to display the RGB tab, {@code false} to hide it
      */
     public void setRGBVisibility(boolean visible) {
 
@@ -310,8 +273,8 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Gets the visibility of the RGB Tab
-     * 
+     * Gets the visibility of the RGB Tab.
+     *
      * @since 7.5.0
      * @return visibility of the RGB tab
      */
@@ -320,10 +283,10 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Set the visibility of the HSV Tab
-     * 
+     * Sets the visibility of the HSV Tab.
+     *
      * @param visible
-     *            The visibility
+     *            {@code true} to display the HSV tab, {@code false} to hide it
      */
     public void setHSVVisibility(boolean visible) {
         if (!visible && !rgbVisible && !swatchesVisible) {
@@ -337,20 +300,22 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Gets the visibility of the HSV Tab
-     * 
+     * Gets the visibility of the HSV tab.
+     *
      * @since 7.5.0
-     * @return visibility of the HSV tab
+     * @return {@code true} if the HSV tab is currently displayed, {@code false}
+     *         otherwise
      */
     public boolean getHSVVisibility() {
         return hsvVisible;
     }
 
     /**
-     * Set the visibility of the Swatches Tab
-     * 
+     * Sets the visibility of the Swatches (palette) tab.
+     *
      * @param visible
-     *            The visibility
+     *            {@code true} to display the Swatches tab, {@code false} to
+     *            hide it
      */
     public void setSwatchesVisibility(boolean visible) {
         if (!visible && !hsvVisible && !rgbVisible) {
@@ -364,20 +329,22 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Gets the visibility of the Swatches Tab
-     * 
+     * Gets the visibility of the Swatches (palette) tab.
+     *
      * @since 7.5.0
-     * @return visibility of the swatches tab
+     * @return {@code true} if the Swatches tab is currently displayed,
+     *         {@code false} otherwise
      */
     public boolean getSwatchesVisibility() {
         return swatchesVisible;
     }
 
     /**
-     * Sets the visibility of the Color History
-     * 
+     * Sets the visibility of the color history, displaying recently picked
+     * colors.
+     *
      * @param visible
-     *            The visibility
+     *            {@code true} to display the history, {@code false} to hide it
      */
     public void setHistoryVisibility(boolean visible) {
         historyVisible = visible;
@@ -387,20 +354,22 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Gets the visibility of the Color History
-     * 
+     * Gets the visibility of the Color history.
+     *
      * @since 7.5.0
-     * @return visibility of color history
+     * @return {@code true} if the history is currently displayed, {@code false}
+     *         otherwise
      */
     public boolean getHistoryVisibility() {
         return historyVisible;
     }
 
     /**
-     * Sets the visibility of the CSS color code text field
-     * 
+     * Sets the visibility of the CSS color code text field.
+     *
      * @param visible
-     *            The visibility
+     *            {@code true} to display the CSS text field, {@code false} to
+     *            hide it
      */
     public void setTextfieldVisibility(boolean visible) {
         textfieldVisible = visible;
@@ -410,30 +379,30 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Gets the visibility of CSS color code text field
-     * 
+     * Gets the visibility of CSS color code text field.
+     *
      * @since 7.5.0
-     * @return visibility of css color code text field
+     * @return {@code true} if the CSS text field is currently displayed,
+     *         {@code false} otherwise
      */
     public boolean getTextfieldVisibility() {
         return textfieldVisible;
     }
 
     @Override
-    protected ColorPickerState getState() {
-        return (ColorPickerState) super.getState();
+    protected AbstractColorPickerState getState() {
+        return (AbstractColorPickerState) super.getState();
     }
 
     @Override
-    protected ColorPickerState getState(boolean markAsDirty) {
-        return (ColorPickerState) super.getState(markAsDirty);
+    protected AbstractColorPickerState getState(boolean markAsDirty) {
+        return (AbstractColorPickerState) super.getState(markAsDirty);
     }
 
     /**
-     * Sets the default styles of the component
-     * 
+     * Sets the default styles of the component.
      */
-    abstract protected void setDefaultStyles();
+    protected abstract void setDefaultStyles();
 
     /**
      * Shows a popup-window for color selection.
@@ -450,10 +419,11 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     }
 
     /**
-     * Shows or hides popup-window depending on the given parameter. If there is
-     * no such window yet, one is created.
-     * 
+     * Shows or hides the popup window depending on the given parameter. If
+     * there is no such window yet, one is created.
+     *
      * @param open
+     *            {@code true} to display the popup, {@code false} to hide it
      */
     protected void showPopup(boolean open) {
         if (open && !isReadOnly()) {
@@ -461,9 +431,9 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
                 parent = getUI();
             }
 
-            if (window == null) {
+            Color color = getValue();
 
-                // Create the popup
+            if (window == null) {
                 window = new ColorPickerPopup(color);
                 window.setCaption(popupCaption);
 
@@ -473,20 +443,18 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
                 window.setHistoryVisible(historyVisible);
                 window.setPreviewVisible(textfieldVisible);
 
-                window.setImmediate(true);
-                window.addCloseListener(this);
-                window.addColorChangeListener(new ColorChangeListener() {
-                    @Override
-                    public void colorChanged(ColorChangeEvent event) {
-                        AbstractColorPicker.this.colorChanged(event);
-                    }
-                });
+                window.addCloseListener(
+                        event -> getState().popupVisible = false);
+                window.addValueChangeListener(
+                        event -> setValue(event.getValue()));
 
-                window.getHistory().setColor(color);
-                parent.addWindow(window);
-                window.setVisible(true);
+                window.getHistory().setValue(color);
                 window.setPositionX(positionX);
                 window.setPositionY(positionY);
+                window.setVisible(true);
+
+                parent.addWindow(window);
+                window.focus();
 
             } else if (!parent.equals(window.getParent())) {
 
@@ -496,10 +464,12 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
                 window.setHistoryVisible(historyVisible);
                 window.setPreviewVisible(textfieldVisible);
 
-                window.setColor(color);
-                window.getHistory().setColor(color);
+                window.setValue(color);
+                window.getHistory().setValue(color);
                 window.setVisible(true);
+
                 parent.addWindow(window);
+                window.focus();
             }
 
         } else if (window != null) {
@@ -509,37 +479,6 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         getState().popupVisible = open;
     }
 
-    /**
-     * Set whether the caption text is rendered as HTML or not. You might need
-     * to re-theme component to allow higher content than the original text
-     * style.
-     * 
-     * If set to true, the captions are passed to the browser as html and the
-     * developer is responsible for ensuring no harmful html is used. If set to
-     * false, the content is passed to the browser as plain text.
-     * 
-     * @param htmlContentAllowed
-     *            <code>true</code> if caption is rendered as HTML,
-     *            <code>false</code> otherwise
-     * @deprecated as of , use {@link #setCaptionAsHtml(boolean)} instead
-     */
-    @Deprecated
-    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        setCaptionAsHtml(htmlContentAllowed);
-    }
-
-    /**
-     * Return HTML rendering setting
-     * 
-     * @return <code>true</code> if the caption text is to be rendered as HTML,
-     *         <code>false</code> otherwise
-     * @deprecated as of , use {@link #isCaptionAsHtml()} instead
-     */
-    @Deprecated
-    public boolean isHtmlContentAllowed() {
-        return isCaptionAsHtml();
-    }
-
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
@@ -547,13 +486,14 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         Attributes attributes = design.attributes();
         if (design.hasAttr("color")) {
             // Ignore the # character
-            String hexColor = DesignAttributeHandler.readAttribute("color",
-                    attributes, String.class).substring(1);
-            setColor(new Color(Integer.parseInt(hexColor, 16)));
+            String hexColor = DesignAttributeHandler
+                    .readAttribute("color", attributes, String.class)
+                    .substring(1);
+            doSetValue(new Color(Integer.parseInt(hexColor, 16)));
         }
         if (design.hasAttr("popup-style")) {
-            setPopupStyle(PopupStyle.valueOf("POPUP_"
-                    + attributes.get("popup-style").toUpperCase()));
+            setPopupStyle(PopupStyle.valueOf(
+                    "POPUP_" + attributes.get("popup-style").toUpperCase()));
         }
         if (design.hasAttr("position")) {
             String[] position = attributes.get("position").split(",");
@@ -568,12 +508,14 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
 
         Attributes attribute = design.attributes();
         DesignAttributeHandler.writeAttribute("color", attribute,
-                color.getCSS(), Color.WHITE.getCSS(), String.class);
+                getValue().getCSS(), Color.WHITE.getCSS(), String.class,
+                designContext);
         DesignAttributeHandler.writeAttribute("popup-style", attribute,
-                (popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple"),
-                "normal", String.class);
-        DesignAttributeHandler.writeAttribute("position", attribute, positionX
-                + "," + positionY, "0,0", String.class);
+                popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple",
+                "normal", String.class, designContext);
+        DesignAttributeHandler.writeAttribute("position", attribute,
+                positionX + "," + positionY, "0,0", String.class,
+                designContext);
     }
 
     @Override
@@ -583,5 +525,16 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
         result.add("position");
         result.add("popup-style");
         return result;
+    }
+
+    @Override
+    protected void doSetValue(Color color) {
+        this.color = color;
+        getState().color = color.getCSS();
+    }
+
+    @Override
+    public Color getEmptyValue() {
+        return Color.WHITE;
     }
 }

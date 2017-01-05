@@ -3,16 +3,17 @@ package com.vaadin.tests.components.table;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnCollapseEvent;
-import com.vaadin.ui.Table.ColumnCollapseListener;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnCollapseEvent;
+import com.vaadin.v7.ui.Table.ColumnCollapseListener;
 
-public class ColumnCollapsingAndColumnExpansion extends AbstractTestUIWithLog {
+public class ColumnCollapsingAndColumnExpansion
+        extends AbstractReindeerTestUIWithLog {
 
     private Table table;
 
@@ -37,7 +38,8 @@ public class ColumnCollapsingAndColumnExpansion extends AbstractTestUIWithLog {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 table.setColumnCollapsed("Col2",
                         !table.isColumnCollapsed("Col2"));
 

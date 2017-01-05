@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.vaadin.data.util.AbstractInMemoryContainer;
-import com.vaadin.data.util.BeanContainer;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.AbstractInMemoryContainer;
+import com.vaadin.v7.data.util.BeanContainer;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.ui.Table;
 
-public class PushErrorHandling extends AbstractTestUI {
+public class PushErrorHandling extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -28,10 +28,10 @@ public class PushErrorHandling extends AbstractTestUI {
 
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
-                addComponent(new Label("An error! "
-                        + event.getThrowable().getMessage()));
-                System.err.println("An error! "
-                        + event.getThrowable().getMessage());
+                addComponent(new Label(
+                        "An error! " + event.getThrowable().getMessage()));
+                System.err.println(
+                        "An error! " + event.getThrowable().getMessage());
             }
         });
 
@@ -60,8 +60,8 @@ public class PushErrorHandling extends AbstractTestUI {
                         AbstractInMemoryContainer.class) {
                     @Override
                     public Collection<String> getContainerPropertyIds() {
-                        List<String> cpropIds = new ArrayList<String>(super
-                                .getContainerPropertyIds());
+                        List<String> cpropIds = new ArrayList<>(
+                                super.getContainerPropertyIds());
                         cpropIds.add("testid");
                         return cpropIds;
                     }

@@ -1,23 +1,25 @@
 package com.vaadin.ui;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Date;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
 
+import java.time.LocalDate;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 public class DateFieldTestCase {
 
-    private DateField dateField;
-    private Date date;
+    private AbstractDateField dateField;
+    private LocalDate date;
 
     @Before
     public void setup() {
-        dateField = new DateField();
-        date = new Date();
+        dateField = new AbstractDateField() {
+        };
+        date = LocalDate.now();
     }
 
     @Test
@@ -28,13 +30,17 @@ public class DateFieldTestCase {
     }
 
     @Test
-    public void rangeStartIsImmutable() {
-        long expectedTime = date.getTime();
-
+    public void rangeStartIsAcceptedAsValue() {
         dateField.setRangeStart(date);
-        date.setTime(expectedTime + 1);
+        dateField.setValue(date);
+        Assert.assertNull(dateField.getComponentError());
+    }
 
-        assertThat(dateField.getRangeStart().getTime(), is(expectedTime));
+    @Test
+    public void belowRangeStartIsNotAcceptedAsValue() {
+        dateField.setRangeStart(date);
+        dateField.setValue(date.minusDays(1));
+        Assert.assertNotNull(dateField.getComponentError());
     }
 
     @Test
@@ -45,12 +51,16 @@ public class DateFieldTestCase {
     }
 
     @Test
-    public void rangeEndIsImmutable() {
-        long expectedTime = date.getTime();
-
+    public void rangeEndIsAcceptedAsValue() {
         dateField.setRangeEnd(date);
-        date.setTime(expectedTime + 1);
+        dateField.setValue(date);
+        Assert.assertNull(dateField.getComponentError());
+    }
 
-        assertThat(dateField.getRangeEnd().getTime(), is(expectedTime));
+    @Test
+    public void aboveRangeEndIsNotAcceptedAsValue() {
+        dateField.setRangeEnd(date);
+        dateField.setValue(date.plusDays(1));
+        Assert.assertNotNull(dateField.getComponentError());
     }
 }

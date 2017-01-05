@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,21 +42,21 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
-import com.vaadin.client.widget.grid.events.GridEnabledEvent;
 import com.vaadin.client.widget.grid.events.GridEnabledHandler;
-import com.vaadin.client.widget.grid.selection.SelectionModel.Multi.Batched;
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedEvent;
+import com.vaadin.client.widget.grid.events.GridSelectionAllowedHandler;
 import com.vaadin.client.widgets.Grid;
 
 /**
  * Renderer showing multi selection check boxes.
- * 
+ *
  * @author Vaadin Ltd
  * @param <T>
  *            the type of the associated grid
  * @since 7.4
  */
-public class MultiSelectionRenderer<T> extends
-        ClickableRenderer<Boolean, CheckBox> {
+public class MultiSelectionRenderer<T>
+        extends ClickableRenderer<Boolean, CheckBox> {
 
     private static final String SELECTION_CHECKBOX_CLASSNAME = "-selection-checkbox";
 
@@ -74,11 +74,12 @@ public class MultiSelectionRenderer<T> extends
 
     /**
      * Handler for MouseDown and TouchStart events for selection checkboxes.
-     * 
+     *
      * @since 7.5
      */
-    private final class CheckBoxEventHandler implements MouseDownHandler,
-            TouchStartHandler, ClickHandler, GridEnabledHandler {
+    private final class CheckBoxEventHandler
+            implements MouseDownHandler, TouchStartHandler, ClickHandler,
+            GridEnabledHandler, GridSelectionAllowedHandler {
         private final CheckBox checkBox;
 
         /**
@@ -91,16 +92,17 @@ public class MultiSelectionRenderer<T> extends
 
         @Override
         public void onMouseDown(MouseDownEvent event) {
-            if(checkBox.isEnabled()) {
+            if (checkBox.isEnabled()) {
                 if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
-                    startDragSelect(event.getNativeEvent(), checkBox.getElement());
+                    startDragSelect(event.getNativeEvent(),
+                            checkBox.getElement());
                 }
             }
         }
 
         @Override
         public void onTouchStart(TouchStartEvent event) {
-            if(checkBox.isEnabled()) {
+            if (checkBox.isEnabled()) {
                 startDragSelect(event.getNativeEvent(), checkBox.getElement());
             }
         }
@@ -114,7 +116,17 @@ public class MultiSelectionRenderer<T> extends
 
         @Override
         public void onEnabled(boolean enabled) {
-            checkBox.setEnabled(enabled);
+            updateEnable();
+        }
+
+        @Override
+        public void onSelectionAllowed(GridSelectionAllowedEvent event) {
+            updateEnable();
+        }
+
+        private void updateEnable() {
+            checkBox.setEnabled(grid.isEnabled()
+                    && grid.getSelectionModel().isSelectionAllowed());
         }
     }
 
@@ -132,7 +144,7 @@ public class MultiSelectionRenderer<T> extends
                      * Something has dropped a touchend/touchcancel and the
                      * scroller is most probably running amok. Let's cancel it
                      * and pretend that everything's going as expected
-                     * 
+                     *
                      * Because this is a preview, this code is run before the
                      * event handler in MultiSelectionRenderer.onBrowserEvent.
                      * Therefore, we can simply kill everything and let that
@@ -159,8 +171,8 @@ public class MultiSelectionRenderer<T> extends
                  * Remember: targetElement is always where touchstart started,
                  * not where the finger is pointing currently.
                  */
-                final Element targetElement = Element.as(event.getNativeEvent()
-                        .getEventTarget());
+                final Element targetElement = Element
+                        .as(event.getNativeEvent().getEventTarget());
                 if (isInFirstColumn(targetElement)) {
                     removeNativeHandler();
                     event.cancel();
@@ -222,7 +234,8 @@ public class MultiSelectionRenderer<T> extends
          * direction has started.
          */
         private static final int SCROLL_AREA_REBOUND_PX_PER_SEC = 1;
-        private static final double SCROLL_AREA_REBOUND_PX_PER_MS = SCROLL_AREA_REBOUND_PX_PER_SEC / 1000.0d;
+        private static final double SCROLL_AREA_REBOUND_PX_PER_MS = SCROLL_AREA_REBOUND_PX_PER_SEC
+                / 1000.0d;
 
         /**
          * The lowest y-coordinate on the {@link Event#getClientY() client} from
@@ -317,8 +330,8 @@ public class MultiSelectionRenderer<T> extends
 
             int constrainedPageY = Math.max(bodyAbsoluteTop,
                     Math.min(bodyAbsoluteBottom, pageY));
-            int logicalRow = getLogicalRowIndex(WidgetUtil.getElementFromPoint(
-                    initialPageX, constrainedPageY));
+            int logicalRow = getLogicalRowIndex(WidgetUtil
+                    .getElementFromPoint(initialPageX, constrainedPageY));
 
             int incrementOrDecrement = (logicalRow > lastModifiedLogicalRow) ? 1
                     : -1;
@@ -346,8 +359,8 @@ public class MultiSelectionRenderer<T> extends
                 return;
             }
 
-            int reboundPx = (int) Math.ceil(SCROLL_AREA_REBOUND_PX_PER_MS
-                    * timeDiff);
+            int reboundPx = (int) Math
+                    .ceil(SCROLL_AREA_REBOUND_PX_PER_MS * timeDiff);
             if (topBound < finalTopBound) {
                 topBound += reboundPx;
                 topBound = Math.min(topBound, finalTopBound);
@@ -454,7 +467,8 @@ public class MultiSelectionRenderer<T> extends
                 final boolean topDidNotMove = oldTopBound == topBound;
                 final boolean bottomDidNotMove = oldBottomBound == bottomBound;
                 final boolean wasVerticalMovement = pageY != this.pageY;
-                scrollAreaShouldRebound = (topDidNotMove && bottomDidNotMove && wasVerticalMovement);
+                scrollAreaShouldRebound = (topDidNotMove && bottomDidNotMove
+                        && wasVerticalMovement);
             }
         }
     }
@@ -520,13 +534,6 @@ public class MultiSelectionRenderer<T> extends
         private int gradientArea;
 
         public void start(int logicalRowIndex) {
-
-            SelectionModel<T> model = grid.getSelectionModel();
-            if (model instanceof Batched) {
-                Batched<?> batchedModel = (Batched<?>) model;
-                batchedModel.startBatchSelect();
-            }
-
             /*
              * bounds are updated whenever the autoscroll cycle starts, to make
              * sure that the widget hasn't changed in size, moved around, or
@@ -573,12 +580,6 @@ public class MultiSelectionRenderer<T> extends
                 autoScroller = null;
             }
 
-            SelectionModel<T> model = grid.getSelectionModel();
-            if (model instanceof Batched) {
-                Batched<?> batchedModel = (Batched<?>) model;
-                batchedModel.commitBatchSelect();
-            }
-
             removeNativeHandler();
         }
     }
@@ -604,8 +605,8 @@ public class MultiSelectionRenderer<T> extends
     @Override
     public CheckBox createWidget() {
         final CheckBox checkBox = GWT.create(CheckBox.class);
-        checkBox.setStylePrimaryName(grid.getStylePrimaryName()
-                + SELECTION_CHECKBOX_CLASSNAME);
+        checkBox.setStylePrimaryName(
+                grid.getStylePrimaryName() + SELECTION_CHECKBOX_CLASSNAME);
 
         CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
 
@@ -618,9 +619,8 @@ public class MultiSelectionRenderer<T> extends
         checkBox.addMouseDownHandler(handler);
         checkBox.addTouchStartHandler(handler);
         checkBox.addClickHandler(handler);
-        grid.addHandler(handler, GridEnabledEvent.TYPE);
-
-        checkBox.setEnabled(grid.isEnabled());
+        grid.addEnabledHandler(handler);
+        grid.addSelectionAllowedHandler(handler);
 
         return checkBox;
     }
@@ -629,14 +629,15 @@ public class MultiSelectionRenderer<T> extends
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
-        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
+        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive()
+                && grid.getSelectionModel().isSelectionAllowed());
         checkBox.getElement().setPropertyInt(LOGICAL_ROW_PROPERTY_INT,
                 cell.getRowIndex());
     }
 
     @Override
     public Collection<String> getConsumedEvents() {
-        final HashSet<String> events = new HashSet<String>();
+        final HashSet<String> events = new HashSet<>();
 
         /*
          * this column's first interest is only to attach a NativePreventHandler
@@ -653,13 +654,13 @@ public class MultiSelectionRenderer<T> extends
     public boolean onBrowserEvent(final CellReference<?> cell,
             final NativeEvent event) {
         if (BrowserEvents.TOUCHSTART.equals(event.getType())
-                || (BrowserEvents.MOUSEDOWN.equals(event.getType()) && event
-                        .getButton() == NativeEvent.BUTTON_LEFT)) {
+                || (BrowserEvents.MOUSEDOWN.equals(event.getType())
+                        && event.getButton() == NativeEvent.BUTTON_LEFT)) {
             startDragSelect(event, Element.as(event.getEventTarget()));
             return true;
         } else {
-            throw new IllegalStateException("received unexpected event: "
-                    + event.getType());
+            throw new IllegalStateException(
+                    "received unexpected event: " + event.getType());
         }
     }
 

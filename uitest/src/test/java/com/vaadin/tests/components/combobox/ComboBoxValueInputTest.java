@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,22 +15,23 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.VerticalLayoutElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.ComboBoxElement;
+import com.vaadin.testbench.elements.VerticalLayoutElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests ComboBox inputs and selections.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class ComboBoxValueInputTest extends MultiBrowserTest {
@@ -42,7 +43,8 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
         openTestURL();
     };
 
-    private void sendKeysToComboBox(ComboBoxElement comboBox, CharSequence keys) {
+    private void sendKeysToComboBox(ComboBoxElement comboBox,
+            CharSequence keys) {
         getComboBoxInput(comboBox).sendKeys(keys);
     }
 
@@ -77,7 +79,8 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
         assertThatComboBoxSuggestionsAreHidden(comboBox);
     }
 
-    private void assertThatComboBoxSuggestionsAreHidden(ComboBoxElement comboBox) {
+    private void assertThatComboBoxSuggestionsAreHidden(
+            ComboBoxElement comboBox) {
         assertThat(comboBox.isElementPresent(By.vaadin("#popup")), is(false));
     }
 
@@ -133,8 +136,8 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
 
         // selectByText doesn't work when filtering is off.
         comboBox.openPopup();
-        List<WebElement> filteredItems = findElements(By
-                .className("gwt-MenuItem"));
+        List<WebElement> filteredItems = findElements(
+                By.className("gwt-MenuItem"));
         filteredItems.get(1).click();
 
         sendKeysToComboBox(comboBox, "mnop");

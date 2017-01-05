@@ -52,14 +52,11 @@ public class DDTest5 extends TestBase {
         HorizontalSortableCssLayoutWithWrappers verticalSortableCssLayoutWithWrappers = new HorizontalSortableCssLayoutWithWrappers();
         w.addWindow(verticalSortableCssLayoutWithWrappers);
         verticalSortableCssLayoutWithWrappers.setPositionX(200);
-        verticalSortableCssLayoutWithWrappers.setPositionY(40); /*
-                                                                 * FIXME:
-                                                                 * subwindow
-                                                                 * horizontal
-                                                                 * position does
-                                                                 * not work if
-                                                                 * only x set
-                                                                 */
+        verticalSortableCssLayoutWithWrappers
+                .setPositionY(40); /*
+                                    * FIXME: subwindow horizontal position does
+                                    * not work if only x set
+                                    */
 
         Label l;
 
@@ -81,8 +78,8 @@ public class DDTest5 extends TestBase {
         cssLayout.setHeight("300px");
 
         dragAndDropWrapper2 = new DragAndDropWrapper(cssLayout);
-        dragAndDropWrapper2
-                .setCaption("Drop here or sort with dd (wrapper(csslayout(n*wrapper(label))))");
+        dragAndDropWrapper2.setCaption(
+                "Drop here or sort with dd (wrapper(csslayout(n*wrapper(label))))");
 
         dh = new DropHandler() {
 
@@ -99,7 +96,8 @@ public class DDTest5 extends TestBase {
                  * here)
                  */
 
-                if (dropEvent.getTransferable() instanceof WrapperTransferable) {
+                if (dropEvent
+                        .getTransferable() instanceof WrapperTransferable) {
                     WrapperTransferable transferable = (WrapperTransferable) dropEvent
                             .getTransferable();
                     Component sourceComponent = transferable
@@ -148,8 +146,8 @@ public class DDTest5 extends TestBase {
                 } else {
                     // no component, add label with "Text"
 
-                    String data = (String) dropEvent.getTransferable().getData(
-                            "text/plain");
+                    String data = (String) dropEvent.getTransferable()
+                            .getData("text/plain");
                     if (data == null || "".equals(data)) {
                         data = "-- no Text --";
                     }

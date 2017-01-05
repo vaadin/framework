@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,10 +17,11 @@ package com.vaadin.tests.components.progressindicator;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
-import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.tests.components.abstractfield.LegacyAbstractFieldTest;
+import com.vaadin.v7.ui.ProgressIndicator;
 
-public class ProgressIndicatorTest extends AbstractFieldTest<ProgressIndicator> {
+public class ProgressIndicatorTest
+        extends LegacyAbstractFieldTest<ProgressIndicator> {
     ProgressIndicator progress = new ProgressIndicator();
     Command<ProgressIndicator, Float> setValueCommand = new Command<ProgressIndicator, Float>() {
 
@@ -58,7 +59,7 @@ public class ProgressIndicatorTest extends AbstractFieldTest<ProgressIndicator> 
     }
 
     private void createPollingIntervalAction() {
-        LinkedHashMap<String, Integer> valueOptions = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> valueOptions = new LinkedHashMap<>();
         for (int i = 100; i <= 3000; i += 200) {
             valueOptions.put(String.valueOf(i), i);
         }
@@ -68,7 +69,7 @@ public class ProgressIndicatorTest extends AbstractFieldTest<ProgressIndicator> 
     }
 
     private void createSetValueAction() {
-        LinkedHashMap<String, Float> valueOptions = new LinkedHashMap<String, Float>();
+        LinkedHashMap<String, Float> valueOptions = new LinkedHashMap<>();
         for (float f = 0.0f; f <= 1.0f; f += 0.1) {
             valueOptions.put(String.valueOf(f), f);
         }

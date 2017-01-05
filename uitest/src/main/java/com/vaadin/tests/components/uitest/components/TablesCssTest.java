@@ -7,9 +7,9 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.themes.ChameleonTheme;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.themes.ChameleonTheme;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class TablesCssTest extends GridLayout {
 
@@ -42,7 +42,7 @@ public class TablesCssTest extends GridLayout {
     }
 
     private void createTableWith(String caption, String primaryStyleName) {
-        final HashSet<Object> markedRows = new HashSet<Object>();
+        final HashSet<Object> markedRows = new HashSet<>();
 
         final Table t;
         if (caption != null) {
@@ -67,8 +67,8 @@ public class TablesCssTest extends GridLayout {
         t.setColumnReorderingAllowed(true);
         t.setColumnCollapsingAllowed(true);
         // t.setColumnHeaders(new String[] { "Country", "Code", "Icon file" });
-        t.setColumnIcon(TestUtils.iso3166_PROPERTY_NAME, new ThemeResource(
-                parent.ICON_URL));
+        t.setColumnIcon(TestUtils.iso3166_PROPERTY_NAME,
+                new ThemeResource(parent.ICON_URL));
 
         // Actions (a.k.a context menu)
         t.addActionHandler(new Action.Handler() {
@@ -82,7 +82,8 @@ public class TablesCssTest extends GridLayout {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 // We just want the actions UI.. don't care about the logic...
                 if (ACTION_MARK == action) {
                     markedRows.add(target);

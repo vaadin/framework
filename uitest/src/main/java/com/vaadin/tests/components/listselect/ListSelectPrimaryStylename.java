@@ -5,14 +5,14 @@ import java.util.Arrays;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.v7.ui.ListSelect;
 
 public class ListSelectPrimaryStylename extends TestBase {
 
     @Override
     protected void setup() {
-        final ListSelect list = new ListSelect("Caption", Arrays.asList(
-                "Option 1", "Option 2", "Option 3"));
+        final ListSelect list = new ListSelect("Caption",
+                Arrays.asList("Option 1", "Option 2", "Option 3"));
         list.setPrimaryStyleName("my-list");
         addComponent(list);
 

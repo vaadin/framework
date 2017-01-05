@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,7 +16,6 @@
 package com.vaadin.tests.push;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -98,7 +97,8 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest.getServerCounter(ReconnectTest.this) > counter;
+                return BasicPushTest
+                        .getServerCounter(ReconnectTest.this) > counter;
             }
         }, 30);
     }
@@ -108,7 +108,8 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest.getClientCounter(ReconnectTest.this) == expectedValue;
+                return BasicPushTest
+                        .getClientCounter(ReconnectTest.this) == expectedValue;
             }
         }, 5);
     }

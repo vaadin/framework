@@ -20,7 +20,8 @@ public class MenuBarRunsOutOfBrowser extends AbstractTestCase {
         MenuBar menuBar = new MenuBar();
         menuBar.addItem("Test", new ThemeResource("icons/16/calendar.png"),
                 null);
-        menuBar.addItem("ABC", new ThemeResource("icons/16/document.png"), null);
+        menuBar.addItem("ABC", new ThemeResource("icons/16/document.png"),
+                null);
         menuBar.addItem("123", new ThemeResource("icons/16/help.png"), null);
 
         main.addComponent(menuBar);

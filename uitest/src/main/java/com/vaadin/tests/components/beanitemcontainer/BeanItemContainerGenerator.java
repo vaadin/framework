@@ -2,8 +2,8 @@ package com.vaadin.tests.components.beanitemcontainer;
 
 import java.util.Date;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.util.PortableRandom;
+import com.vaadin.v7.data.util.BeanItemContainer;
 
 public class BeanItemContainerGenerator {
 
@@ -14,7 +14,7 @@ public class BeanItemContainerGenerator {
     public static BeanItemContainer<TestBean> createContainer(int size,
             long seed) {
 
-        BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
+        BeanItemContainer<TestBean> container = new BeanItemContainer<>(
                 TestBean.class);
         PortableRandom r = new PortableRandom(seed);
         for (int i = 0; i < size; i++) {

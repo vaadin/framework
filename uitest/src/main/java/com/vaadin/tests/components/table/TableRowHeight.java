@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
 
 public class TableRowHeight extends TestBase {
 
@@ -33,12 +33,13 @@ public class TableRowHeight extends TestBase {
         addComponent(table1);
 
         Table table2 = initTable(PAGELENGTH, true, false, false);
-        addComponent(new Label("Table with label component in generated column"));
+        addComponent(
+                new Label("Table with label component in generated column"));
         addComponent(table2);
 
         Table table3 = initTable(PAGELENGTH, false, true, false);
-        addComponent(new Label(
-                "Table with layout component in generated column"));
+        addComponent(
+                new Label("Table with layout component in generated column"));
         addComponent(table3);
 
         Table table4 = initTable(PAGELENGTH, true, true, false);

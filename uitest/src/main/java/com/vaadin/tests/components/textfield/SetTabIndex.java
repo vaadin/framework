@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
@@ -26,17 +24,12 @@ public class SetTabIndex extends TestBase {
         addComponent(field0);
 
         final CheckBox readonly = new CheckBox("Readonly");
-        readonly.setImmediate(true);
-        readonly.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                boolean readonly = Boolean.valueOf(event.getProperty()
-                        .getValue().toString());
-                field1.setReadOnly(readonly);
-                field2.setReadOnly(readonly);
-                field3.setReadOnly(readonly);
-                field0.setReadOnly(readonly);
-            }
+        readonly.addValueChangeListener(event -> {
+            boolean newReadonly = event.getValue();
+            field1.setReadOnly(newReadonly);
+            field2.setReadOnly(newReadonly);
+            field3.setReadOnly(newReadonly);
+            field0.setReadOnly(newReadonly);
         });
         addComponent(readonly);
 

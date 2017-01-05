@@ -1,19 +1,20 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class MoveComponentsFromGridLayoutToInnerLayout extends AbstractTestUI {
+public class MoveComponentsFromGridLayoutToInnerLayout
+        extends AbstractReindeerTestUI {
 
     protected Button testButton;
     private GridLayout gl;
-    protected ComponentContainer vl;
+    protected AbstractOrderedLayout vl;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -34,6 +35,8 @@ public class MoveComponentsFromGridLayoutToInnerLayout extends AbstractTestUI {
         gl.addComponent(testButton);
 
         vl = new VerticalLayout();
+        vl.setMargin(false);
+        vl.setSpacing(false);
         vl.addComponent(new Label("I'm inside the inner layout"));
         gl.addComponent(vl);
 

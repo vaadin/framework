@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.gridlayout;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -10,9 +9,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.ValoTheme;
 
-@Theme(ValoTheme.THEME_NAME)
 public class GridLayoutAlignments extends UI {
 
     @Override
@@ -57,13 +54,16 @@ public class GridLayoutAlignments extends UI {
         setContent(layout);
     }
 
-    private Component createButton(final GridLayout g, final Alignment topLeft) {
-        return new Button("Align " + topLeft.getVerticalAlignment() + ", "
-                + topLeft.getHorizontalAlignment(), new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                g.setComponentAlignment(g.getComponent(0, 0), topLeft);
-            }
-        });
+    private Component createButton(final GridLayout g,
+            final Alignment topLeft) {
+        return new Button(
+                "Align " + topLeft.getVerticalAlignment() + ", "
+                        + topLeft.getHorizontalAlignment(),
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent clickEvent) {
+                        g.setComponentAlignment(g.getComponent(0, 0), topLeft);
+                    }
+                });
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,34 +15,34 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Slider;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Table.RowHeaderMode;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.Align;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.Table.RowHeaderMode;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.TreeTable;
 
 public class Tables extends VerticalLayout implements View {
 
@@ -85,35 +85,31 @@ public class Tables extends VerticalLayout implements View {
                 verticalLines, horizontalLines, borderless, headers, compact,
                 small, rowIndex, rowCaption, rowIcon, componentsInCells);
 
-        ValueChangeListener update = new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (table == null) {
-                    table = new Table();
-                    table.setContainerDataSource(normalContainer);
-                    addComponent(table);
-                }
-                if (hierarchical.getValue() && table instanceof Table) {
-                    removeComponent(table);
-                    table = new TreeTable();
-                    table.setContainerDataSource(hierarchicalContainer);
-                    addComponent(table);
-                } else if (!hierarchical.getValue()
-                        && table instanceof TreeTable) {
-                    removeComponent(table);
-                    table = new Table();
-                    table.setContainerDataSource(normalContainer);
-                    addComponent(table);
-                }
-
-                configure(table, footer.getValue(), sized.getValue(),
-                        expandRatios.getValue(), stripes.getValue(),
-                        verticalLines.getValue(), horizontalLines.getValue(),
-                        borderless.getValue(), headers.getValue(),
-                        compact.getValue(), small.getValue(),
-                        rowIndex.getValue(), rowCaption.getValue(),
-                        rowIcon.getValue(), componentsInCells.getValue());
+        HasValue.ValueChangeListener<Boolean> update = event -> {
+            if (table == null) {
+                table = new Table();
+                table.setContainerDataSource(normalContainer);
+                addComponent(table);
             }
+            if (hierarchical.getValue() && table instanceof Table) {
+                removeComponent(table);
+                table = new TreeTable();
+                table.setContainerDataSource(hierarchicalContainer);
+                addComponent(table);
+            } else if (!hierarchical.getValue() && table instanceof TreeTable) {
+                removeComponent(table);
+                table = new Table();
+                table.setContainerDataSource(normalContainer);
+                addComponent(table);
+            }
+
+            configure(table, footer.getValue(), sized.getValue(),
+                    expandRatios.getValue(), stripes.getValue(),
+                    verticalLines.getValue(), horizontalLines.getValue(),
+                    borderless.getValue(), headers.getValue(),
+                    compact.getValue(), small.getValue(), rowIndex.getValue(),
+                    rowCaption.getValue(), rowIcon.getValue(),
+                    componentsInCells.getValue());
         };
 
         hierarchical.addValueChangeListener(update);
@@ -203,7 +199,7 @@ public class Tables extends VerticalLayout implements View {
                 @Override
                 public Object generateCell(Table source, Object itemId,
                         Object columnId) {
-                    DateField tf = new DateField();
+                    AbstractDateField tf = new TestDateField();
                     tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
                         tf.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);

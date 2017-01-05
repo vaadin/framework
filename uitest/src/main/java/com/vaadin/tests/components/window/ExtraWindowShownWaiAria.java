@@ -3,7 +3,7 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowRole;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
@@ -13,7 +13,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
-public class ExtraWindowShownWaiAria extends AbstractTestUI {
+public class ExtraWindowShownWaiAria extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -61,10 +61,10 @@ public class ExtraWindowShownWaiAria extends AbstractTestUI {
                         }
 
                         w.setTabStopEnabled(tabStop.getValue());
-                        w.setTabStopTopAssistiveText(topTabStopMessage
-                                .getValue());
-                        w.setTabStopBottomAssistiveText(bottomTabStopMessage
-                                .getValue());
+                        w.setTabStopTopAssistiveText(
+                                topTabStopMessage.getValue());
+                        w.setTabStopBottomAssistiveText(
+                                bottomTabStopMessage.getValue());
 
                         Button close = new Button("Close",
                                 new Button.ClickListener() {
@@ -75,8 +75,8 @@ public class ExtraWindowShownWaiAria extends AbstractTestUI {
                                 });
                         layout.addComponent(close);
                         Button iconButton = new Button("A button with icon");
-                        iconButton.setIcon(new ThemeResource(
-                                "../runo/icons/16/ok.png"));
+                        iconButton.setIcon(
+                                new ThemeResource("../runo/icons/16/ok.png"));
                         layout.addComponent(iconButton);
 
                         event.getButton().getUI().addWindow(w);
@@ -118,10 +118,10 @@ public class ExtraWindowShownWaiAria extends AbstractTestUI {
                         }
 
                         w.setTabStopEnabled(tabStop.getValue());
-                        w.setTabStopTopAssistiveText(topTabStopMessage
-                                .getValue());
-                        w.setTabStopBottomAssistiveText(bottomTabStopMessage
-                                .getValue());
+                        w.setTabStopTopAssistiveText(
+                                topTabStopMessage.getValue());
+                        w.setTabStopBottomAssistiveText(
+                                bottomTabStopMessage.getValue());
 
                         TextField name = new TextField("Name:");
                         form.addComponent(name);

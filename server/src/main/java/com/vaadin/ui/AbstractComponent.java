@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -34,6 +35,7 @@ import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ContextClickEvent;
@@ -53,13 +55,14 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ContextClickRpc;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.ReflectTools;
@@ -69,7 +72,7 @@ import com.vaadin.util.ReflectTools;
  * {@link Component} interface. Basic UI components that are not derived from an
  * external component can inherit this class to easily qualify as Vaadin
  * components. Most components in Vaadin do just that.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -117,8 +120,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     private HasComponents parent;
 
-    private Boolean explicitImmediateValue;
-
     protected static final String DESIGN_ATTR_PLAIN_TEXT = "plain-text";
 
     /* Constructor */
@@ -134,7 +135,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#setId(java.lang.String)
      */
     @Override
@@ -144,7 +145,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#getId()
      */
     @Override
@@ -176,8 +177,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public String getStyleName() {
         String s = "";
         if (ComponentStateUtil.hasStyles(getState(false))) {
-            for (final Iterator<String> it = getState(false).styles.iterator(); it
-                    .hasNext();) {
+            for (final Iterator<String> it = getState(false).styles
+                    .iterator(); it.hasNext();) {
                 s += it.next();
                 if (it.hasNext()) {
                     s += " ";
@@ -198,7 +199,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             return;
         }
         if (getState().styles == null) {
-            getState().styles = new ArrayList<String>();
+            getState().styles = new ArrayList<>();
         }
         List<String> styles = getState().styles;
         styles.clear();
@@ -233,7 +234,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         if (getState().styles == null) {
-            getState().styles = new ArrayList<String>();
+            getState().styles = new ArrayList<>();
         }
         List<String> styles = getState().styles;
         if (!styles.contains(style)) {
@@ -254,14 +255,14 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Adds or removes a style name. Multiple styles can be specified as a
      * space-separated list of style names.
-     * 
+     *
      * If the {@code add} parameter is true, the style name is added to the
      * component. If the {@code add} parameter is false, the style name is
      * removed from the component.
      * <p>
      * Functionally this is equivalent to using {@link #addStyleName(String)} or
      * {@link #removeStyleName(String)}
-     * 
+     *
      * @since 7.5
      * @param style
      *            the style name to be added or removed
@@ -290,9 +291,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the component's caption <code>String</code>. Caption is the visible
-     * name of the component. This method will trigger a
-     * {@link RepaintRequestEvent}.
-     * 
+     * name of the component.
+     *
      * @param caption
      *            the new caption <code>String</code> for the component.
      */
@@ -309,7 +309,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * false, the caption is rendered in the browser as plain text.
      * <p>
      * The default is false, i.e. to render that caption as plain text.
-     * 
+     *
      * @param captionAsHtml
      *            true if the captions are rendered as HTML, false if rendered
      *            as plain text
@@ -322,7 +322,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Checks whether captions are rendered as HTML
      * <p>
      * The default is false, i.e. to render that caption as plain text.
-     * 
+     *
      * @return true if the captions are rendered as HTML, false if rendered as
      *         plain text
      */
@@ -352,20 +352,20 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the locale of this component.
-     * 
+     *
      * <pre>
      * // Component for which the locale is meaningful
      * InlineDateField date = new InlineDateField(&quot;Datum&quot;);
-     * 
+     *
      * // German language specified with ISO 639-1 language
      * // code and ISO 3166-1 alpha-2 country code.
      * date.setLocale(new Locale(&quot;de&quot;, &quot;DE&quot;));
-     * 
+     *
      * date.setResolution(DateField.RESOLUTION_DAY);
      * layout.addComponent(date);
      * </pre>
-     * 
-     * 
+     *
+     *
      * @param locale
      *            the locale to become this component's locale.
      */
@@ -389,9 +389,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
-     * Sets the component's icon. This method will trigger a
-     * {@link RepaintRequestEvent}.
-     * 
+     * Sets the component's icon.
+     *
      * @param icon
      *            the icon to be shown with the component's caption.
      */
@@ -402,7 +401,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#isEnabled()
      */
     @Override
@@ -412,7 +411,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#setEnabled(boolean)
      */
     @Override
@@ -422,7 +421,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.Connector#isConnectorEnabled()
      */
     @Override
@@ -433,7 +432,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             return false;
         } else if (!super.isConnectorEnabled()) {
             return false;
-        } else if ((getParent() instanceof SelectiveRenderer)
+        } else if (getParent() instanceof SelectiveRenderer
                 && !((SelectiveRenderer) getParent()).isRendered(this)) {
             return false;
         } else {
@@ -441,55 +440,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
-    /**
-     * Returns the explicitly set immediate value.
-     * 
-     * @return the explicitly set immediate value or null if
-     *         {@link #setImmediate(boolean)} has not been explicitly invoked
-     */
-    protected Boolean getExplicitImmediateValue() {
-        return explicitImmediateValue;
-    }
-
-    /**
-     * Returns the immediate mode of the component.
-     * <p>
-     * Certain operations such as adding a value change listener will set the
-     * component into immediate mode if {@link #setImmediate(boolean)} has not
-     * been explicitly called with false.
-     * 
-     * @return true if the component is in immediate mode (explicitly or
-     *         implicitly set), false if the component if not in immediate mode
-     */
-    public boolean isImmediate() {
-        if (explicitImmediateValue != null) {
-            return explicitImmediateValue;
-        } else if (hasListeners(ValueChangeEvent.class)) {
-            /*
-             * Automatic immediate for fields that developers are interested
-             * about.
-             */
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Sets the component's immediate mode to the specified status.
-     * 
-     * @param immediate
-     *            the boolean value specifying if the component should be in the
-     *            immediate mode after the call.
-     */
-    public void setImmediate(boolean immediate) {
-        explicitImmediateValue = immediate;
-        getState().immediate = immediate;
-    }
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#isVisible()
      */
     @Override
@@ -499,7 +452,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#setVisible(boolean)
      */
     @Override
@@ -526,7 +479,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#getDescription()
      */
     @Override
@@ -536,13 +489,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the component's description. See {@link #getDescription()} for more
-     * information on what the description is. This method will trigger a
-     * {@link RepaintRequestEvent}.
-     * 
+     * information on what the description is.
+     *
      * The description is displayed as HTML in tooltips or directly in certain
      * components so care should be taken to avoid creating the possibility for
      * HTML injection and possibly XSS vulnerabilities.
-     * 
+     *
      * @param description
      *            the new description string for the component.
      */
@@ -567,8 +519,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         if (parent != null && this.parent != null) {
-            throw new IllegalStateException(getClass().getName()
-                    + " already has a parent.");
+            throw new IllegalStateException(
+                    getClass().getName() + " already has a parent.");
         }
 
         // Send a detach event if the component is currently attached
@@ -591,7 +543,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * To find the Window that contains the component, use {@code Window w =
      * getParent(Window.class);}
      * </p>
-     * 
+     *
      * @param <T>
      *            The type of the ancestor
      * @param parentType
@@ -612,7 +564,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the error message for this component.
-     * 
+     *
      * @return ErrorMessage containing the description of the error state of the
      *         component or null, if the component contains no errors. Extending
      *         classes should override this method if they support other error
@@ -625,9 +577,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the component's error message.
-     * 
+     *
      * @link Terminal.ErrorMessage#ErrorMessage(String, int)
-     * 
+     *
      * @return the component's error message.
      */
     public ErrorMessage getComponentError() {
@@ -637,9 +589,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the component's error message. The message may contain certain XML
      * tags, for more information see
-     * 
+     *
      * @link Component.ErrorMessage#ErrorMessage(String, int)
-     * 
+     *
      * @param componentError
      *            the new <code>ErrorMessage</code> of the component.
      */
@@ -647,24 +599,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         this.componentError = componentError;
         fireComponentErrorEvent();
         markAsDirty();
-    }
-
-    /*
-     * Tests if the component is in read-only mode. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
-     */
-    @Override
-    public boolean isReadOnly() {
-        return getState(false).readOnly;
-    }
-
-    /*
-     * Sets the component's read-only mode. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
-     */
-    @Override
-    public void setReadOnly(boolean readOnly) {
-        getState().readOnly = readOnly;
     }
 
     /*
@@ -716,7 +650,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Build CSS compatible string representation of height.
-     * 
+     *
      * @return CSS height
      */
     private String getCSSHeight() {
@@ -725,7 +659,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Build CSS compatible string representation of width.
-     * 
+     *
      * @return CSS width
      */
     private String getCSSWidth() {
@@ -735,12 +669,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Returns the shared state bean with information to be sent from the server
      * to the client.
-     * 
+     *
      * Subclasses should override this method and set any relevant fields of the
      * state returned by super.getState().
-     * 
+     *
      * @since 7.0
-     * 
+     *
      * @return updated component shared state
      */
     @Override
@@ -758,17 +692,15 @@ public abstract class AbstractComponent extends AbstractClientConnector
         super.beforeClientResponse(initial);
         // TODO This logic should be on the client side and the state should
         // simply be a data object with "width" and "height".
-        if (getHeight() >= 0
-                && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
-                        .parentCanDefineHeight(this))) {
+        if (getHeight() >= 0 && (getHeightUnits() != Unit.PERCENTAGE
+                || ComponentSizeValidator.parentCanDefineHeight(this))) {
             getState().height = "" + getCSSHeight();
         } else {
             getState().height = "";
         }
 
-        if (getWidth() >= 0
-                && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
-                        .parentCanDefineWidth(this))) {
+        if (getWidth() >= 0 && (getWidthUnits() != Unit.PERCENTAGE
+                || ComponentSizeValidator.parentCanDefineWidth(this))) {
             getState().width = "" + getCSSWidth();
         } else {
             getState().width = "";
@@ -780,8 +712,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             getState().errorMessage = null;
         }
-
-        getState().immediate = isImmediate();
     }
 
     /* General event framework */
@@ -798,16 +728,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * implemented interface.
      */
     @Override
-    public void addListener(Component.Listener listener) {
-        addListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
+    public Registration addListener(Component.Listener listener) {
+        return addListener(Component.Event.class, listener,
+                COMPONENT_EVENT_METHOD);
     }
 
-    /*
-     * Removes a previously registered listener from this component. Don't add a
-     * JavaDoc comment here, we use the default documentation from implemented
-     * interface.
-     */
     @Override
+    @Deprecated
     public void removeListener(Component.Listener listener) {
         removeListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
     }
@@ -831,7 +758,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Sets the data object, that can be used for any application specific data.
      * The component does not use or modify this data.
-     * 
+     *
      * @param data
      *            the Application specific data.
      * @since 3.1
@@ -842,7 +769,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the application specific data. See {@link #setData(Object)}.
-     * 
+     *
      * @return the Application specific data set with setData function.
      * @since 3.1
      */
@@ -854,7 +781,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.Sizeable#getHeight()
      */
     @Override
@@ -864,7 +791,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#getHeightUnits()
      */
     @Override
@@ -874,7 +801,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#getWidth()
      */
     @Override
@@ -884,7 +811,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#getWidthUnits()
      */
     @Override
@@ -894,7 +821,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setHeight(float, Unit)
      */
     @Override
@@ -910,7 +837,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setSizeFull()
      */
     @Override
@@ -921,7 +848,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setSizeUndefined()
      */
     @Override
@@ -932,7 +859,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setWidthUndefined()
      */
     @Override
@@ -942,7 +869,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setHeightUndefined()
      */
     @Override
@@ -952,7 +879,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setWidth(float, Unit)
      */
     @Override
@@ -968,7 +895,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setWidth(java.lang.String)
      */
     @Override
@@ -983,7 +910,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.Sizeable#setHeight(java.lang.String)
      */
     @Override
@@ -998,7 +925,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#readDesign(org.jsoup.nodes.Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -1013,11 +940,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
             }
 
         }
-        // handle immediate
-        if (attr.hasKey("immediate")) {
-            setImmediate(DesignAttributeHandler.getFormatter().parse(
-                    attr.get("immediate"), Boolean.class));
-        }
 
         // handle locale
         if (attr.hasKey("locale")) {
@@ -1027,19 +949,18 @@ public abstract class AbstractComponent extends AbstractClientConnector
         readSize(attr);
         // handle component error
         if (attr.hasKey("error")) {
-            UserError error = new UserError(attr.get("error"),
-                    ContentMode.HTML, ErrorLevel.ERROR);
+            UserError error = new UserError(attr.get("error"), ContentMode.HTML,
+                    ErrorLevel.ERROR);
             setComponentError(error);
         }
         // Tab index when applicable
         if (design.hasAttr("tabindex") && this instanceof Focusable) {
-            ((Focusable) this).setTabIndex(DesignAttributeHandler
-                    .readAttribute("tabindex", design.attributes(),
-                            Integer.class));
+            ((Focusable) this).setTabIndex(DesignAttributeHandler.readAttribute(
+                    "tabindex", design.attributes(), Integer.class));
         }
 
         // check for unsupported attributes
-        Set<String> supported = new HashSet<String>();
+        Set<String> supported = new HashSet<>();
         supported.addAll(getDefaultAttributes());
         supported.addAll(getCustomAttributes());
         for (Attribute a : attr) {
@@ -1057,7 +978,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * consist of one, two or three parts with '_' between the different parts
      * if there is more than one part. The first part specifies the language,
      * the second part the country and the third part the variant of the locale.
-     * 
+     *
      * @param localeString
      *            the locale specified as a string
      * @return the Locale object corresponding to localeString
@@ -1068,8 +989,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         String[] parts = localeString.split("_");
         if (parts.length > 3) {
-            throw new RuntimeException("Cannot parse the locale string: "
-                    + localeString);
+            throw new RuntimeException(
+                    "Cannot parse the locale string: " + localeString);
         }
         switch (parts.length) {
         case 1:
@@ -1083,7 +1004,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Toggles responsiveness of this component.
-     * 
+     *
      * @since 7.5.0
      * @param responsive
      *            boolean enables responsiveness, false disables
@@ -1096,8 +1017,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             }
         } else {
             // remove responsive extensions
-            List<Extension> extensions = new ArrayList<Extension>(
-                    getExtensions());
+            List<Extension> extensions = new ArrayList<>(getExtensions());
             for (Extension e : extensions) {
                 if (e instanceof Responsive) {
                     removeExtension(e);
@@ -1107,8 +1027,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
-     * Returns true if the component is responsive
-     * 
+     * Returns true if the component is responsive.
+     *
      * @since 7.5.0
      * @return true if the component is responsive
      */
@@ -1122,14 +1042,54 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
+     * Sets the read-only status in the state of this {@code AbstractComponent}.
+     * This method should be made public in {@link Component Components} that
+     * implement {@link HasValue}.
+     *
+     * @param readOnly
+     *            a boolean value specifying whether the component is put
+     *            read-only mode or not
+     */
+    protected void setReadOnly(boolean readOnly) {
+        if (getState(false) instanceof AbstractFieldState) {
+            if (readOnly != isReadOnly()) {
+                ((AbstractFieldState) getState()).readOnly = readOnly;
+            }
+        } else {
+            throw new IllegalStateException(
+                    "This component does not support the read-only mode, since state is of type "
+                            + getStateType().getSimpleName()
+                            + " and does not inherit "
+                            + AbstractFieldState.class.getSimpleName());
+        }
+    }
+
+    /**
+     * Returns the read-only status from the state of this
+     * {@code AbstractComponent}. This method should be made public in
+     * {@link Component Components} that implement {@link HasValue}.
+     *
+     * @return {@code true} if state has read-only on; {@code false} if not
+     * @see #setReadOnly(boolean)
+     */
+    protected boolean isReadOnly() {
+        if (getState(false) instanceof AbstractFieldState) {
+            return ((AbstractFieldState) getState(false)).readOnly;
+        }
+        throw new IllegalStateException(
+                "This component does not support the read-only mode, since state is of type "
+                        + getStateType().getSimpleName()
+                        + " and does not inherit "
+                        + AbstractFieldState.class.getSimpleName());
+    }
+
+    /**
      * Reads the size of this component from the given design attributes. If the
      * attributes do not contain relevant size information, defaults is
      * consulted.
-     * 
+     *
      * @param attributes
      *            the design attributes
-     * @param defaultInstance
-     *            instance of the class that has default sizing.
      */
     private void readSize(Attributes attributes) {
         // read width
@@ -1143,7 +1103,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         // read height
-        if (attributes.hasKey("height-auto") || attributes.hasKey("size-auto")) {
+        if (attributes.hasKey("height-auto")
+                || attributes.hasKey("size-auto")) {
             this.setHeight(null);
         } else if (attributes.hasKey("height-full")
                 || attributes.hasKey("size-full")) {
@@ -1156,9 +1117,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Writes the size related attributes for the component if they differ from
      * the defaults
-     * 
-     * @param component
-     *            the component
+     *
      * @param attributes
      *            the attribute map where the attribute are written
      * @param defaultInstance
@@ -1213,7 +1172,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Test if the given component has equal width with this instance
-     * 
+     *
      * @param component
      *            the component for the width comparison
      * @return true if the widths are equal
@@ -1225,7 +1184,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Test if the given component has equal height with this instance
-     * 
+     *
      * @param component
      *            the component for the height comparison
      * @return true if the heights are equal
@@ -1237,7 +1196,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Test if the given components has equal size with this instance
-     * 
+     *
      * @param component
      *            the component for the size comparison
      * @return true if the sizes are equal
@@ -1251,7 +1210,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * when reading or writing design. These are typically attributes of some
      * primitive type. The default implementation searches setters with
      * primitive values
-     * 
+     *
      * @return a collection of attributes that can be read and written using the
      *         default approach.
      */
@@ -1264,18 +1223,17 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Returns a collection of attributes that should not be handled by the
-     * basic implementation of the {@link readDesign} and {@link writeDesign}
+     * basic implementation of the {@link #readDesign(Element, DesignContext)} and {@link #writeDesign(Element, DesignContext)}
      * methods. Typically these are handled in a custom way in the overridden
      * versions of the above methods
-     * 
+     *
      * @since 7.4
-     * 
+     *
      * @return the collection of attributes that are not handled by the basic
      *         implementation
      */
     protected Collection<String> getCustomAttributes() {
-        ArrayList<String> l = new ArrayList<String>(
-                Arrays.asList(customAttributes));
+        ArrayList<String> l = new ArrayList<>(Arrays.asList(customAttributes));
         if (this instanceof Focusable) {
             l.add("tab-index");
             l.add("tabindex");
@@ -1290,7 +1248,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component#writeDesign(org.jsoup.nodes.Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -1300,26 +1258,21 @@ public abstract class AbstractComponent extends AbstractClientConnector
         Attributes attr = design.attributes();
         // handle default attributes
         for (String attribute : getDefaultAttributes()) {
-            DesignAttributeHandler.writeAttribute(this, attribute, attr, def);
-        }
-        // handle immediate
-        if (explicitImmediateValue != null) {
-            DesignAttributeHandler.writeAttribute("immediate", attr,
-                    explicitImmediateValue, def.isImmediate(), Boolean.class);
+            DesignAttributeHandler.writeAttribute(this, attribute, attr, def,
+                    designContext);
         }
         // handle locale
-        if (getLocale() != null
-                && (getParent() == null || !getLocale().equals(
-                        getParent().getLocale()))) {
+        if (getLocale() != null && (getParent() == null
+                || !getLocale().equals(getParent().getLocale()))) {
             design.attr("locale", getLocale().toString());
         }
         // handle size
         writeSize(attr, def);
         // handle component error
-        String errorMsg = getComponentError() != null ? getComponentError()
-                .getFormattedHtmlMessage() : null;
-        String defErrorMsg = def.getComponentError() != null ? def
-                .getComponentError().getFormattedHtmlMessage() : null;
+        String errorMsg = getComponentError() != null
+                ? getComponentError().getFormattedHtmlMessage() : null;
+        String defErrorMsg = def.getComponentError() != null
+                ? def.getComponentError().getFormattedHtmlMessage() : null;
         if (!SharedUtil.equals(errorMsg, defErrorMsg)) {
             attr.put("error", errorMsg);
         }
@@ -1327,7 +1280,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (this instanceof Focusable) {
             DesignAttributeHandler.writeAttribute("tabindex", attr,
                     ((Focusable) this).getTabIndex(),
-                    ((Focusable) def).getTabIndex(), Integer.class);
+                    ((Focusable) def).getTabIndex(), Integer.class,
+                    designContext);
         }
         // handle custom attributes
         Map<String, String> customAttributes = designContext
@@ -1345,8 +1299,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Gets the {@link ActionManager} used to manage the
-     * {@link ShortcutListener}s added to this {@link Field}.
-     * 
+     * {@link ShortcutListener}s added to this component.
+     *
      * @return the ActionManager in use
      */
     protected ActionManager getActionManager() {
@@ -1377,10 +1331,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     }
 
-    public void addShortcutListener(ShortcutListener shortcut) {
+    public Registration addShortcutListener(ShortcutListener shortcut) {
+        Objects.requireNonNull(shortcut, "Listener must not be null.");
         getActionManager().addAction(shortcut);
+        return () -> getActionManager().removeAction(shortcut);
     }
 
+    @Deprecated
     public void removeShortcutListener(ShortcutListener shortcut) {
         getActionManager().removeAction(shortcut);
     }
@@ -1388,7 +1345,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * Determine whether a <code>content</code> component is equal to, or the
      * ancestor of this component.
-     * 
+     *
      * @param content
      *            the potential ancestor element
      * @return <code>true</code> if the relationship holds
@@ -1406,27 +1363,77 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     @Override
-    public void addContextClickListener(ContextClickListener listener) {
+    public Registration addContextClickListener(ContextClickListener listener) {
         // Register default Context Click RPC if needed. This RPC won't be
         // called if there are no listeners on the server-side. A client-side
         // connector can override this and use a different RPC channel.
         if (getRpcManager(ContextClickRpc.class.getName()) == null) {
-            registerRpc(new ContextClickRpc() {
-                @Override
-                public void contextClick(MouseEventDetails details) {
-                    fireEvent(new ContextClickEvent(AbstractComponent.this,
-                            details));
-                }
+            registerRpc((ContextClickRpc) (MouseEventDetails details) -> {
+                fireEvent(
+                        new ContextClickEvent(AbstractComponent.this, details));
             });
         }
 
-        addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class, listener,
-                ContextClickEvent.CONTEXT_CLICK_METHOD);
+        return addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,
+                listener, ContextClickEvent.CONTEXT_CLICK_METHOD);
     }
 
     @Override
+    @Deprecated
     public void removeContextClickListener(ContextClickListener listener) {
-        removeListener(EventId.CONTEXT_CLICK, ContextClickEvent.class, listener);
+        removeListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,
+                listener);
+    }
+
+    /**
+     * Sets the visibility of the required indicator. <strong>NOTE: Does not
+     * apply for all components!</strong>.
+     * <p>
+     * If the component supports the required indicator (state extends
+     * {@link AbstractFieldState}), then expose this method and
+     * {@link #isRequiredIndicatorVisible()} as {@code public} in the component
+     * and call this method.
+     * <p>
+     * This method will throw a {@link IllegalStateException} if the component
+     * state (returned by {@link #getState()}) does not inherit
+     * {@link AbstractFieldState}.
+     *
+     * @param visible
+     *            <code>true</code> to make the required indicator visible,
+     *            <code>false</code> if not
+     */
+    protected void setRequiredIndicatorVisible(boolean visible) {
+        if (getState(false) instanceof AbstractFieldState) {
+            ((AbstractFieldState) getState()).required = visible;
+        } else {
+            throw new IllegalStateException(
+                    "This component does not support the required indicator, since state is of type "
+                            + getStateType().getSimpleName()
+                            + " and does not inherit "
+                            + AbstractFieldState.class.getSimpleName());
+        }
+    }
+
+    /**
+     * Checks whether the required indicator is visible or not. <strong>NOTE:
+     * Does not apply for all components!</strong>.
+     * <p>
+     * This method will throw a {@link IllegalStateException} if the component
+     * state (returned by {@link #getState()}) does not inherit
+     * {@link AbstractFieldState}.
+     *
+     * @return <code>true</code> if visible, <code>false</code> if not
+     * @see #setRequiredIndicatorVisible(boolean)
+     */
+    protected boolean isRequiredIndicatorVisible() {
+        if (getState(false) instanceof AbstractFieldState) {
+            return ((AbstractFieldState) getState(false)).required;
+        }
+        throw new IllegalStateException(
+                "This component does not support the required indicator, since state is of type "
+                        + getStateType().getSimpleName()
+                        + " and does not inherit "
+                        + AbstractFieldState.class.getSimpleName());
     }
 
     private static final Logger getLogger() {

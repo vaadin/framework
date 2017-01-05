@@ -6,9 +6,9 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ChameleonTheme;
-import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.ui.themes.Runo;
+import com.vaadin.v7.ui.themes.ChameleonTheme;
+import com.vaadin.v7.ui.themes.Reindeer;
+import com.vaadin.v7.ui.themes.Runo;
 
 public class WindowsCssTest extends VerticalLayout {
 
@@ -20,6 +20,8 @@ public class WindowsCssTest extends VerticalLayout {
 
     public WindowsCssTest(TestSampler parent) {
         this.parent = parent;
+        setMargin(false);
+        setSpacing(false);
         parent.registerComponent(this);
 
         Button defWindow = new Button("Default window",
@@ -74,7 +76,7 @@ public class WindowsCssTest extends VerticalLayout {
     }
 
     /**
-     * 
+     *
      * @param caption
      * @param primaryStyleName
      *            - the style defined styleName

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,23 +22,25 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.connectors.grid.AbstractGridRendererConnector;
 import com.vaadin.client.renderers.ComplexRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.tests.widgetset.client.EmptyEnum;
 
 import elemental.json.JsonObject;
 
 @Connect(com.vaadin.tests.components.grid.RowAwareRenderer.class)
-public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
+public class RowAwareRendererConnector
+        extends AbstractGridRendererConnector<EmptyEnum> {
     public interface RowAwareRendererRpc extends ServerRpc {
         void clicky(String key);
     }
 
-    public class RowAwareRenderer extends ComplexRenderer<Void> {
+    public class RowAwareRenderer extends ComplexRenderer<EmptyEnum> {
 
         @Override
         public Collection<String> getConsumedEvents() {
@@ -55,12 +57,13 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
         }
 
         @Override
-        public void render(RendererCellReference cell, Void data) {
+        public void render(RendererCellReference cell, EmptyEnum data) {
             // NOOP
         }
 
         @Override
-        public boolean onBrowserEvent(CellReference<?> cell, NativeEvent event) {
+        public boolean onBrowserEvent(CellReference<?> cell,
+                NativeEvent event) {
             String key = getRowKey((JsonObject) cell.getRow());
             getRpcProxy(RowAwareRendererRpc.class).clicky(key);
             cell.getElement().setInnerText(
@@ -70,7 +73,7 @@ public class RowAwareRendererConnector extends AbstractRendererConnector<Void> {
     }
 
     @Override
-    protected Renderer<Void> createRenderer() {
+    protected Renderer<EmptyEnum> createRenderer() {
         // cannot use the default createRenderer as RowAwareRenderer needs a
         // reference to its connector - it has no "real" no-argument constructor
         return new RowAwareRenderer();

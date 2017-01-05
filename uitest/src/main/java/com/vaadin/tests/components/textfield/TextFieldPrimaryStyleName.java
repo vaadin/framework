@@ -3,7 +3,7 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldPrimaryStyleName extends TestBase {
 

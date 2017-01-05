@@ -6,11 +6,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
-public class VerticalLayoutExpandRatioModification extends TestBase implements
-        ClickListener {
+public class VerticalLayoutExpandRatioModification extends TestBase
+        implements ClickListener {
 
     private boolean isVisible = false;
     private VerticalLayout mainLayout;

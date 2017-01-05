@@ -12,10 +12,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.TextField;
 
 public class SubWindowFocusAndBlurListeners extends TestBase {
 
@@ -39,14 +39,14 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
         layout.setSizeUndefined();
 
         layout.addComponent(new TextField());
-        window.addListener(new FocusListener() {
+        window.addFocusListener(new FocusListener() {
             @Override
             public void focus(FocusEvent event) {
                 Notification.show("Focused window");
             }
         });
 
-        window.addListener(new BlurListener() {
+        window.addBlurListener(new BlurListener() {
             @Override
             public void blur(BlurEvent event) {
                 Notification.show("Blurred window");
@@ -63,7 +63,8 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Action!");
             }
         });

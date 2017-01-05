@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,7 @@ import org.junit.Test;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextArea;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
@@ -47,7 +47,7 @@ import com.vaadin.ui.declarative.DesignException;
  * A test for checking that parsing a layout preserves the IDs and the mapping
  * from prefixes to package names (for example
  * <meta name=”package-mapping” content=”my:com.addon.mypackage” />)
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -195,7 +195,7 @@ public class ParseLayoutTest {
 
         // Check the remaining two components of the vertical layout
         assertTextField(vlayout);
-        assertTextArea(vlayout);
+        assertPasswordField(vlayout);
     }
 
     private void assertComponentHierarchy() {
@@ -209,11 +209,11 @@ public class ParseLayoutTest {
         assertThat(tf.getCaption(), is("Text input"));
     }
 
-    private void assertTextArea(VerticalLayout layout) {
-        TextArea ta = (TextArea) layout.getComponent(2);
+    private void assertPasswordField(VerticalLayout layout) {
+        PasswordField pf = (PasswordField) layout.getComponent(2);
 
-        assertThat(ta.getCaption(), is("Text area"));
-        assertThat(ta.getWidth(), is(300f));
-        assertThat(ta.getHeight(), is(200f));
+        assertThat(pf.getCaption(), is("Password field"));
+        assertThat(pf.getWidth(), is(300f));
+        assertThat(pf.getHeight(), is(200f));
     }
 }

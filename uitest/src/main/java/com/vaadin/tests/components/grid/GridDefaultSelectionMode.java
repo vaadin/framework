@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,7 +17,6 @@ package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -38,15 +37,15 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
         person2.setFirstName("person");
         person2.setLastName("two");
 
-        ArrayList<Person> items = new ArrayList<Person>();
+        ArrayList<Person> items = new ArrayList<>();
         items.add(person1);
         items.add(person2);
 
-        final BeanItemContainer<Person> container = new BeanItemContainer<Person>(
-                Person.class, items);
-
-        final Grid grid = new Grid();
-        grid.setContainerDataSource(container);
+        final Grid<Person> grid = new Grid<>();
+        grid.setItems(items);
+        grid.addColumn(person -> person.getFirstName())
+                .setCaption("First Name");
+        grid.addColumn(person -> person.getLastName()).setCaption("Last Name");
 
         VerticalLayout v = new VerticalLayout();
 
@@ -54,7 +53,7 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                grid.select(null);
+                grid.getSelectionModel().deselectAll();
             }
         }));
 
@@ -62,7 +61,7 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                grid.select(person1);
+                grid.getSelectionModel().select(person1);
             }
         }));
         v.addComponent(grid);

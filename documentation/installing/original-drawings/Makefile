@@ -1,13 +1,18 @@
-IMAGES = installation-steps installation-eclipse installation-netbeans
+SVG =
+RASTERIMAGES = installation-steps installation-eclipse installation-netbeans \
+	installation-intellij toolchain
 
-SRCIMAGES := $(foreach file, $(IMAGES), $(file).svg)
-TRGIMAGES_HI := $(foreach file, $(IMAGES), ../img/$(file)-hi.png)
-TRGIMAGES_LO := $(foreach file, $(IMAGES), ../img/$(file)-lo.png)
+RASTERSRCIMAGES := $(foreach file, $(RASTERIMAGES), $(file).svg)
+RASTERIMAGES_HI := $(foreach file, $(RASTERIMAGES), ../img/$(file)-hi.png)
+SVGTRGIMAGES := $(foreach file, $(SVG), ../img/$(file).svg)
 
-images: $(TRGIMAGES_HI) FORCE
-# Just do low now $(TRGIMAGES_LO) 
+images: $(RASTERIMAGES_HI) $(SVGTRGIMAGES) FORCE
+# Just do low now $(TRGIMAGES_LO)
 
-$(TRGIMAGES_HI): ../img/%-hi.png: %.svg
-	inkscape --export-png $@ --export-dpi=150 --export-area-drawing $<
+$(RASTERIMAGES_HI): ../img/%-hi.png: %.svg
+	inkscape --export-png $@ --export-dpi=300 --export-area-page $<
+
+$(SVGTRGIMAGES): ../img/%.svg: %.svg FORCE
+	inkscape $< --export-text-to-path -l $@
 
 FORCE:

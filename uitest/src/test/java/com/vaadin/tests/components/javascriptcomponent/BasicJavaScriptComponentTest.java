@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.AbstractJavaScriptComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class BasicJavaScriptComponentTest extends MultiBrowserTest {
@@ -24,12 +23,10 @@ public class BasicJavaScriptComponentTest extends MultiBrowserTest {
 
         // Data types in JS functions
         String expected = "1970-01-01T00:00:00.111Z";
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            expected = "1970-01-01T00:00:00Z";
-        }
         Assert.assertEquals(
                 "9. Argument[4][aDate] type: elemental.json.impl.JreJsonString, value: "
-                        + expected, getLogRow(idx++));
+                        + expected,
+                getLogRow(idx++));
         Assert.assertEquals(
                 "8. Argument[4][aBoolean] type: elemental.json.impl.JreJsonBoolean, value: false",
                 getLogRow(idx++));
@@ -53,13 +50,11 @@ public class BasicJavaScriptComponentTest extends MultiBrowserTest {
                 getLogRow(idx++));
 
         expected = "1970-01-01T00:00:00.123Z";
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            expected = "1970-01-01T00:00:00Z";
-        }
 
         Assert.assertEquals(
                 "1. Argument[0] type: elemental.json.impl.JreJsonString, value: "
-                        + expected, getLogRow(idx++));
+                        + expected,
+                getLogRow(idx++));
 
         // Component attributes
         AbstractJavaScriptComponentElement jsComponent = $(
@@ -67,8 +62,8 @@ public class BasicJavaScriptComponentTest extends MultiBrowserTest {
         Assert.assertEquals("Component caption", getCaption(jsComponent));
 
         // app://APP/connector/[uiid]/[cid]/[key]/[filename]
-        Assert.assertTrue(getChildText(jsComponent, 0).matches(
-                "4. Url: .*/run/APP/connector/0/\\d+/test"));
+        Assert.assertTrue(getChildText(jsComponent, 0)
+                .matches("4. Url: .*/run/APP/connector/0/\\d+/test"));
         Assert.assertEquals("3. State message: Second state message",
                 getChildText(jsComponent, 1));
         Assert.assertEquals("2. State message: First state message",

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,39 +25,39 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
-import com.vaadin.ui.Table.RowHeaderMode;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.PopupDateField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.Align;
+import com.vaadin.v7.ui.Table.RowHeaderMode;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.TwinColSelect;
 
-public class FontIcons extends AbstractTestUI {
+public class FontIcons extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -67,17 +67,17 @@ public class FontIcons extends AbstractTestUI {
     private void buildUI(final Resource icon) {
         VerticalLayout layout = new VerticalLayout();
         setContent(layout);
-        layout.setMargin(true);
+        layout.setSpacing(false);
 
         layout.setIcon(icon);
 
-        layout.addComponent(new Button("Switch icon type",
-                new Button.ClickListener() {
+        layout.addComponent(
+                new Button("Switch icon type", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        buildUI(icon instanceof FontIcon ? new ThemeResource(
-                                "../runo/icons/16/user.png")
+                        buildUI(icon instanceof FontIcon
+                                ? new ThemeResource("../runo/icons/16/user.png")
                                 : FontAwesome.ANDROID);
                     }
                 }));
@@ -86,7 +86,8 @@ public class FontIcons extends AbstractTestUI {
             Action[] actions = { new Action("Do it!", icon) };
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
 
             }
 
@@ -110,9 +111,9 @@ public class FontIcons extends AbstractTestUI {
 
         // Basic components, caption icon only
         Class<?>[] components = { Button.class, CheckBox.class,
-                DateField.class, NativeButton.class, Link.class, Label.class,
-                Panel.class, Slider.class, TextArea.class, TextField.class,
-                Upload.class };
+                PopupDateField.class, NativeButton.class, Link.class,
+                Label.class, Panel.class, Slider.class, TextArea.class,
+                TextField.class, Upload.class };
         for (Class<?> clazz : components) {
             Component c;
             try {
@@ -120,6 +121,9 @@ public class FontIcons extends AbstractTestUI {
             } catch (Exception e) {
                 e.printStackTrace();
                 continue;
+            }
+            if (c instanceof Upload) {
+                ((Upload) c).setImmediateMode(false);
             }
             c.setCaption(clazz.getSimpleName());
             c.setIcon(icon);
@@ -131,8 +135,8 @@ public class FontIcons extends AbstractTestUI {
         tabs.setCaption("TabSheet");
         tabs.setIcon(icon);
         tabs.addStyleName("myTabs");
-        tabs.addTab(new Label("Content 1"), "Tab 1", icon);
-        tabs.addTab(new Label("Content 2"), "Tab 2", icon);
+        tabs.addTab(createLabel("Content 1"), "Tab 1", icon);
+        tabs.addTab(createLabel("Content 2"), "Tab 2", icon);
         tabs.setWidth("150px");
         gl.addComponent(tabs);
 
@@ -140,8 +144,8 @@ public class FontIcons extends AbstractTestUI {
         Accordion acc = new Accordion();
         acc.setCaption("Accordion");
         acc.setIcon(icon);
-        acc.addTab(new Label(), "Section 1", icon);
-        acc.addTab(new Label(), "Section 2", icon);
+        acc.addTab(createLabel(""), "Section 1", icon);
+        acc.addTab(createLabel(""), "Section 2", icon);
         gl.addComponent(acc);
 
         // Table, caption + column + row + action icons
@@ -205,7 +209,15 @@ public class FontIcons extends AbstractTestUI {
         for (FontIcon ic : FontAwesome.values()) {
             allIcons += ic.getHtml() + " ";
         }
-        layout.addComponent(new Label(allIcons, ContentMode.HTML));
+        Label label = new Label(allIcons, ContentMode.HTML);
+        label.setWidth("100%");
+        layout.addComponent(label);
+    }
+
+    private Label createLabel(String caption) {
+        Label label = new Label(caption);
+        label.setWidth("100%");
+        return label;
     }
 
     @Override

@@ -1,6 +1,0 @@
-@import "variables";
-@import "../tests-valo/valotest";
-
-.tests-valo-blueprint {
-   @include valotest;
-}

@@ -15,10 +15,10 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.TextField;
 
 public class LayoutPerformanceTests extends TestBase {
     private static final String[] widths = { null, "100%", "200px" };
@@ -34,8 +34,8 @@ public class LayoutPerformanceTests extends TestBase {
 
                 AbstractOrderedLayout layout = createOrderedLayout(depth,
                         fullHeight);
-                layout.addComponent(buildLayout(depth - 1, leafs, leafType,
-                        fullHeight));
+                layout.addComponent(
+                        buildLayout(depth - 1, leafs, leafType, fullHeight));
                 return layout;
             }
         },
@@ -52,8 +52,8 @@ public class LayoutPerformanceTests extends TestBase {
                 Component content = leafType.createContent();
                 content.setSizeUndefined();
                 layout.addComponent(content);
-                layout.addComponent(buildLayout(depth - 1, leafs, leafType,
-                        fullHeight));
+                layout.addComponent(
+                        buildLayout(depth - 1, leafs, leafType, fullHeight));
                 layout.setExpandRatio(layout.getComponent(1), 1);
                 return layout;
             }
@@ -68,10 +68,10 @@ public class LayoutPerformanceTests extends TestBase {
 
                 AbstractOrderedLayout layout = createOrderedLayout(depth,
                         fullHeight);
-                layout.addComponent(buildLayout(depth - 1, leafs, leafType,
-                        fullHeight));
-                layout.addComponent(buildLayout(depth - 1, leafs, leafType,
-                        fullHeight));
+                layout.addComponent(
+                        buildLayout(depth - 1, leafs, leafType, fullHeight));
+                layout.addComponent(
+                        buildLayout(depth - 1, leafs, leafType, fullHeight));
                 layout.setExpandRatio(layout.getComponent(0), 1);
                 layout.setExpandRatio(layout.getComponent(1), 2);
                 return layout;
@@ -82,8 +82,8 @@ public class LayoutPerformanceTests extends TestBase {
 
         protected AbstractOrderedLayout createOrderedLayout(int depth,
                 boolean fullHeight) {
-            AbstractOrderedLayout layout = (depth % 2) == 0 ? new VerticalLayout()
-                    : new HorizontalLayout();
+            AbstractOrderedLayout layout = (depth % 2) == 0
+                    ? new VerticalLayout() : new HorizontalLayout();
             layout.setWidth("100%");
             if (fullHeight) {
                 layout.setHeight("100%");
@@ -233,7 +233,7 @@ public class LayoutPerformanceTests extends TestBase {
                     return;
                 }
 
-                boolean wrapped = wrapInPanel.booleanValue();
+                boolean wrapped = wrapInPanel.getValue();
                 ComponentContainer container = containerType.buildLayout(
                         ((Number) levels.getValue()).intValue(),
                         ((Number) childAmount.getValue()).intValue(), leafType,
@@ -254,8 +254,9 @@ public class LayoutPerformanceTests extends TestBase {
             if (component instanceof NativeSelect) {
                 NativeSelect nativeSelect = (NativeSelect) component;
                 nativeSelect.setNullSelectionAllowed(false);
-                nativeSelect.setValue(new ArrayList<Object>(nativeSelect
-                        .getItemIds()).get(0));
+                nativeSelect.setValue(
+                        new ArrayList<Object>(nativeSelect.getItemIds())
+                                .get(0));
             }
             controls.setComponentAlignment(component, Alignment.BOTTOM_LEFT);
         }

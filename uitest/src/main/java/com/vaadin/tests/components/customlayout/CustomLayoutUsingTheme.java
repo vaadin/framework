@@ -8,8 +8,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
 public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
 
@@ -38,8 +38,9 @@ public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        layout.addComponent(new NativeButton(
-                                "This is it, the body!"), "body");
+                        layout.addComponent(
+                                new NativeButton("This is it, the body!"),
+                                "body");
                     }
                 }));
         layout.addComponent(menu, "menu");

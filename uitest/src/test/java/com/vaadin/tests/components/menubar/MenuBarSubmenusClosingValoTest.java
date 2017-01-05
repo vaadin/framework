@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -55,8 +55,8 @@ public class MenuBarSubmenusClosingValoTest extends MultiBrowserTest {
 
         Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
 
-        List<WebElement> menuItemList = driver.findElements(By
-                .className("v-menubar-menuitem"));
+        List<WebElement> menuItemList = driver
+                .findElements(By.className("v-menubar-menuitem"));
 
         mouse.click(((Locatable) menuItemList.get(0)).getCoordinates());
         waitForElementPresent(By.className("v-menubar-popup"));

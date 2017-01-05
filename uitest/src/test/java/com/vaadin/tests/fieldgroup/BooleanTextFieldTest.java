@@ -1,9 +1,12 @@
 package com.vaadin.tests.fieldgroup;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class BooleanTextFieldTest extends BasicPersonFormTest {
 
@@ -57,4 +60,11 @@ public class BooleanTextFieldTest extends BasicPersonFormTest {
                 "4. Person [firstName=John, lastName=Dover, email=john@doe.com, age=64, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=true, salary=null, salaryDouble=null, rent=null]",
                 getLogRow(0));
     }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // this test also works on IEs, but Firefox has problems with tooltips
+        return getBrowsersExcludingFirefox();
+    }
+
 }

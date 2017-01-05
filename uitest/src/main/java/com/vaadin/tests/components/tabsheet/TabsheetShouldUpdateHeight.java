@@ -5,8 +5,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
 public class TabsheetShouldUpdateHeight extends TestBase {
 
@@ -37,7 +37,8 @@ public class TabsheetShouldUpdateHeight extends TestBase {
         addComponent(btnSwitch);
     }
 
-    private VerticalLayout getLayoutWithComponents(final int inAmount, String id) {
+    private VerticalLayout getLayoutWithComponents(final int inAmount,
+            String id) {
         final VerticalLayout v = new VerticalLayout();
         v.setDebugId(id);
         v.setSpacing(true);

@@ -1,12 +1,12 @@
-/* 
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+/*
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,17 +23,18 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
+
 import elemental.json.JsonArray;
 
-public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
+public class SimpleJavaScriptExtensionTest extends AbstractReindeerTestUI {
 
-    public static class SimpleJavaScriptExtensionState extends
-            JavaScriptExtensionState {
+    public static class SimpleJavaScriptExtensionState
+            extends JavaScriptExtensionState {
         private String prefix;
 
         public void setPrefix(String prefix) {
@@ -45,20 +46,20 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
         }
     }
 
-    public static interface SimpleJavaScriptExtensionClientRpc extends
-            ClientRpc {
+    public static interface SimpleJavaScriptExtensionClientRpc
+            extends ClientRpc {
         public void greet(String message);
     }
 
-    public static interface SimpleJavaScriptExtensionServerRpc extends
-            ServerRpc {
+    public static interface SimpleJavaScriptExtensionServerRpc
+            extends ServerRpc {
         public void greet(String message);
     }
 
     @JavaScript("/statictestfiles/jsextension.js")
     @StyleSheet("/VAADIN/external1.css")
-    public static class SimpleJavascriptExtension extends
-            AbstractJavaScriptExtension {
+    public static class SimpleJavascriptExtension
+            extends AbstractJavaScriptExtension {
 
         public SimpleJavascriptExtension() {
             registerRpc(new SimpleJavaScriptExtensionServerRpc() {
@@ -70,8 +71,8 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
             addFunction("greetToServer", new JavaScriptFunction() {
                 @Override
                 public void call(JsonArray arguments) {
-                    Notification.show(getState().getPrefix()
-                            + arguments.getString(0));
+                    Notification.show(
+                            getState().getPrefix() + arguments.getString(0));
                 }
             });
         }
@@ -100,8 +101,8 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
         final SimpleJavascriptExtension simpleJavascriptExtension = new SimpleJavascriptExtension();
         simpleJavascriptExtension.setPrefix("Prefix: ");
         addExtension(simpleJavascriptExtension);
-        addComponent(new Button("Send rpc greeting",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Send rpc greeting", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         simpleJavascriptExtension.greetRpc("Rpc greeting");

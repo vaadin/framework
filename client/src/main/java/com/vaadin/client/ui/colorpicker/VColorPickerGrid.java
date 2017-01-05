@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,12 +26,12 @@ import com.google.gwt.user.client.ui.HTMLTable.Cell;
 
 /**
  * Client side implementation for ColorPickerGrid.
- * 
+ *
  * @since 7.0.0
- * 
+ *
  */
-public class VColorPickerGrid extends AbsolutePanel implements ClickHandler,
-        HasClickHandlers {
+public class VColorPickerGrid extends AbsolutePanel
+        implements ClickHandler, HasClickHandlers {
 
     private int rows = 1;
     private int columns = 1;
@@ -54,7 +54,7 @@ public class VColorPickerGrid extends AbsolutePanel implements ClickHandler,
 
     /**
      * Creates a grid according to the current row and column count information.
-     * 
+     *
      * @return grid
      */
     private Grid createGrid() {
@@ -68,11 +68,13 @@ public class VColorPickerGrid extends AbsolutePanel implements ClickHandler,
     /**
      * Updates the row and column count and creates a new grid based on them.
      * The new grid replaces the old grid if one existed.
-     * 
+     * <p>
+     * For internal use only. May be renamed or removed in a future release.
+     *
      * @param rowCount
      * @param columnCount
      */
-    protected void updateGrid(int rowCount, int columnCount) {
+    public void updateGrid(int rowCount, int columnCount) {
         rows = rowCount;
         columns = columnCount;
         this.remove(grid);
@@ -83,12 +85,14 @@ public class VColorPickerGrid extends AbsolutePanel implements ClickHandler,
      * Updates the changed colors within the grid based on the given x- and
      * y-coordinates. Nothing happens if any of the parameters is null or the
      * parameter lengths don't match.
-     * 
+     * <p>
+     * For internal use only. May be renamed or removed in a future release.
+     *
      * @param changedColor
      * @param changedX
      * @param changedY
      */
-    protected void updateColor(String[] changedColor, String[] changedX,
+    public void updateColor(String[] changedColor, String[] changedX,
             String[] changedY) {
         if (changedColor != null && changedX != null && changedY != null) {
             if (changedColor.length == changedX.length
@@ -109,22 +113,24 @@ public class VColorPickerGrid extends AbsolutePanel implements ClickHandler,
     /**
      * Returns currently selected x-coordinate of the grid.
      */
-    protected int getSelectedX() {
+    public int getSelectedX() {
         return selectedX;
     }
 
     /**
      * Returns currently selected y-coordinate of the grid.
      */
-    protected int getSelectedY() {
+    public int getSelectedY() {
         return selectedY;
     }
 
     /**
      * Returns true if the colors have been successfully updated at least once,
      * false otherwise.
+     * <p>
+     * For internal use only. May be renamed or removed in a future release.
      */
-    protected boolean isGridLoaded() {
+    public boolean isGridLoaded() {
         return gridLoaded;
     }
 

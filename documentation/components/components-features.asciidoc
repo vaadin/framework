@@ -70,7 +70,6 @@ around a component.
 ----
 .v-caption {}
   .v-captiontext {}
-  .v-caption-clearelem {}
   .v-required-field-indicator {}
 ----
 
@@ -78,10 +77,8 @@ A caption is be rendered inside an HTML element that has the
 [literal]#++v-caption++# CSS style class. The containing layout may enclose a
 caption inside other caption-related elements.
 
-Some layouts put the caption text in a [literal]#++v-captiontext++# element. A
-[literal]#++v-caption-clearelem++# is used in some layouts to clear a CSS
-[literal]#++float++# property in captions. An optional required indicator in
-field components is contained in a separate element with
+Some layouts put the caption text in a [literal]#++v-captiontext++# element.
+An optional required indicator in field components is contained in a separate element with
 [literal]#++v-required-field-indicator++# style.
 
 
@@ -136,17 +133,12 @@ button.setDescription(
     "  <li>etc.</li>"+
     "</ul>");
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.description.richtext[on-line example, window="_blank"].
 
 The result is shown in <<figure.components.tooltip.richtext>>.
 
 [[figure.components.tooltip.richtext]]
 .A Rich Text Tooltip
 image::img/tooltip-richtext-withpointer-hi.png[width=40%, scaledwidth=75%]
-
-Notice that the setter and getter are defined for all fields in the
-[classname]#Field# interface, not for all components in the
-[classname]#Component# interface.
 
 
 [[components.features.enabled]]
@@ -180,14 +172,12 @@ buttons.
 .An Enabled and Disabled [classname]#Button#
 image::img/features-enabled-simple.png[width=30%, scaledwidth=50%]
 
-A disabled component is automatically put in read-only state. No client
-interaction with such a component is sent to the server and, as an important
+A disabled component is automatically put in read-only like state. No client
+interaction with a disabled component is sent to the server and, as an important
 security feature, the server-side components do not receive state updates from
-the client in the read-only state. This feature exists in all built-in
-components in Vaadin and is automatically handled for all [classname]#Field#
-components for the field property value. For custom widgets, you need to make
-sure that the read-only state is checked on the server-side for all
-safety-critical variables.
+the client in the disabled state. This feature exists in all built-in
+components in the Framework meaning all client to server RPC calls are ignored
+for disabled components.
 
 === CSS Style Rules
 
@@ -205,11 +195,8 @@ have to join the style class names with a dot as done in the example below.
 
 This would make the border of all disabled text fields dotted.
 
-// TODO This may change to $v-button-disabled-opacity
 In the Valo theme, the opacity of disabled components is specified with the
-`$v-disabled-opacity`
-ifndef::web[parameter.]
-ifdef::web[parameter, as described in <<dummy/../../../framework/themes/themes-valo#themes.valo.variables,"Common Settings">>]
+`$v-disabled-opacity` parameter.
 
 [[components.features.icon]]
 == Icon
@@ -296,7 +283,6 @@ date.setLocale(new Locale("de", "DE"));
 date.setResolution(Resolution.DAY);
 layout.addComponent(date);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.simple[on-line example, window="_blank"].
 
 The resulting date field is shown in <<figure.components.features.locale.simple>>.
 
@@ -304,7 +290,7 @@ The resulting date field is shown in <<figure.components.features.locale.simple>
 .Set locale for [classname]#InlineDateField#
 image::img/features-locale-simple.png[width=40%, scaledwidth=60%]
 
-ifdef::web[]
+
 [[components.features.locale.get]]
 === Getting the Locale
 
@@ -333,7 +319,6 @@ Button cancel = new Button() {
 };
 layout.addComponent(cancel);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.get-attach[on-line example, window="_blank"].
 
 However, it is normally a better practice to use the locale of the current UI to
 get the localized resource right when the component is created.
@@ -351,81 +336,17 @@ Button cancel =
     new Button(bundle.getString(MyAppCaptions.CancelKey));
 layout.addComponent(cancel);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.get-ui[on-line example, window="_blank"].
-endif::web[]
 
-ifdef::web[]
+
 [[component.features.locale.selecting]]
 === Selecting a Locale
 
-A common task in many applications is selecting a locale. This is done in the
-following example with a [classname]#ComboBox#, which gets the available locales
-in Java.
-
-
-[source, java]
-----
-// The locale in which we want to have the language
-// selection list
-Locale displayLocale = Locale.ENGLISH;
-
-// All known locales
-final Locale[] locales = Locale.getAvailableLocales();
-
-// Allow selecting a language. We are in a constructor of a
-// CustomComponent, so preselecting the current
-// language of the application can not be done before
-// this (and the selection) component are attached to
-// the application.
-final ComboBox select = new ComboBox("Select a language") {
-    @Override
-    public void attach() {
-        super.attach();
-        setValue(getLocale());
-    }
-};
-for (int i=0; i<locales.length; i++) {
-    select.addItem(locales[i]);
-    select.setItemCaption(locales[i],
-                          locales[i].getDisplayName(displayLocale));
-
-    // Automatically select the current locale
-    if (locales[i].equals(getLocale()))
-        select.setValue(locales[i]);
-}
-layout.addComponent(select);
-
-// Locale code of the selected locale
-final Label localeCode = new Label("");
-layout.addComponent(localeCode);
-
-// A date field which language the selection will change
-final InlineDateField date =
-    new InlineDateField("Calendar in the selected language");
-date.setResolution(Resolution.DAY);
-layout.addComponent(date);
-
-// Handle language selection
-select.addValueChangeListener(new Property.ValueChangeListener() {
-    public void valueChange(ValueChangeEvent event) {
-        Locale locale = (Locale) select.getValue();
-        date.setLocale(locale);
-        localeCode.setValue("Locale code: " +
-                            locale.getLanguage() + "_" +
-                            locale.getCountry());
-    }
-});
-select.setImmediate(true);
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.features.locale.selection[on-line example, window="_blank"].
-
-The user interface is shown in <<figure.components.features.locale.selection>>.
-
-[[figure.components.features.locale.selection]]
-.Selecting a locale
-image::img/features-locale-selection.png[]
-
-endif::web[]
+A common task in many applications is selecting a locale.
+The locale can be set for the [classname]#UI# or single [classname]#Component#.
+By default each component uses the locale from the [classname]#UI# it has been
+attached to. Setting a locale to a [classname]#Component# only applies the locale
+to that component and its children. Note, that updating the locale for a component
+does not update its children, thus any child component that uses the locale should be updated manually.
 
 
 [[components.features.readonly]]
@@ -434,20 +355,17 @@ endif::web[]
 ((("read-only property")))
 ((("Component interface", "read-only")))
 The property defines whether the value of a component can be changed. The
-property is mainly applicable to [classname]#Field# components, as they have a
-value that can be edited by the user.
+property is only applicable to components implementing the [interfacename]#HasValue# interface.
 
 [source, java]
 ----
 TextField readwrite = new TextField("Read-Write");
 readwrite.setValue("You can change this");
 readwrite.setReadOnly(false); // The default
-layout.addComponent(readwrite);
 
 TextField readonly = new TextField("Read-Only");
 readonly.setValue("You can't touch this!");
 readonly.setReadOnly(true);
-layout.addComponent(readonly);
 ----
 
 The resulting read-only text field is shown in
@@ -457,38 +375,26 @@ The resulting read-only text field is shown in
 .A read-only component
 image::img/features-readonly-simple.png[width=50%, scaledwidth=80%]
 
-Setting a layout or some other component container as read-only does not usually
-make the contained components read-only recursively. This is different from, for
-example, the disabled state, which is usually applied recursively.
-
 Notice that the value of a selection component is the selection, not its items.
 A read-only selection component doesn't therefore allow its selection to be
-changed, but other changes are possible. For example, if you have a read-only
-[classname]#Table# in editable mode, its contained fields and the underlying
-data model can still be edited, and the user could sort it or reorder the
-columns.
+changed, but other changes are possible. For example, if you have a
+[classname]#Grid# with a read-only selection model in editable mode,
+its contained fields and the underlying data model can still be edited,
+and the user could sort it or reorder the columns.
 
 Client-side state modifications will not be communicated to the server-side and,
 more importantly, server-side field components will not accept changes to the
-value of a read-only [classname]#Field# component. The latter is an important
+value of a read-only [classname]#HasValue# component. The latter is an important
 security feature, because a malicious user can not fabricate state changes in a
-read-only field. This is handled at the level of [classname]#AbstractField# in
-[methodname]#setValue()#, so you can not change the value programmatically
-either. Calling [methodname]#setValue()# on a read-only field results in
-[classname]#Property.ReadOnlyException#.
+read-only field.
 
-Also notice that while the read-only status applies automatically to the
-property value of a field, it does not apply to other component variables. A
-read-only component can accept some other variable changes from the client-side
+Also notice that while the read-only status applies automatically to the value
+of a field, it does not apply to other component variables. A
+read-only component can accept some other state changes from the client-side
 and some of such changes could be acceptable, such as change in the scroll bar
-position of a [classname]#Table#. Custom widgets should check the read-only
-state for variables bound to business
-data.
+position of a [classname]#ListSelect#. Custom components should check the read-only
+state for variables bound to business data.
 
-////
-TODO: Note this also in the Advanced: Security section.
-Possibly also in the GWT chapter.
-////
 
 === CSS Style Rules
 
@@ -509,8 +415,6 @@ components appear in italic.
 }
 ----
 
-
-
 [[components.features.stylename]]
 == Style Name
 
@@ -523,7 +427,6 @@ styles with the given style name or a space-separated list of style names. You
 can also add and remove individual style names with [methodname]#addStylename()#
 and [methodname]#removeStyleName()#. A style name must be a valid CSS style
 name.
-
 
 [source, java]
 ----
@@ -583,18 +486,6 @@ invisible.setVisible(false);
 layout.addComponent(invisible);
 ----
 
-The resulting invisible component is shown in
-<<figure.components.features.visible.simple>>.
-
-[[figure.components.features.visible.simple]]
-.An invisible component
-image::img/features-visible-simple.png[]
-
-Beware that invisible beings can leave footprints. The containing layout cell
-that holds the invisible component will not go away, but will show in the layout
-as extra empty space. Also expand ratios work just like if the component was
-visible - it is the layout cell that expands, not the component.
-
 If you need to make a component only cosmetically invisible, you should use a
 custom theme to set it [literal]#++display: none++# style. This is mainly useful
 for some special components that have effects even when made invisible in CSS.
@@ -604,10 +495,6 @@ disappears. If you want to have the component keep its size, you have to make it
 invisible by setting all its font and other attributes to be transparent. In
 such cases, the invisible content of the component can be made visible easily in
 the browser.
-
-A component made invisible with the __visible__ property has no particular CSS
-style class to indicate that it is hidden. The element does exist though, but
-has [literal]#++display: none++# style, which overrides any CSS styling.
 
 
 [[components.features.sizeable]]
@@ -626,17 +513,15 @@ component in absolute or relative units, or for leaving the size undefined.
 The size of a component can be set with [methodname]#setWidth()# and
 [methodname]#setHeight()# methods. The methods take the size as a floating-point
 value. You need to give the unit of the measure as the second parameter for the
-above methods. The available units are listed in
-<<components.features.sizeable.units.table>> below.
-
+above methods.
 
 [source, java]
 ----
-mycomponent.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-mycomponent.setWidth(400, Sizeable.UNITS_PIXELS);
+mycomponent.setWidth(100, Unit.PERCENTAGE);
+mycomponent.setWidth(400, Unit.PIXELS);
 ----
 
-Alternatively, you can speficy the size as a string. The format of such a string
+Alternatively, you can specify the size as a string. The format of such a string
 must follow the HTML/CSS standards for specifying measures.
 
 
@@ -647,38 +532,18 @@ mycomponent.setHeight("400px");
 ----
 
 The "[literal]#++100%++#" percentage value makes the component take all
-available size in the particular direction (see the description of
-[parameter]#Sizeable.UNITS_PERCENTAGE# in the table below). You can also use the
+available size in the particular direction. You can also use the
 shorthand method [methodname]#setSizeFull()# to set the size to 100% in both
 directions.
 
 The size can be __undefined__ in either or both dimensions, which means that the
 component will take the minimum necessary space. Most components have undefined
 size by default, but some layouts have full size in horizontal direction. You
-can set the height or width as undefined with
-[parameter]#Sizeable.SIZE_UNDEFINED# parameter for [methodname]#setWidth()# and
-[methodname]#setHeight()#.
+can set the height, width, or both as undefined with the methods [methodname]#setWidthUndefined()#,
+[methodname]#setHeightUndefined()#, and [methodname]#setSizeUndefined()#, respectively.
 
 Always keep in mind that _a layout with undefined size may not contain components with defined relative size_, such as "full size", except in some special cases.
 See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
-
-The <<components.features.sizeable.units.table>> table lists the available units and their codes defined in the [interfacename]#Sizeable# interface.
-
-[[components.features.sizeable.units.table]]
-.Size units
-[cols="5,2,10", options="header"]
-|===============
-|Constant|Unit|Description
-|[parameter]#Unit.PIXELS#|px|The _pixel_ is the basic hardware-specific measure of one physical display pixel.
-|[parameter]#Unit.POINTS#|pt|The _point_ is a typographical unit, which is usually defined as 1/72 inches or about 0.35 mm. However, on displays the size can vary significantly depending on display metrics.
-|[parameter]#Unit.PICAS#|pc|The _pica_ is a typographical unit, defined as 12 points, or 1/7 inches or about 4.233 mm. On displays, the size can vary depending on display metrics.
-|[parameter]#Unit.EM#|em|A unit relative to the used font, the width of the upper-case "M" letter.
-|[parameter]#Unit.EX#|ex|A unit relative to the used font, the height of the lower-case "x" letter.
-|[parameter]#Unit.MM#|mm|A physical length unit, millimeters on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
-|[parameter]#Unit.CM#|cm|A physical length unit, _centimeters_ on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
-|[parameter]#Unit.INCH#|in|A physical length unit, _inches_ on the surface of a display device. However, the actual size depends on the display, its metrics in the operating system, and the browser.
-|[parameter]#Unit.PERCENTAGE#|%|A relative percentage of the available size. For example, for the top-level layout [parameter]#100%# would be the full width or height of the browser window. The percentage value must be between 0 and 100.
-|===============
 
 If a component inside [classname]#HorizontalLayout# or [classname]#VerticalLayout# has full size in the namesake direction of the layout, the component will expand to take all available space not needed by the other components.
 See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
@@ -691,7 +556,8 @@ component allows inputting text, the focus and insertion point are indicated by
 a cursor. Pressing the Tab key moves the focus to the component next in the
 __focus order__.
 
-Focusing is supported by all [classname]#Field# components and also by the [classname]#Upload# component.
+Focusing is supported by all [classname]#AbstractField# and [classname]#AbstractListing# components and also by
+components such as [classname]#Button#, [classname]#Upload#, and [classname]#TabSheet#.
 
 The focus order or __tab index__ of a component is defined as a positive integer
 value, which you can set with [methodname]#setTabIndex()# and get with

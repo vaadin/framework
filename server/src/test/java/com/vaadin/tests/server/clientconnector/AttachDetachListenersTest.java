@@ -148,10 +148,10 @@ public class AttachDetachListenersTest {
         control.verify();
     }
 
-    public static class EventEquals<E extends ConnectorEvent> implements
-            IArgumentMatcher {
+    public static class EventEquals<E extends ConnectorEvent>
+            implements IArgumentMatcher {
 
-        private E expected;
+        private final E expected;
 
         public EventEquals(E expected) {
             this.expected = expected;
@@ -160,8 +160,9 @@ public class AttachDetachListenersTest {
         @Override
         public void appendTo(StringBuffer buffer) {
             buffer.append("EventEquals(");
-            buffer.append("expected " + expected.getClass().getSimpleName()
-                    + " with connector " + expected.getConnector());
+            buffer.append("expected ")
+                    .append(expected.getClass().getSimpleName())
+                    .append(" with connector ").append(expected.getConnector());
             buffer.append(")");
         }
 
@@ -174,7 +175,7 @@ public class AttachDetachListenersTest {
     }
 
     public static <E extends ConnectorEvent> E eventEquals(E expected) {
-        EasyMock.reportMatcher(new EventEquals<E>(expected));
+        EasyMock.reportMatcher(new EventEquals<>(expected));
         return null;
     }
 

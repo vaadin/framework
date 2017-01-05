@@ -1,24 +1,23 @@
 package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.server.Sizeable;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.tests.components.AbstractComponentContainerTest;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 
 public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
-        extends AbstractComponentContainerTest<T> implements
-        SplitterClickListener {
+        extends AbstractComponentContainerTest<T>
+        implements SplitterClickListener {
 
     private Command<T, Boolean> splitterClickListenerCommand = new Command<T, Boolean>() {
 
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((SplitterClickListener) AbstractSplitPanelTest.this);
+                c.addSplitterClickListener(AbstractSplitPanelTest.this);
             } else {
-                c.removeListener((SplitterClickListener) AbstractSplitPanelTest.this);
+                c.removeSplitterClickListener(AbstractSplitPanelTest.this);
             }
 
         }

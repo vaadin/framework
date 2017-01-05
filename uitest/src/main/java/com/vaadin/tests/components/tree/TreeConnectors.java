@@ -1,9 +1,5 @@
 package com.vaadin.tests.components.tree;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -11,9 +7,11 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.themes.BaseTheme;
 
 @SuppressWarnings("serial")
 public class TreeConnectors extends TestBase {
@@ -24,16 +22,11 @@ public class TreeConnectors extends TestBase {
     protected void setup() {
         CheckBox cb = new CheckBox("Connectors");
         cb.setValue(false);
-        cb.setImmediate(true);
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) event.getProperty().getValue()) {
-                    tree.addStyleName(BaseTheme.TREE_CONNECTORS);
-                } else {
-                    tree.removeStyleName(BaseTheme.TREE_CONNECTORS);
-                }
+        cb.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                tree.addStyleName(BaseTheme.TREE_CONNECTORS);
+            } else {
+                tree.removeStyleName(BaseTheme.TREE_CONNECTORS);
             }
         });
         addComponent(cb);
@@ -64,16 +57,16 @@ public class TreeConnectors extends TestBase {
 
         });
 
-        tree.setItemIcon("Item 1", new ThemeResource(
-                "../runo/icons/32/folder.png"));
-        tree.setItemIcon("Item 3", new ThemeResource(
-                "../runo/icons/32/document.png"));
-        tree.setItemIcon("Item 13", new ThemeResource(
-                "../runo/icons/64/user.png"));
-        tree.setItemIcon("Item 72", new ThemeResource(
-                "../runo/icons/64/users.png"));
-        tree.setItemIcon("Item 17", new ThemeResource(
-                "../runo/icons/16/document-pdf.png"));
+        tree.setItemIcon("Item 1",
+                new ThemeResource("../runo/icons/32/folder.png"));
+        tree.setItemIcon("Item 3",
+                new ThemeResource("../runo/icons/32/document.png"));
+        tree.setItemIcon("Item 13",
+                new ThemeResource("../runo/icons/64/user.png"));
+        tree.setItemIcon("Item 72",
+                new ThemeResource("../runo/icons/64/users.png"));
+        tree.setItemIcon("Item 17",
+                new ThemeResource("../runo/icons/16/document-pdf.png"));
 
         return tree;
     }

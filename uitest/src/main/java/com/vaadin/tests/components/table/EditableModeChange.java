@@ -5,17 +5,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.Container;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.ui.DefaultFieldFactory;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TableFieldFactory;
 
-public class EditableModeChange extends AbstractTestUI {
+public class EditableModeChange extends AbstractReindeerTestUI {
 
     private ItemClickEvent selectionEvent;
 
@@ -81,7 +81,8 @@ public class EditableModeChange extends AbstractTestUI {
                 Object propertyId, Component uiContext) {
             if (selectionEvent != null) {
                 if ((selectionEvent.getItemId().equals(itemId))
-                        && (selectionEvent.getPropertyId().equals(propertyId))) {
+                        && (selectionEvent.getPropertyId()
+                                .equals(propertyId))) {
                     return super.createField(container, itemId, propertyId,
                             uiContext);
                 }

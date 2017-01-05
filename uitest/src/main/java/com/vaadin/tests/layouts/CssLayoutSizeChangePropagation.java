@@ -32,7 +32,7 @@ public class CssLayoutSizeChangePropagation extends TestBase {
         sp.addComponent(cssLayout);
 
         Button button = new Button("b");
-        button.addListener(new ClickListener() {
+        button.addClickListener(new ClickListener() {
             boolean bool = true;
 
             @Override

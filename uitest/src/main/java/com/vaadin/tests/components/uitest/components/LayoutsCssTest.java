@@ -16,8 +16,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.themes.ChameleonTheme;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.themes.ChameleonTheme;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class LayoutsCssTest extends GridLayout {
 
@@ -101,8 +101,8 @@ public class LayoutsCssTest extends GridLayout {
 
         CustomLayout custom;
         try {
-            custom = new CustomLayout(new ByteArrayInputStream(
-                    customLayoutSrc.getBytes()));
+            custom = new CustomLayout(
+                    new ByteArrayInputStream(customLayoutSrc.getBytes()));
             custom.addComponent(new Label("Some content"), "pos1");
             custom.setComponentError(new UserError("A error mesasge..."));
             custom.setCaption("CustomLayout");

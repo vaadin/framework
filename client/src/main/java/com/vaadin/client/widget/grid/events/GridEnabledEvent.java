@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,7 +27,7 @@ public class GridEnabledEvent extends GwtEvent<GridEnabledHandler> {
     /**
      * The type of this event
      */
-    public static final Type<GridEnabledHandler> TYPE = new Type<GridEnabledHandler>();
+    public static final Type<GridEnabledHandler> TYPE = new Type<>();
     private final boolean enabled;
 
     public GridEnabledEvent(boolean enabled) {

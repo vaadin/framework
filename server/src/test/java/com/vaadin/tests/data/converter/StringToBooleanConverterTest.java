@@ -7,73 +7,86 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.StringToBooleanConverter;
+import com.vaadin.data.ValueContext;
+import com.vaadin.data.converter.StringToBooleanConverter;
 
-public class StringToBooleanConverterTest {
+public class StringToBooleanConverterTest extends AbstractStringConverterTest {
 
-    StringToBooleanConverter converter = new StringToBooleanConverter();
-    StringToBooleanConverter yesNoConverter = new StringToBooleanConverter(
-            "yes", "no");
-    StringToBooleanConverter localeConverter = new StringToBooleanConverter() {
+    @Override
+    protected StringToBooleanConverter getConverter() {
+        return new StringToBooleanConverter(getErrorMessage());
+    }
+
+    private StringToBooleanConverter yesNoConverter = new StringToBooleanConverter(
+            getErrorMessage(), "yes", "no");
+    private StringToBooleanConverter emptyTrueConverter = new StringToBooleanConverter(
+            getErrorMessage(), "", "ABSENT");
+    private final StringToBooleanConverter localeConverter = new StringToBooleanConverter(
+            getErrorMessage()) {
         @Override
         public String getFalseString(Locale locale) {
             Date d = new Date(3000000000000L);
-            return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG,
-                    locale).format(
-                    d.getTime() + (d.getTimezoneOffset() + 120) * 60 * 1000L);
+            return SimpleDateFormat
+                    .getDateInstance(SimpleDateFormat.LONG, locale)
+                    .format(d.getTime()
+                            + (d.getTimezoneOffset() + 120) * 60 * 1000L);
         }
 
         @Override
         public String getTrueString(Locale locale) {
             Date d = new Date(2000000000000L);
-            return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG,
-                    locale).format(
-                    d.getTime() + (d.getTimezoneOffset() + 120) * 60 * 1000L);
+            return SimpleDateFormat
+                    .getDateInstance(SimpleDateFormat.LONG, locale)
+                    .format(d.getTime()
+                            + (d.getTimezoneOffset() + 120) * 60 * 1000L);
         }
     };
 
     @Test
-    public void testNullConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel(null, Boolean.class, null));
-    }
-
-    @Test
-    public void testEmptyStringConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel("", Boolean.class, null));
-    }
-
-    @Test
     public void testValueConversion() {
-        Assert.assertTrue(converter.convertToModel("true", Boolean.class, null));
-        Assert.assertFalse(converter.convertToModel("false", Boolean.class,
-                null));
+        assertValue(true,
+                getConverter().convertToModel("true", new ValueContext()));
+        assertValue(false,
+                getConverter().convertToModel("false", new ValueContext()));
     }
 
     @Test
     public void testYesNoValueConversion() {
-        Assert.assertTrue(yesNoConverter.convertToModel("yes", Boolean.class,
-                null));
-        Assert.assertFalse(yesNoConverter.convertToModel("no", Boolean.class,
-                null));
+        assertValue(true,
+                yesNoConverter.convertToModel("yes", new ValueContext()));
+        assertValue(false,
+                yesNoConverter.convertToModel("no", new ValueContext()));
 
         Assert.assertEquals("yes",
-                yesNoConverter.convertToPresentation(true, String.class, null));
-        Assert.assertEquals("no",
-                yesNoConverter.convertToPresentation(false, String.class, null));
+                yesNoConverter.convertToPresentation(true, new ValueContext()));
+        Assert.assertEquals("no", yesNoConverter.convertToPresentation(false,
+                new ValueContext()));
+    }
+
+    @Test
+    public void testEmptyTrueValueConversion() {
+        assertValue(true,
+                emptyTrueConverter.convertToModel("", new ValueContext()));
+        assertValue(false, emptyTrueConverter.convertToModel("ABSENT",
+                new ValueContext()));
+
+        Assert.assertEquals("", emptyTrueConverter.convertToPresentation(true,
+                new ValueContext()));
+        Assert.assertEquals("ABSENT", emptyTrueConverter
+                .convertToPresentation(false, new ValueContext()));
     }
 
     @Test
     public void testLocale() {
         Assert.assertEquals("May 18, 2033", localeConverter
-                .convertToPresentation(true, String.class, Locale.US));
+                .convertToPresentation(true, new ValueContext(Locale.US)));
         Assert.assertEquals("January 24, 2065", localeConverter
-                .convertToPresentation(false, String.class, Locale.US));
+                .convertToPresentation(false, new ValueContext(Locale.US)));
 
         Assert.assertEquals("18. Mai 2033", localeConverter
-                .convertToPresentation(true, String.class, Locale.GERMANY));
-        Assert.assertEquals("24. Januar 2065", localeConverter
-                .convertToPresentation(false, String.class, Locale.GERMANY));
+                .convertToPresentation(true, new ValueContext(Locale.GERMANY)));
+        Assert.assertEquals("24. Januar 2065",
+                localeConverter.convertToPresentation(false,
+                        new ValueContext(Locale.GERMANY)));
     }
 }

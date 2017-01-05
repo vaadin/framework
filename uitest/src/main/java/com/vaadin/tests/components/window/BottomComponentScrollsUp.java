@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -31,7 +31,7 @@ import com.vaadin.ui.Window;
 /**
  * Reproducing bug #12943 where an action on a Button or ComboBox placed at the
  * bottom of a window in a scroll panel, will scroll up the parent panel.
- * 
+ *
  * This was due to the fact that with the state confirmation notification from
  * the server, the window.setVisible would be call again, and the hack that
  * solved the scrollbars in a window (#11994) would cause the our bug.
@@ -40,7 +40,7 @@ import com.vaadin.ui.Window;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class BottomComponentScrollsUp extends AbstractTestUI {
+public class BottomComponentScrollsUp extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -76,10 +76,12 @@ public class BottomComponentScrollsUp extends AbstractTestUI {
         Panel p = new Panel();
 
         VerticalLayout content = new VerticalLayout();
+        content.setMargin(false);
+        content.setSpacing(false);
         p.setContent(content);
         content.setHeight("500px");
 
-        List<String> items = new ArrayList<String>();
+        List<String> items = new ArrayList<>();
         items.add("1");
         items.add("2");
         items.add("3");

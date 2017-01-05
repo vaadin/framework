@@ -7,8 +7,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 
-public class TestForTabSheet extends CustomComponent implements
-        Button.ClickListener, TabSheet.SelectedTabChangeListener {
+public class TestForTabSheet extends CustomComponent
+        implements Button.ClickListener, TabSheet.SelectedTabChangeListener {
     TabSheet tabsheet = new TabSheet();
     Button tab1_root = new Button("Push this button");
     Label tab2_root = new Label("Contents of Second Tab");
@@ -17,10 +17,10 @@ public class TestForTabSheet extends CustomComponent implements
     TestForTabSheet() {
         setCompositionRoot(tabsheet);
 
-        tabsheet.addListener(this);
+        tabsheet.addSelectedTabChangeListener(this);
 
         /* Listen for button click events. */
-        tab1_root.addListener(this);
+        tab1_root.addClickListener(this);
         tabsheet.addTab(tab1_root, "First Tab", null);
 
         /* A tab that is initially disabled. */

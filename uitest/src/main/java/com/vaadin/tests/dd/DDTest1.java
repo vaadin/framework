@@ -2,9 +2,6 @@ package com.vaadin.tests.dd;
 
 import java.util.Collection;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -13,17 +10,20 @@ import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeTargetDetails;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.AbstractSelect.AcceptItem;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 
 /**
  * DD playground. Better quality example/prototype codes in {@link DDTest2}.
@@ -46,8 +46,8 @@ public class DDTest1 extends TestBase {
 
         pane1.addComponent(label);
 
-        Link l = new Link("This is link", new ExternalResource(
-                "http://www.google.com/"));
+        Link l = new Link("This is link",
+                new ExternalResource("http://www.google.com/"));
         pane1.addComponent(l, "top:100px; left: 20px;");
 
         label = new Label("Bar");
@@ -55,10 +55,11 @@ public class DDTest1 extends TestBase {
         pane1.addComponent(label);
 
         DragDropPane pane2 = new DragDropPane();
-        pane2.setCaption("Pane2 (accept needs server side visit, check for \"Bar\")");
+        pane2.setCaption(
+                "Pane2 (accept needs server side visit, check for \"Bar\")");
         final AcceptCriterion crit = new ServerSideCriterion() {
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 1L;
 
@@ -120,7 +121,7 @@ public class DDTest1 extends TestBase {
         /*
          * Moves items in tree (and could work in Table too). Also supports
          * "building" tree.
-         * 
+         *
          * TODO fix algorithm, broken in some cases.
          */
         DropHandler itemSorter = new DropHandler() {
@@ -139,10 +140,8 @@ public class DDTest1 extends TestBase {
                             Collection<?> itemPropertyIds = item
                                     .getItemPropertyIds();
                             for (Object propId : itemPropertyIds) {
-                                addItem.getItemProperty(propId)
-                                        .setValue(
-                                                item.getItemProperty(propId)
-                                                        .getValue());
+                                addItem.getItemProperty(propId).setValue(item
+                                        .getItemProperty(propId).getValue());
                             }
                         }
                         idx.setParent(childId, itemId);
@@ -178,10 +177,8 @@ public class DDTest1 extends TestBase {
                         Collection<?> itemPropertyIds = item
                                 .getItemPropertyIds();
                         for (Object propertyId : itemPropertyIds) {
-                            addedItem.getItemProperty(propertyId)
-                                    .setValue(
-                                            item.getItemProperty(propertyId)
-                                                    .getValue());
+                            addedItem.getItemProperty(propertyId).setValue(item
+                                    .getItemProperty(propertyId).getValue());
                         }
                         copyChildren(source, target, childId);
                     }
@@ -249,8 +246,8 @@ public class DDTest1 extends TestBase {
         main.addComponent(pane3);
         main.addComponent(t);
         main.addComponent(ta);
-        main.addComponent(new Link("Foo", new ExternalResource(
-                "http://www.itmill.com/")));
+        main.addComponent(new Link("Foo",
+                new ExternalResource("http://www.itmill.com/")));
 
         getLayout().setSizeFull();
         addComponent(main);

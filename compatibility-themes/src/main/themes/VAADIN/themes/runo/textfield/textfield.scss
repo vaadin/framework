@@ -1,0 +1,49 @@
+@mixin runo-textfield($primaryStyleName : v-textfield) {
+
+.#{$primaryStyleName},
+.v-textarea {
+	background: #fff url(img/bg.png) repeat-x;
+	border: 1px solid #b6b6b6;
+	border-top-color: #9d9d9d;
+	border-bottom-color: #d6d6d6;
+	border-right-color: #d6d6d6;
+	margin: 0;
+	line-height: 14px;
+}
+input.#{$primaryStyleName},
+input[type=text].#{$primaryStyleName},
+textarea.v-textarea {
+	font-size: 12px;
+	height: 22px;
+	padding: 2px;
+}
+textarea.v-textarea {
+	height: auto;
+}
+.#{$primaryStyleName}-focus,
+.v-textarea-focus {
+	border-color: #5daee8;
+}
+input.#{$primaryStyleName}-prompt,
+textarea.v-textarea-prompt {
+	color: #999;
+	font-style: normal;
+}
+.v-richtextarea {
+	border: 1px solid #b6b6b6;
+}
+.v-richtextarea .gwt-RichTextArea {
+	background: #fff url(img/bg.png) repeat-x;
+}
+
+/* Small style */
+input.#{$primaryStyleName}-small,
+input[type=text].#{$primaryStyleName}-small,
+textarea.v-textarea-small {
+	font-size: 11px;
+	height: 18px;
+	line-height: 12px;
+	padding: 1px 2px;
+}
+
+}

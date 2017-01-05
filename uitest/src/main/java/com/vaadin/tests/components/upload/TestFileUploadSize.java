@@ -29,7 +29,8 @@ public class TestFileUploadSize extends TestBase implements Receiver {
         Upload u = new Upload("Upload", new Upload.Receiver() {
 
             @Override
-            public OutputStream receiveUpload(String filename, String mimeType) {
+            public OutputStream receiveUpload(String filename,
+                    String mimeType) {
                 return baos;
             }
         });

@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
-import com.vaadin.ui.OptionGroup;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
 
@@ -31,14 +31,14 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
     }
 
     private void createIconToggle(String string) {
-        LinkedHashMap<String, ThemeResource> options = new LinkedHashMap<String, ThemeResource>();
+        LinkedHashMap<String, ThemeResource> options = new LinkedHashMap<>();
         options.put("-", null);
         options.put("16x16", ICON_16_USER_PNG_CACHEABLE);
         options.put("32x32", ICON_32_ATTENTION_PNG_CACHEABLE);
         options.put("64x64", ICON_64_EMAIL_REPLY_PNG_CACHEABLE);
 
-        createSelectAction(string, CATEGORY_DECORATIONS, options, options
-                .keySet().iterator().next(),
+        createSelectAction(string, CATEGORY_DECORATIONS, options,
+                options.keySet().iterator().next(),
                 new Command<OptionGroup, ThemeResource>() {
                     @Override
                     public void execute(OptionGroup c, ThemeResource icon,

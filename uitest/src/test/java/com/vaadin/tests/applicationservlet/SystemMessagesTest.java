@@ -29,6 +29,7 @@ public class SystemMessagesTest extends MultiBrowserTest {
         Assert.assertEquals("Incorrect notification caption,",
                 notification.getCaption(), "Internal error");
         Assert.assertEquals("Incorrect notification description,",
-                notification.getDescription(), "MessagesInfo locale: " + locale);
+                notification.getDescription(),
+                "MessagesInfo locale: " + locale);
     }
 }

@@ -3,17 +3,17 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TextFieldInLayoutInTable extends LegacyApplication {
 
     @Override
     public void init() {
 
-        final LegacyWindow mainWindow = new LegacyWindow(this.getClass()
-                .getName());
+        final LegacyWindow mainWindow = new LegacyWindow(
+                this.getClass().getName());
         setMainWindow(mainWindow);
 
         final Table table = new Table();

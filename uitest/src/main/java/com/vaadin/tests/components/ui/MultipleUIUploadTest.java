@@ -7,7 +7,7 @@ import java.io.OutputStream;
 
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -15,7 +15,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
-public class MultipleUIUploadTest extends AbstractTestUI {
+public class MultipleUIUploadTest extends AbstractReindeerTestUI {
 
     private MemoryBuffer buffer = new MemoryBuffer();
     private Upload upload;
@@ -58,8 +58,8 @@ public class MultipleUIUploadTest extends AbstractTestUI {
 
     }
 
-    public class MemoryBuffer implements StreamResource.StreamSource,
-            Upload.Receiver {
+    public class MemoryBuffer
+            implements StreamResource.StreamSource, Upload.Receiver {
         ByteArrayOutputStream outputBuffer = null;
 
         String mimeType;
@@ -97,7 +97,7 @@ public class MultipleUIUploadTest extends AbstractTestUI {
 
         /**
          * Returns the fileName.
-         * 
+         *
          * @return String
          */
         public String getFileName() {
@@ -106,7 +106,7 @@ public class MultipleUIUploadTest extends AbstractTestUI {
 
         /**
          * Returns the mimeType.
-         * 
+         *
          * @return String
          */
         public String getMimeType() {

@@ -1,14 +1,16 @@
 package com.vaadin.tests.components.gridlayout;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
 @SuppressWarnings("serial")
+@Theme("reindeer")
 public class UniformGridLayoutUI extends UI {
 
     @Override
@@ -17,13 +19,14 @@ public class UniformGridLayoutUI extends UI {
         layout.setMargin(true);
         setContent(layout);
         layout.setSpacing(true);
-        boolean hide = (request.getParameter("collapse") != null);
+        boolean hide = request.getParameter("collapse") != null;
         layout.addComponent(createGridWithoutGridBuilder(1, hide));
         layout.addComponent(createGridWithoutGridBuilder(2, hide));
         layout.addComponent(createGridWithoutGridBuilder(3, hide));
     }
 
-    private GridLayout createGridWithoutGridBuilder(int rows, boolean collapse) {
+    private GridLayout createGridWithoutGridBuilder(int rows,
+            boolean collapse) {
         GridLayout grid = new GridLayout(30, 3);
         grid.setWidth("100%");
         // grid.setMargin(true);

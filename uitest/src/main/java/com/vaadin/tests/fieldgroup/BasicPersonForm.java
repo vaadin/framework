@@ -1,15 +1,5 @@
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.converter.StringToBooleanConverter;
-import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Address;
@@ -18,13 +8,24 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitEvent;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitHandler;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.converter.StringToBooleanConverter;
+import com.vaadin.v7.data.validator.EmailValidator;
+import com.vaadin.v7.data.validator.IntegerRangeValidator;
+import com.vaadin.v7.data.validator.StringLengthValidator;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class BasicPersonForm extends AbstractTestUIWithLog {
 
@@ -60,21 +61,21 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
     private Configuration configuration = new Configuration();
 
     private class ConfigurationPanel extends Panel {
+        private CheckBox preCommitCheckBox = new CheckBox("Pre Commit Fails",
+                configuration.isPreCommitFails());
+        private CheckBox postCommitCheckBox = new CheckBox("Post Commit Fails",
+                configuration.isPostCommitFails());
 
         public ConfigurationPanel() {
             super("Configuration", new VerticalLayout());
             ((VerticalLayout) getContent()).setMargin(true);
-            BeanItem<Configuration> bi = new BeanItem<BasicPersonForm.Configuration>(
-                    configuration);
-            FieldGroup confFieldGroup = new FieldGroup(bi);
-            confFieldGroup.setItemDataSource(bi);
-            confFieldGroup.setBuffered(false);
+            preCommitCheckBox.addValueChangeListener(
+                    event -> configuration.setPreCommitFails(event.getValue()));
+            postCommitCheckBox.addValueChangeListener(event -> configuration
+                    .setPostCommitFails(event.getValue()));
 
-            for (Object propertyId : bi.getItemPropertyIds()) {
-                ((ComponentContainer) getContent()).addComponent(confFieldGroup
-                        .buildAndBind(propertyId));
-            }
-
+            ((ComponentContainer) getContent()).addComponents(preCommitCheckBox,
+                    postCommitCheckBox);
         }
     }
 
@@ -84,7 +85,7 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         Panel confPanel = new ConfigurationPanel();
         addComponent(confPanel);
 
-        final FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
+        final FieldGroup fieldGroup = new BeanFieldGroup<>(Person.class);
         fieldGroup.addCommitHandler(new CommitHandler() {
 
             @Override
@@ -180,7 +181,7 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         });
         Person p = new Person("John", "Doe", "john@doe.com", 64, Sex.MALE,
                 new Address("John street", 11223, "John's town", Country.USA));
-        fieldGroup.setItemDataSource(new BeanItem<Person>(p));
+        fieldGroup.setItemDataSource(new BeanItem<>(p));
     }
 
     @SuppressWarnings("unchecked")
@@ -189,7 +190,7 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Basic Person Form";
     }
 

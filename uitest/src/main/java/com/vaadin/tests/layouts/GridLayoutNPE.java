@@ -29,7 +29,7 @@ public class GridLayoutNPE extends TestBase {
         lo.addComponent(b);
         lo.addComponent(b2);
 
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
@@ -49,7 +49,7 @@ public class GridLayoutNPE extends TestBase {
 
         });
 
-        b2.addListener(new Button.ClickListener() {
+        b2.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

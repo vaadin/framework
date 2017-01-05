@@ -1,18 +1,16 @@
 package com.vaadin.tests.containers;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class BeanItemContainerFilteringTest extends TestBase {
 
@@ -66,7 +64,7 @@ public class BeanItemContainerFilteringTest extends TestBase {
     protected void setup() {
         table = new Table();
         try {
-            container = new BeanItemContainer<TestBean>(TestBean.class);
+            container = new BeanItemContainer<>(TestBean.class);
             table.setContainerDataSource(container);
 
             table.setWidth(300, Sizeable.UNITS_PIXELS);
@@ -87,18 +85,13 @@ public class BeanItemContainerFilteringTest extends TestBase {
             vl.addComponent(filterString);
 
             final CheckBox cb = new CheckBox("Filter on value");
-            cb.addListener(new ValueChangeListener() {
-
-                @Override
-                public void valueChange(ValueChangeEvent event) {
-                    container.removeAllContainerFilters();
-                    if (((CheckBox) event.getProperty()).getValue()) {
-                        container.addContainerFilter("value", filterString
-                                .getValue().toString(), false, false);
-                    }
+            cb.addValueChangeListener(event -> {
+                container.removeAllContainerFilters();
+                if (event.getValue()) {
+                    container.addContainerFilter("value",
+                            filterString.getValue().toString(), false, false);
                 }
             });
-            cb.setImmediate(true);
             vl.addComponent(cb);
 
             nextLabel = new Label();
@@ -111,13 +104,13 @@ public class BeanItemContainerFilteringTest extends TestBase {
                     new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
-                            container.addItem(new TestBean("addItem() "
-                                    + nextToAdd, "value " + nextToAdd));
+                            container.addItem(
+                                    new TestBean("addItem() " + nextToAdd,
+                                            "value " + nextToAdd));
                             nextToAdd++;
                             nextLabel.setCaption("Next id: " + nextToAdd);
                         }
                     });
-            addItemButton.setImmediate(true);
             vl.addComponent(addItemButton);
 
             final Button addItemAfterButton = new Button("addItemAfter()",
@@ -128,19 +121,19 @@ public class BeanItemContainerFilteringTest extends TestBase {
                             if (selection == null) {
                                 return;
                             }
-                            TestBean bean = new TestBean("addItemAfter() "
-                                    + nextToAdd, "value " + nextToAdd);
+                            TestBean bean = new TestBean(
+                                    "addItemAfter() " + nextToAdd,
+                                    "value " + nextToAdd);
                             Item item = container.addItemAfter(selection, bean);
                             if (item == null) {
-                                getMainWindow().showNotification(
-                                        "Adding item after " + selection
-                                                + " failed");
+                                getMainWindow()
+                                        .showNotification("Adding item after "
+                                                + selection + " failed");
                             }
                             nextToAdd++;
                             nextLabel.setCaption("Next id: " + nextToAdd);
                         }
                     });
-            addItemAfterButton.setImmediate(true);
             vl.addComponent(addItemAfterButton);
 
             position = new TextField("Position:", "0");
@@ -150,10 +143,11 @@ public class BeanItemContainerFilteringTest extends TestBase {
                     new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
-                            int index = Integer.parseInt(position.getValue()
-                                    .toString());
-                            TestBean bean = new TestBean("addItemAt() "
-                                    + nextToAdd, "value " + nextToAdd);
+                            int index = Integer
+                                    .parseInt(position.getValue().toString());
+                            TestBean bean = new TestBean(
+                                    "addItemAt() " + nextToAdd,
+                                    "value " + nextToAdd);
                             Item item = container.addItemAt(index, bean);
                             if (item == null) {
                                 getMainWindow().showNotification(
@@ -165,7 +159,6 @@ public class BeanItemContainerFilteringTest extends TestBase {
                             nextLabel.setCaption("Next id: " + nextToAdd);
                         }
                     });
-            addItemAtButton.setImmediate(true);
             vl.addComponent(addItemAtButton);
 
             getLayout().addComponent(table);

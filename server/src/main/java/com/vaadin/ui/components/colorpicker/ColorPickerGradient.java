@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,43 +15,26 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.lang.reflect.Method;
+import java.util.Objects;
 
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientState;
 import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
-import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractField;
 
 /**
  * A component that represents a color gradient within a color picker.
- * 
+ *
  * @since 7.0.0
  */
-public class ColorPickerGradient extends AbstractComponent implements
-        ColorSelector {
-
-    private static final Method COLOR_CHANGE_METHOD;
-    static {
-        try {
-            COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
-                    "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in ColorPicker");
-        }
-    }
+public class ColorPickerGradient extends AbstractField<Color> {
 
     private ColorPickerGradientServerRpc rpc = new ColorPickerGradientServerRpc() {
 
         @Override
         public void select(int cursorX, int cursorY) {
-            x = cursorX;
-            y = cursorY;
-            color = converter.calculate(x, y);
-
-            fireColorChanged(color);
+            setValue(converter.calculate(cursorX, cursorY), true);
         }
     };
 
@@ -60,12 +43,6 @@ public class ColorPickerGradient extends AbstractComponent implements
 
     /** The foreground color. */
     private Color color;
-
-    /** The x-coordinate. */
-    private int x = 0;
-
-    /** The y-coordinate. */
-    private int y = 0;
 
     private ColorPickerGradient() {
         registerRpc(rpc);
@@ -77,7 +54,7 @@ public class ColorPickerGradient extends AbstractComponent implements
 
     /**
      * Instantiates a new color picker gradient.
-     * 
+     *
      * @param id
      *            the id
      * @param converter
@@ -89,32 +66,38 @@ public class ColorPickerGradient extends AbstractComponent implements
         this.converter = converter;
     }
 
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param color
+     *            the new color, not {@code null}
+     * @throws NullPointerException
+     *             if {@code color} is {@code null}
+     */
     @Override
-    public void setColor(Color c) {
-        color = c;
-
-        int[] coords = converter.calculate(c);
-        x = coords[0];
-        y = coords[1];
-
-        getState().cursorX = x;
-        getState().cursorY = y;
-
+    public void setValue(Color color) {
+        Objects.requireNonNull(color, "value must not be null");
+        super.setValue(color);
     }
 
     @Override
-    public void addColorChangeListener(ColorChangeListener listener) {
-        addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
+    public Color getValue() {
+        return color;
     }
 
     @Override
-    public void removeColorChangeListener(ColorChangeListener listener) {
-        removeListener(ColorChangeEvent.class, listener);
+    protected void doSetValue(Color color) {
+        this.color = color;
+        int[] coords = converter.calculate(color);
+        getState().cursorX = coords[0];
+        getState().cursorY = coords[1];
     }
 
     /**
      * Sets the background color.
-     * 
+     *
      * @param color
      *            the new background color
      */
@@ -123,22 +106,12 @@ public class ColorPickerGradient extends AbstractComponent implements
     }
 
     @Override
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * Notifies the listeners that the color has changed
-     * 
-     * @param color
-     *            The color which it changed to
-     */
-    public void fireColorChanged(Color color) {
-        fireEvent(new ColorChangeEvent(this, color));
+    protected ColorPickerGradientState getState() {
+        return (ColorPickerGradientState) super.getState();
     }
 
     @Override
-    protected ColorPickerGradientState getState() {
-        return (ColorPickerGradientState) super.getState();
+    protected ColorPickerGradientState getState(boolean markAsDirty) {
+        return (ColorPickerGradientState) super.getState(markAsDirty);
     }
 }

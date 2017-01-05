@@ -4,16 +4,16 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.v7.ui.ComboBox;
 
 public abstract class AbstractComponentDataBindingTest extends TestBase
         implements ValueChangeListener {
@@ -38,11 +38,11 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
         cb.setNullSelectionAllowed(false);
         for (Locale l : Locale.getAvailableLocales()) {
             Item i = cb.addItem(l);
-            i.getItemProperty(CAPTION).setValue(
-                    l.getDisplayName(Locale.ENGLISH));
+            i.getItemProperty(CAPTION)
+                    .setValue(l.getDisplayName(Locale.ENGLISH));
         }
-        ((Container.Sortable) cb.getContainerDataSource()).sort(
-                new Object[] { CAPTION }, new boolean[] { true });
+        ((Container.Sortable) cb.getContainerDataSource())
+                .sort(new Object[] { CAPTION }, new boolean[] { true });
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 
@@ -65,7 +65,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
 
     protected abstract void createFields();
 
-    private Set<Component> fields = new HashSet<Component>();
+    private Set<Component> fields = new HashSet<>();
 
     @Override
     protected void addComponent(Component c) {

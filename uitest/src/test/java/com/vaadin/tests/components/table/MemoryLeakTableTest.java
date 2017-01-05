@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,17 +24,17 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Test case creating and deleting table component in a loop, testing memory
  * lead in Table component. This test should not be used in auto testing.
- * 
+ *
  * To test memory consuption. Run test in debug mode. Take memory snapshot in
  * Profiler in browser before and after the loop. Compare memory consuption.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -84,9 +84,9 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
     // Method scroll in TalbeElement class has a bug
     //
     private void scrollTable(TableElement tbl, int value) {
-        WebElement actualElement = tbl.findElement(By
-                .className("v-table-body-wrapper"));
-        JavascriptExecutor js = tbl.getCommandExecutor();
+        WebElement actualElement = tbl
+                .findElement(By.className("v-table-body-wrapper"));
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("arguments[0].scrollTop = " + value, actualElement);
     }
 }

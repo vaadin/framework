@@ -4,16 +4,14 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Select;
+import com.vaadin.v7.ui.Select;
 
 public class StylingPopupOpener extends TestBase {
 
     @Override
     protected void setup() {
-        TestUtils
-                .injectCSS(
-                        getMainWindow(),
-                        ".v-filterselect-mystyle .v-filterselect-button { width: 50px; background-color: red; } ");
+        TestUtils.injectCSS(getMainWindow(),
+                ".v-filterselect-mystyle .v-filterselect-button { width: 50px; background-color: red; } ");
 
         final Select select = new Select();
         addComponent(select);
@@ -28,7 +26,7 @@ public class StylingPopupOpener extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "VFilterSelect popup opener width is not updated when the style or theme changes";
+        return "ComboBox popup opener width is not updated when the style or theme changes";
     }
 
     @Override

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,7 @@
  */
 
 /**
- * 
+ *
  */
 package com.vaadin.server;
 
@@ -35,19 +35,19 @@ import com.vaadin.ui.UI;
 /**
  * Server side service which handles locale and the transmission of locale date
  * to the client side LocaleService.
- * 
+ *
  * @since 7.1
  * @author Vaadin Ltd
  */
 public class LocaleService implements Serializable {
 
-    private UI ui;
+    private final UI ui;
 
-    private LocaleServiceState state;
+    private final LocaleServiceState state;
 
     /**
      * Creates a LocaleService bound to the given UI
-     * 
+     *
      * @since 7.1
      * @param ui
      *            The UI which owns the LocaleService
@@ -59,7 +59,7 @@ public class LocaleService implements Serializable {
 
     /**
      * Retrieves the UI this service is bound to
-     * 
+     *
      * @since 7.1
      * @return the UI for this service
      */
@@ -73,7 +73,7 @@ public class LocaleService implements Serializable {
      * {@link Locale} instances and sent to the client when needed, eliminating
      * the need to use the {@link Locale} class and all the framework behind it
      * on the client.
-     * 
+     *
      * @param locale
      *            The locale which is required on the client side
      */
@@ -94,7 +94,7 @@ public class LocaleService implements Serializable {
      * The state is transmitted inside the UI state rather than as an individual
      * entity.
      * </p>
-     * 
+     *
      * @since 7.1
      * @param markAsDirty
      *            true to mark the state as dirty
@@ -111,7 +111,7 @@ public class LocaleService implements Serializable {
 
     /**
      * Creates a LocaleData instance for transportation to the client
-     * 
+     *
      * @since 7.1
      * @param locale
      *            The locale for which to create a LocaleData object
@@ -159,21 +159,20 @@ public class LocaleService implements Serializable {
          * Date formatting (MM/DD/YYYY etc.)
          */
 
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(
-                DateFormat.SHORT, DateFormat.SHORT, locale);
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                DateFormat.SHORT, locale);
         if (!(dateFormat instanceof SimpleDateFormat)) {
-            getLogger().warning(
-                    "Unable to get default date pattern for locale "
-                            + locale.toString());
+            getLogger().warning("Unable to get default date pattern for locale "
+                    + locale.toString());
             dateFormat = new SimpleDateFormat();
         }
         final String df = ((SimpleDateFormat) dateFormat).toPattern();
 
-        int timeStart = df.indexOf("H");
+        int timeStart = df.indexOf('H');
         if (timeStart < 0) {
-            timeStart = df.indexOf("h");
+            timeStart = df.indexOf('h');
         }
-        final int ampm_first = df.indexOf("a");
+        final int ampm_first = df.indexOf('a');
         // E.g. in Korean locale AM/PM is before h:mm
         // TODO should take that into consideration on client-side as well,
         // now always h:mm a
@@ -201,14 +200,13 @@ public class LocaleService implements Serializable {
         final String timeformat = df.substring(timeStart, df.length());
         /*
          * Doesn't return second or milliseconds.
-         * 
+         *
          * We use timeformat to determine 12/24-hour clock
          */
-        final boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
+        final boolean twelve_hour_clock = timeformat.contains("a");
         // TODO there are other possibilities as well, like 'h' in french
         // (ignore them, too complicated)
-        final String hour_min_delimiter = timeformat.indexOf(".") > -1 ? "."
-                : ":";
+        final String hour_min_delimiter = timeformat.contains(".") ? "." : ":";
         // outWriter.print("\"tf\":\"" + timeformat + "\",");
         localeData.twelveHourClock = twelve_hour_clock;
         localeData.hourMinuteDelimiter = hour_min_delimiter;

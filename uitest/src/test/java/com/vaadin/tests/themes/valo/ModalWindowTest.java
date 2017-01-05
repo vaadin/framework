@@ -1,14 +1,15 @@
 package com.vaadin.tests.themes.valo;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
+
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.ModalWindow;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Test;
-import org.openqa.selenium.WebElement;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 public class ModalWindowTest extends SingleBrowserTest {
 
@@ -23,8 +24,8 @@ public class ModalWindowTest extends SingleBrowserTest {
 
         openModalWindow();
 
-        WebElement modalityCurtain = findElement(By
-                .className("v-window-modalitycurtain"));
+        WebElement modalityCurtain = findElement(
+                By.className("v-window-modalitycurtain"));
 
         assertThat(modalityCurtain.getCssValue("-webkit-animation-name"),
                 is("none"));

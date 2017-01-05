@@ -3,15 +3,15 @@ package com.vaadin.tests.components.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
-public class ColumnWidthsAfterChangeTableColumnsCountOrOrder extends
-        AbstractTestUI {
+public class ColumnWidthsAfterChangeTableColumnsCountOrOrder
+        extends AbstractReindeerTestUI {
 
     protected static final String BUTTON_CHANGE_ORDER_AND_WIDTH_ID = "buttonChangeOrderAndWidth";
     protected static final String BUTTON_CHANGE_COLUMN_COUNT_AND_WIDTH = "buttonChangeColumnCountAndWidth";
@@ -19,14 +19,14 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder extends
 
     @Override
     protected void setup(VaadinRequest request) {
-        List<TestBean> beanList = new ArrayList<TestBean>();
+        List<TestBean> beanList = new ArrayList<>();
         beanList.add(new TestBean(1, "name1", "descr1"));
         beanList.add(new TestBean(2, "name2", "descr2"));
         beanList.add(new TestBean(3, "name3", "descr3"));
         beanList.add(new TestBean(4, "name4", "descr4"));
         beanList.add(new TestBean(5, "name5", "descr5"));
 
-        BeanItemContainer<TestBean> container = new BeanItemContainer<TestBean>(
+        BeanItemContainer<TestBean> container = new BeanItemContainer<>(
                 TestBean.class, beanList);
 
         VerticalLayout layout = new VerticalLayout();
@@ -40,8 +40,8 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder extends
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent clickEvent) {
-                        table.setVisibleColumns(new Object[] { "name", "descr",
-                                "id" });
+                        table.setVisibleColumns(
+                                new Object[] { "name", "descr", "id" });
                         table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
                     }
                 });
@@ -51,7 +51,8 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder extends
                 "Change columns count and width", new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent clickEvent) {
-                        table.setVisibleColumns(new Object[] { "name", "descr" });
+                        table.setVisibleColumns(
+                                new Object[] { "name", "descr" });
                         table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
                     }
                 });

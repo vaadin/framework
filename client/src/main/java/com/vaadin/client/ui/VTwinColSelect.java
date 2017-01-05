@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,13 +17,18 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
@@ -33,55 +38,87 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.Focusable;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
+import com.vaadin.client.connectors.AbstractMultiSelectConnector.MultiSelectWidget;
+import com.vaadin.shared.Registration;
 
-public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
+import elemental.json.JsonObject;
+
+/**
+ * A list builder widget that has two selects; one for selectable options,
+ * another for selected options, and buttons for selecting and deselecting the
+ * items.
+ *
+ * @author Vaadin Ltd
+ */
+public class VTwinColSelect extends Composite implements MultiSelectWidget,
+        Field, ClickHandler, Focusable, HasEnabled, KeyDownHandler,
         MouseDownHandler, DoubleClickHandler, SubPartAware {
 
+    private static final String SUBPART_OPTION_SELECT = "leftSelect";
+    private static final String SUBPART_OPTION_SELECT_ITEM = SUBPART_OPTION_SELECT
+            + "-item";
+    private static final String SUBPART_SELECTION_SELECT = "rightSelect";
+    private static final String SUBPART_SELECTION_SELECT_ITEM = SUBPART_SELECTION_SELECT
+            + "-item";
+    private static final String SUBPART_LEFT_CAPTION = "leftCaption";
+    private static final String SUBPART_RIGHT_CAPTION = "rightCaption";
+    private static final String SUBPART_ADD_BUTTON = "add";
+    private static final String SUBPART_REMOVE_BUTTON = "remove";
+
+    /** Primary style name for twin col select. */
     public static final String CLASSNAME = "v-select-twincol";
 
     private static final int VISIBLE_COUNT = 10;
 
     private static final int DEFAULT_COLUMN_COUNT = 10;
 
-    private final DoubleClickListBox options;
+    private final DoubleClickListBox optionsListBox;
 
-    private final DoubleClickListBox selections;
+    private final DoubleClickListBox selectionsListBox;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public FlowPanel captionWrapper;
+    private final FlowPanel optionsContainer;
 
-    private HTML optionsCaption = null;
+    private final FlowPanel captionWrapper;
 
-    private HTML selectionsCaption = null;
+    private final VButton addItemsLeftToRightButton;
 
-    private final VButton add;
-
-    private final VButton remove;
+    private final VButton removeItemsRightToLeftButton;
 
     private final FlowPanel buttons;
 
     private final Panel panel;
 
-    /**
-     * A ListBox which catches double clicks
-     * 
-     */
-    public class DoubleClickListBox extends ListBox implements
-            HasDoubleClickHandlers {
-        public DoubleClickListBox(boolean isMultipleSelect) {
-            super(isMultipleSelect);
-        }
+    private HTML optionsCaption = null;
 
+    private HTML selectionsCaption = null;
+
+    private List<BiConsumer<Set<String>, Set<String>>> selectionChangeListeners;
+
+    private boolean enabled;
+    private boolean readOnly;
+
+    private int rows = 0;
+
+    /**
+     * A multiselect ListBox which catches double clicks.
+     */
+    public class DoubleClickListBox extends ListBox
+            implements HasDoubleClickHandlers {
+        /**
+         * Constructs a new DoubleClickListBox.
+         */
         public DoubleClickListBox() {
-            super();
+            setMultipleSelect(true);
         }
 
         @Override
@@ -91,33 +128,40 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         }
     }
 
+    /**
+     * Constructs a new VTwinColSelect.
+     */
     public VTwinColSelect() {
-        super(CLASSNAME);
+        selectionChangeListeners = new ArrayList<>();
+
+        optionsContainer = new FlowPanel();
+        initWidget(optionsContainer);
+        optionsContainer.setStyleName(CLASSNAME);
 
         captionWrapper = new FlowPanel();
 
-        options = new DoubleClickListBox();
-        options.addClickHandler(this);
-        options.addDoubleClickHandler(this);
-        options.setVisibleItemCount(VISIBLE_COUNT);
-        options.setStyleName(CLASSNAME + "-options");
+        optionsListBox = new DoubleClickListBox();
+        optionsListBox.addClickHandler(this);
+        optionsListBox.addDoubleClickHandler(this);
+        optionsListBox.setVisibleItemCount(VISIBLE_COUNT);
+        optionsListBox.setStyleName(CLASSNAME + "-options");
 
-        selections = new DoubleClickListBox();
-        selections.addClickHandler(this);
-        selections.addDoubleClickHandler(this);
-        selections.setVisibleItemCount(VISIBLE_COUNT);
-        selections.setStyleName(CLASSNAME + "-selections");
+        selectionsListBox = new DoubleClickListBox();
+        selectionsListBox.addClickHandler(this);
+        selectionsListBox.addDoubleClickHandler(this);
+        selectionsListBox.setVisibleItemCount(VISIBLE_COUNT);
+        selectionsListBox.setStyleName(CLASSNAME + "-selections");
 
         buttons = new FlowPanel();
         buttons.setStyleName(CLASSNAME + "-buttons");
-        add = new VButton();
-        add.setText(">>");
-        add.addClickHandler(this);
-        remove = new VButton();
-        remove.setText("<<");
-        remove.addClickHandler(this);
+        addItemsLeftToRightButton = new VButton();
+        addItemsLeftToRightButton.setText(">>");
+        addItemsLeftToRightButton.addClickHandler(this);
+        removeItemsRightToLeftButton = new VButton();
+        removeItemsRightToLeftButton.setText("<<");
+        removeItemsRightToLeftButton.addClickHandler(this);
 
-        panel = ((Panel) optionsContainer);
+        panel = optionsContainer;
 
         panel.add(captionWrapper);
         captionWrapper.getElement().getStyle().setOverflow(Overflow.HIDDEN);
@@ -125,25 +169,30 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         // extra empty space
         captionWrapper.setVisible(false);
 
-        panel.add(options);
-        buttons.add(add);
+        panel.add(optionsListBox);
+        buttons.add(addItemsLeftToRightButton);
         final HTML br = new HTML("<span/>");
         br.setStyleName(CLASSNAME + "-deco");
         buttons.add(br);
-        buttons.add(remove);
+        buttons.add(removeItemsRightToLeftButton);
         panel.add(buttons);
-        panel.add(selections);
+        panel.add(selectionsListBox);
 
-        options.addKeyDownHandler(this);
-        options.addMouseDownHandler(this);
+        optionsListBox.addKeyDownHandler(this);
+        optionsListBox.addMouseDownHandler(this);
 
-        selections.addMouseDownHandler(this);
-        selections.addKeyDownHandler(this);
+        selectionsListBox.addMouseDownHandler(this);
+        selectionsListBox.addKeyDownHandler(this);
 
         updateEnabledState();
     }
 
-    public HTML getOptionsCaption() {
+    /**
+     * Gets the options caption HTML Widget.
+     *
+     * @return the options caption widget
+     */
+    protected HTML getOptionsCaption() {
         if (optionsCaption == null) {
             optionsCaption = new HTML();
             optionsCaption.setStyleName(CLASSNAME + "-caption-left");
@@ -155,7 +204,12 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         return optionsCaption;
     }
 
-    public HTML getSelectionsCaption() {
+    /**
+     * Gets the selections caption HTML widget.
+     *
+     * @return the selections caption widget
+     */
+    protected HTML getSelectionsCaption() {
         if (selectionsCaption == null) {
             selectionsCaption = new HTML();
             selectionsCaption.setStyleName(CLASSNAME + "-caption-right");
@@ -167,18 +221,51 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         return selectionsCaption;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public void updateCaptions(UIDL uidl) {
-        String leftCaption = (uidl
-                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION) ? uidl
-                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
-                : null);
-        String rightCaption = (uidl
-                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION) ? uidl
-                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
-                : null);
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @return the caption wrapper widget
+     */
+    public Widget getCaptionWrapper() {
+        return captionWrapper;
+    }
 
-        boolean hasCaptions = (leftCaption != null || rightCaption != null);
+    /**
+     * Sets the number of visible items for the list boxes.
+     *
+     * @param rows
+     *            the number of items to show
+     * @see ListBox#setVisibleItemCount(int)
+     */
+    public void setRows(int rows) {
+        if (this.rows != rows) {
+            this.rows = rows;
+            optionsListBox.setVisibleItemCount(rows);
+            selectionsListBox.setVisibleItemCount(rows);
+        }
+    }
+
+    /**
+     * Returns the number of visible items for the list boxes.
+     *
+     * @return the number of items to show
+     * @see ListBox#setVisibleItemCount(int)
+     */
+    public int getRows() {
+        return rows;
+    }
+
+    /**
+     * Updates the captions above the left (options) and right (selections)
+     * columns. {code null} value clear the caption.
+     *
+     * @param leftCaption
+     *            the left caption to set, or {@code null} to clear
+     * @param rightCaption
+     *            the right caption to set, or {@code null} to clear
+     */
+    public void updateCaptions(String leftCaption, String rightCaption) {
+        boolean hasCaptions = leftCaption != null || rightCaption != null;
 
         if (leftCaption == null) {
             removeOptionsCaption();
@@ -221,39 +308,45 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     @Override
-    public void buildOptions(UIDL uidl) {
-        options.setMultipleSelect(isMultiselect());
-        selections.setMultipleSelect(isMultiselect());
-        options.clear();
-        selections.clear();
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
-            if (optionUidl.hasAttribute("selected")) {
-                selections.addItem(optionUidl.getStringAttribute("caption"),
-                        optionUidl.getStringAttribute("key"));
-            } else {
-                options.addItem(optionUidl.getStringAttribute("caption"),
-                        optionUidl.getStringAttribute("key"));
-            }
-        }
-
-        if (getRows() > 0) {
-            options.setVisibleItemCount(getRows());
-            selections.setVisibleItemCount(getRows());
-
-        }
+    public Registration addSelectionChangeListener(
+            BiConsumer<Set<String>, Set<String>> listener) {
+        Objects.nonNull(listener);
+        selectionChangeListeners.add(listener);
+        return (Registration) () -> selectionChangeListeners.remove(listener);
     }
 
     @Override
-    protected String[] getSelectedItems() {
-        final ArrayList<String> selectedItemKeys = new ArrayList<String>();
-        for (int i = 0; i < selections.getItemCount(); i++) {
-            selectedItemKeys.add(selections.getValue(i));
-        }
-        return selectedItemKeys.toArray(new String[selectedItemKeys.size()]);
+    public void setItems(List<JsonObject> items) {
+        // filter selected items
+        List<JsonObject> selection = items.stream()
+                .filter(item -> MultiSelectWidget.isSelected(item))
+                .collect(Collectors.toList());
+        items.removeAll(selection);
+
+        updateListBox(optionsListBox, items);
+        updateListBox(selectionsListBox, selection);
     }
 
-    private boolean[] getSelectionBitmap(ListBox listBox) {
+    private static void updateListBox(ListBox listBox,
+            List<JsonObject> options) {
+        for (int i = 0; i < options.size(); i++) {
+            final JsonObject item = options.get(i);
+            // reuse existing option if possible
+            if (i < listBox.getItemCount()) {
+                listBox.setItemText(i, MultiSelectWidget.getCaption(item));
+                listBox.setValue(i, MultiSelectWidget.getKey(item));
+            } else {
+                listBox.addItem(MultiSelectWidget.getCaption(item),
+                        MultiSelectWidget.getKey(item));
+            }
+        }
+        // remove extra
+        for (int i = listBox.getItemCount() - 1; i >= options.size(); i--) {
+            listBox.removeItem(i);
+        }
+    }
+
+    private static boolean[] getSelectionBitmap(ListBox listBox) {
         final boolean[] selectedIndexes = new boolean[listBox.getItemCount()];
         for (int i = 0; i < listBox.getItemCount(); i++) {
             if (listBox.isItemSelected(i)) {
@@ -265,28 +358,24 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         return selectedIndexes;
     }
 
-    private void addItem() {
-        Set<String> movedItems = moveSelectedItems(options, selections);
-        selectedKeys.addAll(movedItems);
-
-        client.updateVariable(paintableId, "selected",
-                selectedKeys.toArray(new String[selectedKeys.size()]),
-                isImmediate());
+    private void moveSelectedItemsLeftToRight() {
+        Set<String> movedItems = moveSelectedItems(optionsListBox,
+                selectionsListBox);
+        selectionChangeListeners
+                .forEach(e -> e.accept(movedItems, Collections.emptySet()));
     }
 
-    private void removeItem() {
-        Set<String> movedItems = moveSelectedItems(selections, options);
-        selectedKeys.removeAll(movedItems);
-
-        client.updateVariable(paintableId, "selected",
-                selectedKeys.toArray(new String[selectedKeys.size()]),
-                isImmediate());
+    private void moveSelectedItemsRightToLeft() {
+        Set<String> movedItems = moveSelectedItems(selectionsListBox,
+                optionsListBox);
+        selectionChangeListeners
+                .forEach(e -> e.accept(Collections.emptySet(), movedItems));
     }
 
-    private Set<String> moveSelectedItems(ListBox source, ListBox target) {
+    private static Set<String> moveSelectedItems(ListBox source,
+            ListBox target) {
         final boolean[] sel = getSelectionBitmap(source);
-        final Set<String> movedItems = new HashSet<String>();
-        int lastSelected = 0;
+        final Set<String> movedItems = new HashSet<>();
         for (int i = 0; i < sel.length; i++) {
             if (sel[i]) {
                 final int optionIndex = i
@@ -299,15 +388,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
                 target.addItem(text, value);
                 target.setItemSelected(target.getItemCount() - 1, true);
                 source.removeItem(optionIndex);
-
-                if (source.getItemCount() > 0) {
-                    lastSelected = optionIndex > 0 ? optionIndex - 1 : 0;
-                }
             }
-        }
-
-        if (source.getItemCount() > 0) {
-            source.setSelectedIndex(lastSelected);
         }
 
         // If no items are left move the focus to the selections
@@ -322,32 +403,29 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     @Override
     public void onClick(ClickEvent event) {
-        super.onClick(event);
-        if (event.getSource() == add) {
-            addItem();
-
-        } else if (event.getSource() == remove) {
-            removeItem();
-
-        } else if (event.getSource() == options) {
+        if (event.getSource() == addItemsLeftToRightButton) {
+            moveSelectedItemsLeftToRight();
+        } else if (event.getSource() == removeItemsRightToLeftButton) {
+            moveSelectedItemsRightToLeft();
+        } else if (event.getSource() == optionsListBox) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
-            final int c = selections.getItemCount();
-            for (int i = 0; i < c; i++) {
-                selections.setItemSelected(i, false);
+            final int count = selectionsListBox.getItemCount();
+            for (int i = 0; i < count; i++) {
+                selectionsListBox.setItemSelected(i, false);
             }
-        } else if (event.getSource() == selections) {
+        } else if (event.getSource() == selectionsListBox) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
-            final int c = options.getItemCount();
-            for (int i = 0; i < c; i++) {
-                options.setItemSelected(i, false);
+            final int count = optionsListBox.getItemCount();
+            for (int i = 0; i < count; i++) {
+                optionsListBox.setItemSelected(i, false);
             }
         }
     }
 
     /** For internal use only. May be removed or replaced in the future. */
     public void clearInternalHeights() {
-        selections.setHeight("");
-        options.setHeight("");
+        selectionsListBox.setHeight("");
+        optionsListBox.setHeight("");
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -355,136 +433,165 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         int captionHeight = WidgetUtil.getRequiredHeight(captionWrapper);
         int totalHeight = getOffsetHeight();
 
-        String selectHeight = (totalHeight - captionHeight) + "px";
+        String selectHeight = totalHeight - captionHeight + "px";
 
-        selections.setHeight(selectHeight);
-        options.setHeight(selectHeight);
+        selectionsListBox.setHeight(selectHeight);
+        optionsListBox.setHeight(selectHeight);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
     public void clearInternalWidths() {
-        int cols = -1;
-        if (getColumns() > 0) {
-            cols = getColumns();
-        } else {
-            cols = DEFAULT_COLUMN_COUNT;
-        }
+        String colWidth = DEFAULT_COLUMN_COUNT + "em";
+        String containerWidth = 2 * DEFAULT_COLUMN_COUNT + 4 + "em";
+        // Caption wrapper width == optionsSelect + buttons +
+        // selectionsSelect
+        String captionWrapperWidth = 2 * DEFAULT_COLUMN_COUNT + 4 - 0.5 + "em";
 
-        if (cols >= 0) {
-            String colWidth = cols + "em";
-            String containerWidth = (2 * cols + 4) + "em";
-            // Caption wrapper width == optionsSelect + buttons +
-            // selectionsSelect
-            String captionWrapperWidth = (2 * cols + 4 - 0.5) + "em";
-
-            options.setWidth(colWidth);
-            if (optionsCaption != null) {
-                optionsCaption.setWidth(colWidth);
-            }
-            selections.setWidth(colWidth);
-            if (selectionsCaption != null) {
-                selectionsCaption.setWidth(colWidth);
-            }
-            buttons.setWidth("3.5em");
-            optionsContainer.setWidth(containerWidth);
-            captionWrapper.setWidth(captionWrapperWidth);
+        optionsListBox.setWidth(colWidth);
+        if (optionsCaption != null) {
+            optionsCaption.setWidth(colWidth);
         }
+        selectionsListBox.setWidth(colWidth);
+        if (selectionsCaption != null) {
+            selectionsCaption.setWidth(colWidth);
+        }
+        buttons.setWidth("3.5em");
+        optionsContainer.setWidth(containerWidth);
+        captionWrapper.setWidth(captionWrapperWidth);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
     public void setInternalWidths() {
         getElement().getStyle().setPosition(Position.RELATIVE);
-        int bordersAndPaddings = WidgetUtil.measureHorizontalPaddingAndBorder(
-                buttons.getElement(), 0);
+        int bordersAndPaddings = WidgetUtil
+                .measureHorizontalPaddingAndBorder(buttons.getElement(), 0);
 
         int buttonWidth = WidgetUtil.getRequiredWidth(buttons);
         int totalWidth = getOffsetWidth();
 
-        int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings) / 2;
+        int spaceForSelect = (totalWidth - buttonWidth - bordersAndPaddings)
+                / 2;
 
-        options.setWidth(spaceForSelect + "px");
+        optionsListBox.setWidth(spaceForSelect + "px");
         if (optionsCaption != null) {
             optionsCaption.setWidth(spaceForSelect + "px");
         }
 
-        selections.setWidth(spaceForSelect + "px");
+        selectionsListBox.setWidth(spaceForSelect + "px");
         if (selectionsCaption != null) {
             selectionsCaption.setWidth(spaceForSelect + "px");
         }
         captionWrapper.setWidth("100%");
     }
 
-    @Override
+    /**
+     * Sets the tab index.
+     *
+     * @param tabIndex
+     *            the tab index to set
+     */
     public void setTabIndex(int tabIndex) {
-        options.setTabIndex(tabIndex);
-        selections.setTabIndex(tabIndex);
-        add.setTabIndex(tabIndex);
-        remove.setTabIndex(tabIndex);
+        optionsListBox.setTabIndex(tabIndex);
+        selectionsListBox.setTabIndex(tabIndex);
+        addItemsLeftToRightButton.setTabIndex(tabIndex);
+        removeItemsRightToLeftButton.setTabIndex(tabIndex);
+    }
+
+    /**
+     * Sets this twin column select as read only, meaning selection cannot be
+     * changed.
+     *
+     * @param readOnly
+     *            {@code true} for read only, {@code false} for not read only
+     */
+    public void setReadOnly(boolean readOnly) {
+        if (this.readOnly != readOnly) {
+            this.readOnly = readOnly;
+            updateEnabledState();
+        }
+    }
+
+    /**
+     * Returns {@code true} if this twin column select is in read only mode,
+     * {@code false} if not.
+     *
+     * @return {@code true} for read only, {@code false} for not read only
+     */
+    public boolean isReadOnly() {
+        return readOnly;
     }
 
     @Override
-    public void updateEnabledState() {
-        boolean enabled = isEnabled() && !isReadonly();
-        options.setEnabled(enabled);
-        selections.setEnabled(enabled);
-        add.setEnabled(enabled);
-        remove.setEnabled(enabled);
-        add.setStyleName(StyleConstants.DISABLED, !enabled);
-        remove.setStyleName(StyleConstants.DISABLED, !enabled);
+    public void setEnabled(boolean enabled) {
+        if (this.enabled != enabled) {
+            this.enabled = enabled;
+            updateEnabledState();
+        }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    private void updateEnabledState() {
+        boolean enabled = isEnabled() && !isReadOnly();
+        optionsListBox.setEnabled(enabled);
+        selectionsListBox.setEnabled(enabled);
+        addItemsLeftToRightButton.setEnabled(enabled);
+        removeItemsRightToLeftButton.setEnabled(enabled);
+        addItemsLeftToRightButton.setStyleName(StyleConstants.DISABLED,
+                !enabled);
+        removeItemsRightToLeftButton.setStyleName(StyleConstants.DISABLED,
+                !enabled);
     }
 
     @Override
     public void focus() {
-        options.setFocus(true);
+        optionsListBox.setFocus(true);
     }
 
     /**
      * Get the key that selects an item in the table. By default it is the Enter
      * key but by overriding this you can change the key to whatever you want.
-     * 
-     * @return
+     *
+     * @return the key that selects an item
      */
     protected int getNavigationSelectKey() {
         return KeyCodes.KEY_ENTER;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
-     * .event.dom.client.KeyDownEvent)
-     */
     @Override
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeKeyCode();
 
         // Catch tab and move between select:s
-        if (keycode == KeyCodes.KEY_TAB && event.getSource() == options) {
+        if (keycode == KeyCodes.KEY_TAB
+                && event.getSource() == optionsListBox) {
             // Prevent default behavior
             event.preventDefault();
 
             // Remove current selections
-            for (int i = 0; i < options.getItemCount(); i++) {
-                options.setItemSelected(i, false);
+            for (int i = 0; i < optionsListBox.getItemCount(); i++) {
+                optionsListBox.setItemSelected(i, false);
             }
 
             // Focus selections
-            selections.setFocus(true);
+            selectionsListBox.setFocus(true);
         }
 
         if (keycode == KeyCodes.KEY_TAB && event.isShiftKeyDown()
-                && event.getSource() == selections) {
+                && event.getSource() == selectionsListBox) {
             // Prevent default behavior
             event.preventDefault();
 
             // Remove current selections
-            for (int i = 0; i < selections.getItemCount(); i++) {
-                selections.setItemSelected(i, false);
+            for (int i = 0; i < selectionsListBox.getItemCount(); i++) {
+                selectionsListBox.setItemSelected(i, false);
             }
 
             // Focus options
-            options.setFocus(true);
+            optionsListBox.setFocus(true);
         }
 
         if (keycode == getNavigationSelectKey()) {
@@ -492,96 +599,72 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             event.preventDefault();
 
             // Decide which select the selection was made in
-            if (event.getSource() == options) {
+            if (event.getSource() == optionsListBox) {
                 // Prevents the selection to become a single selection when
                 // using Enter key
                 // as the selection key (default)
-                options.setFocus(false);
+                optionsListBox.setFocus(false);
 
-                addItem();
+                moveSelectedItemsLeftToRight();
 
-            } else if (event.getSource() == selections) {
+            } else if (event.getSource() == selectionsListBox) {
                 // Prevents the selection to become a single selection when
                 // using Enter key
                 // as the selection key (default)
-                selections.setFocus(false);
+                selectionsListBox.setFocus(false);
 
-                removeItem();
+                moveSelectedItemsRightToLeft();
             }
         }
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
-     * .gwt.event.dom.client.MouseDownEvent)
-     */
     @Override
     public void onMouseDown(MouseDownEvent event) {
         // Ensure that items are deselected when selecting
         // from a different source. See #3699 for details.
-        if (event.getSource() == options) {
-            for (int i = 0; i < selections.getItemCount(); i++) {
-                selections.setItemSelected(i, false);
+        if (event.getSource() == optionsListBox) {
+            for (int i = 0; i < selectionsListBox.getItemCount(); i++) {
+                selectionsListBox.setItemSelected(i, false);
             }
-        } else if (event.getSource() == selections) {
-            for (int i = 0; i < options.getItemCount(); i++) {
-                options.setItemSelected(i, false);
+        } else if (event.getSource() == selectionsListBox) {
+            for (int i = 0; i < optionsListBox.getItemCount(); i++) {
+                optionsListBox.setItemSelected(i, false);
             }
         }
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.
-     * google.gwt.event.dom.client.DoubleClickEvent)
-     */
     @Override
     public void onDoubleClick(DoubleClickEvent event) {
-        if (event.getSource() == options) {
-            addItem();
-            options.setSelectedIndex(-1);
-            options.setFocus(false);
-        } else if (event.getSource() == selections) {
-            removeItem();
-            selections.setSelectedIndex(-1);
-            selections.setFocus(false);
+        if (event.getSource() == optionsListBox) {
+            moveSelectedItemsLeftToRight();
+            optionsListBox.setSelectedIndex(-1);
+            optionsListBox.setFocus(false);
+        } else if (event.getSource() == selectionsListBox) {
+            moveSelectedItemsRightToLeft();
+            selectionsListBox.setSelectedIndex(-1);
+            selectionsListBox.setFocus(false);
         }
 
     }
 
-    private static final String SUBPART_OPTION_SELECT = "leftSelect";
-    private static final String SUBPART_OPTION_SELECT_ITEM = SUBPART_OPTION_SELECT
-            + "-item";
-    private static final String SUBPART_SELECTION_SELECT = "rightSelect";
-    private static final String SUBPART_SELECTION_SELECT_ITEM = SUBPART_SELECTION_SELECT
-            + "-item";
-    private static final String SUBPART_LEFT_CAPTION = "leftCaption";
-    private static final String SUBPART_RIGHT_CAPTION = "rightCaption";
-    private static final String SUBPART_ADD_BUTTON = "add";
-    private static final String SUBPART_REMOVE_BUTTON = "remove";
-
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (SUBPART_OPTION_SELECT.equals(subPart)) {
-            return options.getElement();
+            return optionsListBox.getElement();
         } else if (subPart.startsWith(SUBPART_OPTION_SELECT_ITEM)) {
             String idx = subPart.substring(SUBPART_OPTION_SELECT_ITEM.length());
-            return (com.google.gwt.user.client.Element) options.getElement()
-                    .getChild(Integer.parseInt(idx));
+            return (com.google.gwt.user.client.Element) optionsListBox
+                    .getElement().getChild(Integer.parseInt(idx));
         } else if (SUBPART_SELECTION_SELECT.equals(subPart)) {
-            return selections.getElement();
+            return selectionsListBox.getElement();
         } else if (subPart.startsWith(SUBPART_SELECTION_SELECT_ITEM)) {
-            String idx = subPart.substring(SUBPART_SELECTION_SELECT_ITEM
-                    .length());
-            return (com.google.gwt.user.client.Element) selections.getElement()
-                    .getChild(Integer.parseInt(idx));
+            String idx = subPart
+                    .substring(SUBPART_SELECTION_SELECT_ITEM.length());
+            return (com.google.gwt.user.client.Element) selectionsListBox
+                    .getElement().getChild(Integer.parseInt(idx));
         } else if (optionsCaption != null
                 && SUBPART_LEFT_CAPTION.equals(subPart)) {
             return optionsCaption.getElement();
@@ -589,39 +672,42 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
                 && SUBPART_RIGHT_CAPTION.equals(subPart)) {
             return selectionsCaption.getElement();
         } else if (SUBPART_ADD_BUTTON.equals(subPart)) {
-            return add.getElement();
+            return addItemsLeftToRightButton.getElement();
         } else if (SUBPART_REMOVE_BUTTON.equals(subPart)) {
-            return remove.getElement();
+            return removeItemsRightToLeftButton.getElement();
         }
 
         return null;
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (optionsCaption != null
                 && optionsCaption.getElement().isOrHasChild(subElement)) {
             return SUBPART_LEFT_CAPTION;
         } else if (selectionsCaption != null
                 && selectionsCaption.getElement().isOrHasChild(subElement)) {
             return SUBPART_RIGHT_CAPTION;
-        } else if (options.getElement().isOrHasChild(subElement)) {
-            if (options.getElement() == subElement) {
+        } else if (optionsListBox.getElement().isOrHasChild(subElement)) {
+            if (optionsListBox.getElement() == subElement) {
                 return SUBPART_OPTION_SELECT;
             } else {
                 int idx = WidgetUtil.getChildElementIndex(subElement);
                 return SUBPART_OPTION_SELECT_ITEM + idx;
             }
-        } else if (selections.getElement().isOrHasChild(subElement)) {
-            if (selections.getElement() == subElement) {
+        } else if (selectionsListBox.getElement().isOrHasChild(subElement)) {
+            if (selectionsListBox.getElement() == subElement) {
                 return SUBPART_SELECTION_SELECT;
             } else {
                 int idx = WidgetUtil.getChildElementIndex(subElement);
                 return SUBPART_SELECTION_SELECT_ITEM + idx;
             }
-        } else if (add.getElement().isOrHasChild(subElement)) {
+        } else if (addItemsLeftToRightButton.getElement()
+                .isOrHasChild(subElement)) {
             return SUBPART_ADD_BUTTON;
-        } else if (remove.getElement().isOrHasChild(subElement)) {
+        } else if (removeItemsRightToLeftButton.getElement()
+                .isOrHasChild(subElement)) {
             return SUBPART_REMOVE_BUTTON;
         }
 

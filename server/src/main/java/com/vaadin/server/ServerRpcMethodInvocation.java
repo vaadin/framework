@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import com.vaadin.shared.communication.ServerRpc;
 
 public class ServerRpcMethodInvocation extends MethodInvocation {
 
-    private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<String, Method>(
+    private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<>(
             128, 0.75f, 1);
 
     private final Method method;
@@ -55,7 +55,7 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
      * Tries to find the method from the cache or alternatively by invoking
      * {@link #doFindInvocationMethod(Class, String, int)} and updating the
      * cache.
-     * 
+     *
      * @param targetType
      * @param methodName
      * @param parameterCount
@@ -90,7 +90,7 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
     /**
      * Tries to find the method from the class by looping through available
      * methods.
-     * 
+     *
      * @param targetType
      * @param methodName
      * @param parameterCount

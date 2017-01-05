@@ -34,22 +34,32 @@
         <module organisation="com.vaadin" name="vaadin-testbench-core"
             resolver="vaadin-addons" />
         <module organisation="com.vaadin" name="vaadin-testbench-api"
-            resolver="vaadin-addons" />
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-buildhelpers"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-root"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-shared"
             resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-shared"
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-server"
             resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-server"
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-client"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiler"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-client-compiled"
             resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-client-compiled"
+            resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-themes"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-themes"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-push"
             resolver="vaadin-maven" />
@@ -58,6 +68,8 @@
         <module organisation="com.vaadin" name="vaadin-bom"
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-liferay"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-uitest-common"
             resolver="vaadin-maven" />
     </modules>
 

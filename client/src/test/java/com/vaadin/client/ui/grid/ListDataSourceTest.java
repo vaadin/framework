@@ -32,7 +32,7 @@ public class ListDataSourceTest {
     @Test
     public void testDataSourceConstruction() throws Exception {
 
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
 
         assertEquals(4, ds.size());
         assertEquals(0, (int) ds.getRow(0));
@@ -40,7 +40,7 @@ public class ListDataSourceTest {
         assertEquals(2, (int) ds.getRow(2));
         assertEquals(3, (int) ds.getRow(3));
 
-        ds = new ListDataSource<Integer>(Arrays.asList(0, 1, 2, 3));
+        ds = new ListDataSource<>(Arrays.asList(0, 1, 2, 3));
 
         assertEquals(4, ds.size());
         assertEquals(0, (int) ds.getRow(0));
@@ -52,11 +52,11 @@ public class ListDataSourceTest {
     @Test
     public void testListAddOperation() throws Exception {
 
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataAdded(4, 1);
         EasyMock.expectLastCall();
@@ -76,11 +76,11 @@ public class ListDataSourceTest {
     @Test
     public void testListAddAllOperation() throws Exception {
 
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataAdded(4, 3);
         EasyMock.expectLastCall();
@@ -102,11 +102,11 @@ public class ListDataSourceTest {
     @Test
     public void testListRemoveOperation() throws Exception {
 
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataRemoved(3, 1);
         EasyMock.expectLastCall();
@@ -124,11 +124,11 @@ public class ListDataSourceTest {
     @Test
     public void testListRemoveAllOperation() throws Exception {
 
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataRemoved(0, 3);
         EasyMock.expectLastCall();
@@ -144,11 +144,11 @@ public class ListDataSourceTest {
     @Test
     public void testListClearOperation() throws Exception {
 
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
 
         DataChangeHandler handler = EasyMock
                 .createNiceMock(DataChangeHandler.class);
-        ds.setDataChangeHandler(handler);
+        ds.addDataChangeHandler(handler);
 
         handler.dataRemoved(0, 4);
         EasyMock.expectLastCall();
@@ -162,19 +162,19 @@ public class ListDataSourceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testFetchingNonExistantItem() {
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
         ds.ensureAvailability(5, 1);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testUnsupportedIteratorRemove() {
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(0, 1, 2, 3);
+        ListDataSource<Integer> ds = new ListDataSource<>(0, 1, 2, 3);
         ds.asList().iterator().remove();
     }
 
     @Test
     public void sortColumn() {
-        ListDataSource<Integer> ds = new ListDataSource<Integer>(3, 4, 2, 3, 1);
+        ListDataSource<Integer> ds = new ListDataSource<>(3, 4, 2, 3, 1);
 
         // TODO Should be simplified to sort(). No point in providing these
         // trivial comparators.
@@ -185,8 +185,8 @@ public class ListDataSourceTest {
             }
         });
 
-        assertTrue(Arrays.equals(ds.asList().toArray(), new Integer[] { 1, 2,
-                3, 3, 4 }));
+        assertTrue(Arrays.equals(ds.asList().toArray(),
+                new Integer[] { 1, 2, 3, 3, 4 }));
     }
 
 }

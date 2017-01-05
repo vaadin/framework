@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,18 +31,18 @@ import com.vaadin.ui.UI;
  * to Vaadin 7. The legacy application supports setting a main window, adding
  * additional browser level windows and defining the theme for the entire
  * application.
- * 
+ *
  * @deprecated As of 7.0. This class is only intended to ease migration and
  *             should not be used for new projects.
- * 
+ *
  * @since 7.0
  */
 @Deprecated
 public abstract class LegacyApplication implements ErrorHandler {
     private LegacyWindow mainWindow;
-    private String theme;
+    private String theme = "reindeer";
 
-    private Map<String, LegacyWindow> legacyUINames = new HashMap<String, LegacyWindow>();
+    private final Map<String, LegacyWindow> legacyUINames = new HashMap<>();
 
     private boolean isRunning = true;
 
@@ -56,7 +56,7 @@ public abstract class LegacyApplication implements ErrorHandler {
     /**
      * Sets the main window of this application. Setting window as a main window
      * of this application also adds the window to this application.
-     * 
+     *
      * @param mainWindow
      *            the UI to set as the default window
      */
@@ -87,7 +87,7 @@ public abstract class LegacyApplication implements ErrorHandler {
 
     /**
      * Gets the mainWindow of the application.
-     * 
+     *
      * <p>
      * The main window is the window attached to the application URL (
      * {@link #getURL()}) and thus which is show by default to the user.
@@ -95,7 +95,7 @@ public abstract class LegacyApplication implements ErrorHandler {
      * <p>
      * Note that each application must have at least one main window.
      * </p>
-     * 
+     *
      * @return the UI used as the default window
      */
     public LegacyWindow getMainWindow() {
@@ -105,12 +105,15 @@ public abstract class LegacyApplication implements ErrorHandler {
     /**
      * Sets the application's theme.
      * <p>
+     * The default theme for {@link LegacyApplication} is reindeer, unlike for
+     * {@link UI} the default theme is valo.
+     * <p>
      * Note that this theme can be overridden for a specific UI with
      * {@link VaadinSession#getThemeForUI(UI)}. Setting theme to be
      * <code>null</code> selects the default theme. For the available theme
      * names, see the contents of the VAADIN/themes directory.
      * </p>
-     * 
+     *
      * @param theme
      *            the new theme for this application.
      */
@@ -123,7 +126,7 @@ public abstract class LegacyApplication implements ErrorHandler {
      * theme used by all the uIs for which a theme is not explicitly defined. If
      * the application theme is not explicitly set, <code>null</code> is
      * returned.
-     * 
+     *
      * @return the name of the application's theme.
      */
     public String getTheme() {
@@ -135,7 +138,7 @@ public abstract class LegacyApplication implements ErrorHandler {
      * Gets a UI by name. Returns <code>null</code> if the application is not
      * running or it does not contain a window corresponding to the name.
      * </p>
-     * 
+     *
      * @param name
      *            the name of the requested window
      * @return a UI corresponding to the name, or <code>null</code> to use the
@@ -151,15 +154,10 @@ public abstract class LegacyApplication implements ErrorHandler {
     private int namelessUIIndex = 0;
 
     /**
-     * Adds a new browser level window to this application. Please note that UI
-     * doesn't have a name that is used in the URL - to add a named window you
-     * should instead use {@link #addWindow(UI, String)}
-     * 
+     * Adds a new browser level window to this application.
+     *
      * @param uI
      *            the UI window to add to the application
-     * @return returns the name that has been assigned to the window
-     * 
-     * @see #addWindow(UI, String)
      */
     public void addWindow(LegacyWindow uI) {
         if (uI.getName() == null) {
@@ -175,14 +173,14 @@ public abstract class LegacyApplication implements ErrorHandler {
 
     /**
      * Removes the specified window from the application. This also removes all
-     * name mappings for the window (see {@link #addWindow(UI, String) and
+     * name mappings for the window (see {@link #addWindow(LegacyWindow)} and
      * #getWindowName(UI)}.
-     * 
+     *
      * <p>
      * Note that removing window from the application does not close the browser
      * window - the window is only removed from the server-side.
      * </p>
-     * 
+     *
      * @param uI
      *            the UI to remove
      */
@@ -196,11 +194,11 @@ public abstract class LegacyApplication implements ErrorHandler {
 
     /**
      * Gets the set of windows contained by the application.
-     * 
+     *
      * <p>
      * Note that the returned set of windows can not be modified.
      * </p>
-     * 
+     *
      * @return the unmodifiable collection of windows.
      */
     public Collection<LegacyWindow> getWindows() {
@@ -250,7 +248,7 @@ public abstract class LegacyApplication implements ErrorHandler {
      * Desktop application just closes the application window and
      * web-application redirects the browser to application main URL.
      * </p>
-     * 
+     *
      * @return the URL.
      */
     public String getLogoutURL() {
@@ -263,7 +261,7 @@ public abstract class LegacyApplication implements ErrorHandler {
      * application running environment: Desktop application just closes the
      * application window and web-application redirects the browser to
      * application main URL.
-     * 
+     *
      * @param logoutURL
      *            the logoutURL to set.
      */

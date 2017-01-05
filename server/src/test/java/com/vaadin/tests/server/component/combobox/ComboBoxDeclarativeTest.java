@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,74 +15,96 @@
  */
 package com.vaadin.tests.server.component.combobox;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 
-import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstractsingleselect.AbstractSingleSelectDeclarativeTest;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.StyleGenerator;
 
-public class ComboBoxDeclarativeTest extends DeclarativeTestBase<ComboBox> {
-
-    @Test
-    public void testReadOnlyWithOptionsRead() {
-        testRead(getReadOnlyWithOptionsDesign(),
-                getReadOnlyWithOptionsExpected());
-    }
-
-    private ComboBox getReadOnlyWithOptionsExpected() {
-        ComboBox cb = new ComboBox();
-        cb.setTextInputAllowed(false);
-        cb.addItem("Hello");
-        cb.addItem("World");
-        return cb;
-    }
-
-    private String getReadOnlyWithOptionsDesign() {
-        return "<vaadin-combo-box text-input-allowed='false'><option>Hello</option><option>World</option></vaadin-combo-box>";
-    }
+/**
+ * Declarative support test for ComboBox.
+ * <p>
+ * There are only ComboBox specific properties explicit tests. All other tests
+ * are in the super class ( {@link AbstractSingleSelectDeclarativeTest}).
+ *
+ * @see AbstractSingleSelectDeclarativeTest
+ *
+ * @author Vaadin Ltd
+ *
+ */
+@SuppressWarnings("rawtypes")
+public class ComboBoxDeclarativeTest
+        extends AbstractSingleSelectDeclarativeTest<ComboBox> {
 
     @Test
-    public void testReadOnlyWithOptionsWrite() {
-        testWrite(stripOptionTags(getReadOnlyWithOptionsDesign()),
-                getReadOnlyWithOptionsExpected());
-    }
+    public void comboBoxSpecificPropertiesSerialize() {
+        String placeholder = "testPlaceholder";
+        boolean textInputAllowed = false;
+        int pageLength = 7;
+        String popupWidth = "11%";
+        boolean emptySelectionAllowed = false;
 
-    @Test
-    public void testBasicRead() {
-        testRead(getBasicDesign(), getBasicExpected());
-    }
+        String design = String.format(
+                "<%s placeholder='%s' text-input-allowed='%s' page-length='%d' "
+                        + "popup-width='%s' empty-selection-allowed='%s' scroll-to-selected-item/>",
+                getComponentTag(), placeholder, textInputAllowed, pageLength,
+                popupWidth, emptySelectionAllowed);
 
-    @Test
-    public void testBasicWrite() {
-        testWrite(getBasicDesign(), getBasicExpected());
-    }
-
-    @Test
-    public void testReadOnlyValue() {
-        String design = "<vaadin-combo-box readonly value='foo'><option selected>foo</option></vaadin-combo-box>";
-
-        ComboBox comboBox = new ComboBox();
-        comboBox.addItems("foo", "bar");
-        comboBox.setValue("foo");
-        comboBox.setReadOnly(true);
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setPlaceholder(placeholder);
+        comboBox.setTextInputAllowed(textInputAllowed);
+        comboBox.setPageLength(pageLength);
+        comboBox.setPopupWidth(popupWidth);
+        comboBox.setScrollToSelectedItem(true);
+        comboBox.setEmptySelectionAllowed(emptySelectionAllowed);
 
         testRead(design, comboBox);
-
-        // Selects items are not written out by default
-        String design2 = "<vaadin-combo-box readonly></vaadin-combo-box>";
-        testWrite(design2, comboBox);
+        testWrite(design, comboBox);
     }
 
-    private String getBasicDesign() {
-        return "<vaadin-combo-box input-prompt=\"Select something\" filtering-mode=\"off\" scroll-to-selected-item='false'>";
+    @Test
+    public void optionStylesSerialization() throws InstantiationException,
+            IllegalAccessException, InvocationTargetException {
+        List<String> items = Arrays.asList("foo", "bar", "foobar");
+
+        String design = String.format(
+                "<%s>\n" + "<option item='foo' style='foo-style'>foo</option>\n"
+                        + "<option item='bar' style='bar-style'>bar</option>"
+                        + "<option item='foobar' style='foobar-style'>foobar</option></%s>",
+                getComponentTag(), getComponentTag());
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setItems(items);
+        comboBox.setStyleGenerator(item -> item + "-style");
+
+        testRead(design, comboBox);
+        testWrite(design, comboBox, true);
     }
 
-    private ComboBox getBasicExpected() {
-        ComboBox cb = new ComboBox();
-        cb.setInputPrompt("Select something");
-        cb.setTextInputAllowed(true);
-        cb.setFilteringMode(FilteringMode.OFF);
-        cb.setScrollToSelectedItem(false);
-        return cb;
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-combo-box";
     }
+
+    @Override
+    protected Class<? extends ComboBox> getComponentClass() {
+        return ComboBox.class;
+    }
+
+    @Override
+    protected boolean acceptProperty(Class<?> clazz, Method readMethod,
+            Method writeMethod) {
+        if (readMethod != null) {
+            Class<?> returnType = readMethod.getReturnType();
+            if (StyleGenerator.class.equals(returnType)) {
+                return false;
+            }
+        }
+        return super.acceptProperty(clazz, readMethod, writeMethod);
+    }
+
 }

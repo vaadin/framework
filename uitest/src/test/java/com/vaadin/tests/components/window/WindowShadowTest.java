@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@ package com.vaadin.tests.components.window;
 
 import java.awt.AWTException;
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -27,15 +26,14 @@ import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class WindowShadowTest extends MultiBrowserTest {
 
     @Test
-    public void dragBackgroundWindow() throws AWTException, IOException,
-            InterruptedException {
+    public void dragBackgroundWindow()
+            throws AWTException, IOException, InterruptedException {
         openTestURL();
         WebElement wnd = getDriver().findElement(By.id("topwindow"));
         // There is some bug in Selenium. Can't move window using header
@@ -56,10 +54,4 @@ public class WindowShadowTest extends MultiBrowserTest {
         org.junit.Assert.assertNotEquals(startLoc, endLoc);
     }
 
-    // IE8 doesn't support shadow-box css rule
-    // ignore this browser in testing
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersExcludingIE8();
-    }
 }

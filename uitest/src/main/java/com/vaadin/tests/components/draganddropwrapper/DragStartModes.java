@@ -14,9 +14,8 @@ public class DragStartModes extends TestBase {
     @Override
     protected void setup() {
 
-        TestUtils
-                .injectCSS(getMainWindow(),
-                        ".v-ddwrapper { background: #ACF; } .extra{ background: #FFA500; }");
+        TestUtils.injectCSS(getMainWindow(),
+                ".v-ddwrapper { background: #ACF; } .extra{ background: #FFA500; }");
 
         addComponent(makeWrapper(DragStartMode.NONE));
         addComponent(makeWrapper(DragStartMode.COMPONENT));
@@ -30,10 +29,13 @@ public class DragStartModes extends TestBase {
     private Component makeOtherComponentWrapper(DragStartMode componentOther) {
         VerticalLayout parent = new VerticalLayout();
         parent.setWidth("200px");
-        parent.setSpacing(true);
+        parent.setMargin(false);
 
         CssLayout header = new CssLayout();
-        header.addComponent(new Label("Drag start mode : COMPONENT_OTHER"));
+        Label dragStartModeLabel = new Label(
+                "Drag start mode : COMPONENT_OTHER");
+        dragStartModeLabel.setWidth("100%");
+        header.addComponent(dragStartModeLabel);
         header.setSizeUndefined();
 
         DragAndDropWrapper wrapper = new DragAndDropWrapper(header);
@@ -44,6 +46,7 @@ public class DragStartModes extends TestBase {
 
         Label extra = new Label(
                 "Extra label that is not part of the wrapper. This should be dragged along with COMPONENT_OTHER.");
+        extra.setWidth("100%");
         extra.addStyleName("extra");
         parent.addComponent(extra);
 

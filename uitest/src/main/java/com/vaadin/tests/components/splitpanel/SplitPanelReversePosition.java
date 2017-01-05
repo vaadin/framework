@@ -8,8 +8,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.v7.ui.TextArea;
 
 public class SplitPanelReversePosition extends TestBase {
 
@@ -23,14 +23,15 @@ public class SplitPanelReversePosition extends TestBase {
 
         final HorizontalSplitPanel hsplit = new HorizontalSplitPanel();
         hsplit.setSizeFull();
-        hsplit.setImmediate(true);
         hsplit.setSplitPosition(100, Sizeable.UNITS_PIXELS, hsplitReversed);
-        hsplit.addListener(new HorizontalSplitPanel.SplitterClickListener() {
-            @Override
-            public void splitterClick(SplitterClickEvent event) {
-                getMainWindow().showNotification("Horizontal Splitter Clicked");
-            }
-        });
+        hsplit.addSplitterClickListener(
+                new HorizontalSplitPanel.SplitterClickListener() {
+                    @Override
+                    public void splitterClick(SplitterClickEvent event) {
+                        getMainWindow().showNotification(
+                                "Horizontal Splitter Clicked");
+                    }
+                });
 
         TextArea area = new TextArea("");
         area.setSizeFull();
@@ -38,9 +39,8 @@ public class SplitPanelReversePosition extends TestBase {
 
         final VerticalSplitPanel vsplit = new VerticalSplitPanel();
         vsplit.setSizeFull();
-        vsplit.setImmediate(true);
         vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE, vsplitReversed);
-        vsplit.addListener(new SplitterClickListener() {
+        vsplit.addSplitterClickListener(new SplitterClickListener() {
             @Override
             public void splitterClick(SplitterClickEvent event) {
                 getMainWindow().showNotification("Vertical Splitter Clicked");

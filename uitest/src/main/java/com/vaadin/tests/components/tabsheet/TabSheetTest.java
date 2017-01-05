@@ -66,9 +66,9 @@ public class TabSheetTest<T extends TabSheet> extends
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((SelectedTabChangeListener) TabSheetTest.this);
+                c.addSelectedTabChangeListener(TabSheetTest.this);
             } else {
-                c.removeListener((SelectedTabChangeListener) TabSheetTest.this);
+                c.removeSelectedTabChangeListener(TabSheetTest.this);
             }
 
         }
@@ -160,13 +160,13 @@ public class TabSheetTest<T extends TabSheet> extends
 
         String captionOptions[] = new String[] { "", "{id}", "Tab {id}",
                 "A long caption for tab {id}" };
-        LinkedHashMap<String, Resource> iconOptions = new LinkedHashMap<String, Resource>();
+        LinkedHashMap<String, Resource> iconOptions = new LinkedHashMap<>();
         iconOptions.put("-", null);
         iconOptions.put("16x16 (cachable)", ICON_16_USER_PNG_CACHEABLE);
         iconOptions.put("16x16 (uncachable)", ICON_16_USER_PNG_UNCACHEABLE);
         iconOptions.put("32x32 (cachable)", ICON_32_ATTENTION_PNG_CACHEABLE);
-        iconOptions
-                .put("32x32 (uncachable)", ICON_32_ATTENTION_PNG_UNCACHEABLE);
+        iconOptions.put("32x32 (uncachable)",
+                ICON_32_ATTENTION_PNG_UNCACHEABLE);
         iconOptions.put("64x64 (cachable)", ICON_64_EMAIL_REPLY_PNG_CACHEABLE);
         iconOptions.put("64x64 (uncachable)",
                 ICON_64_EMAIL_REPLY_PNG_UNCACHEABLE);

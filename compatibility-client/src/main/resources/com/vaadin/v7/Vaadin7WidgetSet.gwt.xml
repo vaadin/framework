@@ -1,0 +1,10 @@
+<module>
+	<!-- Hint for WidgetSetBuilder not to automatically update the file -->
+	<!-- WS Compiler: manually edited -->
+
+	<inherits name="com.vaadin.DefaultWidgetSet" />
+
+    <source path="shared" />
+    <source path="client" />
+
+</module>

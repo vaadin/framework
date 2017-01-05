@@ -5,7 +5,7 @@
 package com.vaadin.tests.overlays;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -13,7 +13,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 
-public class OverlayTouchScrolling extends AbstractTestUI {
+public class OverlayTouchScrolling extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -35,8 +35,8 @@ public class OverlayTouchScrolling extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
 
-                Notification
-                        .show("Now close this and you can scroll in mad places.");
+                Notification.show(
+                        "Now close this and you can scroll in mad places.");
                 green.addComponent(new Label(
                         "Thank you for clicking, now scroll (with touch device) to area without green background, which shouldn't be possible."));
             }

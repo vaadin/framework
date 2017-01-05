@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,27 +22,46 @@ import org.jsoup.parser.Tag;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstracttextfield.AbstractTextFieldDeclarativeTest;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * Tests declarative support for implementations of {@link TextArea}.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
+public class TextAreaDeclarativeTest
+        extends AbstractTextFieldDeclarativeTest<TextArea> {
 
-    @Test
-    public void testTextArea() {
-        String design = "<vaadin-text-area rows=6 wordwrap=false>Hello World!</vaadin-text-area>";
-        TextArea ta = new TextArea();
-        ta.setRows(6);
-        ta.setWordwrap(false);
-        ta.setValue("Hello World!");
-        testRead(design, ta);
-        testWrite(design, ta);
+    @Override
+    public void valueDeserialization()
+            throws InstantiationException, IllegalAccessException {
+        String value = "Hello World!";
+        String design = String.format("<%s>%s</%s>", getComponentTag(), value,
+                getComponentTag());
+
+        TextArea component = new TextArea();
+        component.setValue(value);
+
+        testRead(design, component);
+        testWrite(design, component);
+    }
+
+    @Override
+    public void readOnlyValue()
+            throws InstantiationException, IllegalAccessException {
+        String value = "Hello World!";
+        String design = String.format("<%s readonly>%s</%s>", getComponentTag(),
+                value, getComponentTag());
+
+        TextArea component = new TextArea();
+        component.setValue(value);
+        component.setReadOnly(true);
+
+        testRead(design, component);
+        testWrite(design, component);
     }
 
     @Test
@@ -61,14 +80,28 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
     }
 
     @Test
-    public void testReadOnlyValue() {
-        String design = "<vaadin-text-area readonly rows=6 wordwrap=false>Hello World!</vaadin-text-area>";
-        TextArea ta = new TextArea();
-        ta.setRows(6);
-        ta.setWordwrap(false);
-        ta.setValue("Hello World!");
-        ta.setReadOnly(true);
-        testRead(design, ta);
-        testWrite(design, ta);
+    public void remainingAttriburesDeserialization() {
+        int rows = 11;
+        boolean wrap = false;
+        String design = String.format("<%s rows='%s' word-wrap='%s'/>",
+                getComponentTag(), rows, wrap);
+
+        TextArea component = new TextArea();
+        component.setRows(rows);
+        component.setWordWrap(wrap);
+
+        testRead(design, component);
+        testWrite(design, component);
     }
+
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-text-area";
+    }
+
+    @Override
+    protected Class<TextArea> getComponentClass() {
+        return TextArea.class;
+    }
+
 }

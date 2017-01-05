@@ -25,28 +25,13 @@
   $size: round($size) + round($size) % 2;
   height: $size !important;
   width: $size !important;
-  @include box-sizing(border-box);
+  box-sizing: border-box;
   border: $thickness solid transparentize($color, .8);
   border-top-color: $color;
   border-right-color: $color;
   border-radius: 100%;
   @include animation(v-rotate-360 $speed infinite linear);
   pointer-events: none;
-
-  // No CSS animation in IE8 and IE9
-  .v-ie8 &,
-  .v-ie9 & {
-    border: none;
-    border-radius: $v-border-radius;
-    background: #fff url(#{$valo-shared-pathPrefix}img/spinner.gif) no-repeat 50% 50%;
-    background-size: 80%;
-  }
-
-  // No background-size for IE8
-  .v-ie8 & {
-    min-width: 30px;
-    min-height: 30px;
-  }
 }
 
 

@@ -8,7 +8,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class LayoutRenderTimeTest extends LegacyApplication {
 
@@ -31,15 +31,13 @@ public class LayoutRenderTimeTest extends LegacyApplication {
         // row.setWidth("100%");
         // row.setSpacing(true);
 
-        Embedded icon = new Embedded(null, new ThemeResource(
-                "../runo/icons/32/document.png"));
+        Embedded icon = new Embedded(null,
+                new ThemeResource("../runo/icons/32/document.png"));
         // row.addComponent(icon);
         // row.setComponentAlignment(icon, Alignment.MIDDLE_LEFT);
 
-        Label text = new Label(
-                "Row content #"
-                        + i
-                        + ". In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor. Nulla facilisi. Duis aliquet.");
+        Label text = new Label("Row content #" + i
+                + ". In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor. Nulla facilisi. Duis aliquet.");
         // row.addComponent(text);
         // row.setExpandRatio(text, 1);
 

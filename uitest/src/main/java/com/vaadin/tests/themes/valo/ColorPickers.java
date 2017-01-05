@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,7 +27,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class ColorPickers extends VerticalLayout implements View {
     public ColorPickers() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Color Pickers");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -35,7 +35,6 @@ public class ColorPickers extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         TestIcon testIcon = new TestIcon(40);
@@ -43,7 +42,7 @@ public class ColorPickers extends VerticalLayout implements View {
         ColorPicker cp = new ColorPicker();
         cp.setDefaultCaptionEnabled(true);
         cp.setIcon(testIcon.get());
-        cp.setColor(new Color(138, 73, 115));
+        cp.setValue(new Color(138, 73, 115));
         row.addComponent(cp);
 
         cp = new ColorPicker();

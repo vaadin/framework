@@ -45,8 +45,8 @@ public class SplitPanelSplitterWidth extends TestBase {
         p.setSizeFull();
         split2.addComponent(p);
 
-        getLayout().addComponent(
-                new Button("Unlock", new Button.ClickListener() {
+        getLayout()
+                .addComponent(new Button("Unlock", new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {

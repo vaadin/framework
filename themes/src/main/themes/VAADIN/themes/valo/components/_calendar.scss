@@ -206,7 +206,7 @@ $v-calendar-event-colors: #00ace0, #2d9f19, #d18100, #ce3812, #2d55cd !default;
 
   .#{$primary-stylename}-month-day {
     outline: none;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     line-height: 1.2;
   }
 
@@ -408,7 +408,7 @@ $v-calendar-event-colors: #00ace0, #2d9f19, #d18100, #ce3812, #2d55cd !default;
 
   .#{$primary-stylename}-event-month {
     padding: 0 round($v-unit-size/8);
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     margin-bottom: round($v-unit-size/12);
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -430,7 +430,7 @@ $v-calendar-event-colors: #00ace0, #2d9f19, #d18100, #ce3812, #2d55cd !default;
 
   .#{$primary-stylename}-event-all-day {
     padding: 0 round($v-unit-size/8);
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     height: round($v-font-size * 1.2);
     line-height: round($v-font-size * 1.2);
     border-radius: 0;

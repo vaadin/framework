@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,11 +16,18 @@
 
 package com.vaadin.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -33,6 +40,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -43,12 +51,12 @@ import com.vaadin.client.ui.richtextarea.VRichTextToolbar;
 
 /**
  * This class implements a basic client side rich text editor component.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  */
 public class VRichTextArea extends Composite implements Field, KeyPressHandler,
-        KeyDownHandler, Focusable {
+        KeyDownHandler, Focusable, HasEnabled {
 
     /**
      * The input node CSS classname.
@@ -91,6 +99,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
 
     private final Map<BlurHandler, HandlerRegistration> blurHandlers = new HashMap<BlurHandler, HandlerRegistration>();
 
+    private List<Command> inputHandlers = new ArrayList<>();
+
     public VRichTextArea() {
         createRTAComponents();
         fp.add(formatter);
@@ -106,6 +116,15 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
         rta = new RichTextArea();
         rta.setWidth("100%");
         rta.addKeyDownHandler(this);
+        rta.addInitializeHandler(e -> {
+            // Must wait until iframe is attached to be able to access body
+            BodyElement rtaBody = IFrameElement.as(rta.getElement())
+                    .getContentDocument().getBody();
+            addInputListener(rtaBody, event -> {
+                inputHandlers.forEach(handler -> handler.execute());
+            });
+        });
+
         formatter = new VRichTextToolbar(rta);
 
         // Add blur handlers
@@ -120,12 +139,39 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
         }
     }
 
+    private native void addInputListener(Element element,
+            Consumer<NativeEvent> listener)
+    /*-{
+        element.addEventListener("input", $entry(function(event) {
+            listener.@java.util.function.Consumer::accept(Ljava/lang/Object;)(event);
+        }));
+    }-*/;
+
+    public void setMaxLength(int maxLength) {
+        if (maxLength >= 0) {
+            if (this.maxLength == -1) {
+                keyPressHandler = rta.addKeyPressHandler(this);
+            }
+            this.maxLength = maxLength;
+        } else if (this.maxLength != -1) {
+            this.maxLength = -1;
+            keyPressHandler.removeHandler();
+        }
+
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             // rta.setEnabled(enabled);
             swapEditableArea();
             this.enabled = enabled;
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     /**
@@ -155,7 +201,7 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
          * render. Simple deferred command is not enough. Using Timer with
          * moderated timeout. If this appears to fail on many (most likely slow)
          * environments, consider increasing the timeout.
-         * 
+         *
          * FF seems to require the most time to stabilize its RTA. On Vaadin
          * tiergarden test machines, 200ms was not enough always (about 50%
          * success rate) - 300 ms was 100% successful. This however was not
@@ -232,10 +278,9 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
         ShortcutActionHandler shortcutHandler = getShortcutHandlerOwner()
                 .getShortcutActionHandler();
         if (shortcutHandler != null) {
-            shortcutHandler
-                    .handleKeyboardEvent(com.google.gwt.user.client.Event
-                            .as(event.getNativeEvent()),
-                            ConnectorMap.get(client).getConnector(this));
+            shortcutHandler.handleKeyboardEvent(
+                    com.google.gwt.user.client.Event.as(event.getNativeEvent()),
+                    ConnectorMap.get(client).getConnector(this));
         }
     }
 
@@ -284,10 +329,10 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     }
 
     /**
-     * Set the value of the text area
-     * 
+     * Sets the value of the text area.
+     *
      * @param value
-     *            The text value. Can be html.
+     *            The text value, as HTML
      */
     public void setValue(String value) {
         if (rta.isAttached()) {
@@ -298,7 +343,9 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     }
 
     /**
-     * Get the value the text area
+     * Gets the value of the text area.
+     *
+     * @return the value as HTML
      */
     public String getValue() {
         if (rta.isAttached()) {
@@ -312,7 +359,7 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
      * Browsers differ in what they return as the content of a visually empty
      * rich text area. This method is used to normalize these to an empty
      * string. See #8004.
-     * 
+     *
      * @return cleaned html string
      */
     public String getSanitizedValue() {
@@ -340,7 +387,7 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
 
     /**
      * Adds a blur handler to the component.
-     * 
+     *
      * @param blurHandler
      *            the blur handler to add
      */
@@ -350,7 +397,7 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
 
     /**
      * Removes a blur handler.
-     * 
+     *
      * @param blurHandler
      *            the handler to remove
      */
@@ -359,5 +406,10 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
         if (registration != null) {
             registration.removeHandler();
         }
+    }
+
+    public HandlerRegistration addInputHandler(Command inputHandler) {
+        inputHandlers.add(inputHandler);
+        return () -> inputHandlers.remove(inputHandler);
     }
 }

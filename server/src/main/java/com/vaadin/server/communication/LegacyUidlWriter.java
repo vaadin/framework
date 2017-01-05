@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -60,7 +59,7 @@ public class LegacyUidlWriter implements Serializable {
         Collection<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
 
-        List<Component> legacyComponents = new ArrayList<Component>(
+        List<Component> legacyComponents = new ArrayList<>(
                 dirtyVisibleConnectors.size());
         for (ClientConnector connector : dirtyVisibleConnectors) {
             // All Components that want to use paintContent must implement
@@ -73,9 +72,9 @@ public class LegacyUidlWriter implements Serializable {
 
         writer.write("[");
         for (Component c : legacyComponents) {
-            getLogger().fine(
-                    "Painting LegacyComponent " + c.getClass().getName() + "@"
-                            + Integer.toHexString(c.hashCode()));
+            getLogger()
+                    .fine("Painting LegacyComponent " + c.getClass().getName()
+                            + "@" + Integer.toHexString(c.hashCode()));
             target.startTag("change");
             final String pid = c.getConnectorId();
             target.addAttribute("pid", pid);
@@ -89,27 +88,24 @@ public class LegacyUidlWriter implements Serializable {
         // Vaadin 6 requires parents to be painted before children as component
         // containers rely on that their updateFromUIDL method has been called
         // before children start calling e.g. updateCaption
-        Collections.sort(paintables, new Comparator<Component>() {
-            @Override
-            public int compare(Component c1, Component c2) {
-                int depth1 = 0;
-                while (c1.getParent() != null) {
-                    depth1++;
-                    c1 = c1.getParent();
-                }
-                int depth2 = 0;
-                while (c2.getParent() != null) {
-                    depth2++;
-                    c2 = c2.getParent();
-                }
-                if (depth1 < depth2) {
-                    return -1;
-                }
-                if (depth1 > depth2) {
-                    return 1;
-                }
-                return 0;
+        Collections.sort(paintables, (Component c1, Component c2) -> {
+            int depth1 = 0;
+            while (c1.getParent() != null) {
+                depth1++;
+                c1 = c1.getParent();
             }
+            int depth2 = 0;
+            while (c2.getParent() != null) {
+                depth2++;
+                c2 = c2.getParent();
+            }
+            if (depth1 < depth2) {
+                return -1;
+            }
+            if (depth1 > depth2) {
+                return 1;
+            }
+            return 0;
         });
     }
 

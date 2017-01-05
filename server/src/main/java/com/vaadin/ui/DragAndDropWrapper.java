@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -41,11 +41,12 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
+import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperState;
 import com.vaadin.ui.declarative.DesignContext;
 
 @SuppressWarnings("serial")
-public class DragAndDropWrapper extends CustomComponent implements DropTarget,
-        DragSource, LegacyComponent {
+public class DragAndDropWrapper extends CustomComponent
+        implements DropTarget, DragSource, LegacyComponent {
 
     public class WrapperTransferable extends TransferableImpl {
 
@@ -73,7 +74,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         /**
          * The component in wrapper that is being dragged or null if the
          * transferable is not a component (most likely an html5 drag).
-         * 
+         *
          * @return
          */
         public Component getDraggedComponent() {
@@ -112,15 +113,11 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     }
 
-    private final DragAndDropWrapperServerRpc rpc = new DragAndDropWrapperServerRpc() {
-
-        @Override
-        public void poll() {
-            // #19616 RPC to poll the server for changes
-        }
+    private final DragAndDropWrapperServerRpc rpc = () -> {
+        // #19616 RPC to poll the server for changes
     };
 
-    private Map<String, ProxyReceiver> receivers = new HashMap<String, ProxyReceiver>();
+    private Map<String, ProxyReceiver> receivers = new HashMap<>();
 
     public class WrapperTargetDetails extends TargetDetailsImpl {
 
@@ -136,7 +133,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         }
 
         /**
-         * 
+         *
          * @return the absolute position of wrapper on the page
          */
         public Integer getAbsoluteTop() {
@@ -177,7 +174,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         WRAPPER,
         /**
          * The whole wrapper is used to start an HTML5 drag.
-         * 
+         *
          * NOTE: In Internet Explorer 6 to 8, this prevents user interactions
          * with the wrapper's contents. For example, clicking a button inside
          * the wrapper will no longer work.
@@ -191,16 +188,16 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         COMPONENT_OTHER,
     }
 
-    private final Map<String, Object> html5DataFlavors = new LinkedHashMap<String, Object>();
+    private final Map<String, Object> html5DataFlavors = new LinkedHashMap<>();
     private DragStartMode dragStartMode = DragStartMode.NONE;
     private Component dragImageComponent = null;
 
-    private Set<String> sentIds = new HashSet<String>();
+    private Set<String> sentIds = new HashSet<>();
 
     /**
      * This is an internal constructor. Use
      * {@link DragAndDropWrapper#DragAndDropWrapper(Component)} instead.
-     * 
+     *
      * @since 7.5.0
      */
     @Deprecated
@@ -211,7 +208,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     /**
      * Wraps given component in a {@link DragAndDropWrapper}.
-     * 
+     *
      * @param root
      *            the component to be wrapped
      */
@@ -224,7 +221,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
      * Sets data flavors available in the DragAndDropWrapper is used to start an
      * HTML5 style drags. Most commonly the "Text" flavor should be set.
      * Multiple data types can be set.
-     * 
+     *
      * @param type
      *            the string identifier of the drag "payload". E.g. "Text" or
      *            "text/html"
@@ -279,7 +276,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                          * We want to avoid a new ProxyReceiver to be made since
                          * it'll get a new URL, so we need to keep extra track
                          * on what has been sent.
-                         * 
+                         *
                          * See #12330.
                          */
                         sentIds.add(id);
@@ -318,7 +315,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     }
 
     @Override
-    public Transferable getTransferable(final Map<String, Object> rawVariables) {
+    public Transferable getTransferable(
+            final Map<String, Object> rawVariables) {
         return new WrapperTransferable(this, rawVariables);
     }
 
@@ -334,7 +332,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     /**
      * Sets the component that will be used as the drag image. Only used when
      * wrapper is set to {@link DragStartMode#COMPONENT_OTHER}
-     * 
+     *
      * @param dragImageComponent
      */
     public void setDragImageComponent(Component dragImageComponent) {
@@ -345,7 +343,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     /**
      * Gets the component that will be used as the drag image. Only used when
      * wrapper is set to {@link DragStartMode#COMPONENT_OTHER}
-     * 
+     *
      * @return <code>null</code> if no component is set.
      */
     public Component getDragImageComponent() {
@@ -354,7 +352,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     final class ProxyReceiver implements StreamVariable {
 
-        private String id;
+        private final String id;
         private Html5File file;
 
         public ProxyReceiver(String id, Html5File file) {
@@ -379,16 +377,16 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
         @Override
         public void onProgress(StreamingProgressEvent event) {
-            file.getStreamVariable().onProgress(
-                    new ReceivingEventWrapper(event));
+            file.getStreamVariable()
+                    .onProgress(new ReceivingEventWrapper(event));
         }
 
         @Override
         public void streamingStarted(StreamingStartEvent event) {
             listenProgressOfUploadedFile = file.getStreamVariable() != null;
             if (listenProgressOfUploadedFile) {
-                file.getStreamVariable().streamingStarted(
-                        new ReceivingEventWrapper(event));
+                file.getStreamVariable()
+                        .streamingStarted(new ReceivingEventWrapper(event));
             }
             // no need tell to the client about this receiver on next paint
             receivers.remove(id);
@@ -401,16 +399,16 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         @Override
         public void streamingFinished(StreamingEndEvent event) {
             if (listenProgressOfUploadedFile) {
-                file.getStreamVariable().streamingFinished(
-                        new ReceivingEventWrapper(event));
+                file.getStreamVariable()
+                        .streamingFinished(new ReceivingEventWrapper(event));
             }
         }
 
         @Override
         public void streamingFailed(final StreamingErrorEvent event) {
             if (listenProgressOfUploadedFile) {
-                file.getStreamVariable().streamingFailed(
-                        new ReceivingEventWrapper(event));
+                file.getStreamVariable()
+                        .streamingFailed(new ReceivingEventWrapper(event));
             }
         }
 
@@ -428,7 +426,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         class ReceivingEventWrapper implements StreamingErrorEvent,
                 StreamingEndEvent, StreamingStartEvent, StreamingProgressEvent {
 
-            private StreamingEvent wrappedEvent;
+            private final StreamingEvent wrappedEvent;
 
             ReceivingEventWrapper(StreamingEvent e) {
                 wrappedEvent = e;
@@ -504,5 +502,15 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             child.attr(":drag-image", true);
             design.appendChild(child);
         }
+    }
+
+    @Override
+    protected DragAndDropWrapperState getState() {
+        return (DragAndDropWrapperState) super.getState();
+    }
+
+    @Override
+    protected DragAndDropWrapperState getState(boolean markAsDirty) {
+        return (DragAndDropWrapperState) super.getState(markAsDirty);
     }
 }

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Iterator;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -28,7 +29,7 @@ public class TabSheetTest {
         Iterator<Component> iter = tabSheet.getComponentIterator();
 
         assertEquals(c, iter.next());
-        assertEquals(false, iter.hasNext());
+        Assert.assertFalse(iter.hasNext());
         assertNotNull(tabSheet.getTab(c));
     }
 
@@ -200,10 +201,10 @@ public class TabSheetTest {
         tabSheet.replaceComponent(lbl1, lbl2);
         assertSame(tab1, tabSheet.getTab(lbl1));
         assertSame(tab2, tabSheet.getTab(lbl2));
-        assertEquals(false, tab1.isClosable());
-        assertEquals(true, tab2.isClosable());
-        assertEquals(false, tab1.isEnabled());
-        assertEquals(true, tab2.isEnabled());
+        Assert.assertFalse(tab1.isClosable());
+        Assert.assertTrue(tab2.isClosable());
+        Assert.assertFalse(tab1.isEnabled());
+        Assert.assertTrue(tab2.isEnabled());
         assertEquals("description", tab1.getDescription());
         assertEquals(null, tab2.getDescription());
         assertEquals(3, tabSheet.getComponentCount());
@@ -219,7 +220,7 @@ public class TabSheetTest {
         assertNull(tabSheet.getTab(lbl1));
         assertNull(tab1.getComponent());
         assertNotNull(tabSheet.getTab(lbl3));
-        assertEquals(false, tabSheet.getTab(lbl3).isEnabled());
+        Assert.assertFalse(tabSheet.getTab(lbl3).isEnabled());
         assertEquals("description", tab1.getDescription());
         assertEquals(1, tabSheet.getTabPosition(tabSheet.getTab(lbl3)));
     }
@@ -281,6 +282,6 @@ public class TabSheetTest {
 
         // then
         listener.assertActualComponentIs(lbl3);
-        assertEquals(lbl3, tabSheet.getSelectedTab());        
+        assertEquals(lbl3, tabSheet.getSelectedTab());
     }
 }

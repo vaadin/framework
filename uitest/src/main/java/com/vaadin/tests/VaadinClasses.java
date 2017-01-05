@@ -37,7 +37,7 @@ public class VaadinClasses {
             return null;
         }
     }
-    
+
     public static List<Class<? extends ComponentContainer>> getComponentContainers() {
         try {
             return findClasses(ComponentContainer.class, "com.vaadin.ui");
@@ -68,20 +68,6 @@ public class VaadinClasses {
         return classes;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static List<Class<?>> getBasicComponentTests() {
-        try {
-            // Given as name to avoid dependencies on testbench source folder
-            return (List) findClasses(
-                    Class.forName("com.vaadin.tests.components.AbstractComponentTest"),
-                    "com.vaadin.tests.components");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
     private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
             String basePackage) throws IOException {
         return findClasses(baseClass, basePackage, new String[] {});
@@ -89,15 +75,15 @@ public class VaadinClasses {
 
     private static <T> List<Class<? extends T>> findClasses(Class<T> baseClass,
             String basePackage, String[] ignoredPackages) throws IOException {
-        List<Class<? extends T>> classes = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> classes = new ArrayList<>();
         String basePackageDirName = "/" + basePackage.replace('.', '/');
         URL location = VaadinSession.class.getResource(basePackageDirName);
         if (location.getProtocol().equals("file")) {
             try {
                 File f = new File(location.toURI());
                 if (!f.exists()) {
-                    throw new IOException("Directory " + f.toString()
-                            + " does not exist");
+                    throw new IOException(
+                            "Directory " + f.toString() + " does not exist");
                 }
                 findPackages(f, basePackage, baseClass, classes,
                         ignoredPackages);

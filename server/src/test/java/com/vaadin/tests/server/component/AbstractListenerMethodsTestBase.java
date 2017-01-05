@@ -9,6 +9,7 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
 
@@ -19,7 +20,7 @@ public abstract class AbstractListenerMethodsTestBase {
     }
 
     private static void findAllListenerMethods() {
-        Set<Class<?>> classes = new HashSet<Class<?>>();
+        Set<Class<?>> classes = new HashSet<>();
         for (Class<?> c : VaadinClasses.getAllServerSideClasses()) {
             while (c != null && c.getName().startsWith("com.vaadin.")) {
                 classes.add(c);
@@ -30,7 +31,10 @@ public abstract class AbstractListenerMethodsTestBase {
         for (Class<?> c : classes) {
             boolean found = false;
             for (Method m : c.getDeclaredMethods()) {
-                if (m.getName().equals("addListener")) {
+                String methodName = m.getName();
+                if (methodName.startsWith("add")
+                        && methodName.endsWith("Listener")
+                        && !"addListener".equals(methodName)) {
                     if (m.getParameterTypes().length != 1) {
                         continue;
                     }
@@ -47,19 +51,22 @@ public abstract class AbstractListenerMethodsTestBase {
 
                         System.out.println("import "
                                 + AbstractListenerMethodsTestBase.class
-                                        .getName() + ";");
+                                        .getName()
+                                + ";");
                         System.out.println("import " + c.getName() + ";");
-                        System.out.println("public class "
-                                + c.getSimpleName()
-                                + "Listeners extends "
-                                + AbstractListenerMethodsTestBase.class
-                                        .getSimpleName() + " {");
+                        System.out
+                                .println(
+                                        "public class " + c.getSimpleName()
+                                                + "Listeners extends "
+                                                + AbstractListenerMethodsTestBase.class
+                                                        .getSimpleName()
+                                                + " {");
                     }
 
                     String listenerClassName = m.getParameterTypes()[0]
                             .getSimpleName();
-                    String eventClassName = listenerClassName.replaceFirst(
-                            "Listener$", "Event");
+                    String eventClassName = listenerClassName
+                            .replaceFirst("Listener$", "Event");
                     System.out.println("public void test" + listenerClassName
                             + "() throws Exception {");
                     System.out.println("    testListener(" + c.getSimpleName()
@@ -93,11 +100,13 @@ public abstract class AbstractListenerMethodsTestBase {
         verifyListeners(c, eventClass);
 
         // Add one listener and verify
-        addListener(c, mockListener1, listenerClass);
+        Registration listener1Registration = addListener(c, mockListener1,
+                listenerClass);
         verifyListeners(c, eventClass, mockListener1);
 
         // Add another listener and verify
-        addListener(c, mockListener2, listenerClass);
+        Registration listener2Registration = addListener(c, mockListener2,
+                listenerClass);
         verifyListeners(c, eventClass, mockListener1, mockListener2);
 
         // Ensure we can fetch using parent class also
@@ -107,34 +116,27 @@ public abstract class AbstractListenerMethodsTestBase {
         }
 
         // Remove the first and verify
-        removeListener(c, mockListener1, listenerClass);
+        listener1Registration.remove();
         verifyListeners(c, eventClass, mockListener2);
 
         // Remove the remaining and verify
-        removeListener(c, mockListener2, listenerClass);
+        listener2Registration.remove();
         verifyListeners(c, eventClass);
 
     }
 
-    private void removeListener(Object c, Object listener,
+    private Registration addListener(Object c, Object listener1,
             Class<?> listenerClass) throws IllegalArgumentException,
             IllegalAccessException, InvocationTargetException,
             SecurityException, NoSuchMethodException {
-        Method method = getRemoveListenerMethod(c.getClass(), listenerClass);
-        method.invoke(c, listener);
-
-    }
-
-    private void addListener(Object c, Object listener1, Class<?> listenerClass)
-            throws IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException, SecurityException, NoSuchMethodException {
         Method method = getAddListenerMethod(c.getClass(), listenerClass);
-        method.invoke(c, listener1);
+        return (Registration) method.invoke(c, listener1);
     }
 
     private Collection<?> getListeners(Object c, Class<?> eventType)
             throws IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException, SecurityException, NoSuchMethodException {
+            InvocationTargetException, SecurityException,
+            NoSuchMethodException {
         Method method = getGetListenersMethod(c.getClass());
         return (Collection<?>) method.invoke(c, eventType);
     }
@@ -146,14 +148,14 @@ public abstract class AbstractListenerMethodsTestBase {
 
     private Method getAddListenerMethod(Class<?> cls, Class<?> listenerClass)
             throws SecurityException, NoSuchMethodException {
-        return cls.getMethod("addListener", listenerClass);
-
-    }
-
-    private Method getRemoveListenerMethod(Class<?> cls, Class<?> listenerClass)
-            throws SecurityException, NoSuchMethodException {
-        return cls.getMethod("removeListener", listenerClass);
-
+        Method addListenerMethod = cls.getMethod(
+                "add" + listenerClass.getSimpleName(), listenerClass);
+        if (addListenerMethod.getReturnType() != Registration.class) {
+            throw new NoSuchMethodException(
+                    cls.getSimpleName() + ".add" + listenerClass.getSimpleName()
+                            + " has wrong return type, expected Registration");
+        }
+        return addListenerMethod;
     }
 
     private void verifyListeners(Object c, Class<?> eventClass,

@@ -6,10 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
@@ -18,11 +16,13 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.NativeSelect;
 
 @Theme("tests-components")
-public class OrderedLayoutCases extends AbstractTestUI {
+public class OrderedLayoutCases extends AbstractReindeerTestUI {
 
     private static final String[] dimensionValues = { "-1px", "5px", "350px",
             "800px", "100%", "50%" };
@@ -42,11 +42,12 @@ public class OrderedLayoutCases extends AbstractTestUI {
                     new ValueChangeListener() {
                         @Override
                         public void valueChange(ValueChangeEvent event) {
-                            setHeight(event.getProperty().getValue().toString());
+                            setHeight(
+                                    event.getProperty().getValue().toString());
                         }
                     }, dimensionValues));
-            addComponent(createSimpleSelector("Caption",
-                    new ValueChangeListener() {
+            addComponent(
+                    createSimpleSelector("Caption", new ValueChangeListener() {
                         @Override
                         public void valueChange(ValueChangeEvent event) {
                             String value = event.getProperty().getValue()
@@ -54,7 +55,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                             if (value.length() == 0) {
                                 setCaption(null);
                             } else if (value.equals("Long")) {
-                                setCaption("A rather long caption just to see what happens");
+                                setCaption(
+                                        "A rather long caption just to see what happens");
                             } else {
                                 setCaption(value);
                             }
@@ -78,7 +80,7 @@ public class OrderedLayoutCases extends AbstractTestUI {
 
             // Why is Alignment not an enum? Now we have to use reflection just
             // to get the different values as hardcoding is never an option! ;)
-            List<String> alignmentValues = new ArrayList<String>();
+            List<String> alignmentValues = new ArrayList<>();
             Field[] fields = Alignment.class.getDeclaredFields();
             for (Field field : fields) {
                 if (field.getType() == Alignment.class) {
@@ -133,40 +135,40 @@ public class OrderedLayoutCases extends AbstractTestUI {
         sizeBar = new HorizontalLayout();
         sizeBar.setSpacing(true);
 
-        sizeBar.addComponent(createSimpleSelector("Layout width",
-                new ValueChangeListener() {
+        sizeBar.addComponent(
+                createSimpleSelector("Layout width", new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        currentLayout.setWidth(event.getProperty().getValue()
-                                .toString());
+                        currentLayout.setWidth(
+                                event.getProperty().getValue().toString());
                     }
                 }, dimensionValues));
         sizeBar.addComponent(createSimpleSelector("Layout height",
                 new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        currentLayout.setHeight(event.getProperty().getValue()
-                                .toString());
+                        currentLayout.setHeight(
+                                event.getProperty().getValue().toString());
                     }
                 }, dimensionValues));
-        sizeBar.addComponent(createSimpleSelector("Spacing",
-                new ValueChangeListener() {
+        sizeBar.addComponent(
+                createSimpleSelector("Spacing", new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        currentLayout.setSpacing(Boolean.parseBoolean(event
-                                .getProperty().getValue().toString()));
+                        currentLayout.setSpacing(Boolean.parseBoolean(
+                                event.getProperty().getValue().toString()));
                     }
                 }, "false", "true"));
-        sizeBar.addComponent(createSimpleSelector("Margin",
-                new ValueChangeListener() {
+        sizeBar.addComponent(
+                createSimpleSelector("Margin", new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        currentLayout.setMargin(Boolean.parseBoolean(event
-                                .getProperty().getValue().toString()));
+                        currentLayout.setMargin(Boolean.parseBoolean(
+                                event.getProperty().getValue().toString()));
                     }
                 }, "false", "true"));
-        sizeBar.addComponent(createSimpleSelector("Direction",
-                new ValueChangeListener() {
+        sizeBar.addComponent(
+                createSimpleSelector("Direction", new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
                         Object value = event.getProperty().getValue();
@@ -206,8 +208,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                 }, "Horizontal", "Vertical"));
 
         HorizontalLayout caseBar = new HorizontalLayout();
-        caseBar.addComponent(new Button("Undefined without relative",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Undefined without relative", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -220,8 +222,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                         setChildState(2, 2, 2);
                     }
                 }));
-        caseBar.addComponent(new Button("Undefined with relative",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Undefined with relative", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -229,8 +231,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                         setChildState(1, 0, 4);
                     }
                 }));
-        caseBar.addComponent(new Button("Fixed with overflow",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Fixed with overflow", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -240,8 +242,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                         setState(sizeBar, 3, 1);
                     }
                 }));
-        caseBar.addComponent(new Button("Fixed with extra space",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Fixed with extra space", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -258,8 +260,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                     }
                 }));
 
-        caseBar.addComponent(new Button("Expand with alignment",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Expand with alignment", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -276,8 +278,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                     }
                 }));
 
-        caseBar.addComponent(new Button("Multiple expands",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Multiple expands", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -299,8 +301,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                     }
                 }));
 
-        caseBar.addComponent(new Button("Fixed + relative height",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Fixed + relative height", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -317,8 +319,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                     }
                 }));
 
-        caseBar.addComponent(new Button("Undefined + relative height",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Undefined + relative height", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -331,8 +333,8 @@ public class OrderedLayoutCases extends AbstractTestUI {
                     }
                 }));
 
-        caseBar.addComponent(new Button("Undefined + alignments",
-                new ClickListener() {
+        caseBar.addComponent(
+                new Button("Undefined + alignments", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
@@ -399,12 +401,14 @@ public class OrderedLayoutCases extends AbstractTestUI {
         }
     }
 
-    private void setChildState(int childIndex, int selectIndex, int valueIndex) {
+    private void setChildState(int childIndex, int selectIndex,
+            int valueIndex) {
         Component child = currentLayout.getComponent(childIndex);
         setState(child, selectIndex, valueIndex);
     }
 
-    private static void setState(Component container, int selectIndex, int value) {
+    private static void setState(Component container, int selectIndex,
+            int value) {
         NativeSelect select = (NativeSelect) ((AbstractOrderedLayout) container)
                 .getComponent(selectIndex);
         select.setValue(new ArrayList<Object>(select.getItemIds()).get(value));

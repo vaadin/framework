@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,25 +17,21 @@ package com.vaadin.tests.components.table;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import com.vaadin.testbench.elements.TableElement;
 import org.openqa.selenium.interactions.Actions;
+
+import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  * Tests that clicking on active fields doesn't change Table selection, nor does
  * dragging rows.
- * 
+ *
  * @author Vaadin Ltd
  */
 public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
@@ -105,8 +101,8 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
     }
 
     private void assertThatFocusTextFieldHasText(String text) {
-        List<WebElement> focused = getTable().findElements(
-                By.className("v-textfield-focus"));
+        List<WebElement> focused = getTable()
+                .findElements(By.className("v-textfield-focus"));
 
         assertThat(focused.get(0).getAttribute("value"), is(text));
     }

@@ -34,8 +34,8 @@ public class TabGetAndReplaceComponent extends TestBase {
                         Tab tab = tabs.getTab(content2);
 
                         // Replace content
-                        tabs.replaceComponent(tab.getComponent(), new Label(
-                                "Replacement 2"));
+                        tabs.replaceComponent(tab.getComponent(),
+                                new Label("Replacement 2"));
 
                     }
                 });

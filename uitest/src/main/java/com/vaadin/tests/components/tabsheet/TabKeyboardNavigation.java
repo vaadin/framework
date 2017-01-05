@@ -7,32 +7,31 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test if the click and key tab selection in a tabsheet generate the correct
  * focus/blur events.
- * 
+ *
  * The solution was broken in ticket (#14304)
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
-public class TabKeyboardNavigation extends AbstractTestUI {
+public class TabKeyboardNavigation extends AbstractReindeerTestUI {
 
     int index = 1;
-    ArrayList<Component> tabs = new ArrayList<Component>();
+    ArrayList<Component> tabs = new ArrayList<>();
     TabSheet ts = new TabSheet();
     Log focusblur = new Log(10);
 
@@ -100,7 +99,9 @@ public class TabKeyboardNavigation extends AbstractTestUI {
     }
 
     private Tab addTab() {
-        Layout content = new VerticalLayout();
+        VerticalLayout content = new VerticalLayout();
+        content.setMargin(false);
+        content.setSpacing(false);
         tabs.add(content);
         Label label = new Label("Tab " + index);
         label.setId(labelID(index));

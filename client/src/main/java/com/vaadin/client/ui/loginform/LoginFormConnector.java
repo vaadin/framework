@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui.loginform;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,14 +39,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
 import com.vaadin.shared.ui.loginform.LoginFormState;
-import com.google.gwt.core.client.Scheduler;
 
 @Connect(com.vaadin.ui.LoginForm.class)
-public class LoginFormConnector extends
-        AbstractSingleComponentContainerConnector {
+public class LoginFormConnector
+        extends AbstractSingleComponentContainerConnector {
 
-    private VTextField passwordField;
-    private VTextField userField;
     private LoginFormRpc loginFormRpc;
 
     @Override
@@ -63,13 +61,15 @@ public class LoginFormConnector extends
         super.init();
 
         loginFormRpc = getRpcProxy(LoginFormRpc.class);
-        getWidget().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-            @Override
-            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                valuesChanged();
-                loginFormRpc.submitCompleted();
-            }
-        });
+        getWidget().addSubmitCompleteHandler(
+                new FormPanel.SubmitCompleteHandler() {
+                    @Override
+                    public void onSubmitComplete(
+                            FormPanel.SubmitCompleteEvent event) {
+                        valuesChanged();
+                        loginFormRpc.submitCompleted();
+                    }
+                });
     }
 
     @Override
@@ -78,7 +78,8 @@ public class LoginFormConnector extends
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         ComponentConnector content = getContent();
         if (content != null) {
             getWidget().setWidget(getContentWidget());
@@ -90,17 +91,25 @@ public class LoginFormConnector extends
         super.onStateChanged(stateChangeEvent);
 
         LoginFormState state = getState();
-        userField = configureTextField(state.userNameFieldConnector, "username");
-        passwordField = configureTextField(state.passwordFieldConnector,
-                "password");
+        configureTextField(getUsernameFieldConnector(), "username");
+        configureTextField(getPasswordFieldConnector(), "password");
         addSubmitButtonClickHandler(state.loginButtonConnector);
         getWidget().setAction(
                 getResourceUrl(LoginFormConstants.LOGIN_RESOURCE_NAME));
     }
 
-    private VTextField configureTextField(Connector connector, String id) {
+    private TextFieldConnector getUsernameFieldConnector() {
+        return (TextFieldConnector) getState().userNameFieldConnector;
+    }
+
+    private TextFieldConnector getPasswordFieldConnector() {
+        return (TextFieldConnector) getState().passwordFieldConnector;
+    }
+
+    private VTextField configureTextField(TextFieldConnector connector,
+            String id) {
         if (connector != null) {
-            VTextField textField = ((TextFieldConnector) connector).getWidget();
+            VTextField textField = connector.getWidget();
 
             textField.addKeyDownHandler(new SubmitKeyHandler());
 
@@ -135,11 +144,11 @@ public class LoginFormConnector extends
 
     private void addSubmitButtonClickHandler(Connector buttonConnector) {
         if (buttonConnector instanceof ButtonConnector) {
-            addSubmitButtonClickHandler(((ButtonConnector) buttonConnector)
-                    .getWidget());
+            addSubmitButtonClickHandler(
+                    ((ButtonConnector) buttonConnector).getWidget());
         } else if (buttonConnector instanceof NativeButtonConnector) {
-            addSubmitButtonClickHandler(((NativeButtonConnector) buttonConnector)
-                    .getWidget());
+            addSubmitButtonClickHandler(
+                    ((NativeButtonConnector) buttonConnector).getWidget());
         }
     }
 
@@ -153,11 +162,13 @@ public class LoginFormConnector extends
     }
 
     private void valuesChanged() {
-        if (passwordField != null) {
-            passwordField.valueChange(true);
+        TextFieldConnector connector = getUsernameFieldConnector();
+        if (connector != null) {
+            connector.flush();
         }
-        if (userField != null) {
-            userField.valueChange(true);
+        connector = getPasswordFieldConnector();
+        if (connector != null) {
+            connector.flush();
         }
     }
 

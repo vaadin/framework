@@ -4,7 +4,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 public class TableModifcationsWhenScrolledRight extends TestBase {
 
@@ -25,7 +25,7 @@ public class TableModifcationsWhenScrolledRight extends TestBase {
         }
         t.addItem(row).getItemProperty("name").setValue("Row" + row);
 
-        btn.addListener(new ClickListener() {
+        btn.addClickListener(new ClickListener() {
             Integer row = 2;
 
             @Override

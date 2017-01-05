@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,17 +19,18 @@ package com.vaadin.tests.extensions;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 
 @Theme("tests-responsive")
-public class ResponsiveLayoutUpdate extends AbstractTestUI {
+public class ResponsiveLayoutUpdate extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         HorizontalLayout layout = new HorizontalLayout();
+        layout.setSpacing(false);
         layout.addStyleName("layout-update");
         layout.setWidth("100%");
         setContent(layout);
@@ -38,12 +39,13 @@ public class ResponsiveLayoutUpdate extends AbstractTestUI {
         Label label = new Label(
                 "This label changes its size between the breakpoints, allowing more space for the adjacent component.");
         label.addStyleName("change-width");
-        label.setSizeUndefined();
         layout.addComponent(label);
 
         Panel panel = new Panel("Panel");
-        panel.setContent(new Label(
-                "This Panel should be maximized in both breakpoints."));
+        Label label2 = new Label(
+                "This Panel should be maximized in both breakpoints.");
+        label2.setWidth("100%");
+        panel.setContent(label2);
         panel.setSizeFull();
         layout.addComponent(panel);
         layout.setExpandRatio(panel, 1);

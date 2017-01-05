@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,12 +21,13 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EventObject;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.event.EventRouter;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.PageState;
@@ -45,13 +46,14 @@ public class Page implements Serializable {
     /**
      * Listener that gets notified when the size of the browser window
      * containing the uI has changed.
-     * 
-     * @see UI#addListener(BrowserWindowResizeListener)
+     *
+     * @see #addBrowserWindowResizeListener(BrowserWindowResizeListener)
      */
+    @FunctionalInterface
     public interface BrowserWindowResizeListener extends Serializable {
         /**
          * Invoked when the browser window containing a UI has been resized.
-         * 
+         *
          * @param event
          *            a browser window resize event
          */
@@ -68,7 +70,7 @@ public class Page implements Serializable {
 
         /**
          * Creates a new event
-         * 
+         *
          * @param source
          *            the uI for which the browser window has been resized
          * @param width
@@ -89,7 +91,7 @@ public class Page implements Serializable {
 
         /**
          * Gets the new browser window height
-         * 
+         *
          * @return an integer with the new pixel height of the browser window
          */
         public int getHeight() {
@@ -98,7 +100,7 @@ public class Page implements Serializable {
 
         /**
          * Gets the new browser window width
-         * 
+         *
          * @return an integer with the new pixel width of the browser window
          */
         public int getWidth() {
@@ -140,7 +142,7 @@ public class Page implements Serializable {
 
         /**
          * Creates a new open resource.
-         * 
+         *
          * @param url
          *            The URL to open
          * @param name
@@ -162,7 +164,7 @@ public class Page implements Serializable {
 
         /**
          * Creates a new open resource.
-         * 
+         *
          * @param resource
          *            The resource to open
          * @param name
@@ -188,7 +190,7 @@ public class Page implements Serializable {
 
         /**
          * Paints the open request. Should be painted inside the window.
-         * 
+         *
          * @param target
          *            the paint target
          * @throws PaintException
@@ -222,9 +224,9 @@ public class Page implements Serializable {
         }
     }
 
-    private static final Method BROWSER_RESIZE_METHOD = ReflectTools
-            .findMethod(BrowserWindowResizeListener.class,
-                    "browserWindowResized", BrowserWindowResizeEvent.class);
+    private static final Method BROWSER_RESIZE_METHOD = ReflectTools.findMethod(
+            BrowserWindowResizeListener.class, "browserWindowResized",
+            BrowserWindowResizeEvent.class);
 
     /**
      * @deprecated As of 7.0, use {@link BorderStyle#NONE} instead.
@@ -247,18 +249,19 @@ public class Page implements Serializable {
     /**
      * Listener that that gets notified when the URI fragment of the page
      * changes.
-     * 
+     *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
      */
+    @FunctionalInterface
     public interface UriFragmentChangedListener extends Serializable {
         /**
          * Event handler method invoked when the URI fragment of the page
          * changes. Please note that the initial URI fragment has already been
          * set when a new UI is initialized, so there will not be any initial
          * event for listeners added during {@link UI#init(VaadinRequest)}.
-         * 
+         *
          * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
-         * 
+         *
          * @param event
          *            the URI fragment changed event
          */
@@ -273,7 +276,7 @@ public class Page implements Serializable {
      * Resources to be opened automatically on next repaint. The list is
      * automatically cleared when it has been sent to the client.
      */
-    private final LinkedList<OpenResource> openList = new LinkedList<OpenResource>();
+    private final LinkedList<OpenResource> openList = new LinkedList<>();
 
     /**
      * A list of notifications that are waiting to be sent to the client.
@@ -283,7 +286,7 @@ public class Page implements Serializable {
 
     /**
      * Event fired when the URI fragment of a <code>Page</code> changes.
-     * 
+     *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
      */
     public static class UriFragmentChangedEvent extends EventObject {
@@ -295,7 +298,7 @@ public class Page implements Serializable {
 
         /**
          * Creates a new instance of UriFragmentReader change event.
-         * 
+         *
          * @param source
          *            the Source of the event.
          * @param uriFragment
@@ -308,7 +311,7 @@ public class Page implements Serializable {
 
         /**
          * Gets the page in which the fragment has changed.
-         * 
+         *
          * @return the page in which the fragment has changed
          */
         public Page getPage() {
@@ -317,7 +320,7 @@ public class Page implements Serializable {
 
         /**
          * Get the new URI fragment
-         * 
+         *
          * @return the new fragment
          */
         public String getUriFragment() {
@@ -325,13 +328,14 @@ public class Page implements Serializable {
         }
     }
 
+    @FunctionalInterface
     private static interface InjectedStyle extends Serializable {
         public void paint(int id, PaintTarget target) throws PaintException;
     }
 
     private static class InjectedStyleString implements InjectedStyle {
 
-        private String css;
+        private final String css;
 
         public InjectedStyleString(String css) {
             this.css = css;
@@ -383,14 +387,14 @@ public class Page implements Serializable {
     /**
      * Contains dynamically injected styles injected in the HTML document at
      * runtime.
-     * 
+     *
      * @since 7.1
      */
     public static class Styles implements Serializable {
 
-        private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<InjectedStyle>();
+        private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
 
-        private LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<InjectedStyle>();
+        private LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<>();
 
         private final UI ui;
 
@@ -400,7 +404,7 @@ public class Page implements Serializable {
 
         /**
          * Injects a raw CSS string into the page.
-         * 
+         *
          * @param css
          *            The CSS to inject
          */
@@ -416,7 +420,7 @@ public class Page implements Serializable {
 
         /**
          * Injects a CSS resource into the page
-         * 
+         *
          * @param resource
          *            The resource to inject.
          */
@@ -440,7 +444,7 @@ public class Page implements Serializable {
             if (target.isFullRepaint()) {
                 injectedStyles.addAll(pendingInjections);
                 pendingInjections = injectedStyles;
-                injectedStyles = new LinkedHashSet<InjectedStyle>();
+                injectedStyles = new LinkedHashSet<>();
             }
 
             if (!pendingInjections.isEmpty()) {
@@ -484,14 +488,16 @@ public class Page implements Serializable {
         this.state = state;
     }
 
-    private void addListener(Class<?> eventType, Object target, Method method) {
+    private Registration addListener(Class<?> eventType, Object target,
+            Method method) {
         if (!hasEventRouter()) {
             eventRouter = new EventRouter();
         }
-        eventRouter.addListener(eventType, target, method);
+        return eventRouter.addListener(eventType, target, method);
     }
 
-    private void removeListener(Class<?> eventType, Object target, Method method) {
+    private void removeListener(Class<?> eventType, Object target,
+            Method method) {
         if (hasEventRouter()) {
             eventRouter.removeListener(eventType, target, method);
         }
@@ -502,50 +508,38 @@ public class Page implements Serializable {
      * page is changed. Please note that the initial URI fragment has already
      * been set when a new UI is initialized, so there will not be any initial
      * event for listeners added during {@link UI#init(VaadinRequest)}.
-     * 
+     *
      * @see #getUriFragment()
      * @see #setUriFragment(String)
-     * @see #removeUriFragmentChangedListener(UriFragmentChangedListener)
-     * 
+     * @see Registration
+     *
      * @param listener
      *            the URI fragment listener to add
+     * @return a registration object for removing the listener
      */
-    public void addUriFragmentChangedListener(
+    public Registration addUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
-        addListener(UriFragmentChangedEvent.class, listener,
+        return addListener(UriFragmentChangedEvent.class, listener,
                 URI_FRAGMENT_CHANGED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addUriFragmentChangedListener(UriFragmentChangedListener)}
-     **/
-    @Deprecated
-    public void addListener(Page.UriFragmentChangedListener listener) {
-        addUriFragmentChangedListener(listener);
     }
 
     /**
      * Removes a URI fragment listener that was previously added to this page.
-     * 
+     *
      * @param listener
      *            the URI fragment listener to remove
-     * 
+     *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addUriFragmentChangedListener(UriFragmentChangedListener)}.
      */
+    @Deprecated
     public void removeUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
         removeListener(UriFragmentChangedEvent.class, listener,
                 URI_FRAGMENT_CHANGED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeUriFragmentChangedListener(UriFragmentChangedListener)}
-     **/
-    @Deprecated
-    public void removeListener(Page.UriFragmentChangedListener listener) {
-        removeUriFragmentChangedListener(listener);
     }
 
     /**
@@ -560,17 +554,17 @@ public class Page implements Serializable {
      * is already a non-null fragment will leave a trailing # in the URI since
      * removing it would cause the browser to reload the page. This is not fully
      * consistent with the semantics of {@link java.net.URI}.
-     * 
+     *
      * @param newUriFragment
      *            The new fragment.
      * @param fireEvents
      *            true to fire event
-     * 
+     *
      * @see #getUriFragment()
      * @see #setLocation(URI)
      * @see UriFragmentChangedEvent
      * @see Page.UriFragmentChangedListener
-     * 
+     *
      */
     public void setUriFragment(String newUriFragment, boolean fireEvents) {
         String oldUriFragment = location.getFragment();
@@ -579,9 +573,8 @@ public class Page implements Serializable {
             // instead set it to the empty string
             newUriFragment = "";
         }
-        if (newUriFragment == oldUriFragment
-                || (newUriFragment != null && newUriFragment
-                        .equals(oldUriFragment))) {
+        if (newUriFragment == oldUriFragment || (newUriFragment != null
+                && newUriFragment.equals(oldUriFragment))) {
             return;
         }
         try {
@@ -606,7 +599,7 @@ public class Page implements Serializable {
 
     /**
      * Sets URI fragment. This method fires a {@link UriFragmentChangedEvent}
-     * 
+     *
      * @param newUriFragment
      *            id of the new fragment
      * @see UriFragmentChangedEvent
@@ -624,9 +617,9 @@ public class Page implements Serializable {
      * <p>
      * To listen to changes in fragment, hook a
      * {@link Page.UriFragmentChangedListener}.
-     * 
+     *
      * @return the current fragment in browser location URI.
-     * 
+     *
      * @see #getLocation()
      * @see #setUriFragment(String)
      * @see #addUriFragmentChangedListener(UriFragmentChangedListener)
@@ -671,9 +664,9 @@ public class Page implements Serializable {
 
     /**
      * Gets the window.name value of the browser window of this page.
-     * 
+     *
      * @since 7.2
-     * 
+     *
      * @return the window name, <code>null</code> if the name is not known
      */
     public String getWindowName() {
@@ -700,9 +693,9 @@ public class Page implements Serializable {
     /**
      * For internal use only. Updates the internal state with the given values.
      * Does not resize the Page or browser window.
-     * 
+     *
      * @since 7.2
-     * 
+     *
      * @param width
      *            the new browser window width
      * @param height
@@ -742,36 +735,40 @@ public class Page implements Serializable {
      * received while a resize is being performed. Use
      * {@link UI#setResizeLazy(boolean)}.
      * </p>
-     * 
+     *
      * @param resizeListener
      *            the listener to add
-     * 
+     * @return a registration object for removing the listener
+     *
      * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
      * @see UI#setResizeLazy(boolean)
+     * @see Registration
      */
-    public void addBrowserWindowResizeListener(
+    public Registration addBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
-        addListener(BrowserWindowResizeEvent.class, resizeListener,
-                BROWSER_RESIZE_METHOD);
+        Registration registration = addListener(BrowserWindowResizeEvent.class,
+                resizeListener, BROWSER_RESIZE_METHOD);
         getState(true).hasResizeListeners = true;
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addBrowserWindowResizeListener(BrowserWindowResizeListener)}
-     **/
-    @Deprecated
-    public void addListener(BrowserWindowResizeListener resizeListener) {
-        addBrowserWindowResizeListener(resizeListener);
+        return () -> {
+            registration.remove();
+            getState(true).hasResizeListeners = hasEventRouter()
+                    && eventRouter.hasListeners(BrowserWindowResizeEvent.class);
+        };
     }
 
     /**
      * Removes a {@link BrowserWindowResizeListener} from this UI. The listener
      * will no longer be notified when the browser window is resized.
-     * 
+     *
      * @param resizeListener
      *            the listener to remove
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addBrowserWindowResizeListener(BrowserWindowResizeListener)}
+     *             .
      */
+    @Deprecated
     public void removeBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
         removeListener(BrowserWindowResizeEvent.class, resizeListener,
@@ -781,18 +778,9 @@ public class Page implements Serializable {
     }
 
     /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBrowserWindowResizeListener(BrowserWindowResizeListener)}
-     **/
-    @Deprecated
-    public void removeListener(BrowserWindowResizeListener resizeListener) {
-        removeBrowserWindowResizeListener(resizeListener);
-    }
-
-    /**
      * Gets the last known height of the browser window in which this UI
      * resides.
-     * 
+     *
      * @return the browser window height in pixels
      */
     public int getBrowserWindowHeight() {
@@ -801,7 +789,7 @@ public class Page implements Serializable {
 
     /**
      * Gets the last known width of the browser window in which this uI resides.
-     * 
+     *
      * @return the browser window width in pixels
      */
     public int getBrowserWindowWidth() {
@@ -820,7 +808,7 @@ public class Page implements Serializable {
     /**
      * Returns that stylesheet associated with this Page. The stylesheet
      * contains additional styles injected at runtime into the HTML document.
-     * 
+     *
      * @since 7.1
      */
     public Styles getStyles() {
@@ -833,9 +821,8 @@ public class Page implements Serializable {
 
     public void paintContent(PaintTarget target) throws PaintException {
         if (!openList.isEmpty()) {
-            for (final Iterator<OpenResource> i = openList.iterator(); i
-                    .hasNext();) {
-                (i.next()).paintContent(target);
+            for (OpenResource anOpenList : openList) {
+                (anOpenList).paintContent(target);
             }
             openList.clear();
         }
@@ -843,9 +830,7 @@ public class Page implements Serializable {
         // Paint notifications
         if (notifications != null) {
             target.startTag("notifications");
-            for (final Iterator<Notification> it = notifications.iterator(); it
-                    .hasNext();) {
-                final Notification n = it.next();
+            for (final Notification n : notifications) {
                 target.startTag("notification");
                 if (n.getCaption() != null) {
                     target.addAttribute(
@@ -858,8 +843,7 @@ public class Page implements Serializable {
                             n.getDescription());
                 }
                 if (n.getIcon() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_ICON,
+                    target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON,
                             n.getIcon());
                 }
                 if (!n.isHtmlContentAllowed()) {
@@ -867,9 +851,8 @@ public class Page implements Serializable {
                             UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED,
                             true);
                 }
-                target.addAttribute(
-                        UIConstants.ATTRIBUTE_NOTIFICATION_POSITION, n
-                                .getPosition().ordinal());
+                target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION,
+                        n.getPosition().ordinal());
                 target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY,
                         n.getDelayMsec());
                 if (n.getStyleName() != null) {
@@ -900,16 +883,16 @@ public class Page implements Serializable {
      * This method should not be used to start downloads, as the client side
      * will assume the browser will navigate away when opening the URI. Use one
      * of the {@code Page.open} methods or {@code FileDownloader} instead.
-     * 
+     *
      * @see #open(String, String)
      * @see FileDownloader
-     * 
+     *
      * @param uri
      *            the URI to show
      */
     public void setLocation(String uri) {
-        openList.add(new OpenResource(uri, "_self", -1, -1, BORDER_DEFAULT,
-                false));
+        openList.add(
+                new OpenResource(uri, "_self", -1, -1, BORDER_DEFAULT, false));
         uI.markAsDirty();
     }
 
@@ -920,10 +903,10 @@ public class Page implements Serializable {
      * This method should not be used to start downloads, as the client side
      * will assume the browser will navigate away when opening the URI. Use one
      * of the {@code Page.open} methods or {@code FileDownloader} instead.
-     * 
+     *
      * @see #open(String, String)
      * @see FileDownloader
-     * 
+     *
      * @param uri
      *            the URI to show
      */
@@ -935,12 +918,12 @@ public class Page implements Serializable {
      * Returns the location URI of this page, as reported by the browser. Note
      * that this may not be consistent with the server URI the application is
      * deployed in due to potential proxies, redirections and similar.
-     * 
+     *
      * @return The browser location URI.
      */
     public URI getLocation() {
-        if (location == null
-                && !uI.getSession().getConfiguration().isSendUrlsAsParameters()) {
+        if (location == null && !uI.getSession().getConfiguration()
+                .isSendUrlsAsParameters()) {
             throw new IllegalStateException("Location is not available as the "
                     + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
                     + " parameter is configured as false");
@@ -951,10 +934,10 @@ public class Page implements Serializable {
     /**
      * For internal use only. Used to update the server-side location when the
      * client-side location changes.
-     * 
+     *
      * @deprecated As of 7.2, use {@link #updateLocation(String, boolean)}
      *             instead.
-     * 
+     *
      * @param location
      *            the new location URI
      */
@@ -966,9 +949,9 @@ public class Page implements Serializable {
     /**
      * For internal use only. Used to update the server-side location when the
      * client-side location changes.
-     * 
+     *
      * @since 7.2
-     * 
+     *
      * @param location
      *            the new location URI
      * @param fireEvents
@@ -1030,7 +1013,7 @@ public class Page implements Serializable {
      * forgiving when the window is opened directly from a client-side click
      * event.
      * </p>
-     * 
+     *
      * @param url
      *            the URL to open.
      * @param windowName
@@ -1081,7 +1064,7 @@ public class Page implements Serializable {
      * forgiving when the window is opened directly from a client-side click
      * event.
      * </p>
-     * 
+     *
      * @param url
      *            the URL to open.
      * @param windowName
@@ -1108,7 +1091,7 @@ public class Page implements Serializable {
      * forgiving when the window is opened directly from a client-side click
      * event.
      * </p>
-     * 
+     *
      * @param url
      *            the URL to open.
      * @param windowName
@@ -1122,8 +1105,8 @@ public class Page implements Serializable {
      */
     public void open(String url, String windowName, int width, int height,
             BorderStyle border) {
-        openList.add(new OpenResource(url, windowName, width, height, border,
-                true));
+        openList.add(
+                new OpenResource(url, windowName, width, height, border, true));
         uI.markAsDirty();
     }
 
@@ -1157,13 +1140,13 @@ public class Page implements Serializable {
 
     /**
      * Internal helper method to actually add a notification.
-     * 
+     *
      * @param notification
      *            the notification to add
      */
     private void addNotification(Notification notification) {
         if (notifications == null) {
-            notifications = new LinkedList<Notification>();
+            notifications = new LinkedList<>();
         }
         notifications.add(notification);
         uI.markAsDirty();
@@ -1171,12 +1154,12 @@ public class Page implements Serializable {
 
     /**
      * Shows a notification message.
-     * 
+     *
      * @see Notification
-     * 
+     *
      * @param notification
      *            The notification message to show
-     * 
+     *
      * @deprecated As of 7.0, use Notification.show(Page) instead.
      */
     @Deprecated
@@ -1188,9 +1171,9 @@ public class Page implements Serializable {
      * Gets the Page to which the current uI belongs. This is automatically
      * defined when processing requests to the server. In other cases, (e.g.
      * from background threads), the current uI is not automatically defined.
-     * 
+     *
      * @see UI#getCurrent()
-     * 
+     *
      * @return the current page instance if available, otherwise
      *         <code>null</code>
      */
@@ -1208,7 +1191,7 @@ public class Page implements Serializable {
      * <p>
      * If the title is set to null, it will not left as-is. Set to empty string
      * to clear the title.
-     * 
+     *
      * @param title
      *            the page title to set
      */
@@ -1234,7 +1217,7 @@ public class Page implements Serializable {
      * outside of Page should not access it directly but only through public
      * APIs provided by Page.
      * </p>
-     * 
+     *
      * @since 7.1
      * @param markAsDirty
      *            true to mark the state as dirty

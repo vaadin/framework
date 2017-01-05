@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -27,14 +27,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FontIcon;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
 
@@ -64,22 +62,6 @@ public class Slot extends SimplePanel {
 
     private ElementResizeListener spacingResizeListener;
 
-    /*
-     * This listener is applied only in IE8 to workaround browser issue where
-     * IE8 forgets to update the error indicator position when the slot gets
-     * resized by widget resizing itself. #11693
-     */
-    private ElementResizeListener ie8CaptionElementResizeUpdateListener = new ElementResizeListener() {
-
-        @Override
-        public void onElementResize(ElementResizeEvent e) {
-            Element caption = getCaptionElement();
-            if (caption != null) {
-                WidgetUtil.forceIE8Redraw(caption);
-            }
-        }
-    };
-
     // Caption is placed after component unless there is some part which
     // moves it above.
     private CaptionPosition captionPosition = CaptionPosition.RIGHT;
@@ -90,10 +72,10 @@ public class Slot extends SimplePanel {
 
     /**
      * Constructs a slot.
-     * 
+     *
      * When using this constructor, the layout and widget must be set before any
      * other operations are performed on the slot.
-     * 
+     *
      * @since 7.6
      */
     public Slot() {
@@ -103,10 +85,10 @@ public class Slot extends SimplePanel {
     /**
      * Set the layout in which this slot is. This method must be called exactly
      * once at slot construction time when using the default constructor.
-     * 
+     *
      * The method should normally only be called by
      * {@link VAbstractOrderedLayout#createSlot(Widget)}.
-     * 
+     *
      * @since 7.6
      * @param layout
      *            the layout containing the slot
@@ -117,7 +99,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Constructs a slot.
-     * 
+     *
      * @param layout
      *            The layout to which this slot belongs
      * @param widget
@@ -134,7 +116,7 @@ public class Slot extends SimplePanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.SimplePanel#remove(com.google.gwt.user
      * .client.ui.Widget)
      */
@@ -146,7 +128,7 @@ public class Slot extends SimplePanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.SimplePanel#setWidget(com.google.gwt
      * .user.client.ui.Widget)
      */
@@ -176,10 +158,6 @@ public class Slot extends SimplePanel {
                         spacingResizeListener);
             }
 
-            if (BrowserInfo.get().isIE8()) {
-                lm.addElementResizeListener(getWidget().getElement(),
-                        ie8CaptionElementResizeUpdateListener);
-            }
         }
     }
 
@@ -204,10 +182,6 @@ public class Slot extends SimplePanel {
                         spacingResizeListener);
             }
 
-            if (BrowserInfo.get().isIE8()) {
-                lm.removeElementResizeListener(getWidget().getElement(),
-                        ie8CaptionElementResizeUpdateListener);
-            }
         }
     }
 
@@ -246,7 +220,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Returns the alignment for the slot
-     * 
+     *
      */
     public AlignmentInfo getAlignment() {
         return alignment;
@@ -254,7 +228,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Sets the style names for the slot containing the widget
-     * 
+     *
      * @param stylenames
      *            The style names for the slot
      */
@@ -272,7 +246,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Sets how the widget is aligned inside the slot
-     * 
+     *
      * @param alignment
      *            The alignment inside the slot
      */
@@ -308,10 +282,10 @@ public class Slot extends SimplePanel {
      * the expand ratios but instead be allocated space based on its natural
      * size. Other values causes the slot to get a share of the otherwise
      * unallocated space in proportion to the slot's expand ratio value.
-     * 
+     *
      * @param expandRatio
      *            The ratio of the space the slot should occupy
-     * 
+     *
      */
     public void setExpandRatio(double expandRatio) {
         this.expandRatio = expandRatio;
@@ -320,9 +294,9 @@ public class Slot extends SimplePanel {
     /**
      * Get the expand ratio for the slot. The expand ratio describes how the
      * slot should be resized compared to other slots in the layout
-     * 
+     *
      * @return the expand ratio of the slot
-     * 
+     *
      * @see #setExpandRatio(double)
      */
     public double getExpandRatio() {
@@ -332,7 +306,7 @@ public class Slot extends SimplePanel {
     /**
      * Set the spacing for the slot. The spacing determines if there should be
      * empty space around the slot when the slot.
-     * 
+     *
      * @param spacing
      *            Should spacing be enabled
      */
@@ -360,7 +334,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Get the element which is added to make the spacing
-     * 
+     *
      * @return
      */
     public com.google.gwt.user.client.Element getSpacingElement() {
@@ -388,7 +362,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Get the horizontal amount of pixels of the spacing
-     * 
+     *
      * @return
      */
     protected int getHorizontalSpacing() {
@@ -402,7 +376,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Set the position of the caption relative to the slot
-     * 
+     *
      * @param captionPosition
      *            The position of the caption
      */
@@ -410,8 +384,8 @@ public class Slot extends SimplePanel {
         if (caption == null) {
             return;
         }
-        captionWrap.removeClassName("v-caption-on-"
-                + this.captionPosition.name().toLowerCase());
+        captionWrap.removeClassName(
+                "v-caption-on-" + this.captionPosition.name().toLowerCase());
 
         this.captionPosition = captionPosition;
         if (captionPosition == CaptionPosition.BOTTOM
@@ -421,8 +395,8 @@ public class Slot extends SimplePanel {
             captionWrap.insertFirst(caption);
         }
 
-        captionWrap.addClassName("v-caption-on-"
-                + captionPosition.name().toLowerCase());
+        captionWrap.addClassName(
+                "v-caption-on-" + captionPosition.name().toLowerCase());
     }
 
     /**
@@ -434,7 +408,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Set the caption of the slot
-     * 
+     *
      * @param captionText
      *            The text of the caption
      * @param iconUrl
@@ -449,7 +423,7 @@ public class Slot extends SimplePanel {
      *            Is the (field) required
      * @param enabled
      *            Is the component enabled
-     * 
+     *
      * @deprecated Use
      *             {@link #setCaption(String, Icon, List, String, boolean, boolean, boolean)}
      *             instead
@@ -472,7 +446,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Set the caption of the slot as text
-     * 
+     *
      * @param captionText
      *            The text of the caption
      * @param icon
@@ -489,14 +463,15 @@ public class Slot extends SimplePanel {
      *            Is the component enabled
      */
     public void setCaption(String captionText, Icon icon, List<String> styles,
-            String error, boolean showError, boolean required, boolean enabled) {
+            String error, boolean showError, boolean required,
+            boolean enabled) {
         setCaption(captionText, icon, styles, error, showError, required,
                 enabled, false);
     }
 
     /**
      * Set the caption of the slot
-     * 
+     *
      * @param captionText
      *            The text of the caption
      * @param icon
@@ -540,8 +515,8 @@ public class Slot extends SimplePanel {
 
                 // Made changes to DOM. Focus can be lost if it was in the
                 // widget.
-                focusLost = (focusedElement == null ? false : widget
-                        .getElement().isOrHasChild(focusedElement));
+                focusLost = (focusedElement == null ? false
+                        : widget.getElement().isOrHasChild(focusedElement));
             }
         } else if (caption != null) {
             orphan(widget);
@@ -552,8 +527,8 @@ public class Slot extends SimplePanel {
             captionWrap = null;
 
             // Made changes to DOM. Focus can be lost if it was in the widget.
-            focusLost = (focusedElement == null ? false : widget.getElement()
-                    .isOrHasChild(focusedElement));
+            focusLost = (focusedElement == null ? false
+                    : widget.getElement().isOrHasChild(focusedElement));
         }
 
         // Caption text
@@ -663,21 +638,16 @@ public class Slot extends SimplePanel {
                             // even if it does it will be stopped once something
                             // is done with the browser.
                             schedule(25);
-                        } else if (WidgetUtil.getFocusedElement().equals(
-                                Document.get().getBody())) {
+                        } else if (WidgetUtil.getFocusedElement()
+                                .equals(Document.get().getBody())) {
                             // Focus found it's way to BodyElement. Now it can
                             // be restored
                             focusedElement.focus();
                         }
                     }
                 };
-                if (BrowserInfo.get().isIE8()) {
-                    // IE8 can't fix the focus immediately. It will fail.
-                    focusTimer.schedule(25);
-                } else {
-                    // Newer IE versions can handle things immediately.
-                    focusTimer.run();
-                }
+                // Newer IE versions can handle things immediately.
+                focusTimer.run();
             }
         }
     }
@@ -700,7 +670,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Set if the slot has a relative width
-     * 
+     *
      * @param relativeWidth
      *            True if slot uses relative width, false if the slot has a
      *            static width
@@ -718,7 +688,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Set if the slot has a relative height
-     * 
+     *
      * @param relativeHeight
      *            True if the slot uses a relative height, false if the slot has
      *            a static height
@@ -734,7 +704,7 @@ public class Slot extends SimplePanel {
 
     /**
      * Updates the captions size if the slot is relative
-     * 
+     *
      * @param isRelativeSize
      *            Is the slot relatively sized
      * @param direction
@@ -765,7 +735,7 @@ public class Slot extends SimplePanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
      * .user.client.Event)
      */
@@ -784,7 +754,7 @@ public class Slot extends SimplePanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.SimplePanel#getContainerElement()
      */
     @Override
@@ -798,7 +768,7 @@ public class Slot extends SimplePanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.Widget#onDetach()
      */
     @Override
@@ -811,7 +781,7 @@ public class Slot extends SimplePanel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.gwt.user.client.ui.Widget#onAttach()
      */
     @Override

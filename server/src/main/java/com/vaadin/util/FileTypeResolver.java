@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,9 +19,9 @@ package com.vaadin.util;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
@@ -32,7 +32,7 @@ import com.vaadin.server.ThemeResource;
  * Note : The icons are associated purely to mime-types, so a file may not have
  * a custom icon accessible with this class.
  * </p>
- * 
+ *
  * @author Vaadin Ltd.
  * @since 3.0
  */
@@ -53,7 +53,7 @@ public class FileTypeResolver implements Serializable {
     /**
      * Initial file extension to mime-type mapping.
      */
-    static private String initialExtToMIMEMap = "application/cu-seeme                            csm cu,"
+    private static final String initialExtToMIMEMap = "application/cu-seeme                            csm cu,"
             + "application/dsptype                             tsp,"
             + "application/futuresplash                        spl,"
             + "application/mac-binhex40                        hqx,"
@@ -210,12 +210,12 @@ public class FileTypeResolver implements Serializable {
     /**
      * File extension to MIME type mapping. All extensions are in lower case.
      */
-    static private Hashtable<String, String> extToMIMEMap = new Hashtable<String, String>();
+    private static final Map<String, String> EXT_TO_MIME_MAP = new ConcurrentHashMap<>();
 
     /**
      * MIME type to Icon mapping.
      */
-    static private Hashtable<String, Resource> MIMEToIconMap = new Hashtable<String, Resource>();
+    private static final Map<String, Resource> MIME_TO_ICON_MAP = new ConcurrentHashMap<>();
 
     static {
 
@@ -241,7 +241,7 @@ public class FileTypeResolver implements Serializable {
     /**
      * Gets the mime-type of a file. Currently the mime-type is resolved based
      * only on the file name extension.
-     * 
+     *
      * @param fileName
      *            the name of the file whose mime-type is requested.
      * @return mime-type <code>String</code> for the given filename
@@ -254,9 +254,9 @@ public class FileTypeResolver implements Serializable {
         }
 
         // Calculates the extension of the file
-        int dotIndex = fileName.indexOf(".");
-        while (dotIndex >= 0 && fileName.indexOf(".", dotIndex + 1) >= 0) {
-            dotIndex = fileName.indexOf(".", dotIndex + 1);
+        int dotIndex = fileName.indexOf('.');
+        while (dotIndex >= 0 && fileName.indexOf('.', dotIndex + 1) >= 0) {
+            dotIndex = fileName.indexOf('.', dotIndex + 1);
         }
         dotIndex++;
 
@@ -270,7 +270,7 @@ public class FileTypeResolver implements Serializable {
             }
 
             // Return type from extension map, if found
-            final String type = extToMIMEMap.get(ext.toLowerCase());
+            final String type = EXT_TO_MIME_MAP.get(ext.toLowerCase());
             if (type != null) {
                 return type;
             }
@@ -284,7 +284,7 @@ public class FileTypeResolver implements Serializable {
      * the mime-type for the given filename is resolved, and then the
      * corresponding icon is fetched from the internal icon storage. If it is
      * not found the default icon is returned.
-     * 
+     *
      * @param fileName
      *            the name of the file whose icon is requested.
      * @return the icon corresponding to the given file
@@ -294,7 +294,7 @@ public class FileTypeResolver implements Serializable {
     }
 
     private static Resource getIconByMimeType(String mimeType) {
-        final Resource icon = MIMEToIconMap.get(mimeType);
+        final Resource icon = MIME_TO_ICON_MAP.get(mimeType);
         if (icon != null) {
             return icon;
         }
@@ -309,7 +309,7 @@ public class FileTypeResolver implements Serializable {
      * the given file name is resolved, and then the corresponding icon is
      * fetched from the internal icon storage. If it is not found the default
      * icon is returned.
-     * 
+     *
      * @param file
      *            the file whose icon is requested.
      * @return the icon corresponding to the given file
@@ -321,7 +321,7 @@ public class FileTypeResolver implements Serializable {
     /**
      * Gets the mime-type for a file. Currently the returned file type is
      * resolved by the filename extension only.
-     * 
+     *
      * @param file
      *            the file whose mime-type is requested.
      * @return the files mime-type <code>String</code>
@@ -350,7 +350,7 @@ public class FileTypeResolver implements Serializable {
     /**
      * Adds a mime-type mapping for the given filename extension. If the
      * extension is already in the internal mapping it is overwritten.
-     * 
+     *
      * @param extension
      *            the filename extension to be associated with
      *            <code>MIMEType</code>.
@@ -358,38 +358,41 @@ public class FileTypeResolver implements Serializable {
      *            the new mime-type for <code>extension</code>.
      */
     public static void addExtension(String extension, String MIMEType) {
-        extToMIMEMap.put(extension.toLowerCase(), MIMEType);
+        EXT_TO_MIME_MAP.put(extension.toLowerCase(), MIMEType);
     }
 
     /**
      * Adds a icon for the given mime-type. If the mime-type also has a
      * corresponding icon, it is replaced with the new icon.
-     * 
+     *
      * @param MIMEType
      *            the mime-type whose icon is to be changed.
      * @param icon
      *            the new icon to be associated with <code>MIMEType</code>.
      */
     public static void addIcon(String MIMEType, Resource icon) {
-        MIMEToIconMap.put(MIMEType, icon);
+        MIME_TO_ICON_MAP.put(MIMEType, icon);
     }
 
     /**
      * Gets the internal file extension to mime-type mapping.
-     * 
+     *
      * @return unmodifiable map containing the current file extension to
      *         mime-type mapping
      */
     public static Map<String, String> getExtensionToMIMETypeMapping() {
-        return Collections.unmodifiableMap(extToMIMEMap);
+        return Collections.unmodifiableMap(EXT_TO_MIME_MAP);
     }
 
     /**
      * Gets the internal mime-type to icon mapping.
-     * 
+     *
      * @return unmodifiable map containing the current mime-type to icon mapping
      */
     public static Map<String, Resource> getMIMETypeToIconMapping() {
-        return Collections.unmodifiableMap(MIMEToIconMap);
+        return Collections.unmodifiableMap(MIME_TO_ICON_MAP);
+    }
+
+    private FileTypeResolver() {
     }
 }

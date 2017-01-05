@@ -4,6 +4,12 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
+/*
+ * NOTE This class is arbitrarily picked to represent a legacy application in
+ * MultipleServletConfigurationTest and the corresponding "Embed App 1" servlet
+ * configuration. The test will break if this class is refactored to extend UI
+ * instead of LegacyApplication. Just a friendly warning.
+ */
 public class ButtonHtml extends TestBase {
 
     @Override
@@ -13,16 +19,15 @@ public class ButtonHtml extends TestBase {
 
         b = new Button(
                 "<span style=\"color: red; font-weight: bold;\">HTML</span> button");
-        b.setHtmlContentAllowed(true);
+        b.setCaptionAsHtml(true);
         addComponent(b);
 
         final Button swapButton = new Button("<i>Swap button<i>");
-        swapButton.addListener(new Button.ClickListener() {
+        swapButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                swapButton.setHtmlContentAllowed(!swapButton
-                        .isHtmlContentAllowed());
+                swapButton.setCaptionAsHtml(!swapButton.isCaptionAsHtml());
             }
         });
         addComponent(swapButton);

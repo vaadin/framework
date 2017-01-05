@@ -4,13 +4,13 @@ order: 3
 layout: page
 ---
 
+// This section is excluded from the print edition
+
 [[addons.eclipse]]
 = Installing Add-ons in Eclipse with Ivy
 
-The Vaadin Plugin for Eclipse uses Apache Ivy to resolve dependencies. The
-dependencies should be listed in the [filename]#ivy.xml# file in the project
-root. The Vaadin Directory allows dowloading add-ons from a Maven repository,
-which can be accessed also by Ivy.
+If you have a project that uses Apache Ivy to resolve dependencies, they should be listed in the [filename]#ivy.xml# file in the project root.
+Vaadin Directory allows downloading add-ons from a Maven repository, which can also be accessed by Ivy.
 
 You can also use Ivy to resolve dependencies in an Ant script.
 
@@ -84,24 +84,14 @@ dependencies correctly.
 +
 IvyIDE immediately resolves the dependencies when you save the file.
 
-. Compile the add-on widget set
-////
-, as described in &lt;xref
-linkend="addons.compiling.eclipse"/&gt;.
-////
-by clicking the [guilabel]#Compile Vaadin widgets# button in the toolbar.
-
+. Compile the add-on widget set by clicking the [guilabel]#Compile Vaadin Widgetset# button in the toolbar.
 +
 [[figure.addons.eclipse.toolbar]]
 .Compiling Widget Set in Eclipse
-image::img/widgetset-compiling-toolbar-hi.png[]
-
+image::img/widgetset-compiling-toolbar.png[width=50%, scaledwidth=60%]
 
 If you experience problems with Ivy, first check all the dependency parameters.
 IvyDE can sometimes cause unexpected problems. You can clear the Ivy dependency
 cache by right-clicking the project and selecting "Ivy > Clean all caches". To
 refresh Ivy configuration, select "Ivy > Refresh". To try resolving again Ivy,
 select "Ivy > Resolve".
-
-
-

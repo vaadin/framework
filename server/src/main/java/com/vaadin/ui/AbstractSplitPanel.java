@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,6 +29,7 @@ import com.vaadin.server.SizeWithUnit;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
@@ -39,10 +40,10 @@ import com.vaadin.util.ReflectTools;
 
 /**
  * AbstractSplitPanel.
- * 
+ *
  * <code>AbstractSplitPanel</code> is base class for a component container that
  * can contain two components. The components are split by a divider element.
- * 
+ *
  * @author Vaadin Ltd.
  * @since 6.5
  */
@@ -53,7 +54,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     private Unit posMinUnit;
     private Unit posMaxUnit;
 
-    private AbstractSplitPanelRpc rpc = new AbstractSplitPanelRpc() {
+    private final AbstractSplitPanelRpc rpc = new AbstractSplitPanelRpc() {
 
         @Override
         public void splitterClick(MouseEventDetails mouseDetails) {
@@ -79,8 +80,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * Modifiable and Serializable Iterator for the components, used by
      * {@link AbstractSplitPanel#getComponentIterator()}.
      */
-    private class ComponentIterator implements Iterator<Component>,
-            Serializable {
+    private class ComponentIterator
+            implements Iterator<Component>, Serializable {
 
         int i = 0;
 
@@ -125,7 +126,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Add a component into this container. The component is added to the right
      * or under the previous component.
-     * 
+     *
      * @param c
      *            the component to be added.
      */
@@ -145,7 +146,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Sets the first component of this split panel. Depending on the direction
      * the first component is shown at the top or to the left.
-     * 
+     *
      * @param c
      *            The component to use as first component
      */
@@ -168,7 +169,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Sets the second component of this split panel. Depending on the direction
      * the second component is shown at the bottom or to the right.
-     * 
+     *
      * @param c
      *            The component to use as second component
      */
@@ -191,7 +192,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Gets the first component of this split panel. Depending on the direction
      * this is either the component shown at the top or to the left.
-     * 
+     *
      * @return the first component of this split panel
      */
     public Component getFirstComponent() {
@@ -201,7 +202,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Gets the second component of this split panel. Depending on the direction
      * this is either the component shown at the top or to the left.
-     * 
+     *
      * @return the second component of this split panel
      */
     public Component getSecondComponent() {
@@ -210,7 +211,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Removes the component from this container.
-     * 
+     *
      * @param c
      *            the component to be removed.
      */
@@ -227,7 +228,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
 
@@ -239,7 +240,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Gets the number of contained components. Consistent with the iterator
      * returned by {@link #getComponentIterator()}.
-     * 
+     *
      * @return the number of contained components (zero, one or two)
      */
 
@@ -258,7 +259,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /* Documented in superclass */
 
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
         if (oldComponent == getFirstComponent()) {
             setFirstComponent(newComponent);
         } else if (oldComponent == getSecondComponent()) {
@@ -268,7 +270,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Moves the position of the splitter.
-     * 
+     *
      * @param pos
      *            the new size of the first region in the unit that was last
      *            used (default is percentage). Fractions are only allowed when
@@ -280,12 +282,12 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Moves the position of the splitter.
-     * 
+     *
      * @param pos
      *            the new size of the region in the unit that was last used
      *            (default is percentage). Fractions are only allowed when unit
      *            is percentage.
-     * 
+     *
      * @param reverse
      *            if set to true the split splitter position is measured by the
      *            second region else it is measured by the first region
@@ -296,7 +298,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Moves the position of the splitter with given position and unit.
-     * 
+     *
      * @param pos
      *            the new size of the first region. Fractions are only allowed
      *            when unit is percentage.
@@ -309,7 +311,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Moves the position of the splitter with given position and unit.
-     * 
+     *
      * @param pos
      *            the new size of the first region. Fractions are only allowed
      *            when unit is percentage.
@@ -318,7 +320,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @param reverse
      *            if set to true the split splitter position is measured by the
      *            second region else it is measured by the first region
-     * 
+     *
      */
     public void setSplitPosition(float pos, Unit unit, boolean reverse) {
         if (unit != Unit.PERCENTAGE && unit != Unit.PIXELS) {
@@ -340,7 +342,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Returns the current position of the splitter, in
      * {@link #getSplitPositionUnit()} units.
-     * 
+     *
      * @return position of the splitter
      */
     public float getSplitPosition() {
@@ -349,7 +351,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Returns the unit of position of the splitter
-     * 
+     *
      * @return unit of position of the splitter
      * @see #setSplitPosition(float, Unit)
      */
@@ -361,7 +363,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * Is the split position reversed. By default the split position is measured
      * by the first region, but if split position is reversed the measuring is
      * done by the second region instead.
-     * 
+     *
      * @since 7.3.6
      * @return {@code true} if reversed, {@code false} otherwise.
      * @see #setSplitPosition(float, boolean)
@@ -373,7 +375,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Sets the minimum split position to the given position and unit. If the
      * split position is reversed, maximum and minimum are also reversed.
-     * 
+     *
      * @param pos
      *            the minimum position of the split
      * @param unit
@@ -388,7 +390,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Returns the current minimum position of the splitter, in
      * {@link #getMinSplitPositionUnit()} units.
-     * 
+     *
      * @return the minimum position of the splitter
      */
     public float getMinSplitPosition() {
@@ -397,7 +399,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Returns the unit of the minimum position of the splitter.
-     * 
+     *
      * @return the unit of the minimum position of the splitter
      */
     public Unit getMinSplitPositionUnit() {
@@ -407,7 +409,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Sets the maximum split position to the given position and unit. If the
      * split position is reversed, maximum and minimum are also reversed.
-     * 
+     *
      * @param pos
      *            the maximum position of the split
      * @param unit
@@ -422,7 +424,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Returns the current maximum position of the splitter, in
      * {@link #getMaxSplitPositionUnit()} units.
-     * 
+     *
      * @return the maximum position of the splitter
      */
     public float getMaxSplitPosition() {
@@ -431,7 +433,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Returns the unit of the maximum position of the splitter
-     * 
+     *
      * @return the unit of the maximum position of the splitter
      */
     public Unit getMaxSplitPositionUnit() {
@@ -441,7 +443,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Sets the maximum and minimum position of the splitter. If the split
      * position is reversed, maximum and minimum are also reversed.
-     * 
+     *
      * @param minPos
      *            the new minimum position
      * @param minPosUnit
@@ -456,7 +458,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     private void setSplitPositionLimits(float minPos, Unit minPosUnit,
             float maxPos, Unit maxPosUnit) {
         if ((minPosUnit != Unit.PERCENTAGE && minPosUnit != Unit.PIXELS)
-                || (maxPosUnit != Unit.PERCENTAGE && maxPosUnit != Unit.PIXELS)) {
+                || (maxPosUnit != Unit.PERCENTAGE
+                        && maxPosUnit != Unit.PIXELS)) {
             throw new IllegalArgumentException(
                     "Only percentage and pixel units are allowed");
         }
@@ -475,7 +478,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Lock the SplitPanels position, disabling the user from dragging the split
      * handle.
-     * 
+     *
      * @param locked
      *            Set <code>true</code> if locked, <code>false</code> otherwise.
      */
@@ -486,7 +489,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Is the SplitPanel handle locked (user not allowed to change split
      * position by dragging).
-     * 
+     *
      * @return <code>true</code> if locked, <code>false</code> otherwise.
      */
     public boolean isLocked() {
@@ -496,10 +499,11 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * <code>SplitterClickListener</code> interface for listening for
      * <code>SplitterClickEvent</code> fired by a <code>SplitPanel</code>.
-     * 
+     *
      * @see SplitterClickEvent
      * @since 6.2
      */
+    @FunctionalInterface
     public interface SplitterClickListener extends ConnectorEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(
@@ -508,7 +512,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         /**
          * SplitPanel splitter has been clicked
-         * 
+         *
          * @param event
          *            SplitterClickEvent event.
          */
@@ -527,10 +531,12 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Interface for listening for {@link SplitPositionChangeEvent}s fired by a
      * SplitPanel.
-     * 
+     *
      * @since 7.5.0
      */
-    public interface SplitPositionChangeListener extends ConnectorEventListener {
+    @FunctionalInterface
+    public interface SplitPositionChangeListener
+            extends ConnectorEventListener {
 
         public static final Method moveMethod = ReflectTools.findMethod(
                 SplitPositionChangeListener.class, "onSplitPositionChanged",
@@ -538,7 +544,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         /**
          * SplitPanel splitter position has been changed.
-         * 
+         *
          * @param event
          *            SplitPositionChangeEvent event.
          */
@@ -547,7 +553,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     /**
      * Event that indicates a change in SplitPanel's splitter position.
-     * 
+     *
      * @since 7.5.0
      */
     public static class SplitPositionChangeEvent extends Component.Event {
@@ -572,54 +578,40 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     }
 
-    public void addSplitterClickListener(SplitterClickListener listener) {
-        addListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
-                listener, SplitterClickListener.clickMethod);
+    public Registration addSplitterClickListener(
+            SplitterClickListener listener) {
+        return addListener(EventId.CLICK_EVENT_IDENTIFIER,
+                SplitterClickEvent.class, listener,
+                SplitterClickListener.clickMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addSplitterClickListener(SplitterClickListener)}
-     **/
     @Deprecated
-    public void addListener(SplitterClickListener listener) {
-        addSplitterClickListener(listener);
-    }
-
     public void removeSplitterClickListener(SplitterClickListener listener) {
-        removeListener(EventId.CLICK_EVENT_IDENTIFIER,
-                SplitterClickEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeSplitterClickListener(SplitterClickListener)}
-     **/
-    @Deprecated
-    public void removeListener(SplitterClickListener listener) {
-        removeSplitterClickListener(listener);
+        removeListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
+                listener);
     }
 
     /**
      * Register a listener to handle {@link SplitPositionChangeEvent}s.
-     * 
+     *
      * @since 7.5.0
      * @param listener
      *            {@link SplitPositionChangeListener} to be registered.
      */
-    public void addSplitPositionChangeListener(
+    public Registration addSplitPositionChangeListener(
             SplitPositionChangeListener listener) {
-        addListener(SplitPositionChangeEvent.class, listener,
+        return addListener(SplitPositionChangeEvent.class, listener,
                 SplitPositionChangeListener.moveMethod);
     }
 
     /**
      * Removes a {@link SplitPositionChangeListener}.
-     * 
+     *
      * @since 7.5.0
      * @param listener
      *            SplitPositionChangeListener to be removed.
      */
+    @Deprecated
     public void removeSplitPositionChangeListener(
             SplitPositionChangeListener listener) {
         removeListener(SplitPositionChangeEvent.class, listener);
@@ -640,12 +632,13 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     private SplitterState getSplitterState(boolean markAsDirty) {
-        return ((AbstractSplitPanelState) super.getState(markAsDirty)).splitterState;
+        return ((AbstractSplitPanelState) super.getState(
+                markAsDirty)).splitterState;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -714,23 +707,20 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         super.writeDesign(design, designContext);
         // handle custom attributes (write only if a value is not the
         // default value)
-        AbstractSplitPanel def = (AbstractSplitPanel) designContext
-                .getDefaultInstance(this);
+        AbstractSplitPanel def = designContext.getDefaultInstance(this);
         if (getSplitPosition() != def.getSplitPosition()
                 || !def.getSplitPositionUnit().equals(getSplitPositionUnit())) {
             String splitPositionString = asString(getSplitPosition())
                     + getSplitPositionUnit();
             design.attr("split-position", splitPositionString);
         }
-        if (getMinSplitPosition() != def.getMinSplitPosition()
-                || !def.getMinSplitPositionUnit().equals(
-                        getMinSplitPositionUnit())) {
+        if (getMinSplitPosition() != def.getMinSplitPosition() || !def
+                .getMinSplitPositionUnit().equals(getMinSplitPositionUnit())) {
             design.attr("min-split-position", asString(getMinSplitPosition())
                     + getMinSplitPositionUnit());
         }
-        if (getMaxSplitPosition() != def.getMaxSplitPosition()
-                || !def.getMaxSplitPositionUnit().equals(
-                        getMaxSplitPositionUnit())) {
+        if (getMaxSplitPosition() != def.getMaxSplitPosition() || !def
+                .getMaxSplitPositionUnit().equals(getMaxSplitPositionUnit())) {
             design.attr("max-split-position", asString(getMaxSplitPosition())
                     + getMaxSplitPositionUnit());
         }

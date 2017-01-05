@@ -1,18 +1,19 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.TextField;
 
 public class TableShouldNotEatValueChanges extends TestBase {
 
     @Override
     protected void setup() {
-        Table t = new Table("Table with multiselection and item click listener");
+        Table t = new Table(
+                "Table with multiselection and item click listener");
         t.focus();
         t.setPageLength(3);
         t.addContainerProperty("foo", String.class, "bar");

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,12 +16,13 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -45,8 +46,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  */
 @SuppressWarnings("serial")
-public class MenuBar extends AbstractComponent implements LegacyComponent,
-        Focusable {
+public class MenuBar extends AbstractComponent
+        implements LegacyComponent, Focusable {
 
     // Items of the top-level menu
     private final List<MenuItem> menuItems;
@@ -70,7 +71,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         return (MenuBarState) super.getState(markAsDirty);
     }
 
-    /** Paint (serialise) the component for the client. */
+    /** Paint (serialize) the component for the client. */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute(MenuBarConstants.OPEN_ROOT_MENU_ON_HOWER,
@@ -139,8 +140,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
             String description = item.getDescription();
             if (description != null && description.length() > 0) {
-                target.addAttribute(
-                        MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION,
+                target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION,
                         description);
             }
             if (item.isCheckable()) {
@@ -160,10 +160,10 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         target.endTag("item");
     }
 
-    /** Deserialize changes received from client. */
+    /** De-serialize changes received from client. */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        Stack<MenuItem> items = new Stack<MenuItem>();
+        final Deque<MenuItem> items = new ArrayDeque<>();
         boolean found = false;
 
         if (variables.containsKey("clickedId")) {
@@ -177,9 +177,9 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
             MenuItem tmpItem = null;
 
             // Go through all the items in the menu
-            while (!found && !items.empty()) {
+            while (!found && !items.isEmpty()) {
                 tmpItem = items.pop();
-                found = (clickedId.intValue() == tmpItem.getId());
+                found = (clickedId == tmpItem.getId());
 
                 if (tmpItem.hasChildren()) {
                     itr = tmpItem.getChildren().iterator();
@@ -188,7 +188,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
                     }
                 }
 
-            }// while
+            } // while
 
             // If we got the clicked item, launch the command.
             if (found && tmpItem.isEnabled()) {
@@ -199,21 +199,21 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
                     tmpItem.getCommand().menuSelected(tmpItem);
                 }
             }
-        }// if
+        } // if
     }// changeVariables
 
     /**
      * Constructs an empty, horizontal menu
      */
     public MenuBar() {
-        menuItems = new ArrayList<MenuItem>();
+        menuItems = new ArrayList<>();
         setMoreMenuItem(null);
     }
 
     /**
      * Add a new item to the menu bar. Command can be null, but a caption must
      * be given.
-     * 
+     *
      * @param caption
      *            the text for the menu item
      * @param command
@@ -227,7 +227,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
     /**
      * Add a new item to the menu bar. Icon and command can be null, but a
      * caption must be given.
-     * 
+     *
      * @param caption
      *            the text for the menu item
      * @param icon
@@ -253,7 +253,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
      * Add an item before some item. If the given item does not exist the item
      * is added at the end of the menu. Icon and command can be null, but a
      * caption must be given.
-     * 
+     *
      * @param caption
      *            the text for the menu item
      * @param icon
@@ -286,7 +286,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     /**
      * Returns a list with all the MenuItem objects in the menu bar
-     * 
+     *
      * @return a list containing the MenuItem objects in the menu bar
      */
     public List<MenuItem> getItems() {
@@ -295,7 +295,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     /**
      * Remove first occurrence the specified item from the main menu
-     * 
+     *
      * @param item
      *            The item to be removed
      */
@@ -316,7 +316,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     /**
      * Returns the size of the menu.
-     * 
+     *
      * @return The size of the menu
      */
     public int getSize() {
@@ -327,9 +327,9 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
      * Set the item that is used when collapsing the top level menu. All
      * "overflowing" items will be added below this. The item command will be
      * ignored. If set to null, the default item with a downwards arrow is used.
-     * 
+     *
      * The item command (if specified) is ignored.
-     * 
+     *
      * @param item
      */
     public void setMoreMenuItem(MenuItem item) {
@@ -343,7 +343,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     /**
      * Get the MenuItem used as the collapse menu item.
-     * 
+     *
      * @return
      */
     public MenuItem getMoreMenuItem() {
@@ -357,7 +357,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
      * if the mouse is moved out of the opened menu.
      * <p>
      * Note, that on touch devices the menu still opens on a click event.
-     * 
+     *
      * @param autoOpenTopLevelMenu
      *            true if menus should be opened without click, the default is
      *            false
@@ -374,7 +374,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
      * automatically opened when the mouse cursor is moved over the menu.
      * Normally root menu opens only by clicking on the menu. Submenus always
      * open automatically.
-     * 
+     *
      * @return true if the root menus open without click, the default is false
      */
     public boolean isAutoOpen() {
@@ -386,7 +386,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
      * captions are passed to the browser as html and the developer is
      * responsible for ensuring no harmful html is used. If set to false, the
      * content is passed to the browser as plain text.
-     * 
+     *
      * @param htmlContentAllowed
      *            true if the captions are used as html, false if used as plain
      *            text
@@ -398,7 +398,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     /**
      * Checks whether item captions are interpreted as html or plain text.
-     * 
+     *
      * @return true if the captions are used as html, false if used as plain
      *         text
      * @see #setHtmlContentAllowed(boolean)
@@ -414,7 +414,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
      */
     @Override
@@ -434,6 +434,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
      * clicks on the containing {@link com.vaadin.ui.MenuBar.MenuItem}. The
      * selected item is given as an argument.
      */
+    @FunctionalInterface
     public interface Command extends Serializable {
         public void menuSelected(MenuBar.MenuItem selectedItem);
     }
@@ -443,7 +444,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
      * be fired on user click by implementing the
      * {@link com.vaadin.ui.MenuBar.Command} interface. You can also add
      * multiple MenuItems to a MenuItem and create a sub-menu.
-     * 
+     *
      */
     public class MenuItem implements Serializable {
 
@@ -466,14 +467,15 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * Constructs a new menu item that can optionally have an icon and a
          * command associated with it. Icon and command can be null, but a
          * caption must be given.
-         * 
-         * @param text
+         *
+         * @param caption
          *            The text associated with the command
          * @param command
          *            The command to be fired
          * @throws IllegalArgumentException
          */
-        public MenuItem(String caption, Resource icon, MenuBar.Command command) {
+        public MenuItem(String caption, Resource icon,
+                MenuBar.Command command) {
             if (caption == null) {
                 throw new IllegalArgumentException("caption cannot be null");
             }
@@ -485,7 +487,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Checks if the item has children (if it is a sub-menu).
-         * 
+         *
          * @return True if this item has children
          */
         public boolean hasChildren() {
@@ -496,7 +498,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * Adds a separator to this menu. A separator is a way to visually group
          * items in a menu, to make it easier for users to find what they are
          * looking for in the menu.
-         * 
+         *
          * @author Jouni Koivuviita / Vaadin Ltd.
          * @since 6.2.0
          */
@@ -515,20 +517,21 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         /**
          * Add a new item inside this item, thus creating a sub-menu. Command
          * can be null, but a caption must be given.
-         * 
+         *
          * @param caption
          *            the text for the menu item
          * @param command
          *            the command for the menu item
          */
-        public MenuBar.MenuItem addItem(String caption, MenuBar.Command command) {
+        public MenuBar.MenuItem addItem(String caption,
+                MenuBar.Command command) {
             return addItem(caption, null, command);
         }
 
         /**
          * Add a new item inside this item, thus creating a sub-menu. Icon and
          * command can be null, but a caption must be given.
-         * 
+         *
          * @param caption
          *            the text for the menu item
          * @param icon
@@ -553,7 +556,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
             }
 
             if (itsChildren == null) {
-                itsChildren = new ArrayList<MenuItem>();
+                itsChildren = new ArrayList<>();
             }
 
             MenuItem newItem = new MenuItem(caption, icon, command);
@@ -571,7 +574,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * Add an item before some item. If the given item does not exist the
          * item is added at the end of the menu. Icon and command can be null,
          * but a caption must be given.
-         * 
+         *
          * @param caption
          *            the text for the menu item
          * @param icon
@@ -608,7 +611,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * For the associated command.
-         * 
+         *
          * @return The associated command, or null if there is none
          */
         public Command getCommand() {
@@ -617,7 +620,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Gets the objects icon.
-         * 
+         *
          * @return The icon of the item, null if the item doesn't have an icon
          */
         public Resource getIcon() {
@@ -627,7 +630,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         /**
          * For the containing item. This will return null if the item is in the
          * top-level menu bar.
-         * 
+         *
          * @return The containing {@link com.vaadin.ui.MenuBar.MenuItem} , or
          *         null if there is none
          */
@@ -637,7 +640,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * This will return the children of this item or null if there are none.
-         * 
+         *
          * @return List of children items, or null if there are none
          */
         public List<MenuItem> getChildren() {
@@ -646,7 +649,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Gets the objects text
-         * 
+         *
          * @return The text
          */
         public java.lang.String getText() {
@@ -655,7 +658,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Returns the number of children.
-         * 
+         *
          * @return The number of child items
          */
         public int getSize() {
@@ -667,7 +670,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Get the unique identifier for this item.
-         * 
+         *
          * @return The id of this item
          */
         public int getId() {
@@ -676,7 +679,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Set the command for this item. Set null to remove.
-         * 
+         *
          * @param command
          *            The MenuCommand of this item
          */
@@ -686,7 +689,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Sets the icon. Set null to remove.
-         * 
+         *
          * @param icon
          *            The icon for this item
          */
@@ -697,7 +700,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Set the text of this object.
-         * 
+         *
          * @param text
          *            Text for this object
          */
@@ -710,7 +713,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Remove the first occurrence of the item.
-         * 
+         *
          * @param item
          *            The item to be removed
          */
@@ -737,7 +740,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Set the parent of this item. This is called by the addItem method.
-         * 
+         *
          * @param parent
          *            The parent item
          */
@@ -783,9 +786,8 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
         /**
          * Sets the items's description. See {@link #getDescription()} for more
-         * information on what the description is. This method will trigger a
-         * {@link RepaintRequestEvent}.
-         * 
+         * information on what the description is.
+         *
          * @param description
          *            the new description string for the component.
          */
@@ -800,7 +802,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * describe the state of the item to the user. The description string
          * may contain certain XML tags:
          * </p>
-         * 
+         *
          * <p>
          * <table border=1>
          * <tr>
@@ -843,11 +845,11 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * </tr>
          * </table>
          * </p>
-         * 
+         *
          * <p>
          * These tags may be nested.
          * </p>
-         * 
+         *
          * @return item's description <code>String</code>
          */
         public String getDescription() {
@@ -858,11 +860,11 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * Gets the checkable state of the item - whether the item has checked
          * and unchecked states. If an item is checkable its checked state (as
          * returned by {@link #isChecked()}) is indicated in the UI.
-         * 
+         *
          * <p>
          * An item is not checkable by default.
          * </p>
-         * 
+         *
          * @return true if the item is checkable, false otherwise
          * @since 6.6.2
          */
@@ -874,15 +876,15 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * Sets the checkable state of the item. If an item is checkable its
          * checked state (as returned by {@link #isChecked()}) is indicated in
          * the UI.
-         * 
+         *
          * <p>
          * An item is not checkable by default.
          * </p>
-         * 
+         *
          * <p>
          * Items with sub items cannot be checkable.
          * </p>
-         * 
+         *
          * @param checkable
          *            true if the item should be checkable, false otherwise
          * @throws IllegalStateException
@@ -904,15 +906,15 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * if the item is checkable (as indicated by {@link #isCheckable()}).
          * The checked state is indicated in the UI with the item, if the item
          * is checkable.
-         * 
+         *
          * <p>
          * An item is not checked by default.
          * </p>
-         * 
+         *
          * <p>
          * The CSS style corresponding to the checked state is "-checked".
          * </p>
-         * 
+         *
          * @return true if the item is checked, false otherwise
          * @since 6.6.2
          */
@@ -924,16 +926,15 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
          * Sets the checked state of the item. Only used if the item is
          * checkable (indicated by {@link #isCheckable()}). The checked state is
          * indicated in the UI with the item, if the item is checkable.
-         * 
+         *
          * <p>
          * An item is not checked by default.
          * </p>
-         * 
+         *
          * <p>
          * The CSS style corresponding to the checked state is "-checked".
          * </p>
-         * 
-         * @return true if the item is checked, false otherwise
+         *
          * @since 6.6.2
          */
         public void setChecked(boolean checked) {
@@ -946,12 +947,14 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         for (MenuItem item : getItems()) {
-            design.appendChild(createMenuElement(item));
+            design.appendChild(createMenuElement(item, designContext));
         }
 
         // in many cases there seems to be an empty more menu item
-        if (getMoreMenuItem() != null && !getMoreMenuItem().getText().isEmpty()) {
-            Element moreMenu = createMenuElement(getMoreMenuItem());
+        if (getMoreMenuItem() != null
+                && !getMoreMenuItem().getText().isEmpty()) {
+            Element moreMenu = createMenuElement(getMoreMenuItem(),
+                    designContext);
             moreMenu.attr("more", true);
             design.appendChild(moreMenu);
         }
@@ -961,34 +964,35 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         }
     }
 
-    protected Element createMenuElement(MenuItem item) {
+    protected Element createMenuElement(MenuItem item, DesignContext context) {
         Element menuElement = new Element(Tag.valueOf("menu"), "");
         // Defaults
         MenuItem def = new MenuItem("", null, null);
 
         Attributes attr = menuElement.attributes();
         DesignAttributeHandler.writeAttribute("icon", attr, item.getIcon(),
-                def.getIcon(), Resource.class);
+                def.getIcon(), Resource.class, context);
         DesignAttributeHandler.writeAttribute("disabled", attr,
-                !item.isEnabled(), !def.isEnabled(), boolean.class);
-        DesignAttributeHandler.writeAttribute("visible", attr,
-                item.isVisible(), def.isVisible(), boolean.class);
+                !item.isEnabled(), !def.isEnabled(), boolean.class, context);
+        DesignAttributeHandler.writeAttribute("visible", attr, item.isVisible(),
+                def.isVisible(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("separator", attr,
-                item.isSeparator(), def.isSeparator(), boolean.class);
+                item.isSeparator(), def.isSeparator(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("checkable", attr,
-                item.isCheckable(), def.isCheckable(), boolean.class);
-        DesignAttributeHandler.writeAttribute("checked", attr,
-                item.isChecked(), def.isChecked(), boolean.class);
+                item.isCheckable(), def.isCheckable(), boolean.class, context);
+        DesignAttributeHandler.writeAttribute("checked", attr, item.isChecked(),
+                def.isChecked(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("description", attr,
-                item.getDescription(), def.getDescription(), String.class);
+                item.getDescription(), def.getDescription(), String.class,
+                context);
         DesignAttributeHandler.writeAttribute("style-name", attr,
-                item.getStyleName(), def.getStyleName(), String.class);
+                item.getStyleName(), def.getStyleName(), String.class, context);
 
         menuElement.append(item.getText());
 
         if (item.hasChildren()) {
             for (MenuItem subMenu : item.getChildren()) {
-                menuElement.appendChild(createMenuElement(subMenu));
+                menuElement.appendChild(createMenuElement(subMenu, context));
             }
         }
 
@@ -998,12 +1002,12 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
     protected MenuItem readMenuElement(Element menuElement) {
         Resource icon = null;
         if (menuElement.hasAttr("icon")) {
-            icon = DesignAttributeHandler.getFormatter().parse(
-                    menuElement.attr("icon"), Resource.class);
+            icon = DesignAttributeHandler.getFormatter()
+                    .parse(menuElement.attr("icon"), Resource.class);
         }
 
         String caption = "";
-        List<Element> subMenus = new ArrayList<Element>();
+        List<Element> subMenus = new ArrayList<>();
         for (Node node : menuElement.childNodes()) {
             if (node instanceof Element
                     && ((Element) node).tagName().equals("menu")) {
@@ -1040,16 +1044,16 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
                     attr, boolean.class));
         }
         if (menuElement.hasAttr("description")) {
-            menu.setDescription(DesignAttributeHandler.readAttribute(
-                    "description", attr, String.class));
+            menu.setDescription(DesignAttributeHandler
+                    .readAttribute("description", attr, String.class));
         }
         if (menuElement.hasAttr("style-name")) {
-            menu.setStyleName(DesignAttributeHandler.readAttribute(
-                    "style-name", attr, String.class));
+            menu.setStyleName(DesignAttributeHandler.readAttribute("style-name",
+                    attr, String.class));
         }
 
         if (!subMenus.isEmpty()) {
-            menu.itsChildren = new ArrayList<MenuItem>();
+            menu.itsChildren = new ArrayList<>();
         }
 
         for (Element subMenu : subMenus) {

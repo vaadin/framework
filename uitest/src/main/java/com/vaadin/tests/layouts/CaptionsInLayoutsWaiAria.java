@@ -3,13 +3,12 @@ package com.vaadin.tests.layouts;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -17,17 +16,21 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.ui.AbstractLegacyComponent;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
 public class CaptionsInLayoutsWaiAria extends TestBase {
 
@@ -41,7 +44,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     private HorizontalLayout horizontalLayout;
     private GridLayout gridLayout;
     private FormLayout formLayout;
-    private List<AbstractField<?>> components = new ArrayList<AbstractField<?>>();
+    private List<AbstractComponent> components = new ArrayList<>();
     private CssLayout cssLayout;
     private HorizontalLayout layoutParent = new HorizontalLayout();
 
@@ -67,7 +70,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component addCaptionText() {
         Button b = new Button("Add caption text");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -78,7 +81,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     }
 
     protected void prependCaptions(String prepend) {
-        for (AbstractField<?> c : components) {
+        for (Component c : components) {
             c.setCaption(prepend + c.getCaption());
         }
 
@@ -86,70 +89,41 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component toggleRequired() {
         CheckBox requiredToggle = new CheckBox();
-        requiredToggle.setImmediate(true);
         requiredToggle.setCaption("Required");
-        requiredToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setRequired((Boolean) event.getProperty().getValue());
-            }
-        });
+        requiredToggle
+                .addValueChangeListener(event -> setRequired(event.getValue()));
         return requiredToggle;
     }
 
     private Component toggleIcon() {
         CheckBox iconToggle = new CheckBox();
-        iconToggle.setImmediate(true);
         iconToggle.setCaption("Icons");
-        iconToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setIcon((Boolean) event.getProperty().getValue());
-            }
-        });
+        iconToggle.addValueChangeListener(event -> setIcon(event.getValue()));
         return iconToggle;
     }
 
     private Component toggleReadOnly() {
         CheckBox readOnlyToggle = new CheckBox();
-        readOnlyToggle.setImmediate(true);
         readOnlyToggle.setCaption("Read only");
-        readOnlyToggle.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setReadOnly((Boolean) event.getProperty().getValue());
-            }
-        });
+        readOnlyToggle
+                .addValueChangeListener(event -> setReadOnly(event.getValue()));
 
         return readOnlyToggle;
     }
 
     private Component toggleEnabled() {
         CheckBox enabledToggle = new CheckBox();
-        enabledToggle.setImmediate(true);
         enabledToggle.setValue(true);
         enabledToggle.setCaption("Enabled");
-        enabledToggle.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setEnabled((Boolean) event.getProperty().getValue());
-            }
-        });
+        enabledToggle
+                .addValueChangeListener(event -> setEnabled(event.getValue()));
 
         return enabledToggle;
     }
 
     private Component toggleInvalid() {
         CheckBox invalid = new CheckBox("Invalid");
-        invalid.setImmediate(true);
-        invalid.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setInvalid((Boolean) event.getProperty().getValue());
-            }
-        });
+        invalid.addValueChangeListener(event -> setInvalid(event.getValue()));
 
         return invalid;
     }
@@ -161,20 +135,24 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
                     "Der eingegebene Wert ist nicht zulässig!");
         }
 
-        for (AbstractField<?> c : components) {
+        for (AbstractComponent c : components) {
             c.setComponentError(userError);
         }
     }
 
     protected void setRequired(boolean value) {
-        for (AbstractField<?> c : components) {
-            c.setRequired(value);
+        for (AbstractComponent c : components) {
+            if (c instanceof HasValue) {
+                ((HasValue) c).setRequiredIndicatorVisible(value);
+            } else if (c instanceof Field) {
+                ((Field) c).setRequired(value);
+            }
         }
 
     }
 
     protected void setIcon(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (Component c : components) {
             if (!value) {
                 c.setIcon(null);
             } else {
@@ -185,33 +163,30 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     }
 
     protected void setReadOnly(boolean value) {
-        for (AbstractField<?> c : components) {
-            c.setReadOnly(value);
+        for (Component c : components) {
+            if (c instanceof HasValue) {
+                ((HasValue<String>) c).setReadOnly(value);
+            } else if (c instanceof AbstractLegacyComponent) {
+                ((AbstractLegacyComponent) c).setReadOnly(value);
+            }
         }
     }
 
     protected void setEnabled(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (Component c : components) {
             c.setEnabled(value);
         }
     }
 
     private Component toggleError() {
         CheckBox errorToggle = new CheckBox();
-        errorToggle.setImmediate(true);
         errorToggle.setCaption("Error");
-        errorToggle.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setError((Boolean) event.getProperty().getValue());
-            }
-        });
+        errorToggle.addValueChangeListener(event -> setError(event.getValue()));
         return errorToggle;
     }
 
     protected void setError(boolean value) {
-        for (AbstractField<?> c : components) {
+        for (AbstractComponent c : components) {
             if (value) {
                 c.setComponentError(new UserError("error"));
             } else {
@@ -227,7 +202,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         components.add(new TextArea("Default TextArea."));
         // components.add(new RichTextArea("Default RichtTextArea"));
         components.add(new PasswordField("Default Password"));
-        components.add(new DateField("Default DateField"));
+        components.add(new TestDateField("Default DateField"));
 
         // PopupDateField popupDateField = new
         // PopupDateField("Default DateField");
@@ -236,8 +211,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
         components.add(new CheckBox("Default CheckBox"));
 
-        ComboBox comboBox = new ComboBox("Default ComboBox");
-        comboBox.addItem("Item1");
+        ComboBox<String> comboBox = new ComboBox<>("Default ComboBox");
+        comboBox.setItems("Item1");
         components.add(comboBox);
 
         OptionGroup radioGroup = new OptionGroup("Single Items");
@@ -337,8 +312,8 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
             for (String width : new String[] { "auto" }) {
                 Object id = layoutSelect.addItem();
                 Item i = layoutSelect.getItem(id);
-                i.getItemProperty(CAPTION).setValue(
-                        cls.getSimpleName() + ", " + width);
+                i.getItemProperty(CAPTION)
+                        .setValue(cls.getSimpleName() + ", " + width);
                 i.getItemProperty(CLASS).setValue(cls);
                 i.getItemProperty(WIDTH).setValue(width);
             }
@@ -352,10 +327,11 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 Item i = layoutSelect.getItem(event.getProperty().getValue());
 
-                setLayout(getLayout((String) i.getItemProperty(CAPTION)
-                        .getValue(), (Class<? extends Layout>) i
-                        .getItemProperty(CLASS).getValue(), (String) i
-                        .getItemProperty(WIDTH).getValue()));
+                setLayout(getLayout(
+                        (String) i.getItemProperty(CAPTION).getValue(),
+                        (Class<? extends Layout>) i.getItemProperty(CLASS)
+                                .getValue(),
+                        (String) i.getItemProperty(WIDTH).getValue()));
             }
         });
 

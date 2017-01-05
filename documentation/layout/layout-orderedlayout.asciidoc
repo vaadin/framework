@@ -20,7 +20,6 @@ vertically. [classname]#HorizontalLayout# has undefined size in both dimensions.
 
 Typical use of the layouts goes as follows:
 
-
 [source, java]
 ----
 VerticalLayout vertical = new VerticalLayout ();
@@ -39,10 +38,20 @@ image::img/orderedlayout_vertical.png[width=30%, scaledwidth=65%]
 
 image::img/orderedlayout_horizontal.png[width=80%, scaledwidth=100%]
 
-[[layout.orderedlayout.properties]]
-== Properties or Attributes
+ifdef::web[]
+[[layout.orderedlayout.declarative]]
+== Declarative Format
 
-Ordered layouts have the following properties:
+Ordered layouts have the following declarative elements:
+
+|===============
+|Component|Element Name
+|[classname]#VerticalLayout#|[elementname]#v-verticallayout#
+|[classname]#HorizontalLayout#|[elementname]#v-horizontallayout#
+|[classname]#FormLayout#|[elementname]#v-formlayout#
+|===============
+
+The have the following declarative attributes:
 
 [[layout.orderedlayout.properties.table]]
 .Properties and Declarative Attributes
@@ -54,8 +63,36 @@ Ordered layouts have the following properties:
 |[parameter]#spacing#|[parameter]##spacing##++[=++[replaceable]##&lt;boolean&gt;##++]++
 |[parameter]#margin#|[parameter]##margin##++[=++[replaceable]##&lt;boolean&gt;##++]++
 |[parameter]#expandRatio#|Expand ratio of a child component is specified in the child with: [parameter]#:expand#++[=++[replaceable]##&lt;integer&gt;##++]++ or [parameter]#:expand# (implies ratio 1)
-
 |===============
+
+They can also have any attributes applicable to super classes.
+
+For example:
+
+[source, html]
+----
+<!-- Use margin and spacing -->
+<v-vertical-layout size-full margin spacing>
+  <v-label><b>Hello!</b> - How are you?</v-label>
+
+  <!-- Use expand ratio -->
+  <v-horizontal-layout size-full :expand>
+    ...
+
+    <!-- Use expand ratio -->
+    <v-table _id="mytable" caption="My Table"
+             size-full :expand/>
+  </v-horizontal-layout>
+
+  <v-horizontal-layout width-full>
+    ...
+
+    <!-- Use alignment -->
+    <v-button :right><b>OK</b></v-button>
+  </v-horizontal-layout>
+</v-vertical-layout>
+----
+endif::web[]
 
 [[layout.orderedlayout.spacing]]
 == Spacing in Ordered Layouts
@@ -189,6 +226,7 @@ image::img/orderedlayout-sizing-undefined.png[width=50%, scaledwidth=75%]
 
 endif::web[]
 
+[[layout.orderedlayout.defined-size]]
 === Layout with Defined Size
 
 If you set a [classname]#HorizontalLayout# to a defined size horizontally or a
@@ -208,7 +246,7 @@ the question, "Percentage of what?" There is no sensible default answer for this
 question in the current implementation of the layouts, so in practice, you may
 not define "100%" size alone.
 
-
+[[layout.orderedlayout.expanding]]
 === Expanding Components
 
 Often, you want to have one component that takes all the available space left
@@ -234,7 +272,8 @@ Button expandButton = new Button("Expanding component");
 // Use 100% of the expansion cell's width.
 expandButton.setWidth("100%");
 
-// The component must be added to layout before setting the ratio.
+// The component must be added to layout
+// before setting the ratio
 layout.addComponent(expandButton);
 
 // Set the component's cell to expand.
@@ -250,7 +289,7 @@ Notice that you can not call [methodname]#setExpandRatio()# before you have
 added the component to the layout, because it can not operate on an component
 that it doesn't yet have.
 
-
+[[layout.orderedlayout.expandratio]]
 === Expand Ratios
 
 If you specify an expand ratio for multiple components, they will all try to use
@@ -315,15 +354,14 @@ It is not meaningful to combine expanding components with percentually defined
 size and components with fixed or undefined size. Such combination can lead to a
 very unexpected size for the percentually sized components.
 
+[[layout.orderedlayout.percentual]]
+=== Percentual Sizing
 
-=== Percentage of Cells
-
-A percentual size of a component defines the size of the component __within its
-cell__. Usually, you use "100%", but a smaller percentage or a fixed size
+A percentual size of a component defines the size of the component _within its cell_.
+Usually, you use "100%", but a smaller percentage or a fixed size
 (smaller than the cell size) will leave an empty space in the cell and align the
 component within the cell according to its alignment setting, top left by
 default.
-
 
 [source, java]
 ----

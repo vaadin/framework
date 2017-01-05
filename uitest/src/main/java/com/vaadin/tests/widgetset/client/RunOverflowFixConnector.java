@@ -21,8 +21,8 @@ import com.vaadin.tests.components.customlayout.OverflowAutoFix;
 
 @SuppressWarnings("deprecation")
 @Connect(OverflowAutoFix.RunOverflowFix.class)
-public class RunOverflowFixConnector extends
-        AbstractComponentContainerConnector {
+public class RunOverflowFixConnector
+        extends AbstractComponentContainerConnector {
 
     private static final String CONTENT1 = "Overflow:<br>Fix1 (scroll): Both scrollbars should be shown<br>Fix2 (visible): no scrollbars should be shown";
     private static final String CONTENT2 = "OverflowX:<br>Fix1 (hidden): Horizontal scrollbar should be hidden, vertical shown<br>Fix2 (scroll): Both scrollbars should be shown";
@@ -46,18 +46,18 @@ public class RunOverflowFixConnector extends
                     public void onClick(ClickEvent event) {
                         overflow.getElement().getStyle()
                                 .setOverflow(Style.Overflow.SCROLL);
-                        WidgetUtil.runWebkitOverflowAutoFix(overflow
-                                .getElement());
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflow.getElement());
 
                         overflowX.getElement().getStyle()
                                 .setOverflowX(Style.Overflow.HIDDEN);
-                        WidgetUtil.runWebkitOverflowAutoFix(overflowX
-                                .getElement());
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowX.getElement());
 
                         overflowY.getElement().getStyle()
                                 .setOverflowY(Style.Overflow.HIDDEN);
-                        WidgetUtil.runWebkitOverflowAutoFix(overflowY
-                                .getElement());
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowY.getElement());
                     }
                 });
         runFix.addStyleName("run-button-one");
@@ -69,18 +69,18 @@ public class RunOverflowFixConnector extends
                     public void onClick(ClickEvent event) {
                         overflow.getElement().getStyle()
                                 .setOverflow(Style.Overflow.VISIBLE);
-                        WidgetUtil.runWebkitOverflowAutoFix(overflow
-                                .getElement());
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflow.getElement());
 
                         overflowX.getElement().getStyle()
                                 .setOverflowX(Style.Overflow.SCROLL);
-                        WidgetUtil.runWebkitOverflowAutoFix(overflowX
-                                .getElement());
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowX.getElement());
 
                         overflowY.getElement().getStyle()
                                 .setOverflowY(Style.Overflow.AUTO);
-                        WidgetUtil.runWebkitOverflowAutoFix(overflowY
-                                .getElement());
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowY.getElement());
                     }
                 });
         runFix2.addStyleName("run-button-two");

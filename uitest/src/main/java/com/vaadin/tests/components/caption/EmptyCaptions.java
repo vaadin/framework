@@ -2,7 +2,7 @@ package com.vaadin.tests.components.caption;
 
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 public class EmptyCaptions extends TestBase {
 

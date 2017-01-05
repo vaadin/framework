@@ -2,17 +2,17 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter.ConversionException;
+import com.vaadin.v7.ui.TextField;
 
-public class StringMyTypeConverter extends AbstractTestUI {
+public class StringMyTypeConverter extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -59,8 +59,8 @@ class StringToNameConverter implements Converter<String, Name> {
         }
         String[] parts = text.split(" ");
         if (parts.length != 2) {
-            throw new ConversionException("Can not convert text to a name: "
-                    + text);
+            throw new ConversionException(
+                    "Can not convert text to a name: " + text);
         }
         return new Name(parts[0], parts[1]);
     }

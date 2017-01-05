@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,25 +24,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.tests.tb3.ParameterizedTB3Runner;
 
 /**
  * Base class for servlet integration tests. Automatically prepends "/demo" to
  * the deployment path
- * 
+ *
  * @author Vaadin Ltd
  */
 @RunWith(ParameterizedTB3Runner.class)
-public abstract class AbstractServletIntegrationTest extends
-        AbstractIntegrationTest {
+public abstract class AbstractServletIntegrationTest
+        extends AbstractIntegrationTest {
 
     private String contextPath = "/demo";
 
     @Test
     public void runTest() throws IOException, AssertionError {
         openTestURL();
+        // make sure no fading progress indicator from table update is lingering
+        sleep(2000);
         compareScreen("initial");
         $(TableElement.class).first().getCell(0, 1).click();
+        // without this, table fetch might have a fading progress indicator
+        sleep(2000);
         compareScreen("finland");
     }
 
@@ -58,7 +63,7 @@ public abstract class AbstractServletIntegrationTest extends
     @Parameters
     public static Collection<String> getContextPaths() {
         if (getServerName().equals("wildfly9-nginx")) {
-            ArrayList<String> paths = new ArrayList<String>();
+            ArrayList<String> paths = new ArrayList<>();
             paths.add("/buffering/demo");
             paths.add("/nonbuffering/demo");
             paths.add("/buffering-timeout/demo");

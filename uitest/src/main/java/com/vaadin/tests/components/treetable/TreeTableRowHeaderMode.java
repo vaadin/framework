@@ -3,16 +3,16 @@ package com.vaadin.tests.components.treetable;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Table.RowHeaderMode;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.v7.ui.Table.RowHeaderMode;
+import com.vaadin.v7.ui.TreeTable;
 
 /**
  * Test UI for RowHeaderMode.ICON_ONLY in TreeTable.
- * 
+ *
  * @author Vaadin Ltd
  */
-public class TreeTableRowHeaderMode extends AbstractTestUI {
+public class TreeTableRowHeaderMode extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

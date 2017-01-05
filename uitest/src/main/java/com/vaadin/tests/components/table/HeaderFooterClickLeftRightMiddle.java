@@ -1,18 +1,18 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.FooterClickEvent;
-import com.vaadin.ui.Table.FooterClickListener;
-import com.vaadin.ui.Table.HeaderClickEvent;
-import com.vaadin.ui.Table.HeaderClickListener;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.FooterClickEvent;
+import com.vaadin.v7.ui.Table.FooterClickListener;
+import com.vaadin.v7.ui.Table.HeaderClickEvent;
+import com.vaadin.v7.ui.Table.HeaderClickListener;
 
 public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
 
@@ -27,21 +27,14 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         table.setFooterVisible(true);
 
         CheckBox immediateCheckbox = new CheckBox("Immediate");
-        immediateCheckbox.setImmediate(true);
         immediateCheckbox.setValue(table.isImmediate());
-        immediateCheckbox.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setImmediate((Boolean) event.getProperty().getValue());
-            }
-        });
+        immediateCheckbox.addValueChangeListener(
+                event -> table.setImmediate(event.getValue()));
 
         CheckBox headerClickListenerCheckbox = new CheckBox(
                 "Header click listener");
-        headerClickListenerCheckbox.setImmediate(true);
-        headerClickListenerCheckbox
-                .addValueChangeListener(new ValueChangeListener() {
+        headerClickListenerCheckbox.addValueChangeListener(
+                new HasValue.ValueChangeListener<Boolean>() {
 
                     private HeaderClickListener headerClickListener = new HeaderClickListener() {
 
@@ -57,12 +50,13 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void valueChange(ValueChangeEvent event) {
+                    public void valueChange(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(HeaderClickEvent.class)
                                 .isEmpty()) {
                             table.addHeaderClickListener(headerClickListener);
                         } else {
-                            table.removeHeaderClickListener(headerClickListener);
+                            table.removeHeaderClickListener(
+                                    headerClickListener);
                         }
                     }
                 });
@@ -70,9 +64,8 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
 
         CheckBox footerClickListenerCheckbox = new CheckBox(
                 "Footer click listener");
-        footerClickListenerCheckbox.setImmediate(true);
-        footerClickListenerCheckbox
-                .addValueChangeListener(new ValueChangeListener() {
+        footerClickListenerCheckbox.addValueChangeListener(
+                new HasValue.ValueChangeListener<Boolean>() {
 
                     private FooterClickListener footerClickListener = new FooterClickListener() {
 
@@ -87,40 +80,28 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
                     };
 
                     @Override
-                    public void valueChange(ValueChangeEvent event) {
+                    public void valueChange(ValueChangeEvent<Boolean> event) {
                         if (table.getListeners(FooterClickEvent.class)
                                 .isEmpty()) {
                             table.addFooterClickListener(footerClickListener);
                         } else {
-                            table.removeFooterClickListener(footerClickListener);
+                            table.removeFooterClickListener(
+                                    footerClickListener);
                         }
                     }
                 });
         footerClickListenerCheckbox.setValue(true);
 
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
-        sortEnabledCheckbox.setImmediate(true);
         sortEnabledCheckbox.setValue(table.isSortEnabled());
-        sortEnabledCheckbox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.setSortEnabled((Boolean) event.getProperty().getValue());
-            }
-        });
+        sortEnabledCheckbox.addValueChangeListener(
+                event -> table.setSortEnabled(event.getValue()));
 
         CheckBox columnReorderingCheckbox = new CheckBox(
                 "Column reordering allowed");
-        columnReorderingCheckbox.setImmediate(true);
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
-        columnReorderingCheckbox
-                .addValueChangeListener(new ValueChangeListener() {
-
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        table.setColumnReorderingAllowed((Boolean) event
-                                .getProperty().getValue());
-                    }
-                });
+        columnReorderingCheckbox.addValueChangeListener(
+                event -> table.setColumnReorderingAllowed(event.getValue()));
 
         addComponent(immediateCheckbox);
         addComponent(headerClickListenerCheckbox);
@@ -132,7 +113,7 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Tests the header click listener";
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,15 +15,19 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.CssLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TreeElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ValoThemeUITest extends MultiBrowserTest {
@@ -64,7 +68,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         // Note that this can look broken in IE9 because of some browser
         // rendering issue... The problem seems to be in the customized
         // horizontal layout in the test app
-        compareScreen("datefields-with-range");
+        compareScreen("datefields-localdate-with-range");
     }
 
     @Test
@@ -285,9 +289,8 @@ public class ValoThemeUITest extends MultiBrowserTest {
         LabelElement captionElem = content.$(LabelElement.class).first();
         if (!captionElem.getText().equals(caption)) {
             // IE ... why you fail clicks
-            System.err.println("Extra click needed on '" + link
-                    + "' on remote " + getDesiredCapabilities() + " "
-                    + getRemoteControlName());
+            System.err.println("Extra click needed on '" + link + "' on remote "
+                    + getDesiredCapabilities() + " " + getRemoteControlName());
 
             open(link, caption, tries - 1);
         } else {
@@ -311,6 +314,14 @@ public class ValoThemeUITest extends MultiBrowserTest {
     @Override
     protected boolean usePersistentHoverForIE() {
         return false;
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsersToTest = getBrowserCapabilities(
+                Browser.IE11, Browser.FIREFOX, Browser.CHROME);
+        browsersToTest.add(PHANTOMJS2());
+        return browsersToTest;
     }
 
 }

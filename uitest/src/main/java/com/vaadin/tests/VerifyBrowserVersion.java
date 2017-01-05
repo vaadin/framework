@@ -12,8 +12,8 @@ public class VerifyBrowserVersion extends TestBase {
         Label userAgent = new Label(browser.getBrowserApplication());
         userAgent.setId("userAgent");
         addComponent(userAgent);
-        Label touchDevice = new Label("Touch device? "
-                + (browser.isTouchDevice() ? "YES" : "No"));
+        Label touchDevice = new Label(
+                "Touch device? " + (browser.isTouchDevice() ? "YES" : "No"));
         touchDevice.setId("touchDevice");
         addComponent(touchDevice);
     }

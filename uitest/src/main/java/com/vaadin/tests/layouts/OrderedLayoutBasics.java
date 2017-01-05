@@ -16,17 +16,17 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.ListSelect;
 
 public class OrderedLayoutBasics extends TestBase {
 
     String valignName[] = new String[] { "top", "middle", "bottom" };
 
-    Set<AbstractOrderedLayout> layouts = new HashSet<AbstractOrderedLayout>();
+    Set<AbstractOrderedLayout> layouts = new HashSet<>();
     private AbstractOrderedLayout layoutContainer;
     private int suffix = 0;
 
@@ -50,38 +50,68 @@ public class OrderedLayoutBasics extends TestBase {
     }
 
     private void createUI(Layout layout) {
-        layout.addComponent(wrapLayout(layout_field_100pct_button_field(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_field_100pct_button_field(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled_dynamic_height(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_overfilled_dynamic_height(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_symmetric_fields(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_symmetric_fields(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_leftAndRight(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_leftAndRight(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_fixed_filled(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_fixed_filled(new VerticalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_field_100pct_button_field(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_field_100pct_button_field(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_overfilled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_overfilled(new VerticalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_overfilled_dynamic_height(new HorizontalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_overfilled_dynamic_height(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_symmetric_fields(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_symmetric_fields(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_leftAndRight(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_leftAndRight(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_fixed_filled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_fixed_filled(new VerticalLayout())));
         layout.addComponent(wrapLayout(layout_dynamic(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_dynamic(new VerticalLayout())));
         layout.addComponent(wrapLayout(layout_labels(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_labels(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_captions(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_relative_size(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_relative_size(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_fixed_size(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_captions_fixed_size_and_fixed_size(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_add_remove_components(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_add_remove_components(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_pctFilled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_relative_size(
+                        new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_relative_size(
+                        new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_fixed_size(
+                        new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_captions_fixed_size_and_fixed_size(
+                        new VerticalLayout())));
+        layout.addComponent(wrapLayout(
+                layout_add_remove_components(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_add_remove_components(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_pctFilled(new HorizontalLayout())));
         layout.addComponent(wrapLayout(layout_pctFilled(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_underFilled(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_underFilled(new VerticalLayout())));
-        layout.addComponent(wrapLayout(layout_basic_test(new HorizontalLayout())));
-        layout.addComponent(wrapLayout(layout_basic_test(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_underFilled(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_underFilled(new VerticalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_basic_test(new HorizontalLayout())));
+        layout.addComponent(
+                wrapLayout(layout_basic_test(new VerticalLayout())));
     }
 
     private Layout wrapLayout(Layout ol) {
@@ -313,7 +343,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         tf = new TextArea("100% high TextField");
         tf.setCaption(null);
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setValue("100% high Field");
         tf.setHeight("100%");
         tf.setWidth("100px");
@@ -322,7 +352,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         tf = new TextArea("100% high TextField");
         tf.setCaption("100% high TextField");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setValue("100% high Field");
         tf.setHeight("100%");
         tf.setWidth("100px");
@@ -364,9 +394,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_field_100pct_button_field");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_field_100pct_button_field");
+
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -406,9 +436,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_basic_test");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_basic_test");
+
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -448,9 +478,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(false);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_symmetric_fields");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_symmetric_fields");
+
         TextArea tf;
 
         tf = new TextArea("300px x 300px Field");
@@ -487,9 +517,9 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_leftAndRight");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_leftAndRight");
+
         TextArea tf;
 
         // tf = new TextField("100%x100% Field");
@@ -572,7 +602,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("60% x 100% TextField");
         tf.setWidth("100%");
         tf.setHeight("100%");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         // tf.setComponentError(new UserError("It's broken!"));
 
         // tf.setHeight("100%");
@@ -587,7 +617,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("60% x 60% TextField");
         tf.setWidth("100%");
         tf.setHeight("60%");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         ol.addComponent(tf);
         ol.setExpandRatio(tf, 1f);
         ol.setComponentAlignment(tf, Alignment.MIDDLE_LEFT);
@@ -666,7 +696,7 @@ public class OrderedLayoutBasics extends TestBase {
             tf.setValue("200x200 TextField");
             tf.setWidth("200px");
             tf.setHeight("200px");
-            tf.setRequired(true);
+            tf.setRequiredIndicatorVisible(true);
             // tf.setComponentError(new UserError("It's broken!"));
 
             // tf.setHeight("100%");
@@ -693,9 +723,9 @@ public class OrderedLayoutBasics extends TestBase {
             tf = new TextArea("200x200px Field");
             tf.setCaption("This one has a caption");
             tf.setWidth("200px");
-            tf.setHeight(((i + 1) * 50) + "px");
+            tf.setHeight((i + 1) * 50 + "px");
             tf.setValue(tf.getWidth() + "x" + tf.getHeight() + " TextField");
-            tf.setRequired(true);
+            tf.setRequiredIndicatorVisible(true);
             // tf.setComponentError(new UserError("It's broken!"));
 
             // tf.setHeight("100%");
@@ -733,9 +763,8 @@ public class OrderedLayoutBasics extends TestBase {
         ol.setSpacing(true);
 
         // ol.setWidth("");
-        ol.setCaption("Fixed width (" + ol.getWidth()
-                + "px) and fixed height (" + ol.getHeight()
-                + "px) / layout_add_remove_components");
+        ol.setCaption("Fixed width (" + ol.getWidth() + "px) and fixed height ("
+                + ol.getHeight() + "px) / layout_add_remove_components");
 
         for (int i = 0; i < 2; i++) {
             AbstractOrderedLayout inner = createAddRemove(ol, "", "");
@@ -785,7 +814,7 @@ public class OrderedLayoutBasics extends TestBase {
 
         tf = new TextField(
                 "A very long caption which is probably much longer than the field and includes indicators");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
 
@@ -823,7 +852,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf = new TextField(
                 "A long caption which is probably much longer than the field");
         tf.setValue("Undefined width");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -832,7 +861,7 @@ public class OrderedLayoutBasics extends TestBase {
                 "A very long caption which is probably much longer than the field and includes indicators");
         tf.setValue("Undefined width");
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -876,7 +905,7 @@ public class OrderedLayoutBasics extends TestBase {
                 "A long caption which is probably much longer than the field");
         tf.setValue("100% wide field, ratio 2");
         tf.setSizeFull();
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -887,7 +916,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("100% wide field, ratio 3");
         tf.setSizeFull();
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -930,7 +959,7 @@ public class OrderedLayoutBasics extends TestBase {
                 "A long caption which is probably much longer than the field");
         tf.setWidth("250px");
         tf.setValue("250px wide field");
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -940,7 +969,7 @@ public class OrderedLayoutBasics extends TestBase {
         tf.setValue("200px wide field");
         tf.setWidth("200px");
         tf.setIcon(new ThemeResource("icons/16/document-add.png"));
-        tf.setRequired(true);
+        tf.setRequiredIndicatorVisible(true);
         tf.setComponentError(new UserError("abc123"));
         ol.addComponent(tf);
         ol.setComponentAlignment(tf, Alignment.BOTTOM_RIGHT);
@@ -1053,7 +1082,8 @@ public class OrderedLayoutBasics extends TestBase {
 
     }
 
-    protected void addBefore(AbstractOrderedLayout ol, Component c, String width) {
+    protected void addBefore(AbstractOrderedLayout ol, Component c,
+            String width) {
         int index = 0;
         Iterator<Component> iter = ol.getComponentIterator();
         while (iter.hasNext()) {
@@ -1179,7 +1209,7 @@ public class OrderedLayoutBasics extends TestBase {
         ta.setValue("60% x 100% TextField");
         ta.setWidth("60%");
         ta.setHeight("100%");
-        ta.setRequired(true);
+        ta.setRequiredIndicatorVisible(true);
         ta.setRows(2);
 
         ol.addComponent(ta);

@@ -7,19 +7,23 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractDateField;
 
 public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
 
+    public static class TestDateField extends AbstractDateField {
+
+    }
+
     @Test
     public void testFocusListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(DateField.class, FocusEvent.class,
+        testListenerAddGetRemove(TestDateField.class, FocusEvent.class,
                 FocusListener.class);
     }
 
     @Test
     public void testBlurListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(DateField.class, BlurEvent.class,
+        testListenerAddGetRemove(TestDateField.class, BlurEvent.class,
                 BlurListener.class);
     }
 }

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,31 +18,26 @@ package com.vaadin.ui;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.ObjectProperty;
-
 public class CheckBoxTest {
     @Test
-    public void initiallyEmpty() {
-        CheckBox tf = new CheckBox();
-        Assert.assertTrue(tf.isEmpty());
+    public void initiallyFalse() {
+        CheckBox cb = new CheckBox();
+        Assert.assertFalse(cb.getValue());
     }
 
     @Test
-    public void emptyAfterClearUsingPDS() {
-        CheckBox tf = new CheckBox();
-        tf.setPropertyDataSource(new ObjectProperty<Boolean>(Boolean.TRUE));
-        Assert.assertFalse(tf.isEmpty());
-        tf.clear();
-        Assert.assertTrue(tf.isEmpty());
+    public void testSetValue() {
+        CheckBox cb = new CheckBox();
+        cb.setValue(true);
+        Assert.assertTrue(cb.getValue());
+        cb.setValue(false);
+        Assert.assertFalse(cb.getValue());
     }
 
-    @Test
-    public void emptyAfterClear() {
-        CheckBox tf = new CheckBox();
-        tf.setValue(true);
-        Assert.assertFalse(tf.isEmpty());
-        tf.clear();
-        Assert.assertTrue(tf.isEmpty());
+    @Test(expected = NullPointerException.class)
+    public void setValue_nullValue_throwsNPE() {
+        CheckBox cb = new CheckBox();
+        cb.setValue(null);
     }
 
 }

@@ -1,12 +1,12 @@
-/* 
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+/*
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,12 +24,12 @@ import com.vaadin.server.BootstrapListener;
 import com.vaadin.server.BootstrapPageResponse;
 import com.vaadin.server.BootstrapResponse;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
-public class BootstrapModifyUI extends AbstractTestUI {
+public class BootstrapModifyUI extends AbstractReindeerTestUI {
     private static final String INSTALLED_ATRIBUTE_NAME = BootstrapModifyUI.class
             .getName() + ".installed";
 
@@ -47,7 +47,8 @@ public class BootstrapModifyUI extends AbstractTestUI {
                     }
                 });
         addComponent(c);
-        c.setEnabled(getSession().getAttribute(INSTALLED_ATRIBUTE_NAME) == null);
+        c.setEnabled(
+                getSession().getAttribute(INSTALLED_ATRIBUTE_NAME) == null);
     }
 
     private static BootstrapListener createBootstrapListener() {

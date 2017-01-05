@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 public class TableExtraScrollbars extends AbstractTestCase {
 
@@ -42,8 +42,8 @@ public class TableExtraScrollbars extends AbstractTestCase {
         for (int i = 0; i < ROWS; ++i) {
             Item item = container.addItem(i);
             for (int p = 0; p < PROPS; ++p) {
-                item.getItemProperty("prop" + p).setValue(
-                        "property value 1234567890");
+                item.getItemProperty("prop" + p)
+                        .setValue("property value 1234567890");
             }
         }
         return container;

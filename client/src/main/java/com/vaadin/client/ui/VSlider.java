@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -37,8 +37,8 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
-public class VSlider extends SimpleFocusablePanel implements Field,
-        HasValue<Double>, SubPartAware {
+public class VSlider extends SimpleFocusablePanel
+        implements Field, HasValue<Double>, SubPartAware {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -52,7 +52,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     protected String id;
 
-    protected boolean immediate;
     protected boolean disabled;
     protected boolean readonly;
 
@@ -64,7 +63,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
     private final HTML feedback = new HTML("", false);
-    private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
+    private final VOverlay feedbackPopup = new VOverlay(true, false) {
         {
             setOwner(VSlider.this);
         }
@@ -137,7 +136,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         updateStyleNames(style, true);
     }
 
-    protected void updateStyleNames(String styleName, boolean isPrimaryStyleName) {
+    protected void updateStyleNames(String styleName,
+            boolean isPrimaryStyleName) {
 
         feedbackPopup.removeStyleName(getStylePrimaryName() + "-feedback");
         removeStyleName(getStylePrimaryName() + "-vertical");
@@ -213,7 +213,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                     @Override
                     public void execute() {
                         final Element p = getElement();
-                        if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)
+                        if (p.getPropertyInt(domProperty) > MIN_SIZE + 5
                                 || propertyNotNullOrEmpty(styleAttribute, p)) {
                             if (isVertical()) {
                                 setHeight();
@@ -282,8 +282,10 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             increaseValue(true);
         } else if (DOM.eventGetType(event) == Event.MOUSEEVENTS) {
             processBaseEvent(event);
-        } else if ((BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYPRESS)
-                || (!BrowserInfo.get().isGecko() && DOM.eventGetType(event) == Event.ONKEYDOWN)) {
+        } else if (BrowserInfo.get().isGecko()
+                && DOM.eventGetType(event) == Event.ONKEYPRESS
+                || !BrowserInfo.get().isGecko()
+                        && DOM.eventGetType(event) == Event.ONKEYDOWN) {
 
             if (handleNavigation(event.getKeyCode(), event.getCtrlKey(),
                     event.getShiftKey())) {
@@ -403,10 +405,10 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
 
         if (isVertical()) {
-            v = ((baseSize - (coord - baseOffset)) / (double) (baseSize - handleSize))
-                    * (max - min) + min;
+            v = (baseSize - (coord - baseOffset))
+                    / (double) (baseSize - handleSize) * (max - min) + min;
         } else {
-            v = ((coord - baseOffset) / (double) (baseSize - handleSize))
+            v = (coord - baseOffset) / (double) (baseSize - handleSize)
                     * (max - min) + min;
         }
 
@@ -422,7 +424,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     /**
      * TODO consider extracting touches support to an impl class specific for
      * webkit (only browser that really supports touches).
-     * 
+     *
      * @param event
      * @return
      */
@@ -460,7 +462,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     /**
      * Handles the keyboard events handled by the Slider
-     * 
+     *
      * @param event
      *            The keyboard event received
      * @return true iff the navigation event was handled
@@ -472,8 +474,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             return false;
         }
 
-        if ((keycode == getNavigationUpKey() && isVertical())
-                || (keycode == getNavigationRightKey() && !isVertical())) {
+        if (keycode == getNavigationUpKey() && isVertical()
+                || keycode == getNavigationRightKey() && !isVertical()) {
             if (shift) {
                 for (int a = 0; a < acceleration; a++) {
                     increaseValue(false);
@@ -484,7 +486,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             }
             return true;
         } else if (keycode == getNavigationDownKey() && isVertical()
-                || (keycode == getNavigationLeftKey() && !isVertical())) {
+                || keycode == getNavigationLeftKey() && !isVertical()) {
             if (shift) {
                 for (int a = 0; a < acceleration; a++) {
                     decreaseValue(false);
@@ -503,7 +505,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      * Get the key that increases the vertical slider. By default it is the up
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationUpKey() {
@@ -514,7 +516,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      * Get the key that decreases the vertical slider. By default it is the down
      * arrow key but by overriding this you can change the key to whatever you
      * want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationDownKey() {
@@ -525,7 +527,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      * Get the key that decreases the horizontal slider. By default it is the
      * left arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationLeftKey() {
@@ -536,7 +538,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      * Get the key that increases the horizontal slider. By default it is the
      * right arrow key but by overriding this you can change the key to whatever
      * you want.
-     * 
+     *
      * @return The keycode of the key
      */
     protected int getNavigationRightKey() {
@@ -549,10 +551,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setImmediate(boolean immediate) {
-        this.immediate = immediate;
     }
 
     public void setDisabled(boolean disabled) {
@@ -611,7 +609,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                 : "offsetWidth";
         final int handleSize = handle.getPropertyInt(domProperty);
         final int baseSize = base.getPropertyInt(domProperty)
-                - (2 * BASE_BORDER_WIDTH);
+                - 2 * BASE_BORDER_WIDTH;
 
         final int range = baseSize - handleSize;
         double v = value.doubleValue();
@@ -657,7 +655,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     @Override
-    public com.google.gwt.user.client.Element getSubPartElement(String subPart) {
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (subPart.equals("popup")) {
             feedbackPopup.show();
             return feedbackPopup.getElement();
@@ -666,7 +665,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     @Override
-    public String getSubPartName(com.google.gwt.user.client.Element subElement) {
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (feedbackPopup.getElement().isOrHasChild(subElement)) {
             return "popup";
         }

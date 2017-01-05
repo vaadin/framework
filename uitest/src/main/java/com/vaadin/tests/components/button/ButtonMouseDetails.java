@@ -44,7 +44,6 @@ public class ButtonMouseDetails extends TestBase {
         getLayout().setSpacing(true);
 
         Button button = new Button("CLICK ME!", clickListener);
-        button.setImmediate(true);
         addComponent(button);
 
         addComponent(out);

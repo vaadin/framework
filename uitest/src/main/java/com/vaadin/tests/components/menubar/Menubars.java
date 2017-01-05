@@ -72,13 +72,13 @@ public class Menubars extends ComponentTestCase<MenuBar> {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "A generic test for MenuBars in different configurations";
     }
 
     @Override
     protected List<Component> createActions() {
-        ArrayList<Component> actions = new ArrayList<Component>();
+        ArrayList<Component> actions = new ArrayList<>();
         actions.add(createErrorIndicatorAction(false));
         actions.add(createEnabledAction(true));
 

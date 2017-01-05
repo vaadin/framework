@@ -6,19 +6,20 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public class MenuBarNavigation extends AbstractTestUIWithLog implements Command {
+public class MenuBarNavigation extends AbstractTestUIWithLog
+        implements Command {
 
     private MenuItem edit;
     private MenuItem file;
     private MenuItem export;
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Test case for mouse and keyboard navigation in MenuBar";
     }
 
     @Override
-    public Integer getTicketNumber() {
+    protected Integer getTicketNumber() {
         return 5174;
     }
 

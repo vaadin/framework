@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.layouts.layouttester.VLayout;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.tests.layouts.layouttester.BaseCaption;
 import com.vaadin.ui.VerticalLayout;
 
@@ -27,9 +26,6 @@ import com.vaadin.ui.VerticalLayout;
 
 public class VCaption extends BaseCaption {
 
-    /**
-     * @param layoutClass
-     */
     public VCaption() {
         super(VerticalLayout.class);
         // TODO Auto-generated constructor stub

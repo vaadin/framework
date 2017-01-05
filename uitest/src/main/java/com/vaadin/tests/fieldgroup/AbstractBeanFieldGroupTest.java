@@ -1,13 +1,13 @@
 package com.vaadin.tests.fieldgroup;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 
 public abstract class AbstractBeanFieldGroupTest extends TestBase {
 
@@ -57,7 +57,7 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
     protected Button getCommitButton() {
         if (commitButton == null) {
             commitButton = new Button("Commit");
-            commitButton.addListener(new ClickListener() {
+            commitButton.addClickListener(new ClickListener() {
 
                 @Override
                 public void buttonClick(ClickEvent event) {

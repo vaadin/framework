@@ -11,10 +11,10 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Image;
 
-public class DynamicImageUI extends AbstractTestUI {
+public class DynamicImageUI extends AbstractReindeerTestUI {
     public static final String IMAGE_URL = "myimage.png";
 
     private final RequestHandler requestHandler = new RequestHandler() {
@@ -28,8 +28,8 @@ public class DynamicImageUI extends AbstractTestUI {
                 String text = request.getParameter("text");
                 BufferedImage bi = new BufferedImage(100, 30,
                         BufferedImage.TYPE_3BYTE_BGR);
-                bi.getGraphics().drawChars(text.toCharArray(), 0,
-                        text.length(), 10, 20);
+                bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(),
+                        10, 20);
                 response.setContentType("image/png");
                 ImageIO.write(bi, "png", response.getOutputStream());
 

@@ -3,8 +3,8 @@ package com.vaadin.tests.components.tree;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Tree;
 
 public class TreePerformanceTest extends AbstractTestCase {
 

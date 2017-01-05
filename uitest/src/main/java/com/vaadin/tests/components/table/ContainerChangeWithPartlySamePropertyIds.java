@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 public class ContainerChangeWithPartlySamePropertyIds extends TestBase {
 
@@ -67,7 +67,7 @@ public class ContainerChangeWithPartlySamePropertyIds extends TestBase {
         public TableTestComponent() {
 
             Button switchContainerButton = new Button("switch container");
-            switchContainerButton.addListener(new ClickListener() {
+            switchContainerButton.addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     if (testTable.getContainerDataSource() == containerA) {
@@ -80,7 +80,7 @@ public class ContainerChangeWithPartlySamePropertyIds extends TestBase {
             this.addComponent(switchContainerButton);
 
             Button clearButton = new Button("clear (click twice)");
-            clearButton.addListener(new ClickListener() {
+            clearButton.addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     try {

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,15 +15,15 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import com.vaadin.client.connectors.AbstractRendererConnector;
+import com.vaadin.client.connectors.grid.AbstractGridRendererConnector;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.client.SimpleTestBean;
 
 @Connect(com.vaadin.tests.components.grid.BeanRenderer.class)
-public class PojoRendererConnector extends
-        AbstractRendererConnector<SimpleTestBean> {
+public class PojoRendererConnector
+        extends AbstractGridRendererConnector<SimpleTestBean> {
 
     public static class BeanRenderer implements Renderer<SimpleTestBean> {
         @Override

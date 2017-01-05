@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.layouts.layouttester.HLayout;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.tests.layouts.layouttester.BaseComponentSizing;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -27,9 +26,6 @@ import com.vaadin.ui.HorizontalLayout;
 
 public class HComponentSizing extends BaseComponentSizing {
 
-    /**
-     * @param layoutClass
-     */
     public HComponentSizing() {
         super(HorizontalLayout.class);
     }

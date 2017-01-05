@@ -13,7 +13,7 @@
   
   .#{$primary-stylename}-margin,
   .#{$primary-stylename}-canvas {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
   }
   
   .#{$primary-stylename}.v-has-height > div,

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -43,7 +43,7 @@ import com.vaadin.server.VaadinServlet;
  * Note that {@link WebListener} is Servlet 3.0 API so this will not be run for
  * older servers (unless added to web.xml), but these servers do not support JSR
  * 356 websockets either.
- * 
+ *
  * @since 7.5.0
  * @author Vaadin Ltd
  */
@@ -65,8 +65,8 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
      */
     public static class FakeServletConfig implements ServletConfig {
 
-        private ServletRegistration servletRegistration;
-        private ServletContext servletContext;
+        private final ServletRegistration servletRegistration;
+        private final ServletContext servletContext;
 
         public FakeServletConfig(ServletRegistration servletRegistration,
                 ServletContext servletContext) {
@@ -91,8 +91,8 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
 
         @Override
         public Enumeration<String> getInitParameterNames() {
-            return Collections.enumeration(servletRegistration
-                    .getInitParameters().keySet());
+            return Collections.enumeration(
+                    servletRegistration.getInitParameters().keySet());
         }
 
     }
@@ -113,15 +113,15 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
         for (String servletName : regs.keySet()) {
             ServletRegistration servletRegistration = regs.get(servletName);
 
-            if (isVaadinServlet(servletRegistration)) {
+            if (isVaadinServlet(servletRegistration, servletContext)) {
                 try {
                     initAtmosphereForVaadinServlet(servletRegistration,
                             servletContext);
                 } catch (Exception e) {
-                    getLogger().log(
-                            Level.WARNING,
+                    getLogger().log(Level.WARNING,
                             "Failed to initialize Atmosphere for "
-                                    + servletName, e);
+                                    + servletName,
+                            e);
                 }
             }
         }
@@ -132,7 +132,7 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
      * <p>
      * For JSR 356 websockets to work properly, the initialization must be done
      * in the servlet context initialization phase.
-     * 
+     *
      * @param servletRegistration
      *            The servlet registration info for the servlet
      * @param servletContext
@@ -149,9 +149,8 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
             return;
         }
         getLogger().finer("Creating AtmosphereFramework for " + servletName);
-        AtmosphereFramework framework = PushRequestHandler
-                .initAtmosphere(new FakeServletConfig(servletRegistration,
-                        servletContext));
+        AtmosphereFramework framework = PushRequestHandler.initAtmosphere(
+                new FakeServletConfig(servletRegistration, servletContext));
         servletContext.setAttribute(attributeName, framework);
         getLogger().finer("Created AtmosphereFramework for " + servletName);
 
@@ -160,7 +159,7 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
     /**
      * Returns the name of the attribute in the servlet context where the
      * pre-initialized Atmosphere object is stored
-     * 
+     *
      * @param servletName
      *            The name of the servlet
      * @return The attribute name which contains the initialized Atmosphere
@@ -179,21 +178,23 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
      * @return <code>true</code> if the attribute name matches the convention,
      *         <code>false</code> otherwise
      */
-    private static boolean isAtmosphereFrameworkAttribute(String attributeName) {
-        return attributeName.startsWith(JSR356WebsocketInitializer.class
-                .getName() + ".");
+    private static boolean isAtmosphereFrameworkAttribute(
+            String attributeName) {
+        return attributeName
+                .startsWith(JSR356WebsocketInitializer.class.getName() + ".");
     }
 
     /**
      * Tries to determine if the given servlet registration refers to a Vaadin
      * servlet.
-     * 
+     *
      * @param servletRegistration
      *            The servlet registration info for the servlet
      * @return false if the servlet is definitely not a Vaadin servlet, true
      *         otherwise
      */
-    protected boolean isVaadinServlet(ServletRegistration servletRegistration) {
+    protected boolean isVaadinServlet(ServletRegistration servletRegistration,
+            ServletContext servletContext) {
         try {
             String servletClassName = servletRegistration.getClassName();
             if (servletClassName.equals("com.ibm.ws.wsoc.WsocServlet")) {
@@ -201,7 +202,10 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
                 // dynamically added
                 return false;
             }
-            Class<?> servletClass = Class.forName(servletClassName);
+            // Must use servletContext class loader to load servlet class to
+            // work correctly in an OSGi environment (#20024)
+            Class<?> servletClass = servletContext.getClassLoader()
+                    .loadClass(servletClassName);
             return VaadinServlet.class.isAssignableFrom(servletClass);
         } catch (Exception e) {
             // This will fail in OSGi environments, assume everything is a

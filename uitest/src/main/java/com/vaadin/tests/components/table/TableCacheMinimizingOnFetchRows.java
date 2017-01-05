@@ -3,12 +3,12 @@ package com.vaadin.tests.components.table;
 import java.io.Serializable;
 import java.util.List;
 
-import com.vaadin.data.util.BeanContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.BeanContainer;
+import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
 public class TableCacheMinimizingOnFetchRows extends AbstractTestUIWithLog {

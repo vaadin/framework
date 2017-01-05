@@ -2,7 +2,7 @@ package com.vaadin.tests.components.label;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.GridLayout;
@@ -10,19 +10,20 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
-public class MarginsInLabels extends AbstractTestUI {
+public class MarginsInLabels extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         AbstractLayout layout = new VerticalLayout();
-        layout.addComponent(new Label("<h1>Vertical layout</h1>",
-                ContentMode.HTML));
+        layout.addComponent(
+                new Label("<h1>Vertical layout</h1>", ContentMode.HTML));
         layout.addComponent(new Label("Next row"));
         addComponent(layout);
 
         layout = new GridLayout(1, 2);
         layout.setWidth("100%");
-        layout.addComponent(new Label("<h1>Grid layout</h1>", ContentMode.HTML));
+        layout.addComponent(
+                new Label("<h1>Grid layout</h1>", ContentMode.HTML));
         layout.addComponent(new Label("Next row"));
         addComponent(layout);
 

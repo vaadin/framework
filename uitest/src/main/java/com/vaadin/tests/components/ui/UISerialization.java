@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,14 +27,14 @@ import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 
-public class UISerialization extends AbstractTestUI {
+public class UISerialization extends AbstractReindeerTestUI {
 
     private Log log = new Log(5);
 
@@ -55,8 +55,8 @@ public class UISerialization extends AbstractTestUI {
                             .getDiffState(UISerialization.this);
                     UISerialization app = (UISerialization) deserialize(result);
                     log.log("Deserialized UI in " + elapsed + "ms");
-                    Object diffStateAfter = getConnectorTracker().getDiffState(
-                            UISerialization.this);
+                    Object diffStateAfter = getConnectorTracker()
+                            .getDiffState(UISerialization.this);
                     if (diffStateBefore.equals(diffStateAfter)) {
                         log.log("Diff states match, size: "
                                 + diffStateBefore.toString().length());
@@ -67,8 +67,8 @@ public class UISerialization extends AbstractTestUI {
                     log.log("Exception caught: " + e.getMessage());
                     StringWriter sw = new StringWriter();
                     e.printStackTrace(new PrintWriter(sw));
-                    addComponent(new Label(sw.toString(),
-                            ContentMode.PREFORMATTED));
+                    addComponent(
+                            new Label(sw.toString(), ContentMode.PREFORMATTED));
                 }
 
             }

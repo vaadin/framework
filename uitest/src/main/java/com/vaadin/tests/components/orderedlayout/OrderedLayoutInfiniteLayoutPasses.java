@@ -22,7 +22,8 @@ public class OrderedLayoutInfiniteLayoutPasses extends UI {
         setContent(layout);
 
         Styles styles = Page.getCurrent().getStyles();
-        styles.add(".my-separator {background-color: lightgray; min-height:2px;max-height:2px} ");
+        styles.add(
+                ".my-separator {background-color: lightgray; min-height:2px;max-height:2px} ");
     }
 
     private Button createOpenWindowButton() {

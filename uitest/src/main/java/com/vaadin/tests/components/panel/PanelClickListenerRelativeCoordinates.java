@@ -13,14 +13,12 @@ public class PanelClickListenerRelativeCoordinates extends TestBase {
         VerticalLayout panelLayout = new VerticalLayout();
         panelLayout.setMargin(true);
         Panel panel = new Panel("Panel's caption", panelLayout);
-        panel.addListener(new ClickListener() {
+        panel.addClickListener(new ClickListener() {
 
             @Override
             public void click(ClickEvent event) {
-                getMainWindow()
-                        .showNotification(
-                                "" + event.getRelativeX() + ", "
-                                        + event.getRelativeY());
+                getMainWindow().showNotification("" + event.getRelativeX()
+                        + ", " + event.getRelativeY());
             }
         });
         addComponent(panel);

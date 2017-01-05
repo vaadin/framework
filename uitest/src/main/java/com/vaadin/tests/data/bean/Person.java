@@ -136,8 +136,8 @@ public class Person {
     }
 
     public static Person createTestPerson2() {
-        return new Person("Maya", "Dinkelstein", "maya@foo.bar", 18,
-                Sex.FEMALE, new Address("Red street", 12, "Amsterdam",
+        return new Person("Maya", "Dinkelstein", "maya@foo.bar", 18, Sex.FEMALE,
+                new Address("Red street", 12, "Amsterdam",
                         Country.NETHERLANDS));
     }
 }

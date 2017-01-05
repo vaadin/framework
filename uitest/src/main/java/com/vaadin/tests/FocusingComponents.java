@@ -1,20 +1,20 @@
 package com.vaadin.tests;
 
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.NativeSelect;
+import com.vaadin.v7.ui.OptionGroup;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Simple test helper to test Focusable.focus() method.
- * 
+ *
  */
 public class FocusingComponents extends CustomComponent {
     GridLayout lo = new GridLayout(2, 1);
@@ -31,7 +31,7 @@ public class FocusingComponents extends CustomComponent {
         addFocusableTest(f);
         addFocusableTest(new ComboBox());
         addFocusableTest(new TextField());
-        addFocusableTest(new DateField());
+        addFocusableTest(new TestDateField());
         addFocusableTest(new NativeSelect());
         addFocusableTest(new ListSelect());
         addFocusableTest(new OptionGroup());
@@ -53,7 +53,7 @@ public class FocusingComponents extends CustomComponent {
         }
 
         Button focus = new Button("focus");
-        focus.addListener(new Button.ClickListener() {
+        focus.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 f.focus();

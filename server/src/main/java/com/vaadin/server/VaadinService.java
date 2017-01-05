@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,9 +31,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +62,7 @@ import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -164,13 +167,14 @@ public abstract class VaadinService implements Serializable {
                 final Class<?> classLoaderClass = getClass().getClassLoader()
                         .loadClass(classLoaderName);
                 final Constructor<?> c = classLoaderClass
-                        .getConstructor(new Class[] { ClassLoader.class });
+                        .getConstructor(ClassLoader.class);
                 setClassLoader((ClassLoader) c
-                        .newInstance(new Object[] { getClass().getClassLoader() }));
+                        .newInstance(getClass().getClassLoader()));
             } catch (final Exception e) {
                 throw new RuntimeException(
                         "Could not find specified class loader: "
-                                + classLoaderName, e);
+                                + classLoaderName,
+                        e);
             }
         }
 
@@ -189,10 +193,38 @@ public abstract class VaadinService implements Serializable {
      */
     public void init() throws ServiceException {
         List<RequestHandler> handlers = createRequestHandlers();
+
+        ServiceInitEvent event = new ServiceInitEvent(this);
+
+        Iterator<VaadinServiceInitListener> initListeners = getServiceInitListeners();
+        while (initListeners.hasNext()) {
+            initListeners.next().serviceInit(event);
+        }
+
+        handlers.addAll(event.getAddedRequestHandlers());
+
         Collections.reverse(handlers);
+
         requestHandlers = Collections.unmodifiableCollection(handlers);
 
         initialized = true;
+    }
+
+    /**
+     * Gets all available service init listeners. A custom Vaadin service
+     * implementation can override this method to discover init listeners in
+     * some other way in addition to the default implementation that uses
+     * {@link ServiceLoader}. This could for example be used to allow defining
+     * an init listener as an OSGi service or as a Spring bean.
+     *
+     * @since 8.0
+     *
+     * @return an iterator of available service init listeners
+     */
+    protected Iterator<VaadinServiceInitListener> getServiceInitListeners() {
+        ServiceLoader<VaadinServiceInitListener> loader = ServiceLoader
+                .load(VaadinServiceInitListener.class, getClassLoader());
+        return loader.iterator();
     }
 
     /**
@@ -208,7 +240,7 @@ public abstract class VaadinService implements Serializable {
      */
     protected List<RequestHandler> createRequestHandlers()
             throws ServiceException {
-        ArrayList<RequestHandler> handlers = new ArrayList<RequestHandler>();
+        ArrayList<RequestHandler> handlers = new ArrayList<>();
         handlers.add(new SessionRequestHandler());
         handlers.add(new PublishedFileHandler());
         handlers.add(new HeartbeatHandler());
@@ -372,7 +404,8 @@ public abstract class VaadinService implements Serializable {
      * @param request
      * @return the system messages to use
      */
-    public SystemMessages getSystemMessages(Locale locale, VaadinRequest request) {
+    public SystemMessages getSystemMessages(Locale locale,
+            VaadinRequest request) {
         SystemMessagesInfo systemMessagesInfo = new SystemMessagesInfo();
         systemMessagesInfo.setLocale(locale);
         systemMessagesInfo.setService(this);
@@ -409,9 +442,10 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the Vaadin service session initialization listener
+     * @return a registration object for removing the listener
      */
-    public void addSessionInitListener(SessionInitListener listener) {
-        eventRouter.addListener(SessionInitEvent.class, listener,
+    public Registration addSessionInitListener(SessionInitListener listener) {
+        return eventRouter.addListener(SessionInitEvent.class, listener,
                 SESSION_INIT_METHOD);
     }
 
@@ -423,7 +457,11 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the Vaadin service session initialization listener to remove.
+     * @deprecated use the {@link Registration} object returned by
+     *             {@link #addSessionInitListener(SessionInitListener)} to
+     *             remove the listener
      */
+    @Deprecated
     public void removeSessionInitListener(SessionInitListener listener) {
         eventRouter.removeListener(SessionInitEvent.class, listener,
                 SESSION_INIT_METHOD);
@@ -440,9 +478,11 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the vaadin service session destroy listener
+     * @return a registration object for removing the listener
      */
-    public void addSessionDestroyListener(SessionDestroyListener listener) {
-        eventRouter.addListener(SessionDestroyEvent.class, listener,
+    public Registration addSessionDestroyListener(
+            SessionDestroyListener listener) {
+        return eventRouter.addListener(SessionDestroyEvent.class, listener,
                 SESSION_DESTROY_METHOD);
     }
 
@@ -455,41 +495,35 @@ public abstract class VaadinService implements Serializable {
      */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
         final VaadinSession session = vaadinSession;
-        session.access(new Runnable() {
-            @Override
-            public void run() {
-                if (session.getState() == State.CLOSED) {
-                    return;
-                }
-                if (session.getState() == State.OPEN) {
-                    closeSession(session);
-                }
-                ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
-                for (final UI ui : uis) {
-                    ui.accessSynchronously(new Runnable() {
-                        @Override
-                        public void run() {
-                            /*
-                             * close() called here for consistency so that it is
-                             * always called before a UI is removed.
-                             * UI.isClosing() is thus always true in UI.detach()
-                             * and associated detach listeners.
-                             */
-                            if (!ui.isClosing()) {
-                                ui.close();
-                            }
-                            session.removeUI(ui);
-                        }
-                    });
-                }
-                // for now, use the session error handler; in the future, could
-                // have an API for using some other handler for session init and
-                // destroy listeners
-                eventRouter.fireEvent(new SessionDestroyEvent(
-                        VaadinService.this, session), session.getErrorHandler());
-
-                session.setState(State.CLOSED);
+        session.access(() -> {
+            if (session.getState() == State.CLOSED) {
+                return;
             }
+            if (session.getState() == State.OPEN) {
+                closeSession(session);
+            }
+            ArrayList<UI> uis = new ArrayList<>(session.getUIs());
+            for (final UI ui : uis) {
+                ui.accessSynchronously(() -> {
+                    /*
+                     * close() called here for consistency so that it is always
+                     * called before a UI is removed. UI.isClosing() is thus
+                     * always true in UI.detach() and associated detach
+                     * listeners.
+                     */
+                    if (!ui.isClosing()) {
+                        ui.close();
+                    }
+                    session.removeUI(ui);
+                });
+            }
+            // for now, use the session error handler; in the future, could
+            // have an API for using some other handler for session init and
+            // destroy listeners
+            eventRouter.fireEvent(
+                    new SessionDestroyEvent(VaadinService.this, session),
+                    session.getErrorHandler());
+            session.setState(State.CLOSED);
         });
     }
 
@@ -500,7 +534,11 @@ public abstract class VaadinService implements Serializable {
      *
      * @param listener
      *            the vaadin service session destroy listener
+     * @deprecated use the {@link Registration} object returned by
+     *             {@link #addSessionDestroyListener(SessionDestroyListener)} to
+     *             remove the listener
      */
+    @Deprecated
     public void removeSessionDestroyListener(SessionDestroyListener listener) {
         eventRouter.removeListener(SessionDestroyEvent.class, listener,
                 SESSION_DESTROY_METHOD);
@@ -553,7 +591,8 @@ public abstract class VaadinService implements Serializable {
         }
         Object currentSessionLock = wrappedSession
                 .getAttribute(getLockAttributeName());
-        assert (currentSessionLock == null || currentSessionLock == lock) : "Changing the lock for a session is not allowed";
+        assert (currentSessionLock == null
+                || currentSessionLock == lock) : "Changing the lock for a session is not allowed";
 
         wrappedSession.setAttribute(getLockAttributeName(), lock);
     }
@@ -665,7 +704,8 @@ public abstract class VaadinService implements Serializable {
         }
 
         try {
-            return doFindOrCreateVaadinSession(request, requestCanCreateSession);
+            return doFindOrCreateVaadinSession(request,
+                    requestCanCreateSession);
         } finally {
             unlockSession(wrappedSession);
         }
@@ -684,8 +724,8 @@ public abstract class VaadinService implements Serializable {
      * @throws ServiceException
      */
     private VaadinSession doFindOrCreateVaadinSession(VaadinRequest request,
-            boolean requestCanCreateSession) throws SessionExpiredException,
-            ServiceException {
+            boolean requestCanCreateSession)
+            throws SessionExpiredException, ServiceException {
         assert ((ReentrantLock) getSessionLock(request.getWrappedSession()))
                 .isHeldByCurrentThread() : "Session has not been locked by this thread";
 
@@ -768,7 +808,8 @@ public abstract class VaadinService implements Serializable {
         Locale locale = request.getLocale();
         session.setLocale(locale);
         session.setConfiguration(getDeploymentConfiguration());
-        session.setCommunicationManager(new LegacyCommunicationManager(session));
+        session.setCommunicationManager(
+                new LegacyCommunicationManager(session));
 
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
@@ -881,11 +922,10 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Gets the currently used Vaadin service. The current service is
-     * automatically defined when processing requests related to the service and
-     * in threads started at a point when the current service is defined (see
-     * {@link InheritableThreadLocal}). In other cases, (e.g. from background
-     * threads started in some other way), the current service is not
-     * automatically defined.
+     * automatically defined when processing requests related to the service
+     * (see {@link ThreadLocal}) and in {@link VaadinSession#access(Command)}
+     * and {@link UI#access(Command)}. In other cases, (e.g. from background
+     * threads, the current service is not automatically defined.
      *
      * @return the current Vaadin service instance if available, otherwise
      *         <code>null</code>
@@ -932,7 +972,7 @@ public abstract class VaadinService implements Serializable {
      * @param service
      */
     public static void setCurrent(VaadinService service) {
-        CurrentInstance.setInheritable(VaadinService.class, service);
+        CurrentInstance.set(VaadinService.class, service);
     }
 
     /**
@@ -1020,7 +1060,8 @@ public abstract class VaadinService implements Serializable {
      *         <code>false</code> if a new UI instance should be initialized on
      *         refreshed.
      */
-    public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
+    public boolean preserveUIOnRefresh(UIProvider provider,
+            UICreateEvent event) {
         return provider.isPreservedOnRefresh(event);
     }
 
@@ -1043,7 +1084,7 @@ public abstract class VaadinService implements Serializable {
         // Stores all attributes (security key, reference to this context
         // instance) so they can be added to the new session
         Set<String> attributeNames = oldSession.getAttributeNames();
-        HashMap<String, Object> attrs = new HashMap<String, Object>(
+        HashMap<String, Object> attrs = new HashMap<>(
                 attributeNames.size() * 2);
         for (String name : attributeNames) {
             Object value = oldSession.getAttribute(name);
@@ -1088,7 +1129,7 @@ public abstract class VaadinService implements Serializable {
      *
      * Finds the given theme resource from the web content folder or using the
      * class loader and returns a stream for it
-     * 
+     *
      * @param ui
      *            The ui for which to find the resource
      * @param themeName
@@ -1183,16 +1224,13 @@ public abstract class VaadinService implements Serializable {
      * @param session
      */
     private void removeClosedUIs(final VaadinSession session) {
-        ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
+        ArrayList<UI> uis = new ArrayList<>(session.getUIs());
         for (final UI ui : uis) {
             if (ui.isClosing()) {
-                ui.accessSynchronously(new Runnable() {
-                    @Override
-                    public void run() {
-                        getLogger().log(Level.FINER, "Removing closed UI {0}",
-                                ui.getUIId());
-                        session.removeUI(ui);
-                    }
+                ui.accessSynchronously(() -> {
+                    getLogger().log(Level.FINER, "Removing closed UI {0}",
+                            ui.getUIId());
+                    session.removeUI(ui);
                 });
             }
         }
@@ -1208,14 +1246,11 @@ public abstract class VaadinService implements Serializable {
         final String sessionId = session.getSession().getId();
         for (final UI ui : session.getUIs()) {
             if (!isUIActive(ui) && !ui.isClosing()) {
-                ui.accessSynchronously(new Runnable() {
-                    @Override
-                    public void run() {
-                        getLogger().log(Level.FINE,
-                                "Closing inactive UI #{0} in session {1}",
-                                new Object[] { ui.getUIId(), sessionId });
-                        ui.close();
-                    }
+                ui.accessSynchronously(() -> {
+                    getLogger().log(Level.FINE,
+                            "Closing inactive UI #{0} in session {1}",
+                            new Object[] { ui.getUIId(), sessionId });
+                    ui.close();
                 });
             }
         }
@@ -1237,7 +1272,8 @@ public abstract class VaadinService implements Serializable {
      */
     private int getHeartbeatTimeout() {
         // Permit three missed heartbeats before closing the UI
-        return (int) (getDeploymentConfiguration().getHeartbeatInterval() * (3.1));
+        return (int) (getDeploymentConfiguration().getHeartbeatInterval()
+                * (3.1));
     }
 
     /**
@@ -1260,8 +1296,8 @@ public abstract class VaadinService implements Serializable {
      *         timeout never occurs.
      */
     private int getUidlRequestTimeout(VaadinSession session) {
-        return getDeploymentConfiguration().isCloseIdleSessions() ? session
-                .getSession().getMaxInactiveInterval() : -1;
+        return getDeploymentConfiguration().isCloseIdleSessions()
+                ? session.getSession().getMaxInactiveInterval() : -1;
     }
 
     /**
@@ -1445,12 +1481,10 @@ public abstract class VaadinService implements Serializable {
 
             // if this was an UIDL request, send UIDL back to the client
             if (ServletPortletHelper.isUIDLRequest(request)) {
-                SystemMessages ci = getSystemMessages(
-                        ServletPortletHelper.findLocale(null, vaadinSession,
-                                request), request);
+                SystemMessages ci = getSystemMessages(ServletPortletHelper
+                        .findLocale(null, vaadinSession, request), request);
                 try {
-                    writeStringResponse(
-                            response,
+                    writeStringResponse(response,
                             JsonConstants.JSON_CONTENT_TYPE,
                             createCriticalNotificationJSON(
                                     ci.getInternalErrorCaption(),
@@ -1459,10 +1493,9 @@ public abstract class VaadinService implements Serializable {
                 } catch (IOException e) {
                     // An exception occured while writing the response. Log
                     // it and continue handling only the original error.
-                    getLogger()
-                            .log(Level.WARNING,
-                                    "Failed to write critical notification response to the client",
-                                    e);
+                    getLogger().log(Level.WARNING,
+                            "Failed to write critical notification response to the client",
+                            e);
                 }
             } else {
                 // Re-throw other exceptions
@@ -1488,16 +1521,16 @@ public abstract class VaadinService implements Serializable {
      * @throws IOException
      *             If an error occured while writing the response
      */
-    public void writeStringResponse(VaadinResponse response,
-            String contentType, String reponseString) throws IOException {
+    public void writeStringResponse(VaadinResponse response, String contentType,
+            String reponseString) throws IOException {
 
         response.setContentType(contentType);
 
         final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print(reponseString);
-        outWriter.close();
+        try (PrintWriter outWriter = new PrintWriter(
+                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+            outWriter.print(reponseString);
+        }
     }
 
     /**
@@ -1517,8 +1550,8 @@ public abstract class VaadinService implements Serializable {
         for (RequestHandler handler : getRequestHandlers()) {
             if (handler instanceof SessionExpiredHandler) {
                 try {
-                    if (((SessionExpiredHandler) handler).handleSessionExpired(
-                            request, response)) {
+                    if (((SessionExpiredHandler) handler)
+                            .handleSessionExpired(request, response)) {
                         return;
                     }
                 } catch (IOException e) {
@@ -1652,8 +1685,7 @@ public abstract class VaadinService implements Serializable {
         }
 
         if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
-            getLogger().log(
-                    Level.WARNING,
+            getLogger().log(Level.WARNING,
                     Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
                     new Object[] {
                             Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
@@ -1664,7 +1696,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Checks whether Atmosphere is avilable for use
-     * 
+     *
      * @since 7.6
      * @return true if Atmosphere is available, false otherwise
      */
@@ -1763,7 +1795,8 @@ public abstract class VaadinService implements Serializable {
      * @return a future that can be used to check for task completion and to
      *         cancel the task
      */
-    public Future<Void> accessSession(VaadinSession session, Runnable runnable) {
+    public Future<Void> accessSession(VaadinSession session,
+            Runnable runnable) {
         FutureAccess future = new FutureAccess(session, runnable);
         session.getPendingAccessQueue().add(future);
 
@@ -1788,7 +1821,7 @@ public abstract class VaadinService implements Serializable {
          * If no thread is currently holding the lock, pending changes for UIs
          * with automatic push would not be processed and pushed until the next
          * time there is a request or someone does an explicit push call.
-         * 
+         *
          * To remedy this, we try to get the lock at this point. If the lock is
          * currently held by another thread, we just back out as the queue will
          * get purged once it is released. If the lock is held by the current
@@ -1826,17 +1859,16 @@ public abstract class VaadinService implements Serializable {
             return;
         }
 
-        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
-                .getInstances(false);
-
         FutureAccess pendingAccess;
+
+        // Dump all current instances, not only the ones dumped by setCurrent
+        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
+                .getInstances();
+        CurrentInstance.setCurrent(session);
         try {
-            while ((pendingAccess = session.getPendingAccessQueue().poll()) != null) {
+            while ((pendingAccess = session.getPendingAccessQueue()
+                    .poll()) != null) {
                 if (!pendingAccess.isCancelled()) {
-                    CurrentInstance.clearAll();
-                    CurrentInstance.restoreInstances(pendingAccess
-                            .getCurrentInstances());
-                    CurrentInstance.setCurrent(session);
                     pendingAccess.run();
 
                     try {
@@ -1864,9 +1896,11 @@ public abstract class VaadinService implements Serializable {
      * @see #destroy()
      * @see #removeServiceDestroyListener(ServiceDestroyListener)
      * @see ServiceDestroyListener
+     * @return a registration object for removing the listener
      */
-    public void addServiceDestroyListener(ServiceDestroyListener listener) {
-        eventRouter.addListener(ServiceDestroyEvent.class, listener,
+    public Registration addServiceDestroyListener(
+            ServiceDestroyListener listener) {
+        return eventRouter.addListener(ServiceDestroyEvent.class, listener,
                 SERVICE_DESTROY_METHOD);
     }
 
@@ -1877,7 +1911,11 @@ public abstract class VaadinService implements Serializable {
      * @since 7.2
      * @param listener
      *            the service destroy listener to remove
+     * @deprecated use the {@link Registration} object returned by
+     *             {@link #addServiceDestroyListener(ServiceDestroyListener)} to
+     *             remove the listener
      */
+    @Deprecated
     public void removeServiceDestroyListener(ServiceDestroyListener listener) {
         eventRouter.removeListener(ServiceDestroyEvent.class, listener,
                 SERVICE_DESTROY_METHOD);
@@ -1903,16 +1941,16 @@ public abstract class VaadinService implements Serializable {
      * this {@link VaadinService} if found. If current security policy disallows
      * acquiring class loader instance it will log a message and re-throw
      * {@link SecurityException}
-     * 
+     *
      * @throws SecurityException
      *             If current security policy forbids acquiring class loader
-     * 
+     *
      * @since 7.3.5
      */
     protected void setDefaultClassLoader() {
         try {
-            setClassLoader(VaadinServiceClassLoaderUtil
-                    .findDefaultClassLoader());
+            setClassLoader(
+                    VaadinServiceClassLoaderUtil.findDefaultClassLoader());
         } catch (SecurityException e) {
             getLogger().log(Level.SEVERE,
                     Constants.CANNOT_ACQUIRE_CLASSLOADER_SEVERE, e);
@@ -1924,7 +1962,7 @@ public abstract class VaadinService implements Serializable {
      * Called when the VaadinSession should be stored.
      * <p>
      * By default stores the VaadinSession in the underlying HTTP session.
-     * 
+     *
      * @since 7.6
      * @param session
      *            the VaadinSession to store
@@ -1943,7 +1981,7 @@ public abstract class VaadinService implements Serializable {
      * session after sanity checks have been performed.
      * <p>
      * Called by {@link #storeSession(VaadinSession, WrappedSession)}
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -1958,7 +1996,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Called when the VaadinSession should be loaded from the underlying HTTP
      * session
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -1980,7 +2018,7 @@ public abstract class VaadinService implements Serializable {
      * session after sanity checks have been performed.
      * <p>
      * Called by {@link #loadSession(WrappedSession)}.
-     * 
+     *
      * @param wrappedSession
      *            the underlying HTTP session
      * @since 7.6
@@ -1994,7 +2032,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Called when the VaadinSession should be removed from the underlying HTTP
      * session
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -2007,7 +2045,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Performs the actual removal of the VaadinSession from the underlying HTTP
      * session after sanity checks have been performed
-     * 
+     *
      * @since 7.6
      * @param wrappedSession
      *            the underlying HTTP session
@@ -2020,7 +2058,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Returns the name used for storing the VaadinSession in the underlying
      * HTTP session
-     * 
+     *
      * @since 7.6
      * @return the attribute name used for storing the VaadinSession
      */

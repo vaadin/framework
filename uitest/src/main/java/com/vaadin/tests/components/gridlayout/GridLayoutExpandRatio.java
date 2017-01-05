@@ -16,14 +16,14 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
-public class GridLayoutExpandRatio extends AbstractTestUI {
+public class GridLayoutExpandRatio extends AbstractReindeerTestUI {
     HorizontalLayout layout;
     GridLayout gridLayout;
     GridLayout gridLayout2;
@@ -39,14 +39,11 @@ public class GridLayoutExpandRatio extends AbstractTestUI {
         gridLayout = new GridLayout(ROWS, COLS);
         gridLayout.setHideEmptyRowsAndColumns(true);
 
-        layout.setImmediate(true);
-        gridLayout.setImmediate(true);
         gridLayout2 = new GridLayout(4, 4);
         gridLayout2.setHideEmptyRowsAndColumns(true);
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 Label label = new Label("Slot " + i + " " + j);
-                label.setImmediate(true);
                 labels[i][j] = label;
                 gridLayout.addComponent(label, j, i);
                 if (!(i == 2 || j == 2)) {

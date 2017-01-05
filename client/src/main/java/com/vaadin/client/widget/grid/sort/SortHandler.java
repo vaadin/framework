@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handler for a Grid sort event, called when the Grid needs its data source to
  * provide data sorted in a specific manner.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -29,7 +29,7 @@ public interface SortHandler<T> extends EventHandler {
     /**
      * Handle sorting of the Grid. This method is called when a re-sorting of
      * the Grid's data is requested.
-     * 
+     *
      * @param event
      *            the sort event
      */

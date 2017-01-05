@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -178,24 +178,31 @@ public abstract class UIProvider implements Serializable {
             return new WidgetsetInfoImpl(uiWidgetset.value());
         }
 
+        // Second case: We might have an init parameter, use that
+        String initParameterWidgetSet = event.getService()
+                .getDeploymentConfiguration().getWidgetset(null);
+        if (initParameterWidgetSet != null) {
+            return new WidgetsetInfoImpl(initParameterWidgetSet);
+        }
+
         // Find the class AppWidgetset in the default package if one exists
         WidgetsetInfo info = getWidgetsetClassInfo();
 
-        // Second case: we have a generated class called APP_WIDGETSET_NAME
+        // Third case: we have a generated class called APP_WIDGETSET_NAME
         if (info != null) {
             return info;
         }
 
-        // third case: we have an AppWidgetset.gwt.xml file
+        // Fourth case: we have an AppWidgetset.gwt.xml file
         else {
-            InputStream resource = event.getUIClass().getResourceAsStream(
-                    "/" + APP_WIDGETSET_NAME + ".gwt.xml");
+            InputStream resource = event.getUIClass()
+                    .getResourceAsStream("/" + APP_WIDGETSET_NAME + ".gwt.xml");
             if (resource != null) {
                 return new WidgetsetInfoImpl(false, null, APP_WIDGETSET_NAME);
             }
         }
 
-        // fourth case: we are using the default widgetset
+        // fifth case: we are using the default widgetset
         return null;
     }
 
@@ -224,15 +231,14 @@ public abstract class UIProvider implements Serializable {
             try {
                 return cls.newInstance();
             } catch (InstantiationException e) {
-                getLogger().log(
-                        Level.INFO,
+                getLogger().log(Level.INFO,
                         "Unexpected trying to instantiate class "
-                                + cls.getName(), e);
+                                + cls.getName(),
+                        e);
             } catch (IllegalAccessException e) {
-                getLogger()
-                        .log(Level.INFO,
-                                "Unexpected trying to access class "
-                                        + cls.getName(), e);
+                getLogger().log(Level.INFO,
+                        "Unexpected trying to access class " + cls.getName(),
+                        e);
             }
         }
         return null;

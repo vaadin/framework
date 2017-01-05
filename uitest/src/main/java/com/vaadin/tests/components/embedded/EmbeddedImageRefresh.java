@@ -44,7 +44,7 @@ public class EmbeddedImageRefresh extends TestBase {
 
         // The button requests repainting the embedded.
         Button button = new Button("refr");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 embedded.markAsDirty();
@@ -52,17 +52,17 @@ public class EmbeddedImageRefresh extends TestBase {
         });
         addComponent(button);
         button = new Button("refr name");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ((StreamResource) embedded.getSource()).setFilename(new Date()
-                        .getTime() + ".png");
+                ((StreamResource) embedded.getSource())
+                        .setFilename(new Date().getTime() + ".png");
                 embedded.markAsDirty();
             }
         });
         addComponent(button);
         button = new Button("200x200");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 embedded.setWidth("200px");
@@ -71,7 +71,7 @@ public class EmbeddedImageRefresh extends TestBase {
         });
         addComponent(button);
         button = new Button("undef");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 embedded.setSizeUndefined();
@@ -130,8 +130,8 @@ public class EmbeddedImageRefresh extends TestBase {
                     } else {
                         drawable.setColor(Color.black);
                     }
-                    drawable.fillRect(gridx + 1, gridy + 1, gridxnext - gridx
-                            - 1, gridynext - gridy - 1);
+                    drawable.fillRect(gridx + 1, gridy + 1,
+                            gridxnext - gridx - 1, gridynext - gridy - 1);
                 }
             }
 

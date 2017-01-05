@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
-public class EmptyWindow extends AbstractTestUI {
+public class EmptyWindow extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

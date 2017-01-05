@@ -52,7 +52,8 @@ public class FragmentHandlingAndAsynchUIUpdate extends AbstractTestUIWithLog {
         return new UriFragmentChangedListener() {
 
             @Override
-            public void uriFragmentChanged(final UriFragmentChangedEvent event) {
+            public void uriFragmentChanged(
+                    final UriFragmentChangedEvent event) {
 
                 log(String.format("uriFragmentChanged %s",
                         event.getUriFragment()));
@@ -81,8 +82,8 @@ public class FragmentHandlingAndAsynchUIUpdate extends AbstractTestUIWithLog {
 
                 createThread(frag, fragLabel).start();
 
-                fragLabel.setCaption(String.format("Thread running for %s!",
-                        frag));
+                fragLabel.setCaption(
+                        String.format("Thread running for %s!", frag));
                 UI.getCurrent().setPollInterval(1000);
             }
         };
@@ -113,9 +114,9 @@ public class FragmentHandlingAndAsynchUIUpdate extends AbstractTestUIWithLog {
                                 "setCaption in synch mode for fragment %s",
                                 frag));
                         java.util.Random rand = new java.util.Random();
-                        fragLabel.setCaption(String.format(
-                                "Thread finished on %s (%s)", frag,
-                                rand.nextInt()));
+                        fragLabel.setCaption(
+                                String.format("Thread finished on %s (%s)",
+                                        frag, rand.nextInt()));
                     }
                 });
 

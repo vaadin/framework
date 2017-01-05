@@ -5,8 +5,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
 
 public class ScrollDetachSynchronization extends TestBase {
 
@@ -45,7 +45,7 @@ public class ScrollDetachSynchronization extends TestBase {
         mainLayout.addComponent(firstLayout);
         mainLayout.setExpandRatio(firstLayout, 1);
 
-        first.addListener(new Button.ClickListener() {
+        first.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -55,7 +55,7 @@ public class ScrollDetachSynchronization extends TestBase {
                 }
             }
         });
-        second.addListener(new Button.ClickListener() {
+        second.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

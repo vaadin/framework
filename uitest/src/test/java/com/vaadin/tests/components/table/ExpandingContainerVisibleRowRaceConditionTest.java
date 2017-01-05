@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,8 +28,8 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class ExpandingContainerVisibleRowRaceConditionTest extends
-        MultiBrowserTest {
+public class ExpandingContainerVisibleRowRaceConditionTest
+        extends MultiBrowserTest {
 
     private static final int ROW_HEIGHT = 20;
 
@@ -47,15 +47,6 @@ public class ExpandingContainerVisibleRowRaceConditionTest extends
 
         assertRowIdIsInThePage("ROW #330");
         assertScrollPositionIsNotVisible();
-    }
-
-    @Override
-    protected void sleep(int milliseconds) {
-        try {
-            super.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void assertFirstRowIdIs(String expected) {
@@ -76,15 +67,15 @@ public class ExpandingContainerVisibleRowRaceConditionTest extends
 
     private void assertScrollPositionIsNotVisible() {
         WebElement table = vaadinElementById(TABLE);
-        WebElement scrollPosition = table.findElement(By
-                .className("v-table-scrollposition"));
+        WebElement scrollPosition = table
+                .findElement(By.className("v-table-scrollposition"));
         assertFalse(scrollPosition.isDisplayed());
     }
 
     private List<WebElement> getCellsOfFirstColumn() {
         WebElement table = vaadinElementById(TABLE);
-        List<WebElement> firstCellOfRows = table.findElements(By
-                .cssSelector(".v-table-table tr > td"));
+        List<WebElement> firstCellOfRows = table
+                .findElements(By.cssSelector(".v-table-table tr > td"));
         return firstCellOfRows;
     }
 }

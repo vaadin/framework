@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,9 +36,15 @@ import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.CheckBox;
 
+/**
+ * The client-side connector for the {@code CheckBoxGroup} component.
+ *
+ * @author Vaadin Ltd.
+ * @since 8.0
+ */
 @Connect(CheckBox.class)
-public class CheckBoxConnector extends AbstractFieldConnector implements
-        ClickHandler {
+public class CheckBoxConnector extends AbstractFieldConnector
+        implements ClickHandler {
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -76,13 +82,13 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
                 getWidget().errorIndicatorElement.getStyle().clearDisplay();
             }
         } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().errorIndicatorElement.getStyle().setDisplay(
-                    Display.NONE);
+            getWidget().errorIndicatorElement.getStyle()
+                    .setDisplay(Display.NONE);
 
             getWidget().setAriaInvalid(false);
         }
 
-        getWidget().setAriaRequired(isRequired());
+        getWidget().setAriaRequired(isRequiredIndicatorVisible());
         if (isReadOnly()) {
             getWidget().setEnabled(false);
         }
@@ -103,7 +109,6 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
         VCaption.setCaptionText(getWidget(), getState());
 
         getWidget().setValue(getState().checked);
-        getWidget().immediate = getState().immediate;
     }
 
     @Override
@@ -130,13 +135,11 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
 
             // Add mouse details
             MouseEventDetails details = MouseEventDetailsBuilder
-                    .buildMouseEventDetails(event.getNativeEvent(), getWidget()
-                            .getElement());
+                    .buildMouseEventDetails(event.getNativeEvent(),
+                            getWidget().getElement());
             getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
                     details);
-            if (getState().immediate) {
-                getConnection().sendPendingVariableChanges();
-            }
+            getConnection().sendPendingVariableChanges();
         }
     }
 

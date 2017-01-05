@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ package com.vaadin.client;
  * there is work scheduled to be executed in the near future and that the
  * framework should wait for this work to complete before assuming the UI has
  * reached a steady state.
- * 
+ *
  * @since 7.3
  * @author Vaadin Ltd
  */
@@ -28,7 +28,7 @@ public interface DeferredWorker {
     /**
      * Checks whether there are operations pending for this widget or connector
      * that must be executed before reaching a steady state.
-     * 
+     *
      * @returns <code>true</code> iff there are operations pending which must be
      *          executed before reaching a steady state
      */

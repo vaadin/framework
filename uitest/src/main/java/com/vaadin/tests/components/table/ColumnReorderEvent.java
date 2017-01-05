@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
 public class ColumnReorderEvent extends TestBase {
@@ -85,7 +85,7 @@ public class ColumnReorderEvent extends TestBase {
         table.addListener(new Table.ColumnReorderListener() {
             @Override
             public void columnReorder(
-                    com.vaadin.ui.Table.ColumnReorderEvent event) {
+                    com.vaadin.v7.ui.Table.ColumnReorderEvent event) {
                 order.setValue(aToString(table.getVisibleColumns()));
             }
         });

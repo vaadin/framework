@@ -2,14 +2,13 @@ package com.vaadin.tests.components.table;
 
 import java.util.Collection;
 
-import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.Table;
 
-public class LongMultiselect extends AbstractTestUI {
+public class LongMultiselect extends AbstractReindeerTestUI {
 
     private enum ItemProperty {
         COLUMN1, COLUMN2
@@ -40,8 +39,8 @@ public class LongMultiselect extends AbstractTestUI {
                 // Set ItemProperty.COLUMN2 for all selected values of table
                 Collection selectedIds = (Collection) table.getValue();
                 for (final Object itemId : selectedIds) {
-                    final Property p = table.getItem(itemId).getItemProperty(
-                            ItemProperty.COLUMN2);
+                    final Property p = table.getItem(itemId)
+                            .getItemProperty(ItemProperty.COLUMN2);
                     if (p.getValue() instanceof String) {
                         p.setValue(null);
                     } else {

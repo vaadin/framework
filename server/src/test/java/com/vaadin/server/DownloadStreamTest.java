@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DownloadStreamTest {
-    private String filename = "日本語.png";
+    private final String filename = "日本語.png";
     private DownloadStream stream;
 
     @Before
@@ -30,10 +30,8 @@ public class DownloadStreamTest {
         String encodedFileName = URLEncoder.encode(filename, "utf-8");
         verify(response).setHeader(eq(DownloadStream.CONTENT_DISPOSITION),
                 contains(String.format("filename=\"%s\";", encodedFileName)));
-        verify(response)
-                .setHeader(
-                        eq(DownloadStream.CONTENT_DISPOSITION),
-                        contains(String.format("filename*=utf-8''%s",
-                                encodedFileName)));
+        verify(response).setHeader(eq(DownloadStream.CONTENT_DISPOSITION),
+                contains(
+                        String.format("filename*=utf-8''%s", encodedFileName)));
     }
 }

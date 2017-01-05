@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -9,10 +9,10 @@ import com.vaadin.ui.Window;
 /**
  * Tests that the styles work correctly in tiny subwindows that have more
  * content than can fit.
- * 
+ *
  * @author Vaadin Ltd
  */
-public class TestTooSmallSubwindowSize extends AbstractTestUI {
+public class TestTooSmallSubwindowSize extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {
@@ -36,12 +36,12 @@ public class TestTooSmallSubwindowSize extends AbstractTestUI {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         Window w = new Window("Scroll", layout);
-        Label desc = new Label(
-                "This is a new child window with a preset"
-                        + " width, height and position. Resizing has been"
-                        + " disabled for this window. Additionally, this text label"
-                        + " is intentionally too large to fit the window. You can"
-                        + " use the scrollbars to view different parts of the window content.");
+        Label desc = new Label("This is a new child window with a preset"
+                + " width, height and position. Resizing has been"
+                + " disabled for this window. Additionally, this text label"
+                + " is intentionally too large to fit the window. You can"
+                + " use the scrollbars to view different parts of the window content.");
+        desc.setWidth("100%");
         layout.addComponent(desc);
 
         // Set window position
@@ -62,13 +62,12 @@ public class TestTooSmallSubwindowSize extends AbstractTestUI {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         Window w = new Window("Scroll", layout);
-        Label desc = new Label(
-                "This is a new child window with a preset"
-                        + " width, height and position. Resizing has been"
-                        + " disabled for this window. Additionally, this text label"
-                        + " is intentionally too large to fit the window. You could"
-                        + " use the scrollbars to view different parts of the window content,"
-                        + " except it's too small for that either.");
+        Label desc = new Label("This is a new child window with a preset"
+                + " width, height and position. Resizing has been"
+                + " disabled for this window. Additionally, this text label"
+                + " is intentionally too large to fit the window. You could"
+                + " use the scrollbars to view different parts of the window content,"
+                + " except it's too small for that either.");
         // disable wrapping
         desc.setSizeUndefined();
         layout.addComponent(desc);
@@ -91,12 +90,12 @@ public class TestTooSmallSubwindowSize extends AbstractTestUI {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         Window w = new Window("Resize", layout);
-        Label desc = new Label(
-                "This is a new child window with a preset"
-                        + " width, height and position. Resizing has not been"
-                        + " disabled for this window. Additionally, this text label"
-                        + " is intentionally too large to fit the window. You can resize or"
-                        + " use the scrollbars to view different parts of the window content.");
+        Label desc = new Label("This is a new child window with a preset"
+                + " width, height and position. Resizing has not been"
+                + " disabled for this window. Additionally, this text label"
+                + " is intentionally too large to fit the window. You can resize or"
+                + " use the scrollbars to view different parts of the window content.");
+        desc.setWidth("100%");
         layout.addComponent(desc);
 
         // Set window position
@@ -116,12 +115,11 @@ public class TestTooSmallSubwindowSize extends AbstractTestUI {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         Window w = new Window("Resize", layout);
-        Label desc = new Label(
-                "This is a new child window with a preset"
-                        + " width, height and position. Resizing has not been"
-                        + " disabled for this window. Additionally, this text label"
-                        + " is intentionally too large to fit the window. You can resize"
-                        + " to view different parts of the window content.");
+        Label desc = new Label("This is a new child window with a preset"
+                + " width, height and position. Resizing has not been"
+                + " disabled for this window. Additionally, this text label"
+                + " is intentionally too large to fit the window. You can resize"
+                + " to view different parts of the window content.");
         // disable wrapping
         desc.setSizeUndefined();
         layout.addComponent(desc);

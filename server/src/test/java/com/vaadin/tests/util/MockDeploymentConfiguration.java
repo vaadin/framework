@@ -7,8 +7,8 @@ import java.util.Properties;
 import com.vaadin.server.AbstractDeploymentConfiguration;
 import com.vaadin.shared.communication.PushMode;
 
-public class MockDeploymentConfiguration extends
-        AbstractDeploymentConfiguration {
+public class MockDeploymentConfiguration
+        extends AbstractDeploymentConfiguration {
 
     private boolean productionMode = false;
     private boolean xsrfProtectionEnabled = true;
@@ -17,11 +17,10 @@ public class MockDeploymentConfiguration extends
     private int heartbeatInterval = 300;
     private boolean closeIdleSessions = false;
     private PushMode pushMode = PushMode.DISABLED;
-    private Properties initParameters = new Properties();
-    private Map<String, String> applicationOrSystemProperty = new HashMap<String, String>();
-    private LegacyProperyToStringMode legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
+    private final Properties initParameters = new Properties();
+    private final Map<String, String> applicationOrSystemProperty = new HashMap<>();
     private boolean syncIdCheckEnabled = true;
-    private boolean sendUrlsAsParameters = true;
+    private final boolean sendUrlsAsParameters = true;
 
     @Override
     public boolean isProductionMode() {
@@ -107,17 +106,6 @@ public class MockDeploymentConfiguration extends
         } else {
             return defaultValue;
         }
-    }
-
-    @Override
-    @Deprecated
-    public LegacyProperyToStringMode getLegacyPropertyToStringMode() {
-        return legacyPropertyToStringMode;
-    }
-
-    public void setLegacyPropertyToStringMode(
-            LegacyProperyToStringMode legacyPropertyToStringMode) {
-        this.legacyPropertyToStringMode = legacyPropertyToStringMode;
     }
 
     @Override

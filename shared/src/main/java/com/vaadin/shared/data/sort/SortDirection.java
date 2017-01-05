@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 /**
  * Describes sorting direction.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -47,7 +47,7 @@ public enum SortDirection implements Serializable {
 
     /**
      * Get the sort direction that is the direct opposite to this one.
-     * 
+     *
      * @return a sort direction value
      */
     public abstract SortDirection getOpposite();

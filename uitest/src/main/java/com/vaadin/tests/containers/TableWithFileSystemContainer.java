@@ -2,9 +2,9 @@ package com.vaadin.tests.containers;
 
 import java.io.File;
 
-import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.FilesystemContainer;
+import com.vaadin.v7.ui.Table;
 
 public class TableWithFileSystemContainer extends TestBase {
 
@@ -12,8 +12,8 @@ public class TableWithFileSystemContainer extends TestBase {
 
     @Override
     public void setup() {
-        Table table = new Table("Documents", new FilesystemContainer(new File(
-                testPath)));
+        Table table = new Table("Documents",
+                new FilesystemContainer(new File(testPath)));
         table.setWidth("100%");
         getMainWindow().addComponent(table);
     }

@@ -1,17 +1,17 @@
 package com.vaadin.tests.components;
 
-import com.vaadin.annotations.Viewport;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.vaadin.annotations.Viewport;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Label;
+import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.data.validator.IntegerRangeValidator;
+import com.vaadin.v7.ui.TextField;
+
 @Viewport(value = "width=device-width,height=device-height")
-public class TouchDevicesTooltip extends AbstractTestUI {
+public class TouchDevicesTooltip extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -26,8 +26,8 @@ public class TouchDevicesTooltip extends AbstractTestUI {
     private void createTextField(int n) {
         TextField textField = new TextField("Value" + n);
         textField.setConverter(new StringToIntegerConverter());
-        textField.addValidator(new IntegerRangeValidator(getErrorMessage(n), 0,
-                100));
+        textField.addValidator(
+                new IntegerRangeValidator(getErrorMessage(n), 0, 100));
         textField.setImmediate(true);
         textField.setValue("-5");
         addComponent(textField);
@@ -62,7 +62,7 @@ public class TouchDevicesTooltip extends AbstractTestUI {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Unable to dismiss a tooltip on touch devices";
     }
 }

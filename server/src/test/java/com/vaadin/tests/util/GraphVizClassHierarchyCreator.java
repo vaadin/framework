@@ -26,12 +26,12 @@ public class GraphVizClassHierarchyCreator {
 
         StringBuilder sb = new StringBuilder();
 
-        Set<Class> classesAndParents = new HashSet<Class>();
+        Set<Class> classesAndParents = new HashSet<>();
         for (Class<?> cls : classes) {
             addClassAndParents(classesAndParents, cls, packageToInclude);
         }
 
-        Set<Class> interfaces = new HashSet<Class>();
+        Set<Class> interfaces = new HashSet<>();
         for (Object cls : classesAndParents.toArray()) {
             for (Class<?> c : ((Class) cls).getInterfaces()) {
                 addClassAndParentInterfaces(classesAndParents, c,
@@ -50,14 +50,14 @@ public class GraphVizClassHierarchyCreator {
         header.append("    node [shape = ellipse, style=\"dotted\"] ");
         for (Class c : classesAndParents) {
             if (!c.isInterface() && Modifier.isAbstract(c.getModifiers())) {
-                header.append(c.getSimpleName() + " ");
+                header.append(c.getSimpleName()).append(" ");
             }
         }
         if (includeInterfaces) {
             System.out.print("    node [shape = ellipse, style=\"solid\"] ");
             for (Class c : classesAndParents) {
                 if (c.isInterface()) {
-                    header.append(c.getSimpleName() + " ");
+                    header.append(c.getSimpleName()).append(" ");
                 }
             }
             header.append(";\n");
@@ -89,7 +89,8 @@ public class GraphVizClassHierarchyCreator {
     }
 
     private static void addClassAndParentInterfaces(
-            Set<Class> classesAndParents, Class<?> cls, String packageToInclude) {
+            Set<Class> classesAndParents, Class<?> cls,
+            String packageToInclude) {
 
         if (cls == null) {
             return;
@@ -123,7 +124,8 @@ public class GraphVizClassHierarchyCreator {
         if (!superClass.getPackage().getName().startsWith(packageToInclude)) {
             return;
         }
-        if (!includeInterfaces && (c.isInterface() || superClass.isInterface())) {
+        if (!includeInterfaces
+                && (c.isInterface() || superClass.isInterface())) {
             return;
         }
 

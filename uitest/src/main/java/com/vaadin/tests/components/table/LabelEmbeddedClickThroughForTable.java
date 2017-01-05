@@ -1,18 +1,18 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.event.ItemClickEvent;
+import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.v7.shared.ui.label.ContentMode;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.Table;
 
-public class LabelEmbeddedClickThroughForTable extends AbstractTestUI {
+public class LabelEmbeddedClickThroughForTable extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {
@@ -38,23 +38,21 @@ public class LabelEmbeddedClickThroughForTable extends AbstractTestUI {
         Item item = table.addItem("Item 1 (row 1)");
         item.getItemProperty("Column 1").setValue("String A");
         item.getItemProperty("Column 2").setValue(new Label("Label A"));
-        item.getItemProperty("Column 3").setValue(
-                new Label("<b>Label A</b>", ContentMode.HTML));
-        item.getItemProperty("Column 4").setValue(
-                new Embedded("An embedded image", new ThemeResource(
-                        "../runo/icons/32/ok.png")));
+        item.getItemProperty("Column 3")
+                .setValue(new Label("<b>Label A</b>", ContentMode.HTML));
+        item.getItemProperty("Column 4")
+                .setValue(new Embedded("An embedded image",
+                        new ThemeResource("../runo/icons/32/ok.png")));
 
         item = table.addItem("Item 2 (row 2)");
         item.getItemProperty("Column 1").setValue("String B");
         item.getItemProperty("Column 2").setValue(new Label("Label B"));
         item.getItemProperty("Column 3")
-                .setValue(
-                        new Label(
-                                "<a style=\"color: blue\" href=\"javascript:false\">Label B</a>",
-                                ContentMode.HTML));
-        item.getItemProperty("Column 4").setValue(
-                new Embedded("", new ThemeResource(
-                        "../runo/icons/32/cancel.png")));
+                .setValue(new Label(
+                        "<a style=\"color: blue\" href=\"javascript:false\">Label B</a>",
+                        ContentMode.HTML));
+        item.getItemProperty("Column 4").setValue(new Embedded("",
+                new ThemeResource("../runo/icons/32/cancel.png")));
 
         table.addItemClickListener(new ItemClickListener() {
 

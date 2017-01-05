@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,14 +17,14 @@ package com.vaadin.server;
 
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,10 +34,9 @@ import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
@@ -52,7 +51,7 @@ public class ComponentSizeValidator implements Serializable {
     /**
      * Recursively checks given component and its subtree for invalid layout
      * setups. Prints errors to std err stream.
-     * 
+     *
      * @param component
      *            component to check
      * @return set of first level errors found
@@ -72,7 +71,7 @@ public class ComponentSizeValidator implements Serializable {
                     parent.addError(error);
                 } else {
                     if (errors == null) {
-                        errors = new LinkedList<InvalidLayout>();
+                        errors = new LinkedList<>();
                     }
                     errors.add(error);
                 }
@@ -91,23 +90,41 @@ public class ComponentSizeValidator implements Serializable {
                 errors = validateComponentRelativeSizes(it.next(), errors,
                         parent);
             }
-        } else if (component instanceof Form) {
-            Form form = (Form) component;
-            if (form.getLayout() != null) {
-                errors = validateComponentRelativeSizes(form.getLayout(),
-                        errors, parent);
-            }
-            if (form.getFooter() != null) {
-                errors = validateComponentRelativeSizes(form.getFooter(),
-                        errors, parent);
+        } else if (isForm(component)) {
+            HasComponents form = (HasComponents) component;
+            for (Iterator<Component> iterator = form.iterator(); iterator
+                    .hasNext();) {
+                Component child = iterator.next();
+                errors = validateComponentRelativeSizes(child, errors, parent);
             }
         }
 
         return errors;
     }
 
+    /**
+     * Comparability form component which is defined in the different jar.
+     *
+     * TODO : Normally this logic shouldn't be here. But it means that the whole
+     * this class has wrong design and implementation and should be refactored.
+     */
+    private static boolean isForm(Component component) {
+        if (!(component instanceof HasComponents)) {
+            return false;
+        }
+        Class<?> clazz = component.getClass();
+        while (clazz != null) {
+            if (component.getClass().getName()
+                    .equals("com.vaadin.v7.ui.Form")) {
+                return true;
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return false;
+    }
+
     private static void printServerError(String msg,
-            Stack<ComponentInfo> attributes, boolean widthError,
+            Deque<ComponentInfo> attributes, boolean widthError,
             PrintStream errorStream) {
         StringBuffer err = new StringBuffer();
         err.append("Vaadin DEBUG\n");
@@ -118,7 +135,7 @@ public class ComponentSizeValidator implements Serializable {
             while (attributes.size() > LAYERS_SHOWN) {
                 attributes.pop();
             }
-            while (!attributes.empty()) {
+            while (!attributes.isEmpty()) {
                 ci = attributes.pop();
                 showComponent(ci.component, ci.info, err, indent, widthError);
             }
@@ -127,7 +144,8 @@ public class ComponentSizeValidator implements Serializable {
         err.append("Layout problem detected: ");
         err.append(msg);
         err.append("\n");
-        err.append("Relative sizes were replaced by undefined sizes, components may not render as expected.\n");
+        err.append(
+                "Relative sizes were replaced by undefined sizes, components may not render as expected.\n");
         errorStream.println(err);
 
     }
@@ -179,9 +197,10 @@ public class ComponentSizeValidator implements Serializable {
         private final boolean invalidHeight;
         private final boolean invalidWidth;
 
-        private final Vector<InvalidLayout> subErrors = new Vector<InvalidLayout>();
+        private final List<InvalidLayout> subErrors = new ArrayList<>();
 
-        public InvalidLayout(Component component, boolean height, boolean width) {
+        public InvalidLayout(Component component, boolean height,
+                boolean width) {
             this.component = component;
             invalidHeight = height;
             invalidWidth = width;
@@ -198,10 +217,10 @@ public class ComponentSizeValidator implements Serializable {
             Component parent = component.getParent();
             String paintableId = component.getConnectorId();
 
-            clientJSON.append("\"id\":\"" + paintableId + "\"");
+            clientJSON.append("\"id\":\"").append(paintableId).append("\"");
 
             if (invalidHeight) {
-                Stack<ComponentInfo> attributes = null;
+                Deque<ComponentInfo> attributes = null;
                 String msg = "";
                 // set proper error messages
                 if (parent instanceof AbstractOrderedLayout) {
@@ -228,10 +247,10 @@ public class ComponentSizeValidator implements Serializable {
                     attributes = getHeightAttributes(component);
                 }
                 printServerError(msg, attributes, false, serverErrorStream);
-                clientJSON.append(",\"heightMsg\":\"" + msg + "\"");
+                clientJSON.append(",\"heightMsg\":\"").append(msg).append("\"");
             }
             if (invalidWidth) {
-                Stack<ComponentInfo> attributes = null;
+                Deque<ComponentInfo> attributes = null;
                 String msg = "";
                 if (parent instanceof AbstractOrderedLayout) {
                     AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
@@ -256,7 +275,7 @@ public class ComponentSizeValidator implements Serializable {
                     msg = "A component with relative width needs a parent with defined width.";
                     attributes = getWidthAttributes(component);
                 }
-                clientJSON.append(",\"widthMsg\":\"" + msg + "\"");
+                clientJSON.append(",\"widthMsg\":\"").append(msg).append("\"");
                 printServerError(msg, attributes, true, serverErrorStream);
             }
             if (subErrors.size() > 0) {
@@ -289,8 +308,9 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
-    private static Stack<ComponentInfo> getHeightAttributes(Component component) {
-        Stack<ComponentInfo> attributes = new Stack<ComponentInfo>();
+    private static Deque<ComponentInfo> getHeightAttributes(
+            Component component) {
+        Deque<ComponentInfo> attributes = new ArrayDeque<>();
         attributes
                 .add(new ComponentInfo(component, getHeightString(component)));
         Component parent = component.getParent();
@@ -303,8 +323,9 @@ public class ComponentSizeValidator implements Serializable {
         return attributes;
     }
 
-    private static Stack<ComponentInfo> getWidthAttributes(Component component) {
-        Stack<ComponentInfo> attributes = new Stack<ComponentInfo>();
+    private static Deque<ComponentInfo> getWidthAttributes(
+            Component component) {
+        final Deque<ComponentInfo> attributes = new ArrayDeque<>();
         attributes.add(new ComponentInfo(component, getWidthString(component)));
         Component parent = component.getParent();
         attributes.add(new ComponentInfo(parent, getWidthString(parent)));
@@ -320,7 +341,8 @@ public class ComponentSizeValidator implements Serializable {
         String width = "width: ";
         if (hasRelativeWidth(component)) {
             width += "RELATIVE, " + component.getWidth() + " %";
-        } else if (component instanceof Window && component.getParent() == null) {
+        } else if (component instanceof Window
+                && component.getParent() == null) {
             width += "MAIN WINDOW";
         } else if (component.getWidth() >= 0) {
             width += "ABSOLUTE, " + component.getWidth() + " "
@@ -336,7 +358,8 @@ public class ComponentSizeValidator implements Serializable {
         String height = "height: ";
         if (hasRelativeHeight(component)) {
             height += "RELATIVE, " + component.getHeight() + " %";
-        } else if (component instanceof Window && component.getParent() == null) {
+        } else if (component instanceof Window
+                && component.getParent() == null) {
             height += "MAIN WINDOW";
         } else if (component.getHeight() > 0) {
             height += "ABSOLUTE, " + component.getHeight() + " "
@@ -379,8 +402,8 @@ public class ComponentSizeValidator implements Serializable {
         }
 
         if (createLoc != null) {
-            err.append(", created at (" + createLoc.file + ":"
-                    + createLoc.lineNumber + ")");
+            err.append(", created at (").append(createLoc.file).append(":")
+                    .append(createLoc.lineNumber).append(")");
 
         }
 
@@ -388,8 +411,8 @@ public class ComponentSizeValidator implements Serializable {
             err.append(" (");
             err.append(attribute);
             if (sizeLoc != null) {
-                err.append(", set at (" + sizeLoc.file + ":"
-                        + sizeLoc.lineNumber + ")");
+                err.append(", set at (").append(sizeLoc.file).append(":")
+                        .append(sizeLoc.lineNumber).append(")");
             }
 
             err.append(")");
@@ -427,8 +450,8 @@ public class ComponentSizeValidator implements Serializable {
                 if (parent instanceof VerticalLayout) {
                     horizontal = false;
                 }
-                if (horizontal
-                        && hasNonRelativeHeightComponent((AbstractOrderedLayout) parent)) {
+                if (horizontal && hasNonRelativeHeightComponent(
+                        (AbstractOrderedLayout) parent)) {
                     return true;
                 } else {
                     return false;
@@ -454,6 +477,12 @@ public class ComponentSizeValidator implements Serializable {
                     // Other components define row height
                     return true;
                 }
+            } else if (isForm(parent)) {
+                /*
+                 * If some other part of the form is not relative it determines
+                 * the component width
+                 */
+                return formHasNonRelativeWidthComponent(parent);
             }
 
             if (parent instanceof Panel || parent instanceof AbstractSplitPanel
@@ -483,12 +512,30 @@ public class ComponentSizeValidator implements Serializable {
         }
     }
 
-    private static boolean hasRelativeHeight(Component component) {
-        return (component.getHeightUnits() == Unit.PERCENTAGE && component
-                .getHeight() > 0);
+    /**
+     * Comparability form component which is defined in the different jar.
+     *
+     * TODO : Normally this logic shouldn't be here. But it means that the whole
+     * this class has wrong design and impementation and should be refactored.
+     */
+    private static boolean formHasNonRelativeWidthComponent(Component form) {
+        HasComponents parent = (HasComponents) form;
+        for (Component aParent : parent) {
+            if (!hasRelativeWidth(aParent)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    private static boolean hasNonRelativeWidthComponent(AbstractOrderedLayout ol) {
+    private static boolean hasRelativeHeight(Component component) {
+        return (component.getHeightUnits() == Unit.PERCENTAGE
+                && component.getHeight() > 0);
+    }
+
+    private static boolean hasNonRelativeWidthComponent(
+            AbstractOrderedLayout ol) {
         Iterator<Component> it = ol.getComponentIterator();
         while (it.hasNext()) {
             if (!hasRelativeWidth(it.next())) {
@@ -536,7 +583,8 @@ public class ComponentSizeValidator implements Serializable {
                 boolean columnHasWidth = false;
                 for (int col = componentArea.getColumn1(); !columnHasWidth
                         && col <= componentArea.getColumn2(); col++) {
-                    for (int row = 0; !columnHasWidth && row < gl.getRows(); row++) {
+                    for (int row = 0; !columnHasWidth
+                            && row < gl.getRows(); row++) {
                         Component c = gl.getComponent(col, row);
                         if (c != null) {
                             columnHasWidth = !hasRelativeWidth(c);
@@ -549,12 +597,6 @@ public class ComponentSizeValidator implements Serializable {
                     // Other components define column width
                     return true;
                 }
-            } else if (parent instanceof Form) {
-                /*
-                 * If some other part of the form is not relative it determines
-                 * the component width
-                 */
-                return hasNonRelativeWidthComponent((Form) parent);
             } else if (parent instanceof AbstractSplitPanel
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
@@ -567,7 +609,7 @@ public class ComponentSizeValidator implements Serializable {
             } else if (parent instanceof Window) {
                 // Sub window can define width based on caption
                 if (parent.getCaption() != null
-                        && !parent.getCaption().equals("")) {
+                        && !parent.getCaption().isEmpty()) {
                     return true;
                 } else {
                     return false;
@@ -591,23 +633,9 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
-    private static boolean hasNonRelativeWidthComponent(Form form) {
-        Layout layout = form.getLayout();
-        Layout footer = form.getFooter();
-
-        if (layout != null && !hasRelativeWidth(layout)) {
-            return true;
-        }
-        if (footer != null && !hasRelativeWidth(footer)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private static Map<Object, FileLocation> creationLocations = new HashMap<Object, FileLocation>();
-    private static Map<Object, FileLocation> widthLocations = new HashMap<Object, FileLocation>();
-    private static Map<Object, FileLocation> heightLocations = new HashMap<Object, FileLocation>();
+    private static final Map<Object, FileLocation> creationLocations = new HashMap<>();
+    private static final Map<Object, FileLocation> widthLocations = new HashMap<>();
+    private static final Map<Object, FileLocation> heightLocations = new HashMap<>();
 
     public static class FileLocation implements Serializable {
         public String method;
@@ -638,7 +666,8 @@ public class ComponentSizeValidator implements Serializable {
         setLocation(heightLocations, object);
     }
 
-    private static void setLocation(Map<Object, FileLocation> map, Object object) {
+    private static void setLocation(Map<Object, FileLocation> map,
+            Object object) {
         StackTraceElement[] traceLines = Thread.currentThread().getStackTrace();
         for (StackTraceElement traceElement : traceLines) {
             Class<?> cls;
@@ -650,7 +679,8 @@ public class ComponentSizeValidator implements Serializable {
                 }
 
                 cls = Class.forName(className);
-                if (cls == ComponentSizeValidator.class || cls == Thread.class) {
+                if (cls == ComponentSizeValidator.class
+                        || cls == Thread.class) {
                     continue;
                 }
 
@@ -675,7 +705,7 @@ public class ComponentSizeValidator implements Serializable {
 
     /**
      * Validates the layout and returns a collection of errors
-     * 
+     *
      * @since 7.1
      * @param ui
      *            The UI to validate
@@ -685,8 +715,7 @@ public class ComponentSizeValidator implements Serializable {
     public static List<InvalidLayout> validateLayouts(UI ui) {
         List<InvalidLayout> invalidRelativeSizes = ComponentSizeValidator
                 .validateComponentRelativeSizes(ui.getContent(),
-                        new ArrayList<ComponentSizeValidator.InvalidLayout>(),
-                        null);
+                        new ArrayList<>(), null);
 
         // Also check any existing subwindows
         if (ui.getWindows() != null) {
@@ -698,6 +727,9 @@ public class ComponentSizeValidator implements Serializable {
         }
         return invalidRelativeSizes;
 
+    }
+
+    private ComponentSizeValidator() {
     }
 
 }

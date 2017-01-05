@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
@@ -8,8 +7,9 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TreeTable;
 
 public class ExpandAnimationsInChameleon extends TestBase {
 
@@ -62,13 +62,12 @@ public class ExpandAnimationsInChameleon extends TestBase {
                 super.addComponent(c);
                 setComponentAlignment(c, Alignment.MIDDLE_CENTER);
                 if (c.getStyleName() != "") {
-                    ((AbstractComponent) c).setDescription(c.getClass()
-                            .getSimpleName()
-                            + ".addStyleName(\""
-                            + c.getStyleName() + "\")");
+                    ((AbstractComponent) c).setDescription(
+                            c.getClass().getSimpleName() + ".addStyleName(\""
+                                    + c.getStyleName() + "\")");
                 } else {
-                    ((AbstractComponent) c).setDescription("new "
-                            + c.getClass().getSimpleName() + "()");
+                    ((AbstractComponent) c).setDescription(
+                            "new " + c.getClass().getSimpleName() + "()");
                 }
             }
         };
@@ -106,8 +105,8 @@ public class ExpandAnimationsInChameleon extends TestBase {
             hc.setParent(j, 2);
         }
 
-        t.setColumnIcon("Third", new ThemeResource(
-                "../runo/icons/16/document.png"));
+        t.setColumnIcon("Third",
+                new ThemeResource("../runo/icons/16/document.png"));
         t.select(1);
 
         return t;

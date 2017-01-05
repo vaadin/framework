@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,7 +41,7 @@ public class ApplicationConstants implements Serializable {
             + "://";
     /**
      * Prefix used for theme resource URLs
-     * 
+     *
      * @see com.vaadin.server.ThemeResource
      * @since 7.5.0
      */
@@ -135,7 +135,7 @@ public class ApplicationConstants implements Serializable {
     /**
      * The name of the parameter used to transmit the id of the client to server
      * messages.
-     * 
+     *
      * @since 7.6
      */
     public static final String CLIENT_TO_SERVER_ID = "clientId";
@@ -153,7 +153,7 @@ public class ApplicationConstants implements Serializable {
     /**
      * The name of the parameter used for sending the widget set version to the
      * server
-     * 
+     *
      * @since 7.6
      */
     public static final String WIDGETSET_VERSION_ID = "wsver";

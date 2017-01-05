@@ -44,7 +44,7 @@ public class TabsheetNPE extends AbstractTestCase implements ClickListener {
 
         layout.addComponent(tabSheet);
         Button btn = new Button("Enable and activate tab");
-        btn.addListener(this);
+        btn.addClickListener(this);
         layout.addComponent(btn);
         return layout;
     }

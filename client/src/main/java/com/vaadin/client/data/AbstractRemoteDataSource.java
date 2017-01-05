@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,14 +17,19 @@
 package com.vaadin.client.data;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.Profiler;
-import com.vaadin.shared.ui.grid.Range;
+import com.vaadin.shared.Range;
+import com.vaadin.shared.Registration;
 
 /**
  * Base implementation for data sources that fetch data from a remote system.
@@ -32,7 +37,7 @@ import com.vaadin.shared.ui.grid.Range;
  * user. An implementation of this class should override
  * {@link #requestRows(int, int, RequestRowsCallback)} to trigger asynchronously
  * loading of data and then pass the loaded data into the provided callback.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
@@ -52,7 +57,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         /**
          * Creates a new callback
-         * 
+         *
          * @param source
          *            the data source for which the request is made
          * @param requestedRange
@@ -70,7 +75,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
          * Called by the
          * {@link AbstractRemoteDataSource#requestRows(int, int, RequestRowsCallback)}
          * implementation when data has been received.
-         * 
+         *
          * @param rowData
          *            a list of row objects starting at the requested offset
          * @param totalSize
@@ -85,7 +90,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         /**
          * Gets the range of rows that was requested.
-         * 
+         *
          * @return the requsted row range
          */
         public Range getRequestedRange() {
@@ -105,7 +110,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         /**
          * A method for the data source to update the row data.
-         * 
+         *
          * @param row
          *            the updated row object
          */
@@ -159,8 +164,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         @Override
         public void updateRow() {
             int index = indexOf(row);
-            if (index >= 0 && dataChangeHandler != null) {
-                dataChangeHandler.dataUpdated(index, 1);
+            if (index >= 0) {
+                getHandlers().forEach(dch -> dch.dataUpdated(index, 1));
             }
         }
     }
@@ -173,10 +178,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Range cached = Range.between(0, 0);
 
-    private final HashMap<Integer, T> indexToRowMap = new HashMap<Integer, T>();
-    private final HashMap<Object, Integer> keyToIndexMap = new HashMap<Object, Integer>();
+    private final HashMap<Integer, T> indexToRowMap = new HashMap<>();
+    private final HashMap<Object, Integer> keyToIndexMap = new HashMap<>();
 
-    private DataChangeHandler dataChangeHandler;
+    private Set<DataChangeHandler> dataChangeHandlers = new LinkedHashSet<>();
 
     private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
 
@@ -188,8 +193,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         }
     };
 
-    private Map<Object, Integer> pinnedCounts = new HashMap<Object, Integer>();
-    private Map<Object, RowHandleImpl> pinnedRows = new HashMap<Object, RowHandleImpl>();
+    private Map<Object, Integer> pinnedCounts = new HashMap<>();
+    private Map<Object, RowHandleImpl> pinnedRows = new HashMap<>();
 
     // Size not yet known
     private int size = -1;
@@ -204,7 +209,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Pins a row with given handle. This function can be overridden to do
      * specific logic related to pinning rows.
-     * 
+     *
      * @param handle
      *            row handle to pin
      */
@@ -221,10 +226,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Unpins a previously pinned row with given handle. This function can be
      * overridden to do specific logic related to unpinning rows.
-     * 
+     *
      * @param handle
      *            row handle to unpin
-     * 
+     *
      * @throws IllegalStateException
      *             if given row handle has not been pinned before
      */
@@ -257,7 +262,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Gets the row index range that was requested by the previous call to
      * {@link #ensureAvailability(int, int)}.
-     * 
+     *
      * @return the requested availability range
      */
     public Range getRequestedAvailability() {
@@ -282,7 +287,14 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             dropFromCache(cached);
             cached = Range.between(0, 0);
 
-            handleMissingRows(getMaxCacheRange());
+            Range maxCacheRange = getMaxCacheRange();
+            if (!maxCacheRange.isEmpty()) {
+                handleMissingRows(maxCacheRange);
+            } else {
+                // There is nothing to fetch. We're done here.
+                getHandlers().forEach(dch -> dch
+                        .dataAvailable(cached.getStart(), cached.length()));
+            }
         } else {
             discardStaleCacheEntries();
 
@@ -292,9 +304,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                         .partitionWith(cached);
                 handleMissingRows(missingCachePartition[0]);
                 handleMissingRows(missingCachePartition[2]);
-            } else if (dataChangeHandler != null) {
-                dataChangeHandler.dataAvailable(cached.getStart(),
-                        cached.length());
+            } else {
+                getHandlers().forEach(dch -> dch
+                        .dataAvailable(cached.getStart(), cached.length()));
             }
         }
 
@@ -304,10 +316,11 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     /**
      * Checks whether this data source is currently waiting for more rows to
      * become available.
-     * 
+     *
      * @return <code>true</code> if waiting for data; otherwise
      *         <code>false</code>
      */
+    @Override
     public boolean isWaitingForData() {
         return currentRequestCallback != null;
     }
@@ -338,7 +351,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * NOTE: This method has been replaced. Override
      * {@link #onDropFromCache(int, Object)} instead of this method.
-     * 
+     *
      * @since 7.5.0
      * @param rowIndex
      *            the index of the dropped row
@@ -353,7 +366,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * A hook that can be overridden to do something whenever a row has been
      * dropped from the cache. DataSource no longer has anything in the given
      * index.
-     * 
+     *
      * @since 7.6
      * @param rowIndex
      *            the index of the dropped row
@@ -366,17 +379,17 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private void handleMissingRows(Range range) {
-        if (range.isEmpty()) {
+        if (range.isEmpty() || !canFetchData()) {
             return;
         }
-        currentRequestCallback = new RequestRowsCallback<T>(this, range);
+        currentRequestCallback = new RequestRowsCallback<>(this, range);
         requestRows(range.getStart(), range.length(), currentRequestCallback);
     }
 
     /**
      * Triggers fetching rows from the remote data source. The provided callback
      * should be informed when the requested rows have been received.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first row to fetch
      * @param numberOfRows
@@ -397,7 +410,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * <em>Note:</em> This method does not verify that the given row object
      * exists at all in this DataSource.
-     * 
+     *
      * @param row
      *            the row object
      * @return index of the row; or <code>-1</code> if row is not available
@@ -411,19 +424,24 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     @Override
-    public void setDataChangeHandler(DataChangeHandler dataChangeHandler) {
-        this.dataChangeHandler = dataChangeHandler;
+    public Registration addDataChangeHandler(
+            final DataChangeHandler dataChangeHandler) {
+        Objects.requireNonNull(dataChangeHandler,
+                "DataChangeHandler can't be null");
+        dataChangeHandlers.add(dataChangeHandler);
 
-        if (dataChangeHandler != null && !cached.isEmpty()) {
+        if (!cached.isEmpty()) {
             // Push currently cached data to the implementation
             dataChangeHandler.dataUpdated(cached.getStart(), cached.length());
             dataChangeHandler.dataAvailable(cached.getStart(), cached.length());
         }
+
+        return () -> dataChangeHandlers.remove(dataChangeHandler);
     }
 
     /**
      * Informs this data source that updated data has been sent from the server.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first received row
      * @param rowData
@@ -437,31 +455,34 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Range received = Range.withLength(firstRowIndex, rowData.size());
 
         if (isWaitingForData()) {
-            cacheStrategy.onDataArrive(Duration.currentTimeMillis()
-                    - currentRequestCallback.requestStart, received.length());
+            cacheStrategy.onDataArrive(
+                    Duration.currentTimeMillis()
+                            - currentRequestCallback.requestStart,
+                    received.length());
 
             currentRequestCallback = null;
         }
 
-        Range maxCacheRange = getMaxCacheRange();
+        Range maxCacheRange = getMaxCacheRange(received);
 
         Range[] partition = received.partitionWith(maxCacheRange);
 
         Range newUsefulData = partition[1];
         if (!newUsefulData.isEmpty()) {
             // Update the parts that are actually inside
-            for (int i = newUsefulData.getStart(); i < newUsefulData.getEnd(); i++) {
+            int start = newUsefulData.getStart();
+            for (int i = start; i < newUsefulData.getEnd(); i++) {
                 final T row = rowData.get(i - firstRowIndex);
                 indexToRowMap.put(Integer.valueOf(i), row);
                 keyToIndexMap.put(getRowKey(row), Integer.valueOf(i));
             }
 
-            if (dataChangeHandler != null) {
-                Profiler.enter("AbstractRemoteDataSource.setRowData notify dataChangeHandler");
-                dataChangeHandler.dataUpdated(newUsefulData.getStart(),
-                        newUsefulData.length());
-                Profiler.leave("AbstractRemoteDataSource.setRowData notify dataChangeHandler");
-            }
+            Profiler.enter(
+                    "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
+            int length = newUsefulData.length();
+            getHandlers().forEach(dch -> dch.dataUpdated(start, length));
+            Profiler.leave(
+                    "AbstractRemoteDataSource.setRowData notify dataChangeHandler");
 
             // Potentially extend the range
             if (cached.isEmpty()) {
@@ -479,10 +500,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     cached = newUsefulData;
                 }
             }
-            if (dataChangeHandler != null) {
-                dataChangeHandler.dataAvailable(cached.getStart(),
-                        cached.length());
-            }
+
+            getHandlers().forEach(dch -> dch.dataAvailable(cached.getStart(),
+                    cached.length()));
 
             updatePinnedRows(rowData);
         }
@@ -490,7 +510,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (!partition[0].isEmpty() || !partition[2].isEmpty()) {
             /*
              * FIXME
-             * 
+             *
              * Got data that we might need in a moment if the container is
              * updated before the widget settings. Support for this will be
              * implemented later on.
@@ -510,6 +530,12 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.setRowData");
+
+    }
+
+    private Stream<DataChangeHandler> getHandlers() {
+        Set<DataChangeHandler> copy = new LinkedHashSet<>(dataChangeHandlers);
+        return copy.stream();
     }
 
     private void updatePinnedRows(final List<T> rowData) {
@@ -524,7 +550,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Informs this data source that the server has removed data.
-     * 
+     *
      * @param firstRowIndex
      *            the index of the first removed row
      * @param count
@@ -552,17 +578,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             // Removal and cache share some indices. fix accordingly.
             Range[] partitions = cached.partitionWith(removedRange);
             Range remainsBefore = partitions[0];
-            Range transposedRemainsAfter = partitions[2].offsetBy(-removedRange
-                    .length());
+            Range transposedRemainsAfter = partitions[2]
+                    .offsetBy(-removedRange.length());
             cached = remainsBefore.combineWith(transposedRemainsAfter);
         } else if (removedRange.getEnd() <= cached.getStart()) {
             // Removal was before the cache. offset the cache.
             cached = cached.offsetBy(-removedRange.length());
         }
 
-        if (dataChangeHandler != null) {
-            dataChangeHandler.dataRemoved(firstRowIndex, count);
-        }
+        getHandlers().forEach(dch -> dch.dataRemoved(firstRowIndex, count));
+
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.removeRowData");
@@ -570,7 +595,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Informs this data source that new data has been inserted from the server.
-     * 
+     *
      * @param firstRowIndex
      *            the destination index of the new row data
      * @param count
@@ -596,7 +621,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * We need to invalidate the cache from the inserted row onwards,
              * since the cache wants to be a contiguous range. It doesn't
              * support holes.
-             * 
+             *
              * If holes were supported, we could shift the higher part of
              * "cached" and leave a hole the size of "count" in the middle.
              */
@@ -607,9 +632,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                 keyToIndexMap.remove(getRowKey(row));
             }
         }
-        if (dataChangeHandler != null) {
-            dataChangeHandler.dataAdded(firstRowIndex, count);
-        }
+
+        getHandlers().forEach(dch -> dch.dataAdded(firstRowIndex, count));
+
         ensureCoverageCheck();
 
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
@@ -633,7 +658,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Gets the current range of cached rows
-     * 
+     *
      * @return the range of currently cached rows
      */
     public Range getCachedRange() {
@@ -646,7 +671,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * The new strategy is immediately used to evaluate whether currently cached
      * rows should be discarded or new rows should be fetched.
-     * 
+     *
      * @param cacheStrategy
      *            a cache strategy implementation, not <code>null</code>
      */
@@ -674,9 +699,13 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     private Range getMaxCacheRange() {
+        return getMaxCacheRange(getRequestedAvailability());
+    }
+
+    private Range getMaxCacheRange(Range range) {
         Range availableDataRange = getAvailableRangeForCache();
-        Range maxCacheRange = cacheStrategy.getMaxCacheRange(
-                requestedAvailability, cached, availableDataRange);
+        Range maxCacheRange = cacheStrategy.getMaxCacheRange(range, cached,
+                availableDataRange);
 
         assert maxCacheRange.isSubsetOf(availableDataRange);
 
@@ -696,8 +725,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Object key = getRowKey(row);
 
         if (key == null) {
-            throw new NullPointerException("key may not be null (row: " + row
-                    + ")");
+            throw new NullPointerException(
+                    "key may not be null (row: " + row + ")");
         }
 
         if (pinnedRows.containsKey(key)) {
@@ -725,7 +754,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * <p>
      * A very usual and simple example what this could be, is an unique ID for
      * this object that would also be stored in a database.
-     * 
+     *
      * @param row
      *            the row object for which to get the key
      * @return a non-null object that uniquely and consistently represents the
@@ -747,7 +776,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * If you have information about the structure of the change, use
      * {@link #insertRowData(int, int)} or {@link #removeRowData(int, int)} to
      * indicate where the inserted or removed rows are located.
-     * 
+     *
      * @param newSize
      *            the new size of the container
      */
@@ -755,9 +784,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         size = newSize;
         dropFromCache(getCachedRange());
         cached = Range.withLength(0, 0);
-        if (dataChangeHandler != null) {
-            dataChangeHandler.resetDataAndSize(newSize);
-        }
+
+        getHandlers().forEach(dch -> dch.resetDataAndSize(newSize));
     }
 
     protected int indexOfKey(Object rowKey) {
@@ -770,5 +798,18 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     protected boolean isPinned(T row) {
         return pinnedRows.containsKey(getRowKey(row));
+    }
+
+    /**
+     * Checks if it is possible to currently fetch data from the remote data
+     * source.
+     *
+     * @return <code>true</code> if it is ok to try to fetch data,
+     *         <code>false</code> if it is known that fetching data will fail
+     *         and should not be tried right now.
+     * @since 7.7.2
+     */
+    protected boolean canFetchData() {
+        return true;
     }
 }

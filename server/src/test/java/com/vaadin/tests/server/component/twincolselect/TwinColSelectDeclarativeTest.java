@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2014 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,60 +15,72 @@
  */
 package com.vaadin.tests.server.component.twincolselect;
 
-import java.util.Arrays;
-
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstractmultiselect.AbstractMultiSelectDeclarativeTest;
 import com.vaadin.ui.TwinColSelect;
 
 /**
- * Test cases for reading the properties of selection components.
- * 
+ * TwinColSelectt declarative test.
+ * <p>
+ * There are only TwinColSelect specific properties explicit tests. All other
+ * tests are in the super class ( {@link AbstractMultiSelectDeclarativeTest}).
+ *
+ * @see AbstractMultiSelectDeclarativeTest
+ *
  * @author Vaadin Ltd
+ *
  */
-public class TwinColSelectDeclarativeTest extends
-        DeclarativeTestBase<TwinColSelect> {
+public class TwinColSelectDeclarativeTest
+        extends AbstractMultiSelectDeclarativeTest<TwinColSelect> {
 
-    public String getBasicDesign() {
-        return "<vaadin-twin-col-select rows=5 right-column-caption='Selected values' left-column-caption='Unselected values'>\n"
-                + "        <option>First item</option>\n"
-                + "        <option selected>Second item</option>\n"
-                + "        <option selected>Third item</option>\n"
-                + "</vaadin-twin-col-select>";
+    @Test
+    public void rowsPropertySerialization() {
+        int rows = 7;
+        String design = String.format("<%s rows='%s'/>", getComponentTag(),
+                rows);
 
-    }
+        TwinColSelect<String> select = new TwinColSelect<>();
+        select.setRows(rows);
 
-    public TwinColSelect getBasicExpected() {
-        TwinColSelect s = new TwinColSelect();
-        s.setRightColumnCaption("Selected values");
-        s.setLeftColumnCaption("Unselected values");
-        s.addItem("First item");
-        s.addItem("Second item");
-        s.addItem("Third item");
-        s.setValue(Arrays.asList(new Object[] { "Second item", "Third item" }));
-        s.setRows(5);
-        return s;
+        testRead(design, select);
+        testWrite(design, select);
     }
 
     @Test
-    public void testReadBasic() {
-        testRead(getBasicDesign(), getBasicExpected());
+    public void rightColumnCaptionPropertySerialization() {
+        String rightColumnCaption = "foo";
+        String design = String.format("<%s right-column-caption='%s'/>",
+                getComponentTag(), rightColumnCaption);
+
+        TwinColSelect<String> select = new TwinColSelect<>();
+        select.setRightColumnCaption(rightColumnCaption);
+
+        testRead(design, select);
+        testWrite(design, select);
     }
 
     @Test
-    public void testWriteBasic() {
-        testWrite(stripOptionTags(getBasicDesign()), getBasicExpected());
+    public void leftColumnCaptionPropertySerialization() {
+        String leftColumnCaption = "foo";
+        String design = String.format("<%s left-column-caption='%s'/>",
+                getComponentTag(), leftColumnCaption);
+
+        TwinColSelect<String> select = new TwinColSelect<>();
+        select.setLeftColumnCaption(leftColumnCaption);
+
+        testRead(design, select);
+        testWrite(design, select);
     }
 
-    @Test
-    public void testReadEmpty() {
-        testRead("<vaadin-twin-col-select />", new TwinColSelect());
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-twin-col-select";
     }
 
-    @Test
-    public void testWriteEmpty() {
-        testWrite("<vaadin-twin-col-select />", new TwinColSelect());
+    @Override
+    protected Class<? extends TwinColSelect> getComponentClass() {
+        return TwinColSelect.class;
     }
 
 }

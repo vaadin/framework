@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.vaadin.tests.components.textarea;
 
 import com.vaadin.event.UIEvents;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -42,7 +42,7 @@ import com.vaadin.ui.TextField;
  * @since
  * @author Vaadin Ltd
  */
-public class TextAreaSizeResetted extends AbstractTestUI {
+public class TextAreaSizeResetted extends AbstractReindeerTestUI {
 
     public static final int TEXTAREAHEIGHT = 200;
     public static final int TEXTAREAWIDTH = 200;
@@ -73,6 +73,17 @@ public class TextAreaSizeResetted extends AbstractTestUI {
         textArea.setWidth(TEXTAREAWIDTH + "px");
         textArea.setValue("This is a text.");
 
+        Label serverHeight = new Label();
+        Label text = new Label();
+        textArea.addValueChangeListener(
+                event -> text.setValue(event.getValue()));
+        Button hbutton = new Button("check height", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                serverHeight.setValue(textArea.getHeight() + " ");
+            }
+        });
         Button button = new Button("Change Height", new ClickListener() {
 
             @Override
@@ -88,12 +99,15 @@ public class TextAreaSizeResetted extends AbstractTestUI {
         layout.addComponent(textField);
         layout.addComponent(button);
         layout.addComponent(pollIndicator);
+        layout.addComponent(hbutton);
+        layout.addComponent(serverHeight);
+        layout.addComponent(text);
 
         addPollListener(new UIEvents.PollListener() {
             @Override
             public void poll(UIEvents.PollEvent event) {
-                pollIndicator.setValue(String.valueOf(System
-                        .currentTimeMillis()));
+                pollIndicator
+                        .setValue(String.valueOf(System.currentTimeMillis()));
             }
         });
     }

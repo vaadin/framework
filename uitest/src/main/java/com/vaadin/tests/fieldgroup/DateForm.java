@@ -3,21 +3,21 @@ package com.vaadin.tests.fieldgroup;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.PropertyId;
-import com.vaadin.data.util.BeanItem;
+import com.vaadin.annotations.PropertyId;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PopupDateField;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup;
+import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.InlineDateField;
+import com.vaadin.v7.ui.PopupDateField;
+import com.vaadin.v7.ui.TextField;
 
 public class DateForm extends AbstractTestUIWithLog {
 
@@ -79,8 +79,7 @@ public class DateForm extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         setLocale(Locale.US);
         addComponent(log);
-        final FieldGroup fieldGroup = new BeanFieldGroup<DateObject>(
-                DateObject.class);
+        final FieldGroup fieldGroup = new BeanFieldGroup<>(DateObject.class);
         fieldGroup.setBuffered(true);
 
         fieldGroup.buildAndBindMemberFields(this);
@@ -127,10 +126,10 @@ public class DateForm extends AbstractTestUIWithLog {
         addComponent(discardButton);
         addComponent(showBean);
 
-        DateObject d = new DateObject(new Date(443457289789L), new Date(
-                443457289789L), new Date(443457289789L),
+        DateObject d = new DateObject(new Date(443457289789L),
+                new Date(443543689789L), new Date(443457289789L),
                 new Date(443457289789L));
-        fieldGroup.setItemDataSource(new BeanItem<DateObject>(d));
+        fieldGroup.setItemDataSource(new BeanItem<>(d));
     }
 
     @SuppressWarnings("unchecked")
@@ -139,7 +138,7 @@ public class DateForm extends AbstractTestUIWithLog {
     }
 
     @Override
-    public String getDescription() {
+    protected String getTestDescription() {
         return "Ensure FieldGroupFieldFactory supports Dates";
     }
 

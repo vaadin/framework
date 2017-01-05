@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.extension.responsive.ResponsiveState;
 import com.vaadin.ui.Component;
 
 /**
@@ -40,22 +41,22 @@ import com.vaadin.ui.Component;
  * <code>Page.getCurrent().getStyles().add(...)</code>) or any other style
  * updates after the initial page load are not supported at the moment.</i>
  * </p>
- * 
- * 
+ *
+ *
  * <p>
  * Example:
- * 
+ *
  * <b>Java</b>
- * 
+ *
  * <pre>
  * CssLayout layout = new CssLayout();
  * layout.setStyleName(&quot;responsive&quot;);
  * layout.setSizeFull();
  * Responsive.makeResponsive(layout);
  * </pre>
- * 
+ *
  * <b>SCSS</b>
- * 
+ *
  * <pre>
  * .v-csslayout.responsive {
  *   &[width-range~="0-300px"] {
@@ -78,9 +79,9 @@ import com.vaadin.ui.Component;
  *   }
  * }
  * </pre>
- * 
+ *
  * <b>CSS</b>
- * 
+ *
  * <pre>
  * .v-csslayout.responsive[width-range~="0-300px"] {
  *    // Styles for the layout when its width is between 0 and 300 pixels
@@ -91,7 +92,7 @@ import com.vaadin.ui.Component;
  * .v-csslayout.responsive[width-range~="501-"] {
  *    // Styles for the layout when its width is over 500 pixels
  * }
- * 
+ *
  * .v-csslayout.responsive[height-range~="0-300px"] {
  *    // Styles for the layout when its height is between 0 and 300 pixels
  * }
@@ -102,7 +103,7 @@ import com.vaadin.ui.Component;
  *    // Styles for the layout when its height is over 500 pixels
  * }
  * </pre>
- * 
+ *
  * </p>
  * <p>
  * <b>Note:</b> <i>The defined ranges are applied on a global context, so even
@@ -114,24 +115,24 @@ import com.vaadin.ui.Component;
  * though the CSS implies it would only affect CssLayout instances inside a
  * parent with a style name "foobar":
  * </p>
- * 
+ *
  * <pre>
  * .foobar .v-csslayout[width-range~="0px-100px"] {
  *    // These properties will affect all responsive CssLayout instances
  * }
  * </pre>
- * 
+ *
  * <p>
  * To scope the ranges, use an additional style name for the target component,
  * and add that to your CSS selector:
  * </p>
- * 
+ *
  * <pre>
  *  .v-csslayout.mystyle[width-range="0px-100px"] {
  *    // These properties will only affect responsive CssLayout instances with an additional style name of 'mystyle'
  * }
  * </pre>
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.2
  */
@@ -146,7 +147,7 @@ public class Responsive extends AbstractExtension {
     /**
      * Enable responsive width and height range styling for the target component
      * or UI instance.
-     * 
+     *
      * @param target
      *            The component which should be able to respond to width and/or
      *            height changes.
@@ -157,5 +158,15 @@ public class Responsive extends AbstractExtension {
                 new Responsive().extend((AbstractClientConnector) c);
             }
         }
+    }
+
+    @Override
+    protected ResponsiveState getState() {
+        return (ResponsiveState) super.getState();
+    }
+
+    @Override
+    protected ResponsiveState getState(boolean markAsDirty) {
+        return (ResponsiveState) super.getState(markAsDirty);
     }
 }

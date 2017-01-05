@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,16 +15,15 @@
  */
 package com.vaadin.ui.renderers;
 
-import com.vaadin.ui.Grid.AbstractRenderer;
-import elemental.json.JsonValue;
+import com.vaadin.shared.ui.grid.renderers.TextRendererState;
 
 /**
  * A renderer for presenting simple plain-text string values.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer extends AbstractRenderer<String> {
+public class TextRenderer extends AbstractRenderer<Object, String> {
 
     /**
      * Creates a new text renderer
@@ -35,7 +34,7 @@ public class TextRenderer extends AbstractRenderer<String> {
 
     /**
      * Creates a new text renderer
-     * 
+     *
      * @param nullRepresentation
      *            the textual representation of {@code null} value
      */
@@ -46,5 +45,15 @@ public class TextRenderer extends AbstractRenderer<String> {
     @Override
     public String getNullRepresentation() {
         return super.getNullRepresentation();
+    }
+
+    @Override
+    protected TextRendererState getState() {
+        return (TextRendererState) super.getState();
+    }
+
+    @Override
+    protected TextRendererState getState(boolean markAsDirty) {
+        return (TextRendererState) super.getState(markAsDirty);
     }
 }

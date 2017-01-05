@@ -1,0 +1,58 @@
+---
+title: Editing Values in Fields
+order: 2
+layout: page
+---
+
+[[datamodel.fields]]
+= Editing Values in Fields
+
+Input field components (implementing the `HasValue` interface) are in a very central role for handling data in an application since different types of fields are the main user interface controls used for displaying and editing data.
+
+While each field implementation has its own functionality, all fields also have some common core functionality.
+By using these common building blocks, the data binding part of the framework can help simplify the code we need to write for many common data entry cases.
+
+At the very core, each field has a value that the user can see and edit through the user interface.
+The value can also be read and set through code.
+
+[source,java]
+----
+TextField nameField = new TextField("Enter your name");
+
+Button sayHelloButton = new Button("Say hello", clickEvent -> {
+  String name = nameField.getValue();
+  Notification.show("Hello " + name);
+});
+----
+
+Each field implementation has its own specific value type – for instance, the type of a `TextField` is `String`, the type of a `Slider` is `Double`, the type of a `DateField` is `LocalDate`, and so on.
+
+== Reacting to Value Changes
+
+When the value of a field changes, it fires a value change event.
+By listening to the event, we can find out the new value of the field and whether the value was changed by the user through the user interface or by code through the `setValue` method.
+
+[source,java]
+----
+TextField nameField = new TextField("Enter your name");
+nameField.addValueChangeListener(event -> {
+  String origin = event.isUserOriginated()
+    ? "by the user"
+    : "from code";
+  String message = "Name is " + event.getValue()
+      + " as set " + origin;
+  Notification.show(message);
+});
+
+Button setButton = new Button("Set name", event -> {
+  // Will show "Name is Zaphod as set from code"
+  nameField.setValue("Zaphod");
+});
+----
+
+Fields can also be set in read-only mode, which means that the user is not able to directly edit the value through the user interface, but the value can still be changed through code.
+This is useful for showing the user that the data is there, even though the user is currently not allowed to edit it.
+
+When editing multiple values from the same business object, you can use `Binder` to simplify how the values of all input fields in a form are handled.
+
+link:datamodel-forms.asciidoc[Binding Data to Forms] describes how this is done.

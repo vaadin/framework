@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,6 +20,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.communication.URLReference;
+import com.vaadin.shared.ui.grid.renderers.ImageRendererState;
 
 import elemental.json.JsonValue;
 
@@ -29,11 +30,14 @@ import elemental.json.JsonValue;
  * The image for each rendered cell is read from a Resource-typed property in
  * the data source. Only {@link ExternalResource}s and {@link ThemeResource}s
  * are currently supported.
- * 
+ *
+ * @param <T>
+ *            the type of the grid this renderer can be attached to
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class ImageRenderer extends ClickableRenderer<Resource> {
+public class ImageRenderer<T> extends ClickableRenderer<T, Resource> {
 
     /**
      * Creates a new image renderer.
@@ -44,18 +48,19 @@ public class ImageRenderer extends ClickableRenderer<Resource> {
 
     /**
      * Creates a new image renderer and adds the given click listener to it.
-     * 
+     *
      * @param listener
      *            the click listener to register
      */
-    public ImageRenderer(RendererClickListener listener) {
+    public ImageRenderer(RendererClickListener<T> listener) {
         this();
         addClickListener(listener);
     }
 
     @Override
     public JsonValue encode(Resource resource) {
-        if (!(resource == null || resource instanceof ExternalResource || resource instanceof ThemeResource)) {
+        if (!(resource == null || resource instanceof ExternalResource
+                || resource instanceof ThemeResource)) {
             throw new IllegalArgumentException(
                     "ImageRenderer only supports ExternalResource and ThemeResource ("
                             + resource.getClass().getSimpleName() + " given)");
@@ -63,5 +68,15 @@ public class ImageRenderer extends ClickableRenderer<Resource> {
 
         return encode(ResourceReference.create(resource, this, null),
                 URLReference.class);
+    }
+
+    @Override
+    protected ImageRendererState getState() {
+        return (ImageRendererState) super.getState();
+    }
+
+    @Override
+    protected ImageRendererState getState(boolean markAsDirty) {
+        return (ImageRendererState) super.getState(markAsDirty);
     }
 }

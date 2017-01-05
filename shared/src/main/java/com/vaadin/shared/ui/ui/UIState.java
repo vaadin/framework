@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,10 +21,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
 
-public class UIState extends TabIndexState {
+public class UIState extends AbstractSingleComponentContainerState {
+    /**
+     * The <i>tabulator index</i> of the field.
+     */
+    @NoLayout
+    public int tabIndex = 0;
+
     public TooltipConfigurationState tooltipConfiguration = new TooltipConfigurationState();
     public LoadingIndicatorConfigurationState loadingIndicatorConfiguration = new LoadingIndicatorConfigurationState();
     public int pollInterval = -1;
@@ -32,7 +39,7 @@ public class UIState extends TabIndexState {
     // Informing users of assistive devices, that the content of this container
     // is announced automatically and does not need to be navigated into
     public String overlayContainerLabel = "This content is announced automatically and does not need to be navigated into.";
-    public Map<String, NotificationTypeConfiguration> notificationConfigurations = new HashMap<String, NotificationTypeConfiguration>();
+    public Map<String, NotificationTypeConfiguration> notificationConfigurations = new HashMap<>();
     {
         notificationConfigurations.put("error",
                 new NotificationTypeConfiguration("Error: ",
@@ -68,7 +75,7 @@ public class UIState extends TabIndexState {
     public PushConfigurationState pushConfiguration = new PushConfigurationState();
     /**
      * Currently used theme.
-     * 
+     *
      * @since 7.3
      */
     public String theme;
@@ -79,8 +86,8 @@ public class UIState extends TabIndexState {
         tabIndex = 1;
     }
 
-    public static class LoadingIndicatorConfigurationState implements
-            Serializable {
+    public static class LoadingIndicatorConfigurationState
+            implements Serializable {
         public int firstDelay = 300;
         public int secondDelay = 1500;
         public int thirdDelay = 5000;
@@ -117,17 +124,17 @@ public class UIState extends TabIndexState {
         public boolean alwaysUseXhrForServerRequests = false;
         public PushMode mode = PushMode.DISABLED;
         public String pushUrl = null;
-        public Map<String, String> parameters = new HashMap<String, String>();
+        public Map<String, String> parameters = new HashMap<>();
         {
-            parameters
-                    .put(TRANSPORT_PARAM, Transport.WEBSOCKET.getIdentifier());
+            parameters.put(TRANSPORT_PARAM,
+                    Transport.WEBSOCKET.getIdentifier());
             parameters.put(FALLBACK_TRANSPORT_PARAM,
                     Transport.LONG_POLLING.getIdentifier());
         }
     }
 
-    public static class ReconnectDialogConfigurationState implements
-            Serializable {
+    public static class ReconnectDialogConfigurationState
+            implements Serializable {
         public String dialogText = "Server connection lost, trying to reconnect...";
         public String dialogTextGaveUp = "Server connection lost.";
         public int reconnectAttempts = 10000;
@@ -137,7 +144,7 @@ public class UIState extends TabIndexState {
     }
 
     public static class LocaleServiceState implements Serializable {
-        public List<LocaleData> localeData = new ArrayList<LocaleData>();
+        public List<LocaleData> localeData = new ArrayList<>();
     }
 
     public static class LocaleData implements Serializable {

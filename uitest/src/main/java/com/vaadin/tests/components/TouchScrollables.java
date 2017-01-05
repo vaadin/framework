@@ -2,11 +2,8 @@ package com.vaadin.tests.components;
 
 import java.util.Collection;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
@@ -15,7 +12,6 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,9 +23,13 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Table;
 
 public class TouchScrollables extends TestBase {
     java.util.Random r = new java.util.Random(1);
@@ -49,16 +49,14 @@ public class TouchScrollables extends TestBase {
         addTest(getAccordionTest());
         addTest(getSubWindowTest());
 
-        TestUtils
-                .injectCSS(
-                        getLayout().getUI(),
-                        "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
-                                + "        background-color: inherit ; border-bottom: 1px solid cyan;"
-                                + "}"
-                                + ".v-table-row-drag-middle .v-table-cell-wrapper {"
-                                + "        margin-bottom: -1px;" + "}" + ""
+        TestUtils.injectCSS(getLayout().getUI(),
+                "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
+                        + "        background-color: inherit ; border-bottom: 1px solid cyan;"
+                        + "}"
+                        + ".v-table-row-drag-middle .v-table-cell-wrapper {"
+                        + "        margin-bottom: -1px;" + "}" + ""
 
-                );
+        );
     }
 
     private Component getPanelTest() {
@@ -120,7 +118,7 @@ public class TouchScrollables extends TestBase {
         final Table table = new Table();
 
         Button button = new Button("Toggle lazyloading");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 if (table.getCacheRate() == 100) {
@@ -135,7 +133,7 @@ public class TouchScrollables extends TestBase {
         cssLayout.addComponent(button);
 
         button = new Button("Toggle selectable");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 table.setSelectable(!table.isSelectable());
@@ -200,7 +198,8 @@ public class TouchScrollables extends TestBase {
             }
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show(action.getCaption());
 
             }
@@ -239,7 +238,8 @@ public class TouchScrollables extends TestBase {
                 IndexedContainer containerDataSource = (IndexedContainer) table
                         .getContainerDataSource();
                 int newIndex = containerDataSource.indexOfId(itemIdOver) - 1;
-                if (dropTargetData.getDropLocation() != VerticalDropLocation.TOP) {
+                if (dropTargetData
+                        .getDropLocation() != VerticalDropLocation.TOP) {
                     newIndex++;
                 }
                 if (newIndex < 0) {
@@ -296,8 +296,8 @@ public class TouchScrollables extends TestBase {
         for (int i = 0; i < 40; i++) {
             Item addItem = table.addItem("Item" + i);
             Person p = testData.getIdByIndex(i);
-            addItem.getItemProperty("Name").setValue(
-                    p.getFirstName() + " " + p.getLastName());
+            addItem.getItemProperty("Name")
+                    .setValue(p.getFirstName() + " " + p.getLastName());
             addItem.getItemProperty("Weight").setValue(50 + r.nextInt(60));
         }
 

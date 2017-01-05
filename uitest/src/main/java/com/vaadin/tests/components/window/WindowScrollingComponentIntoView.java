@@ -9,9 +9,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.Table;
 
 public class WindowScrollingComponentIntoView extends AbstractTestCase {
 
@@ -60,16 +60,16 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         window.setPositionX(200);
         window.setPositionY(200);
 
-        layout.addComponent(new Button("Scroll mainwin to X9",
-                new ClickListener() {
+        layout.addComponent(
+                new Button("Scroll mainwin to X9", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         getMainWindow().scrollIntoView(x9);
 
                     }
                 }));
-        layout.addComponent(new Button("Scroll mainwin to Y9",
-                new ClickListener() {
+        layout.addComponent(
+                new Button("Scroll mainwin to Y9", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         getMainWindow().scrollIntoView(y9);

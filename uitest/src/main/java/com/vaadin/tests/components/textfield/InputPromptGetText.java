@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,22 +19,22 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * To verify bug fix: Reproducing of bug Textfield value not updated when
  * InputPromt and ShortcutListener are used
- * 
+ *
  * #13492
- * 
+ *
  * @author Vaadin Ltd
  */
 @Theme("reindeer")
-public class InputPromptGetText extends AbstractTestUI {
+public class InputPromptGetText extends AbstractReindeerTestUI {
 
     static final String FIELD = "field";
     static final String BUTTON = "button";
@@ -43,7 +43,7 @@ public class InputPromptGetText extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -67,17 +67,17 @@ public class InputPromptGetText extends AbstractTestUI {
                 getLayout().addComponent(label);
             }
         });
-        tf.addShortcutListener(new ShortcutListener("Shortcut", KeyCode.ENTER,
-                null) {
+        tf.addShortcutListener(
+                new ShortcutListener("Shortcut", KeyCode.ENTER, null) {
 
-            @Override
-            public void handleAction(Object sender, Object target) {
-                String input = tf.getValue();
-                Label label = new Label("Your input was: " + input);
-                label.setId(LABEL1);
-                getLayout().addComponent(label);
-            }
-        });
+                    @Override
+                    public void handleAction(Object sender, Object target) {
+                        String input = tf.getValue();
+                        Label label = new Label("Your input was: " + input);
+                        label.setId(LABEL1);
+                        getLayout().addComponent(label);
+                    }
+                });
 
         getLayout().addComponent(tf);
         getLayout().addComponent(button);

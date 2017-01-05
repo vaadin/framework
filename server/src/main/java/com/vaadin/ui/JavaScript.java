@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,12 +33,12 @@ import elemental.json.JsonException;
  * instance of JavaScript, either use Page.getJavaScript() or
  * JavaScript.getCurrent() as a shorthand for getting the JavaScript object
  * corresponding to the current Page.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
 public class JavaScript extends AbstractExtension {
-    private Map<String, JavaScriptFunction> functions = new HashMap<String, JavaScriptFunction>();
+    private Map<String, JavaScriptFunction> functions = new HashMap<>();
 
     // Can not be defined in client package as this JSONArray is not available
     // in GWT
@@ -52,18 +52,16 @@ public class JavaScript extends AbstractExtension {
      * object.
      */
     public JavaScript() {
-        registerRpc(new JavaScriptCallbackRpc() {
-            @Override
-            public void call(String name, JsonArray arguments) {
-                JavaScriptFunction function = functions.get(name);
-                // TODO handle situation if name is not registered
-                try {
-                    function.call(arguments);
-                } catch (JsonException e) {
-                    throw new IllegalArgumentException(e);
-                }
-            }
-        });
+        registerRpc(
+                (JavaScriptCallbackRpc) (String name, JsonArray arguments) -> {
+                    JavaScriptFunction function = functions.get(name);
+                    // TODO handle situation if name is not registered
+                    try {
+                        function.call(arguments);
+                    } catch (JsonException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                });
     }
 
     @Override
@@ -71,20 +69,25 @@ public class JavaScript extends AbstractExtension {
         return (JavaScriptManagerState) super.getState();
     }
 
+    @Override
+    protected JavaScriptManagerState getState(boolean markAsDirty) {
+        return (JavaScriptManagerState) super.getState(markAsDirty);
+    }
+
     /**
      * Add a new function to the global JavaScript namespace (i.e. the window
      * object). The <code>call</code> method in the passed
      * {@link JavaScriptFunction} object will be invoked with the same
      * parameters whenever the JavaScript function is called in the browser.
-     * 
+     *
      * A function added with the name <code>"myFunction"</code> can thus be
      * invoked with the following JavaScript code:
      * <code>window.myFunction(argument1, argument2)</code>.
-     * 
+     *
      * If the name parameter contains dots, simple objects are created on demand
      * to allow calling the function using the same name (e.g.
      * <code>window.myObject.myFunction</code>).
-     * 
+     *
      * @param name
      *            the name that the function should get in the global JavaScript
      *            namespace.
@@ -100,11 +103,11 @@ public class JavaScript extends AbstractExtension {
     /**
      * Removes a JavaScripFunction from the browser's global JavaScript
      * namespace.
-     * 
+     *
      * If the name contains dots and intermediate objects were created by
      * {@link #addFunction(String, JavaScriptFunction)}, these objects will not
      * be removed by this method.
-     * 
+     *
      * @param name
      *            the name of the callback to remove
      */
@@ -115,7 +118,7 @@ public class JavaScript extends AbstractExtension {
 
     /**
      * Executes the given JavaScript code in the browser.
-     * 
+     *
      * @param script
      *            The JavaScript code to run.
      */
@@ -125,7 +128,7 @@ public class JavaScript extends AbstractExtension {
 
     /**
      * Executes the given JavaScript code in the browser.
-     * 
+     *
      * @param script
      *            The JavaScript code to run.
      */
@@ -136,9 +139,9 @@ public class JavaScript extends AbstractExtension {
     /**
      * Get the JavaScript object for the current Page, or null if there is no
      * current page.
-     * 
+     *
      * @see Page#getCurrent()
-     * 
+     *
      * @return the JavaScript object corresponding to the current Page, or
      *         <code>null</code> if there is no current page.
      */
@@ -152,7 +155,7 @@ public class JavaScript extends AbstractExtension {
 
     /**
      * JavaScript is not designed to be removed.
-     * 
+     *
      * @throws UnsupportedOperationException
      *             when invoked
      */

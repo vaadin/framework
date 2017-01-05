@@ -35,9 +35,11 @@ public class OverflowAutoFixTest extends MultiBrowserTest {
 
     private void assertElementCssValueEquals(String className,
             String propertyName, String expected) {
-        Assert.assertEquals(String.format(
-                "Unexpected value for property '%s' on element '%s',",
-                propertyName, className), expected,
+        Assert.assertEquals(
+                String.format(
+                        "Unexpected value for property '%s' on element '%s',",
+                        propertyName, className),
+                expected,
                 findElement(By.className(className)).getCssValue(propertyName));
     }
 }

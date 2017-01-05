@@ -15,12 +15,13 @@
  */
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.TextField;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.ui.TextField;
 
-public class TextFieldWithDataSourceAndInputPrompt extends AbstractTestUI {
+public class TextFieldWithDataSourceAndInputPrompt
+        extends AbstractReindeerTestUI {
     public static class Pojo {
         private String string;
 
@@ -45,7 +46,7 @@ public class TextFieldWithDataSourceAndInputPrompt extends AbstractTestUI {
                 "TextField with null data source value");
         textField2.setInputPrompt("Me is input prompt");
         textField2.setNullRepresentation(null);
-        BeanItem<Pojo> beanItem = new BeanItem<Pojo>(new Pojo());
+        BeanItem<Pojo> beanItem = new BeanItem<>(new Pojo());
         textField2.setPropertyDataSource(beanItem.getItemProperty("string"));
         addComponent(textField2);
     }

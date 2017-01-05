@@ -24,20 +24,15 @@ public class GridLayoutComboBoxZoomOut extends AbstractTestCase {
         // formLayout.setWidth("100%");
         formLayout.setWidth("1000px");
 
-        ComboBox countryField = new ComboBox();
-        countryField.addItem("Finland");
-        countryField.addItem("Sweden");
-        countryField.addItem("Canada");
-        countryField.addItem("USA");
+        ComboBox<String> countryField = new ComboBox<>();
+        countryField.setItems("Finland", "Sweden", "Canada", "USA");
         countryField.setCaption("Country");
         countryField.setWidth("100%");
         formLayout.addComponent(countryField);
 
-        ComboBox statusField = new ComboBox();
-        statusField.addItem("Available");
-        statusField.addItem("On vacation");
-        statusField.addItem("Busy");
-        statusField.addItem("Left the building");
+        ComboBox<String> statusField = new ComboBox<>();
+        statusField.setItems("Available", "On vacation", "Busy",
+                "Left the building");
         statusField.setCaption("Status");
         statusField.setWidth("100%");
         formLayout.addComponent(statusField);

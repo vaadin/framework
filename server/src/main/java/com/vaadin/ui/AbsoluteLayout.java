@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -32,6 +32,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutServerRpc;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -40,11 +41,11 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * AbsoluteLayout is a layout implementation that mimics html absolute
  * positioning.
- * 
+ *
  */
 @SuppressWarnings("serial")
-public class AbsoluteLayout extends AbstractLayout implements
-        LayoutClickNotifier {
+public class AbsoluteLayout extends AbstractLayout
+        implements LayoutClickNotifier {
 
     // constants for design attributes
     private static final String ATTR_TOP = ":top";
@@ -53,17 +54,12 @@ public class AbsoluteLayout extends AbstractLayout implements
     private static final String ATTR_LEFT = ":left";
     private static final String ATTR_Z_INDEX = ":z-index";
 
-    private AbsoluteLayoutServerRpc rpc = new AbsoluteLayoutServerRpc() {
-
-        @Override
-        public void layoutClick(MouseEventDetails mouseDetails,
-                Connector clickedConnector) {
-            fireEvent(LayoutClickEvent.createEvent(AbsoluteLayout.this,
-                    mouseDetails, clickedConnector));
-        }
-    };
+    private final AbsoluteLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
+            Connector clickedConnector) -> fireEvent(
+                    LayoutClickEvent.createEvent(AbsoluteLayout.this,
+                            mouseDetails, clickedConnector));
     // Maps each component to a position
-    private LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<Component, ComponentPosition>();
+    private final LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<>();
 
     /**
      * Creates an AbsoluteLayout with full size.
@@ -78,6 +74,11 @@ public class AbsoluteLayout extends AbstractLayout implements
         return (AbsoluteLayoutState) super.getState();
     }
 
+    @Override
+    protected AbsoluteLayoutState getState(boolean markAsDirty) {
+        return (AbsoluteLayoutState) super.getState(markAsDirty);
+    }
+
     /**
      * Gets an iterator for going through all components enclosed in the
      * absolute layout.
@@ -90,7 +91,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     /**
      * Gets the number of contained components. Consistent with the iterator
      * returned by {@link #getComponentIterator()}.
-     * 
+     *
      * @return the number of contained components
      */
     @Override
@@ -103,7 +104,8 @@ public class AbsoluteLayout extends AbstractLayout implements
      * old components position.
      */
     @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
+    public void replaceComponent(Component oldComponent,
+            Component newComponent) {
         ComponentPosition position = getPosition(oldComponent);
         removeComponent(oldComponent);
         addComponent(newComponent, position);
@@ -111,10 +113,9 @@ public class AbsoluteLayout extends AbstractLayout implements
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.Component
-     * )
+     *
+     * @see com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.
+     * Component )
      */
     @Override
     public void addComponent(Component c) {
@@ -129,7 +130,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * 10 pixels from the left and 10 pixels from the top. The identifiers:
      * "top","left","right" and "bottom" can be used to specify the position.
      * </p>
-     * 
+     *
      * @param c
      *            The component to add to the layout
      * @param cssPosition
@@ -144,7 +145,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     /**
      * Adds the component using the given position. Ensures the position is only
      * set if the component is added correctly.
-     * 
+     *
      * @param c
      *            The component to add
      * @param position
@@ -175,7 +176,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * Removes the component from all internal data structures. Does not
      * actually remove the component from the layout (this is assumed to have
      * been done by the caller).
-     * 
+     *
      * @param c
      *            The component to remove
      */
@@ -191,11 +192,11 @@ public class AbsoluteLayout extends AbstractLayout implements
         // Map<Connector,String> was supported. We cannot get the child
         // connectorId unless the component is attached to the application so
         // the String->String map cannot be populated in internal* either.
-        Map<String, String> connectorToPosition = new HashMap<String, String>();
+        Map<String, String> connectorToPosition = new HashMap<>();
         for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
             Component c = ci.next();
-            connectorToPosition.put(c.getConnectorId(), getPosition(c)
-                    .getCSSString());
+            connectorToPosition.put(c.getConnectorId(),
+                    getPosition(c).getCSSString());
         }
         getState().connectorToCssPosition = connectorToPosition;
 
@@ -203,7 +204,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.vaadin.ui.AbstractComponentContainer#removeComponent(com.vaadin.ui
      * .Component)
@@ -222,7 +223,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * {@link #setPosition(Component, ComponentPosition)} with the updated
      * {@link ComponentPosition} object.
      * </p>
-     * 
+     *
      * @param component
      *            The component which position is needed
      * @return An instance of ComponentPosition containing the position of the
@@ -235,7 +236,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
     /**
      * Sets the position of a component in the layout.
-     * 
+     *
      * @param component
      * @param position
      */
@@ -250,7 +251,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     /**
      * Updates the position for a component. Caller must ensure component is a
      * child of this layout.
-     * 
+     *
      * @param component
      *            The component. Must be a child for this layout. Not enforced.
      * @param position
@@ -283,11 +284,11 @@ public class AbsoluteLayout extends AbstractLayout implements
         /**
          * Sets the position attributes using CSS syntax. Attributes not
          * included in the string are reset to their unset states.
-         * 
+         *
          * <code><pre>
          * setCSSString("top:10px;left:20%;z-index:16;");
          * </pre></code>
-         * 
+         *
          * @param css
          */
         public void setCSSString(String css) {
@@ -302,7 +303,7 @@ public class AbsoluteLayout extends AbstractLayout implements
             for (int i = 0; i < cssProperties.length; i++) {
                 String[] keyValuePair = cssProperties[i].split(":");
                 String key = keyValuePair[0].trim();
-                if (key.equals("")) {
+                if (key.isEmpty()) {
                     continue;
                 }
                 if (key.equals("z-index")) {
@@ -315,7 +316,7 @@ public class AbsoluteLayout extends AbstractLayout implements
                         value = "";
                     }
                     String symbol = value.replaceAll("[0-9\\.\\-]+", "");
-                    if (!symbol.equals("")) {
+                    if (!symbol.isEmpty()) {
                         value = value.substring(0, value.indexOf(symbol))
                                 .trim();
                     }
@@ -341,7 +342,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Converts the internal values into a valid CSS string.
-         * 
+         *
          * @return A valid CSS string
          */
         public String getCSSString() {
@@ -367,7 +368,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         /**
          * Sets the 'top' attribute; distance from the top of the component to
          * the top edge of the layout.
-         * 
+         *
          * @param topValue
          *            The value of the 'top' attribute
          * @param topUnits
@@ -383,7 +384,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         /**
          * Sets the 'right' attribute; distance from the right of the component
          * to the right edge of the layout.
-         * 
+         *
          * @param rightValue
          *            The value of the 'right' attribute
          * @param rightUnits
@@ -399,10 +400,10 @@ public class AbsoluteLayout extends AbstractLayout implements
         /**
          * Sets the 'bottom' attribute; distance from the bottom of the
          * component to the bottom edge of the layout.
-         * 
+         *
          * @param bottomValue
          *            The value of the 'bottom' attribute
-         * @param units
+         * @param bottomUnits
          *            The unit of the 'bottom' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
@@ -415,10 +416,10 @@ public class AbsoluteLayout extends AbstractLayout implements
         /**
          * Sets the 'left' attribute; distance from the left of the component to
          * the left edge of the layout.
-         * 
+         *
          * @param leftValue
          *            The value of the 'left' attribute
-         * @param units
+         * @param leftUnits
          *            The unit of the 'left' attribute. See UNIT_SYMBOLS for a
          *            description of the available units.
          */
@@ -430,7 +431,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Sets the 'z-index' attribute; the visual stacking order
-         * 
+         *
          * @param zIndex
          *            The z-index for the component.
          */
@@ -442,7 +443,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         /**
          * Sets the value of the 'top' attribute; distance from the top of the
          * component to the top edge of the layout.
-         * 
+         *
          * @param topValue
          *            The value of the 'left' attribute
          */
@@ -453,7 +454,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the 'top' attributes value in current units.
-         * 
+         *
          * @see #getTopUnits()
          * @return The value of the 'top' attribute, null if not set
          */
@@ -463,7 +464,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the 'right' attributes value in current units.
-         * 
+         *
          * @return The value of the 'right' attribute, null if not set
          * @see #getRightUnits()
          */
@@ -475,10 +476,10 @@ public class AbsoluteLayout extends AbstractLayout implements
          * Sets the 'right' attribute value (distance from the right of the
          * component to the right edge of the layout). Currently active units
          * are maintained.
-         * 
+         *
          * @param rightValue
          *            The value of the 'right' attribute
-         * @see #setRightUnits(int)
+         * @see #setRightUnits(Unit)
          */
         public void setRightValue(Float rightValue) {
             this.rightValue = rightValue;
@@ -487,7 +488,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the 'bottom' attributes value using current units.
-         * 
+         *
          * @return The value of the 'bottom' attribute, null if not set
          * @see #getBottomUnits()
          */
@@ -499,10 +500,10 @@ public class AbsoluteLayout extends AbstractLayout implements
          * Sets the 'bottom' attribute value (distance from the bottom of the
          * component to the bottom edge of the layout). Currently active units
          * are maintained.
-         * 
+         *
          * @param bottomValue
          *            The value of the 'bottom' attribute
-         * @see #setBottomUnits(int)
+         * @see #setBottomUnits(Unit)
          */
         public void setBottomValue(Float bottomValue) {
             this.bottomValue = bottomValue;
@@ -511,7 +512,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the 'left' attributes value using current units.
-         * 
+         *
          * @return The value of the 'left' attribute, null if not set
          * @see #getLeftUnits()
          */
@@ -523,10 +524,10 @@ public class AbsoluteLayout extends AbstractLayout implements
          * Sets the 'left' attribute value (distance from the left of the
          * component to the left edge of the layout). Currently active units are
          * maintained.
-         * 
+         *
          * @param leftValue
          *            The value of the 'left' CSS-attribute
-         * @see #setLeftUnits(int)
+         * @see #setLeftUnits(Unit)
          */
         public void setLeftValue(Float leftValue) {
             this.leftValue = leftValue;
@@ -535,7 +536,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the unit for the 'top' attribute
-         * 
+         *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
@@ -545,7 +546,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Sets the unit for the 'top' attribute
-         * 
+         *
          * @param topUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
@@ -557,7 +558,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the unit for the 'right' attribute
-         * 
+         *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
@@ -567,7 +568,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Sets the unit for the 'right' attribute
-         * 
+         *
          * @param rightUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
@@ -579,7 +580,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the unit for the 'bottom' attribute
-         * 
+         *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
@@ -589,7 +590,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Sets the unit for the 'bottom' attribute
-         * 
+         *
          * @param bottomUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
@@ -601,7 +602,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the unit for the 'left' attribute
-         * 
+         *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
          */
@@ -611,7 +612,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Sets the unit for the 'left' attribute
-         * 
+         *
          * @param leftUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *            available units.
@@ -623,7 +624,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /**
          * Gets the 'z-index' attribute.
-         * 
+         *
          * @return the zIndex The z-index attribute
          */
         public int getZIndex() {
@@ -632,7 +633,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.lang.Object#toString()
          */
         @Override
@@ -643,41 +644,22 @@ public class AbsoluteLayout extends AbstractLayout implements
     }
 
     @Override
-    public void addLayoutClickListener(LayoutClickListener listener) {
-        addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
+    public Registration addLayoutClickListener(LayoutClickListener listener) {
+        return addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addLayoutClickListener(LayoutClickListener)}
-     **/
     @Override
     @Deprecated
-    public void addListener(LayoutClickListener listener) {
-        addLayoutClickListener(listener);
-    }
-
-    @Override
     public void removeLayoutClickListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
     }
 
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeLayoutClickListener(LayoutClickListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(LayoutClickListener listener) {
-        removeLayoutClickListener(listener);
-    }
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Node,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -712,7 +694,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Node,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -730,26 +712,29 @@ public class AbsoluteLayout extends AbstractLayout implements
 
             // handle position
             ComponentPosition position = getPosition(child);
-            writePositionAttribute(childElement, ATTR_TOP, position
-                    .getTopUnits().getSymbol(), position.getTopValue());
-            writePositionAttribute(childElement, ATTR_RIGHT, position
-                    .getRightUnits().getSymbol(), position.getRightValue());
-            writePositionAttribute(childElement, ATTR_BOTTOM, position
-                    .getBottomUnits().getSymbol(), position.getBottomValue());
-            writePositionAttribute(childElement, ATTR_LEFT, position
-                    .getLeftUnits().getSymbol(), position.getLeftValue());
+            writePositionAttribute(childElement, ATTR_TOP,
+                    position.getTopUnits().getSymbol(), position.getTopValue());
+            writePositionAttribute(childElement, ATTR_RIGHT,
+                    position.getRightUnits().getSymbol(),
+                    position.getRightValue());
+            writePositionAttribute(childElement, ATTR_BOTTOM,
+                    position.getBottomUnits().getSymbol(),
+                    position.getBottomValue());
+            writePositionAttribute(childElement, ATTR_LEFT,
+                    position.getLeftUnits().getSymbol(),
+                    position.getLeftValue());
 
             // handle z-index
             if (position.getZIndex() >= 0) {
-                childElement
-                        .attr(ATTR_Z_INDEX, String.valueOf(position.zIndex));
+                childElement.attr(ATTR_Z_INDEX,
+                        String.valueOf(position.zIndex));
             }
         }
     }
 
     /**
      * Private method for writing position attributes
-     * 
+     *
      * @since 7.4
      * @param node
      *            target node
@@ -763,8 +748,8 @@ public class AbsoluteLayout extends AbstractLayout implements
     private void writePositionAttribute(Node node, String key, String symbol,
             Float value) {
         if (value != null) {
-            String valueString = DesignAttributeHandler.getFormatter().format(
-                    value);
+            String valueString = DesignAttributeHandler.getFormatter()
+                    .format(value);
             node.attr(key, valueString + symbol);
         }
     }

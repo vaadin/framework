@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,19 +15,19 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.data.Item;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.OptionGroup;
 
 public class CheckBoxes extends VerticalLayout implements View {
     public CheckBoxes() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Check Boxes");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -35,7 +35,6 @@ public class CheckBoxes extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         CheckBox check = new CheckBox("Checked", true);
@@ -96,14 +95,13 @@ public class CheckBoxes extends VerticalLayout implements View {
 
         row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         OptionGroup options = new OptionGroup("Choose one, explicit width");
         options.setWidth("200px");
         options.addItem("Option One");
-        Item two = options
-                .addItem("Option Two, with a longer caption that should wrap when the components width is explicitly set.");
+        Item two = options.addItem(
+                "Option Two, with a longer caption that should wrap when the components width is explicitly set.");
         options.addItem("Option Three");
         options.select("Option One");
         options.setItemIcon("Option One", testIcon.get());
@@ -115,8 +113,8 @@ public class CheckBoxes extends VerticalLayout implements View {
         options.setMultiSelect(true);
         options.setWidth("200px");
         options.addItem("Option One");
-        two = options
-                .addItem("Option Two, with a longer caption that should wrap when the components width is explicitly set.");
+        two = options.addItem(
+                "Option Two, with a longer caption that should wrap when the components width is explicitly set.");
         options.addItem("Option Three");
         options.select("Option One");
         options.setItemIcon("Option One", testIcon.get());

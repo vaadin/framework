@@ -1,21 +1,21 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.AbstractSelect.NewItemHandler;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.DefaultFieldFactory;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.TableFieldFactory;
 
 public class PropertyValueChange extends TestBase {
 
@@ -49,8 +49,8 @@ public class PropertyValueChange extends TestBase {
                 Object columnId) {
             final Label l = new Label();
             @SuppressWarnings("unchecked")
-            final Property<Integer> integer = source.getContainerProperty(
-                    itemId, "integer");
+            final Property<Integer> integer = source
+                    .getContainerProperty(itemId, "integer");
             l.setValue(String.valueOf(getMultipliedValue(integer)));
 
             // we must hook value change listener to ensure updates in all use
@@ -107,8 +107,9 @@ public class PropertyValueChange extends TestBase {
         t2.setId("disabled table");
 
         Table reader = new Table("Reader table");
-        reader.setDescription("This table should be redrawn on container changes as container data is "
-                + "displayed directly in cells.");
+        reader.setDescription(
+                "This table should be redrawn on container changes as container data is "
+                        + "displayed directly in cells.");
         reader.setContainerDataSource(container);
         reader.addGeneratedColumn("integer x 3", multiplier);
         reader.setPageLength(0);

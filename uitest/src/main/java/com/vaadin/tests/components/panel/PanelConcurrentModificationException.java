@@ -24,12 +24,12 @@ public class PanelConcurrentModificationException extends TestBase {
                         panelLayout.addComponent(new Label("Label"));
                     }
                 }));
-        addComponent(new Button("Or click here first",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Or click here first", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        Notification
-                                .show("It is now safe to click the other button");
+                        Notification.show(
+                                "It is now safe to click the other button");
                     }
                 }));
         addComponent(panel);

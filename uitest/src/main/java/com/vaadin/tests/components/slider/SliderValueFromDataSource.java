@@ -1,55 +1,53 @@
 package com.vaadin.tests.components.slider;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.Binder;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Slider;
+import com.vaadin.v7.data.util.BeanItem;
 
-public class SliderValueFromDataSource extends AbstractTestUI {
+public class SliderValueFromDataSource extends AbstractReindeerTestUI {
 
     public static class TestBean {
 
-        private double doubleValue = 10.0;
         private float floatValue = 0.5f;
-
-        public double getDoubleValue() {
-            return doubleValue;
-        }
-
-        public void setDoubleValue(double doubleValue) {
-            this.doubleValue = doubleValue;
-        }
 
         public float getFloatValue() {
             return floatValue;
         }
 
-        public void setFloatValue(float floatValue) {
-            this.floatValue = floatValue;
+        public void setFloatValue(float doubleValue) {
+            floatValue = doubleValue;
         }
     }
 
     @Override
     protected void setup(VaadinRequest request) {
-        Item item = new BeanItem<TestBean>(new TestBean());
+        TestBean bean = new TestBean();
+        BeanItem<TestBean> item = new BeanItem<>(bean);
 
-        Slider slider = new Slider(0, 20);
+        Slider slider = new Slider(0, 10);
         slider.setWidth("200px");
-        slider.setPropertyDataSource(item.getItemProperty("doubleValue"));
-        addComponent(slider);
+        Binder<TestBean> binder = new Binder<>();
+        binder.forField(slider).bind(
+                b -> Double.valueOf(b.getFloatValue() * 10.0),
+                (b, doubleValue) -> item.getItemProperty("floatValue")
+                        .setValue((float) (doubleValue / 10.0)));
+        binder.setBean(bean);
 
-        ProgressIndicator pi = new ProgressIndicator();
-        pi.setPollingInterval(60 * 1000);
-        pi.setWidth("200px");
-        pi.setPropertyDataSource(item.getItemProperty("floatValue"));
-        addComponent(pi);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setWidth("200px");
+
+        slider.addValueChangeListener(
+                event -> progressBar.setValue(event.getValue().floatValue()));
+
+        addComponents(slider, progressBar);
     }
 
     @Override
     protected String getTestDescription() {
-        return "Slider and ProgressIndicator do not properly pass a value from data source to the client";
+        return "Slider and ProgressBar do not properly pass a value from data provider to the client";
     }
 
     @Override

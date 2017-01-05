@@ -12,12 +12,12 @@ public class WindowTest extends PanelTest<Window> {
     }
 
     @Override
-    protected void addTestComponent(Window c) {
+    protected void addTestComponent(Window w) {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
-        c.setContent(layout);
-        getMainWindow().addWindow(c);
-        getTestComponents().add(c);
+        w.setContent(layout);
+        addWindow(w);
+        getTestComponents().add(w);
     }
 
 }

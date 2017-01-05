@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,350 +16,281 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.util.filter.SimpleStringFilter;
+import org.jsoup.nodes.Element;
+
+import com.vaadin.data.HasValue;
+import com.vaadin.data.Listing;
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataKeyMapper;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
+import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
+import com.vaadin.server.SerializableBiPredicate;
+import com.vaadin.server.SerializableConsumer;
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
+import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
-import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
+
+import elemental.json.Json;
+import elemental.json.JsonObject;
 
 /**
- * A filtering dropdown single-select. Suitable for newItemsAllowed, but it's
- * turned of by default to avoid mistakes. Items are filtered based on user
- * input, and loaded dynamically ("lazy-loading") from the server. You can turn
- * on newItemsAllowed and change filtering mode (and also turn it off), but you
- * can not turn on multi-select mode.
- * 
+ * A filtering dropdown single-select. Items are filtered based on user input.
+ * Supports the creation of new items when a handler is set by the user.
+ *
+ * @param <T>
+ *            item (bean) type in ComboBox
+ * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class ComboBox extends AbstractSelect implements
-        AbstractSelect.Filtering, FieldEvents.BlurNotifier,
-        FieldEvents.FocusNotifier {
+public class ComboBox<T> extends AbstractSingleSelect<T>
+        implements HasValue<T>, FieldEvents.BlurNotifier,
+        FieldEvents.FocusNotifier, Listing<T, DataProvider<T, String>> {
 
     /**
-     * ItemStyleGenerator can be used to add custom styles to combo box items
-     * shown in the popup. The CSS class name that will be added to the item
-     * style names is <tt>v-filterselect-item-[style name]</tt>.
-     * 
-     * @since 7.5.6
-     * @see ComboBox#setItemStyleGenerator(ItemStyleGenerator)
+     * Handler that adds a new item based on user input when the new items
+     * allowed mode is active.
      */
-    public interface ItemStyleGenerator extends Serializable {
+    @FunctionalInterface
+    public interface NewItemHandler extends SerializableConsumer<String> {
+    }
+
+    /**
+     * Item style generator class for declarative support.
+     * <p>
+     * Provides a straightforward mapping between an item and its style.
+     *
+     * @param <T>
+     *            item type
+     */
+    protected static class DeclarativeStyleGenerator<T>
+            implements StyleGenerator<T> {
+
+        private StyleGenerator<T> fallback;
+        private Map<T, String> styles = new HashMap<>();
+
+        public DeclarativeStyleGenerator(StyleGenerator<T> fallback) {
+            this.fallback = fallback;
+        }
+
+        @Override
+        public String apply(T item) {
+            return styles.containsKey(item) ? styles.get(item)
+                    : fallback.apply(item);
+        }
 
         /**
-         * Called by ComboBox when an item is painted.
-         * 
-         * @param source
-         *            the source combo box
-         * @param itemId
-         *            The itemId of the item to be painted. Can be
-         *            <code>null</code> if null selection is allowed.
-         * @return The style name to add to this item. (the CSS class name will
-         *         be v-filterselect-item-[style name]
+         * Sets a {@code style} for the {@code item}.
+         *
+         * @param item
+         *            a data item
+         * @param style
+         *            a style for the {@code item}
          */
-        public String getStyle(ComboBox source, Object itemId);
+        protected void setStyle(T item, String style) {
+            styles.put(item, style);
+        }
     }
 
-    private String inputPrompt = null;
+    private ComboBoxServerRpc rpc = new ComboBoxServerRpc() {
+        @Override
+        public void createNewItem(String itemValue) {
+            // New option entered
+            if (getNewItemHandler() != null && itemValue != null
+                    && itemValue.length() > 0) {
+                getNewItemHandler().accept(itemValue);
+            }
+        }
+
+        @Override
+        public void setFilter(String filterText) {
+            getDataCommunicator().setFilter(filterText);
+        }
+    };
 
     /**
-     * Holds value of property pageLength. 0 disables paging.
+     * Handler for new items entered by the user.
      */
-    protected int pageLength = 10;
+    private NewItemHandler newItemHandler;
 
-    // Current page when the user is 'paging' trough options
-    private int currentPage = -1;
+    private StyleGenerator<T> itemStyleGenerator = item -> null;
 
-    private FilteringMode filteringMode = FilteringMode.STARTSWITH;
-
-    private String filterstring;
-    private String prevfilterstring;
+    private final SerializableBiPredicate<String, T> defaultFilterMethod = (
+            text, item) -> getItemCaptionGenerator().apply(item)
+                    .toLowerCase(getLocale())
+                    .contains(text.toLowerCase(getLocale()));
 
     /**
-     * Number of options that pass the filter, excluding the null item if any.
+     * Constructs an empty combo box without a caption. The content of the combo
+     * box can be set with {@link #setDataProvider(DataProvider)} or
+     * {@link #setItems(Collection)}
      */
-    private int filteredSize;
-
-    /**
-     * Cache of filtered options, used only by the in-memory filtering system.
-     */
-    private List<Object> filteredOptions;
-
-    /**
-     * Flag to indicate that request repaint is called by filter request only
-     */
-    private boolean optionRequest;
-
-    /**
-     * True while painting to suppress item set change notifications that could
-     * be caused by temporary filtering.
-     */
-    private boolean isPainting;
-
-    /**
-     * Flag to indicate whether to scroll the selected item visible (select the
-     * page on which it is) when opening the popup or not. Only applies to
-     * single select mode.
-     * 
-     * This requires finding the index of the item, which can be expensive in
-     * many large lazy loading containers.
-     */
-    private boolean scrollToSelectedItem = true;
-
-    private String suggestionPopupWidth = null;
-
-    /**
-     * If text input is not allowed, the ComboBox behaves like a pretty
-     * NativeSelect - the user can not enter any text and clicking the text
-     * field opens the drop down with options
-     */
-    private boolean textInputAllowed = true;
-
-    private ItemStyleGenerator itemStyleGenerator = null;
-
     public ComboBox() {
-        initDefaults();
-    }
+        super(new DataCommunicator<T, String>() {
+            @Override
+            protected DataKeyMapper<T> createKeyMapper() {
+                return new KeyMapper<T>() {
+                    @Override
+                    public void remove(T removeobj) {
+                        // never remove keys from ComboBox to support selection
+                        // of items that are not currently visible
+                    }
+                };
+            }
+        });
 
-    public ComboBox(String caption, Collection<?> options) {
-        super(caption, options);
-        initDefaults();
-    }
-
-    public ComboBox(String caption, Container dataSource) {
-        super(caption, dataSource);
-        initDefaults();
-    }
-
-    public ComboBox(String caption) {
-        super(caption);
-        initDefaults();
-    }
-
-    /**
-     * Initialize the ComboBox with default settings
-     */
-    private void initDefaults() {
-        setNewItemsAllowed(false);
-        setImmediate(true);
+        init();
     }
 
     /**
-     * Gets the current input prompt.
-     * 
-     * @see #setInputPrompt(String)
-     * @return the current input prompt, or null if not enabled
-     */
-    public String getInputPrompt() {
-        return inputPrompt;
-    }
-
-    /**
-     * Sets the input prompt - a textual prompt that is displayed when the
-     * select would otherwise be empty, to prompt the user for input.
+     * Constructs an empty combo box, whose content can be set with
+     * {@link #setDataProvider(DataProvider)} or {@link #setItems(Collection)}.
      *
-     * @param inputPrompt
-     *            the desired input prompt, or null to disable
+     * @param caption
+     *            the caption to show in the containing layout, null for no
+     *            caption
      */
-    public void setInputPrompt(String inputPrompt) {
-        this.inputPrompt = inputPrompt;
-        markAsDirty();
+    public ComboBox(String caption) {
+        this();
+        setCaption(caption);
     }
 
-    private boolean isFilteringNeeded() {
-        return filterstring != null && filterstring.length() > 0
-                && filteringMode != FilteringMode.OFF;
+    /**
+     * Constructs a combo box with a static in-memory data provider with the
+     * given options.
+     *
+     * @param caption
+     *            the caption to show in the containing layout, null for no
+     *            caption
+     * @param options
+     *            collection of options, not null
+     */
+    public ComboBox(String caption, Collection<T> options) {
+        this(caption);
+
+        setItems(options);
+    }
+
+    /**
+     * Initialize the ComboBox with default settings and register client to
+     * server RPC implementation.
+     */
+    private void init() {
+        registerRpc(rpc);
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
+
+        addDataGenerator((T data, JsonObject jsonObject) -> {
+            jsonObject.put(DataCommunicatorConstants.NAME,
+                    getItemCaptionGenerator().apply(data));
+            String style = itemStyleGenerator.apply(data);
+            if (style != null) {
+                jsonObject.put(ComboBoxConstants.STYLE, style);
+            }
+            Resource icon = getItemIconGenerator().apply(data);
+            if (icon != null) {
+                String iconUrl = ResourceReference
+                        .create(icon, ComboBox.this, null).getURL();
+                jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+            }
+        });
     }
 
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        isPainting = true;
-        try {
-            if (inputPrompt != null) {
-                target.addAttribute(ComboBoxConstants.ATTR_INPUTPROMPT,
-                        inputPrompt);
-            }
-
-            if (!textInputAllowed) {
-                target.addAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT, true);
-            }
-
-            // clear caption change listeners
-            getCaptionChangeListener().clear();
-
-            // The tab ordering number
-            if (getTabIndex() != 0) {
-                target.addAttribute("tabindex", getTabIndex());
-            }
-
-            // If the field is modified, but not committed, set modified
-            // attribute
-            if (isModified()) {
-                target.addAttribute("modified", true);
-            }
-
-            if (isNewItemsAllowed()) {
-                target.addAttribute("allownewitem", true);
-            }
-
-            boolean needNullSelectOption = false;
-            if (isNullSelectionAllowed()) {
-                target.addAttribute("nullselect", true);
-                needNullSelectOption = (getNullSelectionItemId() == null);
-                if (!needNullSelectOption) {
-                    target.addAttribute("nullselectitem", true);
-                }
-            }
-
-            // Constructs selected keys array
-            String[] selectedKeys = new String[(getValue() == null
-                    && getNullSelectionItemId() == null ? 0 : 1)];
-
-            target.addAttribute("pagelength", pageLength);
-
-            if (suggestionPopupWidth != null) {
-                target.addAttribute("suggestionPopupWidth",
-                        suggestionPopupWidth);
-            }
-
-            target.addAttribute("filteringmode", getFilteringMode().toString());
-
-            // Paints the options and create array of selected id keys
-            int keyIndex = 0;
-
-            target.startTag("options");
-
-            if (currentPage < 0) {
-                optionRequest = false;
-                currentPage = 0;
-                filterstring = "";
-            }
-
-            boolean nullFilteredOut = isFilteringNeeded();
-            // null option is needed and not filtered out, even if not on
-            // current
-            // page
-            boolean nullOptionVisible = needNullSelectOption
-                    && !nullFilteredOut;
-
-            // first try if using container filters is possible
-            List<?> options = getOptionsWithFilter(nullOptionVisible);
-            if (null == options) {
-                // not able to use container filters, perform explicit in-memory
-                // filtering
-                options = getFilteredOptions();
-                filteredSize = options.size();
-                options = sanitetizeList(options, nullOptionVisible);
-            }
-
-            final boolean paintNullSelection = needNullSelectOption
-                    && currentPage == 0 && !nullFilteredOut;
-
-            if (paintNullSelection) {
-                target.startTag("so");
-                target.addAttribute("caption", "");
-                target.addAttribute("key", "");
-
-                paintItemStyle(target, null);
-
-                target.endTag("so");
-            }
-
-            final Iterator<?> i = options.iterator();
-            // Paints the available selection options from data source
-
-            while (i.hasNext()) {
-
-                final Object id = i.next();
-
-                if (!isNullSelectionAllowed() && id != null
-                        && id.equals(getNullSelectionItemId())
-                        && !isSelected(id)) {
-                    continue;
-                }
-
-                // Gets the option attribute values
-                final String key = itemIdMapper.key(id);
-                final String caption = getItemCaption(id);
-                final Resource icon = getItemIcon(id);
-                getCaptionChangeListener().addNotifierForItem(id);
-
-                // Paints the option
-                target.startTag("so");
-                if (icon != null) {
-                    target.addAttribute("icon", icon);
-                }
-                target.addAttribute("caption", caption);
-                if (id != null && id.equals(getNullSelectionItemId())) {
-                    target.addAttribute("nullselection", true);
-                }
-                target.addAttribute("key", key);
-                if (keyIndex < selectedKeys.length && isSelected(id)) {
-                    // at most one item can be selected at a time
-                    selectedKeys[keyIndex++] = key;
-                }
-
-                paintItemStyle(target, id);
-
-                target.endTag("so");
-            }
-            target.endTag("options");
-
-            target.addAttribute("totalitems", size()
-                    + (needNullSelectOption ? 1 : 0));
-            if (filteredSize > 0 || nullOptionVisible) {
-                target.addAttribute("totalMatches", filteredSize
-                        + (nullOptionVisible ? 1 : 0));
-            }
-
-            // Paint variables
-            target.addVariable(this, "selected", selectedKeys);
-            if (getValue() != null && selectedKeys[0] == null) {
-                // not always available, e.g. scrollToSelectedIndex=false
-                // Give the caption for selected item still, not to make it look
-                // like there is no selection at all
-                target.addAttribute("selectedCaption",
-                        getItemCaption(getValue()));
-            }
-            if (isNewItemsAllowed()) {
-                target.addVariable(this, "newitem", "");
-            }
-
-            target.addVariable(this, "filter", filterstring);
-            target.addVariable(this, "page", currentPage);
-
-            currentPage = -1; // current page is always set by client
-
-            optionRequest = true;
-        } finally {
-            isPainting = false;
-        }
-
+    public void setItems(Collection<T> items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> defaultFilterMethod
+                        .test(filterText, item));
+        setDataProvider(provider);
     }
 
-    private void paintItemStyle(PaintTarget target, Object itemId)
-            throws PaintException {
-        if (itemStyleGenerator != null) {
-            String style = itemStyleGenerator.getStyle(this, itemId);
-            if (style != null && !style.isEmpty()) {
-                target.addAttribute("style", style);
-            }
-        }
+    @Override
+    public void setItems(@SuppressWarnings("unchecked") T... items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> defaultFilterMethod
+                        .test(filterText, item));
+        setDataProvider(provider);
+    }
+
+    /**
+     * Sets the data items of this listing and a simple string filter with which
+     * the item string and the text the user has input are compared.
+     * <p>
+     * Note that unlike {@link #setItems(Collection)}, no automatic case
+     * conversion is performed before the comparison.
+     *
+     * @param captionFilter
+     *            filter to check if an item is shown when user typed some text
+     *            into the ComboBox
+     * @param items
+     *            the data items to display
+     */
+    public void setItems(CaptionFilter captionFilter, Collection<T> items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> captionFilter.test(
+                        getItemCaptionGenerator().apply(item), filterText));
+        setDataProvider(provider);
+    }
+
+    /**
+     * Sets the data items of this listing and a simple string filter with which
+     * the item string and the text the user has input are compared.
+     * <p>
+     * Note that unlike {@link #setItems(Collection)}, no automatic case
+     * conversion is performed before the comparison.
+     *
+     * @param captionFilter
+     *            filter to check if an item is shown when user typed some text
+     *            into the ComboBox
+     * @param items
+     *            the data items to display
+     */
+    public void setItems(CaptionFilter captionFilter,
+            @SuppressWarnings("unchecked") T... items) {
+        DataProvider<T, String> provider = DataProvider.create(items)
+                .convertFilter(filterText -> item -> captionFilter.test(
+                        getItemCaptionGenerator().apply(item), filterText));
+        setDataProvider(provider);
+    }
+
+    /**
+     * Gets the current placeholder text shown when the combo box would be
+     * empty.
+     *
+     * @see #setPlaceholder(String)
+     * @return the current placeholder string, or null if not enabled
+     */
+    public String getPlaceholder() {
+        return getState(false).placeholder;
+    }
+
+    /**
+     * Sets the placeholder string - a textual prompt that is displayed when the
+     * select would otherwise be empty, to prompt the user for input.
+     *
+     * @param placeholder
+     *            the desired placeholder, or null to disable
+     */
+    public void setPlaceholder(String placeholder) {
+        getState().placeholder = placeholder;
     }
 
     /**
@@ -367,28 +298,263 @@ public class ComboBox extends AbstractSelect implements
      * field area of the component is just used to show what is selected. By
      * disabling text input, the comboBox will work in the same way as a
      * {@link NativeSelect}
-     * 
+     *
      * @see #isTextInputAllowed()
-     * 
+     *
      * @param textInputAllowed
      *            true to allow entering text, false to just show the current
      *            selection
      */
     public void setTextInputAllowed(boolean textInputAllowed) {
-        this.textInputAllowed = textInputAllowed;
-        markAsDirty();
+        getState().textInputAllowed = textInputAllowed;
     }
 
     /**
      * Returns true if the user can enter text into the field to either filter
-     * the selections or enter a new value if {@link #isNewItemsAllowed()}
-     * returns true. If text input is disabled, the comboBox will work in the
-     * same way as a {@link NativeSelect}
-     * 
-     * @return
+     * the selections or enter a new value if new item handler is set
+     * (see {@link #setNewItemHandler(NewItemHandler)}. If text input is disabled,
+     * the comboBox will work in the same way as a {@link NativeSelect}
+     *
+     * @return true if text input is allowed
      */
     public boolean isTextInputAllowed() {
-        return textInputAllowed;
+        return getState(false).textInputAllowed;
+    }
+
+    @Override
+    public Registration addBlurListener(BlurListener listener) {
+        return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    @Override
+    public Registration addFocusListener(FocusListener listener) {
+        return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    /**
+     * Returns the page length of the suggestion popup.
+     *
+     * @return the pageLength
+     */
+    public int getPageLength() {
+        return getState(false).pageLength;
+    }
+
+    /**
+     * Returns the suggestion pop-up's width as a CSS string. By default this
+     * width is set to "100%".
+     *
+     * @see #setPopupWidth
+     * @since 7.7
+     * @return explicitly set popup width as CSS size string or null if not set
+     */
+    public String getPopupWidth() {
+        return getState(false).suggestionPopupWidth;
+    }
+
+    /**
+     * Sets the page length for the suggestion popup. Setting the page length to
+     * 0 will disable suggestion popup paging (all items visible).
+     *
+     * @param pageLength
+     *            the pageLength to set
+     */
+    public void setPageLength(int pageLength) {
+        getState().pageLength = pageLength;
+    }
+
+    /**
+     * Returns whether the user is allowed to select nothing in the combo box.
+     *
+     * @return true if empty selection is allowed, false otherwise
+     */
+    public boolean isEmptySelectionAllowed() {
+        return getState(false).emptySelectionAllowed;
+    }
+
+    /**
+     * Sets whether the user is allowed to select nothing in the combo box. When
+     * true, a special empty item is shown to the user.
+     *
+     * @param emptySelectionAllowed
+     *            true to allow not selecting anything, false to require
+     *            selection
+     */
+    public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {
+        getState().emptySelectionAllowed = emptySelectionAllowed;
+    }
+
+    /**
+     * Returns the empty selection caption.
+     * <p>
+     * The empty string {@code ""} is the default empty selection caption.
+     *
+     * @see #setEmptySelectionAllowed(boolean)
+     * @see #isEmptySelectionAllowed()
+     * @see #setEmptySelectionCaption(String)
+     * @see #isSelected(Object)
+     *
+     * @return the empty selection caption, not {@code null}
+     */
+    public String getEmptySelectionCaption() {
+        return getState(false).emptySelectionCaption;
+    }
+
+    /**
+     * Sets the empty selection caption.
+     * <p>
+     * The empty string {@code ""} is the default empty selection caption.
+     * <p>
+     * If empty selection is allowed via the
+     * {@link #setEmptySelectionAllowed(boolean)} method (it is by default) then
+     * the empty item will be shown with the given caption.
+     *
+     * @param caption
+     *            the caption to set, not {@code null}
+     * @see #isSelected(Object)
+     */
+    public void setEmptySelectionCaption(String caption) {
+        Objects.nonNull(caption);
+        getState().emptySelectionCaption = caption;
+    }
+
+    /**
+     * Sets the suggestion pop-up's width as a CSS string. By using relative
+     * units (e.g. "50%") it's possible to set the popup's width relative to the
+     * ComboBox itself.
+     * <p>
+     * By default this width is set to "100%" so that the pop-up's width is
+     * equal to the width of the combobox. By setting width to null the pop-up's
+     * width will automatically expand beyond 100% relative width to fit the
+     * content of all displayed items.
+     *
+     * @see #getPopupWidth()
+     * @since 7.7
+     * @param width
+     *            the width
+     */
+    public void setPopupWidth(String width) {
+        getState().suggestionPopupWidth = width;
+    }
+
+    /**
+     * Sets whether to scroll the selected item visible (directly open the page
+     * on which it is) when opening the combo box popup or not.
+     * <p>
+     * This requires finding the index of the item, which can be expensive in
+     * many large lazy loading containers.
+     *
+     * @param scrollToSelectedItem
+     *            true to find the page with the selected item when opening the
+     *            selection popup
+     */
+    public void setScrollToSelectedItem(boolean scrollToSelectedItem) {
+        getState().scrollToSelectedItem = scrollToSelectedItem;
+    }
+
+    /**
+     * Returns true if the select should find the page with the selected item
+     * when opening the popup.
+     *
+     * @see #setScrollToSelectedItem(boolean)
+     *
+     * @return true if the page with the selected item will be shown when
+     *         opening the popup
+     */
+    public boolean isScrollToSelectedItem() {
+        return getState(false).scrollToSelectedItem;
+    }
+
+    @Override
+    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+        return super.getItemCaptionGenerator();
+    }
+
+    @Override
+    public void setItemCaptionGenerator(
+            ItemCaptionGenerator<T> itemCaptionGenerator) {
+        super.setItemCaptionGenerator(itemCaptionGenerator);
+    }
+
+    /**
+     * Sets the style generator that is used to produce custom class names for
+     * items visible in the popup. The CSS class name that will be added to the
+     * item is <tt>v-filterselect-item-[style name]</tt>. Returning null from
+     * the generator results in no custom style name being set.
+     *
+     * @see StyleGenerator
+     *
+     * @param itemStyleGenerator
+     *            the item style generator to set, not null
+     * @throws NullPointerException
+     *             if {@code itemStyleGenerator} is {@code null}
+     */
+    public void setStyleGenerator(StyleGenerator<T> itemStyleGenerator) {
+        Objects.requireNonNull(itemStyleGenerator,
+                "Item style generator must not be null");
+        this.itemStyleGenerator = itemStyleGenerator;
+        getDataCommunicator().reset();
+    }
+
+    /**
+     * Gets the currently used style generator that is used to generate CSS
+     * class names for items. The default item style provider returns null for
+     * all items, resulting in no custom item class names being set.
+     *
+     * @see StyleGenerator
+     * @see #setStyleGenerator(StyleGenerator)
+     *
+     * @return the currently used item style generator, not null
+     */
+    public StyleGenerator<T> getStyleGenerator() {
+        return itemStyleGenerator;
+    }
+
+    @Override
+    public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
+        super.setItemIconGenerator(itemIconGenerator);
+    }
+
+    @Override
+    public IconGenerator<T> getItemIconGenerator() {
+        return super.getItemIconGenerator();
+    }
+
+    /**
+     * Sets the handler that is called when user types a new item. The creation
+     * of new items is allowed when a new item handler has been set.
+     *
+     * @param newItemHandler
+     *            handler called for new items, null to only permit the
+     *            selection of existing items
+     */
+    public void setNewItemHandler(NewItemHandler newItemHandler) {
+        this.newItemHandler = newItemHandler;
+        getState().allowNewItems = (newItemHandler != null);
+        markAsDirty();
+    }
+
+    /**
+     * Returns the handler called when the user enters a new item (not present
+     * in the data provider).
+     *
+     * @return new item handler or null if none specified
+     */
+    public NewItemHandler getNewItemHandler() {
+        return newItemHandler;
+    }
+
+    // HasValue methods delegated to the selection model
+
+    @Override
+    public Registration addValueChangeListener(
+            HasValue.ValueChangeListener<T> listener) {
+        return addSelectionListener(event -> {
+            listener.valueChange(new ValueChangeEvent<>(event.getComponent(),
+                    this, event.isUserOriginated()));
+        });
     }
 
     @Override
@@ -396,580 +562,136 @@ public class ComboBox extends AbstractSelect implements
         return (ComboBoxState) super.getState();
     }
 
-    /**
-     * Returns the filtered options for the current page using a container
-     * filter.
-     * 
-     * As a size effect, {@link #filteredSize} is set to the total number of
-     * items passing the filter.
-     * 
-     * The current container must be {@link Filterable} and {@link Indexed}, and
-     * the filtering mode must be suitable for container filtering (tested with
-     * {@link #canUseContainerFilter()}).
-     * 
-     * Use {@link #getFilteredOptions()} and
-     * {@link #sanitetizeList(List, boolean)} if this is not the case.
-     * 
-     * @param needNullSelectOption
-     * @return filtered list of options (may be empty) or null if cannot use
-     *         container filters
-     */
-    protected List<?> getOptionsWithFilter(boolean needNullSelectOption) {
-        Container container = getContainerDataSource();
-
-        if (pageLength == 0 && !isFilteringNeeded()) {
-            // no paging or filtering: return all items
-            filteredSize = container.size();
-            assert filteredSize >= 0;
-            return new ArrayList<Object>(container.getItemIds());
-        }
-
-        if (!(container instanceof Filterable)
-                || !(container instanceof Indexed)
-                || getItemCaptionMode() != ITEM_CAPTION_MODE_PROPERTY) {
-            return null;
-        }
-
-        Filterable filterable = (Filterable) container;
-
-        Filter filter = buildFilter(filterstring, filteringMode);
-
-        // adding and removing filters leads to extraneous item set
-        // change events from the underlying container, but the ComboBox does
-        // not process or propagate them based on the flag filteringContainer
-        if (filter != null) {
-            filterable.addContainerFilter(filter);
-        }
-
-        // try-finally to ensure that the filter is removed from container even
-        // if a exception is thrown...
-        try {
-            Indexed indexed = (Indexed) container;
-
-            int indexToEnsureInView = -1;
-
-            // if not an option request (item list when user changes page), go
-            // to page with the selected item after filtering if accepted by
-            // filter
-            Object selection = getValue();
-            if (isScrollToSelectedItem() && !optionRequest && selection != null) {
-                // ensure proper page
-                indexToEnsureInView = indexed.indexOfId(selection);
-            }
-
-            filteredSize = container.size();
-            assert filteredSize >= 0;
-            currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
-                    indexToEnsureInView, filteredSize);
-            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
-                    filteredSize);
-            int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
-                    filteredSize, first);
-
-            // Compute the number of items to fetch from the indexes given or
-            // based on the filtered size of the container
-            int lastItemToFetch = Math.min(last, filteredSize - 1);
-            int nrOfItemsToFetch = (lastItemToFetch + 1) - first;
-
-            List<?> options = indexed.getItemIds(first, nrOfItemsToFetch);
-
-            return options;
-        } finally {
-            // to the outside, filtering should not be visible
-            if (filter != null) {
-                filterable.removeContainerFilter(filter);
-            }
-        }
-    }
-
-    /**
-     * Constructs a filter instance to use when using a Filterable container in
-     * the <code>ITEM_CAPTION_MODE_PROPERTY</code> mode.
-     * 
-     * Note that the client side implementation expects the filter string to
-     * apply to the item caption string it sees, so changing the behavior of
-     * this method can cause problems.
-     * 
-     * @param filterString
-     * @param filteringMode
-     * @return
-     */
-    protected Filter buildFilter(String filterString,
-            FilteringMode filteringMode) {
-        Filter filter = null;
-
-        if (null != filterString && !"".equals(filterString)) {
-            switch (filteringMode) {
-            case OFF:
-                break;
-            case STARTSWITH:
-                filter = new SimpleStringFilter(getItemCaptionPropertyId(),
-                        filterString, true, true);
-                break;
-            case CONTAINS:
-                filter = new SimpleStringFilter(getItemCaptionPropertyId(),
-                        filterString, true, false);
-                break;
-            }
-        }
-        return filter;
+    @Override
+    protected ComboBoxState getState(boolean markAsDirty) {
+        return (ComboBoxState) super.getState(markAsDirty);
     }
 
     @Override
-    public void containerItemSetChange(Container.ItemSetChangeEvent event) {
-        if (!isPainting) {
-            super.containerItemSetChange(event);
+    protected void doSetSelectedKey(String key) {
+        super.doSetSelectedKey(key);
+
+        String selectedCaption = null;
+        T value = getDataCommunicator().getKeyMapper().get(key);
+        if (value != null) {
+            selectedCaption = getItemCaptionGenerator().apply(value);
         }
+        getState().selectedItemCaption = selectedCaption;
     }
 
-    /**
-     * Makes correct sublist of given list of options.
-     * 
-     * If paint is not an option request (affected by page or filter change),
-     * page will be the one where possible selection exists.
-     * 
-     * Detects proper first and last item in list to return right page of
-     * options. Also, if the current page is beyond the end of the list, it will
-     * be adjusted.
-     * 
-     * @param options
-     * @param needNullSelectOption
-     *            flag to indicate if nullselect option needs to be taken into
-     *            consideration
-     */
-    private List<?> sanitetizeList(List<?> options, boolean needNullSelectOption) {
+    @Override
+    protected Element writeItem(Element design, T item, DesignContext context) {
+        Element element = design.appendElement("option");
 
-        if (pageLength != 0 && options.size() > pageLength) {
-
-            int indexToEnsureInView = -1;
-
-            // if not an option request (item list when user changes page), go
-            // to page with the selected item after filtering if accepted by
-            // filter
-            Object selection = getValue();
-            if (isScrollToSelectedItem() && !optionRequest && selection != null) {
-                // ensure proper page
-                indexToEnsureInView = options.indexOf(selection);
-            }
-
-            int size = options.size();
-            currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
-                    indexToEnsureInView, size);
-            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
-                    size);
-            int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
-                    size, first);
-            return options.subList(first, last + 1);
+        String caption = getItemCaptionGenerator().apply(item);
+        if (caption != null) {
+            element.html(DesignFormatter.encodeForTextNode(caption));
         } else {
-            return options;
+            element.html(DesignFormatter.encodeForTextNode(item.toString()));
         }
+        element.attr("item", item.toString());
+
+        Resource icon = getItemIconGenerator().apply(item);
+        if (icon != null) {
+            DesignAttributeHandler.writeAttribute("icon", element.attributes(),
+                    icon, null, Resource.class, context);
+        }
+
+        String style = getStyleGenerator().apply(item);
+        if (style != null) {
+            element.attr("style", style);
+        }
+
+        if (isSelected(item)) {
+            element.attr("selected", "");
+        }
+
+        return element;
     }
 
-    /**
-     * Returns the index of the first item on the current page. The index is to
-     * the underlying (possibly filtered) contents. The null item, if any, does
-     * not have an index but takes up a slot on the first page.
-     * 
-     * @param needNullSelectOption
-     *            true if a null option should be shown before any other options
-     *            (takes up the first slot on the first page, not counted in
-     *            index)
-     * @param size
-     *            number of items after filtering (not including the null item,
-     *            if any)
-     * @return first item to show on the UI (index to the filtered list of
-     *         options, not taking the null item into consideration if any)
-     */
-    private int getFirstItemIndexOnCurrentPage(boolean needNullSelectOption,
-            int size) {
-        // Not all options are visible, find out which ones are on the
-        // current "page".
-        int first = currentPage * pageLength;
-        if (needNullSelectOption && currentPage > 0) {
-            first--;
-        }
-        return first;
+    @Override
+    protected List<T> readItems(Element design, DesignContext context) {
+        setStyleGenerator(new DeclarativeStyleGenerator<>(getStyleGenerator()));
+        return super.readItems(design, context);
     }
 
-    /**
-     * Returns the index of the last item on the current page. The index is to
-     * the underlying (possibly filtered) contents. If needNullSelectOption is
-     * true, the null item takes up the first slot on the first page,
-     * effectively reducing the first page size by one.
-     * 
-     * @param needNullSelectOption
-     *            true if a null option should be shown before any other options
-     *            (takes up the first slot on the first page, not counted in
-     *            index)
-     * @param size
-     *            number of items after filtering (not including the null item,
-     *            if any)
-     * @param first
-     *            index in the filtered view of the first item of the page
-     * @return index in the filtered view of the last item on the page
-     */
-    private int getLastItemIndexOnCurrentPage(boolean needNullSelectOption,
-            int size, int first) {
-        // page length usable for non-null items
-        int effectivePageLength = pageLength
-                - (needNullSelectOption && (currentPage == 0) ? 1 : 0);
-        return Math.min(size - 1, first + effectivePageLength - 1);
-    }
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    protected T readItem(Element child, Set<T> selected,
+            DesignContext context) {
+        T item = super.readItem(child, selected, context);
 
-    /**
-     * Adjusts the index of the current page if necessary: make sure the current
-     * page is not after the end of the contents, and optionally go to the page
-     * containg a specific item. There are no side effects but the adjusted page
-     * index is returned.
-     * 
-     * @param page
-     *            page number to use as the starting point
-     * @param needNullSelectOption
-     *            true if a null option should be shown before any other options
-     *            (takes up the first slot on the first page, not counted in
-     *            index)
-     * @param indexToEnsureInView
-     *            index of an item that should be included on the page (in the
-     *            data set, not counting the null item if any), -1 for none
-     * @param size
-     *            number of items after filtering (not including the null item,
-     *            if any)
-     */
-    private int adjustCurrentPage(int page, boolean needNullSelectOption,
-            int indexToEnsureInView, int size) {
-        if (indexToEnsureInView != -1) {
-            int newPage = (indexToEnsureInView + (needNullSelectOption ? 1 : 0))
-                    / pageLength;
-            page = newPage;
-        }
-        // adjust the current page if beyond the end of the list
-        if (page * pageLength > size) {
-            page = (size + (needNullSelectOption ? 1 : 0)) / pageLength;
-        }
-        return page;
-    }
-
-    /**
-     * Filters the options in memory and returns the full filtered list.
-     * 
-     * This can be less efficient than using container filters, so use
-     * {@link #getOptionsWithFilter(boolean)} if possible (filterable container
-     * and suitable item caption mode etc.).
-     * 
-     * @return
-     */
-    protected List<?> getFilteredOptions() {
-        if (!isFilteringNeeded()) {
-            prevfilterstring = null;
-            filteredOptions = new LinkedList<Object>(getItemIds());
-            return filteredOptions;
-        }
-
-        if (filterstring.equals(prevfilterstring)) {
-            return filteredOptions;
-        }
-
-        Collection<?> items;
-        if (prevfilterstring != null
-                && filterstring.startsWith(prevfilterstring)) {
-            items = filteredOptions;
-        } else {
-            items = getItemIds();
-        }
-        prevfilterstring = filterstring;
-
-        filteredOptions = new LinkedList<Object>();
-        for (final Iterator<?> it = items.iterator(); it.hasNext();) {
-            final Object itemId = it.next();
-            String caption = getItemCaption(itemId);
-            if (caption == null || caption.equals("")) {
-                continue;
+        if (child.hasAttr("style")) {
+            StyleGenerator<T> styleGenerator = getStyleGenerator();
+            if (styleGenerator instanceof DeclarativeStyleGenerator) {
+                ((DeclarativeStyleGenerator) styleGenerator).setStyle(item,
+                        child.attr("style"));
             } else {
-                caption = caption.toLowerCase(getLocale());
-            }
-            switch (filteringMode) {
-            case CONTAINS:
-                if (caption.indexOf(filterstring) > -1) {
-                    filteredOptions.add(itemId);
-                }
-                break;
-            case STARTSWITH:
-            default:
-                if (caption.startsWith(filterstring)) {
-                    filteredOptions.add(itemId);
-                }
-                break;
+                throw new IllegalStateException(String.format(
+                        "Don't know how "
+                                + "to set style using current style generator '%s'",
+                        styleGenerator.getClass().getName()));
             }
         }
+        return item;
+    }
 
-        return filteredOptions;
+    @Override
+    @SuppressWarnings("unchecked")
+    public DataProvider<T, String> getDataProvider() {
+        return (DataProvider<T, String>) internalGetDataProvider();
+    }
+
+    @Override
+    public void setDataProvider(DataProvider<T, String> dataProvider) {
+        internalSetDataProvider(dataProvider);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public DataCommunicator<T, String> getDataCommunicator() {
+        // Not actually an unsafe cast. DataCommunicator is final and set by
+        // ComboBox.
+        return (DataCommunicator<T, String>) super.getDataCommunicator();
+    }
+
+    @Override
+    protected void setSelectedFromClient(String key) {
+        super.setSelectedFromClient(key);
+
+        /*
+         * The client side for combo box always expects a state change for
+         * selectedItemKey after it has sent a selection change. This means that
+         * we must store a value in the diffstate that guarantees that a new
+         * value will be sent, regardless of what the value actually is at the
+         * time when changes are sent.
+         *
+         * Keys are always strings (or null), so using a non-string type will
+         * always trigger a diff mismatch and a resend.
+         */
+        updateDiffstate("selectedItemKey", Json.create(0));
     }
 
     /**
-     * Invoked when the value of a variable has changed.
-     * 
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
-     *      java.util.Map)
-     */
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // Not calling super.changeVariables due the history of select
-        // component hierarchy
-
-        // Selection change
-        if (variables.containsKey("selected")) {
-            final String[] ka = (String[]) variables.get("selected");
-
-            // Single select mode
-            if (ka.length == 0) {
-
-                // Allows deselection only if the deselected item is visible
-                final Object current = getValue();
-                final Collection<?> visible = getVisibleItemIds();
-                if (visible != null && visible.contains(current)) {
-                    setValue(null, true);
-                }
-            } else {
-                final Object id = itemIdMapper.get(ka[0]);
-                if (id != null && id.equals(getNullSelectionItemId())) {
-                    setValue(null, true);
-                } else {
-                    setValue(id, true);
-                }
-            }
-        }
-
-        String newFilter;
-        if ((newFilter = (String) variables.get("filter")) != null) {
-            // this is a filter request
-            currentPage = ((Integer) variables.get("page")).intValue();
-            filterstring = newFilter;
-            if (filterstring != null) {
-                filterstring = filterstring.toLowerCase(getLocale());
-            }
-            requestRepaint();
-        } else if (isNewItemsAllowed()) {
-            // New option entered (and it is allowed)
-            final String newitem = (String) variables.get("newitem");
-            if (newitem != null && newitem.length() > 0) {
-                getNewItemHandler().addNewItem(newitem);
-                // rebuild list
-                filterstring = null;
-                prevfilterstring = null;
-            }
-        }
-
-        if (variables.containsKey(FocusEvent.EVENT_ID)) {
-            fireEvent(new FocusEvent(this));
-        }
-        if (variables.containsKey(BlurEvent.EVENT_ID)) {
-            fireEvent(new BlurEvent(this));
-        }
-
-    }
-
-    @Override
-    public void setFilteringMode(FilteringMode filteringMode) {
-        this.filteringMode = filteringMode;
-    }
-
-    @Override
-    public FilteringMode getFilteringMode() {
-        return filteringMode;
-    }
-
-    @Override
-    public void addBlurListener(BlurListener listener) {
-        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
-                BlurListener.blurMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(BlurListener listener) {
-        addBlurListener(listener);
-    }
-
-    @Override
-    public void removeBlurListener(BlurListener listener) {
-        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeBlurListener(BlurListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(BlurListener listener) {
-        removeBlurListener(listener);
-    }
-
-    @Override
-    public void addFocusListener(FocusListener listener) {
-        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
-                FocusListener.focusMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(FocusListener listener) {
-        addFocusListener(listener);
-    }
-
-    @Override
-    public void removeFocusListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFocusListener(FocusListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(FocusListener listener) {
-        removeFocusListener(listener);
-    }
-
-    /**
-     * ComboBox does not support multi select mode.
-     * 
-     * @deprecated As of 7.0, use {@link ListSelect}, {@link OptionGroup} or
-     *             {@link TwinColSelect} instead
-     * @see com.vaadin.ui.AbstractSelect#setMultiSelect(boolean)
-     * @throws UnsupportedOperationException
-     *             if trying to activate multiselect mode
-     */
-    @Deprecated
-    @Override
-    public void setMultiSelect(boolean multiSelect) {
-        if (multiSelect) {
-            throw new UnsupportedOperationException("Multiselect not supported");
-        }
-    }
-
-    /**
-     * ComboBox does not support multi select mode.
-     * 
-     * @deprecated As of 7.0, use {@link ListSelect}, {@link OptionGroup} or
-     *             {@link TwinColSelect} instead
-     * 
-     * @see com.vaadin.ui.AbstractSelect#isMultiSelect()
-     * 
-     * @return false
-     */
-    @Deprecated
-    @Override
-    public boolean isMultiSelect() {
-        return false;
-    }
-
-    /**
-     * Returns the page length of the suggestion popup.
-     * 
-     * @return the pageLength
-     */
-    public int getPageLength() {
-        return pageLength;
-    }
-
-    /**
-     * Returns the suggestion pop-up's width as a CSS string.
+     * Predicate to check {@link ComboBox} item captions against user typed
+     * strings.
      *
-     * @see #setPopupWidth
-     * @since 7.7
+     * @see #setItems(CaptionFilter, Collection)
+     * @see #setItems(CaptionFilter, Object[])
      */
-    public String getPopupWidth() {
-        return suggestionPopupWidth;
-    }
+    @FunctionalInterface
+    public interface CaptionFilter
+            extends SerializableBiPredicate<String, String> {
 
-    /**
-     * Sets the page length for the suggestion popup. Setting the page length to
-     * 0 will disable suggestion popup paging (all items visible).
-     * 
-     * @param pageLength
-     *            the pageLength to set
-     */
-    public void setPageLength(int pageLength) {
-        this.pageLength = pageLength;
-        markAsDirty();
+        /**
+         * Check item caption against entered text
+         *
+         * @param itemCaption
+         * @param filterText
+         * @return {@code true} if item passes the filter and should be listed,
+         *         {@code false} otherwise
+         */
+        @Override
+        public boolean test(String itemCaption, String filterText);
     }
-
-    /**
-     * Sets the suggestion pop-up's width as a CSS string. By using relative
-     * units (e.g. "50%") it's possible to set the popup's width relative to the
-     * ComboBox itself.
-     * 
-     * @see #getPopupWidth()
-     * @since 7.7
-     * @param width the width
-     */
-    public void setPopupWidth(String width) {
-        suggestionPopupWidth = width;
-        markAsDirty();
-    }
-
-    /**
-     * Sets whether to scroll the selected item visible (directly open the page
-     * on which it is) when opening the combo box popup or not. Only applies to
-     * single select mode.
-     * 
-     * This requires finding the index of the item, which can be expensive in
-     * many large lazy loading containers.
-     * 
-     * @param scrollToSelectedItem
-     *            true to find the page with the selected item when opening the
-     *            selection popup
-     */
-    public void setScrollToSelectedItem(boolean scrollToSelectedItem) {
-        this.scrollToSelectedItem = scrollToSelectedItem;
-    }
-
-    /**
-     * Returns true if the select should find the page with the selected item
-     * when opening the popup (single select combo box only).
-     * 
-     * @see #setScrollToSelectedItem(boolean)
-     * 
-     * @return true if the page with the selected item will be shown when
-     *         opening the popup
-     */
-    public boolean isScrollToSelectedItem() {
-        return scrollToSelectedItem;
-    }
-
-    /**
-     * Sets the item style generator that is used to produce custom styles for
-     * showing items in the popup. The CSS class name that will be added to the
-     * item style names is <tt>v-filterselect-item-[style name]</tt>.
-     * 
-     * @param itemStyleGenerator
-     *            the item style generator to set, or <code>null</code> to not
-     *            use any custom item styles
-     * @since 7.5.6
-     */
-    public void setItemStyleGenerator(ItemStyleGenerator itemStyleGenerator) {
-        this.itemStyleGenerator = itemStyleGenerator;
-        markAsDirty();
-    }
-
-    /**
-     * Gets the currently used item style generator.
-     * 
-     * @return the itemStyleGenerator the currently used item style generator,
-     *         or <code>null</code> if no generator is used
-     * @since 7.5.6
-     */
-    public ItemStyleGenerator getItemStyleGenerator() {
-        return itemStyleGenerator;
-    }
-
 }

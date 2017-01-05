@@ -25,7 +25,6 @@ vertical.addComponent(new TextField("Street address"));
 vertical.addComponent(new TextField("Postal code"));
 layout.addComponent(vertical);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
 
 You could define it declaractively with the following equivalent design:
 
@@ -37,9 +36,6 @@ You could define it declaractively with the following equivalent design:
   <vaadin-text-field caption="Postal code"/>
 </vaadin-vertical-layout>
 ----
-ifdef::web[]
-See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
-endif::web[]
 
 Declarative designs can be crafted by hand, but are most conveniently created
 with the Vaadin Designer.
@@ -72,12 +68,8 @@ to variables in the Java code, as well as optional attributes.
       <vaadin-label><b>Hello!</b> -
                     How are you?</vaadin-label>
 
-      <vaadin-horizontal-layout size-full :expand>
-       <vaadin-tree _id="mytree" caption="My Tree"
-                    width-auto height-full/>
-       <vaadin-table _id="mytable" caption="My Table"
-                     size-full :expand/>
-      </vaadin-horizontal-layout>
+      <vaadin-grid _id="mygrid" caption="My Grid"
+                    size-full :expand/>
     </vaadin-vertical-layout>
   </body>
 </html>
@@ -191,8 +183,8 @@ documentation of Vaadin.
 Component properties are directly mapped to the attributes of the HTML elements
 according to the names of the properties. Attributes are written in lower-case
 letters and dash is used for word separation instead of upper-case letters in
-the Java methods, so that [literal]#++input-prompt++# attribute is equivalent to
-[methodname]#setInputPrompt()#.
+the Java methods, so that [literal]#++placeholder++# attribute is equivalent to
+[methodname]#setPlaceholder()#.
 
 For example, the __caption__ property, which you can set with
 [methodname]#setCaption()#, is represented as [literal]#++caption++# attribute.
@@ -203,7 +195,7 @@ classes.
 
 [source, html]
 ----
-<vaadin-text-field caption="Name" input-prompt="Enter Name"/>
+<vaadin-text-field caption="Name" placeholder="Enter Name"/>
 ----
 
 
@@ -248,17 +240,13 @@ component [parameter]#c# is equivalent to calling [methodname]#setExpandRatio(c,
   &lt;!-- Expands to take up all remaining vertical space --&gt;
   &lt;vaadin-horizontal-layout size-full **:expand**&gt;
     &lt;!-- Automatic width - shrinks horizontally --&gt;
-    &lt;vaadin-tree width-auto height-full/&gt;
+    &lt;vaadin-radio-button-group width-auto height-full/&gt;
 
     &lt;!-- Expands horizontally to take remaining space --&gt;
-    &lt;vaadin-table size-full **:expand**/&gt;
+    &lt;vaadin-grid size-full **:expand**/&gt;
   &lt;/vaadin-horizontal-layout&gt;
 &lt;/vaadin-vertical-layout&gt;
 ----
-Again, compare the above declaration to the Java code given in
-<<dummy/../../../framework/application/application-architecture#application.architecture,"Building
-the UI">>.
-
 
 
 [[application.declarative.identifiers]]
@@ -281,7 +269,7 @@ design. This is the recommended way to identifying components.
 
 [source, html]
 ----
-<vaadin-tree _id="mytree" caption="My Tree"/>
+<vaadin-grid _id="mygrid" caption="My Grid"/>
 ----
 
 
@@ -310,26 +298,24 @@ For example, the following class could be used to bind the design given earlier.
 ----
 @DesignRoot
 public class MyViewDesign extends VerticalLayout {
-    Tree mytree;
-    Table mytable;
+    RadioButtonGroup<String> myRadioButtonGroup;
+    Grid<String> myGrid;
 
     public MyViewDesign() {
         Design.read("MyDeclarativeUI.html", this);
 
         // Show some (example) data
-        mytree.setContainerDataSource(
-            TreeExample.createTreeContent());
-        mytable.setContainerDataSource(
-            TableExample.generateContent());
+        myCheckBoxGroup.setItems("Venus", "Earth", "Mars");
+        myGrid.setItems(
+            GridExample.generateContent());
 
         // Some interaction
-        mytree.addItemClickListener(event -> // Java 8
+        myCheckBoxGroup.addValueChangeListener(event ->
             Notification.show("Selected " +
-                event.getItemId()));
+                event.getValue());
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.declarative.designroot[on-line example, window="_blank"].
 
 The design root class must match or extend the root element class of the design.
 For example, earlier we had [literal]#++<vaadin-vertical-layout>++# element in the

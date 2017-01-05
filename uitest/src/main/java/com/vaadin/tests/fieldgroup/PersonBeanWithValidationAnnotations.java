@@ -1,8 +1,9 @@
 package com.vaadin.tests.fieldgroup;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 public class PersonBeanWithValidationAnnotations implements Serializable {
     @NotNull(message = MultipleValidationErrors.FIRST_NAME_NOT_NULL_VALIDATION_MESSAGE)

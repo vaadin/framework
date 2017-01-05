@@ -5,22 +5,24 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
-public class WebBrowserTimeZone extends AbstractTestUI {
+public class WebBrowserTimeZone extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
 
         final Label offsetLabel = addLabel("Browser offset");
         final Label rawOffsetLabel = addLabel("Browser raw offset");
-        final Label dstDiffLabel = addLabel("Difference between raw offset and DST");
+        final Label dstDiffLabel = addLabel(
+                "Difference between raw offset and DST");
         final Label dstInEffectLabel = addLabel("Is DST currently active?");
         final Label curDateLabel = addLabel("Current date in the browser");
-        final Label diffLabel = addLabel("Browser to Europe/Helsinki offset difference");
+        final Label diffLabel = addLabel(
+                "Browser to Europe/Helsinki offset difference");
         final Label containsLabel = addLabel("Browser could be in Helsinki");
 
         addButton("Get TimeZone from browser", new Button.ClickListener() {
@@ -40,10 +42,10 @@ public class WebBrowserTimeZone extends AbstractTestUI {
                 rawOffsetLabel.setValue(String.valueOf(browserRawOffset));
                 diffLabel.setValue(String.valueOf(browserOffset - hkiOffset));
                 containsLabel.setValue(contains ? "Yes" : "No");
-                dstDiffLabel.setValue(String.valueOf(getBrowser()
-                        .getDSTSavings()));
-                dstInEffectLabel.setValue(getBrowser().isDSTInEffect() ? "Yes"
-                        : "No");
+                dstDiffLabel
+                        .setValue(String.valueOf(getBrowser().getDSTSavings()));
+                dstInEffectLabel
+                        .setValue(getBrowser().isDSTInEffect() ? "Yes" : "No");
                 curDateLabel.setValue(getBrowser().getCurrentDate().toString());
             }
         });

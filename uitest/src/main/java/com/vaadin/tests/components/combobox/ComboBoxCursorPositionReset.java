@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,12 +16,12 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
-public class ComboBoxCursorPositionReset extends AbstractTestUI {
+public class ComboBoxCursorPositionReset extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -29,11 +29,9 @@ public class ComboBoxCursorPositionReset extends AbstractTestUI {
         root.setSizeFull();
         setContent(root);
 
-        ComboBox combo = new ComboBox();
-        combo.setImmediate(true);
+        ComboBox<String> combo = new ComboBox<>();
         root.addComponent(combo);
-        combo.addItem("Hello World");
-        combo.addItem("Please click on the text");
+        combo.setItems("Hello World", "Please click on the text");
 
         combo.setValue("Please click on the text");
         Label gap = new Label();

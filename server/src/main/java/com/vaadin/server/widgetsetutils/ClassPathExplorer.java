@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -49,7 +49,7 @@ import java.util.jar.Manifest;
  * appropriate monkey code for gwt directly in annotation processor and get rid
  * of {@link WidgetMapGenerator}. Using annotation processor might be a good
  * idea when dropping Java 1.5 support (integrated to javac in 6).
- * 
+ *
  */
 public class ClassPathExplorer {
 
@@ -58,20 +58,17 @@ public class ClassPathExplorer {
     /**
      * File filter that only accepts directories.
      */
-    private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
-        @Override
-        public boolean accept(File f) {
-            if (f.exists() && f.isDirectory()) {
-                return true;
-            } else {
-                return false;
-            }
+    private final static FileFilter DIRECTORIES_ONLY = (File f) -> {
+        if (f.exists() && f.isDirectory()) {
+            return true;
+        } else {
+            return false;
         }
     };
 
     /**
      * Contains information about widgetsets and themes found on the classpath
-     * 
+     *
      * @since 7.1
      */
     public static class LocationInfo {
@@ -80,7 +77,8 @@ public class ClassPathExplorer {
 
         private final Map<String, URL> addonStyles;
 
-        public LocationInfo(Map<String, URL> widgetsets, Map<String, URL> themes) {
+        public LocationInfo(Map<String, URL> widgetsets,
+                Map<String, URL> themes) {
             this.widgetsets = widgetsets;
             addonStyles = themes;
         }
@@ -100,20 +98,21 @@ public class ClassPathExplorer {
      * entries that could include widgets/widgetsets are listed (primarily
      * directories, Vaadin JARs and add-on JARs).
      */
-    private static List<String> rawClasspathEntries = getRawClasspathEntries();
+    private static final List<String> rawClasspathEntries = getRawClasspathEntries();
 
     /**
      * Map from identifiers (either a package name preceded by the path and a
      * slash, or a URL for a JAR file) to the corresponding URLs. This is
      * constructed from the class path.
      */
-    private static Map<String, URL> classpathLocations = getClasspathLocations(rawClasspathEntries);
+    private static final Map<String, URL> classpathLocations = getClasspathLocations(
+            rawClasspathEntries);
 
     private static boolean debug = false;
 
     static {
         String debugProperty = System.getProperty("debug");
-        if (debugProperty != null && !debugProperty.equals("")) {
+        if (debugProperty != null && !debugProperty.isEmpty()) {
             debug = true;
         }
     }
@@ -126,7 +125,7 @@ public class ClassPathExplorer {
 
     /**
      * Finds the names and locations of widgetsets available on the class path.
-     * 
+     *
      * @return map from widgetset classname to widgetset location URL
      * @deprecated Use {@link #getAvailableWidgetSetsAndStylesheets()} instead
      */
@@ -138,13 +137,13 @@ public class ClassPathExplorer {
     /**
      * Finds the names and locations of widgetsets and themes available on the
      * class path.
-     * 
+     *
      * @return
      */
     public static LocationInfo getAvailableWidgetSetsAndStylesheets() {
         long start = System.currentTimeMillis();
-        Map<String, URL> widgetsets = new HashMap<String, URL>();
-        Map<String, URL> themes = new HashMap<String, URL>();
+        Map<String, URL> widgetsets = new HashMap<>();
+        Map<String, URL> themes = new HashMap<>();
         Set<String> keySet = classpathLocations.keySet();
         for (String location : keySet) {
             searchForWidgetSetsAndAddonStyles(location, widgetsets, themes);
@@ -178,13 +177,13 @@ public class ClassPathExplorer {
     /**
      * Finds all GWT modules / Vaadin widgetsets and Addon styles in a valid
      * location.
-     * 
+     *
      * If the location is a directory, all GWT modules (files with the
      * ".gwt.xml" extension) are added to widgetsets.
-     * 
+     *
      * If the location is a JAR file, the comma-separated values of the
      * "Vaadin-Widgetsets" attribute in its manifest are added to widgetsets.
-     * 
+     *
      * @param locationString
      *            an entry in {@link #classpathLocations}
      * @param widgetsets
@@ -192,9 +191,8 @@ public class ClassPathExplorer {
      *            separators) to a URL (see {@link #classpathLocations}) - new
      *            entries are added to this map
      */
-    private static void searchForWidgetSetsAndAddonStyles(
-            String locationString, Map<String, URL> widgetsets,
-            Map<String, URL> addonStyles) {
+    private static void searchForWidgetSetsAndAddonStyles(String locationString,
+            Map<String, URL> widgetsets, Map<String, URL> addonStyles) {
 
         URL location = classpathLocations.get(locationString);
         File directory = new File(location.getFile());
@@ -210,8 +208,8 @@ public class ClassPathExplorer {
 
                 // remove the .gwt.xml extension
                 String classname = files[i].substring(0, files[i].length() - 8);
-                String packageName = locationString.substring(locationString
-                        .lastIndexOf("/") + 1);
+                String packageName = locationString
+                        .substring(locationString.lastIndexOf('/') + 1);
                 classname = packageName + "." + classname;
 
                 if (!WidgetSetBuilder.isWidgetset(classname)) {
@@ -222,8 +220,21 @@ public class ClassPathExplorer {
 
                 if (!widgetsets.containsKey(classname)) {
                     String packagePath = packageName.replaceAll("\\.", "/");
-                    String basePath = location.getFile().replaceAll(
-                            "/" + packagePath + "$", "");
+
+                    String basePath = location.getFile();
+                    if (basePath.endsWith("/" + packagePath)) {
+                        basePath = basePath.replaceAll("/" + packagePath + "$",
+                                "");
+                    } else if (basePath.endsWith("/" + packagePath + "/")) {
+                        basePath = basePath.replaceAll("/" + packagePath + "/$",
+                                "");
+                    } else {
+                        throw new IllegalStateException(
+                                "Error trying to find base path, location ("
+                                        + location.getFile()
+                                        + ") does not end in expected '/"
+                                        + packagePath + "'");
+                    }
                     try {
                         URL url = new URL(location.getProtocol(),
                                 location.getHost(), location.getPort(),
@@ -255,26 +266,26 @@ public class ClassPathExplorer {
                     }
 
                     // Check for widgetset attribute
-                    String value = manifest.getMainAttributes().getValue(
-                            "Vaadin-Widgetsets");
+                    String value = manifest.getMainAttributes()
+                            .getValue("Vaadin-Widgetsets");
                     if (value != null) {
                         String[] widgetsetNames = value.split(",");
-                        for (int i = 0; i < widgetsetNames.length; i++) {
-                            String widgetsetname = widgetsetNames[i].trim();
-                            if (!widgetsetname.equals("")) {
+                        for (String widgetsetName : widgetsetNames) {
+                            String widgetsetname = widgetsetName.trim();
+                            if (!widgetsetname.isEmpty()) {
                                 widgetsets.put(widgetsetname, location);
                             }
                         }
                     }
 
                     // Check for theme attribute
-                    value = manifest.getMainAttributes().getValue(
-                            "Vaadin-Stylesheets");
+                    value = manifest.getMainAttributes()
+                            .getValue("Vaadin-Stylesheets");
                     if (value != null) {
                         String[] stylesheets = value.split(",");
-                        for (int i = 0; i < stylesheets.length; i++) {
-                            String stylesheet = stylesheets[i].trim();
-                            if (!stylesheet.equals("")) {
+                        for (String stylesheet1 : stylesheets) {
+                            String stylesheet = stylesheet1.trim();
+                            if (!stylesheet.isEmpty()) {
                                 addonStyles.put(stylesheet, location);
                             }
                         }
@@ -290,14 +301,14 @@ public class ClassPathExplorer {
     /**
      * Splits the current class path into entries, and filters them accepting
      * directories, Vaadin add-on JARs with widgetsets and Vaadin JARs.
-     * 
+     *
      * Some other non-JAR entries may also be included in the result.
-     * 
+     *
      * @return filtered list of class path entries
      */
     private final static List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
-        List<String> locations = new ArrayList<String>();
+        List<String> locations = new ArrayList<>();
 
         String pathSep = System.getProperty("path.separator");
         String classpath = System.getProperty("java.class.path");
@@ -325,9 +336,9 @@ public class ClassPathExplorer {
     /**
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
-     * 
+     *
      * See {@link #classpathLocations} for information on output format.
-     * 
+     *
      * @param rawClasspathEntries
      *            raw class path entries as split from the Java class path
      *            string
@@ -337,7 +348,7 @@ public class ClassPathExplorer {
             List<String> rawClasspathEntries) {
         long start = System.currentTimeMillis();
         // try to keep the order of the classpath
-        Map<String, URL> locations = new LinkedHashMap<String, URL>();
+        Map<String, URL> locations = new LinkedHashMap<>();
         for (String classpathEntry : rawClasspathEntries) {
             File file = new File(classpathEntry);
             include(null, file, locations);
@@ -352,14 +363,14 @@ public class ClassPathExplorer {
     /**
      * Checks a class path entry to see whether it can contain widgets and
      * widgetsets.
-     * 
+     *
      * All directories are automatically accepted. JARs are accepted if they
      * have the "Vaadin-Widgetsets" attribute in their manifest or the JAR file
      * name contains "vaadin-" or ".vaadin.".
-     * 
+     *
      * Also other non-JAR entries may be accepted, the caller should be prepared
      * to handle them.
-     * 
+     *
      * @param classpathEntry
      *            class path entry string as given in the Java class path
      * @return true if the entry should be considered when looking for widgets
@@ -390,10 +401,12 @@ public class ClassPathExplorer {
                     if (manifest != null) {
                         Attributes mainAttributes = manifest
                                 .getMainAttributes();
-                        if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
+                        if (mainAttributes
+                                .getValue("Vaadin-Widgetsets") != null) {
                             return true;
                         }
-                        if (mainAttributes.getValue("Vaadin-Stylesheets") != null) {
+                        if (mainAttributes
+                                .getValue("Vaadin-Stylesheets") != null) {
                             return true;
                         }
                     }
@@ -415,7 +428,7 @@ public class ClassPathExplorer {
     /**
      * Recursively add subdirectories and jar files to locations - see
      * {@link #classpathLocations}.
-     * 
+     *
      * @param name
      * @param file
      * @param locations
@@ -450,8 +463,8 @@ public class ClassPathExplorer {
                         && !dirs[i].getPath().contains(File.separator + ".")) {
                     String key = dirs[i].getCanonicalPath() + "/" + name
                             + dirs[i].getName();
-                    locations.put(key,
-                            new URL("file://" + dirs[i].getCanonicalPath()));
+                    URL url = dirs[i].getCanonicalFile().toURI().toURL();
+                    locations.put(key, url);
                 }
             } catch (Exception ioe) {
                 return;
@@ -462,8 +475,8 @@ public class ClassPathExplorer {
 
     /**
      * Add a jar file to locations - see {@link #classpathLocations}.
-     * 
-     * @param name
+     *
+     * @param file
      * @param locations
      */
     private static void includeJar(File file, Map<String, URL> locations) {
@@ -486,12 +499,12 @@ public class ClassPathExplorer {
     /**
      * Find and return the default source directory where to create new
      * widgetsets.
-     * 
+     *
      * Return the first directory (not a JAR file etc.) on the classpath by
      * default.
-     * 
+     *
      * TODO this could be done better...
-     * 
+     *
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {
@@ -501,23 +514,23 @@ public class ClassPathExplorer {
     /**
      * Find and return the source directory which contains the given widgetset
      * file.
-     * 
+     *
      * If not applicable or widgetsetFileName is null, return the first
      * directory (not a JAR file etc.) on the classpath.
-     * 
+     *
      * TODO this could be done better...
      *
      * @since 7.6.5
-     * 
+     *
      * @param widgetsetFileName
      *            relative path for the widgetset
-     * 
+     *
      * @return URL
      */
     public static URL getWidgetsetSourceDirectory(String widgetsetFileName) {
         if (debug) {
             debug("classpathLocations values:");
-            ArrayList<String> locations = new ArrayList<String>(
+            ArrayList<String> locations = new ArrayList<>(
                     classpathLocations.keySet());
             for (String location : locations) {
                 debug(String.valueOf(classpathLocations.get(location)));
@@ -541,7 +554,8 @@ public class ClassPathExplorer {
                     }
 
                     if (widgetsetFileName == null
-                            || new File(directory, widgetsetFileName).exists()) {
+                            || new File(directory, widgetsetFileName)
+                                    .exists()) {
                         return directoryUrl;
                     }
                 } catch (MalformedURLException e) {

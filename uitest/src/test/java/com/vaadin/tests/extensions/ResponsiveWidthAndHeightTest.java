@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,9 +41,9 @@ public class ResponsiveWidthAndHeightTest extends MultiBrowserTest {
         openTestURL();
 
         // IE sometimes has trouble waiting long enough.
-        new WebDriverWait(getDriver(), 30).until(ExpectedConditions
-                .presenceOfElementLocated(By
-                        .cssSelector(".v-csslayout-width-and-height")));
+        new WebDriverWait(getDriver(), 30)
+                .until(ExpectedConditions.presenceOfElementLocated(
+                        By.cssSelector(".v-csslayout-width-and-height")));
 
         // Verify both width-range and height-range.
         assertEquals("600px-",

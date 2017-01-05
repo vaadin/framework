@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.abstractfield;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.DoubleValidator;
-import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.util.ObjectProperty;
+import com.vaadin.v7.data.validator.DoubleValidator;
+import com.vaadin.v7.data.validator.IntegerValidator;
+import com.vaadin.v7.ui.TextField;
 
 public class IntegerDoubleFieldsWithDataSource extends TestBase {
 
@@ -23,14 +23,14 @@ public class IntegerDoubleFieldsWithDataSource extends TestBase {
 
         tf = createIntegerTextField();
         tf.setCaption("Enter a double");
-        tf.setPropertyDataSource(new ObjectProperty<Double>(2.1));
+        tf.setPropertyDataSource(new ObjectProperty<>(2.1));
         tf.addValidator(new DoubleValidator("Must be a Double"));
         addComponent(tf);
     }
 
     private TextField createIntegerTextField() {
         final TextField tf = new TextField("Enter an integer");
-        tf.setPropertyDataSource(new ObjectProperty<Integer>(new Integer(2)));
+        tf.setPropertyDataSource(new ObjectProperty<>(new Integer(2)));
         tf.setImmediate(true);
         tf.addListener(new ValueChangeListener() {
 

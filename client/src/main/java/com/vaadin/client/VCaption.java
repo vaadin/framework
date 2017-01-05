@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,12 +26,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.HasErrorIndicator;
+import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
 
@@ -67,9 +67,9 @@ public class VCaption extends HTML {
 
     /**
      * Creates a caption that is not linked to a {@link ComponentConnector}.
-     * 
+     *
      * When using this constructor, {@link #getOwner()} returns null.
-     * 
+     *
      * @param client
      *            ApplicationConnection
      * @deprecated all captions should be associated with a paintable widget and
@@ -88,13 +88,14 @@ public class VCaption extends HTML {
 
     /**
      * Creates a caption for a {@link ComponentConnector}.
-     * 
+     *
      * @param component
      *            owner of caption, not null
      * @param client
      *            ApplicationConnection
      */
-    public VCaption(ComponentConnector component, ApplicationConnection client) {
+    public VCaption(ComponentConnector component,
+            ApplicationConnection client) {
         super();
         this.client = client;
         owner = component;
@@ -129,10 +130,10 @@ public class VCaption extends HTML {
 
     /**
      * Updates the caption from UIDL.
-     * 
+     *
      * This method may only be called when the caption has an owner - otherwise,
      * use {@link #updateCaptionWithoutOwner(UIDL, String, boolean, boolean)}.
-     * 
+     *
      * @return true if the position where the caption should be placed has
      *         changed
      */
@@ -157,14 +158,13 @@ public class VCaption extends HTML {
         boolean hasIcon = owner.getState().resources
                 .containsKey(ComponentConstants.ICON_RESOURCE);
         boolean showRequired = false;
-        boolean showError = owner.getState().errorMessage != null;
-        if (owner.getState() instanceof AbstractFieldState) {
-            AbstractFieldState abstractFieldState = (AbstractFieldState) owner
-                    .getState();
-            showError = showError && !abstractFieldState.hideErrors;
+        boolean showError = false;
+        if (owner instanceof HasRequiredIndicator) {
+            showRequired = ((HasRequiredIndicator) owner)
+                    .isRequiredIndicatorVisible();
         }
-        if (owner instanceof AbstractFieldConnector) {
-            showRequired = ((AbstractFieldConnector) owner).isRequired();
+        if (owner instanceof HasErrorIndicator) {
+            showError = ((HasErrorIndicator) owner).isErrorIndicatorVisible();
         }
 
         if (icon != null) {
@@ -172,8 +172,8 @@ public class VCaption extends HTML {
             icon = null;
         }
         if (hasIcon) {
-            String uri = owner.getState().resources.get(
-                    ComponentConstants.ICON_RESOURCE).getURL();
+            String uri = owner.getState().resources
+                    .get(ComponentConstants.ICON_RESOURCE).getURL();
 
             icon = client.getIcon(uri);
 
@@ -247,8 +247,8 @@ public class VCaption extends HTML {
                         getInsertPosition(InsertPosition.REQUIRED));
 
                 // Hide the required indicator from assistive device
-                Roles.getTextboxRole().setAriaHiddenState(
-                        requiredFieldIndicator, true);
+                Roles.getTextboxRole()
+                        .setAriaHiddenState(requiredFieldIndicator, true);
             }
         } else if (requiredFieldIndicator != null) {
             // Remove existing
@@ -269,8 +269,8 @@ public class VCaption extends HTML {
                         getInsertPosition(InsertPosition.ERROR));
 
                 // Hide error indicator from assistive devices
-                Roles.getTextboxRole().setAriaHiddenState(
-                        errorIndicatorElement, true);
+                Roles.getTextboxRole().setAriaHiddenState(errorIndicatorElement,
+                        true);
             }
         } else if (errorIndicatorElement != null) {
             // Remove existing
@@ -447,37 +447,39 @@ public class VCaption extends HTML {
             if (owner != null) {
                 Util.notifyParentOfSizeChange(owner.getWidget(), true);
             } else {
-                getLogger()
-                        .warning(
-                                "Warning: Icon load event was not propagated because VCaption owner is unknown.");
+                getLogger().warning(
+                        "Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
     }
 
-    public static boolean isNeeded(AbstractComponentState state) {
+    public static boolean isNeeded(ComponentConnector connector) {
+        AbstractComponentState state = connector.getState();
         if (state.caption != null) {
             return true;
         }
         if (state.resources.containsKey(ComponentConstants.ICON_RESOURCE)) {
             return true;
         }
-        if (state.errorMessage != null) {
+        if (connector instanceof HasErrorIndicator
+                && ((HasErrorIndicator) connector).isErrorIndicatorVisible()) {
             return true;
         }
 
-        if (state instanceof AbstractFieldState) {
-            if (((AbstractFieldState) state).required) {
-                return true;
-            }
+        if (connector instanceof HasRequiredIndicator
+                && ((HasRequiredIndicator) connector)
+                        .isRequiredIndicatorVisible()) {
+            return true;
         }
 
         return false;
+
     }
 
     /**
      * Checks whether anything in a given state change might cause the caption
      * to change.
-     * 
+     *
      * @param event
      *            the state change event to check
      * @return <code>true</code> if the caption might have changed; otherwise
@@ -499,7 +501,7 @@ public class VCaption extends HTML {
 
     /**
      * Returns Paintable for which this Caption belongs to.
-     * 
+     *
      * @return owner Widget
      */
     public ComponentConnector getOwner() {
@@ -637,13 +639,13 @@ public class VCaption extends HTML {
             }
 
             if (icon != null) {
-                int iconRequiredWidth = WidgetUtil.getRequiredWidth(icon
-                        .getElement());
+                int iconRequiredWidth = WidgetUtil
+                        .getRequiredWidth(icon.getElement());
                 if (availableWidth > iconRequiredWidth) {
                     availableWidth -= iconRequiredWidth;
                 } else {
-                    icon.getElement().getStyle()
-                            .setWidth(availableWidth, Unit.PX);
+                    icon.getElement().getStyle().setWidth(availableWidth,
+                            Unit.PX);
                     availableWidth = 0;
                 }
             }
@@ -664,7 +666,7 @@ public class VCaption extends HTML {
 
     /**
      * Sets the tooltip that should be shown for the caption
-     * 
+     *
      * @param tooltipInfo
      *            The tooltip that should be shown or null if no tooltip should
      *            be shown
@@ -675,7 +677,7 @@ public class VCaption extends HTML {
 
     /**
      * Returns the tooltip that should be shown for the caption
-     * 
+     *
      * @return The tooltip to show or null if no tooltip should be shown
      */
     public TooltipInfo getTooltipInfo() {
@@ -704,7 +706,7 @@ public class VCaption extends HTML {
      * Sets whether the caption is rendered as HTML.
      * <p>
      * Default is false
-     * 
+     *
      * @param captionAsHtml
      *            true if the captions are rendered as HTML, false if rendered
      *            as plain text
@@ -717,7 +719,7 @@ public class VCaption extends HTML {
      * Checks whether captions are rendered as HTML.
      * <p>
      * Default is false
-     * 
+     *
      * @return true if the captions are rendered as HTML, false if rendered as
      *         plain text
      */
@@ -731,7 +733,7 @@ public class VCaption extends HTML {
      * <p>
      * Uses {@link AbstractComponentState#captionAsHtml} to determine whether to
      * set the caption as html or plain text
-     * 
+     *
      * @since 7.4
      * @param captionElement
      *            the target element
@@ -753,7 +755,7 @@ public class VCaption extends HTML {
      * <p>
      * Uses {@link AbstractComponentState#captionAsHtml} to determine whether to
      * set the caption as html or plain text
-     * 
+     *
      * @since 7.4
      * @param widget
      *            the target widget

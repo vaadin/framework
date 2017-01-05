@@ -1,16 +1,16 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Item;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.themes.BaseTheme;
 
 @Theme("tests-tickets")
-public class TableRowHeight2 extends AbstractTestUI {
+public class TableRowHeight2 extends AbstractReindeerTestUI {
 
     @Override
     protected String getTestDescription() {
@@ -46,7 +46,8 @@ public class TableRowHeight2 extends AbstractTestUI {
             b.setStyleName(BaseTheme.BUTTON_LINK);
             b.addStyleName("nowraplink");
 
-            b.setCaption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ullamcorper, elit quis elementum iaculis, dui est rutrum risus, at cursus sem leo eget arcu. Proin vel eros ut tortor luctus pretium. Nulla facilisi. Donec in dui. Proin ac diam vitae massa tempus faucibus. Fusce eu risus. Nunc ac risus. Cras libero.");
+            b.setCaption(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ullamcorper, elit quis elementum iaculis, dui est rutrum risus, at cursus sem leo eget arcu. Proin vel eros ut tortor luctus pretium. Nulla facilisi. Donec in dui. Proin ac diam vitae massa tempus faucibus. Fusce eu risus. Nunc ac risus. Cras libero.");
 
             item.getItemProperty("title").setValue(b);
 

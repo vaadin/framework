@@ -1,20 +1,22 @@
 package com.vaadin.tests.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 
 @SuppressWarnings("serial")
-public class PersonContainer extends BeanItemContainer<Person> implements
-        Serializable {
+public class PersonContainer extends BeanItemContainer<Person>
+        implements Serializable {
 
     /**
      * Natural property order for Person bean. Used in tables and forms.
      */
-    public static final Object[] NATURAL_COL_ORDER = new Object[] {
-            "firstName", "lastName", "email", "phoneNumber",
-            "address.streetAddress", "address.postalCode", "address.city" };
+    public static final Object[] NATURAL_COL_ORDER = new Object[] { "firstName",
+            "lastName", "email", "phoneNumber", "address.streetAddress",
+            "address.postalCode", "address.city" };
 
     /**
      * "Human readable" captions for properties in same order as in
@@ -36,9 +38,18 @@ public class PersonContainer extends BeanItemContainer<Person> implements
     }
 
     public static PersonContainer createWithTestData(int size) {
-        PersonContainer c = null;
+        PersonContainer c = new PersonContainer();
+        c.addAll(createTestData(size));
+        return c;
+    }
+
+    public static Collection<Person> createTestData() {
+        return createTestData(100);
+    }
+
+    public static Collection<Person> createTestData(int size) {
         Random r = new Random(0);
-        c = new PersonContainer();
+        ArrayList<Person> testData = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Person p = new Person();
             p.setFirstName(TestDataGenerator.getFirstName(r));
@@ -49,12 +60,11 @@ public class PersonContainer extends BeanItemContainer<Person> implements
             p.setPhoneNumber(TestDataGenerator.getPhoneNumber(r));
 
             p.getAddress().setPostalCode(TestDataGenerator.getPostalCode(r));
-            p.getAddress().setStreetAddress(
-                    TestDataGenerator.getStreetAddress(r));
-            c.addItem(p);
+            p.getAddress()
+                    .setStreetAddress(TestDataGenerator.getStreetAddress(r));
+            testData.add(p);
         }
-
-        return c;
+        return testData;
     }
 
 }

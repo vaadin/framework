@@ -2,10 +2,10 @@ package com.vaadin.tests.themes.base;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.MenuBar;
 
-public class DisabledMenuBarItem extends AbstractTestUI {
+public class DisabledMenuBarItem extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         MenuBar menubar = new MenuBar();

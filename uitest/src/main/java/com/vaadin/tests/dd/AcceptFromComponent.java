@@ -1,6 +1,5 @@
 package com.vaadin.tests.dd;
 
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -15,8 +14,9 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTargetDetails;
 import com.vaadin.ui.DragAndDropWrapper.WrapperTransferable;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.Tree;
 
 public class AcceptFromComponent extends Window {
 
@@ -78,8 +78,9 @@ public class AcceptFromComponent extends Window {
                             // Item id
                             Label l = new Label();
                             l.setSizeUndefined();
-                            l.setValue("ItemId : "
-                                    + ((DataBoundTransferable) ctr).getItemId());
+                            l.setValue(
+                                    "ItemId : " + ((DataBoundTransferable) ctr)
+                                            .getItemId());
                             layout.addComponent(l);
                             component = l;
 
@@ -100,8 +101,8 @@ public class AcceptFromComponent extends Window {
                         int clientY = eventDetails.getClientY();
 
                         try {
-                            layout.getPosition(component).setTopValue(
-                                    Float.valueOf(clientY - top));
+                            layout.getPosition(component)
+                                    .setTopValue(Float.valueOf(clientY - top));
                             layout.getPosition(component).setLeftValue(
                                     Float.valueOf(clientX - left));
                         } catch (Exception e) {

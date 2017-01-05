@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.SharedState;
 
 public final class ComponentStateUtil implements Serializable {
@@ -31,7 +32,8 @@ public final class ComponentStateUtil implements Serializable {
         return state.width == null || "".equals(state.width);
     }
 
-    public static final boolean isUndefinedHeight(AbstractComponentState state) {
+    public static final boolean isUndefinedHeight(
+            AbstractComponentState state) {
         return state.height == null || "".equals(state.height);
     }
 
@@ -53,10 +55,16 @@ public final class ComponentStateUtil implements Serializable {
 
     /**
      * Removes an event listener id.
-     * 
-     * @param eventListenerId
+     *
+     * @param state
+     *            shared state
+     * @param eventIdentifier
      *            The event identifier to remove
+     * @deprecated Use a {@link Registration} object returned by
+     *             {@link #addRegisteredEventListener(SharedState, String)} to
+     *             remove a listener
      */
+    @Deprecated
     public static final void removeRegisteredEventListener(SharedState state,
             String eventIdentifier) {
         if (state.registeredEventListeners == null) {
@@ -70,15 +78,17 @@ public final class ComponentStateUtil implements Serializable {
 
     /**
      * Adds an event listener id.
-     * 
+     *
      * @param eventListenerId
      *            The event identifier to add
+     * @return a registration object for removing the listener
      */
-    public static final void addRegisteredEventListener(SharedState state,
-            String eventListenerId) {
+    public static final Registration addRegisteredEventListener(
+            SharedState state, String eventListenerId) {
         if (state.registeredEventListeners == null) {
-            state.registeredEventListeners = new HashSet<String>();
+            state.registeredEventListeners = new HashSet<>();
         }
         state.registeredEventListeners.add(eventListenerId);
+        return () -> removeRegisteredEventListener(state, eventListenerId);
     }
 }

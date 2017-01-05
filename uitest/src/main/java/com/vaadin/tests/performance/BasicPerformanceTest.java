@@ -12,10 +12,10 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class BasicPerformanceTest extends UI {
 
@@ -49,8 +49,8 @@ public class BasicPerformanceTest extends UI {
         this.performanceTopic = performanceTopic;
         this.serverLimit = serverLimit;
         this.clientLimit = clientLimit;
-        reportPerformanceButton.setCaption("Report performance for "
-                + performanceTopic);
+        reportPerformanceButton
+                .setCaption("Report performance for " + performanceTopic);
         reportPerformanceButton.setEnabled(true);
         reportBootstap = false;
     }
@@ -97,8 +97,8 @@ public class BasicPerformanceTest extends UI {
                     }
                 }));
 
-        leftBar.addComponent(new Button("Update all labels",
-                new Button.ClickListener() {
+        leftBar.addComponent(
+                new Button("Update all labels", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         Iterator<Component> componentIterator = contentLayout
@@ -129,8 +129,8 @@ public class BasicPerformanceTest extends UI {
                     }
                 }));
 
-        leftBar.addComponent(new Button("Update one label",
-                new Button.ClickListener() {
+        leftBar.addComponent(
+                new Button("Update one label", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         Component child = contentLayout.getComponent(0);
@@ -149,8 +149,8 @@ public class BasicPerformanceTest extends UI {
                     }
                 }));
 
-        leftBar.addComponent(new Button("Clear content",
-                new Button.ClickListener() {
+        leftBar.addComponent(
+                new Button("Clear content", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         contentLayout.removeAllComponents();

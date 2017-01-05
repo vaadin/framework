@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 
-public class ListSelectJump extends AbstractTestUI {
+public class ListSelectJump extends AbstractReindeerTestUI {
 
     @Override
     public void setup(VaadinRequest request) {
@@ -22,16 +21,12 @@ public class ListSelectJump extends AbstractTestUI {
                         + "<li>Leave the Option #10 visible in the scroll window</li><li>Press the button</li></ol>"
                         + "You will see the <code>ListSelect</code> scroll window jump back to the top.",
                 ContentMode.HTML));
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         for (int i = 1; i <= 25; i++) {
             list.add("Option #" + i);
         }
-        ListSelect listSelect = new ListSelect(null, list);
-        listSelect.setNullSelectionAllowed(false);
-        listSelect.setMultiSelect(true);
-        listSelect.setImmediate(false);
+        ListSelect<String> listSelect = new ListSelect<>(null, list);
         listSelect.setRows(5);
-        listSelect.setItemCaptionMode(AbstractSelect.ItemCaptionMode.ID);
         listSelect.setId("listselect");
         addComponent(listSelect);
         Button button = new Button("Press Me");

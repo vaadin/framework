@@ -1,7 +1,5 @@
 package com.vaadin.tests.integration;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.tests.components.TestBase;
@@ -18,20 +16,14 @@ public class EmbedSizeTest extends TestBase {
         LegacyWindow mainWindow = getMainWindow();
         mainWindow.setSizeUndefined();
         mainWindow.getContent().setSizeUndefined();
-        mainWindow.setImmediate(true);
 
         CheckBox lazyCheckBox = new CheckBox("Lazy resize");
-        lazyCheckBox.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                CheckBox cb = (CheckBox) event.getProperty();
-                Boolean resizeLazy = cb.getValue();
-                getMainWindow().setResizeLazy(resizeLazy);
-                log.log("Resize lazy: " + resizeLazy);
-            }
+        lazyCheckBox.addValueChangeListener(event -> {
+            boolean resizeLazy = event.getValue();
+            getMainWindow().setResizeLazy(resizeLazy);
+            log.log("Resize lazy: " + resizeLazy);
         });
         lazyCheckBox.setValue(Boolean.FALSE);
-        lazyCheckBox.setImmediate(true);
         addComponent(lazyCheckBox);
 
         addComponent(log);

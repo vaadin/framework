@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -29,7 +29,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -46,7 +45,7 @@ import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * Various tests related to formatter.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -81,15 +80,15 @@ public class DesignFormatterTest {
         assertEquals("", formatter.format(true));
         assertEquals("false", formatter.format(false));
 
-        assertEquals(true, formatter.parse("true", boolean.class));
-        assertEquals(true, formatter.parse("foobar", boolean.class));
-        assertEquals(true, formatter.parse("", boolean.class));
-        assertEquals(false, formatter.parse("false", boolean.class));
+        Assert.assertTrue(formatter.parse("true", boolean.class));
+        Assert.assertTrue(formatter.parse("foobar", boolean.class));
+        Assert.assertTrue(formatter.parse("", boolean.class));
+        Assert.assertFalse(formatter.parse("false", boolean.class));
 
-        assertEquals(true, formatter.parse("true", Boolean.class));
-        assertEquals(true, formatter.parse("foobar", Boolean.class));
-        assertEquals(true, formatter.parse("", Boolean.class));
-        assertEquals(false, formatter.parse("false", Boolean.class));
+        Assert.assertTrue(formatter.parse("true", Boolean.class));
+        Assert.assertTrue(formatter.parse("foobar", Boolean.class));
+        Assert.assertTrue(formatter.parse("", Boolean.class));
+        Assert.assertFalse(formatter.parse("false", Boolean.class));
     }
 
     @Test
@@ -209,20 +208,20 @@ public class DesignFormatterTest {
         // note the space here - it separates key combination from caption
         assertEquals("ctrl-alt-d d", formatted);
 
-        ShortcutAction result = formatter
-                .parse(formatted, ShortcutAction.class);
+        ShortcutAction result = formatter.parse(formatted,
+                ShortcutAction.class);
         assertTrue(equals(action, result));
     }
 
     @Test
     public void testShortcutActionNoCaption() {
-        ShortcutAction action = new ShortcutAction(null, KeyCode.D, new int[] {
-                ModifierKey.ALT, ModifierKey.CTRL });
+        ShortcutAction action = new ShortcutAction(null, KeyCode.D,
+                new int[] { ModifierKey.ALT, ModifierKey.CTRL });
         String formatted = formatter.format(action);
         assertEquals("ctrl-alt-d", formatted);
 
-        ShortcutAction result = formatter
-                .parse(formatted, ShortcutAction.class);
+        ShortcutAction result = formatter.parse(formatted,
+                ShortcutAction.class);
         assertTrue(equals(action, result));
     }
 
@@ -238,7 +237,7 @@ public class DesignFormatterTest {
         try {
             formatter.parse(shortcut, ShortcutAction.class);
             Assert.fail("Invalid shortcut '" + shortcut + "' should throw");
-        } catch (ConversionException e) {
+        } catch (IllegalArgumentException e) {
             // expected
         }
     }
@@ -267,8 +266,8 @@ public class DesignFormatterTest {
             assertEquals("parsed ExternalResource", scheme + url,
                     ((ExternalResource) resource).getURL());
 
-            String formatted = formatter.format(new ExternalResource(scheme
-                    + url));
+            String formatted = formatter
+                    .format(new ExternalResource(scheme + url));
 
             assertEquals("formatted ExternalResource", scheme + url, formatted);
         }
@@ -284,7 +283,8 @@ public class DesignFormatterTest {
         String fileSystemPath = "c:/app/resources/icon.png";
 
         assertEquals(httpUrl, formatter.format(new ExternalResource(httpUrl)));
-        assertEquals(httpsUrl, formatter.format(new ExternalResource(httpsUrl)));
+        assertEquals(httpsUrl,
+                formatter.format(new ExternalResource(httpsUrl)));
         assertEquals(ApplicationConstants.THEME_PROTOCOL_PREFIX + themePath,
                 formatter.format(new ThemeResource(themePath)));
 
@@ -297,21 +297,21 @@ public class DesignFormatterTest {
                 formatter.format(new FileResource(new File(fileSystemPath))));
     }
 
-    @Test(expected = ConversionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testResourceParseException() {
         String someRandomResourceUrl = "random://url";
         formatter.parse(someRandomResourceUrl, Resource.class);
     }
 
-    @Test(expected = ConversionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testResourceFormatException() {
         formatter.format(new Resource() { // must use unknown resource type
-                    @Override
-                    public String getMIMEType() {
-                        // TODO Auto-generated method stub
-                        return null;
-                    }
-                });
+            @Override
+            public String getMIMEType() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+        });
     }
 
     @Test
@@ -328,10 +328,10 @@ public class DesignFormatterTest {
                 formatter.parse(httpUrl, ExternalResource.class).getURL());
         assertEquals(new ExternalResource(httpsUrl).getURL(),
                 formatter.parse(httpsUrl, ExternalResource.class).getURL());
-        assertEquals(
-                new ThemeResource(themePath),
-                formatter.parse(ApplicationConstants.THEME_PROTOCOL_PREFIX
-                        + themePath, ThemeResource.class));
+        assertEquals(new ThemeResource(themePath),
+                formatter.parse(
+                        ApplicationConstants.THEME_PROTOCOL_PREFIX + themePath,
+                        ThemeResource.class));
         assertEquals(FontAwesome.AMBULANCE,
                 formatter.parse(fontAwesomeUrlOld, FontAwesome.class));
         assertEquals(FontAwesome.AMBULANCE,
@@ -339,8 +339,7 @@ public class DesignFormatterTest {
         assertEquals(new GenericFontIcon("SomeOther", 0xF0F9),
                 formatter.parse(someOtherFont, FontIcon.class));
 
-        assertEquals(
-                new FileResource(new File(fileSystemPath)).getSourceFile(),
+        assertEquals(new FileResource(new File(fileSystemPath)).getSourceFile(),
                 formatter.parse(fileSystemPath, FileResource.class)
                         .getSourceFile());
 
@@ -348,7 +347,7 @@ public class DesignFormatterTest {
 
     /**
      * A static method to allow comparison two different actions.
-     * 
+     *
      * @param act
      *            One action to compare.
      * @param other
@@ -356,13 +355,13 @@ public class DesignFormatterTest {
      * @return <b>true</b> when both actions are the same (caption, icon, and
      *         key combination).
      */
-    public static final boolean equals(ShortcutAction act, ShortcutAction other) {
+    public static final boolean equals(ShortcutAction act,
+            ShortcutAction other) {
         if (SharedUtil.equals(other.getCaption(), act.getCaption())
                 && SharedUtil.equals(other.getIcon(), act.getIcon())
                 && act.getKeyCode() == other.getKeyCode()
                 && act.getModifiers().length == other.getModifiers().length) {
-            HashSet<Integer> thisSet = new HashSet<Integer>(
-                    act.getModifiers().length);
+            HashSet<Integer> thisSet = new HashSet<>(act.getModifiers().length);
             // this is a bit tricky comparison, but there is no nice way of
             // making int[] into a Set
             for (int mod : act.getModifiers()) {

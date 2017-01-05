@@ -2,15 +2,16 @@ package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
-public class HorizontalLayoutFullsizeContentWithErrorMsg extends AbstractTestUI {
+public class HorizontalLayoutFullsizeContentWithErrorMsg
+        extends AbstractReindeerTestUI {
 
     static final String FIELD_ID = "f";
     static final String BUTTON_ID = "b";
@@ -23,7 +24,7 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg extends AbstractTestUI 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -44,8 +45,8 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg extends AbstractTestUI 
         toggleError.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                tf.setComponentError(tf.getComponentError() == null ? new UserError(
-                        "foo") : null);
+                tf.setComponentError(tf.getComponentError() == null
+                        ? new UserError("foo") : null);
             }
         });
         hl.addComponent(toggleError);
@@ -55,7 +56,7 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg extends AbstractTestUI 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override

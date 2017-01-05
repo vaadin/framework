@@ -50,7 +50,7 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
         formLayout.addComponent(login);
         mainWindow.setContent(formLayout);
 
-        login.addListener(new ClickListener() {
+        login.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
                 String username = userField.getValue();
@@ -82,7 +82,7 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
         title.addStyleName("header-title");
         header.addComponent(title);
         Button logout = new Button("Logout");
-        logout.addListener(new ClickListener() {
+        logout.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
                 user = null;

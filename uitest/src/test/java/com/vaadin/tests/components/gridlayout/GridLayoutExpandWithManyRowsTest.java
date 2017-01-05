@@ -21,8 +21,8 @@ public class GridLayoutExpandWithManyRowsTest extends SingleBrowserTest {
         // to the first N rows.
         // The tests uses rowspan=2 so one row in the DOM should be max 2 pixels
         // lower than the first row
-        List<WebElement> slots = gridlayout.findElements(By
-                .className("v-gridlayout-slot"));
+        List<WebElement> slots = gridlayout
+                .findElements(By.className("v-gridlayout-slot"));
         Assert.assertEquals(GridLayoutExpandWithManyRows.POPULATED_ROWS,
                 slots.size());
 

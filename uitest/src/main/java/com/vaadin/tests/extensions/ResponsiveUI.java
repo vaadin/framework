@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,13 +20,13 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 
 @Theme("tests-responsive")
-public class ResponsiveUI extends AbstractTestUI {
+public class ResponsiveUI extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         HorizontalSplitPanel split = new HorizontalSplitPanel();
@@ -51,7 +51,9 @@ public class ResponsiveUI extends AbstractTestUI {
                         + "span the entire width of the container.</p><p>This label will "
                         + "adapt its font size and line height for different widths.</p>"
                         + "<p><a href=\"http://vaadin.com/download\">Download "
-                        + "Vaadin</a></p>", ContentMode.HTML);
+                        + "Vaadin</a></p>",
+                ContentMode.HTML);
+        description.setWidth("100%");
         description.addStyleName("description");
         split.addComponent(description);
 

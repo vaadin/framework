@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,16 +24,16 @@ import com.vaadin.shared.MouseEventDetails.MouseButton;
 /**
  * Helper class for constructing a MouseEventDetails object from a
  * {@link NativeEvent}.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
+ *
  */
 public class MouseEventDetailsBuilder {
 
     /**
      * Construct a {@link MouseEventDetails} object from the given event
-     * 
+     *
      * @param evt
      *            The event to use as a source for the details
      * @return a MouseEventDetails containing information from the event
@@ -44,7 +44,7 @@ public class MouseEventDetailsBuilder {
 
     /**
      * Construct a {@link MouseEventDetails} object from the given event
-     * 
+     *
      * @param evt
      *            The event to use as a source for the details
      * @param relativeToElement
@@ -66,7 +66,7 @@ public class MouseEventDetailsBuilder {
         } else if (evt.getButton() == NativeEvent.BUTTON_MIDDLE) {
             mouseEventDetails.setButton(MouseButton.MIDDLE);
         } else {
-            // IE8 does not always report a button. Assume left.
+            // No button reported? Assume left.
             mouseEventDetails.setButton(MouseButton.LEFT);
         }
         mouseEventDetails.setAltKey(evt.getAltKey());

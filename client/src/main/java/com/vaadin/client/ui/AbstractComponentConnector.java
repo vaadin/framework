@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -60,9 +60,10 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.ui.UIState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
-        implements ComponentConnector {
+        implements ComponentConnector, HasErrorIndicator {
 
     private HandlerRegistration contextHandler = null;
 
@@ -104,18 +105,19 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @OnStateChange("registeredEventListeners")
     void handleContextClickListenerChange() {
         if (contextHandler == null && hasEventListener(EventId.CONTEXT_CLICK)) {
-            contextHandler = getWidget().addDomHandler(
-                    new ContextMenuHandler() {
+            contextHandler = getWidget()
+                    .addDomHandler(new ContextMenuHandler() {
                         @Override
                         public void onContextMenu(ContextMenuEvent event) {
-                            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
-                                    event.getNativeEvent(), getWidget()
-                                            .getElement());
+                            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                                    .buildMouseEventDetails(
+                                            event.getNativeEvent(),
+                                            getWidget().getElement());
 
                             event.preventDefault();
                             event.stopPropagation();
-                            sendContextClickEvent(mouseEventDetails, event
-                                    .getNativeEvent().getEventTarget());
+                            sendContextClickEvent(mouseEventDetails,
+                                    event.getNativeEvent().getEventTarget());
                         }
                     }, ContextMenuEvent.getType());
 
@@ -139,10 +141,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * The new default behaviour is for long taps to fire a contextclick event
      * if there's a contextclick listener attached to the component.
-     * 
+     *
      * If you do not want this in your component, override this with a blank
      * method to get rid of said behaviour.
-     * 
+     *
      * @since 7.6
      */
     protected void unregisterTouchHandlers() {
@@ -163,13 +165,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * The new default behaviour is for long taps to fire a contextclick event
      * if there's a contextclick listener attached to the component.
-     * 
+     *
      * If you do not want this in your component, override this with a blank
      * method to get rid of said behaviour.
-     * 
+     *
      * Some Vaadin Components already handle the long tap as a context menu.
      * This method is unnecessary for those.
-     * 
+     *
      * @since 7.6
      */
     protected void registerTouchHandlers() {
@@ -196,8 +198,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                  * this was the case with iOS devices.
                  */
 
-                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder.buildMouseEventDetails(
-                        event.getNativeEvent(), getWidget().getElement());
+                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event.getNativeEvent(),
+                                getWidget().getElement());
 
                 final EventTarget eventTarget = event.getNativeEvent()
                         .getEventTarget();
@@ -288,7 +291,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * If a long touch event timer is running, cancel it.
-     * 
+     *
      * @since 7.6
      */
     private void cancelTouchTimer() {
@@ -302,7 +305,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * Cancel the timer recursively for parent components that have timers
      * running
-     * 
+     *
      * @since 7.6
      */
     private void cancelParentTouchTimers() {
@@ -324,7 +327,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * This method sends the context menu event to the server-side. Can be
      * overridden to provide extra information through an alternative RPC
      * interface.
-     * 
+     *
      * @since 7.6
      * @param event
      */
@@ -349,7 +352,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * can't call <code>super.createWidget()</code> since the metadata needed
      * for that implementation is not generated if there's an override of the
      * method.
-     * 
+     *
      * @return a new widget instance to use for this component connector
      */
     protected Widget createWidget() {
@@ -364,14 +367,15 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                             + getClass().getSimpleName()
                             + ". This might be caused by explicitely using "
                             + "super.createWidget() or some unspecified "
-                            + "problem with the widgetset compilation.", e);
+                            + "problem with the widgetset compilation.",
+                    e);
         }
     }
 
     /**
      * Returns the widget associated with this paintable. The widget returned by
      * this method must not changed during the life time of the paintable.
-     * 
+     *
      * @return The widget associated with this paintable
      */
     @Override
@@ -419,7 +423,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          * first setting tabindex, then enabled state (through super
          * implementation).
          */
-        Profiler.enter("AbstractComponentConnector.onStateChanged update tab index");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged update tab index");
         if (getState() instanceof TabIndexState) {
             if (getWidget() instanceof Focusable) {
                 ((Focusable) getWidget())
@@ -433,28 +438,41 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 // + Util.getSimpleName(getWidget())
                 // + " which does not implement Focusable");
             }
+        } else if (getState() instanceof UIState
+                && getWidget() instanceof Focusable) {
+            // UI behaves like a component with TabIndexState
+            ((Focusable) getWidget())
+                    .setTabIndex(((UIState) getState()).tabIndex);
         }
-        Profiler.leave("AbstractComponentConnector.onStateChanged update tab index");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged update tab index");
 
-        Profiler.enter("AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
         super.onStateChanged(stateChangeEvent);
-        Profiler.leave("AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
 
         // Style names
-        Profiler.enter("AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
         updateWidgetStyleNames();
-        Profiler.leave("AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
 
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
          */
 
-        Profiler.enter("AbstractComponentConnector.onStateChanged updateComponentSize");
+        Profiler.enter(
+                "AbstractComponentConnector.onStateChanged updateComponentSize");
         updateComponentSize();
-        Profiler.leave("AbstractComponentConnector.onStateChanged updateComponentSize");
+        Profiler.leave(
+                "AbstractComponentConnector.onStateChanged updateComponentSize");
 
-        Profiler.enter("AbstractComponentContainer.onStateChanged check tooltip");
+        Profiler.enter(
+                "AbstractComponentContainer.onStateChanged check tooltip");
         if (!tooltipListenersAttached && hasTooltip()) {
             /*
              * Add event handlers for tooltips if they are needed but have not
@@ -463,7 +481,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             tooltipListenersAttached = true;
             getConnection().getVTooltip().connectHandlersToWidget(getWidget());
         }
-        Profiler.leave("AbstractComponentContainer.onStateChanged check tooltip");
+        Profiler.leave(
+                "AbstractComponentContainer.onStateChanged check tooltip");
 
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
@@ -504,7 +523,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * Updates the component size, invoking the {@link LayoutManager layout
      * manager} if necessary.
-     * 
+     *
      * @param newWidth
      *            The new width as a CSS string. Cannot be null.
      * @param newHeight
@@ -518,16 +537,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (newWidth.endsWith("%") != lastKnownWidth.endsWith("%")) {
             Connector parent = getParent();
             if (parent instanceof ManagedLayout) {
-                getLayoutManager().setNeedsHorizontalLayout(
-                        (ManagedLayout) parent);
+                getLayoutManager()
+                        .setNeedsHorizontalLayout((ManagedLayout) parent);
             }
         }
 
         if (newHeight.endsWith("%") != lastKnownHeight.endsWith("%")) {
             Connector parent = getParent();
             if (parent instanceof ManagedLayout) {
-                getLayoutManager().setNeedsVerticalLayout(
-                        (ManagedLayout) parent);
+                getLayoutManager()
+                        .setNeedsVerticalLayout((ManagedLayout) parent);
             }
         }
 
@@ -537,21 +556,25 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Set defined sizes
         Widget widget = getWidget();
 
-        Profiler.enter("AbstractComponentConnector.updateComponentSize update styleNames");
+        Profiler.enter(
+                "AbstractComponentConnector.updateComponentSize update styleNames");
         widget.setStyleName("v-has-width", !isUndefinedWidth());
         widget.setStyleName("v-has-height", !isUndefinedHeight());
-        Profiler.leave("AbstractComponentConnector.updateComponentSize update styleNames");
+        Profiler.leave(
+                "AbstractComponentConnector.updateComponentSize update styleNames");
 
-        Profiler.enter("AbstractComponentConnector.updateComponentSize update DOM");
+        Profiler.enter(
+                "AbstractComponentConnector.updateComponentSize update DOM");
         updateWidgetSize(newWidth, newHeight);
-        Profiler.leave("AbstractComponentConnector.updateComponentSize update DOM");
+        Profiler.leave(
+                "AbstractComponentConnector.updateComponentSize update DOM");
 
         Profiler.leave("AbstractComponentConnector.updateComponentSize");
     }
 
     /**
      * Updates the DOM size of this connector's {@link #getWidget() widget}.
-     * 
+     *
      * @since 7.1.15
      * @param newWidth
      *            The new width as a CSS string. Cannot be null.
@@ -585,7 +608,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ComponentConnector#delegateCaptionHandling ()
      */
     @Override
@@ -599,8 +622,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * primary style name of the widget returned by {@link #getWidget()}
      * <p>
      * This method can be overridden to provide additional style names for the
-     * component, for example see
-     * {@link AbstractFieldConnector#updateWidgetStyleNames()}
+     * component, for example see {@code AbstractFieldConnector}
      * </p>
      */
     protected void updateWidgetStyleNames() {
@@ -612,13 +634,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Set the core 'v' style name for the widget
         setWidgetStyleName(StyleConstants.UI_WIDGET, true);
 
-        // should be in AbstractFieldConnector ?
-        // add / remove read-only style name
-        setWidgetStyleName("v-readonly", isReadOnly());
-
         // add / remove error style name
-        setWidgetStyleNameWithPrefix(primaryStyleName,
-                StyleConstants.ERROR_EXT, null != state.errorMessage);
+        setWidgetStyleNameWithPrefix(primaryStyleName, StyleConstants.ERROR_EXT,
+                null != state.errorMessage);
 
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
@@ -652,6 +670,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
              */
             getWidget().setStylePrimaryName(state.primaryStyleName);
         }
+
+        // set required style name if components supports that
+        if (this instanceof HasRequiredIndicator) {
+            getWidget().setStyleName(StyleConstants.REQUIRED,
+                    ((HasRequiredIndicator) this).isRequiredIndicatorVisible());
+        }
+
         Profiler.leave("AbstractComponentConnector.updateWidgetStyleNames");
     }
 
@@ -662,7 +687,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * updated in another widget in addition to the one returned by the
      * {@link #getWidget()}.
      * </p>
-     * 
+     *
      * @param styleName
      *            the style name to be added or removed
      * @param add
@@ -683,7 +708,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * different. For example see
      * {@link com.vaadin.client.ui.datefield.DateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
      * </p>
-     * 
+     *
      * @param styleName
      *            the style name to be added or removed
      * @param add
@@ -693,8 +718,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      *             prefixes.
      */
     @Deprecated
-    protected void setWidgetStyleNameWithPrefix(String prefix,
-            String styleName, boolean add) {
+    protected void setWidgetStyleNameWithPrefix(String prefix, String styleName,
+            boolean add) {
         if (!styleName.startsWith("-")) {
             if (!prefix.endsWith("-")) {
                 prefix += "-";
@@ -705,17 +730,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }
         getWidget().setStyleName(prefix + styleName, add);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.ComponentConnector#isReadOnly()
-     */
-    @Override
-    @Deprecated
-    public boolean isReadOnly() {
-        return getState().readOnly;
     }
 
     @Override
@@ -738,9 +752,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // at this point.
         if (getWidget() != null && getWidget().isAttached()) {
             getWidget().removeFromParent();
-            VConsole.error("Widget is still attached to the DOM after the connector ("
-                    + Util.getConnectorString(this)
-                    + ") has been unregistered. Widget was removed.");
+            VConsole.error(
+                    "Widget is still attached to the DOM after the connector ("
+                            + Util.getConnectorString(this)
+                            + ") has been unregistered. Widget was removed.");
         }
     }
 
@@ -755,7 +770,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         AbstractComponentState state = getState();
         if (state.description != null && !state.description.equals("")) {
             return true;
-        } else if (state.errorMessage != null && !state.errorMessage.equals("")) {
+        } else if (state.errorMessage != null
+                && !state.errorMessage.equals("")) {
             return true;
         } else {
             return false;
@@ -764,7 +780,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * Gets the URI of the icon set for this component.
-     * 
+     *
      * @return the URI of the icon, or <code>null</code> if no icon has been
      *         defined.
      */
@@ -774,7 +790,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * Gets the icon set for this component.
-     * 
+     *
      * @return the icon, or <code>null</code> if no icon has been defined.
      */
     protected Icon getIcon() {
@@ -783,11 +799,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.client.ComponentConnector#flush()
      */
     @Override
     public void flush() {
         // No generic implementation. Override if needed
+    }
+
+    @Override
+    public boolean isErrorIndicatorVisible() {
+        return getState().errorMessage != null;
     }
 }

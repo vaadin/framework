@@ -14,7 +14,7 @@ public class ErrorMessages extends TestBase {
     @Override
     protected void setup() {
         Button bb = new Button("Button with CompositeError");
-        List<UserError> errors = new ArrayList<UserError>();
+        List<UserError> errors = new ArrayList<>();
         errors.add(new UserError("Error 1"));
         errors.add(new UserError("Error 2"));
         bb.setComponentError(new CompositeErrorMessage(errors));
@@ -24,7 +24,8 @@ public class ErrorMessages extends TestBase {
         tf.setComponentError(new UserError("This is a failure"));
         addComponent(tf);
 
-        ComboBox cb = new ComboBox("ComboBox with description and UserError");
+        ComboBox<String> cb = new ComboBox<>(
+                "ComboBox with description and UserError");
         cb.setDescription("This is a combobox");
         cb.setComponentError(new UserError("This is a failure"));
         addComponent(cb);

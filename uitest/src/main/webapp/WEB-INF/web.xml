@@ -12,6 +12,10 @@
         <param-name>productionMode</param-name>
         <param-value>false</param-value>
     </context-param>
+    <context-param>
+        <param-name>widgetset</param-name>
+        <param-value>com.vaadin.v7.Vaadin7WidgetSet</param-value>
+    </context-param>
 
     <context-param>
         <param-name>resourceCacheTime</param-name>
@@ -22,7 +26,7 @@
         <servlet-class>com.vaadin.server.LegacyVaadinServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.vaadin.tests.components.button.Buttons</param-value>
+            <param-value>com.vaadin.tests.components.button.ButtonHtml</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
@@ -63,10 +67,6 @@
         <servlet-name>VaadinApplicationRunner</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
         <!-- Non-default values for testing purposes -->
-        <init-param>
-            <param-name>legacyPropertyToString</param-name>
-            <param-value>false</param-value>
-        </init-param>
         <init-param>
             <param-name>heartbeatInterval</param-name>
             <param-value>301</param-value>
@@ -146,6 +146,15 @@
         </init-param>
         <async-supported>true</async-supported>
     </servlet>
+    <servlet>
+        <servlet-name>ResourcesFromServlet</servlet-name>
+        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
+        <init-param>
+            <param-name>resources</param-name>
+            <param-value>/servlet-with-resources</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
 
     <!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
     <servlet>
@@ -219,6 +228,11 @@
     <servlet-mapping>
         <servlet-name>VaadinStaticFiles</servlet-name>
         <url-pattern>/VAADIN/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ResourcesFromServlet</servlet-name>
+        <url-pattern>/servlet-with-resources/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

@@ -10,10 +10,10 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 public class LayoutResizeTest extends TestBase {
 
@@ -32,17 +32,14 @@ public class LayoutResizeTest extends TestBase {
         left.setSpacing(true);
         left.setMargin(true);
 
-        left.addComponent(new Label("<h2>Layout resize test</h2>",
-                ContentMode.HTML));
+        left.addComponent(
+                new Label("<h2>Layout resize test</h2>", ContentMode.HTML));
 
         Button resize = new Button("Resize to 700x400",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        event.getButton()
-                                .getUI()
-                                .getPage()
-                                .getJavaScript()
+                        event.getButton().getUI().getPage().getJavaScript()
                                 .execute(
                                         "setTimeout(function() {window.resizeTo(700,400)}, 500)");
                     }
@@ -52,12 +49,8 @@ public class LayoutResizeTest extends TestBase {
         resize = new Button("Resize to 900x600", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                event.getButton()
-                        .getUI()
-                        .getPage()
-                        .getJavaScript()
-                        .execute(
-                                "setTimeout(function() {window.resizeTo(900,600)}, 500)");
+                event.getButton().getUI().getPage().getJavaScript().execute(
+                        "setTimeout(function() {window.resizeTo(900,600)}, 500)");
             }
         });
         left.addComponent(resize);
@@ -105,15 +98,13 @@ public class LayoutResizeTest extends TestBase {
         row.setWidth("100%");
         row.setSpacing(true);
 
-        Embedded icon = new Embedded(null, new ThemeResource(
-                "../runo/icons/32/document.png"));
+        Embedded icon = new Embedded(null,
+                new ThemeResource("../runo/icons/32/document.png"));
         row.addComponent(icon);
         row.setComponentAlignment(icon, Alignment.MIDDLE_LEFT);
 
-        Label text = new Label(
-                "Row content #"
-                        + i
-                        + ". In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor. Nulla facilisi. Duis aliquet.");
+        Label text = new Label("Row content #" + i
+                + ". In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor. Nulla facilisi. Duis aliquet.");
         row.addComponent(text);
         row.setExpandRatio(text, 1);
 

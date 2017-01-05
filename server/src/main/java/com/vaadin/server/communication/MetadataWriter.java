@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,7 +25,7 @@ import com.vaadin.ui.UI;
 
 /**
  * Serializes miscellaneous metadata to JSON.
- * 
+ *
  * @author Vaadin Ltd
  * @since 7.1
  */
@@ -35,16 +35,13 @@ public class MetadataWriter implements Serializable {
 
     /**
      * Writes a JSON object containing metadata related to the given UI.
-     * 
+     *
      * @param ui
      *            The UI whose metadata to write.
      * @param writer
      *            The writer used.
      * @param repaintAll
      *            Whether the client should repaint everything.
-     * @param analyzeLayouts
-     *            Whether detected layout problems should be reported in client
-     *            and server console.
      * @param async
      *            True if this message is sent by the server asynchronously,
      *            false if it is a response to a client message.
@@ -53,7 +50,7 @@ public class MetadataWriter implements Serializable {
      *            messages.
      * @throws IOException
      *             If the serialization fails.
-     * 
+     *
      */
     public void write(UI ui, Writer writer, boolean repaintAll, boolean async,
             SystemMessages messages) throws IOException {
@@ -89,8 +86,8 @@ public class MetadataWriter implements Serializable {
                     writer.write(",");
                 }
                 writer.write("\"timedRedirect\":{\"interval\":"
-                        + (newTimeoutInterval + 15) + ",\"url\":\""
-                        + escapedURL + "\"}");
+                        + (newTimeoutInterval + 15) + ",\"url\":\"" + escapedURL
+                        + "\"}");
                 metaOpen = true;
             }
             timeoutInterval = newTimeoutInterval;

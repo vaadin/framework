@@ -9,7 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -21,8 +21,8 @@ public class ColumnReorderingWithManyColumnsTest extends MultiBrowserTest {
         TableHeaderElement sourceCell = table.getHeaderCell(0);
         TableHeaderElement targetCell = table.getHeaderCell(10);
         drag(sourceCell, targetCell);
-        WebElement markedElement = table.findElement(By
-                .className("v-table-focus-slot-right"));
+        WebElement markedElement = table
+                .findElement(By.className("v-table-focus-slot-right"));
         String markedColumnName = markedElement.findElement(By.xpath(".."))
                 .getText();
         assertEquals("col-9", markedColumnName.toLowerCase());

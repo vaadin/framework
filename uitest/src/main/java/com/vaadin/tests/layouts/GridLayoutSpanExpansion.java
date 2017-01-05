@@ -14,8 +14,9 @@ public class GridLayoutSpanExpansion extends TestBase {
         heightSpan.setWidth("200px");
         heightSpan.addComponent(new Label("1"), 0, 0);
         heightSpan.addComponent(new Label("2"), 0, 1);
-        heightSpan.addComponent(new Label(
-                "This is a somewhat long text that spans over a few lines."),
+        heightSpan.addComponent(
+                new Label(
+                        "This is a somewhat long text that spans over a few lines."),
                 1, 0, 1, 1);
         heightSpan.setRowExpandRatio(1, 1);
         addComponent(heightSpan);
@@ -23,8 +24,9 @@ public class GridLayoutSpanExpansion extends TestBase {
         GridLayout widthSpan = new GridLayout(2, 2);
         widthSpan.setHeight("100px");
         widthSpan.setWidth("200px");
-        widthSpan.addComponent(new Label(
-                "This is a somewhat long text that spans over both columns."),
+        widthSpan.addComponent(
+                new Label(
+                        "This is a somewhat long text that spans over both columns."),
                 0, 0, 1, 0);
         Label label1 = new Label("1");
         label1.setSizeUndefined();

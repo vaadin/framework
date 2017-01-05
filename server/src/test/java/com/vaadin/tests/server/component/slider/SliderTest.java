@@ -4,10 +4,10 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Slider;
+import com.vaadin.ui.Slider.ValueOutOfBoundsException;
 
 public class SliderTest {
 
@@ -41,8 +41,8 @@ public class SliderTest {
 
             slider.setValue(-1.0);
         } catch (Slider.ValueOutOfBoundsException e) {
-            assertThat(e.getMessage(),
-                    containsString("Value -1.0 is out of bounds: [0.0, 100.0]"));
+            assertThat(e.getMessage(), containsString(
+                    "Value -1.0 is out of bounds: [0.0, 100.0]"));
         }
     }
 
@@ -55,16 +55,10 @@ public class SliderTest {
         assertThat(slider.getValue(), is(5.0));
     }
 
-    @Test
+    @Test(expected = ValueOutOfBoundsException.class)
     public void valueCannotBeOutOfBounds() {
         Slider s = new Slider(0, 10);
-
-        try {
-            s.setValue(20.0);
-            Assert.fail("Should throw out of bounds exception");
-        } catch (Slider.ValueOutOfBoundsException e) {
-            // TODO: handle exception
-        }
+        s.setValue(20.0);
     }
 
     @Test
@@ -131,5 +125,11 @@ public class SliderTest {
         slider.setValue(1.2345);
 
         assertThat(slider.getValue(), is(1.23));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void setValue_nullValue_throwNPE() {
+        Slider slider = new Slider();
+        slider.setValue(null);
     }
 }

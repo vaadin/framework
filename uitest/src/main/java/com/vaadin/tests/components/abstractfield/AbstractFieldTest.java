@@ -1,38 +1,34 @@
 package com.vaadin.tests.components.abstractfield;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ReadOnlyStatusChangeEvent;
-import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-public abstract class AbstractFieldTest<T extends AbstractField> extends
-        AbstractComponentTest<T> implements ValueChangeListener,
-        ReadOnlyStatusChangeListener {
+public abstract class AbstractFieldTest<T extends AbstractField<V>, V>
+        extends AbstractComponentTest<T> {
 
     private boolean sortValueChanges = true;
+
+    protected Registration valueChangeListenerRegistration;
 
     @Override
     protected void createActions() {
         super.createActions();
 
         createBooleanAction("Required", CATEGORY_STATE, false, requiredCommand);
-        createRequiredErrorSelect(CATEGORY_DECORATIONS);
 
         createValueChangeListener(CATEGORY_LISTENERS);
-        createReadOnlyStatusChangeListener(CATEGORY_LISTENERS);
 
         // * invalidcommitted
         // * commit()
@@ -54,15 +50,15 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         super.populateSettingsMenu(settingsMenu);
 
         if (AbstractField.class.isAssignableFrom(getTestClass())) {
-            MenuItem abstractField = settingsMenu
-                    .addItem("AbstractField", null);
+            MenuItem abstractField = settingsMenu.addItem("AbstractField",
+                    null);
             abstractField.addItem("Show value", new MenuBar.Command() {
 
                 @Override
                 public void menuSelected(MenuItem selectedItem) {
                     for (T a : getTestComponents()) {
                         log(a.getClass().getSimpleName() + " value: "
-                                + getValue(a));
+                                + formatValue(a.getValue()));
                     }
                 }
             });
@@ -81,70 +77,49 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         }
     }
 
-    private void createRequiredErrorSelect(String category) {
-        LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
-        options.put("-", null);
-        options.put(TEXT_SHORT, TEXT_SHORT);
-        options.put("Medium", TEXT_MEDIUM);
-        options.put("Long", TEXT_LONG);
-        options.put("Very long", TEXT_VERY_LONG);
-        createSelectAction("Required error message", category, options, "-",
-                requiredErrorMessageCommand);
-
-    }
-
     private void createValueChangeListener(String category) {
 
         createBooleanAction("Value change listener", category, false,
                 valueChangeListenerCommand);
     }
 
-    private void createReadOnlyStatusChangeListener(String category) {
-
-        createBooleanAction("Read only status change listener", category,
-                false, readonlyStatusChangeListenerCommand);
-    }
-
     protected Command<T, Boolean> valueChangeListenerCommand = new Command<T, Boolean>() {
 
+        private ValueChangeListener<V> valueChangeListener = new ValueChangeListener<V>() {
+
+            @Override
+            public void valueChange(ValueChangeEvent<V> event) {
+                log(event.getClass().getSimpleName() + ", new value: "
+                        + formatValue(event.getValue()));
+            }
+        };
+
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.addListener((ValueChangeListener) AbstractFieldTest.this);
+                if (valueChangeListenerRegistration == null) {
+                    valueChangeListenerRegistration = c
+                            .addValueChangeListener(valueChangeListener);
+                }
             } else {
-                c.removeListener((ValueChangeListener) AbstractFieldTest.this);
-            }
-        }
-    };
-    protected Command<T, Boolean> readonlyStatusChangeListenerCommand = new Command<T, Boolean>() {
-
-        @Override
-        public void execute(T c, Boolean value, Object data) {
-            if (value) {
-                c.addListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
-            } else {
-                c.removeListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
+                if (valueChangeListenerRegistration != null) {
+                    valueChangeListenerRegistration.remove();
+                    valueChangeListenerRegistration = null;
+                }
             }
         }
     };
 
-    protected Command<T, Object> setValueCommand = new Command<T, Object>() {
+    protected Command<T, V> setValueCommand = new Command<T, V>() {
 
         @Override
-        public void execute(T c, Object value, Object data) {
+        public void execute(T c, V value, Object data) {
             c.setValue(value);
         }
     };
 
-    @Override
-    public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-        log(event.getClass().getSimpleName() + ", new value: "
-                + getValue(event.getProperty()));
-    }
-
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private String getValue(Property property) {
-        Object o = property.getValue();
+    private String formatValue(Object o) {
         if (o instanceof Collection && sortValueChanges) {
             // Sort collections to avoid problems with values printed in
             // different order
@@ -162,13 +137,13 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         // Distinguish between null and 'null'
         String value = "null";
         if (o != null) {
-            if (o instanceof Date) {
-                Date d = (Date) o;
-                // Dec 31, 2068 23:09:26.531
-                String pattern = "MMM d, yyyy HH:mm:ss.SSS";
-                SimpleDateFormat format = new SimpleDateFormat(pattern,
-                        new Locale("en", "US"));
-                value = format.format(d);
+            if (o instanceof LocalDate) {
+                LocalDate date = (LocalDate) o;
+                // Dec 31, 2068
+                String pattern = "MMM d, yyyy";
+                DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern,
+                        Locale.ENGLISH);
+                value = format.format(date);
             } else {
                 value = "'" + o.toString() + "'";
             }
@@ -176,26 +151,6 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
 
         return value;
 
-    }
-
-    @Override
-    public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {
-        log(event.getClass().getSimpleName());
-    }
-
-    protected void createSetTextValueAction(String category) {
-        String subCategory = "Set text value";
-        createCategory(subCategory, category);
-        List<String> values = new ArrayList<String>();
-        values.add("Test");
-        values.add("A little longer value");
-        values.add("A very long value with very much text. All in all it is 74 characters long");
-
-        createClickAction("(empty string)", subCategory, setValueCommand, "");
-        createClickAction("(null)", subCategory, setValueCommand, null);
-        for (String value : values) {
-            createClickAction(value, subCategory, setValueCommand, value);
-        }
     }
 
 }

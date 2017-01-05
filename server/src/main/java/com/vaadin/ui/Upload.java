@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 
 import com.vaadin.server.NoInputStreamException;
 import com.vaadin.server.NoOutputStreamException;
@@ -29,6 +30,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.upload.UploadClientRpc;
 import com.vaadin.shared.ui.upload.UploadServerRpc;
 import com.vaadin.shared.ui.upload.UploadState;
@@ -60,9 +62,9 @@ import com.vaadin.util.ReflectTools;
  * ProgressListener and updating the indicator in updateProgress().
  *
  * <p>
- * Setting upload component immediate initiates the upload as soon as a file is
- * selected, instead of the common pattern of file selection field and upload
- * button.
+ * Setting upload component immediate with {@link #setImmediateMode(boolean)}
+ * initiates the upload as soon as a file is selected, instead of the common
+ * pattern of file selection field and upload button.
  *
  * <p>
  * Note! Because of browser dependent implementations of <input type="file">
@@ -73,8 +75,8 @@ import com.vaadin.util.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Upload extends AbstractComponent implements Component.Focusable,
-        LegacyComponent {
+public class Upload extends AbstractComponent
+        implements Component.Focusable, LegacyComponent {
 
     /**
      * Should the field be focused on next repaint?
@@ -199,6 +201,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface Receiver extends Serializable {
 
         /**
@@ -212,7 +215,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
          * @return Stream to which the uploaded file should be written.
          */
         public OutputStream receiveUpload(String filename, String mimeType);
-
     }
 
     /* Upload events */
@@ -227,15 +229,14 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
     static {
         try {
-            UPLOAD_FINISHED_METHOD = FinishedListener.class.getDeclaredMethod(
-                    "uploadFinished", new Class[] { FinishedEvent.class });
-            UPLOAD_FAILED_METHOD = FailedListener.class.getDeclaredMethod(
-                    "uploadFailed", new Class[] { FailedEvent.class });
-            UPLOAD_STARTED_METHOD = StartedListener.class.getDeclaredMethod(
-                    "uploadStarted", new Class[] { StartedEvent.class });
+            UPLOAD_FINISHED_METHOD = FinishedListener.class
+                    .getDeclaredMethod("uploadFinished", FinishedEvent.class);
+            UPLOAD_FAILED_METHOD = FailedListener.class
+                    .getDeclaredMethod("uploadFailed", FailedEvent.class);
+            UPLOAD_STARTED_METHOD = StartedListener.class
+                    .getDeclaredMethod("uploadStarted", StartedEvent.class);
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class
-                    .getDeclaredMethod("uploadSucceeded",
-                            new Class[] { SucceededEvent.class });
+                    .getDeclaredMethod("uploadSucceeded", SucceededEvent.class);
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
@@ -543,6 +544,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @author Vaadin Ltd.
      * @since 5.0
      */
+    @FunctionalInterface
     public interface StartedListener extends Serializable {
 
         /**
@@ -560,6 +562,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface FinishedListener extends Serializable {
 
         /**
@@ -577,6 +580,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface FailedListener extends Serializable {
 
         /**
@@ -594,6 +598,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @author Vaadin Ltd.
      * @since 3.0
      */
+    @FunctionalInterface
     public interface SucceededListener extends Serializable {
 
         /**
@@ -610,6 +615,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      *
      * @since 7.2
      */
+    @FunctionalInterface
     public interface ChangeListener extends Serializable {
 
         Method FILENAME_CHANGED = ReflectTools.findMethod(ChangeListener.class,
@@ -628,19 +634,10 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Adds the upload started event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addStartedListener(StartedListener listener) {
-        addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addStartedListener(StartedListener)}
-     **/
-    @Deprecated
-    public void addListener(StartedListener listener) {
-        addStartedListener(listener);
+    public Registration addStartedListener(StartedListener listener) {
+        return addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
     }
 
     /**
@@ -649,36 +646,20 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeStartedListener(StartedListener listener) {
         removeListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeStartedListener(StartedListener)}
-     **/
-    @Deprecated
-    public void removeListener(StartedListener listener) {
-        removeStartedListener(listener);
     }
 
     /**
      * Adds the upload received event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addFinishedListener(FinishedListener listener) {
-        addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFinishedListener(FinishedListener)}
-     **/
-    @Deprecated
-    public void addListener(FinishedListener listener) {
-        addFinishedListener(listener);
+    public Registration addFinishedListener(FinishedListener listener) {
+        return addListener(FinishedEvent.class, listener,
+                UPLOAD_FINISHED_METHOD);
     }
 
     /**
@@ -687,36 +668,19 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeFinishedListener(FinishedListener listener) {
         removeListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFinishedListener(FinishedListener)}
-     **/
-    @Deprecated
-    public void removeListener(FinishedListener listener) {
-        removeFinishedListener(listener);
     }
 
     /**
      * Adds the upload interrupted event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addFailedListener(FailedListener listener) {
-        addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addFailedListener(FailedListener)}
-     **/
-    @Deprecated
-    public void addListener(FailedListener listener) {
-        addFailedListener(listener);
+    public Registration addFailedListener(FailedListener listener) {
+        return addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
     }
 
     /**
@@ -725,36 +689,20 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeFailedListener(FailedListener listener) {
         removeListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeFailedListener(FailedListener)}
-     **/
-    @Deprecated
-    public void removeListener(FailedListener listener) {
-        removeFailedListener(listener);
     }
 
     /**
      * Adds the upload success event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
-    public void addSucceededListener(SucceededListener listener) {
-        addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addSucceededListener(SucceededListener)}
-     **/
-    @Deprecated
-    public void addListener(SucceededListener listener) {
-        addSucceededListener(listener);
+    public Registration addSucceededListener(SucceededListener listener) {
+        return addListener(SucceededEvent.class, listener,
+                UPLOAD_SUCCEEDED_METHOD);
     }
 
     /**
@@ -763,17 +711,9 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
+    @Deprecated
     public void removeSucceededListener(SucceededListener listener) {
         removeListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeSucceededListener(SucceededListener)}
-     **/
-    @Deprecated
-    public void removeListener(SucceededListener listener) {
-        removeSucceededListener(listener);
     }
 
     /**
@@ -782,20 +722,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the progress listener to be added
      */
-    public void addProgressListener(ProgressListener listener) {
+    public Registration addProgressListener(ProgressListener listener) {
+        Objects.requireNonNull(listener, "Listener must not be null.");
         if (progressListeners == null) {
-            progressListeners = new LinkedHashSet<ProgressListener>();
+            progressListeners = new LinkedHashSet<>();
         }
         progressListeners.add(listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #addProgressListener(ProgressListener)}
-     **/
-    @Deprecated
-    public void addListener(ProgressListener listener) {
-        addProgressListener(listener);
+        return () -> {
+            if (progressListeners != null) {
+                progressListeners.remove(listener);
+            }
+        };
     }
 
     /**
@@ -804,6 +741,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the progress listener to be removed
      */
+    @Deprecated
     public void removeProgressListener(ProgressListener listener) {
         if (progressListeners != null) {
             progressListeners.remove(listener);
@@ -814,10 +752,10 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Adds a filename change event listener
      *
      * @param listener
-     *            the Listener to add
+     *            the Listener to add, not null
      */
-    public void addChangeListener(ChangeListener listener) {
-        super.addListener(EventId.CHANGE, ChangeEvent.class, listener,
+    public Registration addChangeListener(ChangeListener listener) {
+        return addListener(EventId.CHANGE, ChangeEvent.class, listener,
                 ChangeListener.FILENAME_CHANGED);
     }
 
@@ -827,17 +765,9 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the listener to be removed
      */
+    @Deprecated
     public void removeChangeListener(ChangeListener listener) {
         super.removeListener(EventId.CHANGE, ChangeEvent.class, listener);
-    }
-
-    /**
-     * @deprecated As of 7.0, replaced by
-     *             {@link #removeProgressListener(ProgressListener)}
-     **/
-    @Deprecated
-    public void removeListener(ProgressListener listener) {
-        removeProgressListener(listener);
     }
 
     /**
@@ -907,8 +837,8 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator<ProgressListener> it = progressListeners.iterator(); it
-                    .hasNext();) {
+            for (Iterator<ProgressListener> it = progressListeners
+                    .iterator(); it.hasNext();) {
                 ProgressListener l = it.next();
                 l.updateProgress(totalBytes, contentLength);
             }
@@ -1029,6 +959,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     /**
      * ProgressListener receives events to track progress of upload.
      */
+    @FunctionalInterface
     public interface ProgressListener extends Serializable {
         /**
          * Updates progress to listener
@@ -1058,7 +989,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * {@link #submitUpload()}.
      * <p>
      * In case the Upload is used in immediate mode using
-     * {@link #setImmediate(boolean)}, the file choose (html input with type
+     * {@link #setImmediateMode(boolean)}, the file choose (html input with type
      * "file") is hidden and only the button with this text is shown.
      * <p>
      *
@@ -1115,8 +1046,8 @@ public class Upload extends AbstractComponent implements Component.Focusable,
 
                 @Override
                 public boolean listenProgress() {
-                    return (progressListeners != null && !progressListeners
-                            .isEmpty());
+                    return progressListeners != null
+                            && !progressListeners.isEmpty();
                 }
 
                 @Override
@@ -1185,7 +1116,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     public java.util.Collection<?> getListeners(java.lang.Class<?> eventType) {
         if (StreamingProgressEvent.class.isAssignableFrom(eventType)) {
             if (progressListeners == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             } else {
                 return Collections.unmodifiableCollection(progressListeners);
             }
@@ -1194,8 +1125,44 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         return super.getListeners(eventType);
     }
 
+    /**
+     * Sets the immediate mode of the upload.
+     * <p>
+     * If the upload is in immediate mode, the file upload is started
+     * immediately after the user has selected the file.
+     * <p>
+     * If the upload is not in immediate mode, after selecting the file the user
+     * must click another button to start the upload.
+     * <p>
+     * The default mode of an Upload component is immediate.
+     *
+     * @param immediateMode
+     *            {@code true} for immediate mode, {@code false} for not
+     */
+    public void setImmediateMode(boolean immediateMode) {
+        getState().immediateMode = immediateMode;
+    }
+
+    /**
+     * Returns the immediate mode of the upload.
+     * <p>
+     * The default mode of an Upload component is immediate.
+     *
+     * @return {@code true} if the upload is in immediate mode, {@code false} if
+     *         the upload is not in immediate mode
+     * @see #setImmediateMode(boolean)
+     */
+    public boolean isImmediateMode() {
+        return getState(false).immediateMode;
+    }
+
     @Override
     protected UploadState getState() {
         return (UploadState) super.getState();
+    }
+
+    @Override
+    protected UploadState getState(boolean markAsDirty) {
+        return (UploadState) super.getState(markAsDirty);
     }
 }

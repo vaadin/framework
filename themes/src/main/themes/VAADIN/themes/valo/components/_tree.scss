@@ -41,7 +41,7 @@ $v-tree-expand-animation-enabled: false !default;
 /**
  *
  *
- * @param {string} $primary-stylename (v-tree) - 
+ * @param {string} $primary-stylename (v-tree) -
  *
  * @group tree
  */
@@ -70,18 +70,6 @@ $v-tree-expand-animation-enabled: false !default;
       background: red;
       opacity: 0;
 
-      .v-ie8 & {
-        position: static;
-        margin-left: -1.9em;
-        vertical-align: top;
-        @include valo-tree-collapsed-icon-style;
-        text-align: center;
-        background: transparent;
-      }
-    }
-
-    .v-ie8 & {
-      padding-left: 1.9em;
     }
   }
 
@@ -109,10 +97,6 @@ $v-tree-expand-animation-enabled: false !default;
 
         @if $v-tree-animations-enabled {
           @include transition(all 100ms);
-        }
-
-        .v-ie8 & {
-          display: none;
         }
       }
     }
@@ -153,14 +137,8 @@ $v-tree-expand-animation-enabled: false !default;
         @include transition(opacity 120ms);
       }
 
-      .v-ie8 & {
-        content: none;
-      }
     }
 
-    .v-ie8 & {
-      display: inline-block;
-    }
   }
 
   .#{$primary-stylename}-node-expanded > .#{$primary-stylename}-node-caption > div:before {
@@ -170,10 +148,6 @@ $v-tree-expand-animation-enabled: false !default;
       @include transform(rotate(90deg));
       @include valo-tree-collapsed-icon-style;
     }
-  }
-
-  .v-ie8 & .#{$primary-stylename}-node-expanded:before {
-    @include valo-tree-expanded-icon-style(true);
   }
 
   .#{$primary-stylename}-node-leaf:before,
@@ -188,9 +162,6 @@ $v-tree-expand-animation-enabled: false !default;
       border: 1px solid $v-focus-color;
     }
 
-    .v-ie8 & {
-      outline: 1px dotted $v-focus-color;
-    }
   }
 
 
@@ -205,22 +176,13 @@ $v-tree-expand-animation-enabled: false !default;
       @include valo-gradient($v-selection-color);
       border: none;
 
-      .v-ie8 & {
-        //visibility: visible;
-      }
     }
 
-    .v-ie8 & {
-      @include valo-gradient($v-selection-color);
-    }
   }
 
   .#{$primary-stylename}-node-children {
     padding-left: round($v-unit-size/2);
 
-    .v-ie8 & {
-      padding-left: 0;
-    }
   }
 
   @if $v-tree-expand-animation-enabled {
@@ -265,9 +227,6 @@ $v-tree-expand-animation-enabled: false !default;
     position: relative;
     border-radius: $v-border-radius;
 
-    .v-ie8 & {
-      outline: 2px solid $v-focus-color;
-    }
   }
 
   .v-ff & .#{$primary-stylename}-node-drag-top:before,
@@ -275,10 +234,6 @@ $v-tree-expand-animation-enabled: false !default;
     line-height: 1px;
   }
 
-  .v-ie8 & .#{$primary-stylename}-node-drag-top:before,
-  .v-ie8 & .#{$primary-stylename}-node-drag-bottom:after {
-    line-height: 0;
-  }
 }
 
 
@@ -296,7 +251,7 @@ $v-tree-expand-animation-enabled: false !default;
 /**
  *
  *
- * @param {bool} $force (false) - 
+ * @param {bool} $force (false) -
  *
  * @group tree
  */

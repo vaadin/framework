@@ -7,9 +7,9 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class TableContextMenuOnField extends TestBase {
 
@@ -23,7 +23,8 @@ public class TableContextMenuOnField extends TestBase {
 
         table.addActionHandler(new Action.Handler() {
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 // TODO Auto-generated method stub
 
             }
@@ -43,7 +44,7 @@ public class TableContextMenuOnField extends TestBase {
                 VerticalLayout layout = new VerticalLayout();
                 layout.addComponent(new TextField());
 
-                layout.addListener(new LayoutClickListener() {
+                layout.addLayoutClickListener(new LayoutClickListener() {
 
                     @Override
                     public void layoutClick(LayoutClickEvent event) {

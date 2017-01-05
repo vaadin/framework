@@ -1,14 +1,11 @@
 package com.vaadin.tests.themes.valo;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.ui.Table;
 
-@Theme(ValoTheme.THEME_NAME)
 public class FormLayoutInsideTable extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
@@ -18,7 +15,8 @@ public class FormLayoutInsideTable extends AbstractTestUI {
             private static final long serialVersionUID = 1L;
 
             @Override
-            public Object generateCell(Table source, Object itemId, Object columnId) {
+            public Object generateCell(Table source, Object itemId,
+                    Object columnId) {
                 FormLayout layout = new FormLayout();
                 layout.addComponent(new Label("Line 1 " + itemId));
                 layout.addComponent(new Label("Line 2 " + itemId));
@@ -30,4 +28,5 @@ public class FormLayoutInsideTable extends AbstractTestUI {
         table.setSizeFull();
         table.addItem("abc0");
         addComponent(table);
-    }}
+    }
+}

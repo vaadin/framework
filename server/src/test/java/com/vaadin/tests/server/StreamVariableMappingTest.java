@@ -58,12 +58,12 @@ public class StreamVariableMappingTest {
         owner.getUI().getConnectorTracker().registerConnector(owner);
         String targetUrl = cm.getStreamVariableTargetUrl(owner, variableName,
                 streamVariable);
-        assertTrue(targetUrl.startsWith("app://APP/UPLOAD/-1/"
-                + owner.getConnectorId() + "/myName/"));
+        assertTrue(targetUrl.startsWith(
+                "app://APP/UPLOAD/-1/" + owner.getConnectorId() + "/myName/"));
 
         ConnectorTracker tracker = owner.getUI().getConnectorTracker();
-        StreamVariable streamVariable2 = tracker.getStreamVariable(
-                owner.getConnectorId(), variableName);
+        StreamVariable streamVariable2 = tracker
+                .getStreamVariable(owner.getConnectorId(), variableName);
         assertSame(streamVariable, streamVariable2);
     }
 

@@ -1,20 +1,20 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
-public class HeaderSyncOnScroll extends AbstractTestUI {
+public class HeaderSyncOnScroll extends AbstractReindeerTestUI {
 
     private Table table;
 
     @Override
-    public String getDescription() {
-        return "Header's should be in sync when scrolling";
+    protected String getTestDescription() {
+        return "Headers should be in sync when scrolling";
     }
 
     @Override
@@ -48,6 +48,7 @@ public class HeaderSyncOnScroll extends AbstractTestUI {
         addComponent(table);
 
         HorizontalLayout buttonsLo = new HorizontalLayout();
+        buttonsLo.setSpacing(false);
         addComponent(buttonsLo);
 
         Button setTableWidth100 = new Button("table.setWidth(100%)",

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,16 +18,16 @@ package com.vaadin.tests.components;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
 /**
  * Test to see if AbstractOrderedLayout displays captions correctly with
  * expanding ratios.
- * 
+ *
  * @author Vaadin Ltd
  */
-public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
+public class AbstractOrderedLayoutWithCaptions extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -37,6 +37,8 @@ public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
         TextField textField = new TextField("Input Text:");
         Label label1 = new Label("LABEL 1");
         Label label2 = new Label("LABEL 2");
+        label1.setWidth("100%"); // Only to make test backwards compatible
+        label2.setWidth("100%"); // Only to make test backwards compatible
 
         layout.addComponent(textField);
 
@@ -52,7 +54,7 @@ public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -62,7 +64,7 @@ public class AbstractOrderedLayoutWithCaptions extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override

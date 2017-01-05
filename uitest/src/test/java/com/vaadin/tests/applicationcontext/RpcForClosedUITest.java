@@ -21,8 +21,8 @@ public class RpcForClosedUITest extends MultiBrowserTest {
         clickButton("Log 'hello'");
         /* Ensure 'hello' was not logged */
         checkLogMatches("2. Current WrappedSession id: .*");
-        Assert.assertFalse("Page contains word 'Hello'", driver.getPageSource()
-                .contains("Hello"));
+        Assert.assertFalse("Page contains word 'Hello'",
+                driver.getPageSource().contains("Hello"));
     }
 
     private void clickButton(String caption) {

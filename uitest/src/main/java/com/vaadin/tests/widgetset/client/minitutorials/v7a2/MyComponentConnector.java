@@ -14,8 +14,8 @@ import com.vaadin.tests.minitutorials.v7a2.MyComponent;
 @Connect(MyComponent.class)
 public class MyComponentConnector extends AbstractComponentConnector {
 
-    MyComponentServerRpc rpc = RpcProxy
-            .create(MyComponentServerRpc.class, this);
+    MyComponentServerRpc rpc = RpcProxy.create(MyComponentServerRpc.class,
+            this);
 
     public MyComponentConnector() {
         getWidget().addClickHandler(new ClickHandler() {

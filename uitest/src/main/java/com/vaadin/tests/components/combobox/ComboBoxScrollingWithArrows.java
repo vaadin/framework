@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,11 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
@@ -24,12 +27,12 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test UI verifying navigating in combobox via arrow keys.
  */
-public class ComboBoxScrollingWithArrows extends AbstractTestUI {
+public class ComboBoxScrollingWithArrows extends AbstractReindeerTestUI {
     final String DESCRIPTION = "When positioned on last item in the page and press downArrow key - should open new page and set focus on the first item.";
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
      * VaadinRequest)
      */
@@ -42,7 +45,7 @@ public class ComboBoxScrollingWithArrows extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTestDescription()
      */
     @Override
@@ -52,7 +55,7 @@ public class ComboBoxScrollingWithArrows extends AbstractTestUI {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.tests.components.AbstractTestUI#getTicketNumber()
      */
     @Override
@@ -61,12 +64,14 @@ public class ComboBoxScrollingWithArrows extends AbstractTestUI {
     }
 
     private void addComboBox(AbstractLayout layout) {
-        ComboBox box = new ComboBox();
+        ComboBox<String> box = new ComboBox<>();
+        List<String> items = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            box.addItem("item " + i);
+            items.add("item " + i);
         }
+        box.setItems(items);
         box.setPageLength(10);
-        box.setNullSelectionAllowed(false);
+        box.setEmptySelectionAllowed(false);
         layout.addComponent(box);
     }
 }

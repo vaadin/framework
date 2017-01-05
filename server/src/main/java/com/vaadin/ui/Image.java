@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,25 +20,22 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.image.ImageServerRpc;
 import com.vaadin.shared.ui.image.ImageState;
 
 /**
  * Component for embedding images.
- * 
+ *
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
+ * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")
 public class Image extends AbstractEmbedded {
 
-    protected ImageServerRpc rpc = new ImageServerRpc() {
-        @Override
-        public void click(MouseEventDetails mouseDetails) {
-            fireEvent(new ClickEvent(Image.this, mouseDetails));
-        }
+    protected ImageServerRpc rpc = (MouseEventDetails mouseDetails) -> {
+        fireEvent(new ClickEvent(Image.this, mouseDetails));
     };
 
     /**
@@ -50,7 +47,7 @@ public class Image extends AbstractEmbedded {
 
     /**
      * Creates a new empty Image with caption.
-     * 
+     *
      * @param caption
      */
     public Image(String caption) {
@@ -61,7 +58,7 @@ public class Image extends AbstractEmbedded {
     /**
      * Creates a new Image whose contents is loaded from given resource. The
      * dimensions are assumed if possible. The type is guessed from resource.
-     * 
+     *
      * @param caption
      * @param source
      *            the Source of the embedded object.
@@ -76,46 +73,39 @@ public class Image extends AbstractEmbedded {
         return (ImageState) super.getState();
     }
 
-    /**
-     * @deprecated As of 7.0, use {@link #addClickListener(ClickListener)}
-     *             instead
-     */
-    @Deprecated
-    public void addListener(ClickListener listener) {
-        addClickListener(listener);
+    @Override
+    protected ImageState getState(boolean markAsDirty) {
+        return (ImageState) super.getState(markAsDirty);
     }
 
     /**
      * Add a click listener to the component. The listener is called whenever
      * the user clicks inside the component. Depending on the content the event
      * may be blocked and in that case no event is fired.
-     * 
-     * Use {@link #removeClickListener(ClickListener)} to remove the listener.
-     * 
+     *
+     * @see Registration
+     *
      * @param listener
-     *            The listener to add
+     *            The listener to add, not null
+     * @return a registration object for removing the listener
      */
-    public void addClickListener(ClickListener listener) {
-        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
-                ClickListener.clickMethod);
-    }
-
-    /**
-     * @deprecated As of 7.0, use {@link #removeClickListener(ClickListener)}
-     *             instead
-     */
-    @Deprecated
-    public void removeListener(ClickListener listener) {
-        removeClickListener(listener);
+    public Registration addClickListener(ClickListener listener) {
+        return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener, ClickListener.clickMethod);
     }
 
     /**
      * Remove a click listener from the component. The listener should earlier
      * have been added using {@link #addClickListener(ClickListener)}.
-     * 
+     *
      * @param listener
      *            The listener to remove
+     *
+     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
+     *             registration object returned from
+     *             {@link #addClickListener(ClickListener)}.
      */
+    @Deprecated
     public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);

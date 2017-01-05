@@ -1,18 +1,16 @@
 package com.vaadin.tests.containers;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 public class IndexedContainerFilteringTest extends TestBase {
 
@@ -54,18 +52,13 @@ public class IndexedContainerFilteringTest extends TestBase {
         vl.addComponent(filterString);
 
         final CheckBox cb = new CheckBox("Filter");
-        cb.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                container.removeAllContainerFilters();
-                if (((CheckBox) event.getProperty()).getValue()) {
-                    container.addContainerFilter("column1", filterString
-                            .getValue().toString(), false, false);
-                }
+        cb.addValueChangeListener(event -> {
+            container.removeAllContainerFilters();
+            if (event.getValue()) {
+                container.addContainerFilter("column1",
+                        filterString.getValue().toString(), false, false);
             }
         });
-        cb.setImmediate(true);
         vl.addComponent(cb);
 
         nextLabel = new Label();
@@ -80,14 +73,13 @@ public class IndexedContainerFilteringTest extends TestBase {
                     public void buttonClick(ClickEvent event) {
                         Item item = container.addItem("addItem() " + nextToAdd);
                         if (item != null) {
-                            item.getItemProperty("column1").setValue(
-                                    "addItem() " + nextToAdd);
+                            item.getItemProperty("column1")
+                                    .setValue("addItem() " + nextToAdd);
                         }
                         nextToAdd++;
                         nextLabel.setCaption("Next id: " + nextToAdd);
                     }
                 });
-        addItemButton.setImmediate(true);
         vl.addComponent(addItemButton);
 
         final Button addItemAfterButton = new Button("addItemAfter()",
@@ -104,15 +96,14 @@ public class IndexedContainerFilteringTest extends TestBase {
                             item.getItemProperty("column1").setValue(id);
                             table.setValue(id);
                         } else {
-                            getMainWindow().showNotification(
-                                    "Adding item after " + selection
-                                            + " failed");
+                            getMainWindow()
+                                    .showNotification("Adding item after "
+                                            + selection + " failed");
                         }
                         nextToAdd++;
                         nextLabel.setCaption("Next id: " + nextToAdd);
                     }
                 });
-        addItemAfterButton.setImmediate(true);
         vl.addComponent(addItemAfterButton);
 
         position = new TextField("Position:", "0");
@@ -122,23 +113,22 @@ public class IndexedContainerFilteringTest extends TestBase {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        int index = Integer.parseInt(position.getValue()
-                                .toString());
+                        int index = Integer
+                                .parseInt(position.getValue().toString());
                         String id = "addItemAt() " + nextToAdd;
                         Item item = container.addItemAt(index, id);
                         if (item != null) {
                             item.getItemProperty("column1").setValue(id);
                             table.setValue(id);
                         } else {
-                            getMainWindow().showNotification(
-                                    "Adding item at index "
+                            getMainWindow()
+                                    .showNotification("Adding item at index "
                                             + position.getValue() + " failed");
                         }
                         nextToAdd++;
                         nextLabel.setCaption("Next id: " + nextToAdd);
                     }
                 });
-        addItemAtButton.setImmediate(true);
         vl.addComponent(addItemAtButton);
 
         getLayout().addComponent(table);

@@ -7,6 +7,8 @@ layout: page
 [[components.interfaces]]
 = Interfaces and Abstractions
 
+*_This section has not yet been updated for Vaadin Framework 8_*
+
 ((("interfaces")))
 Vaadin user interface components are built on a skeleton of interfaces and
 abstract classes that define and implement the features common to all components
@@ -15,21 +17,14 @@ and the client.
 
 This section gives details on the basic component interfaces and abstractions.
 The layout and other component container abstractions are described in
-<<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing
-Layout">>. The interfaces that define the Vaadin data model are described in
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
-Components to Data">>.
+<<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing Layout">>.
+The interfaces that define the Vaadin data model are described in <<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
 
 [[figure.components.interfaces]]
-.Component Interfaces and Abstractions
-image::img/component-abstractions-hi.png[]
+.Component interfaces and abstractions
+image::img/component-abstractions-hi.png[width=100%, scaledwidth=100%]
 
-((("[classname]#Paintable#")))
-((("[classname]#VariableOwner#")))
-All components also implement the [classname]#Paintable# interface, which is
-used for serializing ("painting") the components to the client, and the reverse
-[classname]#VariableOwner# interface, which is needed for deserializing
-component state or user interaction from the client.
+All components are connectors that connect to the client-side widgets.
 
 ((("[classname]#Serializable#")))
 In addition to the interfaces defined within the Vaadin framework, all
@@ -67,20 +62,19 @@ the [methodname]#detach()# method. If the parent of an added component is
 already connected to the UI, the [methodname]#attach()# is called immediately
 from [methodname]#setParent()#.
 
-
 [source, java]
 ----
 public class AttachExample extends CustomComponent {
     public AttachExample() {
     }
-    
+
     @Override
     public void attach() {
         super.attach(); // Must call.
-        
+
         // Now we know who ultimately owns us.
         ClassResource r = new ClassResource("smiley.jpg");
-        Image image = new Image("Image:", r); 
+        Image image = new Image("Image:", r);
         setCompositionRoot(image);
     }
 }
@@ -89,7 +83,6 @@ public class AttachExample extends CustomComponent {
 The attachment logic is implemented in [classname]#AbstractComponent#, as
 described in <<components.interfaces.abstractcomponent>>.
 
-
 ((("[classname]#Component# interface")))
 
 [[components.interfaces.abstractcomponent]]
@@ -97,21 +90,10 @@ described in <<components.interfaces.abstractcomponent>>.
 
 ((("[classname]#AbstractComponent#", id="term.components.interfaces.abstractcomponent", range="startofrange")))
 
-
 [classname]#AbstractComponent# is the base class for all user interface
 components. It is the (only) implementation of the [classname]#Component#
-interface, implementing all the methods defined in the interface.
-
-[classname]#AbstractComponent# has a single abstract method,
-[methodname]#getTag()#, which returns the serialization identifier of a
-particular component class. It needs to be implemented when (and only when)
-creating entirely new components. [classname]#AbstractComponent# manages much of
-the serialization of component states between the client and the server.
-Creation of new components and serialization is described in
-<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
-with the Server-Side">>.
+interface, implementing all the methods defined in the interface. When
+creating a new component, you should extend [classname]#AbstractComponent# or
+one of its subclasses.
 
 (((range="endofrange", startref="term.components.interfaces.abstractcomponent")))
-
-
-

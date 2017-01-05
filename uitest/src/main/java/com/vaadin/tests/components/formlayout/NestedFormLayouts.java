@@ -1,14 +1,12 @@
 package com.vaadin.tests.components.formlayout;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 
-public class NestedFormLayouts extends AbstractTestUI {
+public class NestedFormLayouts extends AbstractReindeerTestUI {
 
     private FormLayout outer;
     private FormLayout inner1;
@@ -62,24 +60,14 @@ public class NestedFormLayouts extends AbstractTestUI {
 
         final CheckBox spacingCheckBox = new CheckBox("Spacings", false);
         spacingCheckBox.setId("spacings");
-        spacingCheckBox.setImmediate(true);
-        spacingCheckBox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setLayoutSpacing(spacingCheckBox.getValue());
-            }
-        });
+        spacingCheckBox.addValueChangeListener(
+                event -> setLayoutSpacing(spacingCheckBox.getValue()));
         addComponent(spacingCheckBox);
 
         final CheckBox marginCheckBox = new CheckBox("Margins", false);
         marginCheckBox.setId("margins");
-        marginCheckBox.setImmediate(true);
-        marginCheckBox.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setLayoutMargin(marginCheckBox.getValue());
-            }
-        });
+        marginCheckBox.addValueChangeListener(
+                event -> setLayoutMargin(marginCheckBox.getValue()));
         addComponent(marginCheckBox);
 
         setLayoutSpacing(false);

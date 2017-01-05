@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.provider.Query;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Accordion;
@@ -37,36 +36,24 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         lab = new Label("Label inside the component container");
         lab.setWidth(null);
 
-        ComboBox componentContainerSelect = new ComboBox("Container") {
-            {
-                pageLength = 0;
-            }
-        };
+        ComboBox<Class<? extends HasComponents>> componentContainerSelect = new ComboBox<>(
+                "Container");
+        componentContainerSelect.setPageLength(0);
         componentContainerSelect.setId("componentContainerSelect");
         componentContainerSelect.setWidth("300px");
-        componentContainerSelect.setImmediate(true);
-        componentContainerSelect.setNullSelectionAllowed(false);
         // componentContainer.addContainerProperty(CAPTION, String.class, "");
         // componentContainer.addContainerProperty(CLASS, Class.class, "");
 
-        for (Class<? extends HasComponents> cls : getComponentContainers()) {
-            componentContainerSelect.addItem(cls);
-        }
-        componentContainerSelect.addListener(new ValueChangeListener() {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public void valueChange(ValueChangeEvent event) {
-                HasComponents oldCC = cc;
-                cc = createComponentContainer((Class<? extends HasComponents>) event
-                        .getProperty().getValue());
-                addToCC(lab);
-                replaceComponent(oldCC, cc);
-            }
+        componentContainerSelect.setItems(getComponentContainers());
+        componentContainerSelect.addValueChangeListener(event -> {
+            HasComponents oldCC = cc;
+            cc = createComponentContainer(event.getValue());
+            addToCC(lab);
+            replaceComponent(oldCC, cc);
         });
 
-        componentContainerSelect.setValue(componentContainerSelect.getItemIds()
-                .iterator().next());
+        componentContainerSelect.setValue(componentContainerSelect
+                .getDataProvider().fetch(new Query<>()).iterator().next());
         Button but1 = new Button("Move in and out of component container",
                 new Button.ClickListener() {
 
@@ -96,13 +83,13 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         } else if (cc instanceof SingleComponentContainer) {
             ((SingleComponentContainer) cc).setContent(lab);
         } else {
-            throw new RuntimeException("Don't know how to add to "
-                    + cc.getClass().getName());
+            throw new RuntimeException(
+                    "Don't know how to add to " + cc.getClass().getName());
         }
     }
 
     private Collection<Class<? extends HasComponents>> getComponentContainers() {
-        List<Class<? extends HasComponents>> list = new ArrayList<Class<? extends HasComponents>>();
+        List<Class<? extends HasComponents>> list = new ArrayList<>();
         list.add(AbsoluteLayout.class);
         list.add(Accordion.class);
         list.add(CssLayout.class);

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -95,9 +95,6 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean immediate;
 
     /**
      * The current position of the split handle in either percentages or pixels
@@ -252,18 +249,17 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     /**
      * Converts given split position string (in pixels or percentage) to a
      * floating point pixel value.
-     * 
+     *
      * @param pos
      * @return
      */
     private float convertToPixels(String pos) {
         float posAsFloat;
         if (pos.indexOf("%") > 0) {
-            posAsFloat = Math.round(Float.parseFloat(pos.substring(0,
-                    pos.length() - 1))
-                    / 100
-                    * (orientation == Orientation.HORIZONTAL ? getOffsetWidth()
-                            : getOffsetHeight()));
+            posAsFloat = Math
+                    .round(Float.parseFloat(pos.substring(0, pos.length() - 1))
+                            / 100 * (orientation == Orientation.HORIZONTAL
+                                    ? getOffsetWidth() : getOffsetHeight()));
         } else {
             posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 2));
         }
@@ -273,16 +269,16 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     /**
      * Converts given split position string (in pixels or percentage) to a float
      * percentage value.
-     * 
+     *
      * @param pos
      * @return
      */
     private float convertToPercentage(String pos) {
         if (pos.endsWith("px")) {
-            float pixelPosition = Float.parseFloat(pos.substring(0,
-                    pos.length() - 2));
-            int offsetLength = orientation == Orientation.HORIZONTAL ? getOffsetWidth()
-                    : getOffsetHeight();
+            float pixelPosition = Float
+                    .parseFloat(pos.substring(0, pos.length() - 2));
+            int offsetLength = orientation == Orientation.HORIZONTAL
+                    ? getOffsetWidth() : getOffsetHeight();
 
             // Take splitter size into account at the edge
             if (pixelPosition + getSplitterSize() >= offsetLength) {
@@ -299,9 +295,9 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     /**
      * Returns the given position clamped to the range between current minimum
      * and maximum positions.
-     * 
+     *
      * TODO Should this be in the connector?
-     * 
+     *
      * @param pos
      *            Position of the splitter as a CSS string, either pixels or a
      *            percentage.
@@ -324,7 +320,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     /**
      * Converts given string to the same units as the split position is.
-     * 
+     *
      * @param pos
      *            position to be converted
      * @return converted position string
@@ -359,8 +355,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         if (pos.indexOf("%") > 0) {
             int size = orientation == Orientation.HORIZONTAL ? getOffsetWidth()
                     : getOffsetHeight();
-            float percentage = Float.parseFloat(pos.substring(0,
-                    pos.length() - 1));
+            float percentage = Float
+                    .parseFloat(pos.substring(0, pos.length() - 1));
             pos = percentage / 100 * size + "px";
         }
 
@@ -407,8 +403,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
         // reposition splitter in case it is out of box
-        if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
-                || (positionReversed && pixelPosition < 0)) {
+        if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize
+                || positionReversed && pixelPosition < 0) {
             pixelPosition = wholeSize - getSplitterSize();
             if (pixelPosition < 0) {
                 pixelPosition = 0;
@@ -419,7 +415,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
 
         firstContainer.getStyle().setHeight(pixelPosition, Unit.PX);
-        int secondContainerHeight = (wholeSize - pixelPosition - getSplitterSize());
+        int secondContainerHeight = wholeSize - pixelPosition
+                - getSplitterSize();
         if (secondContainerHeight < 0) {
             secondContainerHeight = 0;
         }
@@ -456,8 +453,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
         // reposition splitter in case it is out of box
-        if ((pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize)
-                || (positionReversed && pixelPosition < 0)) {
+        if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize
+                || positionReversed && pixelPosition < 0) {
             pixelPosition = wholeSize - getSplitterSize();
             if (pixelPosition < 0) {
                 pixelPosition = 0;
@@ -468,7 +465,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
 
         firstContainer.getStyle().setWidth(pixelPosition, Unit.PX);
-        int secondContainerWidth = (wholeSize - pixelPosition - getSplitterSize());
+        int secondContainerWidth = wholeSize - pixelPosition
+                - getSplitterSize();
         if (secondContainerWidth < 0) {
             secondContainerWidth = 0;
         }
@@ -605,21 +603,21 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     /**
      * Called when starting drag resize
-     * 
+     *
      * @since 7.5.1
      */
     abstract protected void startResize();
 
     /**
      * Called when stopping drag resize
-     * 
+     *
      * @since 7.5.1
      */
     abstract protected void stopResize();
 
     /**
      * Gets the first container
-     * 
+     *
      * @since 7.5.1
      * @return the firstContainer
      */
@@ -629,7 +627,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     /**
      * Gets the second container
-     * 
+     *
      * @since 7.5.1
      * @return the secondContainer
      */
@@ -666,7 +664,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         } else {
             // Reversed position
             if (positionReversed) {
-                position = (getOffsetWidth() - newX - getSplitterSize()) + "px";
+                position = getOffsetWidth() - newX - getSplitterSize() + "px";
             } else {
                 position = newX + "px";
             }
@@ -699,8 +697,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         } else {
             // Reversed position
             if (positionReversed) {
-                position = (getOffsetHeight() - newY - getSplitterSize())
-                        + "px";
+                position = getOffsetHeight() - newY - getSplitterSize() + "px";
             } else {
                 position = newY + "px";
             }
@@ -732,10 +729,10 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     public interface SplitterMoveHandler extends EventHandler {
         public void splitterMoved(SplitterMoveEvent event);
 
-        public static class SplitterMoveEvent extends
-                GwtEvent<SplitterMoveHandler> {
+        public static class SplitterMoveEvent
+                extends GwtEvent<SplitterMoveHandler> {
 
-            public static final Type<SplitterMoveHandler> TYPE = new Type<SplitterMoveHandler>();
+            public static final Type<SplitterMoveHandler> TYPE = new Type<>();
 
             private Widget splitPanel;
 
@@ -784,11 +781,11 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     /**
      * A dragging curtain is required in Gecko and Webkit.
-     * 
+     *
      * @return true if the browser requires a dragging curtain
      */
     private boolean isDraggingCurtainRequired() {
-        return (BrowserInfo.get().isGecko() || BrowserInfo.get().isWebkit());
+        return BrowserInfo.get().isGecko() || BrowserInfo.get().isWebkit();
     }
 
     /**
@@ -836,8 +833,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         secondContainer.setClassName(secondContainerClass);
 
         for (String styleName : componentStyleNames) {
-            splitter.addClassName(splitterClass + "-" + styleName
-                    + lockedSuffix);
+            splitter.addClassName(
+                    splitterClass + "-" + styleName + lockedSuffix);
             firstContainer.addClassName(firstContainerClass + "-" + styleName);
             secondContainer
                     .addClassName(secondContainerClass + "-" + styleName);

@@ -22,12 +22,10 @@ visually identical in both modes.
 [source, java]
 ----
 // Create the selection component
-ListSelect select = new ListSelect("The List");
+ListSelect<String> select = new ListSelect<>("The List");
 
-// Add some items (here by the item ID as the caption)
-select.addItems("Mercury", "Venus", "Earth", ...);
-
-select.setNullSelectionAllowed(false);
+// Add some items
+select.setItems("Mercury", "Venus", "Earth", ...);
 
 // Show 5 items and a scrollbar if there are more
 select.setRows(5);

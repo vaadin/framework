@@ -17,6 +17,7 @@ public class BrowserFrameIsVisible extends TestBase {
     protected void setup() {
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(false);
         addComponent(buttonLayout);
 
         Button page1 = new Button("Hello World");
@@ -101,8 +102,8 @@ public class BrowserFrameIsVisible extends TestBase {
 
             ByteArrayInputStream istream;
             try {
-                istream = new ByteArrayInputStream(sb.toString().getBytes(
-                        "UTF-8"));
+                istream = new ByteArrayInputStream(
+                        sb.toString().getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

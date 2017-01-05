@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2013 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,7 +34,7 @@ public class TextFields extends VerticalLayout implements View {
     private TestIcon testIcon = new TestIcon(140);
 
     public TextFields() {
-        setMargin(true);
+        setSpacing(false);
 
         Label h1 = new Label("Text Fields");
         h1.addStyleName(ValoTheme.LABEL_H1);
@@ -42,26 +42,25 @@ public class TextFields extends VerticalLayout implements View {
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         TextField tf = new TextField("Normal");
-        tf.setInputPrompt("First name");
+        tf.setPlaceholder("First name");
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("Custom color");
-        tf.setInputPrompt("Email");
+        tf.setPlaceholder("Email");
         tf.addStyleName("color1");
         row.addComponent(tf);
 
         tf = new TextField("User Color");
-        tf.setInputPrompt("Gender");
+        tf.setPlaceholder("Gender");
         tf.addStyleName("color2");
         row.addComponent(tf);
 
         tf = new TextField("Themed");
-        tf.setInputPrompt("Age");
+        tf.setPlaceholder("Age");
         tf.addStyleName("color3");
         row.addComponent(tf);
 
@@ -77,7 +76,7 @@ public class TextFields extends VerticalLayout implements View {
         row.addComponent(tf);
 
         tf = new TextField("Read-only");
-        tf.setInputPrompt("Nationality");
+        tf.setPlaceholder("Nationality");
         tf.setValue("Finnish");
         tf.setReadOnly(true);
         row.addComponent(tf);
@@ -94,27 +93,27 @@ public class TextFields extends VerticalLayout implements View {
         row.addComponent(tf);
 
         tf = new TextField("Icon inside");
-        tf.setInputPrompt("Ooh, an icon");
+        tf.setPlaceholder("Ooh, an icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("Large, Icon inside");
-        tf.setInputPrompt("Ooh, an icon");
+        tf.setPlaceholder("Ooh, an icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_LARGE);
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("Small, Icon inside");
-        tf.setInputPrompt("Ooh, an icon");
+        tf.setPlaceholder("Ooh, an icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_SMALL);
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         row.addComponent(tf);
 
         tf = new TextField("16px supported by default");
-        tf.setInputPrompt("Image icon");
+        tf.setPlaceholder("Image icon");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get(true, 16));
         row.addComponent(tf);
@@ -136,7 +135,7 @@ public class TextFields extends VerticalLayout implements View {
         row.addComponent(group);
 
         tf = new TextField();
-        tf.setInputPrompt("Grouped with a button");
+        tf.setPlaceholder("Grouped with a button");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.setIcon(testIcon.get());
         tf.setWidth("260px");
@@ -147,7 +146,7 @@ public class TextFields extends VerticalLayout implements View {
         group.addComponent(button);
 
         tf = new TextField("Borderless");
-        tf.setInputPrompt("Write here…");
+        tf.setPlaceholder("Write here…");
         tf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         tf.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
         tf.setIcon(testIcon.get());
@@ -159,25 +158,25 @@ public class TextFields extends VerticalLayout implements View {
         row.addComponent(tf);
 
         tf = new TextField("Centered");
-        tf.setInputPrompt("Guess what?");
+        tf.setPlaceholder("Guess what?");
         tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         row.addComponent(tf);
 
         PasswordField pwf = new PasswordField("Password");
-        pwf.setInputPrompt("Secret words");
+        pwf.setPlaceholder("Secret words");
         pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
         pwf = new PasswordField("Password, right-aligned");
-        pwf.setInputPrompt("Secret words");
+        pwf.setPlaceholder("Secret words");
         pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         pwf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
         pwf.setIcon(FontAwesome.LOCK);
         row.addComponent(pwf);
 
         pwf = new PasswordField("Password, centered");
-        pwf.setInputPrompt("Secret words");
+        pwf.setPlaceholder("Secret words");
         pwf.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         pwf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         pwf.setIcon(FontAwesome.LOCK);
@@ -199,22 +198,21 @@ public class TextFields extends VerticalLayout implements View {
 
         row = new HorizontalLayout();
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-        row.setSpacing(true);
         addComponent(row);
 
         TextArea ta = new TextArea("Normal");
-        ta.setInputPrompt("Write your comment…");
+        ta.setPlaceholder("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Inline icon");
-        ta.setInputPrompt("Inline icon not really working");
+        ta.setPlaceholder("Inline icon not really working");
         ta.addStyleName("inline-icon");
         ta.setIcon(testIcon.get());
         row.addComponent(ta);
 
         ta = new TextArea("Custom color");
         ta.addStyleName("color1");
-        ta.setInputPrompt("Write your comment…");
+        ta.setPlaceholder("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Custom color, read-only");
@@ -230,17 +228,17 @@ public class TextFields extends VerticalLayout implements View {
 
         ta = new TextArea("Small");
         ta.addStyleName(ValoTheme.TEXTAREA_SMALL);
-        ta.setInputPrompt("Write your comment…");
+        ta.setPlaceholder("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Large");
         ta.addStyleName(ValoTheme.TEXTAREA_LARGE);
-        ta.setInputPrompt("Write your comment…");
+        ta.setPlaceholder("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Borderless");
         ta.addStyleName(ValoTheme.TEXTAREA_BORDERLESS);
-        ta.setInputPrompt("Write your comment…");
+        ta.setPlaceholder("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Right-aligned");
@@ -255,12 +253,12 @@ public class TextFields extends VerticalLayout implements View {
 
         ta = new TextArea("Tiny");
         ta.addStyleName(ValoTheme.TEXTAREA_TINY);
-        ta.setInputPrompt("Write your comment…");
+        ta.setPlaceholder("Write your comment…");
         row.addComponent(ta);
 
         ta = new TextArea("Huge");
         ta.addStyleName(ValoTheme.TEXTAREA_HUGE);
-        ta.setInputPrompt("Write your comment…");
+        ta.setPlaceholder("Write your comment…");
         row.addComponent(ta);
 
         RichTextArea rta = new RichTextArea();

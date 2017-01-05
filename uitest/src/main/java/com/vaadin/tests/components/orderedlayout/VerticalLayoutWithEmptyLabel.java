@@ -3,7 +3,7 @@ package com.vaadin.tests.components.orderedlayout;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -11,12 +11,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
 
-public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
+public class VerticalLayoutWithEmptyLabel extends AbstractReindeerTestUI {
 
     private static final float UPPER_BAR_HEIGHT = 42;
 
@@ -190,9 +190,6 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
             filterFoobarField.setColumns(16);
             filterFoobarField.setMaxLength(16);
             // this.filterFoobarField.setStyleName("pexp-fixed-width");
-
-            // Configure incoming checkbox
-            incomingOnlyField.setImmediate(true);
 
             // Add filter inputs for phone # and foobar ID
             tableControlsLayout.addComponent(filterPhoneField);

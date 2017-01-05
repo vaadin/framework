@@ -15,9 +15,8 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.data.Item;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
@@ -27,11 +26,12 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.PopupView.Content;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
 
-public class TabSheetWithHasComponent extends AbstractTestUI {
+public class TabSheetWithHasComponent extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -64,8 +64,8 @@ public class TabSheetWithHasComponent extends AbstractTestUI {
     }
 
     protected TabSheet createSmallTabSheet() {
-        return new TabSheet(new Button("Tab1 inside popup"), new NativeButton(
-                "Tab 2 inside popup"));
+        return new TabSheet(new Button("Tab1 inside popup"),
+                new NativeButton("Tab 2 inside popup"));
     }
 
     private Panel createPanel() {

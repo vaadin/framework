@@ -10,8 +10,8 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.NativeButton;
 
-public class SplitPanelExtraScrollbars extends AbstractTestCase implements
-        ClickListener {
+public class SplitPanelExtraScrollbars extends AbstractTestCase
+        implements ClickListener {
 
     private HorizontalSplitPanel sp;
     private HorizontalLayout hl;
@@ -39,7 +39,7 @@ public class SplitPanelExtraScrollbars extends AbstractTestCase implements
     private Button createButton(String height) {
         Button b = new NativeButton("A BIG button");
         b.setHeight(height);
-        b.addListener(this);
+        b.addClickListener(this);
         return b;
     }
 

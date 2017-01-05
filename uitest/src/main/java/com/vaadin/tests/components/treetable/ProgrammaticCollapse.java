@@ -5,8 +5,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TreeTable;
 
 public class ProgrammaticCollapse extends TestBase {
 
@@ -22,14 +22,15 @@ public class ProgrammaticCollapse extends TestBase {
             table.addItem(new Object[] { "A" + i, "B" + i }, parentid);
             for (int j = 1; j < 5; ++j) {
                 int id = 1000 * i + j;
-                table.addItem(new Object[] { "A" + i + "." + j,
-                        "B" + i + "." + j }, id);
+                table.addItem(
+                        new Object[] { "A" + i + "." + j, "B" + i + "." + j },
+                        id);
                 table.setParent(id, parentid);
             }
         }
         layout.addComponent(table);
-        layout.addComponent(new Button("Expand / Collapse",
-                new ClickListener() {
+        layout.addComponent(
+                new Button("Expand / Collapse", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         boolean collapsed = !table.isCollapsed(1);
@@ -37,8 +38,8 @@ public class ProgrammaticCollapse extends TestBase {
                         table.setCollapsed(1, collapsed);
                     }
                 }));
-        layout.addComponent(new Button("Expand / Collapse last",
-                new ClickListener() {
+        layout.addComponent(
+                new Button("Expand / Collapse last", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         boolean collapsed = !table.isCollapsed(100);
@@ -46,8 +47,8 @@ public class ProgrammaticCollapse extends TestBase {
                         table.setCollapsed(100, collapsed);
                     }
                 }));
-        layout.addComponent(new Button("Expand / Collapse multiple",
-                new ClickListener() {
+        layout.addComponent(
+                new Button("Expand / Collapse multiple", new ClickListener() {
                     private boolean collapsed = true;
 
                     @Override

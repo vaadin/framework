@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,12 +21,14 @@ import java.lang.reflect.Method;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.util.ReflectTools;
 
 public interface LayoutEvents {
 
+    @FunctionalInterface
     public interface LayoutClickListener extends ConnectorEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(
@@ -35,7 +37,7 @@ public interface LayoutEvents {
 
         /**
          * Layout has been clicked
-         * 
+         *
          * @param event
          *            Component click event.
          */
@@ -56,7 +58,7 @@ public interface LayoutEvents {
      * class really will send the events, or if it just defines the methods to
      * be able to implement an interface.
      * </p>
-     * 
+     *
      * @since 6.5.2
      * @see LayoutClickListener
      * @see LayoutClickEvent
@@ -68,39 +70,31 @@ public interface LayoutEvents {
          * the click targets a component inside a nested layout or Panel,
          * provided the targeted component does not prevent the click event from
          * propagating. A caption is not considered part of a component.
-         * 
+         *
          * The child component that was clicked is included in the
          * {@link LayoutClickEvent}.
-         * 
-         * Use {@link #removeListener(LayoutClickListener)} to remove the
-         * listener.
-         * 
+         *
+         * @see Registration
+         *
          * @param listener
          *            The listener to add
+         * @return a registration object for removing the listener
          */
-        public void addLayoutClickListener(LayoutClickListener listener);
-
-        /**
-         * @deprecated As of 7.0, replaced by
-         *             {@link #addLayoutClickListener(LayoutClickListener)}
-         **/
-        @Deprecated
-        public void addListener(LayoutClickListener listener);
+        public Registration addLayoutClickListener(
+                LayoutClickListener listener);
 
         /**
          * Removes an LayoutClickListener.
-         * 
+         *
          * @param listener
          *            LayoutClickListener to be removed
+         *
+         * @deprecated As of 8.0, replaced by {@link Registration#remove()} in
+         *             the registration object returned from
+         *             {@link #addLayoutClickListener(LayoutClickListener)}.
          */
-        public void removeLayoutClickListener(LayoutClickListener listener);
-
-        /**
-         * @deprecated As of 7.0, replaced by
-         *             {@link #removeLayoutClickListener(LayoutClickListener)}
-         **/
         @Deprecated
-        public void removeListener(LayoutClickListener listener);
+        public void removeLayoutClickListener(LayoutClickListener listener);
     }
 
     /**
@@ -114,8 +108,8 @@ public interface LayoutEvents {
         private final Component childComponent;
 
         public LayoutClickEvent(Component source,
-                MouseEventDetails mouseEventDetails,
-                Component clickedComponent, Component childComponent) {
+                MouseEventDetails mouseEventDetails, Component clickedComponent,
+                Component childComponent) {
             super(source, mouseEventDetails);
             this.clickedComponent = clickedComponent;
             this.childComponent = childComponent;
@@ -124,10 +118,10 @@ public interface LayoutEvents {
         /**
          * Returns the component that was clicked, which is somewhere inside the
          * parent layout on which the listener was registered.
-         * 
+         *
          * For the direct child component of the layout, see
          * {@link #getChildComponent()}.
-         * 
+         *
          * @return clicked {@link Component}, null if none found
          */
         public Component getClickedComponent() {
@@ -137,10 +131,10 @@ public interface LayoutEvents {
         /**
          * Returns the direct child component of the layout which contains the
          * clicked component.
-         * 
+         *
          * For the clicked component inside that child component of the layout,
          * see {@link #getClickedComponent()}.
-         * 
+         *
          * @return direct child {@link Component} of the layout which contains
          *         the clicked Component, null if none found
          */

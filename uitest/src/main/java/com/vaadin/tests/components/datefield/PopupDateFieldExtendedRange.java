@@ -1,28 +1,23 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.DateField;
 
 @SuppressWarnings("serial")
-public class PopupDateFieldExtendedRange extends AbstractTestUI {
-
-    private Calendar date = Calendar.getInstance();
+public class PopupDateFieldExtendedRange extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        date.set(2011, 0, 1);
-
         getLayout().setSpacing(true);
 
-        final PopupDateField[] fields = new PopupDateField[3];
+        final DateField[] fields = new DateField[3];
 
         fields[0] = makeDateField();
         fields[0].setLocale(new Locale("fi", "FI"));
@@ -37,19 +32,12 @@ public class PopupDateFieldExtendedRange extends AbstractTestUI {
         fields[2].setShowISOWeekNumbers(true);
         fields[2].setCaption("Finnish locale with week numbers");
 
-        for (PopupDateField f : fields) {
+        for (DateField f : fields) {
             addComponent(f);
         }
 
-        addComponent(new Button("Change date", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                date.set(2010, 1, 16);
-                for (PopupDateField f : fields) {
-                    f.setValue(date.getTime());
-                }
-            }
-        }));
+        addComponent(new Button("Change date", event -> Stream.of(fields)
+                .forEach(field -> field.setValue(LocalDate.of(2010, 2, 16)))));
     }
 
     @Override
@@ -62,10 +50,10 @@ public class PopupDateFieldExtendedRange extends AbstractTestUI {
         return 6718;
     }
 
-    private PopupDateField makeDateField() {
-        PopupDateField pdf = new PopupDateField();
+    private DateField makeDateField() {
+        DateField pdf = new DateField();
         pdf.setResolution(Resolution.DAY);
-        pdf.setValue(date.getTime());
+        pdf.setValue(LocalDate.of(2011, 1, 1));
         return pdf;
     }
 }

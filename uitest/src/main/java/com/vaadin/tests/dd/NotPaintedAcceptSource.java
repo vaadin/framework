@@ -1,18 +1,18 @@
 package com.vaadin.tests.dd;
 
-import com.vaadin.data.Item;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.Table.TableTransferable;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.Table.TableTransferable;
 
 public class NotPaintedAcceptSource extends TestBase {
 
@@ -35,8 +35,8 @@ public class NotPaintedAcceptSource extends TestBase {
             public void drop(DragAndDropEvent event) {
                 TableTransferable transferable = (TableTransferable) event
                         .getTransferable();
-                Item item = transferable.getSourceComponent().getItem(
-                        transferable.getItemId());
+                Item item = transferable.getSourceComponent()
+                        .getItem(transferable.getItemId());
                 Object value = item.getItemProperty("value").getValue();
                 AbstractSelectTargetDetails targetDetails = (AbstractSelectTargetDetails) event
                         .getTargetDetails();
@@ -44,8 +44,8 @@ public class NotPaintedAcceptSource extends TestBase {
                 Object addItemAfter = target.addItemAfter(targetItemId);
                 target.getItem(addItemAfter).getItemProperty("value")
                         .setValue(value);
-                transferable.getSourceComponent().removeItem(
-                        transferable.getItemId());
+                transferable.getSourceComponent()
+                        .removeItem(transferable.getItemId());
             }
         });
 

@@ -90,8 +90,8 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
     }
 
     private void assertOverlayTheme(String theme) {
-        final WebElement overlayContainerDiv = findElement(By
-                .xpath("//div[contains(@class,'v-overlay-container')]"));
+        final WebElement overlayContainerDiv = findElement(
+                By.xpath("//div[contains(@class,'v-overlay-container')]"));
         String overlayClass = overlayContainerDiv.getAttribute("class").trim();
 
         assertThat(overlayClass, containsString(theme));

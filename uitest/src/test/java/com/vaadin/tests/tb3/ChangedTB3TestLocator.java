@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 /**
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
@@ -54,7 +54,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     }
 
     protected List<String> getChangedFilePaths() {
-        List<String> filePaths = new ArrayList<String>();
+        List<String> filePaths = new ArrayList<>();
 
         for (DiffEntry diff : getDiffs()) {
             if (diff.getChangeType() != ChangeType.DELETE) {
@@ -74,7 +74,8 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
                     .findGitDir() // scan up the file system tree
                     .build();
 
-            List<DiffEntry> diffsInWorkingTree = getDiffsInWorkingTree(repository);
+            List<DiffEntry> diffsInWorkingTree = getDiffsInWorkingTree(
+                    repository);
 
             if (diffsInWorkingTree.isEmpty()) {
                 return getDiffsInHead(repository);
@@ -99,7 +100,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
         Git git = new Git(repository);
         DiffCommand diffCommand = git.diff();
 
-        List<DiffEntry> diffsInWorkingTree = new ArrayList<DiffEntry>();
+        List<DiffEntry> diffsInWorkingTree = new ArrayList<>();
 
         for (DiffEntry diff : diffCommand.call()) {
             if (pathIsExcluded(diff.getNewPath())) {
@@ -142,7 +143,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     private <T> List<Class<? extends T>> getChangedTestClasses(
             Class<T> baseClass) {
         List<String> changedTestFilePaths = getTestFilePaths();
-        List<Class<? extends T>> testClasses = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> testClasses = new ArrayList<>();
 
         for (String filePath : changedTestFilePaths) {
             String path = filePath.replace("uitest/src/", "").replace(".java",
@@ -155,7 +156,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     }
 
     private List<String> getTestFilePaths() {
-        List<String> changedTestFilePaths = new ArrayList<String>();
+        List<String> changedTestFilePaths = new ArrayList<>();
 
         for (String filePath : getChangedFilePaths()) {
             if (filePath.toLowerCase().startsWith("uitest")

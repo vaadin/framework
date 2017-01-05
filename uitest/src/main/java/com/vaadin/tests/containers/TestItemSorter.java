@@ -3,13 +3,13 @@ package com.vaadin.tests.containers;
 import java.util.Collection;
 import java.util.Comparator;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.DefaultItemSorter;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.DefaultItemSorter;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.Table;
 
 public class TestItemSorter extends TestBase {
 
@@ -38,8 +38,8 @@ public class TestItemSorter extends TestBase {
                     return caption1.compareTo(caption2);
 
                 } else if (o1 instanceof String && o2 instanceof String) {
-                    return ((String) o1).toLowerCase().compareTo(
-                            ((String) o2).toLowerCase());
+                    return ((String) o1).toLowerCase()
+                            .compareTo(((String) o2).toLowerCase());
                 }
 
                 return 0;
@@ -61,8 +61,8 @@ public class TestItemSorter extends TestBase {
             Item item = container.getItem(id);
             item.getItemProperty(STRING).setValue(s);
             item.getItemProperty(BUTTON).setValue(new Button(s));
-            item.getItemProperty(CHECKBOX).setValue(
-                    new CheckBox("", s.equals("true")));
+            item.getItemProperty(CHECKBOX)
+                    .setValue(new CheckBox("", s.equals("true")));
         }
 
     }

@@ -5,7 +5,7 @@ import java.io.Writer;
 
 /**
  * Use for collecting HTTP response.
- * 
+ *
  */
 public class LogPrintWriter extends PrintWriter {
 

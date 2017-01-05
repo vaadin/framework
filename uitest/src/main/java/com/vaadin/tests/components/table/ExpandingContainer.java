@@ -6,14 +6,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractContainer;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.AbstractContainer;
+import com.vaadin.v7.data.util.BeanItem;
 
 @SuppressWarnings("serial")
 public class ExpandingContainer extends AbstractContainer implements
@@ -99,7 +99,7 @@ public class ExpandingContainer extends AbstractContainer implements
             return null;
         }
         final int index = ((Integer) itemId).intValue();
-        return new BeanItem<MyBean>(new MyBean(index));
+        return new BeanItem<>(new MyBean(index));
     }
 
     @Override
@@ -114,7 +114,7 @@ public class ExpandingContainer extends AbstractContainer implements
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Property/* <?> */getContainerProperty(Object itemId,
+    public Property/* <?> */ getContainerProperty(Object itemId,
             Object propertyId) {
         BeanItem<MyBean> item = getItem(itemId);
         return item != null ? item.getItemProperty(propertyId) : null;
@@ -222,8 +222,8 @@ public class ExpandingContainer extends AbstractContainer implements
         }
         final int size = currentSize;
         if (index >= size) {
-            throw new IndexOutOfBoundsException("index=" + index + " but size="
-                    + size);
+            throw new IndexOutOfBoundsException(
+                    "index=" + index + " but size=" + size);
         }
         checkExpand(index);
         return index;
@@ -237,8 +237,8 @@ public class ExpandingContainer extends AbstractContainer implements
         final int size = currentSize;
         checkExpand(startIndex);
         if (startIndex < 0 || startIndex > size) {
-            throw new IndexOutOfBoundsException("startIndex=" + startIndex
-                    + " but size=" + size);
+            throw new IndexOutOfBoundsException(
+                    "startIndex=" + startIndex + " but size=" + size);
         }
         if (startIndex + numberOfItems > size) {
             numberOfItems = size - startIndex;

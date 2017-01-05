@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,57 +15,96 @@
  */
 package com.vaadin.data.validator;
 
+import java.util.Comparator;
+import java.util.Objects;
+
+import com.vaadin.data.ValidationResult;
+import com.vaadin.data.ValueContext;
+
 /**
- * An base implementation for validating any objects that implement
- * {@link Comparable}.
- * 
- * Verifies that the value is of the given type and within the (optionally)
- * given limits. Typically you want to use a sub class of this like
- * {@link IntegerRangeValidator}, {@link DoubleRangeValidator} or
- * {@link DateRangeValidator} in applications.
- * <p>
- * Note that {@link RangeValidator} always accept null values. Make a field
- * required to ensure that no empty values are accepted or override
- * {@link #isValidValue(Comparable)}.
- * </p>
- * 
+ * Verifies that a value is within the given range.
+ *
  * @param <T>
- *            The type of Number to validate. Must implement Comparable so that
- *            minimum and maximum checks work.
+ *            the type to validate
  * @author Vaadin Ltd.
- * @since 7.0
+ * @since 8.0
  */
-public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
+public class RangeValidator<T> extends AbstractValidator<T> {
 
     private T minValue = null;
-    private boolean minValueIncluded = true;
     private T maxValue = null;
+    private boolean minValueIncluded = true;
     private boolean maxValueIncluded = true;
-    private Class<T> type;
+    private final Comparator<? super T> comparator;
 
     /**
-     * Creates a new range validator of the given type.
-     * 
+     * Creates a new range validator of the given type. Passing null to either
+     * {@code minValue} or {@code maxValue} means there is no limit in that
+     * direction. Both limits may be null; this can be useful if the limits are
+     * resolved programmatically. The result of passing null to {@code apply}
+     * depends on the given comparator.
+     *
      * @param errorMessage
-     *            The error message to use if validation fails
-     * @param type
-     *            The type of object the validator can validate.
+     *            the error message to return if validation fails, not null
+     * @param comparator
+     *            the comparator to compare with, not null
      * @param minValue
-     *            The minimum value that should be accepted or null for no limit
+     *            the least value of the accepted range or null for no limit
      * @param maxValue
-     *            The maximum value that should be accepted or null for no limit
+     *            the greatest value of the accepted range or null for no limit
      */
-    public RangeValidator(String errorMessage, Class<T> type, T minValue,
-            T maxValue) {
+    public RangeValidator(String errorMessage, Comparator<? super T> comparator,
+            T minValue, T maxValue) {
         super(errorMessage);
-        this.type = type;
+        Objects.requireNonNull(comparator, "comparator cannot be null");
+
         this.minValue = minValue;
         this.maxValue = maxValue;
+        this.minValueIncluded = minValue != null;
+        this.maxValueIncluded = maxValue != null;
+        this.comparator = comparator;
     }
 
     /**
-     * Checks if the minimum value is part of the accepted range
-     * 
+     * Returns a {@code RangeValidator} comparing values of a {@code Comparable}
+     * type using their <i>natural order</i>. Passing null to either
+     * {@code minValue} or {@code maxValue} means there is no limit in that
+     * direction. Both limits may be null; this can be useful if the limits are
+     * resolved programmatically.
+     * <p>
+     * Null is considered to be less than any non-null value. This means null
+     * never passes validation if a minimum value is specified.
+     *
+     * @param <C>
+     *            the {@code Comparable} value type
+     * @param errorMessage
+     *            the error message to return if validation fails, not null
+     * @param minValue
+     *            the least value of the accepted range or null for no limit
+     * @param maxValue
+     *            the greatest value of the accepted range or null for no limit
+     * @return the new validator
+     */
+    public static <C extends Comparable<? super C>> RangeValidator<C> of(
+            String errorMessage, C minValue, C maxValue) {
+        return new RangeValidator<>(errorMessage,
+                Comparator.nullsFirst(Comparator.naturalOrder()), minValue,
+                maxValue);
+    }
+
+    /**
+     * Returns {@code Result.ok} if the value is within the specified bounds,
+     * {@code Result.error} otherwise. If null is passed to {@code apply}, the
+     * behavior depends on the used comparator.
+     */
+    @Override
+    public ValidationResult apply(T value, ValueContext context) {
+        return toResult(value, isValid(value));
+    }
+
+    /**
+     * Returns whether the minimum value is part of the accepted range.
+     *
      * @return true if the minimum value is part of the range, false otherwise
      */
     public boolean isMinValueIncluded() {
@@ -73,8 +112,8 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Sets if the minimum value is part of the accepted range
-     * 
+     * Sets whether the minimum value is part of the accepted range.
+     *
      * @param minValueIncluded
      *            true if the minimum value should be part of the range, false
      *            otherwise
@@ -84,8 +123,8 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Checks if the maximum value is part of the accepted range
-     * 
+     * Returns whether the maximum value is part of the accepted range.
+     *
      * @return true if the maximum value is part of the range, false otherwise
      */
     public boolean isMaxValueIncluded() {
@@ -93,8 +132,8 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Sets if the maximum value is part of the accepted range
-     * 
+     * Sets whether the maximum value is part of the accepted range.
+     *
      * @param maxValueIncluded
      *            true if the maximum value should be part of the range, false
      *            otherwise
@@ -104,8 +143,8 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Gets the minimum value of the range
-     * 
+     * Returns the minimum value of the range.
+     *
      * @return the minimum value
      */
     public T getMinValue() {
@@ -116,7 +155,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
      * Sets the minimum value of the range. Use
      * {@link #setMinValueIncluded(boolean)} to control whether this value is
      * part of the range or not.
-     * 
+     *
      * @param minValue
      *            the minimum value
      */
@@ -125,8 +164,8 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Gets the maximum value of the range
-     * 
+     * Gets the maximum value of the range.
+     *
      * @return the maximum value
      */
     public T getMaxValue() {
@@ -137,7 +176,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
      * Sets the maximum value of the range. Use
      * {@link #setMaxValueIncluded(boolean)} to control whether this value is
      * part of the range or not.
-     * 
+     *
      * @param maxValue
      *            the maximum value
      */
@@ -145,53 +184,42 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
         this.maxValue = maxValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.data.validator.AbstractValidator#isValidValue(java.lang.Object
-     * )
-     */
     @Override
-    protected boolean isValidValue(T value) {
-        if (value == null
-                || (String.class.equals(getType()) && "".equals(value))) {
+    public String toString() {
+        T min = getMinValue();
+        T max = getMaxValue();
+        return String.format("%s %c%s, %s%c", getClass().getSimpleName(),
+                isMinValueIncluded() ? '[' : '(', min != null ? min : "-∞",
+                max != null ? max : "∞", isMaxValueIncluded() ? ']' : ')');
+    }
+
+    /**
+     * Returns whether the given value lies in the valid range.
+     *
+     * @param value
+     *            the value to validate
+     * @return true if the value is valid, false otherwise
+     */
+    protected boolean isValid(T value) {
+        if (value == null) {
             return true;
         }
-
         if (getMinValue() != null) {
-            // Ensure that the min limit is ok
-            int result = value.compareTo(getMinValue());
+            int result = comparator.compare(value, getMinValue());
             if (result < 0) {
-                // value less than min value
                 return false;
             } else if (result == 0 && !isMinValueIncluded()) {
-                // values equal and min value not included
                 return false;
             }
         }
         if (getMaxValue() != null) {
-            // Ensure that the Max limit is ok
-            int result = value.compareTo(getMaxValue());
+            int result = comparator.compare(value, getMaxValue());
             if (result > 0) {
-                // value greater than max value
                 return false;
             } else if (result == 0 && !isMaxValueIncluded()) {
-                // values equal and max value not included
                 return false;
             }
         }
         return true;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.validator.AbstractValidator#getType()
-     */
-    @Override
-    public Class<T> getType() {
-        return type;
-    }
-
 }

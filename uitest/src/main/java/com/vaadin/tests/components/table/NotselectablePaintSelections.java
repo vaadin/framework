@@ -3,9 +3,9 @@ package com.vaadin.tests.components.table;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.data.Item;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Table;
 
 public class NotselectablePaintSelections extends TestBase {
 
@@ -28,7 +28,7 @@ public class NotselectablePaintSelections extends TestBase {
         t.setMultiSelect(true);
         t.setPageLength(5);
         t.addContainerProperty("Name", String.class, null);
-        Set<Object> selected = new HashSet<Object>();
+        Set<Object> selected = new HashSet<>();
         for (int i = 0; i < 30; i++) {
             Item item = t.addItem(i);
             item.getItemProperty("Name").setValue("Name " + i);

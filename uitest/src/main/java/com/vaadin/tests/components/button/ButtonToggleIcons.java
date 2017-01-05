@@ -33,6 +33,7 @@ public class ButtonToggleIcons extends UI {
         };
 
         layout.addComponent(new Button("Toggle icon", iconToggleListener));
-        layout.addComponent(new NativeButton("Toggle icon", iconToggleListener));
+        layout.addComponent(
+                new NativeButton("Toggle icon", iconToggleListener));
     }
 }

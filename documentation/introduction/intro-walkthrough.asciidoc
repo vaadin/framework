@@ -18,7 +18,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 @Title("My UI")
-@Theme("valo")
 public class HelloWorld extends UI {
     @Override
     protected void init(VaadinRequest request) {
@@ -31,12 +30,7 @@ public class HelloWorld extends UI {
 
         // Have a clickable button
         content.addComponent(new Button("Push Me!",
-            new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent e) {
-                    Notification.show("Pushed!");
-                }
-            }));
+            click -> Notification.show("Pushed!")));
     }
 }
 ----
@@ -59,18 +53,8 @@ user interface component, which displays simple text, and sets the text to
 
 The example also shows how to create a button and handle button click events.
 Event handling is described in
-<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
-and Listeners">> and on the practical side in
-<<dummy/../../../framework/application/application-events#application.events,"Handling
-Events with Listeners">>. In addition to listeners, in Java 8 you can handle
-events with lambda expressions, which simplifies the handler code significantly.
-
-
-[source, java]
-----
-content.addComponent(new Button("Push Me!",
-    event -> Notification.show("Pushed!")));
-----
+<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events and Listeners">> and on the practical side in <<dummy/../../../framework/application/application-events#application.events,"Handling Events with Listeners">>.
+In Java 8, you can implement listeners with lambda expressions, which simplifies the handler code significantly.
 
 The result of the Hello World application, when opened in a browser, is shown in
 <<figure.intro.walkthrough>>.
@@ -84,25 +68,3 @@ deploy it to a server, as explained in
 <<dummy/../../../framework/application/application-environment#application.environment,"Deploying
 an Application">>. During development, you typically deploy to an application
 server integrated with the IDE.
-
-Developing a pure client-side application, you could write a Hello World just as
-easily, and also in Java:
-
-
-[source, java]
-----
-public class HelloWorld implements EntryPoint {
-    @Override
-    public void onModuleLoad() {
-        RootPanel.get().add(new Label("Hello, world!"));
-    }
-}
-----
-
-We do not set the title here, because it is usually defined in the HTML page in
-which the code is executed. The application would be compiled into JavaScript
-with the Vaadin Client Compiler (or GWT Compiler). It is more typical, however,
-to write client-side widgets, which you can then use from a server-side Vaadin
-application. For more information regarding client-side development, see
-<<dummy/../../../framework/clientside/clientside-overview.asciidoc#clientside.overview,"Client-Side
-Vaadin Development">>.

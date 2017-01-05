@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,16 +20,15 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 
 /**
- * FormLayout is used by {@link Form} to layout fields. It may also be used
- * separately without {@link Form}.
- * 
+ * FormLayout is used to layout fields.
+ *
  * FormLayout is a close relative of {@link VerticalLayout}, but in FormLayout
  * captions are rendered to the left of their respective components. Required
  * and validation indicators are shown between the captions and the fields.
- * 
+ *
  * FormLayout by default has component spacing on. Also margin top and margin
  * bottom are by default on.
- * 
+ *
  */
 public class FormLayout extends AbstractOrderedLayout {
 
@@ -42,9 +41,9 @@ public class FormLayout extends AbstractOrderedLayout {
 
     /**
      * Constructs a FormLayout and adds the given components to it.
-     * 
+     *
      * @see AbstractOrderedLayout#addComponents(Component...)
-     * 
+     *
      * @param children
      *            Components to add to the FormLayout
      */
@@ -76,5 +75,10 @@ public class FormLayout extends AbstractOrderedLayout {
     @Override
     protected FormLayoutState getState() {
         return (FormLayoutState) super.getState();
+    }
+
+    @Override
+    protected FormLayoutState getState(boolean markAsDirty) {
+        return (FormLayoutState) super.getState(markAsDirty);
     }
 }

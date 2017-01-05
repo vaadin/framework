@@ -13,7 +13,7 @@ You can use Vaadin with any Java IDE or no IDE at all.
 Vaadin has special support for the Eclipse and NetBeans IDEs, as well as for IntelliJ IDEA.
 
 .Vaadin installation steps
-image::img/installation-steps.svg[scaledwidth=100%]
+image::img/installation-steps-hi.png[width=100%, scaledwidth=100%]
 
 Managing Vaadin and other Java libraries can get tedious to do manually, so using a build system that manages dependencies automatically is adviced.
 Vaadin is distributed in the Maven central repository, and can be used with any build or dependency management system that can access Maven repositories, such as Ivy or Gradle, in addition to Maven.

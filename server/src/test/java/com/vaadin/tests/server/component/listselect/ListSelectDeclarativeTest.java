@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,54 +17,46 @@ package com.vaadin.tests.server.component.listselect;
 
 import org.junit.Test;
 
-import com.vaadin.tests.design.DeclarativeTestBase;
+import com.vaadin.tests.server.component.abstractmultiselect.AbstractMultiSelectDeclarativeTest;
 import com.vaadin.ui.ListSelect;
 
-public class ListSelectDeclarativeTest extends DeclarativeTestBase<ListSelect> {
-
-    private ListSelect getWithOptionsExpected() {
-        ListSelect ls = new ListSelect();
-        ls.setRows(10);
-        ls.addItem("Male");
-        ls.addItem("Female");
-        return ls;
-    }
-
-    private String getWithOptionsDesign() {
-        return "<vaadin-list-select rows=10>\n" + "        <option>Male</option>\n"
-                + "        <option>Female</option>\n" + "</vaadin-list-select>\n"
-                + "";
-    }
-
-    @Test
-    public void testReadWithOptions() {
-        testRead(getWithOptionsDesign(), getWithOptionsExpected());
-    }
+/**
+ * List select declarative test.
+ * <p>
+ * There is only {@link ListSelect#setRows(int)}/{@link ListSelect#getRows()}
+ * explicit test. All other tests are in the super class (
+ * {@link AbstractMultiSelectDeclarativeTest}).
+ *
+ * @see AbstractMultiSelectDeclarativeTest
+ *
+ * @author Vaadin Ltd
+ *
+ */
+@SuppressWarnings("rawtypes")
+public class ListSelectDeclarativeTest
+        extends AbstractMultiSelectDeclarativeTest<ListSelect> {
 
     @Test
-    public void testWriteWithOptions() {
-        testWrite(stripOptionTags(getWithOptionsDesign()),
-                getWithOptionsExpected());
+    public void rowsPropertySerialization() {
+        int rows = 7;
+        String design = String.format("<%s rows='%s'/>", getComponentTag(),
+                rows);
+
+        ListSelect<String> select = new ListSelect<>();
+        select.setRows(rows);
+
+        testRead(design, select);
+        testWrite(design, select);
     }
 
-    private ListSelect getBasicExpected() {
-        ListSelect ls = new ListSelect();
-        ls.setCaption("Hello");
-        return ls;
+    @Override
+    protected String getComponentTag() {
+        return "vaadin-list-select";
     }
 
-    private String getBasicDesign() {
-        return "<vaadin-list-select caption='Hello' />";
-    }
-
-    @Test
-    public void testReadBasic() {
-        testRead(getBasicDesign(), getBasicExpected());
-    }
-
-    @Test
-    public void testWriteBasic() {
-        testWrite(getBasicDesign(), getBasicExpected());
+    @Override
+    protected Class<? extends ListSelect> getComponentClass() {
+        return ListSelect.class;
     }
 
 }

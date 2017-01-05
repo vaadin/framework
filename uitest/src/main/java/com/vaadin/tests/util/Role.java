@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class Role implements Serializable {
     private String name = "";
-    private Set<User> users = new HashSet<User>();
+    private Set<User> users = new HashSet<>();
 
     public Role() {
     }
@@ -27,7 +27,7 @@ public class Role implements Serializable {
      * In this direction, the users for a role can be queried and the returned
      * collection modified, but the whole collection of users cannot be set
      * directly.
-     * 
+     *
      * @return set of users having the role (not null)
      */
     public Set<User> getUsers() {

@@ -6,11 +6,11 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.ui.TreeTable;
 
-public class TreeTableRowIcons extends AbstractTestUI {
+public class TreeTableRowIcons extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -18,8 +18,8 @@ public class TreeTableRowIcons extends AbstractTestUI {
         layout.setSpacing(true);
         addComponent(layout);
 
-        layout.addComponent(createTreeTableAndPopulate(new ThemeResource(
-                "../runo/icons/16/ok.png")));
+        layout.addComponent(createTreeTableAndPopulate(
+                new ThemeResource("../runo/icons/16/ok.png")));
         layout.addComponent(createTreeTableAndPopulate(FontAwesome.ANDROID));
     }
 

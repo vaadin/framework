@@ -4,10 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -20,17 +16,21 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
-import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableTransferable;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TargetItemAllowsChildren;
-import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.AbstractSelect;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.AbstractSelect.AcceptItem;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableTransferable;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TargetItemAllowsChildren;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
 
 public class DDTest2 extends TestBase {
 
@@ -73,7 +73,7 @@ public class DDTest2 extends TestBase {
         /*
          * An example of lazy initializing drop criterion with component
          * specific api for easy rule writing.
-         * 
+         *
          * Example is pretty stupid (accepts drop on all nodes, but by
          * explicitly defining them here), but demonstrates lazy initialization
          * option if rules are heavy.
@@ -83,7 +83,7 @@ public class DDTest2 extends TestBase {
             @Override
             protected Set<Object> getAllowedItemIds(DragAndDropEvent dragEvent,
                     Tree tree) {
-                return new HashSet<Object>(tree.getItemIds());
+                return new HashSet<>(tree.getItemIds());
             }
         };
 
@@ -272,8 +272,8 @@ public class DDTest2 extends TestBase {
         for (int i = 0; i < 10; i++) {
             Item addItem = table.addItem("Item" + i);
             Person p = testData.getIdByIndex(i);
-            addItem.getItemProperty("Name").setValue(
-                    p.getFirstName() + " " + p.getLastName());
+            addItem.getItemProperty("Name")
+                    .setValue(p.getFirstName() + " " + p.getLastName());
             addItem.getItemProperty("Weight").setValue(50 + r.nextInt(60));
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,244 +15,118 @@
  */
 package com.vaadin.client.widget.grid.selection;
 
-import java.util.Collection;
+import com.vaadin.shared.data.DataCommunicatorConstants;
 
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.widgets.Grid;
+import elemental.json.JsonObject;
 
 /**
- * Common interface for all selection models.
- * <p>
- * Selection models perform tracking of selected rows in the Grid, as well as
- * dispatching events when the selection state changes.
- * 
- * @author Vaadin Ltd
+ * Models the selection logic of a {@code Grid} component. Determines how items
+ * can be selected and deselected.
+ *
+ * @author Vaadin Ltd.
+ *
  * @param <T>
- *            Grid's row type
- * @since 7.4
+ *            the type of the items to select
+ * @since 8.0
  */
 public interface SelectionModel<T> {
 
-    /**
-     * Return true if the provided row is considered selected under the
-     * implementing selection model.
-     * 
-     * @param row
-     *            row object instance
-     * @return <code>true</code>, if the row given as argument is considered
-     *         selected.
-     */
-    public boolean isSelected(T row);
+    public static class NoSelectionModel<T> implements SelectionModel<T> {
 
-    /**
-     * Return the {@link Renderer} responsible for rendering the selection
-     * column.
-     * 
-     * @return a renderer instance. If null is returned, a selection column will
-     *         not be drawn.
-     */
-    public Renderer<Boolean> getSelectionColumnRenderer();
-
-    /**
-     * Tells this SelectionModel which Grid it belongs to.
-     * <p>
-     * Implementations are free to have this be a no-op. This method is called
-     * internally by Grid.
-     * 
-     * @param grid
-     *            a {@link Grid} instance; <code>null</code> when removing from
-     *            Grid
-     */
-    public void setGrid(Grid<T> grid);
-
-    /**
-     * Resets the SelectionModel to the initial state.
-     * <p>
-     * This method can be called internally, for example, when the attached
-     * Grid's data source changes.
-     */
-    public void reset();
-
-    /**
-     * Returns a Collection containing all selected rows.
-     * 
-     * @return a non-null collection.
-     */
-    public Collection<T> getSelectedRows();
-
-    /**
-     * Selection model that allows a maximum of one row to be selected at any
-     * one time.
-     * 
-     * @param <T>
-     *            type parameter corresponding with Grid row type
-     */
-    public interface Single<T> extends SelectionModel<T> {
-
-        /**
-         * Selects a row.
-         * 
-         * @param row
-         *            a {@link Grid} row object
-         * @return true, if this row as not previously selected.
-         */
-        public boolean select(T row);
-
-        /**
-         * Deselects a row.
-         * <p>
-         * This is a no-op unless {@link row} is the currently selected row.
-         * 
-         * @param row
-         *            a {@link Grid} row object
-         * @return true, if the currently selected row was deselected.
-         */
-        public boolean deselect(T row);
-
-        /**
-         * Returns the currently selected row.
-         * 
-         * @return a {@link Grid} row object or null, if nothing is selected.
-         */
-        public T getSelectedRow();
-
-        /**
-         * Sets whether it's allowed to deselect the selected row through the
-         * UI. Deselection is allowed by default.
-         * 
-         * @param deselectAllowed
-         *            <code>true</code> if the selected row can be deselected
-         *            without selecting another row instead; otherwise
-         *            <code>false</code>.
-         */
-        public void setDeselectAllowed(boolean deselectAllowed);
-
-        /**
-         * Sets whether it's allowed to deselect the selected row through the
-         * UI.
-         * 
-         * @return <code>true</code> if deselection is allowed; otherwise
-         *         <code>false</code>
-         */
-        public boolean isDeselectAllowed();
-
-    }
-
-    /**
-     * Selection model that allows for several rows to be selected at once.
-     * 
-     * @param <T>
-     *            type parameter corresponding with Grid row type
-     */
-    public interface Multi<T> extends SelectionModel<T> {
-
-        /**
-         * A multi selection model that can send selections and deselections in
-         * a batch, instead of committing them one-by-one.
-         * 
-         * @param <T>
-         *            type parameter corresponding with Grid row type
-         */
-        public interface Batched<T> extends Multi<T> {
-            /**
-             * Starts a batch selection.
-             * <p>
-             * Any commands to any select or deselect method will be batched
-             * into one, and a final selection event will be fired when
-             * {@link #commitBatchSelect()} is called.
-             * <p>
-             * <em>Note:</em> {@link SelectionEvent SelectionChangeEvents} will
-             * still be fired for each selection/deselection. You should check
-             * whether the event is a part of a batch or not with
-             * {@link SelectionEvent#isBatchedSelection()}.
-             */
-            public void startBatchSelect();
-
-            /**
-             * Commits and ends a batch selection.
-             * <p>
-             * Any and all selections and deselections since the last invocation
-             * of {@link #startBatchSelect()} will be fired at once as one
-             * collated {@link SelectionEvent}.
-             */
-            public void commitBatchSelect();
-
-            /**
-             * Checks whether or not a batch has been started.
-             * 
-             * @return <code>true</code> iff a batch has been started
-             */
-            public boolean isBeingBatchSelected();
-
-            /**
-             * Gets all the rows that would become selected in this batch.
-             * 
-             * @return a collection of the rows that would become selected
-             */
-            public Collection<T> getSelectedRowsBatch();
-
-            /**
-             * Gets all the rows that would become deselected in this batch.
-             * 
-             * @return a collection of the rows that would become deselected
-             */
-            public Collection<T> getDeselectedRowsBatch();
+        @Override
+        public void select(T item) {
         }
 
-        /**
-         * Selects one or more rows.
-         * 
-         * @param rows
-         *            {@link Grid} row objects
-         * @return true, if the set of selected rows was changed.
-         */
-        public boolean select(T... rows);
+        @Override
+        public void deselect(T item) {
+        }
 
-        /**
-         * Deselects one or more rows.
-         * 
-         * @param rows
-         *            Grid row objects
-         * @return true, if the set of selected rows was changed.
-         */
-        public boolean deselect(T... rows);
+        @Override
+        public boolean isSelected(T item) {
+            return false;
+        }
 
-        /**
-         * De-selects all rows.
-         * 
-         * @return true, if any row was previously selected.
-         */
-        public boolean deselectAll();
+        @Override
+        public void deselectAll() {
+        }
 
-        /**
-         * Select all rows in a {@link Collection}.
-         * 
-         * @param rows
-         *            a collection of Grid row objects
-         * @return true, if the set of selected rows was changed.
-         */
-        public boolean select(Collection<T> rows);
+        @Override
+        public void setSelectionAllowed(boolean selectionAllowed) {
+        }
 
-        /**
-         * Deselect all rows in a {@link Collection}.
-         * 
-         * @param rows
-         *            a collection of Grid row objects
-         * @return true, if the set of selected rows was changed.
-         */
-        public boolean deselect(Collection<T> rows);
-
+        @Override
+        public boolean isSelectionAllowed() {
+            return false;
+        }
     }
 
     /**
-     * Interface for a selection model that does not allow anything to be
-     * selected.
-     * 
-     * @param <T>
-     *            type parameter corresponding with Grid row type
+     * Selects the given item. If another item was already selected, that item
+     * is deselected.
+     *
+     * @param item
+     *            the item to select, not null
      */
-    public interface None<T> extends SelectionModel<T> {
+    void select(T item);
 
+    /**
+     * Deselects the given item. If the item is not currently selected, does
+     * nothing.
+     *
+     * @param item
+     *            the item to deselect, not null
+     */
+    void deselect(T item);
+
+    /**
+     * Returns whether the given item is currently selected.
+     *
+     * @param item
+     *            the item to check, not null
+     * @return {@code true} if the item is selected, {@code false} otherwise
+     */
+    boolean isSelected(T item);
+
+    /**
+     * Deselects all currently selected items.
+     */
+    void deselectAll();
+
+    /**
+     * Sets whether the user is allowed to change the selection.
+     * <p>
+     * The check is done only for the client side actions. It doesn't affect
+     * selection requests sent from the server side.
+     *
+     * @param selectionAllowed
+     *            <code>true</code> if the user is allowed to change the
+     *            selection, <code>false</code> otherwise
+     */
+    void setSelectionAllowed(boolean selectionAllowed);
+
+    /**
+     * Checks if the user is allowed to change the selection.
+     * <p>
+     * The check is done only for the client side actions. It doesn't affect
+     * selection requests sent from the server side.
+     *
+     * @return <code>true</code> if the user is allowed to change the selection,
+     *         <code>false</code> otherwise
+     */
+    boolean isSelectionAllowed();
+
+    /**
+     * Gets the selected state from a given grid row json object. This is a
+     * helper method for grid selection models.
+     *
+     * @param item
+     *            a json object
+     * @return {@code true} if the json object is marked as selected;
+     *         {@code false} if not
+     */
+    public static boolean isItemSelected(JsonObject item) {
+        return item.hasKey(DataCommunicatorConstants.SELECTED)
+                && item.getBoolean(DataCommunicatorConstants.SELECTED);
     }
 
 }

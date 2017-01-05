@@ -6,27 +6,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ContainerSizeChangeTest extends MultiBrowserTest {
 
     @Test
-    public void tableShouldLoadCorrectItems() throws IOException,
-            InterruptedException {
+    public void tableShouldLoadCorrectItems()
+            throws IOException, InterruptedException {
         openTestURL();
 
-        ButtonElement decreaseSize = $(ButtonElement.class).caption(
-                "Decrease size").first();
+        ButtonElement decreaseSize = $(ButtonElement.class)
+                .caption("Decrease size").first();
         decreaseSize.click(); // decreasing container size from 50 to 40
         decreaseSize.click(); // decreasing container size from 40 to 30
 

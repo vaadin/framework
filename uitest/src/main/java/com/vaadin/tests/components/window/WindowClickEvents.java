@@ -28,7 +28,7 @@ public class WindowClickEvents extends TestBase {
     @Override
     protected void setup() {
         VerticalLayout layout = new VerticalLayout();
-        layout.addListener(new LayoutClickListener() {
+        layout.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(LayoutClickEvent event) {
                 WindowClickEvents.this.click("Sub window layout", event);
@@ -36,7 +36,7 @@ public class WindowClickEvents extends TestBase {
         });
 
         ((VerticalLayout) getMainWindow().getContent())
-                .addListener(new LayoutClickListener() {
+                .addLayoutClickListener(new LayoutClickListener() {
                     @Override
                     public void layoutClick(LayoutClickEvent event) {
                         WindowClickEvents.this.click("Main window layout",
@@ -45,7 +45,7 @@ public class WindowClickEvents extends TestBase {
                 });
         layout.setMargin(true);
         Window centered = new Window("A window with a click listener", layout);
-        centered.addListener(new ClickListener() {
+        centered.addClickListener(new ClickListener() {
 
             @Override
             public void click(ClickEvent event) {
@@ -61,7 +61,7 @@ public class WindowClickEvents extends TestBase {
         l.setSizeUndefined();
         Button b = new Button(
                 "Clicking here should not produce a layout click event");
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
@@ -75,7 +75,7 @@ public class WindowClickEvents extends TestBase {
         getMainWindow().addWindow(centered);
         log = new Log(5);
         addComponent(log);
-        getMainWindow().addListener(new ClickListener() {
+        getMainWindow().addClickListener(new ClickListener() {
 
             @Override
             public void click(ClickEvent event) {

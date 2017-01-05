@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
+import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxCombinedWithEnterShortcut extends TestBase {
     final String[] cities = new String[] { "Berlin", "Brussels", "Helsinki",
@@ -27,7 +27,7 @@ public class ComboBoxCombinedWithEnterShortcut extends TestBase {
 
         Button aButton = new Button("Show Value");
         aButton.setClickShortcut(KeyCode.ENTER);
-        aButton.addListener(new Button.ClickListener() {
+        aButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

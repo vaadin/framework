@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,13 +30,13 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.v7.ui.ListSelect;
 
 public class RPCLoggerUI extends AbstractTestUIWithLog implements ErrorHandler {
 
-    private List<Action> lastActions = new ArrayList<Action>();
+    private List<Action> lastActions = new ArrayList<>();
 
     public static class Action {
         public Action(ClientConnector connector, MethodInvocation invocation) {
@@ -151,18 +151,11 @@ public class RPCLoggerUI extends AbstractTestUIWithLog implements ErrorHandler {
         for (int i = 0; i < lastActions.size(); i++) {
             Action action = lastActions.get(i);
             if (action.invocation instanceof ServerRpcMethodInvocation) {
-                msg += "\n"
-                        + (i + 1)
-                        + " "
-                        + formatAction(action.target,
-                                (ServerRpcMethodInvocation) action.invocation);
+                msg += "\n" + (i + 1) + " " + formatAction(action.target,
+                        (ServerRpcMethodInvocation) action.invocation);
             } else {
-                msg += "\n"
-                        + (i + 1)
-                        + " "
-                        + formatAction(
-                                action.target,
-                                (LegacyChangeVariablesInvocation) action.invocation);
+                msg += "\n" + (i + 1) + " " + formatAction(action.target,
+                        (LegacyChangeVariablesInvocation) action.invocation);
             }
         }
 

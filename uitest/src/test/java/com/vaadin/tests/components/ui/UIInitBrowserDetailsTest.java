@@ -37,8 +37,9 @@ public class UIInitBrowserDetailsTest extends MultiBrowserTest {
     private void compareRequestAndBrowserValue(String paramName,
             String browserName, String errorValue) {
         assertTextNotEquals(browserName, errorValue);
-        Assert.assertEquals(String.format(
-                "Browser and request values differ in '%s',", browserName),
+        Assert.assertEquals(
+                String.format("Browser and request values differ in '%s',",
+                        browserName),
                 getLabelText(paramName), getLabelText(browserName));
     }
 

@@ -1,11 +1,15 @@
 package com.vaadin.tests.fieldgroup;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.tests.util.TestDataGenerator;
+import com.vaadin.v7.data.util.BeanItemContainer;
 
 public class ComplexPerson {
 
@@ -22,6 +26,10 @@ public class ComplexPerson {
     }
 
     public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String firstName) {
         this.firstName = firstName;
     }
 
@@ -78,7 +86,7 @@ public class ComplexPerson {
     }
 
     public static BeanItemContainer<ComplexPerson> createContainer(int size) {
-        BeanItemContainer<ComplexPerson> bic = new BeanItemContainer<ComplexPerson>(
+        BeanItemContainer<ComplexPerson> bic = new BeanItemContainer<>(
                 ComplexPerson.class);
         Random r = new Random(size);
 
@@ -90,14 +98,26 @@ public class ComplexPerson {
         return bic;
     }
 
+    public static ListDataProvider<ComplexPerson> createDataProvider(int size) {
+        List<ComplexPerson> list = new ArrayList<>();
+        Random r = new Random(size);
+
+        for (int i = 0; i < size; i++) {
+            ComplexPerson cp = ComplexPerson.create(r);
+            list.add(cp);
+        }
+
+        return DataProvider.create(list);
+    }
+
     public static ComplexPerson create(Random r) {
         ComplexPerson cp = new ComplexPerson();
         cp.setFirstName(TestDataGenerator.getFirstName(r));
         cp.lastName = TestDataGenerator.getLastName(r);
         cp.setAlive(r.nextBoolean());
         cp.setBirthDate(TestDataGenerator.getBirthDate(r));
-        cp.setAge((int) ((new Date(2014 - 1900, 1, 1).getTime() - cp
-                .getBirthDate().getTime()) / 1000 / 3600 / 24 / 365));
+        cp.setAge((int) ((new Date(2014 - 1900, 1, 1).getTime()
+                - cp.getBirthDate().getTime()) / 1000 / 3600 / 24 / 365));
         cp.setSalary(TestDataGenerator.getSalary(r));
         cp.setAddress(ComplexAddress.create(r));
         cp.setGender(TestDataGenerator.getEnum(Gender.class, r));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,8 +24,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.TextField;
 
 /**
  *
@@ -53,11 +53,17 @@ public class BaseAddReplaceMove extends BaseLayoutTestUI {
         l2.setHeight(null);
         // extra layout from which components will be moved
         final HorizontalLayout source = new HorizontalLayout();
-        source.addComponent(new Label("OTHER LABEL 1"));
-        source.addComponent(new Label("OTHER LABEL 2"));
+        Label label1 = new Label("OTHER LABEL 1");
+        label1.setWidth("100%"); // Only to make test backwards compatible
+        source.addComponent(label1);
+        Label label2 = new Label("OTHER LABEL 2");
+        label2.setWidth("100%"); // Only to make test backwards compatible
+        source.addComponent(label2);
 
-        final AbstractComponent c1 = new Label("<b>LABEL</b>", ContentMode.HTML);
-        final AbstractComponent c2 = new Label("<b>LABEL</b>", ContentMode.HTML);
+        final AbstractComponent c1 = new Label("<b>LABEL</b>",
+                ContentMode.HTML);
+        final AbstractComponent c2 = new Label("<b>LABEL</b>",
+                ContentMode.HTML);
         final AbstractComponent c3 = new Table("TABLE");
         c3.setHeight("100px");
         c3.setWidth("100%");

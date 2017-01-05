@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,6 +34,7 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.ui.Component;
@@ -67,17 +68,15 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
                 .get("component");
         if (sourceComponent != null && !sourceComponent.isConnectorEnabled()) {
             // source component not supposed to be enabled
-            getLogger().warning(
-                    "Client dropped from " + sourceComponent
-                            + " even though it's disabled");
+            getLogger().warning("Client dropped from " + sourceComponent
+                    + " even though it's disabled");
             return;
         }
 
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
-            getLogger()
-                    .severe("DropHandler owner " + owner
-                            + " must implement DropTarget");
+            getLogger().severe("DropHandler owner " + owner
+                    + " must implement DropTarget");
             return;
         }
         // owner cannot be null here
@@ -85,10 +84,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         DropTarget dropTarget = (DropTarget) owner;
 
         if (!dropTarget.isConnectorEnabled()) {
-            getLogger()
-                    .warning(
-                            "Client dropped on " + owner
-                                    + " even though it's disabled");
+            getLogger().warning("Client dropped on " + owner
+                    + " even though it's disabled");
             return;
         }
 
@@ -107,13 +104,13 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     /**
      * Handles a drop request from the VDragAndDropManager.
-     * 
+     *
      * @param dropTarget
      * @param variables
      */
     private void handleDropRequest(DropTarget dropTarget,
             Map<String, Object> variables) {
-        DropHandler dropHandler = (dropTarget).getDropHandler();
+        DropHandler dropHandler = dropTarget.getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
             getLogger().log(Level.FINE,
@@ -127,8 +124,10 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
          * operation based on the info passed from the client widgets (drag
          * source for Transferable, drop target for DragDropDetails).
          */
-        Transferable transferable = constructTransferable(dropTarget, variables);
-        TargetDetails dropData = constructDragDropDetails(dropTarget, variables);
+        Transferable transferable = constructTransferable(dropTarget,
+                variables);
+        TargetDetails dropData = constructDragDropDetails(dropTarget,
+                variables);
         DragAndDropEvent dropEvent = new DragAndDropEvent(transferable,
                 dropData);
         if (dropHandler.getAcceptCriterion().accept(dropEvent)) {
@@ -138,7 +137,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     /**
      * Handles a drag/move request from the VDragAndDropManager.
-     * 
+     *
      * @param dropTarget
      * @param variables
      */
@@ -153,7 +152,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
          * operation based on the info passed from the client widgets (drag
          * source for Transferable, current target for DragDropDetails).
          */
-        Transferable transferable = constructTransferable(dropTarget, variables);
+        Transferable transferable = constructTransferable(dropTarget,
+                variables);
         TargetDetails dragDropDetails = constructDragDropDetails(dropTarget,
                 variables);
 
@@ -166,7 +166,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
      * Construct DragDropDetails based on variables from client drop target.
      * Uses DragDropDetailsTranslator if available, otherwise a default
      * DragDropDetails implementation is used.
-     * 
+     *
      * @param dropTarget
      * @param variables
      * @return
@@ -217,14 +217,20 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return transferable;
     }
 
+    /**
+     * <p>
+     * Tests if the variable owner is enabled or not. The terminal should not
+     * send any variable changes to disabled variable owners.
+     * </p>
+     * Implementation detail: this method is originally from the VariableOwner
+     * class, which has been removed in Vaadin 8.
+     *
+     * @return <code>true</code> if the variable owner is enabled,
+     *         <code>false</code> if not
+     */
     @Override
     public boolean isEnabled() {
         return isConnectorEnabled();
-    }
-
-    @Override
-    public boolean isImmediate() {
-        return true;
     }
 
     public void printJSONResponse(Writer outWriter) throws IOException {
@@ -361,24 +367,32 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public void addAttachListener(AttachListener listener) {
+    public Registration addAttachListener(AttachListener listener) {
+        return () -> {
+            /* NO-OP */
+        };
     }
 
     @Override
+    @Deprecated
     public void removeAttachListener(AttachListener listener) {
     }
 
     @Override
-    public void addDetachListener(DetachListener listener) {
+    public Registration addDetachListener(DetachListener listener) {
+        return () -> {
+            /* NO-OP */
+        };
     }
 
     @Override
+    @Deprecated
     public void removeDetachListener(DetachListener listener) {
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.vaadin.server.ClientConnector#isAttached()
      */
     @Override

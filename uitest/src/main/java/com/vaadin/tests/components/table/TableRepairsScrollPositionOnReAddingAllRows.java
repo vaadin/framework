@@ -4,28 +4,29 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
 
 /**
  * Scroll position should be restored when removing and re-adding all rows in
  * Table.
- * 
+ *
  * @author Vaadin Ltd
  */
-public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI {
+public class TableRepairsScrollPositionOnReAddingAllRows
+        extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = 1L;
 
     @Override
     protected void setup(VaadinRequest request) {
-        final BeanItemContainer<TableItem> cont = new BeanItemContainer<TableItem>(
+        final BeanItemContainer<TableItem> cont = new BeanItemContainer<>(
                 TableItem.class);
-        final List<TableItem> restoringItemList = new ArrayList<TableItem>();
+        final List<TableItem> restoringItemList = new ArrayList<>();
 
         final Table table = new Table();
         table.setWidth("400px");
@@ -50,8 +51,8 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
 
             @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
-                List<TableItem> originalItemIds = new ArrayList<TableItem>(cont
-                        .getItemIds());
+                List<TableItem> originalItemIds = new ArrayList<>(
+                        cont.getItemIds());
                 cont.removeAllItems();
                 cont.addAll(originalItemIds);
             }
@@ -70,7 +71,7 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
                         cont.removeAllItems();
                         // create new collection (of different items) with other
                         // size
-                        List<TableItem> itemList = new ArrayList<TableItem>();
+                        List<TableItem> itemList = new ArrayList<>();
                         for (int i = 0; i < 79; i++) {
                             TableItem ti = new TableItem();
                             ti.setName("AnotherItem1_" + i);
@@ -127,7 +128,7 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
                             com.vaadin.ui.Button.ClickEvent event) {
                         cont.removeAllItems();
 
-                        List<TableItem> list = new ArrayList<TableItem>(
+                        List<TableItem> list = new ArrayList<>(
                                 restoringItemList);
                         TableItem ti = new TableItem();
                         ti.setName("AnotherItem3_" + 80);
@@ -159,7 +160,7 @@ public class TableRepairsScrollPositionOnReAddingAllRows extends AbstractTestUI 
             @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
                 cont.removeAllItems();
-                BeanItemContainer<TableItem> newContainer = new BeanItemContainer<TableItem>(
+                BeanItemContainer<TableItem> newContainer = new BeanItemContainer<>(
                         TableItem.class);
                 for (int i = 0; i < 50; i++) {
                     TableItem ti = new TableItem();

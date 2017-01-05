@@ -3,7 +3,7 @@ package com.vaadin.tests.components.table;
 import com.vaadin.event.Action;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.ui.Table;
 
 public class TableContextMenu extends TestBase {
 
@@ -17,7 +17,8 @@ public class TableContextMenu extends TestBase {
 
         table.addActionHandler(new Action.Handler() {
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 Notification.show("Done that :-)");
             }
 

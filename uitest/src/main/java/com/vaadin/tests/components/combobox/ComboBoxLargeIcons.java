@@ -2,8 +2,6 @@ package com.vaadin.tests.components.combobox;
 
 import java.util.Date;
 
-import com.vaadin.data.Item;
-import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
@@ -22,22 +20,15 @@ public class ComboBoxLargeIcons extends TestBase {
 
     @Override
     protected void setup() {
-        ComboBox cb = new ComboBox();
-        cb.addContainerProperty("icon", Resource.class, null);
-        cb.setItemIconPropertyId("icon");
+        ComboBox<String> cb = new ComboBox<String>();
+        cb.setItems("folder-add", "folder-delete", "arrow-down", "arrow-left",
+                "arrow-right", "arrow-up", "document-add", "document-delete",
+                "document-doc", "document-edit", "document-image",
+                "document-pdf", "document-ppt", "document-txt", "document-web",
+                "document");
         getLayout().addComponent(cb);
-        cb.setNullSelectionAllowed(false);
-        String[] icons = new String[] { "folder-add", "folder-delete",
-                "arrow-down", "arrow-left", "arrow-right", "arrow-up",
-                "document-add", "document-delete", "document-doc",
-                "document-edit", "document-image", "document-pdf",
-                "document-ppt", "document-txt", "document-web", "document" };
-        for (String icon : icons) {
-            Item item = cb.addItem(icon);
-            item.getItemProperty("icon").setValue(
-                    new ThemeResource("../runo/icons/32/" + icon + ".png?"
-                            + new Date().getTime()));
-        }
-
+        // FIXME cb.setNullSelectionAllowed(false);
+        cb.setItemIconGenerator(icon -> new ThemeResource(
+                "../runo/icons/32/" + icon + ".png?" + new Date().getTime()));
     }
 }

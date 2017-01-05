@@ -5,15 +5,16 @@ This chapter describes the installation of add-on components, themes,
 containers, and other tools from the Vaadin Directory and the use of commercial
 add-ons offered by Vaadin.
 
-
 include::addons-overview.asciidoc[leveloffset=+2]
-
-include::addons-downloading.asciidoc[leveloffset=+2]
-
-include::addons-eclipse.asciidoc[leveloffset=+2]
 
 include::addons-maven.asciidoc[leveloffset=+2]
 
 include::addons-cval.asciidoc[leveloffset=+2]
+
+// Outdated for the print edition
+// include::addons-eclipse.asciidoc[leveloffset=+2]
+
+// Irrelevant for the print edition
+// include::addons-downloading.asciidoc[leveloffset=+2]
 
 include::addons-troubleshooting.asciidoc[leveloffset=+2]

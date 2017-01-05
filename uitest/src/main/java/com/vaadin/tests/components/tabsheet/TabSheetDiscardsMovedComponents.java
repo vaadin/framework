@@ -7,7 +7,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 public class TabSheetDiscardsMovedComponents extends TestBase {
 

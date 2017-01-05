@@ -4,7 +4,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox;
 
 @SuppressWarnings("serial")
 public class RemovalOfSelectedIcon extends TestBase {
@@ -19,8 +19,7 @@ public class RemovalOfSelectedIcon extends TestBase {
         addComponent(cb2);
 
         Button btClear = new Button("Clear button");
-        btClear.setImmediate(true);
-        btClear.addListener(new Button.ClickListener() {
+        btClear.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

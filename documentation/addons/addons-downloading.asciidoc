@@ -1,6 +1,6 @@
 ---
 title: Downloading Add-ons from Vaadin Directory
-order: 2
+order: 4
 layout: page
 ---
 
@@ -33,8 +33,7 @@ components, that is, a __widget set__. This is the case for majority of add-ons,
 except for pure server-side, theme, or data binding add-ons. Compiling the
 widget set depends on the build environment. See <<addons.downloading.ant>>, or
 later in this chapter for instructions for compiling the widget set with Eclipse
-and
-Maven.+
+and Maven.
 ////
 See &lt;xref linkend="addons.compiling"/&gt; for
 instructions.
@@ -55,7 +54,3 @@ it by running Ant in the directory.
 If you are using an IDE such as Eclipse, __always__ remember to refresh the
 project to synchronize it with the filesystem after compiling the widget set
 outside the IDE.
-
-
-
-

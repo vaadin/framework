@@ -1,17 +1,17 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.TreeTable;
 
 public class RowHeightWithoutRows extends TestBase {
 
     private TreeTable treeTable = new TreeTable();
 
-    private BeanItemContainer<User> container = new BeanItemContainer<User>(
+    private BeanItemContainer<User> container = new BeanItemContainer<>(
             User.class);
 
     @Override
@@ -23,7 +23,8 @@ public class RowHeightWithoutRows extends TestBase {
 
         Button refresh = new Button("Add two elements");
         addComponent(refresh);
-        refresh.addListener(new ClickListener() {
+        refresh.addClickListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 addTwoElements();
             }
@@ -31,7 +32,8 @@ public class RowHeightWithoutRows extends TestBase {
 
         Button reset = new Button("Reset");
         addComponent(reset);
-        reset.addListener(new ClickListener() {
+        reset.addClickListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 container.removeAllItems();
             }
@@ -39,7 +41,8 @@ public class RowHeightWithoutRows extends TestBase {
 
         Button refresh5 = new Button("Add five elements");
         addComponent(refresh5);
-        refresh5.addListener(new ClickListener() {
+        refresh5.addClickListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 container.addBean(new User("John", "Doe"));
                 container.addBean(new User("Mark", "Twain"));

@@ -1,7 +1,5 @@
 package com.vaadin.tests.minitutorials.v70;
 
-import com.vaadin.data.validator.AbstractValidator;
-import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -9,13 +7,15 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.v7.data.validator.AbstractValidator;
+import com.vaadin.v7.data.validator.EmailValidator;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.themes.Reindeer;
 
-public class SimpleLoginView extends CustomComponent implements View,
-        Button.ClickListener {
+public class SimpleLoginView extends CustomComponent
+        implements View, Button.ClickListener {
 
     public static final String NAME = "login";
 
@@ -33,8 +33,8 @@ public class SimpleLoginView extends CustomComponent implements View,
         user.setWidth("300px");
         user.setRequired(true);
         user.setInputPrompt("Your username (eg. joe@email.com)");
-        user.addValidator(new EmailValidator(
-                "Username must be an email address"));
+        user.addValidator(
+                new EmailValidator("Username must be an email address"));
         user.setInvalidAllowed(false);
 
         // Create the password input field
@@ -50,7 +50,8 @@ public class SimpleLoginView extends CustomComponent implements View,
 
         // Add both to a panel
         VerticalLayout fields = new VerticalLayout(user, password, loginButton);
-        fields.setCaption("Please login to access the application. (test@test.com/passw0rd)");
+        fields.setCaption(
+                "Please login to access the application. (test@test.com/passw0rd)");
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
         fields.setSizeUndefined();
@@ -72,8 +73,8 @@ public class SimpleLoginView extends CustomComponent implements View,
     /*
      * Validator for validating the passwords
      */
-    private static final class PasswordValidator extends
-            AbstractValidator<String> {
+    private static final class PasswordValidator
+            extends AbstractValidator<String> {
 
         public PasswordValidator() {
             super("The password provided is not valid");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,8 +54,8 @@ public class CvalAddonsCheckerTest {
 
     @Before
     public void setup() {
-        addonChecker = new CvalAddonsChecker().setLicenseProvider(
-                validLicenseProvider).setFilter(".*test.*");
+        addonChecker = new CvalAddonsChecker()
+                .setLicenseProvider(validLicenseProvider).setFilter(".*test.*");
         licenseName = computeLicenseName(productNameCval);
 
         deleteCache(productNameCval);

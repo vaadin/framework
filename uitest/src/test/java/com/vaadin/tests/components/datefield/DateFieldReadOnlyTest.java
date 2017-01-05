@@ -1,43 +1,43 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.DateFieldElement;
-import com.vaadin.tests.tb3.AbstractTB3Test;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.io.IOException;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.customelements.AbstractDateFieldElement;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldReadOnlyTest extends MultiBrowserTest {
 
     @Test
-    public void readOnlyDateFieldPopupShouldNotOpen() throws IOException,
-            InterruptedException {
+    public void readOnlyDateFieldPopupShouldNotOpen()
+            throws IOException, InterruptedException {
         openTestURL();
 
-        compareScreen("initial");
+        compareScreen("initial-date");
         toggleReadOnly();
 
         openPopup();
-        compareScreen("readwrite-popup");
+        compareScreen("readwrite-popup-date");
 
         closePopup();
         toggleReadOnly();
-        compareScreen("readonly");
+        compareScreen("readonly-date");
     }
 
     private void closePopup() {
-        findElement(By.className("v-datefield-calendarpanel")).sendKeys(
-                Keys.RETURN);
+        findElement(By.className("v-datefield-calendarpanel"))
+                .sendKeys(Keys.RETURN);
     }
 
     private void openPopup() {
         // waiting for openPopup() in TB4 beta1:
         // http://dev.vaadin.com/ticket/13766
-        $(DateFieldElement.class).first().findElement(By.tagName("button"))
-                .click();
+        $(AbstractDateFieldElement.class).first()
+                .findElement(By.tagName("button")).click();
     }
 
     private void toggleReadOnly() {

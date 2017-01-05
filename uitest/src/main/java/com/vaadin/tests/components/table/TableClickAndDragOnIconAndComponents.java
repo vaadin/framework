@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -10,18 +7,22 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.Table.RowHeaderMode;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
+import com.vaadin.v7.ui.Table.RowHeaderMode;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.TextField;
 
-public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
+public class TableClickAndDragOnIconAndComponents
+        extends AbstractReindeerTestUI {
 
     private static final long serialVersionUID = -2534880024131980135L;
     private Table table;
@@ -61,8 +62,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
                     Object columnId) {
                 Item item = source.getItem(itemId);
                 TextField textfield = new TextField();
-                textfield.setValue(String.valueOf(item.getItemProperty("foo")
-                        .getValue()));
+                textfield.setValue(
+                        String.valueOf(item.getItemProperty("foo").getValue()));
                 return textfield;
             }
         });
@@ -75,8 +76,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
                     Object columnId) {
                 Item item = source.getItem(itemId);
                 TextField textfield = new TextField();
-                textfield.setValue(String.valueOf(item.getItemProperty("foo")
-                        .getValue()));
+                textfield.setValue(
+                        String.valueOf(item.getItemProperty("foo").getValue()));
                 textfield.setReadOnly(true);
                 return textfield;
             }
@@ -88,8 +89,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
             @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
-                Embedded embedded = new Embedded(null, new ThemeResource(
-                        "../runo/icons/16/ok.png"));
+                Embedded embedded = new Embedded(null,
+                        new ThemeResource("../runo/icons/16/ok.png"));
                 return embedded;
             }
         });
@@ -134,8 +135,8 @@ public class TableClickAndDragOnIconAndComponents extends AbstractTestUI {
         }
         item.getItemProperty("foo").setValue("foo " + itemId);
         item.getItemProperty("red").setValue("red " + itemId);
-        item.getItemProperty("icon").setValue(
-                new ThemeResource("../runo/icons/16/ok.png"));
+        item.getItemProperty("icon")
+                .setValue(new ThemeResource("../runo/icons/16/ok.png"));
     }
 
     @Override

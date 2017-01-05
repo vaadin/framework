@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,15 +18,22 @@ package com.vaadin.shared;
 import com.vaadin.shared.ui.TabIndexState;
 
 /**
- * Shared state for {@link com.vaadin.ui.AbstractField}.
- * 
+ * State for components that can show the required indicator.
+ *
  * @author Vaadin Ltd
- * @since 7.0.0
- * 
+ * @since 8.0.0
+ *
  */
 public class AbstractFieldState extends TabIndexState {
-    public boolean propertyReadOnly = false;
-    public boolean hideErrors = false;
+
+    /**
+     * Is the required indicator visible or not.
+     */
     public boolean required = false;
-    public boolean modified = false;
+
+    /**
+     * Is the field read-only or not.
+     */
+    public boolean readOnly = false;
+
 }

@@ -1,6 +1,6 @@
 package com.vaadin.tests.util;
 
-import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.v7.data.validator.AbstractValidator;
 
 public class AlwaysFailValidator extends AbstractValidator<Object> {
     public AlwaysFailValidator() {

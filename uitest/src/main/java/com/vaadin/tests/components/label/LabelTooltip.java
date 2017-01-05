@@ -21,15 +21,17 @@ public class LabelTooltip extends TestBase {
         layout.setWidth("400px");
         layout.setColumnExpandRatio(0, 1);
 
-        layout.addComponent(new Label("Default"));
+        Label defaultLabel = new Label("Default");
+        defaultLabel.setWidth("100%");
+        layout.addComponent(defaultLabel);
         Label tooltip = new Label("Hover over me to see the tooltip");
-        tooltip.setSizeUndefined();
         tooltip.setDescription("Default tooltip content");
         layout.addComponent(tooltip);
 
-        layout.addComponent(new Label("Default /w error"));
+        Label defaultWithError = new Label("Default /w error");
+        defaultWithError.setWidth("100%");
+        layout.addComponent(defaultWithError);
         tooltip = new Label("Hover over me to see the tooltip");
-        tooltip.setSizeUndefined();
         tooltip.setDescription("Default tooltip content");
         tooltip.setComponentError(new UserError(
                 "Error inside tooltip together with the regular tooltip message."));

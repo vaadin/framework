@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.draganddropwrapper;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
@@ -14,7 +15,7 @@ public class TooltipHandlingWhenNotDefined extends TestBase {
         CssLayout wrapperLayout = new CssLayout();
         wrapperLayout.setWidth("100%");
 
-        Label label = new Label("Can I has the tooltip?", Label.CONTENT_XHTML);
+        Label label = new Label("Can I has the tooltip?", ContentMode.HTML);
         label.setId("tooltipLabel");
         label.setDescription("Good! Tooltip works!");
         label.setSizeUndefined();

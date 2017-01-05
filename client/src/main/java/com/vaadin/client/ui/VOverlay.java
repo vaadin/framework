@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,9 +21,7 @@ import java.util.logging.Logger;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
@@ -39,12 +37,12 @@ import com.vaadin.client.widgets.Overlay;
  * {@link Overlay} superclass and the default widgetset will replace it with
  * this. The widget will not be dependent on this Vaadin specific widget and can
  * be used in a pure GWT environment.
- * 
+ *
  * @deprecated as this is specifically for Vaadin only, it should not be used
  *             directly.
  */
 @Deprecated
-public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
+public class VOverlay extends Overlay {
 
     /*
      * ApplicationConnection that this overlay belongs to, which is needed to
@@ -67,20 +65,11 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
         super(autoHide, modal);
     }
 
-    /**
-     * @deprecated See main JavaDoc for VOverlay. Use the other constructors
-     *             without the <code>showShadow</code> parameter.
-     */
-    @Deprecated
-    public VOverlay(boolean autoHide, boolean modal, boolean showShadow) {
-        super(autoHide, modal, showShadow);
-    }
-
     /*
      * A "thread local" of sorts, set temporarily so that VOverlayImpl knows
      * which VOverlay is using it, so that it can be attached to the correct
      * overlay container.
-     * 
+     *
      * TODO this is a strange pattern that we should get rid of when possible.
      */
     protected static VOverlay current;
@@ -88,7 +77,7 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
     /**
      * Get the {@link ApplicationConnection} that this overlay belongs to. If
      * it's not set, {@link #getOwner()} is used to figure it out.
-     * 
+     *
      * @return
      */
     protected ApplicationConnection getApplicationConnection() {
@@ -108,7 +97,7 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
     /**
      * Gets the 'overlay container' element. Tries to find the current
      * {@link ApplicationConnection} using {@link #getApplicationConnection()}.
-     * 
+     *
      * @return the overlay container element for the current
      *         {@link ApplicationConnection} or another element if the current
      *         {@link ApplicationConnection} cannot be determined.
@@ -119,9 +108,8 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
         if (ac == null) {
             // could not figure out which one we belong to, styling will
             // probably fail
-            Logger.getLogger(getClass().getSimpleName())
-                    .warning(
-                            "Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
+            Logger.getLogger(getClass().getSimpleName()).warning(
+                    "Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
             return super.getOverlayContainer();
         } else {
             return getOverlayContainer(ac);
@@ -133,7 +121,7 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
      * {@link ApplicationConnection}. Each overlay should be created in a
      * overlay container element, so that the correct theme and styles can be
      * applied.
-     * 
+     *
      * @param ac
      *            A reference to {@link ApplicationConnection}
      * @return The overlay container
@@ -160,7 +148,7 @@ public class VOverlay extends Overlay implements CloseHandler<PopupPanel> {
     /**
      * Set the label of the container element, where tooltip, notification and
      * dialgs are added to.
-     * 
+     *
      * @param applicationConnection
      *            the application connection for which to change the label
      * @param overlayContainerLabel

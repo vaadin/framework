@@ -4,8 +4,8 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextField;
 
 @SuppressWarnings("serial")
 public class MovingInvisibleField extends TestBase {
@@ -21,7 +21,7 @@ public class MovingInvisibleField extends TestBase {
                 "A visible text field");
         tfHidden.setVisible(false);
         Button b = new Button("Move hidden textfield to other layout");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

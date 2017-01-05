@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,9 +23,10 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.customelements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement.ContextMenuElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
-import com.vaadin.tests.components.table.CustomTableElement.ContextMenuElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
@@ -34,7 +35,7 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
     public void expandCorrectlyAfterCollapse() throws IOException {
         openTestURL();
 
-        CustomTableElement table = $(CustomTableElement.class).first();
+        TableElement table = $(TableElement.class).first();
 
         // Hide col2 through UI
         table.openCollapseMenu().getItem(1).click();
@@ -47,18 +48,10 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
         compareScreen(table, "col3");
 
         // Show column 2 using context menu (first action)
-        if (BrowserUtil.isIE8(getDesiredCapabilities())) {
-            // IE8 can context click but the popup is off screen so it can't be
-            // interacted with...
-            ButtonElement show2 = $(ButtonElement.class).caption("Show Col2")
-                    .first();
-            show2.click();
-        } else {
-            contextClick(table.getCell(0, 0));
-            ContextMenuElement contextMenu = table.getContextMenu();
-            WebElement i = contextMenu.getItem(0);
-            i.click();
-        }
+        contextClick(table.getCell(0, 0));
+        ContextMenuElement contextMenu = table.getContextMenu();
+        WebElement i = contextMenu.getItem(0);
+        i.click();
         compareScreen(table, "col2-col3");
 
         // Show column 1 again
@@ -70,8 +63,8 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
     }
 
     private void contextClick(TestBenchElement e) {
-        if (e.isPhantomJS()) {
-            JavascriptExecutor js = e.getCommandExecutor();
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            JavascriptExecutor js = (JavascriptExecutor) getDriver();
             String scr = "var element=arguments[0];"
                     + "var ev = document.createEvent('HTMLEvents');"
                     + "ev.initEvent('contextmenu', true, false);"
@@ -86,7 +79,7 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
     @Test
     public void collapseEvents() {
         openTestURL();
-        CustomTableElement table = $(CustomTableElement.class).first();
+        TableElement table = $(TableElement.class).first();
 
         // Through menu
         table.openCollapseMenu().getItem(0).click();

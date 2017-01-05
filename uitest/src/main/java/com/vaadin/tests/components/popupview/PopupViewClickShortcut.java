@@ -9,9 +9,9 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.Table;
 
 public class PopupViewClickShortcut extends TestBase {
 
@@ -24,8 +24,8 @@ public class PopupViewClickShortcut extends TestBase {
         sub.center();
         getMainWindow().addWindow(sub);
         addComponent(log);
-        addComponent(new PopupView("Show popup table", makeTable("Popup",
-                KeyCode.P)));
+        addComponent(new PopupView("Show popup table",
+                makeTable("Popup", KeyCode.P)));
         addComponent(makeTable("Main window", KeyCode.M));
         ((ComponentContainer) sub.getContent()).addComponent(new PopupView(
                 "Show popup table", makeTable("Subwindow popup", KeyCode.U)));
@@ -45,17 +45,18 @@ public class PopupViewClickShortcut extends TestBase {
         l.setCaption(caption);
         l.setWidth(null);
 
-        Button b = new Button("Submit " + caption + " (Ctrl+Alt+"
-                + (char) keyCode + ")", new Button.ClickListener() {
-            private int i = 5;
+        Button b = new Button(
+                "Submit " + caption + " (Ctrl+Alt+" + (char) keyCode + ")",
+                new Button.ClickListener() {
+                    private int i = 5;
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.log("Submitted from "
-                        + event.getButton().getParent().getCaption());
-                t.addItem(new String[] { "added " + i++ }, i);
-            }
-        });
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        log.log("Submitted from "
+                                + event.getButton().getParent().getCaption());
+                        t.addItem(new String[] { "added " + i++ }, i);
+                    }
+                });
 
         b.setClickShortcut(keyCode, ModifierKey.CTRL, ModifierKey.ALT);
 

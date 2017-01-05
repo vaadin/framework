@@ -1,16 +1,14 @@
 package com.vaadin.tests.components.datefield;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.PopupDateField;
 
 @SuppressWarnings("serial")
-public class PopupDateFieldStates extends AbstractTestUI {
+public class PopupDateFieldStates extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -35,18 +33,11 @@ public class PopupDateFieldStates extends AbstractTestUI {
         return 14565;
     }
 
-    private static PopupDateField createPopupDateField(final boolean enabled,
+    private static DateField createPopupDateField(final boolean enabled,
             final boolean textFieldEnabled) {
-        final PopupDateField popupDatefield = new PopupDateField();
+        final DateField popupDatefield = new DateField();
 
-        Calendar cal = GregorianCalendar.getInstance();
-        cal.set(Calendar.DATE, 3);
-        cal.set(Calendar.MONTH, Calendar.SEPTEMBER);
-        cal.set(Calendar.YEAR, 2014);
-        cal.set(Calendar.HOUR_OF_DAY, 8);
-        final Date currentDate = cal.getTime();
-
-        popupDatefield.setValue(currentDate);
+        popupDatefield.setValue(LocalDate.of(2014, 9, 3));
         popupDatefield.setCaption("Enabled: " + enabled
                 + ", Text field enabled: " + textFieldEnabled);
         popupDatefield.setEnabled(enabled);

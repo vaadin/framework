@@ -8,7 +8,7 @@ import com.vaadin.ui.TextArea;
 
 /**
  * @author denis
- * 
+ *
  */
 public class ScrollCursor extends TestBase {
 
@@ -18,14 +18,14 @@ public class ScrollCursor extends TestBase {
     @Override
     protected void setup() {
         textArea = new TextArea();
-        textArea.setValue("saddddddddddd     fdgdfgfdgfd\n"
-                + "aasddddddddddd\n" + "dsaffffffdsf\n" + "sdf\n"
-                + "dsfsdfsdfsdfsd\n\n" + "ffffffffffffffffffff\n"
-                + "sdfdsfdsfsdfsdfsd  xxxxxxxxxxxxxxxx\n" + "sdgfsd\n"
-                + "dsf\n" + "ds\n" + "fds\n" + "fds\nfs");
+        textArea.setValue("saddddddddddd     fdgdfgfdgfd\n" + "aasddddddddddd\n"
+                + "dsaffffffdsf\n" + "sdf\n" + "dsfsdfsdfsdfsd\n\n"
+                + "ffffffffffffffffffff\n"
+                + "sdfdsfdsfsdfsdfsd  xxxxxxxxxxxxxxxx\n" + "sdgfsd\n" + "dsf\n"
+                + "ds\n" + "fds\n" + "fds\nfs");
         addComponent(textArea);
         Button button = new Button("Scroll");
-        button.addListener(new ClickListener() {
+        button.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -33,16 +33,16 @@ public class ScrollCursor extends TestBase {
             }
         });
         Button wrap = new Button("Set wrap");
-        wrap.addListener(new ClickListener() {
+        wrap.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                textArea.setWordwrap(false);
+                textArea.setWordWrap(false);
             }
         });
 
         Button toBegin = new Button("To begin");
-        toBegin.addListener(new ClickListener() {
+        toBegin.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -51,7 +51,7 @@ public class ScrollCursor extends TestBase {
         });
 
         Button toMiddle = new Button("To middle");
-        toMiddle.addListener(new ClickListener() {
+        toMiddle.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -60,7 +60,7 @@ public class ScrollCursor extends TestBase {
         });
 
         Button toEnd = new Button("To end");
-        toEnd.addListener(new ClickListener() {
+        toEnd.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

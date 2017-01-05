@@ -23,7 +23,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 public class DragAndDropWrapperInPanel extends TestBase {
 
@@ -31,6 +31,7 @@ public class DragAndDropWrapperInPanel extends TestBase {
     protected void setup() {
 
         addComponent(new Button("Click to resize", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 for (int i = 1; i < getLayout().getComponentCount(); ++i) {
                     Component c = getLayout().getComponent(i);

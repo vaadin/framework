@@ -1,8 +1,0 @@
-@mixin reindeer-button-ie($primaryStyleName : v-nativebutton) {
-
-.v-ie8 & .#{$primaryStyleName}-link {
-	padding: 0;
-	text-align: left;
-}
-
-}

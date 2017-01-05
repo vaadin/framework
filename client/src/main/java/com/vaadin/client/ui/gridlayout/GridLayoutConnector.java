@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,12 +18,9 @@ package com.vaadin.client.ui.gridlayout;
 import java.util.Map.Entry;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
@@ -111,7 +108,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         layout.colExpandRatioArray = getState().colExpand;
         layout.rowExpandRatioArray = getState().rowExpand;
 
-        layout.updateMarginStyleNames(new MarginInfo(getState().marginsBitmask));
+        layout.updateMarginStyleNames(
+                new MarginInfo(getState().marginsBitmask));
         layout.updateSpacingStyleName(getState().spacing);
         getLayoutManager().setNeedsLayout(this);
     }
@@ -132,7 +130,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent event) {
         VGridLayout layout = getWidget();
 
         // clean non rendered components
@@ -171,7 +170,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     public void updateCaption(ComponentConnector childConnector) {
         VGridLayout layout = getWidget();
         Cell cell = layout.widgetToCell.get(childConnector.getWidget());
-        if (VCaption.isNeeded(childConnector.getState())) {
+        if (VCaption.isNeeded(childConnector)) {
             VLayoutSlot layoutSlot = cell.slot;
             VCaption caption = layoutSlot.getCaption();
             if (caption == null) {

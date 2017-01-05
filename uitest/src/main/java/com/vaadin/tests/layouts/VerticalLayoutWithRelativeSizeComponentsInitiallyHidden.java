@@ -7,8 +7,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
-public class VerticalLayoutWithRelativeSizeComponentsInitiallyHidden extends
-        TestBase {
+public class VerticalLayoutWithRelativeSizeComponentsInitiallyHidden
+        extends TestBase {
 
     @Override
     protected String getDescription() {
@@ -41,7 +41,7 @@ public class VerticalLayoutWithRelativeSizeComponentsInitiallyHidden extends
 
         Button b = new Button(
                 "Click to set bar visible. Button should stay visible.");
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

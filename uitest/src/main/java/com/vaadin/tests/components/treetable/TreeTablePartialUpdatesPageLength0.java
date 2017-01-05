@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.v7.data.Container.Hierarchical;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.TreeTable;
 
-public class TreeTablePartialUpdatesPageLength0 extends AbstractTestUI {
+public class TreeTablePartialUpdatesPageLength0 extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -50,7 +50,8 @@ public class TreeTablePartialUpdatesPageLength0 extends AbstractTestUI {
     }
 
     @SuppressWarnings("unchecked")
-    private void addNodesToRoot(HierarchicalContainer hc, Object root, int count) {
+    private void addNodesToRoot(HierarchicalContainer hc, Object root,
+            int count) {
         for (int ix = 0; ix < count; ix++) {
             Object id = hc.addItem();
             hc.getItem(id).getItemProperty("p1").setValue(String.valueOf(ix));

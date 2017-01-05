@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,40 +18,35 @@ package com.vaadin.tests.components.datefield;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.DateField;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.tests.components.TestDateField;
+import com.vaadin.ui.AbstractDateField;
 
-public class DateFieldPopupClosingOnDetach extends AbstractTestUI {
+public class DateFieldPopupClosingOnDetach extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         // Use polling to notice the removal of DateField.
         getUI().setPollInterval(500);
 
-        final DateField df = new DateField();
-        getLayout().addLayoutClickListener(new LayoutClickListener() {
+        final AbstractDateField df = new TestDateField();
+        getLayout().addLayoutClickListener(event -> {
+            // Use a background Thread to remove the DateField 1 second
+            // after being clicked.
+            TimerTask removeTask = new TimerTask() {
 
-            @Override
-            public void layoutClick(LayoutClickEvent event) {
-                // Use a background Thread to remove the DateField 1 second
-                // after being clicked.
-                TimerTask removeTask = new TimerTask() {
-
-                    @Override
-                    public void run() {
-                        getUI().access(new Runnable() {
-                            @Override
-                            public void run() {
-                                removeComponent(df);
-                            }
-                        });
-                    }
-                };
-                new Timer(true).schedule(removeTask, 1000);
-            }
+                @Override
+                public void run() {
+                    getUI().access(new Runnable() {
+                        @Override
+                        public void run() {
+                            removeComponent(df);
+                        }
+                    });
+                }
+            };
+            new Timer(true).schedule(removeTask, 1000);
         });
 
         addComponent(df);

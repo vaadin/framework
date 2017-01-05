@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -30,19 +30,23 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * Tests declarative support for AbstractOrderedLayout.
- * 
+ *
  * @since
  * @author Vaadin Ltd
  */
-public class AbstractOrderedLayoutDeclarativeTest extends
-        DeclarativeMarginTestBase<AbstractOrderedLayout> {
+public class AbstractOrderedLayoutDeclarativeTest
+        extends DeclarativeMarginTestBase<AbstractOrderedLayout> {
 
-    private List<String> defaultAlignments = Arrays.asList(new String[] {
-            ":top", ":left" });
+    private List<String> defaultAlignments = Arrays.asList(":top", ":left");
 
     @Test
-    public void testMargins() {
-        testMargins("vaadin-vertical-layout");
+    public void testMarginsVertical() {
+        testMargins("vaadin-vertical-layout", true);
+    }
+
+    @Test
+    public void testMarginsHorizontal() {
+        testMargins("vaadin-horizontal-layout", false);
     }
 
     @Test
@@ -76,8 +80,8 @@ public class AbstractOrderedLayoutDeclarativeTest extends
     private String getDesign(float expandRatio, String... alignments) {
         String result = "<vaadin-vertical-layout caption=test-layout>";
         result += "<vaadin-label caption=test-label ";
-        String ratioString = expandRatio == 1.0f ? null : String
-                .valueOf(expandRatio);
+        String ratioString = expandRatio == 1.0f ? null
+                : String.valueOf(expandRatio);
         if (expandRatio != 0) {
             if (ratioString == null) {
                 result += ":expand";

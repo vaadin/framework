@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.textfield;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 public class IE6Cursor extends TestBase {
 

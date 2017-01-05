@@ -5,13 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
@@ -19,14 +12,19 @@ import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
-import com.vaadin.ui.AbstractSelect.VerticalLocationIs;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.TableDragMode;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.Tree.TreeDragMode;
-import com.vaadin.ui.Tree.TreeTargetDetails;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.event.DataBoundTransferable;
+import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.v7.ui.AbstractSelect.VerticalLocationIs;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.TableDragMode;
+import com.vaadin.v7.ui.Tree;
+import com.vaadin.v7.ui.Tree.TreeDragMode;
+import com.vaadin.v7.ui.Tree.TreeTargetDetails;
 
 public class TreeDragStart extends TestBase {
 
@@ -35,26 +33,17 @@ public class TreeDragStart extends TestBase {
         final Tree tree = new Tree("Inventory");
 
         CheckBox checkBox = new CheckBox("Enabled");
-        checkBox.setImmediate(true);
         checkBox.setValue(true);
-        checkBox.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                tree.setEnabled(!tree.isEnabled());
-            }
-        });
+        checkBox.addValueChangeListener(
+                event -> tree.setEnabled(!tree.isEnabled()));
         addComponent(checkBox);
         checkBox = new CheckBox("Drag start");
-        checkBox.setImmediate(true);
         checkBox.setValue(true);
-        checkBox.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (((CheckBox) event.getProperty()).getValue()) {
-                    tree.setDragMode(TreeDragMode.NODE);
-                } else {
-                    tree.setDragMode(TreeDragMode.NONE);
-                }
+        checkBox.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                tree.setDragMode(TreeDragMode.NODE);
+            } else {
+                tree.setDragMode(TreeDragMode.NONE);
             }
         });
         addComponent(checkBox);
@@ -81,8 +70,8 @@ public class TreeDragStart extends TestBase {
             public AcceptCriterion getAcceptCriterion() {
                 // Accept drops in the middle of container items
                 // and below and above all items.
-                return new Or(Tree.TargetItemAllowsChildren.get(), new Not(
-                        VerticalLocationIs.MIDDLE));
+                return new Or(Tree.TargetItemAllowsChildren.get(),
+                        new Not(VerticalLocationIs.MIDDLE));
             }
 
             @Override
@@ -108,8 +97,7 @@ public class TreeDragStart extends TestBase {
                 if (sourceItemId instanceof BeanItem<?>) {
                     beanItem = (BeanItem<?>) sourceItemId;
                 } else if (sourceItemId instanceof InventoryObject) {
-                    beanItem = new BeanItem<InventoryObject>(
-                            (InventoryObject) sourceItemId);
+                    beanItem = new BeanItem<>((InventoryObject) sourceItemId);
                 }
 
                 // Remove the item from the source container and
@@ -146,9 +134,9 @@ public class TreeDragStart extends TestBase {
         table.setDragMode(TableDragMode.ROW);
 
         // Initialize the table container
-        ArrayList<InventoryObject> collection = new ArrayList<InventoryObject>();
+        ArrayList<InventoryObject> collection = new ArrayList<>();
         collection.add(new InventoryObject("Dummy Item", 0.0, false));
-        final BeanItemContainer<InventoryObject> tableContainer = new BeanItemContainer<InventoryObject>(
+        final BeanItemContainer<InventoryObject> tableContainer = new BeanItemContainer<>(
                 collection);
         table.setContainerDataSource(tableContainer);
         table.setVisibleColumns(new String[] { "name", "weight" });
@@ -251,7 +239,7 @@ public class TreeDragStart extends TestBase {
         }
     }
 
-    HashMap<String, InventoryObject> inventoryStore = new HashMap<String, InventoryObject>();
+    HashMap<String, InventoryObject> inventoryStore = new HashMap<>();
 
     public HierarchicalContainer createTreeContent() {
         final Object[] inventory = new Object[] {
@@ -259,20 +247,17 @@ public class TreeDragStart extends TestBase {
                 new InventoryObject("+5 Quarterstaff (blessed)", 3.5, false),
                 new InventoryObject("+3 Elven Dagger (blessed)", 0.2, false),
                 new InventoryObject("+5 Helmet (greased)", 1.5, false),
-                new Object[] {
-                        new InventoryObject("Sack", 0.2, true),
+                new Object[] { new InventoryObject("Sack", 0.2, true),
                         new InventoryObject("Pick-Axe", 2.5, false),
                         new InventoryObject("Lock Pick", 0.1, false),
                         new InventoryObject("Tinning Kit", 0.5, false),
                         new InventoryObject("Potion of Healing (blessed)", 0.7,
                                 false), },
-                new Object[] {
-                        new InventoryObject("Bag of Holding", 0.1, true),
+                new Object[] { new InventoryObject("Bag of Holding", 0.1, true),
                         new InventoryObject("Magic Marker", 0.05, false),
                         new InventoryObject("Can of Grease (blessed)", 0.5,
                                 false), },
-                new Object[] {
-                        new InventoryObject("Chest", 10.0, true),
+                new Object[] { new InventoryObject("Chest", 10.0, true),
                         new InventoryObject("Scroll of Identify", 0.1, false),
                         new InventoryObject("Scroll of Genocide", 0.1, false),
                         new InventoryObject("Towel", 0.3, false),
@@ -293,14 +278,14 @@ public class TreeDragStart extends TestBase {
                     BeanItem<InventoryObject> item;
                     if (data[i].getClass() == InventoryObject.class) {
                         InventoryObject object = (InventoryObject) data[i];
-                        item = new BeanItem<InventoryObject>(object);
+                        item = new BeanItem<>(object);
                         container.addItem(item);
                         container.setParent(item, parent);
                         container.setChildrenAllowed(item, false);
                     } else {// It's an Object[]
                         Object[] sub = (Object[]) data[i];
                         InventoryObject object = (InventoryObject) sub[0];
-                        item = new BeanItem<InventoryObject>(object);
+                        item = new BeanItem<>(object);
                         container.addItem(item);
                         container.setParent(item, parent);
 
@@ -308,8 +293,8 @@ public class TreeDragStart extends TestBase {
                         put(sub, item, container);
                     }
 
-                    inventoryStore
-                            .put(item.getBean().getName(), item.getBean());
+                    inventoryStore.put(item.getBean().getName(),
+                            item.getBean());
                 }
             }
         }.put(inventory, null, container);

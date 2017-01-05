@@ -18,7 +18,8 @@ public class ButtonEnterWithWindowShortcut extends TestBase {
             private static final long serialVersionUID = -4976129418325394913L;
 
             @Override
-            public void handleAction(Action action, Object sender, Object target) {
+            public void handleAction(Action action, Object sender,
+                    Object target) {
                 log.log(action.getCaption() + " pressed in window");
             }
 

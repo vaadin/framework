@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.upload;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
 // We're explicitly testing only immediate uploads here because non-immediate
 // width issues still require planning before we can provide a fix.
-public class UploadImmediateButtonWidth extends AbstractTestUI {
+public class UploadImmediateButtonWidth extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -30,6 +30,8 @@ public class UploadImmediateButtonWidth extends AbstractTestUI {
         // Let's use a separate layout without margins to make the
         // button widths not dependent on the selected theme.
         VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(false);
         layout.setWidth("500px");
 
         layout.addComponent(getImmediateUpload("upload1", "300px"));
@@ -44,7 +46,7 @@ public class UploadImmediateButtonWidth extends AbstractTestUI {
 
         upload.setId(id);
         upload.setWidth(width);
-        upload.setImmediate(true);
+        upload.setImmediateMode(true);
 
         return upload;
     }

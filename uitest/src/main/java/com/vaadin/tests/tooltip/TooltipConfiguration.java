@@ -1,14 +1,14 @@
 package com.vaadin.tests.tooltip;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.ui.TextField;
 
-public class TooltipConfiguration extends AbstractTestUIWithLog {
+public class TooltipConfiguration extends AbstractReindeerTestUIWithLog {
 
     private TextField closeTimeout;
     private TextField quickOpenTimeout;
@@ -23,7 +23,8 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         componentWithShortTooltip.setDescription("This is a short tooltip");
         componentWithShortTooltip.setId("shortTooltip");
 
-        NativeButton componentWithLongTooltip = new NativeButton("Long tooltip");
+        NativeButton componentWithLongTooltip = new NativeButton(
+                "Long tooltip");
         componentWithLongTooltip.setId("longTooltip");
         componentWithLongTooltip.setDescription(LoremIpsum.get(5000));
 
@@ -68,8 +69,8 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
                         if (quickOpenDelay.getConvertedValue() != null) {
-                            getTooltipConfiguration().setQuickOpenDelay(
-                                    (Integer) quickOpenDelay
+                            getTooltipConfiguration()
+                                    .setQuickOpenDelay((Integer) quickOpenDelay
                                             .getConvertedValue());
                         }
                     }

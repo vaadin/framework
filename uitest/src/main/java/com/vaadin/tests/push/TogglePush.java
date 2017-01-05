@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,17 +18,15 @@ package com.vaadin.tests.push;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
-public class TogglePush extends AbstractTestUI {
+public class TogglePush extends AbstractReindeerTestUI {
     private final Label counterLabel = new Label();
     private int counter = 0;
 
@@ -38,28 +36,23 @@ public class TogglePush extends AbstractTestUI {
         addComponent(counterLabel);
 
         getPushConfiguration()
-                .setPushMode(
-                        "disabled".equals(request.getParameter("push")) ? PushMode.DISABLED
-                                : PushMode.AUTOMATIC);
+                .setPushMode("disabled".equals(request.getParameter("push"))
+                        ? PushMode.DISABLED : PushMode.AUTOMATIC);
 
         CheckBox pushSetting = new CheckBox("Push enabled");
-        pushSetting.setValue(Boolean.valueOf(getPushConfiguration()
-                .getPushMode().isEnabled()));
-        pushSetting.setImmediate(true);
-        pushSetting.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (event.getProperty().getValue() == Boolean.TRUE) {
-                    getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
-                } else {
-                    getPushConfiguration().setPushMode(PushMode.DISABLED);
-                }
+        pushSetting.setValue(Boolean
+                .valueOf(getPushConfiguration().getPushMode().isEnabled()));
+        pushSetting.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
+            } else {
+                getPushConfiguration().setPushMode(PushMode.DISABLED);
             }
         });
         addComponent(pushSetting);
 
-        addComponent(new Button("Update counter now",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Update counter now", new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         updateCounter();
@@ -86,8 +79,8 @@ public class TogglePush extends AbstractTestUI {
     }
 
     public void updateCounter() {
-        counterLabel.setValue("Counter has been updated " + counter++
-                + " times");
+        counterLabel
+                .setValue("Counter has been updated " + counter++ + " times");
     }
 
     @Override

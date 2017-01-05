@@ -24,6 +24,7 @@ public class RefreshStatePreserveTest extends MultiBrowserTest {
     private void assertCorrectState() {
         waitForElementPresent(By.className("v-label"));
         LabelElement uiIdLabel = $(LabelElement.class).get(7);
-        Assert.assertEquals("Incorrect UI id,", UI_ID_TEXT, uiIdLabel.getText());
+        Assert.assertEquals("Incorrect UI id,", UI_ID_TEXT,
+                uiIdLabel.getText());
     }
 }

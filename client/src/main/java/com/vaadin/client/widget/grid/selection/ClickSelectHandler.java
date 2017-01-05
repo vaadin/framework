@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,7 +22,7 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * Generic class to perform selections when clicking on cells in body of Grid.
- * 
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -36,6 +36,9 @@ public class ClickSelectHandler<T> {
 
         @Override
         public void onClick(GridClickEvent event) {
+            if (!grid.getSelectionModel().isSelectionAllowed()) {
+                return;
+            }
             T row = (T) event.getTargetCell().getRow();
             if (!grid.isSelected(row)) {
                 grid.select(row);
@@ -48,7 +51,7 @@ public class ClickSelectHandler<T> {
     /**
      * Constructor for ClickSelectHandler. This constructor will add all
      * necessary handlers for selecting rows by clicking cells.
-     * 
+     *
      * @param grid
      *            grid to attach to
      */
@@ -66,7 +69,7 @@ public class ClickSelectHandler<T> {
 
     /**
      * Sets whether clicking the currently selected row should deselect the row.
-     * 
+     *
      * @param deselectAllowed
      *            <code>true</code> to allow deselecting the selected row;
      *            otherwise <code>false</code>

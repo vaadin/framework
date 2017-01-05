@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,7 +33,7 @@ import com.vaadin.ui.JavaScriptFunction;
 
 import elemental.json.JsonArray;
 
-// Load vaadinPush.js so that jQueryVaadin is defined 
+// Load vaadinPush.js so that jQueryVaadin is defined
 @JavaScript("vaadin://vaadinPush.debug.js")
 public class TrackMessageSizeUI extends AbstractTestUIWithLog {
 
@@ -64,8 +64,8 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
                     }
                 });
 
-        getPage().getJavaScript().execute(
-                methodImplementation + testMethod + buildTestCase());
+        getPage().getJavaScript()
+                .execute(methodImplementation + testMethod + buildTestCase());
     }
 
     private String buildTestCase() {

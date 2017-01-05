@@ -7,7 +7,7 @@ import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -17,7 +17,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 
-public class ErrorHandlers extends AbstractTestUI {
+public class ErrorHandlers extends AbstractReindeerTestUI {
 
     public static class NotificationErrorHandler implements ErrorHandler {
 
@@ -32,8 +32,8 @@ public class ErrorHandlers extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         addComponent(runtimeExceptionOnClick(new Button("Standard button")));
         addComponent(npeOnClick(new Button("Standard button with NPE")));
-        Button customErrorButton = notificationErrorHandler(new Button(
-                "Button with notification error handler"));
+        Button customErrorButton = notificationErrorHandler(
+                new Button("Button with notification error handler"));
         addComponent(runtimeExceptionOnClick(customErrorButton));
 
         final VerticalLayout layoutWithErrorHandler = new VerticalLayout(
@@ -42,15 +42,14 @@ public class ErrorHandlers extends AbstractTestUI {
 
             @Override
             public void error(com.vaadin.server.ErrorEvent event) {
-                layoutWithErrorHandler.addComponent(new Label("Layout error: "
-                        + getErrorMessage(event)));
+                layoutWithErrorHandler.addComponent(
+                        new Label("Layout error: " + getErrorMessage(event)));
             }
 
         };
         layoutWithErrorHandler.setErrorHandler(e);
-        layoutWithErrorHandler
-                .addComponent(notificationErrorHandler(npeOnClick(new Button(
-                        "Error handler on button and parent"))));
+        layoutWithErrorHandler.addComponent(notificationErrorHandler(
+                npeOnClick(new Button("Error handler on button and parent"))));
         addComponent(layoutWithErrorHandler);
     }
 
@@ -59,7 +58,8 @@ public class ErrorHandlers extends AbstractTestUI {
         return button;
     }
 
-    protected static String getErrorMessage(com.vaadin.server.ErrorEvent event) {
+    protected static String getErrorMessage(
+            com.vaadin.server.ErrorEvent event) {
         Component c = DefaultErrorHandler.findAbstractComponent(event);
         String errorMsg = "Error: '" + getMessage(event) + "' in ";
         errorMsg += c.getClass().getSimpleName() + " with caption '"

@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.uitest.components;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.tests.components.uitest.TestSampler;
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.HierarchicalContainer;
+import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableCssTest {
     private int debugIdCounter = 0;

@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
- * 
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,18 +26,19 @@ import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.UnknownExtensionConnector;
 
 public class WidgetSet {
     /**
      * Create an uninitialized connector that best matches given UIDL. The
      * connector must implement {@link ServerConnector}.
-     * 
+     *
      * @param tag
      *            connector type tag for the connector to create
      * @param conf
      *            the application configuration to use when creating the
      *            connector
-     * 
+     *
      * @return New uninitialized and unregistered connector that can paint given
      *         UIDL.
      */
@@ -55,34 +56,43 @@ public class WidgetSet {
         Class<? extends ServerConnector> classType = resolveInheritedConnectorType(
                 conf, tag);
 
-        if (classType == null || classType == UnknownComponentConnector.class) {
-            String serverSideName = conf.getUnknownServerClassNameByTag(tag);
-            UnknownComponentConnector c = GWT
-                    .create(UnknownComponentConnector.class);
-            c.setServerSideClassName(serverSideName);
-            Profiler.leave("WidgetSet.createConnector");
-            return c;
-        } else {
-            /*
-             * let the auto generated code instantiate this type
-             */
-            try {
-                ServerConnector connector = (ServerConnector) TypeData.getType(
-                        classType).createInstance();
+        try {
+            if (classType == null
+                    || classType == UnknownComponentConnector.class
+                    || classType == UnknownExtensionConnector.class) {
+                String serverSideName = conf
+                        .getUnknownServerClassNameByTag(tag);
+                if (classType == UnknownExtensionConnector.class) {
+                    // Display message in the console for non-visual connectors
+                    getLogger().severe(UnknownComponentConnector
+                            .createMessage(serverSideName));
+                    return GWT.create(UnknownExtensionConnector.class);
+                } else {
+                    UnknownComponentConnector c = GWT
+                            .create(UnknownComponentConnector.class);
+                    // Set message to be shown in a widget for visual connectors
+                    c.setServerSideClassName(serverSideName);
+                    return c;
+                }
+            } else {
+                /*
+                 * let the auto generated code instantiate this type
+                 */
+                ServerConnector connector = (ServerConnector) TypeData
+                        .getType(classType).createInstance();
                 if (connector instanceof HasJavaScriptConnectorHelper) {
                     ((HasJavaScriptConnectorHelper) connector)
                             .getJavascriptConnectorHelper().setTag(tag);
                 }
-                Profiler.leave("WidgetSet.createConnector");
                 return connector;
-            } catch (NoDataException e) {
-                Profiler.leave("WidgetSet.createConnector");
-                throw new IllegalStateException(
-                        "There is no information about "
-                                + classType
-                                + ". Did you remember to compile the right widgetset?",
-                        e);
             }
+        } catch (NoDataException e) {
+            throw new IllegalStateException(
+                    "There is no information about " + classType
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
+        } finally {
+            Profiler.leave("WidgetSet.createConnector");
         }
     }
 
@@ -109,7 +119,7 @@ public class WidgetSet {
      * Due its nature, GWT does not support dynamic classloading. To bypass this
      * limitation, widgetset must have function that returns Class by its fully
      * qualified name.
-     * 
+     *
      * @param tag
      * @param applicationConfiguration
      * @return
@@ -127,10 +137,9 @@ public class WidgetSet {
         } while (bundleName == null && t != null);
 
         if (bundleName != null && !loader.isBundleLoaded(bundleName)) {
-            getLogger().info(
-                    "Loading bundle " + bundleName
-                            + " to be able to render server side class "
-                            + serverSideClassName);
+            getLogger().info("Loading bundle " + bundleName
+                    + " to be able to render server side class "
+                    + serverSideClassName);
             ApplicationConfiguration.startDependencyLoading();
             loader.loadBundle(bundleName, new BundleLoadCallback() {
                 @Override
