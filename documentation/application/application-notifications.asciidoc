@@ -23,7 +23,7 @@ type, and displays it in the current page.
 ----
 Notification.show("This is the caption",
                   "This is the description",
-                  Notification.Type.WARNING_MESSAGE);
+                  Notification.Type.HUMANIZED_MESSAGE);
 ----
 
 [[figure.notification.example1]]
@@ -39,8 +39,8 @@ in a [classname]#Page#, typically the current page.
 [source, java]
 ----
 new Notification("This is a warning",
-    "<br/>This is the <i>last</i> warning",
-    Notification.TYPE_WARNING_MESSAGE, true)
+    "This is the <i>last</i> warning",
+    Notification.Type.WARNING_MESSAGE, true)
     .show(Page.getCurrent());
 ----
 
@@ -67,14 +67,14 @@ notification. If no notification type is given, the "humanized" type is used as
 the default. The notification types, listed below, are defined in the
 [classname]#Notification.Type# class.
 
-[parameter]#TYPE_HUMANIZED_MESSAGE#::
+[parameter]#HUMANIZED_MESSAGE#::
 image:img/notification-humanized.png[width=30%, scaledwidth=50%]
 +
 A user-friendly message that does not annoy too much: it does not require
 confirmation by clicking and disappears quickly. It is centered and has a
 neutral gray color.
 
-[parameter]#TYPE_WARNING_MESSAGE#::
+[parameter]#WARNING_MESSAGE#::
 image:img/notification-warning.png[width=30%, scaledwidth=50%]
 +
 Warnings are messages of medium importance. They are displayed with colors that
@@ -82,7 +82,7 @@ are neither neutral nor too distractive. A warning is displayed for 1.5 seconds,
 but the user can click the message box to dismiss it. The user can continue to
 interact with the application while the warning is displayed.
 
-[parameter]#TYPE_ERROR_MESSAGE#::
+[parameter]#ERROR_MESSAGE#::
 image:img/notification-error.png[width=30%, scaledwidth=50%]
 +
 Error messages are notifications that require the highest user attention, with
@@ -92,7 +92,7 @@ although the close box in the upper right corner indicates it visually. Unlike
 with other notifications, the user can not interact with the application while
 the error message is displayed.
 
-[parameter]#TYPE_TRAY_NOTIFICATION#::
+[parameter]#TRAY_NOTIFICATION#::
 image:img/notification-tray.png[width=30%, scaledwidth=50%]
 +
 Tray notifications are displayed in the "system tray" area, that is, in the
@@ -115,7 +115,7 @@ the current page.
 // Notification with default settings for a warning
 Notification notif = new Notification(
     "Warning",
-    "<br/>Area of reindeer husbandry",
+    "Area of reindeer husbandry",
     Notification.TYPE_WARNING_MESSAGE);
 
 // Customize it
