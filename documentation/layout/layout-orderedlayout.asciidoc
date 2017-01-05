@@ -145,7 +145,8 @@ The figure is broken down in the following subsections.
 
 If a [classname]#VerticalLayout# has undefined height or
 [classname]#HorizontalLayout# undefined width, the layout will shrink to fit the
-contained components so that there is no extra space between them apart from spacing if enabled.
+contained components so that there is no extra space between them (apart from
+optional spacing).
 
 
 [source, java]
