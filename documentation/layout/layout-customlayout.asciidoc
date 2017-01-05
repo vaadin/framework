@@ -21,9 +21,9 @@ designed separately from code, for example using WYSIWYG web designer tools such
 as Adobe Dreamweaver.
 
 A template is a HTML file located under [filename]#layouts# folder under a theme
-folder under the [filename]#WebContent/VAADIN/themes/# folder, for example,
-[filename]#WebContent/VAADIN/themes/__themename/layouts/mylayout.html__#.
-(Notice that the root path [filename]#WebContent/VAADIN/themes/# for themes is
+folder under the [filename]#/VAADIN/themes/# folder, for example,
+[filename]#/VAADIN/themes/__themename/layouts/mylayout.html__#.
+(Notice that the root path [filename]#/VAADIN/themes/# for themes is
 fixed.) A template can also be provided dynamically from an
 [classname]#InputStream#, as explained below. A template includes
 [literal]#++<div>++# elements with a [parameter]#location# attribute that

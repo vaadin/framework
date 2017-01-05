@@ -45,14 +45,14 @@ layout.addComponent(tabsheet);
 
 // Create the first tab
 VerticalLayout tab1 = new VerticalLayout();
-tab1.addComponent(new Embedded(null,
+tab1.addComponent(new Image(null,
         new ThemeResource("img/planets/Mercury.jpg")));
 tabsheet.addTab(tab1, "Mercury",
         new ThemeResource("img/planets/Mercury_symbol.png"));
 
 // This tab gets its caption from the component caption
 VerticalLayout tab2 = new VerticalLayout();
-tab2.addComponent(new Embedded(null,
+tab2.addComponent(new Image(null,
         new ThemeResource("img/planets/Venus.jpg")));
 tab2.setCaption("Venus");
 tabsheet.addTab(tab2).setIcon(
@@ -92,12 +92,6 @@ A tab can be made invisible by setting [methodname]#setVisible(false)# for the
 tab bar entirely. This can be useful in tabbed document interfaces (TDI) when
 there is only one tab.
 
-ifdef::web[]
-[[figure.tabsheet.example2]]
-.A TabSheet with Hidden and Disabled Tabs
-image::img/tabsheet-example2.png[width=50%, scaledwidth=70%]
-endif::web[]
-
 
 [[layout.tabsheet.events]]
 == Tab Change Events
@@ -116,7 +110,6 @@ Notice that when the first tab is added, it is selected and the change event is
 fired, so if you want to catch that, you need to add your listener before adding
 any tabs.
 
-ifdef::web[]
 [[layout.tabsheet.events.dynamic]]
 === Creating Tab Content Dynamically
 
@@ -154,8 +147,6 @@ for (String caption: tabs)
     tabsheet.addTab(new VerticalLayout(), caption,
         new ThemeResource("img/planets/"+caption+"_symbol.png"));
 ----
-
-endif::web[]
 
 
 [[layout.tabsheet.closing]]
@@ -202,7 +193,6 @@ tabsheet.setCloseHandler(new CloseHandler() {
 
 
 
-ifdef::web[]
 [[layout.tabsheet.css]]
 == CSS Style Rules
 
@@ -247,5 +237,3 @@ buttons enable browsing the full tab list. These use the styles
 The content area where the tab contents are shown can be styled with
 [literal]#++v-tabsheet-content++#, and the surrounding decoration with
 [literal]#++v-tabsheet-deco++#.
-
-endif::web[]
