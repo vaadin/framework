@@ -34,19 +34,5 @@ public class ResynchronizeAfterAsyncRemovalTest extends SingleBrowserTest {
         Assert.assertEquals(
                 "Removing window should not cause button to be marked as dirty",
                 "2. Dirty: false", getLogRow(0));
-
-        ButtonElement logCountButton = $(ButtonElement.class).all().get(1);
-        logCountButton.click();
-
-        Assert.assertEquals("Sanity check", "3. syncId: 2", getLogRow(1));
-        Assert.assertEquals("Sanity check",
-                "4. Unregistered connector count: 1", getLogRow(0));
-
-        logCountButton.click();
-
-        Assert.assertEquals("Sanity check", "5. syncId: 3", getLogRow(1));
-        Assert.assertEquals(
-                "Unregistered connector map should have been cleared",
-                "6. Unregistered connector count: 0", getLogRow(0));
     }
 }

@@ -28,6 +28,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Table;
+
 import elemental.json.JsonObject;
 
 @Push
@@ -173,22 +174,8 @@ public class TableRemovedQuicklySendsInvalidRpcCalls extends AbstractTestUI {
         }
 
         @Override
-        public boolean connectorWasPresentAsRequestWasSent(String connectorId,
-                long lastSyncIdSeenByClient) {
-            return tracker.connectorWasPresentAsRequestWasSent(connectorId,
-                    lastSyncIdSeenByClient);
-        }
-
-        @Override
         public int getCurrentSyncId() {
             return tracker.getCurrentSyncId();
-        }
-
-        @Override
-        public void cleanConcurrentlyRemovedConnectorIds(
-                int lastSyncIdSeenByClient) {
-            tracker.cleanConcurrentlyRemovedConnectorIds(
-                    lastSyncIdSeenByClient);
         }
 
         @Override

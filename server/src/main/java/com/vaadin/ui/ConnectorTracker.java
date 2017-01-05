@@ -24,9 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,14 +87,6 @@ public class ConnectorTracker implements Serializable {
     private Map<StreamVariable, String> streamVariableToSeckey;
 
     private int currentSyncId = 0;
-
-    /**
-     * Map to track on which syncId each connector was removed.
-     *
-     * @see #getCurrentSyncId()
-     * @see #cleanConcurrentlyRemovedConnectorIds(long)
-     */
-    private TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<Integer, Set<String>>();
 
     /**
      * Gets a logger for this class
@@ -181,15 +171,6 @@ public class ConnectorTracker implements Serializable {
                     + connectorId
                     + " is not the one that was registered for that id");
         }
-
-        Set<String> unregisteredConnectorIds = syncIdToUnregisteredConnectorIds
-                .get(currentSyncId);
-        if (unregisteredConnectorIds == null) {
-            unregisteredConnectorIds = new HashSet<String>();
-            syncIdToUnregisteredConnectorIds.put(currentSyncId,
-                    unregisteredConnectorIds);
-        }
-        unregisteredConnectorIds.add(connectorId);
 
         dirtyConnectors.remove(connector);
         if (unregisteredConnectors.add(connector)) {
@@ -847,48 +828,6 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Check whether a connector was present on the client when the it was
-     * creating this request, but was removed server-side before the request
-     * arrived.
-     *
-     * @since 7.2
-     * @param connectorId
-     *            The connector id to check for whether it was removed
-     *            concurrently or not.
-     * @param lastSyncIdSeenByClient
-     *            the most recent sync id the client has seen at the time the
-     *            request was sent, or -1 to ignore potential problems
-     * @return <code>true</code> if the connector was removed before the client
-     *         had a chance to react to it.
-     */
-    public boolean connectorWasPresentAsRequestWasSent(String connectorId,
-            long lastSyncIdSeenByClient) {
-        assert getConnector(connectorId) == null : "Connector " + connectorId
-                + " is still attached";
-
-        if (lastSyncIdSeenByClient == -1) {
-            // Ignore potential problems
-            return true;
-        }
-
-        /*
-         * Use non-inclusive tail map to find all connectors that were removed
-         * after the reported sync id was sent to the client.
-         */
-        NavigableMap<Integer, Set<String>> unregisteredAfter = syncIdToUnregisteredConnectorIds
-                .tailMap(Integer.valueOf((int) lastSyncIdSeenByClient), false);
-        for (Set<String> unregisteredIds : unregisteredAfter.values()) {
-            if (unregisteredIds.contains(connectorId)) {
-                // Removed with a higher sync id, so it was most likely present
-                // when this sync id was sent.
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Gets the most recently generated server sync id.
      * <p>
      * The sync id is incremented by one whenever a new response is being
@@ -909,46 +848,5 @@ public class ConnectorTracker implements Serializable {
      */
     public int getCurrentSyncId() {
         return currentSyncId;
-    }
-
-    /**
-     * Maintains the bookkeeping connector removal and concurrency by removing
-     * entries that have become too old.
-     * <p>
-     * <em>It is important to run this call for each transmission from the
-     * client</em> , otherwise the bookkeeping gets out of date and the results
-     * form {@link #connectorWasPresentAsRequestWasSent(String, long)} will
-     * become invalid (that is, even though the client knew the component was
-     * removed, the aforementioned method would start claiming otherwise).
-     * <p>
-     * Entries that both client and server agree upon are removed. Since
-     * argument is the last sync id that the client has seen from the server, we
-     * know that entries earlier than that cannot cause any problems anymore.
-     * <p>
-     * The sync id value <code>-1</code> is ignored to facilitate testing with
-     * pre-recorded requests.
-     *
-     * @see #connectorWasPresentAsRequestWasSent(String, long)
-     * @since 7.2
-     * @param lastSyncIdSeenByClient
-     *            the sync id the client has most recently received from the
-     *            server.
-     */
-    public void cleanConcurrentlyRemovedConnectorIds(
-            int lastSyncIdSeenByClient) {
-        if (lastSyncIdSeenByClient == -1) {
-            // Sync id checking is not in use, so we should just clear the
-            // entire map to avoid leaking memory
-            syncIdToUnregisteredConnectorIds.clear();
-            return;
-        }
-        /*
-         * We remove all entries _older_ than the one reported right now,
-         * because the remaining still contain components that might cause
-         * conflicts. In any case, it's better to clean up too little than too
-         * much, especially as the data will hardly grow into the kilobytes.
-         */
-        syncIdToUnregisteredConnectorIds.headMap(lastSyncIdSeenByClient, true)
-                .clear();
     }
 }
