@@ -7,17 +7,38 @@ layout: page
 [[components.overview]]
 = Overview
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 Vaadin provides a comprehensive set of user interface components and allows you
-to define custom components. <<figure.uicomponents>> illustrates the inheritance
-hierarchy of the UI component classes and interfaces. Interfaces are displayed
-in gray, abstract classes in orange, and regular classes in blue. An annotated
+to define custom components.
+
+The component hierarchy of Vaadin is presented in the next three diagrams:
+
+* <<figure.uicomponents>>
+illustrates the inheritance
+hierarchy of the UI component classes and interfaces not bound directly to
+business objects.
+
+* <<figure.uifields>>
+presents fields bound to single values
+
+* <<figure.uiselects>>
+lists components presenting lists of data.
+
+Interfaces are displayed
+with a dotted outline, abstract classes in gray, and regular classes in blue. An annotated
 version of the diagram is featured in the __Vaadin Cheat Sheet__.
 
 [[figure.uicomponents]]
 .User Interface Component Class Hierarchy
-image::img/component-diagram-hi.png[width=100%, scaledwidth=100%]
+image::img/component-class-hierarchy.png[width=100%, scaledwidth=100%]
+
+[[figure.uifields]]
+.Field Component Class Hierarchy
+image::img/field-class-hierarchy.png[width=100%, scaledwidth=100%]
+
+[[figure.uiselects]]
+.Lists Component Class Hierarchy
+image::img/selects-class-hierarchy.png[width=100%, scaledwidth=100%]
+
 
 ((("[classname]#Component#")))
 At the top of the interface hierarchy, we have the [classname]#Component#
@@ -25,6 +46,8 @@ interface.
 ((("[classname]#AbstractComponent#")))
 At the top of the class hierarchy, we have the [classname]#AbstractComponent#
 class.
+
+
 ((("[classname]#AbstractField#")))
 ((("[classname]#AbstractComponentContainer#")))
 It is inherited by two other abstract classes: [classname]#AbstractField#,
