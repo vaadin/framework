@@ -147,8 +147,8 @@ browsing can open the window in another tab, depending on the browser settings.
 === URL and Session
 
 The URL path for a popup window UI is by default determined from the UI class
-name, by prefixig it with " [literal]#++popup/++#". For example the
-UI giver earlier, the URL would be
+name, by prefixing it with "[literal]#++popup/++#". For example, for the
+UI given earlier, the URL would be
 [literal]#++/example/base/popup/MyPopupUI++#.
 
 
