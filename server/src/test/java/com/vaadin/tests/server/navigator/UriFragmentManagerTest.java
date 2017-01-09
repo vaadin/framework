@@ -24,7 +24,6 @@ import org.junit.Test;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.Navigator.UriFragmentManager;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.shared.Registration;
 
 public class UriFragmentManagerTest {
@@ -62,9 +61,7 @@ public class UriFragmentManagerTest {
         navigator.navigateTo("test");
         control.replay();
 
-        UriFragmentChangedEvent event = new UriFragmentChangedEvent(page,
-                "oldtest");
-        manager.uriFragmentChanged(event);
+        page.setUriFragment("oldtest", true);
     }
 
     @Test
