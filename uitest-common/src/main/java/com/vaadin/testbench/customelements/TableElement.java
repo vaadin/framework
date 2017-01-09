@@ -8,11 +8,11 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 @ServerClass("com.vaadin.ui.Table")
 public class TableElement extends com.vaadin.testbench.elements.TableElement {
     @Override
-    public CollapseMenu openCollapseMenu() {
+    public CollapseMenuElement openCollapseMenu() {
         getCollapseMenuToggle().click();
         WebElement cm = getDriver()
                 .findElement(By.xpath("//*[@id='PID_VAADIN_CM']"));
-        return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenu.class);
+        return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenuElement.class);
     }
 
     @Override

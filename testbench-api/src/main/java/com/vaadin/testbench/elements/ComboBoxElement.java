@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -265,7 +264,6 @@ public class ComboBoxElement extends AbstractSelectElement {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
-                Assert.fail(e.getMessage());
             }
         }
     }

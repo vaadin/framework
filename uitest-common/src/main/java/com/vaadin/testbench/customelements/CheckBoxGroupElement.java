@@ -63,7 +63,7 @@ public class CheckBoxGroupElement
      *
      * @return list of the selected options in the checkbox group
      */
-    public List<String> getSelection() {
+    public List<String> getValue() {
         List<String> values = new ArrayList<>();
         List<WebElement> options = findElements(byButtonSpan);
         for (WebElement option : options) {

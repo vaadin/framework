@@ -147,16 +147,30 @@ public class TableElement extends AbstractSelectElement {
         }
     }
 
-    public CollapseMenu openCollapseMenu() {
+    /**
+     * Opens the collapse menu of this table and returns the element for it.
+     *
+     * @return collapse menu element
+     */
+    public CollapseMenuElement openCollapseMenu() {
         getCollapseMenuToggle().click();
         WebElement cm = getDriver()
                 .findElement(By.xpath("//*[@id='PID_VAADIN_CM']"));
-        return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenu.class);
+        return wrapElement(cm, getCommandExecutor())
+                .wrap(CollapseMenuElement.class);
     }
 
-    public static class CollapseMenu extends ContextMenuElement {
+    /**
+     * Element representing a collapse menu of a Table.
+     */
+    public static class CollapseMenuElement extends ContextMenuElement {
     }
 
+    /**
+     * Gets the button that shows or hides the collapse menu.
+     *
+     * @return button for opening collapse menu
+     */
     public WebElement getCollapseMenuToggle() {
         return findElement(By.className("v-table-column-selector"));
     }

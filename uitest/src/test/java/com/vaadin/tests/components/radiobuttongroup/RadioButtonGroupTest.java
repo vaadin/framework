@@ -18,7 +18,6 @@ package com.vaadin.tests.components.radiobuttongroup;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -190,9 +189,8 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         assertSelected("Item 5");
     }
 
-    private void assertSelected(String... expectedSelection) {
-        Assert.assertEquals(Arrays.asList(expectedSelection),
-                getSelect().getSelection());
+    private void assertSelected(String expectedSelection) {
+        Assert.assertEquals(expectedSelection, getSelect().getValue());
     }
 
     @Override
