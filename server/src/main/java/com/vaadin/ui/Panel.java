@@ -279,7 +279,7 @@ public class Panel extends AbstractSingleComponentContainer
 
     /**
      * Remove a click listener from the Panel. The listener should earlier have
-     * been added using {@link #addListener(ClickListener)}.
+     * been added using {@link #addClickListener(ClickListener)}.
      *
      * @param listener
      *            The listener to remove

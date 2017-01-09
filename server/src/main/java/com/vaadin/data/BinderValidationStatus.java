@@ -29,12 +29,12 @@ import com.vaadin.data.validator.BeanValidator;
  * Binder validation status change. Represents the outcome of binder level
  * validation. Has information about the validation results for the
  * {@link BindingBuilder#withValidator(Validator) field level} and
- * {@link Binder#withValidator(Validator)binder level} validation.
+ * {@link Binder#withValidator(Validator) binder level} validation.
  * <p>
  * Note: if there are any field level validation errors, the bean level
  * validation is not run.
  * <p>
- * Use {@link Binder#setValidationStatusHandler(BinderStatusHandler)} to handle
+ * Use {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler)} to handle
  * form level validation status changes.
  *
  * @author Vaadin Ltd
@@ -43,7 +43,7 @@ import com.vaadin.data.validator.BeanValidator;
  *            the bean type of the binder
  *
  * @see BinderValidationStatusHandler
- * @see Binder#setValidationStatusHandler(BinderStatusHandler)
+ * @see Binder#setValidationStatusHandler(BinderValidationStatusHandler)
  * @see Binder#validate()
  * @see BindingValidationStatus
  *

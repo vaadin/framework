@@ -23,10 +23,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.vaadin.server.SerializableConsumer;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
@@ -237,7 +236,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
      * multiselect component.
      *
      * @return the item enabled provider, not {@code null}
-     * @see #setItemEnabledProvider(Predicate)
+     * @see #setItemEnabledProvider(SerializablePredicate)
      */
     protected SerializablePredicate<T> getItemEnabledProvider() {
         return itemEnabledProvider;
@@ -462,8 +461,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         return item;
     }
 
-    private void updateSelection(Consumer<Set<T>> handler,
-            boolean userOriginated) {
+    private void updateSelection(SerializableConsumer<Set<T>> handler,
+                                 boolean userOriginated) {
         LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
         handler.accept(selection);
 

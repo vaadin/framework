@@ -21,7 +21,7 @@ import com.vaadin.server.SerializableFunction;
  * {@link ItemCaptionGenerator} can be used to customize the string shown to the
  * user for an item.
  *
- * @see ComboBox#setItemCaptionGenerator(ItemCaptionProvider)
+ * @see ComboBox#setItemCaptionGenerator(ItemCaptionGenerator)
  * @param <T>
  *            item type
  * @since 8.0

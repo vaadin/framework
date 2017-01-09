@@ -69,7 +69,6 @@ scripting vulnerabilities and sanitization of user input.
 
 ====
 
-ifdef::web[]
 [[components.richtextarea.localization]]
 == Localizing RichTextArea Toolbars
 
@@ -82,21 +81,6 @@ it, and replacing the default toolbar. The toolbar is a single image file from
 which the individual button icons are picked, so the order of the icons is
 different from the rendered. The image file depends on the client-side
 implementation of the toolbar.
-
-
-[source, css]
-----
-.v-richtextarea-richtextexample .gwt-ToggleButton
-.gwt-Image {
-  background-image: url(img/richtextarea-toolbar-fi.png)
-                    !important;
-}
-----
-
-.Regular English and a Localized Rich Text Area Toolbar
-image::img/richtextarea-toolbar-whitebg.png[]
-
-endif::web[]
 
 == CSS Style Rules
 

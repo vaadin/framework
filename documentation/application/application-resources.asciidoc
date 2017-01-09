@@ -10,12 +10,11 @@ layout: page
 Web applications can display various __resources__, such as images, other
 embedded content, or downloadable files, that the browser has to load from the
 server. Image resources are typically displayed with the [classname]#Image#
-component or as component icons. Flash animations can be displayed with
-[classname]#Flash#, embedded browser frames with [classname]#BrowserFrame#, and
+component or as component icons. Embedded browser frames can be displayed with [classname]#BrowserFrame#, and
 other content with the [classname]#Embedded# component, as described in
 <<dummy/../../../framework/components/components-embedded#components.embedded,"Embedded
 Resources">>. Downloadable files are usually provided by clicking a
-[classname]#Link#.
+[classname]#Link# or using the [classname]#FileDownloader# extension.
 
 There are several ways to how such resources can be provided by the web server.
 Static resources can be provided without having to ask for them from the
@@ -85,15 +84,8 @@ Image image = new Image("Image from file", resource);
 // Let the user view the file in browser or download it
 Link link = new Link("Link to the image file", resource);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.resources.fileresource[on-line example, window="_blank"].
 
-The result, as well as the folder structure where the file is stored under a
-regular Eclipse Vaadin project, is shown in
-<<figure.application.resources.file>>.
-
-[[figure.application.resources.file]]
-.File Resource
-image::img/resource-fileresource.png[width=50%, scaledwidth=80%]
+In a Maven based Vaadin project the image file should be located inside [filename]#src/main/webapp/WEB-INF/images/image.png#. 
 
 
 [[application.resources.class]]
@@ -114,7 +106,6 @@ and displays it in an [classname]#Image# component.
 layout.addComponent(new Image(null,
         new ClassResource("smiley.jpg")));
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.resources.classresource[on-line example, window="_blank"].
 
 
 [[application.resources.theme]]
@@ -136,14 +127,6 @@ ThemeResource resource = new ThemeResource("img/themeimage.png");
 // Use the resource
 Image image = new Image("My Theme Image", resource);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.resources.themeresource[on-line example, window="_blank"].
-
-The result is shown in <<figure.application.resources.theme>>, also illustrating
-the folder structure for the theme resource file in an Eclipse project.
-
-[[figure.application.resources.theme]]
-.Theme Resources
-image::img/resource-themeimage.png[width=40%, scaledwidth=70%]
 
 To use theme resources, you must set the theme for the UI. See
 <<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>

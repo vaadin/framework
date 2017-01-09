@@ -30,7 +30,6 @@ as follows:
 Link link = new Link("Click Me!",
         new ExternalResource("http://vaadin.com/"));
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.basic[on-line example, window="_blank"].
 
 You can use [methodname]#setIcon()# to make image links as follows:
 
@@ -47,7 +46,6 @@ Link combo = new Link("To appease both literal and visual",
         new ExternalResource("http://vaadin.com/"));
 combo.setIcon(new ThemeResource("img/nicubunu_Chain.png"));
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.basic[on-line example, window="_blank"].
 
 The resulting links are shown in <<figure.components.link.basic>>. You could add
 a " [literal]#++display: block++#" style for the icon element to place the
@@ -82,7 +80,6 @@ link.setTargetName("_blank");
 link.setIcon(new ThemeResource("icons/external-link.png"));
 link.addStyleName("icon-after-caption");
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
 
 [[components.link.pop-up]]
 == Opening as a Pop-Up Window
@@ -91,27 +88,26 @@ With the [literal]#++_blank++# target, a normal new browser window is opened. If
 you wish to open it in a popup window (or tab), you need to give a size for the
 window with [methodname]#setTargetWidth()# and [methodname]#setTargetHeight()#.
 You can control the window border style with [methodname]#setTargetBorder()#,
-which takes any of the defined border styles [parameter]#TARGET_BORDER_DEFAULT#,
-[parameter]#TARGET_BORDER_MINIMAL#, and [parameter]#TARGET_BORDER_NONE#. The
+which takes any of the defined border styles [parameter]#BorderStyle.DEFAULT#,
+[parameter]#BorderStyle.MINIMAL#, and [parameter]#BorderStyle.NONE#. The
 exact result depends on the browser.
 
 [source, java]
 ----
 // Open the URL in a popup
 link.setTargetName("_blank");
-link.setTargetBorder(Link.TARGET_BORDER_NONE);
+link.setTargetBorder(BorderStyle.NONE);
 link.setTargetHeight(300);
 link.setTargetWidth(400);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
 
 == Alternatives
 
 In addition to the [classname]#Link# component, Vaadin allows alternative ways to make hyperlinks.
 Also, you can make hyperlinks (or any other HTML) in a [classname]#Label# in HTML content mode.
 
-The [classname]#Button# component has a [parameter]#Reindeer.BUTTON_LINK# style name that makes it look like a hyperlink, while handling clicks in a server-side click listener instead of in the browser.
-However, browsers do not generally allow opening new windows from with browser code, so for such tasks you need to use the [classname]#BrowserWindowOpener# extension described in <<dummy/../../../framework/advanced/advanced-windows#advanced.windows.popup, "Opening Pop-up Windows">>
+The [classname]#Button# component has a [parameter]#ValoTheme.BUTTON_LINK# style name that makes it look like a hyperlink, while handling clicks in a server-side click listener instead of in the browser.
+However, browsers do not generally allow opening new windows after server side round trip, so for such tasks you need to use the [classname]#BrowserWindowOpener# extension described in <<dummy/../../../framework/advanced/advanced-windows#advanced.windows.popup, "Opening Pop-up Windows">>
 
 
 == CSS Style Rules
@@ -132,13 +128,12 @@ text span.
 Hyperlink anchors have a number of __pseudo-classes__ that are active at
 different times. An unvisited link has [literal]#++a:link++# class and a visited
 link [literal]#++a:visited++#. When the mouse pointer hovers over the link, it
-will have a:hover, and when the mouse button is being pressed over the link, the
+will have [literal]#++a:hover++#, and when the mouse button is being pressed over the link, the
 [literal]#++a:active++# class. When combining the pseudo-classes in a selector,
 please notice that [literal]#++a:hover++# must come after an
 [literal]#++a:link++# and [literal]#++a:visited++#, and [literal]#++a:active++#
 after the [literal]#++a:hover++#.
 
-ifdef::web[]
 === Icon Position
 
 Normally, the link icon is before the caption.
@@ -156,7 +151,6 @@ You can have it right of the caption by reversing the text direction in the cont
     padding: 0 3px;
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.link.target[on-line example, window="_blank"].
 
 The resulting link is shown in <<figure.components.link.new-window>>.
 
@@ -164,4 +158,3 @@ The resulting link is shown in <<figure.components.link.new-window>>.
 .Link That Opens a New Window
 image::img/link-new.png[width=25%, scaledwidth=50%]
 
-endif::web[]

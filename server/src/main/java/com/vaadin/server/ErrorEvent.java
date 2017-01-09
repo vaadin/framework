@@ -109,8 +109,8 @@ public class ErrorEvent implements Serializable {
     /**
      * Method for finding the error handler for the given session.
      *
-     * @param connector
-     *            The target connector
+     * @param session
+     *            The target session
      *
      * @return An ErrorHandler for the session or null if none was found
      */

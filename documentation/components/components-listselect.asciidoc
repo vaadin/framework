@@ -14,9 +14,7 @@ endif::web[]
 
 The [classname]#ListSelect# component is list box that shows the selectable
 items in a vertical list. If the number of items exceeds the height of the
-component, a scrollbar is shown. The component allows both single and multiple
-selection modes, which you can set with [methodname]#setMultiSelect()#. It is
-visually identical in both modes.
+component, a scrollbar is shown. The component allows selecting multiple values.
 
 
 [source, java]
@@ -29,6 +27,11 @@ select.setItems("Mercury", "Venus", "Earth", ...);
 
 // Show 5 items and a scrollbar if there are more
 select.setRows(5);
+
+select.addValueChangeListener(event -> {
+    Set<String> selected = event.getNewSelection();
+    Notification.show(selected.size() + " items.");
+});
 ----
 
 The number of visible items is set with [methodname]#setRows()#.

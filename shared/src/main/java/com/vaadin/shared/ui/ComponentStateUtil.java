@@ -56,7 +56,9 @@ public final class ComponentStateUtil implements Serializable {
     /**
      * Removes an event listener id.
      *
-     * @param eventListenerId
+     * @param state
+     *            shared state
+     * @param eventIdentifier
      *            The event identifier to remove
      * @deprecated Use a {@link Registration} object returned by
      *             {@link #addRegisteredEventListener(SharedState, String)} to

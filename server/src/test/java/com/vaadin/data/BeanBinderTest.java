@@ -13,8 +13,10 @@ import org.junit.Test;
 
 import com.vaadin.data.BeanBinder.BeanBindingBuilder;
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.TextField;
 
 public class BeanBinderTest
         extends BinderTestBase<BeanBinder<BeanToValidate>, BeanToValidate> {
@@ -24,10 +26,12 @@ public class BeanBinderTest
 
     private class TestClass {
         private CheckBoxGroup<TestEnum> enums;
+        private TextField number = new TextField();
     }
 
     private class TestBean {
         private Set<TestEnum> enums;
+        private int number;
 
         public Set<TestEnum> getEnums() {
             return enums;
@@ -35,6 +39,14 @@ public class BeanBinderTest
 
         public void setEnums(Set<TestEnum> enums) {
             this.enums = enums;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
         }
     }
 
@@ -50,7 +62,53 @@ public class BeanBinderTest
     public void bindInstanceFields_parameters_type_erased() {
         BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
         TestClass testClass = new TestClass();
+        otherBinder.forField(testClass.number)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind("number");
+
+        // Should correctly bind the enum field without throwing
         otherBinder.bindInstanceFields(testClass);
+    }
+
+    @Test
+    public void bindInstanceFields_automatically_binds_incomplete_forMemberField_bindings() {
+        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        TestClass testClass = new TestClass();
+
+        otherBinder.forMemberField(testClass.number)
+                .withConverter(new StringToIntegerConverter(""));
+        otherBinder.bindInstanceFields(testClass);
+
+        TestBean bean = new TestBean();
+        otherBinder.setBean(bean);
+        testClass.number.setValue("50");
+        assertEquals(50, bean.number);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void bindInstanceFields_does_not_automatically_bind_incomplete_forField_bindings() {
+        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        TestClass testClass = new TestClass();
+
+        otherBinder.forField(testClass.number)
+                .withConverter(new StringToIntegerConverter(""));
+
+        // Should throw an IllegalStateException since the binding for number is
+        // not completed with bind
+        otherBinder.bindInstanceFields(testClass);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void incomplete_forMemberField_bindings() {
+        BeanBinder<TestBean> otherBinder = new BeanBinder<>(TestBean.class);
+        TestClass testClass = new TestClass();
+
+        otherBinder.forMemberField(testClass.number)
+                .withConverter(new StringToIntegerConverter(""));
+
+        // Should throw an IllegalStateException since the forMemberField
+        // binding has not been completed
+        otherBinder.setBean(new TestBean());
     }
 
     @Test

@@ -357,7 +357,7 @@ public class LegacyCommunicationManager implements Serializable {
 
         /**
          *
-         * @param paintable
+         * @param object
          * @return true if the given class was added to cache
          */
         public boolean cache(Object object) {

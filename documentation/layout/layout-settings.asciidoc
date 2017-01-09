@@ -118,7 +118,7 @@ example below, the buttons have 1:2:3 ratio for the expansion.
 [classname]#GridLayout# has corresponding method for both of its directions,
 [methodname]#setRowExpandRatio()# and [methodname]#setColumnExpandRatio()#.
 
-Expansion is dealt in detail in the documentation of the layout components that
+Expansion is covered in detail in the documentation of the layout components that
 support it. See
 <<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout,"VerticalLayout
 and HorizontalLayout">> and
@@ -251,36 +251,19 @@ alignment, which you can also get as a bitmask value.
 === Size of Aligned Components
 
 You can only align a component that is smaller than its containing cell in the
-direction of alignment. If a component has 100% width, as many components have
+direction of alignment. If a component has 100% width, as some components have
 by default, horizontal alignment does not have any effect. For example,
-[classname]#Label# is 100% wide by default and can not therefore be horizontally
-aligned as such. The problem can be hard to notice, as the text inside a
-[classname]#Label# is left-aligned.
+[classname]#VerticalLayout# is 100% wide by default and can not therefore be horizontally
+aligned as such. The problem can sometimes be hard to notice, as the content inside a
+[classname]#VerticalLayout# is left-aligned by default.
 
 You usually need to set either a fixed size, undefined size, or less than a 100%
 relative size for the component to be aligned - a size that is smaller than the
 containing layout has.
 
-For example, assuming that a [classname]#Label# has short content that is less
-wide than the containing [classname]#VerticalLayout#, you could center it as
-follows:
-
-
-[source, java]
-----
-VerticalLayout layout = new VerticalLayout(); // 100% default width
-Label label = new Label("Hello"); // 100% default width
-label.setSizeUndefined();
-layout.addComponent(label);
-layout.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
-----
-
 If you set the size as undefined and the component itself contains components,
 make sure that the contained components also have either undefined or fixed
-size. For example, if you set the size of a [classname]#Form# as undefined, its
-containing layout [classname]#FormLayout# has 100% default width, which you also
-need to set as undefined. But then, any components inside the
-[classname]#FormLayout# must have either undefined or fixed size.
+size.
 
 
 (((range="endofrange", startref="term.alignment")))
@@ -291,7 +274,7 @@ need to set as undefined. But then, any components inside the
 
 The [classname]#VerticalLayout#, [classname]#HorizontalLayout#, and
 [classname]#GridLayout# layouts offer a [methodname]#setSpacing()# method to
-enable spacing between the cells of the layout.
+enable or disable spacing between the cells of the layout.
 
 For example:
 
@@ -299,7 +282,7 @@ For example:
 [source, java]
 ----
 VerticalLayout layout = new VerticalLayout();
-layout.setSpacing(true);
+layout.setSpacing(false);
 layout.addComponent(new Button("Component 1"));
 layout.addComponent(new Button("Component 2"));
 layout.addComponent(new Button("Component 3"));
@@ -330,9 +313,10 @@ handling. Please see the sections on the individual components for more details.
 [[layout.settings.margins]]
 == Layout Margins
 
-Most layout components do not have any margin around them by default. The
-ordered layouts, as well as [classname]#GridLayout#, support enabling a margin
-with [methodname]#setMargin()#. This enables CSS classes for each margin in the
+Most layout components (with the exception of [classname]#VerticalLayout#) do
+not have any margin around them by default. The ordered layouts, as well as
+[classname]#GridLayout#, support enabling or disabling a margin with
+[methodname]#setMargin()#. This enables CSS classes for each margin in the
 HTML element of the layout component.
 
 In the Valo theme, the margin sizes default to $v-unit-size. You can customize

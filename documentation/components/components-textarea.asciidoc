@@ -29,7 +29,6 @@ area.setValue("A row\n"+
               "Another row\n"+
               "Yet another row");
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textarea.basic[on-line example, window="_blank"].
 
 The result is shown in <<figure.components.textarea>>.
 
@@ -62,15 +61,14 @@ shortening a wrapped line will undo the wrapping.
 [source, java]
 ----
 TextArea area1 = new TextArea("Wrapping");
-area1.setWordwrap(true); // The default
+area1.setWordWrap(true); // The default
 area1.setValue("A quick brown fox jumps over the lazy dog");
 
 TextArea area2 = new TextArea("Nonwrapping");
-area2.setWordwrap(false);
+area2.setWordWrap(false);
 area2.setValue("Victor jagt zw&ouml;lf Boxk&auml;mpfer quer "+
                "&uuml;ber den Sylter Deich");
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textarea.wordwrap[on-line example, window="_blank"].
 
 The result is shown in <<figure.components.textarea.wordwrap>>.
 

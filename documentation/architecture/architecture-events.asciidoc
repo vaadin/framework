@@ -7,17 +7,17 @@ layout: page
 [[architecture.events]]
 = Events and Listeners
 
-Vaadin offers an event-driven programming model for handling user interaction.
+Vaadin Framework offers an event-driven programming model for handling user interaction.
 When a user does something in the user interface, such as clicks a button or
 selects an item, the application needs to know about it. Many Java-based user
 interface frameworks follow the __Event-Listener pattern__ (also known as the
 Observer design pattern) to communicate user input to the application logic. So
-does Vaadin. The design pattern involves two kinds of elements: an object that
+does Vaadin Framework. The design pattern involves two kinds of elements: an object that
 generates ("fires" or "emits") events and a number of listeners that listen for
 the events. When such an event occurs, the object sends a notification about it
 to all the listeners. In a typical case, there is only one listener.
 
-Events can serve many kinds of purposes. In Vaadin, the usual purpose of events
+Events can serve many kinds of purposes. In Vaadin Framework, the usual purpose of events
 is handling user interaction in a user interface. Session management can require
 special events, such as time-out, in which case the event would actually be the
 lack of user interaction. Time-out is a special case of timed or scheduled
@@ -32,48 +32,28 @@ listener).
 Most components that have related events define their own event class and the
 corresponding listener class. For example, the [classname]#Button# has
 [classname]#Button.ClickEvent# events, which can be listened to through the
-[classname]#Button.ClickListener# interface.
+[classname]#Button.ClickListener# functional interface.
 
-In the following, we handle button clicks with a listener implemented as an
-anonymous class:
+In the following, we assign a button click listener using a lambda expression.
 
 [source, java]
 ----
 final Button button = new Button("Push it!");
 
-button.addClickListener(new Button.ClickListener() {
-    public void buttonClick(ClickEvent event) {
-        button.setCaption("You pushed it!");
-    }
-});
+button.addClickListener(event ->
+  button.setCaption("You pushed it!"));
 ----
 
 <<figure.eventlistenerdiagram>> illustrates the case where an
 application-specific class inherits the [classname]#Button.ClickListener#
 interface to be able to listen for button click events. The application must
 instantiate the listener class and register it with
-[methodname]#addClickListener()#. It can be an anonymous class, such as the one
-above. When an event occurs, an event object is instantiated, in this case a
+[methodname]#addClickListener()#. When an event occurs, an event object is instantiated, in this case a
 [classname]#Button.ClickEvent#. The event object knows the related UI component,
 in this case the [classname]#Button#.
 
 [[figure.eventlistenerdiagram]]
 .Class Diagram of a Button Click Listener
-image::img/events-classdiagram-hi.png[width=80%, scaledwidth=100%]
-
-In Java 8, you can implement such functional interfaces with a lambda expression:
-
-[source, java]
-----
-Button button = new Button("Push it!");
-
-button.addClickListener(event ->
-  button.setCaption("You pushed it!"));
-----
-
-In the ancient times of C programming, __callback functions__ filled largely the
-same need as listeners do now. In object-oriented languages, we usually only
-have classes and methods, not functions, so the application has to give a class
-interface instead of a callback function pointer to the framework.
+image::img/events-classdiagram.png[width=80%, scaledwidth=100%]
 
 <<dummy/../../../framework/application/application-events#application.events,"Handling Events with Listeners">> goes into details of handling events in practice.

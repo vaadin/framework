@@ -12,12 +12,12 @@ Engine")))
 The user interface of a server-side Vaadin application is rendered in the
 browser by the Vaadin Client-Side Engine. It is loaded in the browser when the
 page with the Vaadin UI is opened. The server-side UI components are rendered
-using __widgets__ (as they are called in Google Web Toolkit) on the client-side.
+using __widgets__ (as they are called in GWT) on the client-side.
 The client-side engine is illustrated in <<figure.architecture.client-side>>.
 
 [[figure.architecture.client-side]]
 .Vaadin Client-Side Engine
-image::img/clientside-arch-hi.png[width=80%, scaledwidth=100%]
+image::img/clientside-arch.png[width=80%, scaledwidth=100%]
 
 The client-side framework includes two kinds of built-in widgets: GWT widgets
 and Vaadin-specific widgets. The two widget collections have significant

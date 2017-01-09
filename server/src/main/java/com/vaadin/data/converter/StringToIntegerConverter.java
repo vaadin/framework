@@ -48,8 +48,8 @@ public class StringToIntegerConverter
 
     /**
      * Returns the format used by
-     * {@link #convertToPresentation(Integer, Locale)} and
-     * {@link #convertToModel(String, Locale)}.
+     * {@link #convertToPresentation(Object, ValueContext)}  and
+     * {@link #convertToModel(String, ValueContext)}.
      *
      * @param locale
      *            The locale to use

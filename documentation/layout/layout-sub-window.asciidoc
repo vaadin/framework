@@ -46,7 +46,6 @@ public static class SubWindowUI extends UI {
         // Create a sub-window and set the content
         Window subWindow = new Window("Sub-window");
         VerticalLayout subContent = new VerticalLayout();
-        subContent.setMargin(true);
         subWindow.setContent(subContent);
 
         // Put some components in it
@@ -78,7 +77,6 @@ You close a sub-window also programmatically by calling the
 [guibutton]#OK# or [guibutton]#Cancel# button. You can also call
 [methodname]#removeWindow()# for the current [classname]#UI#.
 
-ifdef::web[]
 [[layout.sub-window.openclose.example]]
 === Sub-Window Management
 
@@ -94,23 +92,10 @@ class MySub extends Window {
         super("Subs on Sale"); // Set window caption
         center();
 
-        // Some basic content for the window
-        VerticalLayout content = new VerticalLayout();
-        content.addComponent(new Label("Just say it's OK!"));
-        content.setMargin(true);
-        setContent(content);
-
         // Disable the close button
         setClosable(false);
 
-        // Trivial logic for closing the sub-window
-        Button ok = new Button("OK");
-        ok.addClickListener(new ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                close(); // Close the sub-window
-            }
-        });
-        content.addComponent(ok);
+        setContent(new Button("Close me", event -> close()));
     }
 }
 ----
@@ -122,17 +107,13 @@ You could open the window as follows:
 ----
 // Some UI logic to open the sub-window
 final Button open = new Button("Open Sub-Window");
-open.addClickListener(new ClickListener() {
-    public void buttonClick(ClickEvent event) {
-        MySub sub = new MySub();
+open.addClickListener(event -> {
+    MySub sub = new MySub();
 
-        // Add it to the root component
-        UI.getCurrent().addWindow(sub);
-    }
+    // Add it to the root component
+    UI.getCurrent().addWindow(sub);
 });
 ----
-
-endif::web[]
 
 
 [[layout.sub-window.position]]

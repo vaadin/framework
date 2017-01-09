@@ -41,8 +41,8 @@ import com.vaadin.data.ValueContext;
 public class StringToDateConverter implements Converter<String, Date> {
 
     /**
-     * Returns the format used by {@link #convertToPresentation(Date, Locale)}
-     * and {@link #convertToModel(String, Locale)}.
+     * Returns the format used by {@link #convertToPresentation(Date, ValueContext)}
+     * and {@link #convertToModel(String, ValueContext)}.
      *
      * @param locale
      *            The locale to use

@@ -788,16 +788,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private String userId;
 
         /**
-         * Constructs a new Column configuration with given header caption,
-         * renderer and value provider.
+         * Constructs a new Column configuration with given renderer and
+         * value provider.
          *
          * @param valueProvider
          *            the function to get values from items
          * @param renderer
          *            the type of value
          */
-        protected Column(String caption,
-                ValueProvider<T, ? extends V> valueProvider,
+        protected Column(ValueProvider<T, ? extends V> valueProvider,
                 Renderer<V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
@@ -1071,9 +1070,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets strings describing back end properties to be used when sorting
-         * this column. This method is a short hand for
-         * {@link #setSortBuilder(Function)} that takes an array of strings and
-         * uses the same sorting direction for all of them.
+         * this column.
          *
          * @param properties
          *            the array of strings describing backend properties
@@ -1414,7 +1411,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * {@link #isHidable() hidable}.
          * <p>
          * The default value is <code>null</code>, and in that case the column's
-         * {@link #getHeaderCaption() header caption} is used.
+         * {@link #getCaption() header caption} is used.
          * <p>
          * <em>NOTE:</em> setting this to empty string might cause the hiding
          * toggle to not render correctly.
@@ -1882,8 +1879,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             ValueProvider<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
-        Column<T, V> column = new Column<>("Column " + generatedIdentifier,
-                valueProvider, renderer);
+        Column<T, V> column = new Column<>(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
         return column;
     }
@@ -2468,9 +2464,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Returns the footer section of this grid. The default footer contains a
-     * single row, set as the {@linkplain #setDefaultFooterRow(FooterRow)
-     * default row}.
+     * Returns the footer section of this grid.
      *
      * @return the footer section
      */
@@ -2760,7 +2754,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return a registration handle to remove the listener
      * @throws UnsupportedOperationException
      *             if selection has been disabled with
-     *             {@link SelectionMode.NONE}
+     *             {@link SelectionMode#NONE}
      */
     public Registration addSelectionListener(SelectionListener<T> listener)
             throws UnsupportedOperationException {
@@ -2850,6 +2844,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param mode
      *            a ColumnResizeMode value
+     * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
         getState().columnResizeMode = mode;
@@ -2860,6 +2855,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * {@link ColumnResizeMode#ANIMATED}.
      *
      * @return a ColumnResizeMode value
+     * @since 7.7.5
      */
     public ColumnResizeMode getColumnResizeMode() {
         return getState(false).columnResizeMode;
@@ -3023,7 +3019,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
             DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-            Column<T, String> column = new Column<>("", provider,
+            Column<T, String> column = new Column<>(provider,
                     new HtmlRenderer());
             addColumn(getGeneratedIdentifier(), column);
             if (id != null) {

@@ -19,7 +19,7 @@ following rules.
 
 Because our goals are high, the focus must be clear. Vaadin is designed for
 creating web applications. It is not designed for creating websites or
-advertisement demos. You may find, for example, JSP/JSF or Flash more suitable
+advertisement demos. You may find, for example, JSP/JSF more suitable
 for such purposes.
 
 

@@ -15,7 +15,7 @@ endif::web[]
 ((("[classname]#TextField#", id="term.components.textfield", range="startofrange")))
 
 [classname]#TextField# is one of the most commonly used user interface components.
-It is a [classname]#Field# component that allows entering textual values with keyboard.
+It is a field that allows entering textual values with keyboard.
 
 The following example creates a simple text field:
 
@@ -27,7 +27,6 @@ TextField tf = new TextField("A Field");
 // Put some initial content in it
 tf.setValue("Stuff in the field");
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.basic[on-line example, window="_blank"].
 
 The result is shown in <<figure.components.textfield.basic>>.
 
@@ -45,12 +44,10 @@ tf.addValueChangeListener(event ->
         // Do something with the value
         Notification.show("Value is: " + event.getValue()));
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.inputhandling[on-line example, window="_blank"].
 
 [classname]#TextField# edits [classname]#String# values, but you can use [classname]#Binder#
 to bind it to any property type that has a proper converter, as described in
-<<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties.converter,"Converting
-Between Property Type and Representation">>.
+<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.conversion,"Conversion">>.
 
 Much of the API of [classname]#TextField# is defined in
 [classname]#AbstractTextField#, which allows different kinds of text input
@@ -90,36 +87,30 @@ to the server and cause a server-side event. Lazier change events allow sending
 larger changes in one event if the user is typing fast, thereby reducing server
 requests.
 
-((([classname]#TextChangeEventMode#)))
+((([classname]#ValueChangeMode#)))
 You can set the text change event mode of a [classname]#TextField# with
-[methodname]#setTextChangeEventMode()#. The allowed modes are defined in
-[classname]#TextChangeEventMode# enum and are as follows:
+[methodname]#setValueChangeMode()#. The allowed modes are defined in
+[classname]#ValueChangeMode# enum and are as follows:
 
-[parameter]#TextChangeEventMode.LAZY#(default):: An event is triggered when there is a pause in editing the text. The length of
-the pause can be modified with [methodname]#setInputEventTimeout()#. As with the
-[parameter]#TIMEOUT# mode, a text change event is forced before a possible
-[classname]#ValueChangeEvent#, even if the user did not keep a pause while
-entering the text.
+[parameter]#ValueChangeMode.LAZY#(default):: An event is triggered when there is a pause in editing the text. The length of
+the pause can be modified with [methodname]#setValueChangeTimeout()#.
 
 +
 This is the default mode.
 
-[parameter]#TextChangeEventMode.TIMEOUT#:: A text change in the user interface causes the event to be communicated to the
+[parameter]#ValueChangeMode.TIMEOUT#:: A text change in the user interface causes the event to be communicated to the
 application after a timeout period. If more changes are made during this period,
 the event sent to the server-side includes the changes made up to the last
 change. The length of the timeout can be set with
-[methodname]#setInputEventTimeout()#.
+[methodname]#setValueChangeTimeout()#.
 
-+
-If a [classname]#ValueChangeEvent# would occur before the timeout period, a
-[classname]#TextChangeEvent# is triggered before it, on the condition that the
-text content has changed since the previous [classname]#TextChangeEvent#.
-
-[parameter]#TextChangeEventMode.EAGER#:: An event is triggered immediately for every change in the text content,
+[parameter]#ValueChangeMode.EAGER#:: The [classname]#ValueChangeEvent# is triggered immediately for every change in the text content,
 typically caused by a key press. The requests are separate and are processed
 sequentially one after another. Change events are nevertheless communicated
 asynchronously to the server, so further input can be typed while event requests
 are being processed.
+
+[parameter]#ValueChangeMode.BLUR#:: The [classname]#ValueChangeEvent# is fired, after the field has lost focus.
 
 [source, java]
 ----
@@ -139,11 +130,9 @@ tf.addValueChangeListener(event -> {
     counter.setValue(len + " of " + tf.getMaxLength());
 });
 
-tf.setValueChangeMode(ValueChangeMode.onKeyPress());
+tf.setValueChangeMode(ValueChangeMode.EAGER);
 ----
 
-
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.textchangeevents.counter[on-line example, window="_blank"].
 
 The result is shown in <<figure.components.textfield.textchangeevents>>.
 
@@ -171,10 +160,8 @@ For example, the following custom style uses dashed border:
 ----
 .v-textfield-dashing {
     border:     thin dashed;
-    background: white; /* Has shading image by default */
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.textfield.css[on-line example, window="_blank"].
 
 The result is shown in <<figure.components.textfield.css>>.
 

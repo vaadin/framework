@@ -22,6 +22,7 @@ import java.util.List;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
+import elemental.json.JsonArray;
 
 /**
  * The shared state for the {@link com.vaadin.ui.Grid} component.
@@ -41,49 +42,49 @@ public class GridState extends AbstractSingleSelectState {
     /**
      * The key in which a row's data can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
      */
     public static final String JSONKEY_DATA = "d";
 
     /**
      * The key in which a row's own key can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
      */
     public static final String JSONKEY_ROWKEY = "k";
 
     /**
      * The key in which a row's generated style can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
      */
     public static final String JSONKEY_ROWSTYLE = "rs";
 
     /**
      * The key in which a generated styles for a row's cells can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
      */
     public static final String JSONKEY_CELLSTYLES = "cs";
 
     /**
      * The key in which a row's description can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
      */
     public static final String JSONKEY_ROWDESCRIPTION = "rd";
 
     /**
      * The key in which a cell's description can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, String)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
      */
     public static final String JSONKEY_CELLDESCRIPTION = "cd";
 
     /**
      * The key that tells whether details are visible for the row.
      *
-     * @see com.vaadin.ui.Grid#setDetailsGenerator(com.vaadin.ui.Grid.DetailsGenerator)
+     * @see com.vaadin.ui.Grid#setDetailsGenerator(com.vaadin.ui.components.grid.DetailsGenerator)
      * @see com.vaadin.ui.Grid#setDetailsVisible(Object, boolean)
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
      *      elemental.json.JsonArray)
@@ -101,6 +102,8 @@ public class GridState extends AbstractSingleSelectState {
 
     /**
      * Column resize mode in grid.
+     * 
+     * @since 7.7.5
      */
     public ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
 

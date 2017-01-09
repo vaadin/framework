@@ -25,8 +25,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -226,6 +228,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                     errorMessageProvider);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public Binding<BEAN, TARGET> bind(String propertyName) {
             checkUnbound();
@@ -252,6 +255,7 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                                 value));
             } finally {
                 getBinder().boundProperties.add(propertyName);
+                getBinder().incompleteMemberFieldBindings.remove(getField());
             }
         }
 
@@ -315,7 +319,8 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     }
 
     private final Class<? extends BEAN> beanType;
-    private final Set<String> boundProperties;
+    private final Set<String> boundProperties = new HashSet<>();
+    private final Map<HasValue<?>, BeanBindingImpl<BEAN, ?, ?>> incompleteMemberFieldBindings = new IdentityHashMap<>();
 
     /**
      * Creates a new {@code BeanBinder} supporting beans of the given type.
@@ -326,13 +331,35 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
     public BeanBinder(Class<? extends BEAN> beanType) {
         BeanUtil.checkBeanValidationAvailable();
         this.beanType = beanType;
-        boundProperties = new HashSet<>();
     }
 
     @Override
     public <FIELDVALUE> BeanBindingBuilder<BEAN, FIELDVALUE> forField(
             HasValue<FIELDVALUE> field) {
         return (BeanBindingBuilder<BEAN, FIELDVALUE>) super.forField(field);
+    }
+
+    /**
+     * Creates a new binding for the given field. The returned builder may be
+     * further configured before invoking {@link #bindInstanceFields(Object)}.
+     * Unlike with the {@link #forField(HasValue)} method, no explicit call to
+     * {@link BeanBindingBuilder#bind(String)} is needed to complete this
+     * binding in the case that the name of the field matches a field name found
+     * in the bean.
+     *
+     * @param <FIELDVALUE>
+     *            the value type of the field
+     * @param field
+     *            the field to be bound, not null
+     * @return the new binding builder
+     * 
+     * @see #forField(HasValue)
+     * @see #bindInstanceFields(Object)
+     */
+    public <FIELDVALUE> BeanBindingBuilder<BEAN, FIELDVALUE> forMemberField(
+            HasValue<FIELDVALUE> field) {
+        incompleteMemberFieldBindings.put(field, null);
+        return forField(field);
     }
 
     /**
@@ -372,12 +399,28 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         return (BeanBinder<BEAN>) super.withValidator(validator);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected <FIELDVALUE, TARGET> BeanBindingImpl<BEAN, FIELDVALUE, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             BindingValidationStatusHandler handler) {
         Objects.requireNonNull(field, "field cannot be null");
         Objects.requireNonNull(converter, "converter cannot be null");
+        if (incompleteMemberFieldBindings.containsKey(field)) {
+            BeanBindingImpl<BEAN, FIELDVALUE, TARGET> newBinding = doCreateBinding(
+                    field, converter, handler);
+            incompleteMemberFieldBindings.put(field, newBinding);
+            return newBinding;
+        } else {
+            return (BeanBindingImpl<BEAN, FIELDVALUE, TARGET>) super.createBinding(
+                    field, converter, handler);
+        }
+    }
+
+    @Override
+    protected <FIELDVALUE, TARGET> BeanBindingImpl<BEAN, FIELDVALUE, TARGET> doCreateBinding(
+            HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
+            BindingValidationStatusHandler handler) {
         return new BeanBindingImpl<>(this, field, converter, handler);
     }
 
@@ -431,8 +474,23 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
                 .filter(memberField -> HasValue.class
                         .isAssignableFrom(memberField.getType()))
                 .forEach(memberField -> handleProperty(memberField,
+                        objectWithMemberFields,
                         (property, type) -> bindProperty(objectWithMemberFields,
                                 memberField, property, type)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private BeanBindingImpl<BEAN, ?, ?> getIncompleteMemberFieldBinding(
+            Field memberField, Object objectWithMemberFields) {
+        memberField.setAccessible(true);
+        try {
+            return incompleteMemberFieldBindings
+                    .get(memberField.get(objectWithMemberFields));
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } finally {
+            memberField.setAccessible(false);
+        }
     }
 
     /**
@@ -537,6 +595,17 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         return memberFieldInOrder;
     }
 
+    @Override
+    protected void checkBindingsCompleted(String methodName) {
+        if (!incompleteMemberFieldBindings.isEmpty()) {
+            throw new IllegalStateException(
+                    "All bindings created with forMemberField must "
+                            + "be completed with bindInstanceFields before calling "
+                            + methodName);
+        }
+        super.checkBindingsCompleted(methodName);
+    }
+
     private void initializeField(Object objectWithMemberFields,
             Field memberField, HasValue<?> value) {
         try {
@@ -551,8 +620,9 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
         }
     }
 
-    private void handleProperty(Field field,
+    private void handleProperty(Field field, Object objectWithMemberFields,
             BiConsumer<String, Class<?>> propertyHandler) {
+
         Optional<PropertyDescriptor> descriptor = getPropertyDescriptor(field);
 
         if (!descriptor.isPresent()) {
@@ -561,6 +631,13 @@ public class BeanBinder<BEAN> extends Binder<BEAN> {
 
         String propertyName = descriptor.get().getName();
         if (boundProperties.contains(propertyName)) {
+            return;
+        }
+
+        BeanBindingImpl<BEAN, ?, ?> tentativeBinding = getIncompleteMemberFieldBinding(
+                field, objectWithMemberFields);
+        if (tentativeBinding != null) {
+            tentativeBinding.bind(propertyName);
             return;
         }
 

@@ -97,7 +97,7 @@ public class ListSelect<T> extends AbstractMultiSelect<T>
      * select.
      * <p>
      * If a height if set (using {@link #setHeight(String)} or
-     * {@link #setHeight(float, int)}) it overrides the number of rows. Leave
+     * {@link #setHeight(float, Unit)}) it overrides the number of rows. Leave
      * the height undefined to use this method.
      * <p>
      * Default value is {@link #DEFAULT_ROWS}

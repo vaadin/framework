@@ -13,8 +13,8 @@ image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#u
 endif::web[]
 
 [classname]#RadioButtonGroup# is a single selection component that allows 
-selection from a group of radio buttons. [classname]#CheckBoxGroup# is a multi selection
-component where items displayed as check boxes. The common selection component features are
+selection from a group of radio buttons. [classname]#CheckBoxGroup# is a multiselection
+component where items are displayed as check boxes. The common selection component features are
 described in
 <<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
 
@@ -46,8 +46,6 @@ maintains the individual check box objects, you can get an array of the
 currently selected items easily, and that you can easily change the appearance
 of a single component and use it with a [classname]#Binder#.
 
-ifdef::web[]
-
 [[components.optiongroups.disabling]]
 == Disabling Items
 
@@ -64,7 +62,7 @@ RadioButtonGroup<String> group = new RadioButtonGroup<>("My Disabled Group");
 group.setItems("One", "Two", "Three");
 
 // Disable one item
-group.setItemEnabledProvider( item-> !"Two".equals(item));
+group.setItemEnabledProvider(item-> !"Two".equals(item));
 ----
 
 [[figure.components.optiongroups.disabling]]
@@ -72,7 +70,6 @@ group.setItemEnabledProvider( item-> !"Two".equals(item));
 image::img/optiongroup-disabling.png[width=25%, scaledwidth=50%]
 
 Setting an item as disabled turns on the [literal]#++v-disabled++# style for it.
-endif::web[]
 
 [[components.optiongroups.css]]
 == CSS Style Rules
@@ -93,43 +90,9 @@ also have the [literal]#++v-select-option++# style that allows styling
 regardless of the option type. Disabled items have additionally the
 [literal]#++v-disabled++# style.
 
-ifdef::web[]
 
 [[components.optiongroups.css.horizontal]]
 === Horizontal Layout
 
-The options are normally laid out vertically. You can use horizontal layout by
-setting [literal]#++display: inline-block++# for the options. The
-[literal]#++nowrap++# setting for the overall element prevents wrapping if there
-is not enough horizontal space in the layout, or if the horizontal width is
-undefined.
+The options are normally laid out vertically. You can switch to horizontal layout by using the style name [parameter]#ValoTheme.OPTIONGROUP_HORIZONTAL# with [methodname]#addStyleName()#.
 
-
-[source, css]
-----
-/* Lay the options horizontally */
-.v-select-optiongroup-horizontal .v-select-option {
-    display: inline-block;
-}
-
-/* Avoid wrapping if the layout is too tight */
-.v-select-optiongroup-horizontal {
-    white-space: nowrap;
-}
-
-/* Some extra spacing is needed */
-.v-select-optiongroup-horizontal
-  .v-select-option.v-radiobutton {
-    padding-right: 10px;
-}
-----
-
-Use of the above rules requires setting a custom [literal]#++horizontal++# style
-name for the component. The result is shown in
-<<figure.components.optiongroups.horizontal>>.
-
-[[figure.components.optiongroups.horizontal]]
-.Horizontal [classname]#RadioButtonGroup#
-image::img/optiongroup-horizontal.png[width=35%, scaledwidth=50%]
-
-endif::web[]

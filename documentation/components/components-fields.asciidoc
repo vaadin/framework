@@ -7,8 +7,6 @@ layout: page
 [[components.fields]]
 = Field Components
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 ((("[classname]#Field#", id="term.components.fields", range="startofrange")))
 
 _Fields_ are components that have a value that the user can change through the
@@ -16,62 +14,57 @@ user interface. <<figure.components.fields>> illustrates the inheritance relatio
 and the important interfaces and base classes.
 
 [[figure.components.fields]]
-.Field components
-image::img/field-diagram-hi.png[width=80%, scaledwidth=100%]
+.Field Components
+image::img/field-class-hierarchy.png[width=100%, scaledwidth=100%]
 
-Field components are built upon the framework defined in the [classname]#Field#
-interface and the [classname]#AbstractField# base class.
-[classname]#AbstractField# is the base class for all field components. In
-addition to the component features inherited from
+Field components are built upon the framework defined in the [classname]#HasValue#
+interface.
+[classname]#AbstractField# is the base class for all field components,
+except those components that allow the user to select a value.
+(see <<dummy/../../../framework/components/components-selection.asciidoc#components.selection,"Selection Components">>).
+
+In addition to the component features inherited from
 [classname]#AbstractComponent#, it implements the features defined in the
-[classname]#HasValue# and [classname]#Component.Focusable# interfaces.
+[interfacename]#HasValue# and [classname]#Component.Focusable# interfaces.
 
 [[figure.components.fields.hasvalue]]
 .Field components having values
 image::img/field-interface-v8-hi.png[width=60%, scaledwidth=100%]
 
-The description of the field interfaces and base classes is broken down in the
-following sections.
+The description of the [interfacename]#HasValue# interface and field components extending [classname]#AbstractField] is broken down in the following sections.
 
 [[components.fields.field]]
-== The [classname]#Field# Interface
+== The [interfacename]#HasValue# Interface
 
-The [classname]#Field# interface inherits the [classname]#Component#
-superinterface and also the [classname]#HasValue# interface to have a value for
-the field. [classname]#AbstractField# is the only class implementing the
-[classname]#Field# interface directly. The relationships are illustrated in
-<<figure.components.fields.field>>.
+The [interfacename]#HasValue# interface marks a component that has a user editable value.
+The type parameter in the interface is the type of the value that the component is editing.
 
-[[figure.components.fields.field]]
-.[classname]#Field# interface inheritance
-image::img/field-interface-hi.png[width=60%, scaledwidth=100%]
-
-You can set the field value with the [methodname]#setValue()# and read with the
+You can set the value with the [methodname]#setValue()# and read it with the
 [methodname]#getValue()# method defined in the [classname]#HasValue# interface.
-The actual value type depends on the component.
 
-The [classname]#Field# interface defines a number of properties, which you can
+The [classname]#HasValue# interface defines a number of properties, which you can
 access with the corresponding setters and getters.
 
-[methodname]#required#:: When enabled, a required indicator (usually the asterisk * character) is
-displayed on the left, above, or right the field, depending on the containing
-layout and whether the field has a caption. If such fields are validated but are
-empty and the [methodname]#requiredError# property (see below) is set, an error
-indicator is shown and the component error is set to the text defined with the
-error property. Without validation, the required indicator is merely a visual
-guide.
 
-[methodname]#requiredError#:: Defines the error message to show when a value is required, but none is entered.
-The error message is set as the component error for the field and is usually
-displayed in a tooltip when the mouse pointer hovers over the error indicator.
+[methodname]#readOnly#:: Set the component to be read-only, meaning that the value is not editable.
+
+[methodname]#requiredIndicatorVisible#:: When enabled, a required indicator
+(the asterisk * character) is displayed on the left, above, or right the field,
+depending on the containing layout and whether the field has a caption.
+When the component is used in a form (see <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.validation,"Validation">>),
+it can be set to be required, which will automatically show the required indicator,
+and validate that the value is not empty. Without validation, the required indicator
+is merely a visual guide.
+
+[methodname]#emptyValue#:: The initial empty value of the component.
+
+[methodname]#clear#:: Clears the value to the empty value.
+
 
 [[components.fields.valuechanges]]
-== Handling Field Value Changes
+== Handling Value Changes
 
-[classname]#Field# provides [methodname]#addValueChangeListener# method for listening to changes to the field value. This method takes a [interfacename]#EventListener# that gets
-a [classname]#ValueChange# event instance containing information about the event.
-
-This method returns a [classname]#Registration# object that can be used to later
+[interfacename]#HasValue# provides [methodname]#addValueChangeListener# method for listening to changes to the field value. This method returns a [classname]#Registration# object that can be used to later
 remove the added listener if necessary.
 
 [source, java]
@@ -79,7 +72,6 @@ remove the added listener if necessary.
 TextField textField = new TextField();
 Label echo = new Label();
 
-// Add a more complex listener
 textField.addValueChangeListener(event -> {
     String origin = event.isUserOriginated()
         ? "user"
@@ -90,6 +82,7 @@ textField.addValueChangeListener(event -> {
     Notification.show(message);
 });
 ----
+
 
 [[components.fields.databinding]]
 == Binding Fields to Data
@@ -114,15 +107,17 @@ Binder<Person> binder = new Binder<>();
 
 // Bind nameField to the Person.name property
 // by specifying its getter and setter
-binder.forField(nameField)
-    .bind(Person::getName, Person::setName);
+binder.bind(nameField, Person::getName, Person::setName);
 
 // Bind an actual concrete Person instance.
 // After this, whenever the user changes the value
 // of nameField, p.setName is automatically called.
 Person p = new Person();
-binder.bind(p;
+binder.bind(p);
 ----
+
+For more information on data binding, see <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
+
 
 == Validating Field Values
 
@@ -131,40 +126,24 @@ User input may be syntactically or semantically invalid.
 automatically checking the validity of the input before storing it to the data
 object. You can add validators to fields by calling the [methodname]#withValidator#
 method on the [interfacename]#Binding# object returned by [methodname]#Binder.forField#.
+There are several built-in validators in the Framework, such as the [classname]#StringLengthValidator# used below.
 
 [source, java]
 ----
 binder.forField(nameField)
-    .withValidator(new StringLengthValidator(2, 20,
-        "Name must be between 2 and 20 characters long"))
+    .withValidator(new StringLengthValidator(
+        "Name must be between 2 and 20 characters long",
+        2, 20))
     .bind(Person::getName, Person::setName);
 ----
 
-Failed validation is indicated with the error indicator of the field, described in
+Failed validation is by default indicated with the error indicator of the field, described in
 <<dummy/../../../framework/application/application-errors#application.errors.error-indicator,"Error
 Indicator and Message">>. Hovering mouse on the field displays the error message
 returned by the validator. If any value in a set of bound fields fails validation,
 none of the field values are saved into the bound property until the validation
 passes.
 
-[[components.fields.validation.builtin]]
-=== Built-in Validators
-
-Vaadin includes the following built-in validators. The property value type is
-indicated.
-
-[classname]#RangeValidator#: [classname]#Comparable#::
-Checks that the given [interfacename]#Comparable# value is at or between two given values.
-
-[classname]#StringLengthValidator#: [classname]#String#::
-Checks that the length of the input string is at or between two given lengths.
-
-[classname]#RegexpValidator#: [classname]#String#::
-Checks that the value matches the given regular expression.
-
-[classname]#EmailValidator#: [classname]#String#::
-Checks that the string value is a syntactically valid email address.
-The validated syntax is close to the RFC 822 standard regarding email addresses.
 
 === Implementing Custom Validators
 
@@ -177,7 +156,7 @@ whether or not the given input was valid.
 ----
 class MyValidator implements Validator<String> {
     @Override
-    public Result<String> apply(String input) {
+    public Result<String> apply(String value, ValueContext context) {
         if(input.length() == 6) {
             return Result.ok(input);
         } else {
@@ -211,8 +190,7 @@ Field values are always of some particular type. For example,
 a data source, the type of the source property can be something different,
 say an [classname]#Integer#. __Converters__ are used for converting the values
 between the presentation and the model. Their usage is described in
-<<dummy/../../../framework/datamodel/datamodel-properties#datamodel.properties.converter,"Converting
-Between Model and Presentation Types">>.
+<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.conversion,"Conversion">>.
 
 
 (((range="endofrange", startref="term.components.fields")))
