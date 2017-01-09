@@ -7,8 +7,6 @@ layout: page
 [[components.interfaces]]
 = Interfaces and Abstractions
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 ((("interfaces")))
 Vaadin user interface components are built on a skeleton of interfaces and
 abstract classes that define and implement the features common to all components
@@ -22,7 +20,7 @@ The interfaces that define the Vaadin data model are described in <<dummy/../../
 
 [[figure.components.interfaces]]
 .Component interfaces and abstractions
-image::img/component-abstractions-hi.png[width=100%, scaledwidth=100%]
+image::img/component-abstractions.png[width=100%, scaledwidth=100%]
 
 All components are connectors that connect to the client-side widgets.
 

@@ -70,25 +70,25 @@ For example:
 [source, html]
 ----
 <!-- Use margin and spacing -->
-<v-vertical-layout size-full margin spacing>
-  <v-label><b>Hello!</b> - How are you?</v-label>
+<vaadin-vertical-layout size-full margin spacing>
+  <vaadin-label><b>Hello!</b> - How are you?</vaadin-label>
 
   <!-- Use expand ratio -->
-  <v-horizontal-layout size-full :expand>
+  <vaadin-horizontal-layout size-full :expand>
     ...
 
     <!-- Use expand ratio -->
-    <v-table _id="mytable" caption="My Table"
+    <vaadin-grid _id="mygrid" caption="My Grid"
              size-full :expand/>
-  </v-horizontal-layout>
+  </vaadin-horizontal-layout>
 
-  <v-horizontal-layout width-full>
+  <vaadin-horizontal-layout width-full>
     ...
 
     <!-- Use alignment -->
-    <v-button :right><b>OK</b></v-button>
-  </v-horizontal-layout>
-</v-vertical-layout>
+    <vaadin-button :right><b>OK</b></vaadin-button>
+  </vaadin-horizontal-layout>
+</vaadin-vertical-layout>
 ----
 
 [[layout.orderedlayout.spacing]]
