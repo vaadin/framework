@@ -159,7 +159,7 @@ Start with the following configuration:
     ... other project build definitions ...
 
     <!-- Name of the theme -->
-    <property name="theme" value="book-examples"/>
+    <property name="theme" value="mytheme"/>
 
     <!-- Compilation result directory -->
     <property name="result" value="build/result"/>

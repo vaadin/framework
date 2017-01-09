@@ -36,7 +36,6 @@ content.addComponent(c);
 // Enable Responsive CSS selectors for the component
 Responsive.makeResponsive(c);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.basic[on-line example, window="_blank"].
 
 You can now use [literal]#++width-range++# and [literal]#++height-range++#
 conditions in CSS selectors as follows:
@@ -67,7 +66,6 @@ conditions in CSS selectors as follows:
     font-size: 36pt;
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.basic[on-line example, window="_blank"].
 
 You can have overlapping size ranges, in which case all the selectors matching
 the current size are enabled.
@@ -126,7 +124,6 @@ Image image = new Image(null,
 image.addStyleName("itembox");
 layout.addComponent(image);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.flexwrap[on-line example, window="_blank"].
 
 The SCSS could be as follows:
 
@@ -160,7 +157,6 @@ The SCSS could be as follows:
     .itembox {width: 50%}
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.flexwrap[on-line example, window="_blank"].
 
 The layout in the wide mode is shown in <<figure.theme.responsive.flexwrap>>.
 
@@ -214,7 +210,6 @@ Label notenoughspace = new Label("Quite small space");
 notenoughspace.addStyleName("notenoughspace");
 layout.addComponent(notenoughspace);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.display[on-line example, window="_blank"].
 
 The SCSS could be as follows:
 
@@ -252,7 +247,6 @@ The SCSS could be as follows:
     .notenoughspace {display: none}
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#themes.responsive.display[on-line example, window="_blank"].
 
 endif::web[]
 
@@ -264,11 +258,6 @@ You can find a simple responsive demo at
 link:http://demo.vaadin.com/responsive/[demo.vaadin.com/responsive]. It
 demonstrates the flexible wrapping technique described in
 <<themes.responsive.wrap>>.
-
-The
-link:http://demo.vaadin.com/book-examples-vaadin7/book/#themes.responsive.basic[Book
-Examples] demo provides the examples given in this chapter, as well as some
-others.
 
 ((("Parking
 demo")))

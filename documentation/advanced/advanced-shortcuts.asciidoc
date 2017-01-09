@@ -68,7 +68,6 @@ name.addShortcutListener(
                                         ModifierKey.ALT));
 layout.addComponent(name);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.shortcut.focus[on-line example, window="_blank"].
 
 You can also specify the shortcut by a shorthand notation, where the shortcut
 key is indicated with an ampersand ( [literal]#++&++#).
@@ -81,7 +80,6 @@ TextField address = new TextField("Address (Alt+A)");
 address.addShortcutListener(
         new AbstractField.FocusShortcut(address, "&Address"));
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.shortcut.focus[on-line example, window="_blank"].
 
 This is especially useful for internationalization, so that you can determine
 the shortcut key from the localized string.
