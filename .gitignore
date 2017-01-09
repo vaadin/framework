@@ -62,5 +62,5 @@ phantomjsdriver.log
 
 */.checkstyle
 
-# TB default error screenshot forlder
+# TB default error screenshot folder
 error-screenshots/
