@@ -172,7 +172,6 @@ The class path includes source folder in case there are custom widgets, compiled
 </target>
 ----
 
-You can find the complete example build script for compiling widget sets with Ant and Ivy in the https://github.com/vaadin/book-examples/blob/master/build/build.xml[build.xml for the Book Examples].
-You can copy the build script to your project and, once configured, run it with Ant.
+You can copy the example build script to your project and, once configured, run it with Ant.
 You may need to do some configuration in the build targets, such as to exclude or include source or target paths.
 endif::web[]

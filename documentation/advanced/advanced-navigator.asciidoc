@@ -60,7 +60,6 @@ public class NavigatorUI extends UI {
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
 
 The [classname]#Navigator# automatically sets the URI fragment of the
 application URL. It also registers a [interfacename]#URIFragmentChangedListener#
@@ -137,7 +136,6 @@ public class StartView extends VerticalLayout implements View {
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
 
 You can initialize the view content in the constructor, as was done in the
 example above, or in the [methodname]#enter()# method. The advantage with the
@@ -262,7 +260,6 @@ public class MainView extends VerticalLayout implements View {
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
 
 The animal sub-view would have the following declarative design:
 
@@ -275,7 +272,6 @@ The animal sub-view would have the following declarative design:
   <vaadin-label _id="back" size-auto :middle :center/>
 </vaadin-vertical-layout>
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.navigator.basic[on-line example, window="_blank"].
 
 The main view is shown in <<figure.advanced.navigator.mainview>>. At this point,
 the URL would be [literal]#++http://localhost:8080/myapp#!main/reindeer++#.
