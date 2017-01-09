@@ -14,14 +14,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-test-widget-set-testutil</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-test-widget-set-testutil</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -29,6 +21,7 @@
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
+                <version>${vaadin.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
