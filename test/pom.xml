@@ -18,7 +18,6 @@
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
     </properties>
-    </properties>
 
     <repositories>
         <repository>
