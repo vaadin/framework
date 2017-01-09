@@ -25,9 +25,8 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.ImageIcon;
+import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VMenuBar;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -77,11 +76,11 @@ public class MenuBarConnector extends AbstractComponentConnector
             StringBuffer itemHTML = new StringBuffer();
 
             if (moreItemUIDL.hasAttribute("icon")) {
-                itemHTML.append("<img src=\""
-                        + WidgetUtil.escapeAttribute(client.translateVaadinUri(
-                                moreItemUIDL.getStringAttribute("icon")))
-                        + "\" class=\"" + ImageIcon.CLASSNAME
-                        + "\" alt=\"\" />");
+                Icon icon = client
+                        .getIcon(moreItemUIDL.getStringAttribute("icon"));
+                if (icon != null) {
+                    itemHTML.append(icon.getElement().getString());
+                }
             }
 
             String moreItemText = moreItemUIDL.getStringAttribute("text");
