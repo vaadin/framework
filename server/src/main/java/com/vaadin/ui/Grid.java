@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -1855,7 +1854,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(ValueProvider<T, String> valueProvider) {
+    public Column<T, String> addColumn(ValueProvider<T, ?> valueProvider) {
         return addColumn(t -> String.valueOf(valueProvider.apply(t)),
                 new TextRenderer());
     }

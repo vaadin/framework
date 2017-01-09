@@ -35,6 +35,7 @@ public class GridTest {
 
         grid.addColumn(ValueProvider.identity()).setId("foo");
         grid.addColumn(String::length, new NumberRenderer());
+        grid.addColumn(String::length);
         grid.addColumn(ValueProvider.identity()).setId("randomColumnId");
     }
 
