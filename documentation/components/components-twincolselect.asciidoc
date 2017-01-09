@@ -24,8 +24,7 @@ clicking on the "&lt;" button.
 image::img/twincolselect-basic.png[width=50%, scaledwidth=80%]
 
 [classname]#TwinColSelect# is always in multi-select mode, so its selection
-is always a collection of the item IDs of the selected items, that is, the items
-in the right column.
+is always a collection of the selected items in the right column.
 
 The selection columns can have their own captions, separate from the overall
 component caption, which is managed by the containing layout. You can set the
