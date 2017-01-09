@@ -49,7 +49,6 @@ print.addClickListener(new Button.ClickListener() {
     }
 });
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.printing.this[on-line example, window="_blank"].
 
 The button in the above example would print the current page, including the
 button itself. You can hide such elements in CSS, as well as otherwise style the
@@ -92,7 +91,6 @@ opener.setFeatures("height=200,width=400,resizable");
 Button print = new Button("Click to Print");
 opener.extend(print);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.printing.open[on-line example, window="_blank"].
 
 How the browser opens the window, as an actual (popup) window or just a tab,
 depends on the browser. After printing, we automatically close the window with
@@ -173,7 +171,6 @@ layout.addComponent(name);
 layout.addComponent(ok);
 layout.addComponent(print);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.printing.pdfgeneration[on-line example, window="_blank"].
 
 
 (((range="endofrange", startref="term.advanced.printing")))

@@ -270,7 +270,6 @@ public class PushyUI extends UI {
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.push.simple[on-line example, window="_blank"].
 
 When sharing data between UIs or user sessions, you need to consider the
 message-passing mechanism more carefully, as explained next.
@@ -331,7 +330,6 @@ public class Broadcaster implements Serializable {
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.push.pusharound[on-line example, window="_blank"].
 
 In Java 8, you could use lambda expressions for the listeners instead of the
 interface, and a parameterless expression to create the runnable:
@@ -343,7 +341,6 @@ for (final Consumer<String> listener: listeners)
     executorService.execute(() ->
             listener.accept(message));
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.push.pusharound[on-line example, window="_blank"].
 
 
 [[advanced.push.pusharound.receiving]]
@@ -392,7 +389,6 @@ public class PushAroundUI extends UI
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.push.pusharound[on-line example, window="_blank"].
 
 
 [[advanced.push.pusharound.sending]]
@@ -419,7 +415,6 @@ send.addClickListener(new ClickListener() {
     }
 });
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.push.pusharound[on-line example, window="_blank"].
 
 
 
