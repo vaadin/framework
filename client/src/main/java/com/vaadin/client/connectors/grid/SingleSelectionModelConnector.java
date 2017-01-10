@@ -15,12 +15,14 @@
  */
 package com.vaadin.client.connectors.grid;
 
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.widget.grid.events.GridSelectionAllowedEvent;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.SingleSelectionModelState;
 
 import elemental.json.JsonObject;
 
@@ -43,6 +45,8 @@ public class SingleSelectionModelConnector
     protected class SingleSelectionModel implements SelectionModel<JsonObject> {
 
         private boolean isSelectionAllowed = true;
+
+        private boolean deselectAllowed = true;
 
         @Override
         public void select(JsonObject item) {
@@ -77,6 +81,39 @@ public class SingleSelectionModelConnector
         public boolean isSelectionAllowed() {
             return isSelectionAllowed;
         }
+
+        /**
+         * Sets whether it's allowed to deselect the selected row through the
+         * UI. Deselection is allowed by default.
+         *
+         * @param deselectAllowed
+         *            <code>true</code> if the selected row can be deselected
+         *            without selecting another row instead; otherwise
+         *            <code>false</code>.
+         */
+        public void setDeselectAllowed(boolean deselectAllowed) {
+            this.deselectAllowed = deselectAllowed;
+            updateHandlerDeselectAllowed();
+        }
+
+        /**
+         * Sets whether it's allowed to deselect the selected row through the
+         * UI.
+         *
+         * @return <code>true</code> if deselection is allowed; otherwise
+         *         <code>false</code>
+         */
+        public boolean isDeselectAllowed() {
+            return deselectAllowed;
+        }
+
+        private void updateHandlerDeselectAllowed() {
+            if (clickSelectHandler != null) {
+                clickSelectHandler.setDeselectAllowed(deselectAllowed);
+            }
+            getParent().setDeselectAllowed(deselectAllowed);
+        }
+
     }
 
     @Override
@@ -92,6 +129,20 @@ public class SingleSelectionModelConnector
         if (clickSelectHandler != null) {
             clickSelectHandler.removeHandler();
         }
+    }
+
+    @Override
+    public SingleSelectionModelState getState() {
+        return (SingleSelectionModelState) super.getState();
+    }
+
+    @OnStateChange("deselectAllowed")
+    private void updateDeselectAllowed() {
+        getSelectionModel().setDeselectAllowed(getState().deselectAllowed);
+    }
+
+    private SingleSelectionModel getSelectionModel() {
+        return (SingleSelectionModel) getGrid().getSelectionModel();
     }
 
 }

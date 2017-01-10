@@ -47,7 +47,6 @@ import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
-import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
@@ -112,7 +111,6 @@ public class GridConnector extends AbstractListingConnector
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
     private SpaceSelectHandler<JsonObject> spaceSelectHandler;
-    private ClickSelectHandler<JsonObject> clickSelectHandler;
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     /**
@@ -344,7 +342,6 @@ public class GridConnector extends AbstractListingConnector
         super.onUnregister();
 
         columnToIdMap.clear();
-        removeClickHandler();
 
         if (spaceSelectHandler != null) {
             spaceSelectHandler.removeHandler();
@@ -415,17 +412,23 @@ public class GridConnector extends AbstractListingConnector
         return (GridState) super.getState();
     }
 
-    private void removeClickHandler() {
-        if (clickSelectHandler != null) {
-            clickSelectHandler.removeHandler();
-            clickSelectHandler = null;
-        }
-    }
-
     @Override
     public boolean hasTooltip() {
         // Always check for generated descriptions.
         return true;
+    }
+
+    /**
+     * Sets whether clicking the currently selected row should deselect the row.
+     *
+     * @param deselectAllowed
+     *            <code>true</code> to allow deselecting the selected row;
+     *            otherwise <code>false</code>
+     */
+    public void setDeselectAllowed(boolean deselectAllowed) {
+        if (spaceSelectHandler != null) {
+            spaceSelectHandler.setDeselectAllowed(deselectAllowed);
+        }
     }
 
     @Override
