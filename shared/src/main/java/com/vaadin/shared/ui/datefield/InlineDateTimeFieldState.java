@@ -16,11 +16,11 @@
 package com.vaadin.shared.ui.datefield;
 
 /**
- * Shared state for the DateTimeField component.
- * 
  * @author Vaadin Ltd
  *
  */
-public class LocalDateTimeFieldState extends TextualDateFieldState {
-
+public class InlineDateTimeFieldState extends AbstractTextualDateFieldState {
+    {
+        primaryStyleName = "v-inline-datefield";
+    }
 }

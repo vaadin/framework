@@ -28,7 +28,8 @@ import com.vaadin.shared.ui.datefield.DateResolution;
  * @author Vaadin Ltd
  *
  */
-public class VPopupCalendar extends VAbstractPopupCalendar<DateResolution> {
+public class VPopupCalendar
+        extends VAbstractPopupCalendar<VDateCalendarPanel, DateResolution> {
 
     public VPopupCalendar() {
         super(GWT.create(VDateCalendarPanel.class), DateResolution.YEAR);
@@ -50,20 +51,20 @@ public class VPopupCalendar extends VAbstractPopupCalendar<DateResolution> {
                 resolution == null ? DateResolution.YEAR : resolution);
     }
 
-    public static Date makeDate(Map<DateResolution, Integer> dateVaules) {
-        if (dateVaules.get(DateResolution.YEAR) == -1) {
+    public static Date makeDate(Map<DateResolution, Integer> dateValues) {
+        if (dateValues.get(DateResolution.YEAR) == -1) {
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
-        int year = dateVaules.get(DateResolution.YEAR);
+        int year = dateValues.get(DateResolution.YEAR);
         if (year >= 0) {
             date.setYear(year - 1900);
         }
-        int month = dateVaules.get(DateResolution.MONTH);
+        int month = dateValues.get(DateResolution.MONTH);
         if (month >= 0) {
             date.setMonth(month - 1);
         }
-        int day = dateVaules.get(DateResolution.DAY);
+        int day = dateValues.get(DateResolution.DAY);
         if (day >= 0) {
             date.setDate(day);
         }
@@ -99,6 +100,18 @@ public class VPopupCalendar extends VAbstractPopupCalendar<DateResolution> {
                     currentDate != null ? currentDate.getDate() : -1,
                     getCurrentResolution() == DateResolution.DAY);
         }
+    }
+
+    @Override
+    protected String cleanFormat(String format) {
+        // Remove unnecessary d & M if resolution is too low
+        if (getCurrentResolution().compareTo(DateResolution.DAY) > 0) {
+            format = format.replaceAll("d", "");
+        }
+        if (getCurrentResolution().compareTo(DateResolution.MONTH) > 0) {
+            format = format.replaceAll("M", "");
+        }
+        return super.cleanFormat(format);
     }
 
 }

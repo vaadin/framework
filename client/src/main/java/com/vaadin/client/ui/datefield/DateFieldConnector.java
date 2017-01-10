@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.datefield;
 
+import com.vaadin.client.ui.VDateCalendarPanel;
 import com.vaadin.client.ui.VPopupCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.DateResolution;
@@ -26,7 +27,8 @@ import com.vaadin.ui.AbstractLocalDateField;
  *
  */
 @Connect(AbstractLocalDateField.class)
-public class DateFieldConnector extends TextualDateConnector<DateResolution> {
+public class DateFieldConnector
+        extends TextualDateConnector<VDateCalendarPanel, DateResolution> {
 
     @Override
     protected boolean isResolutionAboveMonth() {

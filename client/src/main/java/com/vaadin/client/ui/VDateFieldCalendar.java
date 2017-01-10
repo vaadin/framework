@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.datefield.DateResolution;
  *
  */
 public class VDateFieldCalendar
-        extends VAbstractDateFieldCalendar<DateResolution> {
+        extends VAbstractDateFieldCalendar<VDateCalendarPanel, DateResolution> {
 
     public VDateFieldCalendar() {
         super(GWT.create(VDateCalendarPanel.class), DateResolution.YEAR);

@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.datefield;
 
+import com.vaadin.client.ui.VDateCalendarPanel;
 import com.vaadin.client.ui.VDateFieldCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.DateResolution;
@@ -25,8 +26,8 @@ import com.vaadin.ui.InlineDateField;
  *
  */
 @Connect(InlineDateField.class)
-public class InlineDateFieldConnector
-        extends AbstractInlineDateFieldConnector<DateResolution> {
+public class InlineDateFieldConnector extends
+        AbstractInlineDateFieldConnector<VDateCalendarPanel, DateResolution> {
 
     @Override
     protected boolean isResolutionMonthOrHigher() {

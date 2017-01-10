@@ -27,7 +27,11 @@ import com.vaadin.shared.ui.datefield.AbstractTextualDateFieldState;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
+ * Abstract DateField class for {@link LocalDate} type.
+ * 
  * @author Vaadin Ltd
+ * 
+ * @since 8.0
  *
  */
 public abstract class AbstractLocalDateField

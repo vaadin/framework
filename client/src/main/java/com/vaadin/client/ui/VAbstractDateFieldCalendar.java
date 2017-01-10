@@ -23,14 +23,13 @@ import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 /**
  * A client side implementation for inline date field.
  */
-public abstract class VAbstractDateFieldCalendar<R extends Enum<R>>
+public abstract class VAbstractDateFieldCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VDateField<R> {
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final VAbstractCalendarPanel<R> calendarPanel;
+    public final PANEL calendarPanel;
 
-    public VAbstractDateFieldCalendar(VAbstractCalendarPanel<R> panel,
-            R resolution) {
+    public VAbstractDateFieldCalendar(PANEL panel, R resolution) {
         super(resolution);
         calendarPanel = panel;
         calendarPanel.setParentField(this);
