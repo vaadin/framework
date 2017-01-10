@@ -2921,7 +2921,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (selectAllCheckBox == null) {
                 selectAllCheckBox = GWT.create(CheckBox.class);
-                selectAllCheckBox.setEnabled(isUserSelectionAllowed());
+                selectAllCheckBox.setEnabled(enabled && userSelectionAllowed);
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
                 selectAllCheckBox.addValueChangeHandler(
