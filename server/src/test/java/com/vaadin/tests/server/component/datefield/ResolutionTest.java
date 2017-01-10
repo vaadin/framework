@@ -4,39 +4,39 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.util.TestUtil;
 
 public class ResolutionTest {
 
     @Test
     public void testResolutionHigherOrEqualToYear() {
-        Iterable<Resolution> higherOrEqual = Resolution
-                .getResolutionsHigherOrEqualTo(Resolution.YEAR);
-        ArrayList<Resolution> expected = new ArrayList<>();
-        expected.add(Resolution.YEAR);
+        Iterable<DateResolution> higherOrEqual = DateResolution
+                .getResolutionsHigherOrEqualTo(DateResolution.YEAR);
+        ArrayList<DateResolution> expected = new ArrayList<>();
+        expected.add(DateResolution.YEAR);
         TestUtil.assertIterableEquals(expected, higherOrEqual);
     }
 
     @Test
     public void testResolutionHigherOrEqualToDay() {
-        Iterable<Resolution> higherOrEqual = Resolution
-                .getResolutionsHigherOrEqualTo(Resolution.DAY);
-        ArrayList<Resolution> expected = new ArrayList<>();
-        expected.add(Resolution.DAY);
-        expected.add(Resolution.MONTH);
-        expected.add(Resolution.YEAR);
+        Iterable<DateResolution> higherOrEqual = DateResolution
+                .getResolutionsHigherOrEqualTo(DateResolution.DAY);
+        ArrayList<DateResolution> expected = new ArrayList<>();
+        expected.add(DateResolution.DAY);
+        expected.add(DateResolution.MONTH);
+        expected.add(DateResolution.YEAR);
         TestUtil.assertIterableEquals(expected, higherOrEqual);
 
     }
 
     @Test
     public void testResolutionLowerThanYear() {
-        Iterable<Resolution> higherOrEqual = Resolution
-                .getResolutionsLowerThan(Resolution.YEAR);
-        ArrayList<Resolution> expected = new ArrayList<>();
-        expected.add(Resolution.MONTH);
-        expected.add(Resolution.DAY);
+        Iterable<DateResolution> higherOrEqual = DateResolution
+                .getResolutionsLowerThan(DateResolution.YEAR);
+        ArrayList<DateResolution> expected = new ArrayList<>();
+        expected.add(DateResolution.MONTH);
+        expected.add(DateResolution.DAY);
         TestUtil.assertIterableEquals(expected, higherOrEqual);
 
     }

@@ -19,19 +19,19 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.VerticalLayout;
 
 public class CustomDateFormatEEE extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        AbstractDateField df = new TestDateField(
+        AbstractLocalDateField df = new TestDateField(
                 "Should display 14/03/2014 Fri");
-        df.setResolution(Resolution.DAY);
+        df.setResolution(DateResolution.DAY);
         df.setLocale(new Locale("en", "US"));
 
         String pattern = "dd/MM/yyyy EEE";

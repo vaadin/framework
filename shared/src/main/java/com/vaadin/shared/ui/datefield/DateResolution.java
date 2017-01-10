@@ -24,7 +24,7 @@ import java.util.List;
  * @author Vaadin Ltd.
  * @since 7.0
  */
-public enum Resolution {
+public enum DateResolution {
     DAY, MONTH, YEAR;
 
     /**
@@ -36,10 +36,10 @@ public enum Resolution {
      *            The resolution to start from
      * @return An iterable for the resolutions higher or equal to r
      */
-    public static Iterable<Resolution> getResolutionsHigherOrEqualTo(
-            Resolution r) {
-        List<Resolution> resolutions = new ArrayList<>();
-        Resolution[] values = Resolution.values();
+    public static Iterable<DateResolution> getResolutionsHigherOrEqualTo(
+            DateResolution r) {
+        List<DateResolution> resolutions = new ArrayList<>();
+        DateResolution[] values = DateResolution.values();
         for (int i = r.ordinal(); i < values.length; i++) {
             resolutions.add(values[i]);
         }
@@ -55,9 +55,10 @@ public enum Resolution {
      *            The resolution to start from
      * @return An iterable for the resolutions lower than r
      */
-    public static List<Resolution> getResolutionsLowerThan(Resolution r) {
-        List<Resolution> resolutions = new ArrayList<>();
-        Resolution[] values = Resolution.values();
+    public static List<DateResolution> getResolutionsLowerThan(
+            DateResolution r) {
+        List<DateResolution> resolutions = new ArrayList<>();
+        DateResolution[] values = DateResolution.values();
         for (int i = r.ordinal() - 1; i >= 0; i--) {
             resolutions.add(values[i]);
         }

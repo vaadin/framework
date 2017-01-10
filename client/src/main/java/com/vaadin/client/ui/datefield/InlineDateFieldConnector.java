@@ -15,88 +15,27 @@
  */
 package com.vaadin.client.ui.datefield;
 
-import java.util.Date;
-
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VDateFieldCalendar;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.datefield.InlineDateFieldState;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.InlineDateField;
 
+/**
+ * @author Vaadin Ltd
+ *
+ */
 @Connect(InlineDateField.class)
-public class InlineDateFieldConnector extends AbstractDateFieldConnector {
+public class InlineDateFieldConnector
+        extends AbstractInlineDateFieldConnector<DateResolution> {
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
-        getWidget().calendarPanel
-                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
-        getWidget().calendarPanel
-                .setDateTimeService(getWidget().getDateTimeService());
-        getWidget().calendarPanel
-                .setResolution(getWidget().getCurrentResolution());
-        Date currentDate = getWidget().getCurrentDate();
-        if (currentDate != null) {
-            getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
-        } else {
-            getWidget().calendarPanel.setDate(null);
-        }
-
-        if (getWidget().getCurrentResolution()
-                .compareTo(Resolution.MONTH) >= 0) {
-            getWidget().calendarPanel
-                    .setFocusChangeListener(new FocusChangeListener() {
-                        @Override
-                        public void focusChanged(Date date) {
-                            Date date2 = new Date();
-                            if (getWidget().calendarPanel.getDate() != null) {
-                                date2.setTime(getWidget().calendarPanel
-                                        .getDate().getTime());
-                            }
-                            /*
-                             * Update the value of calendarPanel
-                             */
-                            date2.setYear(date.getYear());
-                            date2.setMonth(date.getMonth());
-                            getWidget().calendarPanel.setDate(date2);
-                            /*
-                             * Then update the value from panel to server
-                             */
-                            getWidget().updateValueFromPanel();
-                        }
-                    });
-        } else {
-            getWidget().calendarPanel.setFocusChangeListener(null);
-        }
-
-        // Update possible changes
-        getWidget().calendarPanel.renderCalendar();
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setTabIndex(getState().tabIndex);
-        getWidget().calendarPanel.setRangeStart(getState().rangeStart);
-        getWidget().calendarPanel.setRangeEnd(getState().rangeEnd);
+    protected boolean isResolutionMonthOrHigher() {
+        return getWidget().getCurrentResolution()
+                .compareTo(DateResolution.MONTH) >= 0;
     }
 
     @Override
     public VDateFieldCalendar getWidget() {
         return (VDateFieldCalendar) super.getWidget();
-    }
-
-    @Override
-    public InlineDateFieldState getState() {
-        return (InlineDateFieldState) super.getState();
     }
 }
