@@ -1599,7 +1599,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public boolean isUserSelectionAllowed() {
-            return getState().userSelectionAllowed;
+            return getState(false).userSelectionAllowed;
         }
 
         @Override
@@ -1990,7 +1990,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         @Override
         public boolean isUserSelectionAllowed() {
-            return getState().userSelectionAllowed;
+            return getState(false).userSelectionAllowed;
         }
 
         @Override
