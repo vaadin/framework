@@ -44,14 +44,24 @@ public class ReplaceDataProvider extends AbstractTestUI {
 
         grid.setItems(listOfClasses);
 
-        Button btn = new Button("change value");
-        btn.addClickListener(clickEvent -> {
+        Button replaceBtn = new Button("replace data provider");
+        replaceBtn.addClickListener(clickEvent -> {
             List<TestClass> newList = IntStream.range(0, 10)
                     .mapToObj(TestClass::new).collect(Collectors.toList());
             newList.get(0).someField = "b";
             grid.setItems(newList);
         });
 
-        addComponents(btn, grid);
+        Button replaceAndSelectBtn = new Button(
+                "replace data provider and select second");
+        replaceAndSelectBtn.addClickListener(clickEvent -> {
+            List<TestClass> newList = IntStream.range(0, 10)
+                    .mapToObj(TestClass::new).collect(Collectors.toList());
+            newList.get(0).someField = "b";
+            grid.setItems(newList);
+            grid.getSelectionModel().select(newList.get(1));
+        });
+
+        addComponents(replaceBtn, replaceAndSelectBtn, grid);
     }
 }
