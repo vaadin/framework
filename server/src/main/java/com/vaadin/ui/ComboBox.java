@@ -18,7 +18,6 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -610,9 +609,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         setStyleGenerator(new DeclarativeStyleGenerator<>(getStyleGenerator()));
-        return super.readItems(design, context);
+        super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
