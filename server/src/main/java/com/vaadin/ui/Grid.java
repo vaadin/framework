@@ -2895,8 +2895,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
-        return Collections.emptyList();
+    protected void readItems(Element design, DesignContext context) {
+        // Grid handles reading of items in Grid#readData
     }
 
     @Override
@@ -3043,11 +3043,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             List<DeclarativeValueProvider<T>> providers) {
         getSelectionModel().deselectAll();
         List<T> items = new ArrayList<>();
+        List<T> selectedItems = new ArrayList<>();
         for (Element row : body.children()) {
             T item = deserializeDeclarativeRepresentation(row.attr("item"));
             items.add(item);
             if (row.hasAttr("selected")) {
-                getSelectionModel().select(item);
+                selectedItems.add(item);
             }
             Elements cells = row.children();
             int i = 0;
@@ -3058,6 +3059,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         setItems(items);
+        selectedItems.forEach(getSelectionModel()::select);
     }
 
     private void writeStructure(Element design, DesignContext designContext) {

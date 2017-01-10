@@ -17,7 +17,6 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -236,9 +235,9 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         setItemEnabledProvider(new DeclarativeItemEnabledProvider<>());
-        return super.readItems(design, context);
+        super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
