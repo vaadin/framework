@@ -62,9 +62,11 @@ public abstract class AbstractFieldDeclarativeTest<T extends AbstractField<V>, V
         testWrite(design, component);
     }
 
+    @Test
     public abstract void valueDeserialization()
             throws InstantiationException, IllegalAccessException;
 
+    @Test
     public abstract void readOnlyValue()
             throws InstantiationException, IllegalAccessException;
 }

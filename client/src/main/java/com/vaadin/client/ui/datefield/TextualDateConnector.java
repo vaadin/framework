@@ -24,11 +24,22 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.VAbstractCalendarPanel;
 import com.vaadin.client.ui.VAbstractCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VAbstractPopupCalendar;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
-public abstract class TextualDateConnector<R extends Enum<R>>
+/**
+ * @author Vaadin Ltd
+ * 
+ * @since 8.0
+ *
+ * @param <PANEL>
+ *            Subclass of VAbstractCalendarPanel specific for the implementation
+ * @param <R>
+ *            the resolution type which the field is based on (day, month, ...)
+ */
+public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends AbstractTextualDateConnector<R> {
 
     @Override
@@ -112,7 +123,7 @@ public abstract class TextualDateConnector<R extends Enum<R>>
      * customizing only listeners logic.
      */
     protected void updateListeners() {
-        if (isResolutionAboveMonth()) {
+        if (isResolutionMonthOrHigher()) {
             getWidget().calendar
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
@@ -130,11 +141,17 @@ public abstract class TextualDateConnector<R extends Enum<R>>
         }
     }
 
-    protected abstract boolean isResolutionAboveMonth();
+    /**
+     * Returns {@code true} is the current resolution of the widget is month or
+     * less specific (e.g. month, year, quarter, etc).
+     * 
+     * @return {@code true} if the current resolution is above month
+     */
+    protected abstract boolean isResolutionMonthOrHigher();
 
     @Override
-    public VAbstractPopupCalendar<R> getWidget() {
-        return (VAbstractPopupCalendar<R>) super.getWidget();
+    public VAbstractPopupCalendar<PANEL, R> getWidget() {
+        return (VAbstractPopupCalendar<PANEL, R>) super.getWidget();
     }
 
     @Override

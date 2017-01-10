@@ -13,14 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.datefield;
 
-/**
- * Shared state for the DateTimeField component.
- * 
- * @author Vaadin Ltd
- *
- */
-public class LocalDateTimeFieldState extends TextualDateFieldState {
+package com.vaadin.client.ui.datefield;
+
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.ui.DateTimeField;
+
+@Connect(DateTimeField.class)
+public class PopupDateTimeFieldConnector extends DateTimeFieldConnector {
 
 }
