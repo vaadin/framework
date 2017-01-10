@@ -19,6 +19,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
+import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.grid.AbstractSelectionModelState;
 
@@ -34,9 +35,24 @@ import elemental.json.JsonObject;
 public abstract class AbstractSelectionModelConnector
         extends AbstractExtensionConnector {
 
+    private SpaceSelectHandler<JsonObject> spaceSelectHandler;
+
     @Override
     protected void extend(ServerConnector target) {
         initSelectionModel();
+
+        // Default selection style is space key.
+        spaceSelectHandler = new SpaceSelectHandler<>(getGrid());
+    }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+
+        if (spaceSelectHandler != null) {
+            spaceSelectHandler.removeHandler();
+            spaceSelectHandler = null;
+        }
     }
 
     /**
@@ -60,6 +76,15 @@ public abstract class AbstractSelectionModelConnector
      */
     protected Grid<JsonObject> getGrid() {
         return getParent().getWidget();
+    }
+
+    /**
+     * Gets space selection handler registered for the Grid.
+     * 
+     * @return space selection handler
+     */
+    protected SpaceSelectHandler<JsonObject> getSpaceSelectionHandler() {
+        return spaceSelectHandler;
     }
 
     @OnStateChange("selectionAllowed")
