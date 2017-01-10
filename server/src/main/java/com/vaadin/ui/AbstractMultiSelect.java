@@ -428,7 +428,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         Set<T> selected = new HashSet<>();
         List<T> items = design.children().stream()
                 .map(child -> readItem(child, selected, context))
@@ -438,7 +438,6 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
             ((Listing<T, ?>) this).setItems(items);
         }
         selected.forEach(this::select);
-        return items;
     }
 
     /**

@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
@@ -383,10 +382,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
      *            The element to obtain the state from
      * @param context
      *            The DesignContext instance used for parsing the design
-     *
-     * @return the items read from the design
      */
-    protected abstract List<T> readItems(Element design, DesignContext context);
+    protected abstract void readItems(Element design, DesignContext context);
 
     /**
      * Reads an Item from a design and inserts it into the data source.
