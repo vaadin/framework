@@ -23,4 +23,7 @@ package com.vaadin.shared.ui.grid;
  * @since 8.0
  */
 public class SingleSelectionModelState extends AbstractSelectionModelState {
+
+    /* Allow deselecting rows */
+    public boolean deselectAllowed = true;
 }

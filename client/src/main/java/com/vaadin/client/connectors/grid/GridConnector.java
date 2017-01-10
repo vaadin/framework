@@ -47,8 +47,6 @@ import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
-import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
-import com.vaadin.client.widget.grid.selection.SpaceSelectHandler;
 import com.vaadin.client.widget.grid.sort.SortEvent;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Grid;
@@ -111,8 +109,6 @@ public class GridConnector extends AbstractListingConnector
 
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
-    private SpaceSelectHandler<JsonObject> spaceSelectHandler;
-    private ClickSelectHandler<JsonObject> clickSelectHandler;
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
     /**
@@ -147,8 +143,6 @@ public class GridConnector extends AbstractListingConnector
     protected void init() {
         super.init();
 
-        // Default selection style is space key.
-        spaceSelectHandler = new SpaceSelectHandler<>(getWidget());
         getWidget().addSortHandler(this::handleSortEvent);
         getWidget().setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
@@ -344,12 +338,6 @@ public class GridConnector extends AbstractListingConnector
         super.onUnregister();
 
         columnToIdMap.clear();
-        removeClickHandler();
-
-        if (spaceSelectHandler != null) {
-            spaceSelectHandler.removeHandler();
-            spaceSelectHandler = null;
-        }
     }
 
     @Override
@@ -413,13 +401,6 @@ public class GridConnector extends AbstractListingConnector
     @Override
     public GridState getState() {
         return (GridState) super.getState();
-    }
-
-    private void removeClickHandler() {
-        if (clickSelectHandler != null) {
-            clickSelectHandler.removeHandler();
-            clickSelectHandler = null;
-        }
     }
 
     @Override
