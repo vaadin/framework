@@ -1598,8 +1598,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
+        protected SingleSelectionModelState getState(boolean markAsDirty) {
+            return (SingleSelectionModelState) super.getState(markAsDirty);
+        }
+
+        @Override
         public boolean isUserSelectionAllowed() {
-            return getState().userSelectionAllowed;
+            return getState(false).userSelectionAllowed;
         }
 
         @Override
@@ -1989,8 +1994,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
 
         @Override
+        protected MultiSelectionModelState getState(boolean markAsDirty) {
+            return (MultiSelectionModelState) super.getState(markAsDirty);
+        }
+
+        @Override
         public boolean isUserSelectionAllowed() {
-            return getState().userSelectionAllowed;
+            return getState(false).userSelectionAllowed;
         }
 
         @Override
