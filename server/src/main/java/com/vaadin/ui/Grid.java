@@ -2583,6 +2583,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                 for (CELLTYPE cell : cells.values()) {
                     cell.detach();
                 }
+                for (CELLTYPE cell : cellGroups.values()) {
+                    cell.detach();
+                }
             }
         }
 
