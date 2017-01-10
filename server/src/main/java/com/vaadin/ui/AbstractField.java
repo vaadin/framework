@@ -133,7 +133,7 @@ public abstract class AbstractField<T> extends AbstractComponent
         if (userOriginated && isReadOnly()) {
             return false;
         }
-        if (Objects.equals(value, getValue())) {
+        if (!isDifferentValue(value)) {
             return false;
         }
         doSetValue(value);
@@ -143,6 +143,24 @@ public abstract class AbstractField<T> extends AbstractComponent
         fireEvent(createValueChange(userOriginated));
 
         return true;
+    }
+
+    /**
+     * Called when a new value is set to determine whether the provided new
+     * value is considered to be a change compared to the current value. This is
+     * used to determine whether {@link #doSetValue(Object)} should be called
+     * and a value change event fired.
+     *
+     * @param newValue
+     *            the new value candidate to check, may be <code>null</code>
+     *
+     * @return <code>true</code> if the provided value is considered to be
+     *         different and a value change event should be fired;
+     *         <code>false</code> if the values are considered to be the same
+     *         and no value change should be fired
+     */
+    protected boolean isDifferentValue(T newValue) {
+        return !Objects.equals(newValue, getValue());
     }
 
     /**
