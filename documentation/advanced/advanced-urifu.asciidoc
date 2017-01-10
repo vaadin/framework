@@ -68,7 +68,6 @@ method from the current [classname]#Page# object. The fragment is known when the
 String fragment = getPage().getUriFragment();
 enter(fragment);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.urifragment.basic[on-line example, window="_blank"].
 
 To enable reusing the same code when the URI fragment is changed, as described
 next, it is usually best to build the relevant part of the UI in a separate
@@ -110,7 +109,6 @@ public class MyUI extends UI {
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.urifragment.basic[on-line example, window="_blank"].
 
 <<figure.advanced.urifu>> shows an application that allows specifying the menu
 selection with a URI fragment and correspondingly sets the fragment when the
@@ -173,7 +171,6 @@ public class MyCustomServlet extends VaadinServlet
     }
 }
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#advanced.urifragment.basic[on-line example, window="_blank"].
 
 The crawlable content does not need to be human readable. It can provide an
 index of links to other application states, as we did in the example above. The

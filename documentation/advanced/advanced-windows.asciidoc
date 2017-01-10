@@ -68,7 +68,7 @@ For example:
 
 [source, java]
 ----
-@Theme("book-examples")
+@Theme("mytheme")
 public static class MyPopupUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
@@ -147,10 +147,9 @@ browsing can open the window in another tab, depending on the browser settings.
 === URL and Session
 
 The URL path for a popup window UI is by default determined from the UI class
-name, by prefixig it with " [literal]#++popup/++#". For example, for the example
-UI giver earlier, the URL would be
-[literal]#++/book-examples/book/popup/MyPopupUI++#.
-
+name, by prefixing it with "[literal]#++popup/++#". For example, for the
+UI given earlier, the URL would be
+[literal]#++/example/base/popup/MyPopupUI++#.
 
 
 [[advanced.windows.popup-closing]]
