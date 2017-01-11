@@ -38,6 +38,4 @@ public interface UIServerRpc extends ClickRpc, ServerRpc {
 
     public void popstate(String uri);
 
-    @NoLoadingIndicator
-    public void acknowledge();
 }
