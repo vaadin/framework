@@ -36,7 +36,7 @@ public class AbstractFieldElementSetValueReadOnlyTest extends MultiBrowserTest {
     @Test(expected = ReadOnlyException.class)
     public void testCheckBoxGroup() {
         CheckBoxGroupElement elem = $(CheckBoxGroupElement.class).first();
-        elem.setValue("");
+        elem.setSelection("");
     }
 
     @Test(expected = ReadOnlyException.class)

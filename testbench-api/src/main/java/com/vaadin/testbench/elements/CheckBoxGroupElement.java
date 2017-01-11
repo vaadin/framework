@@ -16,6 +16,7 @@
 package com.vaadin.testbench.elements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +35,8 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     private static org.openqa.selenium.By byRadioInput = By.tagName("input");
 
     public List<String> getOptions() {
-        return getOptionElements().stream().map(
-                option -> option.findElement(byLabel).getText())
+        return getOptionElements().stream()
+                .map(option -> option.findElement(byLabel).getText())
                 .collect(Collectors.toList());
     }
 
@@ -82,13 +83,35 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Select option in the option group with the specified value.
+     * Sets the selected options for this checkbox group.
      *
-     * @param chars
-     *            value of the option in the option group which will be selected
+     * @param options
+     *            the options to select
+     *
+     * @see #getSelection()
+     * @see #setSelection(List)
      */
-    public void setValue(CharSequence chars) throws ReadOnlyException {
-        selectByText((String) chars);
+    public void setSelection(String... options) {
+        setSelection(Arrays.asList(options));
+    }
+
+    /**
+     * Sets the selected options for this checkbox group.
+     *
+     * @param options
+     *            the list of options to select
+     *
+     * @see #getSelection()
+     * @see #setSelection(String...)
+     */
+    public void setSelection(List<String> options) {
+        // Deselect everything that is not going to be selected again.
+        getSelection().stream().filter(option -> !options.contains(option))
+                .forEach(this::selectByText);
+        // Select everything that still needs selecting.
+        List<String> selection = getSelection();
+        options.stream().filter(option -> !selection.contains(option))
+                .forEach(this::selectByText);
     }
 
     /**

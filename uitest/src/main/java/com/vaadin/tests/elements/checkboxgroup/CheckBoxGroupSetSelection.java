@@ -7,7 +7,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.CheckBoxGroup;
 
-public class CheckBoxGroupSetValue extends AbstractTestUI {
+public class CheckBoxGroupSetSelection extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
