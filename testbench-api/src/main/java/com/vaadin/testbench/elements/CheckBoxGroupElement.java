@@ -17,6 +17,7 @@ package com.vaadin.testbench.elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.WebElement;
 
@@ -33,12 +34,9 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     private static org.openqa.selenium.By byRadioInput = By.tagName("input");
 
     public List<String> getOptions() {
-        List<String> optionTexts = new ArrayList<String>();
-        List<WebElement> options = findElements(bySelectOption);
-        for (WebElement option : options) {
-            optionTexts.add(option.findElement(byLabel).getText());
-        }
-        return optionTexts;
+        return getOptionElements().stream().map(
+                option -> option.findElement(byLabel).getText())
+                .collect(Collectors.toList());
     }
 
     /**
