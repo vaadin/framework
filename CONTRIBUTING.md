@@ -13,10 +13,10 @@ In other words:
  * Include a test to prove your patch works, or a benchmark if it’s a performance improvement.
  * Style-check your changes: it’s okay to have a separate commit to fix style issues.
  * Ensure you have Contributor Agreement signed up. This can be signed digitally in the code review system.
- * Submit your patch; it will then be reviewed by the Framework team, who will provide actionable feedback in a timely fashion if necessary. 
+ * Create a pull request; it will then be reviewed by the Framework team, who will provide actionable feedback in a timely fashion if necessary. **Remember to check the "Allow edits from maintainers" so we can rebase the PR or do small changes if necessary** 
  * Respond to review comments: review comments are meant to improve the quality of the code by pointing out defects or readability issues.
- * Don't get discouraged - or impatient: Reviewers are people too and will sometimes forget. Give them a friendly poke if you feel the patch has been forgotten about. 
- * Most patches take a few iterations of review before they are merged. 
+ * Don't get discouraged - or impatient: Reviewers are people too and will sometimes forget. Give them a friendly poke if you feel the PR has been forgotten about. 
+ * Most PRs take a few iterations of review before they are merged. 
 
 # We encourage you to get in touch
 
@@ -29,6 +29,8 @@ Getting in touch with us early will also help us co-ordinate efforts so that not
 The Vaadin repository can be cloned using `git clone https://github.com/vaadin/framework.git` or using your favorite Git tool.
 
 Remember to do `git checkout master` and `git pull` to make sure you are creating your commits on top of a recent enough version. 
+
+https://robots.thoughtbot.com/keeping-a-github-fork-updated has instructions on how to keep your local fork up to date.
 
 ## Set up your development environment
 
@@ -118,7 +120,7 @@ If you can clearly prove that the patch works, it dramatically increases the odd
 
 # Respond to review comments
 
-Your patch will almost certainly get comments from reviewers on ways in which the patch can be improved.  You must respond to those comments; ignoring reviewers is a good way to get ignored in return.  Review comments or questions that do not lead to a code change should almost certainly bring about a comment or changelog entry so that the next reviewer better understands what is going on.
+Your pull request will almost certainly get comments from reviewers on ways in which the patch can be improved.  You must respond to those comments; ignoring reviewers is a good way to get ignored in return.  Review comments or questions that do not lead to a code change should almost certainly bring about a comment or changelog entry so that the next reviewer better understands what is going on.
 
 Be sure to tell the reviewers what changes you are making. Respond politely to comments and address the problems they have pointed out. 
 
@@ -132,8 +134,10 @@ You should receive comments within a week or so; if that does not happen, make s
 
 # Submitting the patches
 
-## Submitting patches to GitHub
+## Creating a pull request in GitHub
 
 All our projects accept contributions as GitHub pull requests. The first time you create a pull request, you will be asked to electronically sign a contribution agreement.
 
 https://yangsu.github.io/pull-request-tutorial/ has instructions on how to create a pull request.
+
+**Remember to check the "Allow edits from maintainers" so we can rebase the PR or do small changes if necessary**.
