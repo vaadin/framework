@@ -122,6 +122,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     private void valueChange(ValueChangeEvent<String> event) {
         String value = event.getValue();
+        Color oldColor = color;
         try {
             if (value != null) {
                 /*
@@ -174,8 +175,8 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
                 }
 
                 oldValue = value;
-                fireEvent(
-                        new ValueChangeEvent<>(this, event.isUserOriginated()));
+                fireEvent(new ValueChangeEvent<>(this, oldColor,
+                        event.isUserOriginated()));
             }
 
         } catch (NumberFormatException nfe) {

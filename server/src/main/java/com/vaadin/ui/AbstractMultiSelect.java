@@ -230,7 +230,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<Set<T>> listener) {
         return addSelectionListener(event -> listener.valueChange(
-                new ValueChangeEvent<>(this, event.isUserOriginated())));
+                new ValueChangeEvent<>(this, event.getOldValue(),
+                        event.isUserOriginated())));
     }
 
     /**

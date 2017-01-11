@@ -148,6 +148,7 @@ public class GridTest {
 
         grid.getSelectionModel().deselect("foo");
 
+        event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
         assertEquals("bar", event.getFirstSelected().get());

@@ -39,8 +39,6 @@ import com.vaadin.ui.MultiSelect;
 public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
         implements SelectionEvent<T> {
 
-    private final Set<T> oldSelection;
-
     /**
      * Creates a new event.
      *
@@ -54,8 +52,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
      */
     public MultiSelectionEvent(AbstractMultiSelect<T> source,
             Set<T> oldSelection, boolean userOriginated) {
-        super(source, userOriginated);
-        this.oldSelection = oldSelection;
+        super(source, oldSelection, userOriginated);
     }
 
     /**
@@ -73,8 +70,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
      */
     public MultiSelectionEvent(Component component, MultiSelect<T> source,
             Set<T> oldSelection, boolean userOriginated) {
-        super(component, source, userOriginated);
-        this.oldSelection = oldSelection;
+        super(component, source, oldSelection, userOriginated);
     }
 
     /**
@@ -98,7 +94,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
      * @return a set of items selected before the selection was changed
      */
     public Set<T> getOldSelection() {
-        return Collections.unmodifiableSet(oldSelection);
+        return Collections.unmodifiableSet(getOldValue());
     }
 
     /**
@@ -111,7 +107,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
      * @return the items that were removed from selection
      */
     public Set<T> getRemovedSelection() {
-        LinkedHashSet<T> copy = new LinkedHashSet<>(oldSelection);
+        LinkedHashSet<T> copy = new LinkedHashSet<>(getOldValue());
         copy.removeAll(getNewSelection());
         return copy;
     }
@@ -127,7 +123,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
      */
     public Set<T> getAddedSelection() {
         LinkedHashSet<T> copy = new LinkedHashSet<>(getValue());
-        copy.removeAll(oldSelection);
+        copy.removeAll(getOldValue());
         return copy;
     }
 

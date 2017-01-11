@@ -297,7 +297,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                      * If value was changed fire the ValueChangeEvent
                      */
                     if (oldDate != null) {
-                        fireEvent(createValueChange(true));
+                        fireEvent(createValueChange(oldDate, true));
                     }
 
                     markAsDirty();
