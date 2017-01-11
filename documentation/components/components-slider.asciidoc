@@ -47,7 +47,6 @@ field is a [classname]#Double# object.
 ----
 // Shows the value of the vertical slider
 final Label vertvalue = new Label();
-vertvalue.setSizeUndefined();
 
 // Handle changes in slider value.
 vertslider.addValueChangeListener(event -> {

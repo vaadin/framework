@@ -110,7 +110,6 @@ not update the scroll position to the server-side.
 (((range="endofrange", startref="term.layout.panel.scrolling.scrollbars")))
 
 
-ifdef::web[]
 [[layout.panel.css]]
 == CSS Style Rules
 
@@ -130,10 +129,7 @@ styled with [literal]#++v-panel-caption++#, [literal]#++v-panel-content++#, and
 [literal]#++v-panel-deco++#, respectively. If the panel has no caption, the
 caption element will have the style [literal]#++v-panel-nocaption++#.
 
-The built-in [literal]#++light++# style in the Reindeer and Runo themes has no
+The built-in [literal]#++borderless++# style in the Valo theme has no
 borders or border decorations for the [classname]#Panel#. You can use the
-[parameter]#Reindeer.PANEL_LIGHT# and [parameter]#Runo.PANEL_LIGHT# constants to
-add the style to a panel. Other themes may also provide the light and other
-styles for [classname]#Panel# as well.
-
-endif::web[]
+[parameter]#ValoTheme.PANEL_BORDERLESS# constant to
+add the style to a panel.

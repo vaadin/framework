@@ -123,6 +123,7 @@ import com.vaadin.v7.client.widget.grid.DetailsGenerator;
 import com.vaadin.v7.client.widget.grid.EditorHandler;
 import com.vaadin.v7.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.v7.client.widget.grid.EventCellReference;
+import com.vaadin.v7.client.widget.grid.GridEventHandler;
 import com.vaadin.v7.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.v7.client.widget.grid.RendererCellReference;
 import com.vaadin.v7.client.widget.grid.RowReference;
@@ -1187,6 +1188,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public static class GridEvent<T> {
         private Event event;
         private EventCellReference<T> cell;
+        private boolean handled = false;
 
         protected GridEvent(Event event, EventCellReference<T> cell) {
             this.event = event;
@@ -1218,6 +1220,25 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         public Grid<T> getGrid() {
             return cell.getGrid();
+        }
+
+        /**
+         * Check whether this event has already been marked as handled.
+         *
+         * @return whether this event has already been marked as handled
+         */
+        public boolean isHandled() {
+            return handled;
+        }
+
+        /**
+         * Set the status of this event. Setting to {@code true} effectively
+         * marks this event as having already been handled.
+         *
+         * @param handled
+         */
+        public void setHandled(boolean handled) {
+            this.handled = handled;
         }
     }
 
@@ -2839,6 +2860,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
     }
 
+    private final List<GridEventHandler<T>> browserEventHandlers = new ArrayList<>();
+
+    private CellStyleGenerator<T> cellStyleGenerator;
+    private RowStyleGenerator<T> rowStyleGenerator;
+    private RowReference<T> rowReference = new RowReference<>(this);
+    private CellReference<T> cellReference = new CellReference<>(rowReference);
+    private RendererCellReference rendererCellReference = new RendererCellReference(
+            (RowReference<Object>) rowReference);
+
     public final class SelectionColumn extends Column<Boolean, T>
             implements GridEnabledHandler {
 
@@ -4367,8 +4397,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     reordered.addAll(columns.subList(
                             draggedColumnIndex + colspan, columns.size()));
                 }
-                reordered.remove(selectionColumn); // since setColumnOrder will
-                                                   // add it anyway!
+                reordered.remove(selectionColumn); // since
+                                                   // setColumnOrder
+                                                   // will
+                                                   // add
+                                                   // it
+                                                   // anyway!
 
                 // capture focused cell column before reorder
                 Cell focusedCell = cellFocusHandler.getFocusedCell();
@@ -4382,7 +4416,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         .toArray(new Column[reordered.size()]);
                 setColumnOrder(array);
                 transferCellFocusOnDrop();
-            } // else no reordering
+            } // else
+              // no
+              // reordering
         }
 
         private void transferCellFocusOnDrop() {
@@ -6077,6 +6113,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         });
 
+        browserEventHandlers.addAll(Arrays.asList(
+                // Opening, closing and navigating in the editor
+                new EditorEventHandler(),
+                // Keyboard and click handlers, Escalator events
+                new SuperEventHandler(),
+                // Column reordering via header drag&drop
+                new HeaderCellDragStartHandler(),
+                // Column sorting via header click
+                new HeaderDefaultRowEventHandler(),
+                // Invoking event-aware renderers
+                new RendererEventHandler(),
+                // Moving cell focus by keyboard or mouse
+                new CellFocusEventHandler()));
+
     }
 
     @Override
@@ -6090,6 +6140,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param mode
      *            a ColumnResizeMode value
+     * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
         columnResizeMode = mode;
@@ -6100,6 +6151,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * {@link ColumnResizeMode.ANIMATED}.
      *
      * @return a ColumnResizeMode value
+     * @since 7.7.5
      */
     public ColumnResizeMode getColumnResizeMode() {
         return columnResizeMode;
@@ -7321,32 +7373,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 + "-event with a null cell target";
         eventCell.set(cell, getSectionFromContainer(container));
 
-        // Editor can steal focus from Grid and is still handled
-        if (isEditorEnabled() && handleEditorEvent(event, container)) {
-            return;
-        }
-
-        // Fire GridKeyEvents and GridClickEvents. Pass the event to escalator.
-        super.onBrowserEvent(event);
-
-        if (!isElementInChildWidget(e)) {
-
-            if (handleHeaderCellDragStartEvent(event, container)) {
-                return;
-            }
-
-            // Sorting through header Click / KeyUp
-            if (handleHeaderDefaultRowEvent(event, container)) {
-                return;
-            }
-
-            if (handleRendererEvent(event, container)) {
-                return;
-            }
-
-            if (handleCellFocusEvent(event, container)) {
-                return;
-            }
+        GridEvent<T> gridEvent = new GridEvent<>(event, eventCell);
+        for (GridEventHandler<T> handler : browserEventHandlers) {
+            handler.onEvent(gridEvent);
         }
     }
 
@@ -7399,178 +7428,238 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return w != null;
     }
 
-    private boolean handleEditorEvent(Event event, RowContainer container) {
-        Widget w;
-        if (editor.focusedColumnIndex < 0) {
-            w = null;
-        } else {
-            w = editor.getWidget(getColumn(editor.focusedColumnIndex));
+    private class EditorEventHandler implements GridEventHandler<T> {
+
+        @Override
+        public void onEvent(GridEvent<T> event) {
+            if (!isEditorEnabled()) {
+                return;
+            }
+
+            Widget widget;
+            if (editor.focusedColumnIndex < 0) {
+                widget = null;
+            } else {
+                widget = editor.getWidget(getColumn(editor.focusedColumnIndex));
+            }
+
+            EditorDomEvent<T> editorEvent = new EditorDomEvent<>(
+                    event.getDomEvent(), event.getCell(), widget);
+
+            event.setHandled(
+                    getEditor().getEventHandler().handleEvent(editorEvent));
         }
+    };
 
-        EditorDomEvent<T> editorEvent = new EditorDomEvent<>(event,
-                getEventCell(), w);
+    private class SuperEventHandler implements GridEventHandler<T> {
 
-        return getEditor().getEventHandler().handleEvent(editorEvent);
-    }
+        @Override
+        public void onEvent(GridEvent<T> event) {
+            if (event.isHandled()) {
+                return;
+            }
+            Grid.super.onBrowserEvent(event.getDomEvent());
+        }
+    };
 
-    private boolean handleRendererEvent(Event event, RowContainer container) {
+    private abstract class AbstractGridEventHandler
+            implements GridEventHandler<T> {
 
-        if (container == escalator.getBody()) {
-            Column<?, T> gridColumn = eventCell.getColumn();
-            boolean enterKey = event.getType().equals(BrowserEvents.KEYDOWN)
-                    && event.getKeyCode() == KeyCodes.KEY_ENTER;
-            boolean doubleClick = event.getType()
+        @Override
+        public void onEvent(GridEvent<T> event) {
+            if (event.isHandled()) {
+                return;
+            }
+            event.setHandled(isElementInChildWidget(
+                    Element.as(event.getDomEvent().getEventTarget())));
+        }
+    };
+
+    private class RendererEventHandler extends AbstractGridEventHandler {
+
+        @Override
+        public void onEvent(GridEvent<T> event) {
+            super.onEvent(event);
+            if (event.isHandled()) {
+                return;
+            }
+            if (!event.getCell().isBody()) {
+                return;
+            }
+
+            Column<?, T> gridColumn = event.getCell().getColumn();
+            boolean enterKey = event.getDomEvent().getType()
+                    .equals(BrowserEvents.KEYDOWN)
+                    && event.getDomEvent().getKeyCode() == KeyCodes.KEY_ENTER;
+            boolean doubleClick = event.getDomEvent().getType()
                     .equals(BrowserEvents.DBLCLICK);
 
             if (gridColumn.getRenderer() instanceof ComplexRenderer) {
                 ComplexRenderer<?> cplxRenderer = (ComplexRenderer<?>) gridColumn
                         .getRenderer();
                 if (cplxRenderer.getConsumedEvents()
-                        .contains(event.getType())) {
-                    if (cplxRenderer.onBrowserEvent(eventCell, event)) {
-                        return true;
+                        .contains(event.getDomEvent().getType())) {
+                    if (cplxRenderer.onBrowserEvent(event.getCell(),
+                            event.getDomEvent())) {
+                        event.setHandled(true);
                     }
                 }
 
                 // Calls onActivate if KeyDown and Enter or double click
                 if ((enterKey || doubleClick)
-                        && cplxRenderer.onActivate(eventCell)) {
-                    return true;
+                        && cplxRenderer.onActivate(event.getCell())) {
+                    event.setHandled(true);
                 }
             }
         }
-        return false;
-    }
+    };
 
-    private boolean handleCellFocusEvent(Event event, RowContainer container) {
-        Collection<String> navigation = cellFocusHandler.getNavigationEvents();
-        if (navigation.contains(event.getType())) {
-            cellFocusHandler.handleNavigationEvent(event, eventCell);
-        }
-        return false;
-    }
+    private class CellFocusEventHandler extends AbstractGridEventHandler {
 
-    private boolean handleHeaderCellDragStartEvent(Event event,
-            RowContainer container) {
-        if (!isColumnReorderingAllowed()) {
-            return false;
-        }
-        if (container != escalator.getHeader()) {
-            return false;
-        }
-        if (eventCell.getColumnIndex() < escalator.getColumnConfiguration()
-                .getFrozenColumnCount()) {
-            return false;
-        }
-
-        if (event.getTypeInt() == Event.ONMOUSEDOWN
-                && event.getButton() == NativeEvent.BUTTON_LEFT
-                || event.getTypeInt() == Event.ONTOUCHSTART) {
-            dndHandler.onDragStartOnDraggableElement(event,
-                    headerCellDndCallback);
-            event.preventDefault();
-            event.stopPropagation();
-            return true;
-        }
-        return false;
-    }
-
-    private Point rowEventTouchStartingPoint;
-    private CellStyleGenerator<T> cellStyleGenerator;
-    private RowStyleGenerator<T> rowStyleGenerator;
-    private RowReference<T> rowReference = new RowReference<>(this);
-    private CellReference<T> cellReference = new CellReference<>(rowReference);
-    private RendererCellReference rendererCellReference = new RendererCellReference(
-            (RowReference<Object>) rowReference);
-
-    private boolean handleHeaderDefaultRowEvent(Event event,
-            RowContainer container) {
-        if (container != escalator.getHeader()) {
-            return false;
-        }
-        if (!getHeader().getRow(eventCell.getRowIndex()).isDefault()) {
-            return false;
-        }
-        if (!eventCell.getColumn().isSortable()) {
-            // Only handle sorting events if the column is sortable
-            return false;
-        }
-
-        if (BrowserEvents.MOUSEDOWN.equals(event.getType())
-                && event.getShiftKey()) {
-            // Don't select text when shift clicking on a header.
-            event.preventDefault();
-        }
-
-        if (BrowserEvents.TOUCHSTART.equals(event.getType())) {
-            if (event.getTouches().length() > 1) {
-                return false;
+        @Override
+        public void onEvent(GridEvent<T> event) {
+            super.onEvent(event);
+            if (event.isHandled()) {
+                return;
             }
 
-            event.preventDefault();
+            Collection<String> navigation = cellFocusHandler
+                    .getNavigationEvents();
+            if (navigation.contains(event.getDomEvent().getType())) {
+                cellFocusHandler.handleNavigationEvent(event.getDomEvent(),
+                        event.getCell());
+            }
+        }
+    };
 
-            Touch touch = event.getChangedTouches().get(0);
-            rowEventTouchStartingPoint = new Point(touch.getClientX(),
-                    touch.getClientY());
+    private class HeaderCellDragStartHandler extends AbstractGridEventHandler {
 
-            sorter.sortAfterDelay(GridConstants.LONG_TAP_DELAY, true);
-
-            return true;
-
-        } else if (BrowserEvents.TOUCHMOVE.equals(event.getType())) {
-            if (event.getTouches().length() > 1) {
-                return false;
+        @Override
+        public void onEvent(GridEvent<T> event) {
+            super.onEvent(event);
+            if (event.isHandled()) {
+                return;
+            }
+            if (!isColumnReorderingAllowed()) {
+                return;
+            }
+            if (!event.getCell().isHeader()) {
+                return;
+            }
+            if (event.getCell().getColumnIndex() < escalator
+                    .getColumnConfiguration().getFrozenColumnCount()) {
+                return;
             }
 
-            event.preventDefault();
+            if (event.getDomEvent().getTypeInt() == Event.ONMOUSEDOWN
+                    && event.getDomEvent()
+                            .getButton() == NativeEvent.BUTTON_LEFT
+                    || event.getDomEvent().getTypeInt() == Event.ONTOUCHSTART) {
+                dndHandler.onDragStartOnDraggableElement(event.getDomEvent(),
+                        headerCellDndCallback);
+                event.getDomEvent().preventDefault();
+                event.getDomEvent().stopPropagation();
+                event.setHandled(true);
+            }
+        }
+    };
 
-            Touch touch = event.getChangedTouches().get(0);
-            double diffX = Math.abs(
-                    touch.getClientX() - rowEventTouchStartingPoint.getX());
-            double diffY = Math.abs(
-                    touch.getClientY() - rowEventTouchStartingPoint.getY());
+    private class HeaderDefaultRowEventHandler
+            extends AbstractGridEventHandler {
 
-            // Cancel long tap if finger strays too far from
-            // starting point
-            if (diffX > GridConstants.LONG_TAP_THRESHOLD
-                    || diffY > GridConstants.LONG_TAP_THRESHOLD) {
+        private Point rowEventTouchStartingPoint;
+
+        @Override
+        public void onEvent(GridEvent<T> event) {
+            super.onEvent(event);
+            if (event.isHandled()) {
+                return;
+            }
+            if (!event.getCell().isHeader()) {
+                return;
+            }
+            if (!getHeader().getRow(event.getCell().getRowIndex())
+                    .isDefault()) {
+                return;
+            }
+            if (!event.getCell().getColumn().isSortable()) {
+                // Only handle sorting events if the column is sortable
+                return;
+            }
+
+            if (BrowserEvents.MOUSEDOWN.equals(event.getDomEvent().getType())
+                    && event.getDomEvent().getShiftKey()) {
+                // Don't select text when shift clicking on a header.
+                event.getDomEvent().preventDefault();
+            }
+
+            if (BrowserEvents.TOUCHSTART
+                    .equals(event.getDomEvent().getType())) {
+                if (event.getDomEvent().getTouches().length() > 1) {
+                    return;
+                }
+
+                event.getDomEvent().preventDefault();
+
+                Touch touch = event.getDomEvent().getChangedTouches().get(0);
+                rowEventTouchStartingPoint = new Point(touch.getClientX(),
+                        touch.getClientY());
+
+                sorter.sortAfterDelay(GridConstants.LONG_TAP_DELAY, true);
+
+                event.setHandled(true);
+            } else if (BrowserEvents.TOUCHMOVE
+                    .equals(event.getDomEvent().getType())) {
+                if (event.getDomEvent().getTouches().length() > 1) {
+                    return;
+                }
+
+                event.getDomEvent().preventDefault();
+
+                Touch touch = event.getDomEvent().getChangedTouches().get(0);
+                double diffX = Math.abs(
+                        touch.getClientX() - rowEventTouchStartingPoint.getX());
+                double diffY = Math.abs(
+                        touch.getClientY() - rowEventTouchStartingPoint.getY());
+
+                // Cancel long tap if finger strays too far from
+                // starting point
+                if (diffX > GridConstants.LONG_TAP_THRESHOLD
+                        || diffY > GridConstants.LONG_TAP_THRESHOLD) {
+                    sorter.cancelDelayedSort();
+                }
+
+                event.setHandled(true);
+            } else if (BrowserEvents.TOUCHEND
+                    .equals(event.getDomEvent().getType())) {
+                if (event.getDomEvent().getTouches().length() > 1) {
+                    return;
+                }
+
+                if (sorter.isDelayedSortScheduled()) {
+                    // Not a long tap yet, perform single sort
+                    sorter.cancelDelayedSort();
+                    sorter.sort(event.getCell().getColumn(), false);
+                }
+
+                event.setHandled(true);
+            } else if (BrowserEvents.TOUCHCANCEL
+                    .equals(event.getDomEvent().getType())) {
+                if (event.getDomEvent().getTouches().length() > 1) {
+                    return;
+                }
+
                 sorter.cancelDelayedSort();
+
+                event.setHandled(true);
+            } else if (BrowserEvents.CLICK
+                    .equals(event.getDomEvent().getType())) {
+
+                sorter.sort(event.getCell().getColumn(),
+                        event.getDomEvent().getShiftKey());
             }
-
-            return true;
-
-        } else if (BrowserEvents.TOUCHEND.equals(event.getType())) {
-            if (event.getTouches().length() > 1) {
-                return false;
-            }
-
-            if (sorter.isDelayedSortScheduled()) {
-                // Not a long tap yet, perform single sort
-                sorter.cancelDelayedSort();
-                sorter.sort(eventCell.getColumn(), false);
-            }
-
-            return true;
-
-        } else if (BrowserEvents.TOUCHCANCEL.equals(event.getType())) {
-            if (event.getTouches().length() > 1) {
-                return false;
-            }
-
-            sorter.cancelDelayedSort();
-
-            return true;
-
-        } else if (BrowserEvents.CLICK.equals(event.getType())) {
-
-            sorter.sort(eventCell.getColumn(), event.getShiftKey());
-
-            // Click events should go onward to cell focus logic
-            return false;
-        } else {
-            return false;
         }
-    }
+    };
 
     @Override
     @SuppressWarnings("deprecation")
@@ -8293,6 +8382,22 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public HandlerRegistration addRowHeightChangedHandler(
             RowHeightChangedHandler handler) {
         return escalator.addHandler(handler, RowHeightChangedEvent.TYPE);
+    }
+
+    /**
+     * Adds a low-level DOM event handler to this Grid. The handler is inserted
+     * into the given position in the list of handlers. The handlers are invoked
+     * in order. If the
+     * {@link GridEventHandler#onEvent(Event, EventCellReference) onEvent}
+     * method of a handler returns true, subsequent handlers are not invoked.
+     *
+     * @param index
+     *            the index to insert the handler to
+     * @param handler
+     *            the handler to add
+     */
+    public void addBrowserEventHandler(int index, GridEventHandler<T> handler) {
+        browserEventHandlers.add(index, handler);
     }
 
     /**

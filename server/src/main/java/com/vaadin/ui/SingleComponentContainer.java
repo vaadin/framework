@@ -56,7 +56,6 @@ public interface SingleComponentContainer
      * The content should always be set, either as a constructor parameter or by
      * calling this method.
      *
-     * @return a component (typically a layout) to use as content
      */
     public void setContent(Component content);
 

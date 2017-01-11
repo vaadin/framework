@@ -15,14 +15,12 @@
  */
 package com.vaadin.ui;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Listing;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
@@ -138,9 +136,6 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
      * <p>
-     * <strong>Note:</strong> This constructor does not set a selection model
-     * for the new listing. The invoking constructor must explicitly call
-     * {@link #setSelectionModel(SelectionModel)}.
      */
     protected AbstractListing() {
         this(new DataCommunicator<>());
@@ -154,9 +149,6 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * {@code AbstractListing} with a custom communicator. In the common case
      * {@link AbstractListing#AbstractListing()} should be used.
      * <p>
-     * <strong>Note:</strong> This constructor does not set a selection model
-     * for the new listing. The invoking constructor must explicitly call
-     * {@link #setSelectionModel(SelectionModel)}.
      *
      * @param dataCommunicator
      *            the data communicator to use, not null
@@ -277,7 +269,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Writes listing specific state into the given design.
      * <p>
-     * This method is separated from {@link writeDesign(Element, DesignContext)}
+     * This method is separated from {@link #writeDesign(Element, DesignContext)}
      * to be overridable in subclasses that need to replace this, but still must
      * be able to call {@code super.writeDesign(...)}.
      *
@@ -357,7 +349,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Reads the listing specific state from the given design.
      * <p>
-     * This method is separated from {@link readDesign(Element, DesignContext)}
+     * This method is separated from {@link #readDesign(Element, DesignContext)}
      * to be overridable in subclasses that need to replace this, but still must
      * be able to call {@code super.readDesign(...)}.
      *
@@ -380,10 +372,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
         setItemIconGenerator(
                 new DeclarativeIconGenerator<>(getItemIconGenerator()));
 
-        List<T> readItems = readItems(design, context);
-        if (!readItems.isEmpty() && this instanceof Listing) {
-            ((Listing<T, ?>) this).setItems(readItems);
-        }
+        readItems(design, context);
     }
 
     /**
@@ -393,10 +382,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
      *            The element to obtain the state from
      * @param context
      *            The DesignContext instance used for parsing the design
-     *
-     * @return the items read from the design
      */
-    protected abstract List<T> readItems(Element design, DesignContext context);
+    protected abstract void readItems(Element design, DesignContext context);
 
     /**
      * Reads an Item from a design and inserts it into the data source.

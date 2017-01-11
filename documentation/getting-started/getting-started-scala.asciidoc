@@ -34,7 +34,7 @@ of the application server. If copying outside Eclipse to a project, refresh the
 project by selecting it and pressing kbd:[F5].
 
 +
-You could also get it with an Ivy or Maven dependency, just make sure that the
+You could also get it with a Maven dependency, just make sure that the
 version is same as what the Scala IDE uses.
 
 

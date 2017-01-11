@@ -23,13 +23,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.provider.DataGenerator;
@@ -37,6 +36,7 @@ import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
+import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
@@ -117,6 +117,11 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
         @Override
         public void destroyData(T data) {
+        }
+
+        @Override
+        public void destroyAllData() {
+            AbstractMultiSelect.this.deselectAll();
         }
     }
 
@@ -237,7 +242,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
      * multiselect component.
      *
      * @return the item enabled provider, not {@code null}
-     * @see #setItemEnabledProvider(Predicate)
+     * @see #setItemEnabledProvider(SerializablePredicate)
      */
     protected SerializablePredicate<T> getItemEnabledProvider() {
         return itemEnabledProvider;
@@ -423,14 +428,16 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         Set<T> selected = new HashSet<>();
         List<T> items = design.children().stream()
                 .map(child -> readItem(child, selected, context))
                 .collect(Collectors.toList());
         deselectAll();
+        if (!items.isEmpty() && this instanceof Listing) {
+            ((Listing<T, ?>) this).setItems(items);
+        }
         selected.forEach(this::select);
-        return items;
     }
 
     /**
@@ -462,8 +469,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         return item;
     }
 
-    private void updateSelection(Consumer<Set<T>> handler,
-            boolean userOriginated) {
+    private void updateSelection(SerializableConsumer<Set<T>> handler,
+                                 boolean userOriginated) {
         LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
         handler.accept(selection);
 

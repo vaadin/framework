@@ -47,7 +47,7 @@ import com.vaadin.ui.declarative.DesignContext;
  *
  * <p>
  * The {@link #getParent()} method allows retrieving the parent component of a
- * component. While there is a {@link #setParent(Component) setParent()}, you
+ * component. While there is a {@link #setParent(HasComponents)}, you
  * rarely need it as you normally add components with the
  * {@link ComponentContainer#addComponent(Component) addComponent()} method of
  * the layout or other {@code ComponentContainer}, which automatically sets the
@@ -183,8 +183,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * style names defined in Vaadin or GWT can not be removed.
      * </p>
      *
-     * * This method will trigger a {@link RepaintRequestEvent}.
-     *
      * @param style
      *            the style name or style names to be removed
      * @see #getStyleName()
@@ -260,12 +258,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * disabled.setEnabled(false);
      * layout.addComponent(disabled);
      * </pre>
-     *
-     * <p>
-     * This method will trigger a {@link RepaintRequestEvent} for the component
-     * and, if it is a {@link ComponentContainer}, for all its children
-     * recursively.
-     * </p>
      *
      * @param enabled
      *            a boolean value specifying if the component should be enabled
@@ -426,11 +418,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * display it inside the component.
      * </p>
      *
-     * <p>
-     * This method will trigger a {@link RepaintRequestEvent}. A
-     * reimplementation should call the superclass implementation.
-     * </p>
-     *
      * @param caption
      *            the new caption for the component. If the caption is
      *            {@code null}, no caption is shown and it does not normally
@@ -497,8 +484,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * and a caption inside elements related to the caption, such as
      * {@code v-caption} .
      * </p>
-     *
-     * This method will trigger a {@link RepaintRequestEvent}.
      *
      * @param icon
      *            the icon of the component. If null, no icon is shown and it

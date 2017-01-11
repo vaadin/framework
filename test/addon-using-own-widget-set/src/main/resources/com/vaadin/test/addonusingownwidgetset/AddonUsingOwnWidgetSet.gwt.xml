@@ -3,5 +3,5 @@
 <module>
     <inherits name="com.vaadin.DefaultWidgetSet" />
 
-    <inherits name="com.vaadin.addon.contextmenu.WidgetSet" />
+    <inherits name="com.vaadin.contextmenu.WidgetSet" />
 </module>

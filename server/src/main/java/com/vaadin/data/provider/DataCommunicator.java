@@ -84,8 +84,8 @@ public class DataCommunicator<T, F> extends AbstractExtension {
      * {@link DataKeyMapper}.
      * <p>
      * When the {@link DataCommunicator} is pushing new data to the client-side
-     * via {@link DataCommunicator#pushData(long, Collection)},
-     * {@link #addActiveData(Collection)} and {@link #cleanUp(Collection)} are
+     * via {@link DataCommunicator#pushData(int, Stream)},
+     * {@link #addActiveData(Stream)} and {@link #cleanUp(Stream)} are
      * called with the same parameter. In the clean up method any dropped data
      * objects that are not in the given collection will be cleaned up and
      * {@link DataGenerator#destroyData(Object)} will be called for them.
@@ -177,6 +177,12 @@ public class DataCommunicator<T, F> extends AbstractExtension {
             activeData.remove(getKeyMapper().key(data));
             // Drop the registered key
             getKeyMapper().remove(data);
+        }
+
+        @Override
+        public void destroyAllData() {
+            activeData.clear();
+            getKeyMapper().removeAll();
         }
     }
 
@@ -354,6 +360,13 @@ public class DataCommunicator<T, F> extends AbstractExtension {
         }
     }
 
+    private void dropAllData() {
+        for (DataGenerator<T> g : generators) {
+            g.destroyAllData();
+        }
+        handler.destroyAllData();
+    }
+
     /**
      * Informs the DataProvider that the collection has changed.
      */
@@ -460,6 +473,7 @@ public class DataCommunicator<T, F> extends AbstractExtension {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         this.dataProvider = dataProvider;
         detachDataProviderListener();
+        dropAllData();
         /*
          * This introduces behavior which influence on the client-server
          * communication: now the very first response to the client will always

@@ -9,24 +9,50 @@ layout: page
 
 Let us put into practice what we learned of event handling in
 <<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
-and Listeners">>. You can implement listener interfaces in a regular class, but
-it brings the problem with differentiating between different event sources.
-Using anonymous class for listeners is recommended in most cases.
+and Listeners">>. You can implement listener interfaces by directly using lambda expressions, method references or anonymous classes.
+
+For example, in the following, we use a lambda expression to handle button click
+events in the constructor:
+
+
+[source, java]
+----
+layout.addComponent(new Button("Click Me!",
+    event -> event.getButton().setCaption("You made click!")));
+----
+
+Directing events to handler methods is easy with method references:
+
+[source, java]
+----
+public class Buttons extends CustomComponent {
+    public Buttons() {
+        setCompositionRoot(new HorizontalLayout(
+            new Button("OK", this::ok),
+            new Button("Cancel", this::cancel)));
+    }
+
+    private void ok(ClickEvent event) {
+        event.getButton().setCaption ("OK!");
+    }
+
+    private void cancel(ClickEvent event) {
+        event.getButton().setCaption ("Not OK!");
+    }
+}
+----
+
 
 [[application.events.anonymous]]
 == Using Anonymous Classes
 
-By far the easiest and the most common way to handle events in Java 8 lambdas.
-It encapsulates the handling of events to where
-the component is defined and does not require cumbering the managing class with
-interface implementations. The following example defines an anonymous class that
-inherits the [classname]#Button.ClickListener# interface.
+The following example defines an anonymous class that inherits the [classname]#Button.ClickListener# interface.
 
 
 [source, java]
 ----
 // Have a component that fires click events
-final Button button = new Button("Click Me!");
+Button button = new Button("Click Me!");
 
 // Handle the events with an anonymous class
 button.addClickListener(new Button.ClickListener() {
@@ -35,19 +61,12 @@ button.addClickListener(new Button.ClickListener() {
     }
 });
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.eventlistener.anonymous[on-line example, window="_blank"].
 
-Local objects referenced from within an anonymous class, such as the
-[classname]#Button# object in the above example, must be declared
-[literal]#++final++#.
-
-Most components allow passing a listener to the constructor, thereby losing a
-line or two. However, notice that if accessing the component that is constructed
-from an anonymous class, you must use a reference that is declared before the
-constructor is executed, for example as a member variable in the outer class. If
-it is declared in the same expression where the constructor is called, it
-doesn't yet exist. In such cases, you need to get a reference to the component
-from the event object.
+Most components allow passing a listener to the constructor.
+Note that to be able to access the component from the anonymous listener class,
+you must have a reference to the component that is declared before the
+constructor is executed, for example as a member variable in the outer class.
+You can also to get a reference to the component from the event object:
 
 
 [source, java]
@@ -60,132 +79,3 @@ final Button button = new Button("Click It!",
     }
   });
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.eventlistener.constructor[on-line example, window="_blank"].
-
-
-[[application.events.java8]]
-== Handling Events in Java 8
-
-Java 8 introduced lambda expressions, which offer a replacement for listeners.
-You can directly use lambda expressions in place of listeners that have only one
-method to implement.
-
-For example, in the following, we use a lambda expression to handle button click
-events in the constructor:
-
-
-[source, java]
-----
-layout.addComponent(new Button("Click Me!",
-    event -> event.getButton().setCaption("You made click!")));
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.eventlistener.java8[on-line example, window="_blank"].
-
-Java 8 is the future that is already here, and as Vaadin API uses event
-listeners extensively, using lambda expressions makes UI code much more
-readable.
-
-Directing events to handler methods is easy with method references:
-
-
-[source, java]
-----
-public class Java8Buttons extends CustomComponent {
-    public Java8Buttons() {
-        setCompositionRoot(new HorizontalLayout(
-            new Button("OK", this::ok),
-            new Button("Cancel", this::cancel)));
-    }
-
-    public void ok(ClickEvent event) {
-        event.getButton().setCaption ("OK!");
-    }
-
-    public void cancel(ClickEvent event) {
-        event.getButton().setCaption ("Not OK!");
-    }
-}
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.eventlistener.java8differentiation[on-line example, window="_blank"].
-
-
-[[application.events.classlistener]]
-== Implementing a Listener in a Regular Class
-
-The following example follows a typical pattern where you have a
-[classname]#Button# component and a listener that handles user interaction
-(clicks) communicated to the application as events. Here we define a class that
-listens to click events.
-
-
-[source, java]
-----
-public class MyComposite extends CustomComponent
-             implements Button.ClickListener {
-    Button button; // Defined here for access
-
-    public MyComposite() {
-        Layout layout = new HorizontalLayout();
-
-        // Just a single component in this composition
-        button = new Button("Do not push this");
-        button.addClickListener(this);
-        layout.addComponent(button);
-
-        setCompositionRoot(layout);
-    }
-
-    // The listener method implementation
-    public void buttonClick(ClickEvent event) {
-        button.setCaption("Do not push this again");
-    }
-}
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.eventlistener.classlistener[on-line example, window="_blank"].
-
-
-[[application.events.differentiation]]
-== Differentiating Between Event Sources
-
-If an application receives events of the same type from multiple sources, such
-as multiple buttons, it has to be able to distinguish between the sources. If
-using a regular class listener, distinguishing between the components can be
-done by comparing the source of the event with each of the components. The
-method for identifying the source depends on the event type.
-
-
-[source, java]
-----
-public class TheButtons extends CustomComponent
-       implements Button.ClickListener {
-    Button onebutton;
-    Button toobutton;
-
-    public TheButtons() {
-        onebutton = new Button("Button One", this);
-        toobutton = new Button("A Button Too", this);
-
-        // Put them in some layout
-        Layout root = new HorizontalLayout();
-        root.addComponent(onebutton);
-        root.addComponent(toobutton);
-        setCompositionRoot(root);
-    }
-
-    @Override
-    public void buttonClick(ClickEvent event) {
-        // Differentiate targets by event source
-        if (event.getButton() == onebutton)
-            onebutton.setCaption ("Pushed one");
-        else if (event.getButton() == toobutton)
-            toobutton.setCaption ("Pushed too");
-    }
-}
-----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#application.eventlistener.differentiation[on-line example, window="_blank"].
-
-Other techniques exist for separating between event sources, such as using
-object properties, names, or captions to separate between them. Using captions
-or any other visible text is generally discouraged, as it may create problems
-for internationalization. Using other symbolic strings can also be dangerous,
-because the syntax of such strings is checked only at runtime.

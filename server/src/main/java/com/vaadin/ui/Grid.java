@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -1070,9 +1069,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets strings describing back end properties to be used when sorting
-         * this column. This method is a short hand for
-         * {@link #setSortBuilder(Function)} that takes an array of strings and
-         * uses the same sorting direction for all of them.
+         * this column.
          *
          * @param properties
          *            the array of strings describing backend properties
@@ -1413,7 +1410,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * {@link #isHidable() hidable}.
          * <p>
          * The default value is <code>null</code>, and in that case the column's
-         * {@link #getHeaderCaption() header caption} is used.
+         * {@link #getCaption() header caption} is used.
          * <p>
          * <em>NOTE:</em> setting this to empty string might cause the hiding
          * toggle to not render correctly.
@@ -1857,7 +1854,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(ValueProvider<T, String> valueProvider) {
+    public Column<T, String> addColumn(ValueProvider<T, ?> valueProvider) {
         return addColumn(t -> String.valueOf(valueProvider.apply(t)),
                 new TextRenderer());
     }
@@ -2466,9 +2463,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Returns the footer section of this grid. The default footer contains a
-     * single row, set as the {@linkplain #setDefaultFooterRow(FooterRow)
-     * default row}.
+     * Returns the footer section of this grid.
      *
      * @return the footer section
      */
@@ -2758,7 +2753,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return a registration handle to remove the listener
      * @throws UnsupportedOperationException
      *             if selection has been disabled with
-     *             {@link SelectionMode.NONE}
+     *             {@link SelectionMode#NONE}
      */
     public Registration addSelectionListener(SelectionListener<T> listener)
             throws UnsupportedOperationException {
@@ -2848,6 +2843,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param mode
      *            a ColumnResizeMode value
+     * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
         getState().columnResizeMode = mode;
@@ -2858,6 +2854,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * {@link ColumnResizeMode#ANIMATED}.
      *
      * @return a ColumnResizeMode value
+     * @since 7.7.5
      */
     public ColumnResizeMode getColumnResizeMode() {
         return getState(false).columnResizeMode;
@@ -2898,8 +2895,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
-        return Collections.emptyList();
+    protected void readItems(Element design, DesignContext context) {
+        // Grid handles reading of items in Grid#readData
     }
 
     @Override
@@ -3046,11 +3043,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             List<DeclarativeValueProvider<T>> providers) {
         getSelectionModel().deselectAll();
         List<T> items = new ArrayList<>();
+        List<T> selectedItems = new ArrayList<>();
         for (Element row : body.children()) {
             T item = deserializeDeclarativeRepresentation(row.attr("item"));
             items.add(item);
             if (row.hasAttr("selected")) {
-                getSelectionModel().select(item);
+                selectedItems.add(item);
             }
             Elements cells = row.children();
             int i = 0;
@@ -3061,6 +3059,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         setItems(items);
+        selectedItems.forEach(getSelectionModel()::select);
     }
 
     private void writeStructure(Element design, DesignContext designContext) {

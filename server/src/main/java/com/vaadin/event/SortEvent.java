@@ -18,12 +18,13 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.util.List;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.SortOrder;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 
 /**
- * Event describing a change in sorting of a {@link Container}. Fired by
+ * Event describing a change in sorting of a {@link DataProvider}. Fired by
  * {@link SortNotifier SortNotifiers}.
  *
  * @see SortListener

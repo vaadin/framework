@@ -28,7 +28,6 @@ vertical.addComponent(new TextField("Street address"));
 vertical.addComponent(new TextField("Postal code"));
 layout.addComponent(vertical);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.basic[on-line example, window="_blank"].
 
 In [classname]#VerticalLayout#, the captions of child components are placed above each component, so the layout would look as follows:
 
@@ -38,7 +37,6 @@ image::img/orderedlayout_vertical.png[width=30%, scaledwidth=65%]
 
 image::img/orderedlayout_horizontal.png[width=80%, scaledwidth=100%]
 
-ifdef::web[]
 [[layout.orderedlayout.declarative]]
 == Declarative Format
 
@@ -46,9 +44,9 @@ Ordered layouts have the following declarative elements:
 
 |===============
 |Component|Element Name
-|[classname]#VerticalLayout#|[elementname]#v-verticallayout#
-|[classname]#HorizontalLayout#|[elementname]#v-horizontallayout#
-|[classname]#FormLayout#|[elementname]#v-formlayout#
+|[classname]#VerticalLayout#|[elementname]#v-vertical-layout#
+|[classname]#HorizontalLayout#|[elementname]#v-horizontal-layout#
+|[classname]#FormLayout#|[elementname]#v-form-layout#
 |===============
 
 The have the following declarative attributes:
@@ -72,36 +70,35 @@ For example:
 [source, html]
 ----
 <!-- Use margin and spacing -->
-<v-vertical-layout size-full margin spacing>
-  <v-label><b>Hello!</b> - How are you?</v-label>
+<vaadin-vertical-layout size-full margin spacing>
+  <vaadin-label><b>Hello!</b> - How are you?</vaadin-label>
 
   <!-- Use expand ratio -->
-  <v-horizontal-layout size-full :expand>
+  <vaadin-horizontal-layout size-full :expand>
     ...
 
     <!-- Use expand ratio -->
-    <v-table _id="mytable" caption="My Table"
+    <vaadin-grid _id="mygrid" caption="My Grid"
              size-full :expand/>
-  </v-horizontal-layout>
+  </vaadin-horizontal-layout>
 
-  <v-horizontal-layout width-full>
+  <vaadin-horizontal-layout width-full>
     ...
 
     <!-- Use alignment -->
-    <v-button :right><b>OK</b></v-button>
-  </v-horizontal-layout>
-</v-vertical-layout>
+    <vaadin-button :right><b>OK</b></vaadin-button>
+  </vaadin-horizontal-layout>
+</vaadin-vertical-layout>
 ----
-endif::web[]
 
 [[layout.orderedlayout.spacing]]
 == Spacing in Ordered Layouts
 
 The ordered layouts can have spacing between the horizontal or vertical cells.
-The spacing can be enabled with [methodname]#setSpacing(true)# or declaratively
-with the [literal]#++spacing++# attribute.
+Spacing is enabled by default, and can be disabled with [methodname]#setSpacing(false)# or declaratively
+with the [literal]#++spacing="false"++# attribute.
 
-The spacing as a default height or width, which can be customized in CSS. You
+The spacing has a default height or width, which can be customized in CSS. You
 need to set the height or width for spacing elements with
 [literal]#++v-spacing++# style. You also need to specify an enclosing rule
 element in a CSS selector, such as [literal]#++v-verticallayout++# for a
@@ -140,21 +137,23 @@ direction of the layout component.
 image::img/horizontallayout_sizing.png[width=75%, scaledwidth=100%]
 
 <<figure.layout.orderedlayout.size.summary>> gives a summary of the sizing
-options for a [classname]#HorizontalLayout#. The figure is broken down in the
-following subsections.
+options for a [classname]#HorizontalLayout# with spacing disabled.
+The figure is broken down in the following subsections.
 
 [[layout.orderedlayout.sizing.undefined]]
 === Layout with Undefined Size
 
 If a [classname]#VerticalLayout# has undefined height or
 [classname]#HorizontalLayout# undefined width, the layout will shrink to fit the
-contained components so that there is no extra space between them.
+contained components so that there is no extra space between them (apart from
+optional spacing).
 
 
 [source, java]
 ----
 HorizontalLayout fittingLayout = new HorizontalLayout();
 fittingLayout.setWidth(Sizeable.SIZE_UNDEFINED, 0); // Default
+fittingLayout.setSpacing(false); // Compact layout
 fittingLayout.addComponent(new Button("Small"));
 fittingLayout.addComponent(new Button("Medium-sized"));
 fittingLayout.addComponent(new Button("Quite a big component"));
@@ -191,7 +190,6 @@ with fixed (or undefined) size in a sense defines the size of the containing
 layout, removing the paradox. That size is then used for the relatively sized
 components.
 
-ifdef::web[]
 The technique can be used to define the width of a [classname]#VerticalLayout#
 or the height of a [classname]#HorizontalLayout#.
 
@@ -218,13 +216,11 @@ Button butt = new Button("\u2190 This Button takes 100% "+
 butt.setWidth("100%");
 vertical.addComponent(butt);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#layout.orderedlayout.sizing.sizing-undefined-defining[on-line example, window="_blank"].
 
 [[figure.layout.orderedlayout.sizing.undefined.defining]]
 .Defining the Size with a Component
 image::img/orderedlayout-sizing-undefined.png[width=50%, scaledwidth=75%]
 
-endif::web[]
 
 [[layout.orderedlayout.defined-size]]
 === Layout with Defined Size
@@ -240,11 +236,6 @@ their alignment setting, top left by default, as in the example below.
 ----
 fixedLayout.setWidth("400px");
 ----
-
-Using percentual sizes for components contained in a layout requires answering
-the question, "Percentage of what?" There is no sensible default answer for this
-question in the current implementation of the layouts, so in practice, you may
-not define "100%" size alone.
 
 [[layout.orderedlayout.expanding]]
 === Expanding Components

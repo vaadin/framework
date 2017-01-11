@@ -62,6 +62,9 @@ Java.
 ----
 // Display only year, month, and day in ISO format
 date.setDateFormat("yyyy-MM-dd");
+
+// Display the correct format as placeholder
+date.setPlaceholder("yyyy-mm-dd");
 ----
 
 The result is shown in <<figure.components.datefield.popupdatefield.format>>.
@@ -73,8 +76,6 @@ image::img/datefield-formatting.png[width=35%, scaledwidth=60%]
 The same format specification is also used for parsing user-input date,
 as described later.
 
-
-ifdef::web[]
 [[components.datefield.popupdatefield.malformed]]
 === Handling Malformed User Input
 
@@ -119,23 +120,14 @@ in the following example.
 // custom error message for invalid format
 DateField date = new DateField("My Date") {
     @Override
-    protected Result<Date> handleUnparsableDateString(String dateString) {
-        // Try custom parsing
-        String fields[] = dateString.split("/");
-        if (fields.length >= 3) {
-            try {
-                int year  = Integer.parseInt(fields[0]);
-                int month = Integer.parseInt(fields[1])-1;
-                int day   = Integer.parseInt(fields[2]);
-                
-                return Result.ok(LocalDate.of(year, month, day));
-            } catch (NumberFormatException e) {
-               return Result.error("Not a number");
-            }
+    protected Result<LocalDate> handleUnparsableDateString(
+          String dateString) {        
+        try {
+            // try to parse with alternative format
+            return Result.ok(LocalDate.of(dateString, myFormat));
+        } catch (DateTimeParseException e) {
+           return Result.error("Bad date");
         }
-
-        // Bad date
-        return Result.error("Your date needs two slashes");
     }
 };
 
@@ -146,68 +138,6 @@ date.setDateFormat("yyyy/MM/dd");
 // on the client-side
 date.setLenient(true);
 ----
-
-The handler method must either return a parsed [classname]#Date# object or throw
-a [classname]#ConversionException#. Returning [parameter]#null# will set the
-field value to [parameter]#null# and clear the input box.
-
-endif::web[]
-
-ifdef::web[]
-[[components.datefield.popupdatefield.error-customization]]
-=== Customizing the Error Message
-
-In addition to customized parsing, overriding the handler method for unparseable
-input is useful for internationalization and other customization of the error
-message. You can also use it for another way for reporting the errors, as is
-done in the example below:
-
-
-[source, java]
-----
-// Create a date field with a custom error message for invalid format
-DateField date = new DateField("My Date") {
-    @Override
-    protected Result<LocalDate> handleUnparsableDateString(String dateString) {
-        // Have a notification for the error
-        Notification.show(
-                "Your date needs two slashes",
-                Notification.TYPE_WARNING_MESSAGE);
-
-        // A failure must always also throw an exception
-        return Result.error("Bad date");
-    }
-};
-----
-
-If the input is invalid, you should always throw the exception; returning a
-[parameter]#null# value would make the input field empty, which is probably
-undesired.
-
-endif::web[]
-
-[[components.datefield.popupdatefield.prompt]]
-=== Placeholder
-
-Like other fields that have a text box, [classname]#DateField# allows an
-placeholder that is visible until the user has input a value. You can set that with [methodname]#setPlaceholder#.
-
-
-[source, java]
-----
-DateField date = new DateField();
-
-// Set the prompt
-date.setPlaceholder("Select a date");
-
-// Set width explicitly to accommodate the prompt
-date.setWidth("10em");
-----
-
-The date field doesn't automatically scale to accommodate the prompt, so you
-need to set it explicitly with [methodname]#setWidth()#.
-
-The input prompt is not available in the [classname]#DateField# superclass.
 
 
 [[components.datefield.popupdatefield.css]]
@@ -323,7 +253,7 @@ endings for the weekday bar.
 
 In addition to display a calendar with dates, [classname]#DateField# can also
 display just the month or year. The visibility of the input components is
-controlled by __date resolution__, which you can set with [methodname]#setResolution()#.
+controlled by [methodname]#setDateResolution()#, which you can set with [methodname]#setResolution()#.
 The method takes as its parameter the highest resolution date element that should
 be visible. Please see the API Reference for the complete list of resolution parameters.
 
@@ -338,25 +268,8 @@ method of [classname]#AbstractComponent#, as described in
 Only Gregorian calendar is supported.
 
 
-ifdef::web[]
 [[components.datefield.weeknumbers]]
 == Week Numbers
 
 You can enable week numbers in a date field with
-[methodname]#setShowISOWeekNumbers()#. The numbers are shown in a column on the
-left side of the field.
-
-
-[source, java]
-----
-df.setShowISOWeekNumbers(true);
-----
-
-The supported numbering is defined in the ISO 8601 standard. Note that the ISO
-standard applies only to calendar locales where the week starts on Monday. This
-is not the case in many countries, such as Americas (North and South), many
-East-Asian countries, and some African countries, where the week starts on
-Sunday, nor in some North African and Middle-Eastern countries, where the week
-begins on Saturday. In such locales, the week numbers are not displayed.
-
-endif::web[]
+[methodname]#setShowISOWeekNumbers()#. The numbers are shown according to the ISO 8601 standard in a column on the left side of the field.

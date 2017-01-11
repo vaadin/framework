@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.textfield;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractTextFieldWidget;
@@ -29,7 +30,7 @@ import com.vaadin.ui.AbstractTextField;
  * Connector class for AbstractTextField.
  */
 public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
-        implements ValueChangeHandler.Owner {
+        implements ValueChangeHandler.Owner, DeferredWorker {
 
     private class AbstractTextFieldClientRpcImpl
             implements AbstractTextFieldClientRpc {
@@ -132,6 +133,16 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
     public void flush() {
         super.flush();
         sendValueChange();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @since 8.0.0
+     */
+    @Override
+    public boolean isWorkPending() {
+        return getValueChangeHandler().isScheduled();
     }
 
 }

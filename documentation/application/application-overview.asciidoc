@@ -7,7 +7,7 @@ layout: page
 [[application.overview]]
 = Overview
 
-A server-side Vaadin application runs as a Java Servlet in a servlet container.
+A Vaadin Framework application runs as a Java Servlet in a servlet container.
 The Java Servlet API is, however, hidden behind the framework. The user
 interface of the application is implemented as a __UI__ class, which needs to
 create and manage the user interface components that make up the user interface.
@@ -18,14 +18,14 @@ downloadable files are handled as __resources__, which can be external or served
 by the application server or the application itself.
 
 [[figure.application.architecture]]
-.Server-Side Application Architecture
-image::img/application-architecture-hi.png[width=75%, scaledwidth=90%]
+.Vaadin Framework Application Architecture
+image::img/application-architecture.png[width=75%, scaledwidth=90%]
 
 <<figure.application.architecture>> illustrates the basic architecture of an
 application made with the Vaadin Framework, with all the major elements, which
 are introduced below and discussed in detail in this chapter.
 
-First of all, a Vaadin application must have one or more UI classes that extend
+First of all, a Vaadin Framework application must have one or more UI classes that extend
 the abstract [classname]#com.vaadin.ui.UI# class and implement the
 [methodname]#init()# method. A custom theme can be defined as an annotation for
 the UI.
@@ -41,15 +41,15 @@ public class HelloWorld extends UI {
 }
 ----
 
-A UI is a viewport to a Vaadin application running in a web page. A web page can
+A UI is a viewport to the application running in a web page. A web page can
 actually have multiple such UIs within it. Such situation is typical especially
 with portlets in a portal. An application can run in multiple browser windows,
 each having a distinct [classname]#UI# instance. The UIs of an application can
 be the same UI class or different.
 
-Vaadin framework handles servlet requests internally and associates the requests
-with user sessions and a UI state. Because of this, you can develop Vaadin
-applications much like you would develop desktop applications.
+Vaadin Framework handles servlet requests internally and associates the requests
+with user sessions and a UI state. Because of this, you can develop
+applications with Vaadin Framework much like you would develop desktop applications.
 
 The most important task in the initialization is the creation of the initial
 user interface. This, and the deployment of a UI as a Java Servlet in the
@@ -62,11 +62,11 @@ UI:
 
 UI:: A __UI__ represents an HTML fragment in which a Vaadin application runs in a web
 page. It typically fills the entire page, but can also be just a part of a page.
-You normally develop a Vaadin application by extending the [classname]#UI# class
+You normally develop an application with Vaadin Framework by extending the [classname]#UI# class
 and adding content to it. A UI is essentially a viewport connected to a user
 session of an application, and you can have many such views, especially in a
 multi-window application. Normally, when the user opens a new page with the URL
-of the Vaadin UI, a new [classname]#UI# (and the associated [classname]#Page#
+of the UI, a new [classname]#UI# (and the associated [classname]#Page#
 object) is automatically created for it. All of them share the same user
 session.
 
@@ -99,7 +99,7 @@ They are laid out hierarchically using special __layout components__, with a
 content root layout at the top of the hierarchy. User interaction with the
 components causes __events__ related to the component, which the application can
 handle. __Field components__ are intended for inputting values and can be
-directly bound to data using the Vaadin Data Model. You can make your own user
+directly bound to data using the data model of the framework. You can make your own user
 interface components through either inheritance or composition. For a thorough
 reference of user interface components, see
 <<dummy/../../../framework/components/components-overview.asciidoc#components.overview,"User
@@ -109,7 +109,7 @@ Layout">>, and for compositing components, see
 <<dummy/../../../framework/components/components-customcomponent#components.customcomponent,"Composition
 with CustomComponent">>.
 
-Events and Listeners:: Vaadin follows an event-driven programming paradigm, in which events, and
+Events and Listeners:: Vaadin Framework follows an event-driven programming paradigm, in which events, and
 listeners that handle the events, are the basis of handling user interaction in
 an application (although also server push is possible as described in
 <<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server
@@ -139,11 +139,11 @@ Layouts">>, and theme resources in
 <<dummy/../../../framework/application/application-resources#application.resources.theme,"Theme
 Resources">>.
 
-Data Binding:: With data binding, any Vaadin field component can be bound to the properties
+Data Binding:: With data binding, any field component in Vaadin Framework can be bound to the properties
 of business objects such as JavaBeans and grouped together as forms. The components
 can get their values from and update user input to the data model directly, without
 the need for any control code. Similarly, any select component can be bound to a
-__data source__, fetching its items from a Java Collection or a backend such as an SQL database.
+__data provider__, fetching its items from a Java Collection or a backend such as an SQL database.
 For a complete overview of data binding in Vaadin, please refer to
 <<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
 Components to Data">>.

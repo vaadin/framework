@@ -17,6 +17,7 @@ package com.vaadin.event.selection;
 
 import java.lang.reflect.Method;
 
+import com.vaadin.data.SelectionModel;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.util.ReflectTools;
 

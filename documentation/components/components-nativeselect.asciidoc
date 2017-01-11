@@ -12,9 +12,8 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/multiple-value/drop-down-menu"]
 endif::web[]
 
-[classname]#NativeSelect# is a drop-down selection component implemented with
-the native selection input of web browsers, using the HTML
-[literal]#++<select>++# element.
+[classname]#NativeSelect# is a selection component allows selecting an item from a
+drop-down list. It is implemented with the native selection input of web browsers, using the HTML [literal]#++<select>++# element.
 
 
 [source, java]

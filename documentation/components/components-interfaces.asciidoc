@@ -7,8 +7,6 @@ layout: page
 [[components.interfaces]]
 = Interfaces and Abstractions
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 ((("interfaces")))
 Vaadin user interface components are built on a skeleton of interfaces and
 abstract classes that define and implement the features common to all components
@@ -22,7 +20,7 @@ The interfaces that define the Vaadin data model are described in <<dummy/../../
 
 [[figure.components.interfaces]]
 .Component interfaces and abstractions
-image::img/component-abstractions-hi.png[width=100%, scaledwidth=100%]
+image::img/component-abstractions.png[width=100%, scaledwidth=100%]
 
 All components are connectors that connect to the client-side widgets.
 
@@ -92,15 +90,8 @@ described in <<components.interfaces.abstractcomponent>>.
 
 [classname]#AbstractComponent# is the base class for all user interface
 components. It is the (only) implementation of the [classname]#Component#
-interface, implementing all the methods defined in the interface.
-
-[classname]#AbstractComponent# has a single abstract method,
-[methodname]#getTag()#, which returns the serialization identifier of a
-particular component class. It needs to be implemented when (and only when)
-creating entirely new components. [classname]#AbstractComponent# manages much of
-the serialization of component states between the client and the server.
-Creation of new components and serialization is described in
-<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
-with the Server-Side">>.
+interface, implementing all the methods defined in the interface. When
+creating a new component, you should extend [classname]#AbstractComponent# or
+one of its subclasses.
 
 (((range="endofrange", startref="term.components.interfaces.abstractcomponent")))

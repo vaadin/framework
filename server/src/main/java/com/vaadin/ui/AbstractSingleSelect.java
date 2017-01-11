@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.SelectionModel;
+import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel.Single;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.event.selection.SingleSelectionEvent;
@@ -58,10 +58,6 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
      * <p>
-     * <strong>Note:</strong> This constructor does not set a selection model
-     * for the new listing. The invoking constructor must explicitly call
-     * {@link #setSelectionModel(SelectionModel)} with an
-     * {@link AbstractSingleSelect.AbstractSingleSelection} .
      */
     protected AbstractSingleSelect() {
         init();
@@ -75,10 +71,6 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      * {@code AbstractSingleSelect} with a custom communicator. In the common
      * case {@link AbstractSingleSelect#AbstractSingleSelect()} should be used.
      * <p>
-     * <strong>Note:</strong> This constructor does not set a selection model
-     * for the new listing. The invoking constructor must explicitly call
-     * {@link #setSelectionModel(SelectionModel)} with an
-     * {@link AbstractSingleSelect.AbstractSingleSelection} .
      *
      * @param dataCommunicator
      *            the data communicator to use, not null
@@ -219,7 +211,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
 
     /**
      * Sets the selection based on a client request. Does nothing if the select
-     * component is {@linkplain Component#isReadOnly()} or if the selection
+     * component is {@linkplain #isReadOnly()} or if the selection
      * would not change. Otherwise updates the selection and fires a selection
      * change event with {@code isUserOriginated == true}.
      *
@@ -329,13 +321,15 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         Set<T> selected = new HashSet<>();
         List<T> items = design.children().stream()
                 .map(child -> readItem(child, selected, context))
                 .collect(Collectors.toList());
+        if (!items.isEmpty() && this instanceof Listing) {
+            ((Listing<T, ?>) this).setItems(items);
+        }
         selected.forEach(this::setValue);
-        return items;
     }
 
     /**

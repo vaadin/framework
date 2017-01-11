@@ -489,8 +489,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Sets the component's description. See {@link #getDescription()} for more
-     * information on what the description is. This method will trigger a
-     * {@link RepaintRequestEvent}.
+     * information on what the description is.
      *
      * The description is displayed as HTML in tooltips or directly in certain
      * components so care should be taken to avoid creating the possibility for
@@ -1091,8 +1090,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *
      * @param attributes
      *            the design attributes
-     * @param defaultInstance
-     *            instance of the class that has default sizing.
      */
     private void readSize(Attributes attributes) {
         // read width
@@ -1121,8 +1118,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Writes the size related attributes for the component if they differ from
      * the defaults
      *
-     * @param component
-     *            the component
      * @param attributes
      *            the attribute map where the attribute are written
      * @param defaultInstance
@@ -1228,9 +1223,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Returns a collection of attributes that should not be handled by the
-     * basic implementation of the {@link readDesign} and {@link writeDesign}
-     * methods. Typically these are handled in a custom way in the overridden
-     * versions of the above methods
+     * basic implementation of the {@link #readDesign(Element, DesignContext)}
+     * and {@link #writeDesign(Element, DesignContext)} methods. Typically these
+     * are handled in a custom way in the overridden versions of the above
+     * methods
      *
      * @since 7.4
      *

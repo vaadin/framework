@@ -174,6 +174,9 @@
             <li><tt>Grid</tt> selection API has been removed from component level to <tt>GridSelectionModel</tt> which is available via <tt>Grid::getSelectionModel()</tt></li>
             <li><tt>Grid::setSelectionModel(GridSelectionModel)</tt> visibility has been changed from <tt>public</tt> to <tt>protected</tt> to reduce confusion with <tt>Grid::setSelectionMode</tt></li>
         </ul>
+        <ul><h4>Client side widget specific API changes</h4>
+            <li><tt>VTextualDate</tt></li> widget class is removed and replaced by abstract <tt>VAbstractTextualDate</tt> class which is supposed to be inherited by concrete date field implementation widgets
+        </ul>
         <ul><h4>Component specific visual changes</h4>
             <li>The default width of <tt>Label</tt> is now undefined, matching other components</li>
             <li>The default width for <tt>ComboBox</tt> pop-up is now 100 % (previously undefined)</li>

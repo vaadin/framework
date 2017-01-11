@@ -39,17 +39,11 @@ import com.vaadin.util.ReflectTools;
  * passed to that method. The supplied components are specially treated so that
  * they work with password managers.
  * <p>
- * If you need to change the URL as part of the login procedure, call
- * {@link #setLoginMode(LoginMode)} with the argument {@link LoginMode#DEFERRED}
- * in your implementation of
- * {@link #createContent(com.vaadin.ui.TextField, com.vaadin.ui.PasswordField, com.vaadin.ui.Button)
- * createContent}.
- * <p>
  * To customize the fields or to replace them with your own implementations, you
  * can override {@link #createUsernameField()}, {@link #createPasswordField()}
  * and {@link #createLoginButton()}. These methods are called automatically and
  * cannot be called by your code. Captions can be reset by overriding
- * {@link #getUsernameFieldCaption()}, {@link #getPasswordFieldCaption()} and
+ * {@link #getUsernameCaption()}, {@link #getPasswordCaption()} and
  * {@link #getLoginButtonCaption()}.
  * <p>
  * Note that the API of LoginForm changed significantly in Vaadin 7.7.
@@ -277,7 +271,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * implementations, override {@link #createUsernameField()},
      * {@link #createPasswordField()} and {@link #createLoginButton()}. If you
      * only want to change the default captions, override
-     * {@link #getUsernameFieldCaption()}, {@link #getPasswordFieldCaption()}
+     * {@link #getUsernameCaption()}, {@link #getPasswordCaption()}
      * and {@link #getLoginButtonCaption()}. You do not have to use the login
      * button in your layout.
      *

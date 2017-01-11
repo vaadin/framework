@@ -44,6 +44,10 @@ public class ComboBoxElement extends AbstractSelectElement {
      *            the text of the option to select
      */
     public void selectByText(String text) {
+        if (isReadOnly()) {
+            throw new ReadOnlyException();
+        }
+
         if (!isTextInputAllowed()) {
             selectByTextFromPopup(text);
             return;

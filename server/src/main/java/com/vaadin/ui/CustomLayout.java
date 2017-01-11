@@ -88,8 +88,6 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      *            Stream containing template data. Must be using UTF-8 encoding.
      *            To use a String as a template use for instance new
      *            ByteArrayInputStream("&lt;template&gt;".getBytes()).
-     * @param streamLength
-     *            Length of the templateStream
      * @throws IOException
      */
     public CustomLayout(InputStream templateStream) throws IOException {

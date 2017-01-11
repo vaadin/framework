@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 
 /**
@@ -34,7 +35,7 @@ import com.vaadin.shared.Registration;
 public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
 
     private final SerializableFunction<Query<T, F>, Stream<T>> request;
-    private final SerializableFunction<Query<T, F>, Integer> sizeCallback;
+    private final SerializableToIntFunction<Query<T, F>> sizeCallback;
 
     /**
      * Constructs a new DataProvider to request data from an arbitrary back end
@@ -47,7 +48,7 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
      */
     public BackEndDataProvider(
             SerializableFunction<Query<T, F>, Stream<T>> request,
-            SerializableFunction<Query<T, F>, Integer> sizeCallback) {
+            SerializableToIntFunction<Query<T, F>> sizeCallback) {
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
         this.request = request;
@@ -61,7 +62,7 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
 
     @Override
     public int size(Query<T, F> query) {
-        return sizeCallback.apply(query);
+        return sizeCallback.applyAsInt(query);
     }
 
     /**

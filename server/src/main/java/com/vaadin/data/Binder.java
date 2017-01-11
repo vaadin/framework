@@ -110,7 +110,7 @@ public class Binder<BEAN> implements Serializable {
          * instance representing the outcome of the validation.
          *
          * @see Binder#validate()
-         * @see Validator#apply(Object)
+         * @see Validator#apply(Object, ValueContext)
          *
          * @return the validation result.
          */
@@ -130,6 +130,13 @@ public class Binder<BEAN> implements Serializable {
      * @see Binder#forField(HasValue)
      */
     public interface BindingBuilder<BEAN, TARGET> extends Serializable {
+
+        /**
+         * Gets the field the binding is being built for.
+         *
+         * @return the field this binding is being built for
+         */
+        public HasValue<?> getField();
 
         /**
          * Completes this binding using the given getter and setter functions
@@ -547,6 +554,7 @@ public class Binder<BEAN> implements Serializable {
             getBinder().fireStatusChangeEvent(false);
 
             bound = true;
+            getBinder().incompleteBindings.remove(getField());
 
             return binding;
         }
@@ -649,6 +657,11 @@ public class Binder<BEAN> implements Serializable {
                 throw new IllegalStateException(
                         "cannot modify binding: already bound to a property");
             }
+        }
+
+        @Override
+        public HasValue<FIELDVALUE> getField() {
+            return field;
         }
     }
 
@@ -805,8 +818,7 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Handles the value change triggered by the bound field.
          *
-         * @param bean
-         *            the new value
+         * @param event
          */
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
@@ -952,6 +964,8 @@ public class Binder<BEAN> implements Serializable {
 
     private final Set<BindingImpl<BEAN, ?, ?>> bindings = new LinkedHashSet<>();
 
+    private final Map<HasValue<?>, BindingBuilder<BEAN, ?>> incompleteBindings = new IdentityHashMap<>();
+
     private final List<Validator<? super BEAN>> validators = new ArrayList<>();
 
     private final Map<HasValue<?>, ConverterDelegate<?>> initialConverters = new IdentityHashMap<>();
@@ -1020,7 +1034,7 @@ public class Binder<BEAN> implements Serializable {
      * {@link HasValue#getEmptyValue()}. This conversion is one-way only, if you
      * want to have a two-way mapping back to {@code null}, use
      * {@link #forField(HasValue)} and
-     * {@link Binding#withNullRepresentation(Object))}.
+     * {@link BindingBuilder#withNullRepresentation(Object))}.
      * <p>
      * When a bean is bound with {@link Binder#setBean(BEAN)}, the field value
      * is set to the return value of the given getter. The property value is
@@ -1086,6 +1100,7 @@ public class Binder<BEAN> implements Serializable {
      *            bean
      */
     public void setBean(BEAN bean) {
+        checkBindingsCompleted("setBean");
         if (bean == null) {
             if (this.bean != null) {
                 doRemoveBean(true);
@@ -1129,6 +1144,7 @@ public class Binder<BEAN> implements Serializable {
      */
     public void readBean(BEAN bean) {
         Objects.requireNonNull(bean, "bean cannot be null");
+        checkBindingsCompleted("readBean");
         setHasChanges(false);
         bindings.forEach(binding -> binding.initFieldValue(bean));
 
@@ -1384,13 +1400,13 @@ public class Binder<BEAN> implements Serializable {
      * Only the one validation error message is shown in this label at a time.
      * <p>
      * This is a convenience method for
-     * {@link #setValidationStatusHandler(BinderStatusHandler)}, which means
+     * {@link #setValidationStatusHandler(BinderValidationStatusHandler)}, which means
      * that this method cannot be used after the handler has been set. Also the
      * handler cannot be set after this label has been set.
      *
      * @param statusLabel
      *            the status label to set
-     * @see #setValidationStatusHandler(BinderStatusHandler)
+     * @see #setValidationStatusHandler(BinderValidationStatusHandler)
      * @see BindingBuilder#withStatusLabel(Label)
      */
     public void setStatusLabel(Label statusLabel) {
@@ -1447,11 +1463,11 @@ public class Binder<BEAN> implements Serializable {
      * Gets the status handler of this form.
      * <p>
      * If none has been set with
-     * {@link #setValidationStatusHandler(BinderStatusHandler)}, the default
+     * {@link #setValidationStatusHandler(BinderValidationStatusHandler)}, the default
      * implementation is returned.
      *
      * @return the status handler used, never <code>null</code>
-     * @see #setValidationStatusHandler(BinderStatusHandler)
+     * @see #setValidationStatusHandler(BinderValidationStatusHandler)
      */
     public BinderValidationStatusHandler<BEAN> getValidationStatusHandler() {
         return Optional.ofNullable(statusHandler)
@@ -1509,6 +1525,15 @@ public class Binder<BEAN> implements Serializable {
      * @return the new incomplete binding
      */
     protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> createBinding(
+            HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
+            BindingValidationStatusHandler handler) {
+        BindingBuilder<BEAN, TARGET> newBinding = doCreateBinding(field,
+                converter, handler);
+        incompleteBindings.put(field, newBinding);
+        return newBinding;
+    }
+
+    protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> doCreateBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
             BindingValidationStatusHandler handler) {
         return new BindingBuilderImpl<>(this, field, converter, handler);
@@ -1695,4 +1720,19 @@ public class Binder<BEAN> implements Serializable {
         return converter;
     }
 
+    /**
+     * Throws if this binder has incomplete bindings.
+     * 
+     * @param methodName
+     *            name of the method where this call is originated from
+     * @throws IllegalStateException
+     *             if this binder has incomplete bindings
+     */
+    protected void checkBindingsCompleted(String methodName) {
+        if (!incompleteBindings.isEmpty()) {
+            throw new IllegalStateException(
+                    "All bindings created with forField must be completed before calling "
+                            + methodName);
+        }
+    }
 }

@@ -14,6 +14,10 @@
     <url>https://vaadin.com/</url>
     <description>Vaadin 7 compatibility package for Vaadin 8</description>
 
+    <properties>
+        <!-- These files are directly from Vaadin 7 -->
+        <sonar.skip>true</sonar.skip>
+    </properties>
     <dependencies>
         <!-- Project modules -->
         <dependency>
@@ -88,7 +92,11 @@
                         <Bundle-RequiredExecutionEnvironment>${osgi.execution.environment}</Bundle-RequiredExecutionEnvironment>
                         <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
                         <Export-Package>VAADIN;version="${osgi.bundle.version}",com.vaadin.v7.*;version="${osgi.bundle.version}"</Export-Package>
-
+                        <Import-Package>!com.google.appengine.api.datastore,
+                            !com.google.appengine.api.memcache,
+                            !com.google.apphosting.api,
+                            *
+                        </Import-Package>
                         <Require-Bundle>
                             com.vaadin.server;bundle-version="${osgi.bundle.version}",
                             com.vaadin.shared;bundle-version="${osgi.bundle.version}"

@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.gridlayout;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
@@ -32,7 +32,7 @@ public class GridLayoutCellSizesUI extends AbstractReindeerTestUI {
         grid.addComponent(new Button("3x1 button"), 1, 1, 3, 1);
         grid.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
         final InlineDateField date = new InlineDateField("A 2x2 date field");
-        date.setResolution(Resolution.DAY);
+        date.setResolution(DateResolution.DAY);
         grid.addComponent(date, 2, 2, 3, 3);
 
         grid.setMargin(true);

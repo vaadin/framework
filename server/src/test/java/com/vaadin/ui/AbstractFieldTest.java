@@ -15,6 +15,14 @@ import com.vaadin.server.ClientConnector;
 
 public class AbstractFieldTest extends EasyMockSupport {
 
+    private final class IdentityTextField extends TextField {
+        @Override
+        protected boolean isDifferentValue(String newValue) {
+            // Checks for identity instead of equality
+            return newValue != getValue();
+        }
+    }
+
     class TextField extends AbstractField<String> {
 
         String value = "";
@@ -118,5 +126,54 @@ public class AbstractFieldTest extends EasyMockSupport {
         assertSame("event source", source, e.getSource());
         assertSame("event source connector", source, e.getSource());
         assertEquals("event from user", userOriginated, e.isUserOriginated());
+    }
+
+    @Test
+    public void identityField_realChange() {
+        TextField identityField = new IdentityTextField();
+
+        identityField.addValueChangeListener(l);
+
+        // Expect event to both listeners for actual change
+        l.valueChange(EasyMock.capture(capture));
+
+        replayAll();
+
+        identityField.setValue("value");
+
+        verifyAll();
+    }
+
+    @Test
+    public void identityField_onlyIdentityChange() {
+        TextField identityField = new IdentityTextField();
+        identityField.setValue("value");
+
+        identityField.addValueChangeListener(l);
+
+        // Expect event to both listeners for actual change
+        l.valueChange(EasyMock.capture(capture));
+
+        replayAll();
+
+        String sameValueDifferentIdentity = new String("value");
+        identityField.setValue(sameValueDifferentIdentity);
+
+        verifyAll();
+    }
+
+    @Test
+    public void identityField_noChange() {
+        TextField identityField = new IdentityTextField();
+        identityField.setValue("value");
+
+        identityField.addValueChangeListener(l);
+
+        // Expect no event for identical value
+        replayAll();
+
+        identityField.setValue(identityField.getValue());
+
+        verifyAll();
     }
 }

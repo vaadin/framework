@@ -12,13 +12,14 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/data-input/other/upload"]
 endif::web[]
 
-*_This section has not yet been updated to Vaadin Framework 8_*
-
 The [classname]#Upload# component allows a user to upload files to the server.
-It displays a file name entry box, a file selection button, and an upload submit
-button. The user can either write the filename in the text area or click the
-[guibutton]#Browse# button to select a file. After the file is selected, the
-user sends the file by clicking the upload submit button.
+It has two different modes controlled with [methodname]#setImmediateMode(boolean)#, that affect the user workflow.
+
+[parameter]#Immediate# (default):: In the immediate mode, the upload displays a file name entry box and a button for selecting the file. The uploading is started immediately after the file has been selected.
+
+[parameter]#Non-immediate#:: In the non-immediate mode, the upload displays a file name
+entry box, a button for selecting the file and a button for starting the upload.
+After the file is selected, the user starts the upload by clicking the submit button.
 
 Uploading requires a receiver that implements [interfacename]#Upload.Receiver#
 to provide an output stream to which the upload is written by the server.
@@ -26,11 +27,15 @@ to provide an output stream to which the upload is written by the server.
 [source, java]
 ----
 Upload upload = new Upload("Upload it here", receiver);
+upload.setImmediateMode(false);
 ----
 
 [[figure.ui.upload]]
-.The [classname]#Upload# component
+.The [classname]#Upload# component in non-immediate mode
 image::img/upload.png[width=60%, scaledwidth=80%]
+
+In the image above, the upload is in non-immediate mode. By default in the immediate mode,
+only the [guilabel]#Start Upload# button is visible.
 
 You can set the text of the upload button with [methodname]#setButtonCaption()#.
 Note that it is difficult to change the caption or look of the
@@ -46,9 +51,7 @@ upload.setButtonCaption("Upload Now");
 
 You can also hide the upload button with [literal]#++.v-upload .v-button
 {display: none}++# in theme, have custom logic for starting the upload, and call
-[methodname]#startUpload()# to start it. If the upload component has
-[methodname]#setImmediateMode(true)# enabled, uploading starts immediately after
-choosing the file.
+[methodname]#startUpload()# to start it.
 
 [[components.upload.receiving]]
 == Receiving Upload Data
@@ -91,8 +94,7 @@ displays the uploaded image in an [classname]#Image# component.
 [source, java]
 ----
 // Show uploaded file in this placeholder
-final Embedded image = new Embedded("Uploaded Image");
-image.setVisible(false);
+final Image image = new Image("Uploaded Image");
 
 // Implement both receiver that saves upload in a file and
 // listener for successful upload
@@ -101,25 +103,12 @@ class ImageUploader implements Receiver, SucceededListener {
 
     public OutputStream receiveUpload(String filename,
                                       String mimeType) {
-        // Create upload stream
-        FileOutputStream fos = null; // Stream to write to
-        try {
-            // Open the file for writing.
-            file = new File("/tmp/uploads/" + filename);
-            fos = new FileOutputStream(file);
-        } catch (final java.io.FileNotFoundException e) {
-            new Notification("Could not open file<br/>",
-                             e.getMessage(),
-                             Notification.Type.ERROR_MESSAGE)
-                .show(Page.getCurrent());
-            return null;
-        }
-        return fos; // Return the output stream to write to
+        // Create and return a file output stream
+        ...
     }
 
     public void uploadSucceeded(SucceededEvent event) {
         // Show the uploaded file in the image viewer
-        image.setVisible(true);
         image.setSource(new FileResource(file));
     }
 };
@@ -127,26 +116,9 @@ ImageUploader receiver = new ImageUploader();
 
 // Create the upload with a caption and set receiver later
 Upload upload = new Upload("Upload Image Here", receiver);
-upload.setButtonCaption("Start Upload");
 upload.addSucceededListener(receiver);
-
-// Put the components in a panel
-Panel panel = new Panel("Cool Image Storage");
-Layout panelContent = new VerticalLayout();
-panelContent.addComponents(upload, image);
-panel.setContent(panelContent);
 ----
-See the http://demo.vaadin.com/book-examples-vaadin7/book#component.upload.basic[on-line example, window="_blank"].
 
-Note that the example does not check the type of the uploaded files in any way,
-which will cause an error if the content is anything else but an image. The
-program also assumes that the MIME type of the file is resolved correctly based
-on the file name extension. After uploading an image, the component will look as
-shown in <<figure.ui.upload.example>>.
-
-[[figure.ui.upload.example]]
-.Image Upload Example
-image::img/upload-example.png[width=60%, scaledwidth=80%]
 
 [[components.upload.css]]
 == CSS Style Rules

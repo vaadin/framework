@@ -18,7 +18,6 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -311,9 +310,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     /**
      * Returns true if the user can enter text into the field to either filter
-     * the selections or enter a new value if {@link #isNewItemsAllowed()}
-     * returns true. If text input is disabled, the comboBox will work in the
-     * same way as a {@link NativeSelect}
+     * the selections or enter a new value if new item handler is set
+     * (see {@link #setNewItemHandler(NewItemHandler)}. If text input is disabled,
+     * the comboBox will work in the same way as a {@link NativeSelect}
      *
      * @return true if text input is allowed
      */
@@ -413,9 +412,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @param caption
      *            the caption to set, not {@code null}
-     * @see #getNullSelectionItemId()
      * @see #isSelected(Object)
-     * @see #select(Object)
      */
     public void setEmptySelectionCaption(String caption) {
         Objects.nonNull(caption);
@@ -612,9 +609,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         setStyleGenerator(new DeclarativeStyleGenerator<>(getStyleGenerator()));
-        return super.readItems(design, context);
+        super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

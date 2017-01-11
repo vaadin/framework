@@ -39,8 +39,6 @@ import java.util.List;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
-import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
@@ -101,10 +99,10 @@ public class Navigator implements Serializable {
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
      */
-    public static class UriFragmentManager
-            implements NavigationStateManager, UriFragmentChangedListener {
+    public static class UriFragmentManager implements NavigationStateManager {
         private final Page page;
         private Navigator navigator;
+        private Registration uriFragmentRegistration;
 
         /**
          * Creates a new URIFragmentManager and attach it to listen to URI
@@ -120,9 +118,10 @@ public class Navigator implements Serializable {
         @Override
         public void setNavigator(Navigator navigator) {
             if (this.navigator == null && navigator != null) {
-                page.addUriFragmentChangedListener(this);
+                uriFragmentRegistration = page.addUriFragmentChangedListener(
+                        event -> navigator.navigateTo(getState()));
             } else if (this.navigator != null && navigator == null) {
-                page.removeUriFragmentChangedListener(this);
+                uriFragmentRegistration.remove();
             }
             this.navigator = navigator;
         }
@@ -140,11 +139,6 @@ public class Navigator implements Serializable {
         @Override
         public void setState(String state) {
             setFragment("!" + state);
-        }
-
-        @Override
-        public void uriFragmentChanged(UriFragmentChangedEvent event) {
-            navigator.navigateTo(getState());
         }
 
         /**
@@ -1021,7 +1015,6 @@ public class Navigator implements Serializable {
      * {@code parameters}.
      *
      * @since 7.6.7
-     * @return view change event
      */
     public void destroy() {
         stateManager.setNavigator(null);
