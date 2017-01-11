@@ -67,6 +67,9 @@ public class CheckBoxElement extends AbstractFieldElement {
 
     @Override
     public void click() {
+        if (isReadOnly()) {
+            throw new ReadOnlyException();
+        }
         WebElement input = getInputElement();
         if (isFirefox()) {
             // When using Valo, the input element is covered by a

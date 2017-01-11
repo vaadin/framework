@@ -44,6 +44,10 @@ public class ComboBoxElement extends AbstractSelectElement {
      *            the text of the option to select
      */
     public void selectByText(String text) {
+        if (isReadOnly()) {
+            throw new ReadOnlyException();
+        }
+
         if (!isTextInputAllowed()) {
             selectByTextFromPopup(text);
             return;
@@ -57,7 +61,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     /**
      * Selects, without filtering, the first option in the ComboBox which
      * matches the given text.
-     * 
+     *
      * @param text
      *            the text of the option to select
      */
@@ -96,7 +100,7 @@ public class ComboBoxElement extends AbstractSelectElement {
 
     /**
      * Checks if text input is allowed for the combo box.
-     * 
+     *
      * @return <code>true</code> if text input is allowed, <code>false</code>
      *         otherwise
      */
