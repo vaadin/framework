@@ -42,6 +42,7 @@ import com.vaadin.event.ContextClickEvent.ContextClickNotifier;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
@@ -571,6 +572,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     getClass().getName() + " already has a parent.");
         }
 
+        ClientConnector oldParent = getParent();
+
         // Send a detach event if the component is currently attached
         if (isAttached()) {
             detach();
@@ -582,6 +585,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // Send attach event if the component is now attached
         if (isAttached()) {
             attach();
+        }
+
+        if (oldParent != null) {
+            oldParent.markAsDirty();
         }
     }
 

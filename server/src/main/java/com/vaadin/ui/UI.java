@@ -179,11 +179,6 @@ public abstract class UI extends AbstractSingleComponentContainer
         public void poll() {
             fireEvent(new PollEvent(UI.this));
         }
-
-        @Override
-        public void acknowledge() {
-            // Nothing to do, just need the message to be sent and processed
-        }
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
         @Override
