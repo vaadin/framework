@@ -225,7 +225,7 @@
                         </manifest>
                     </archive>
                 </configuration>
-                <!-- Package src/test into a jar so that compatbility-server 
+                <!-- Package src/test into a jar so that compatbility-server
                     can use the same test classes, e.g. test beans -->
                 <executions>
                     <execution>
@@ -239,6 +239,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Duser.language=en -Duser.region=US</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
