@@ -6,7 +6,16 @@
 @import "lora/lora";
 @import "../../../VAADIN/addons/vaadin-icons/vaadin-icons.scss";
 
+/// Include VaadinIcons. They are included in Valo from
+/// https://vaadin.com/directory/#!addon/vaadin-icons-add-on
+/// since Vaadin Framework version 8.0
 $v-icons: true !default;
+
+/// Set the value of this variable to `true` if you want to use the Font Awesome icons from
+/// the Vaadin Framework 7 compatibility package. Note, that this is a legacy package,
+/// which will not be updated in the future.
+/// We encourage you to use the FontAwesomeLabel add-on from the Directory instead:
+/// https://vaadin.com/directory/#!addon/fontawesomelabel
 $v-font-awesome: false !default;
 
 $font-icons-pathPrefix: null;
