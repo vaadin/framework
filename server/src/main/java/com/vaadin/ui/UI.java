@@ -190,11 +190,6 @@ public abstract class UI extends AbstractSingleComponentContainer
         }
 
         @Override
-        public void acknowledge() {
-            // Nothing to do, just need the message to be sent and processed
-        }
-
-        @Override
         public void popstate(String uri) {
             getPage().updateLocation(uri, true, true);
 
