@@ -62,8 +62,9 @@ List<Person> people = Lists.newArrayList(
 // Create a grid bound to the list
 Grid<Person> grid = new Grid<>();
 grid.setItems(people);
-grid.addColumn("Name", Person::getName);
-grid.addColumn("Year of birth", Person::getBirthYear);
+grid.addColumn(Person::getName).setCaption("Name");
+grid.addColumn(Person::getBirthYear).setCaption("Year of birth");
+
 layout.addComponent(grid);
 ----
 
@@ -260,12 +261,16 @@ Columns are normally defined in the container data source. The
 Column configuration is defined in [classname]#Grid.Column# objects, which can
 be obtained from the grid with [methodname]#getColumns()#.
 
+The setter methods in [classname]#Column# have _fluent API_, so you can easily chain
+the configuration calls for columns if you want to.
+
 
 [source, java]
 ----
-Column<Date> bornColumn = grid.addColumn(Person:getBirthDate);
-bornColumn.setHeaderCaption("Born date");
-
+grid.addColumn(Person:getBirthDate, new DateRenderer())
+      .setCaption("Birth Date")
+      .setWidth("100px")
+      .setResizable(false);
 ----
 
 In the following, we describe the basic column configuration.
@@ -304,14 +309,12 @@ you can call [methodname]#addColumn()#.
 === Column Captions
 
 Column captions are displayed in the grid header. You can set the header caption
-explicitly through the column object with [methodname]#setHeaderCaption()#.
-
+explicitly through the column object with [methodname]#setCaption()#.
 
 [source, java]
 ----
 Column<Date> bornColumn = grid.addColumn(Person:getBirthDate);
-bornColumn.setHeaderCaption("Born date");
-
+bornColumn.setCaption("Born date");
 ----
 
 This is equivalent to setting it with [methodname]#setText()# for the header
@@ -368,7 +371,7 @@ lambdas:
 // Add generated full name column
 Column<String> fullNameColumn = grid.addColumn(person ->
     person.getFirstName() + " " + person.getLastName());
-fullNameColumn.setHeaderCaption("Full name");
+fullNameColumn.setCaption("Full name");
 ----
 
 [[components.grid.renderer]]
@@ -414,7 +417,7 @@ people.add(new Person("Galileo Galilei", 1564));
 people.add(new Person("Johannes Kepler", 1571));
 
 // Create a grid
-Grid<Person> grid = new Grid(people);
+Grid<Person> grid = new Grid<>(people);
 
 // Render a button that deletes the data row (item)
 grid.addColumn(person -> "Delete", 
@@ -433,9 +436,9 @@ The column type must be a [interfacename]#Resource#, as described in
 +
 [source, java]
 ----
-Column<ThemeResource> imageColumn = grid.addColumn("picture",
-    p -> new ThemeResource("img/"+p.getLastname()+".jpg"));
-imageColumn.setRenderer(new ImageRenderer());
+Column<ThemeResource> imageColumn = grid.addColumn(
+    p -> new ThemeResource("img/"+p.getLastname()+".jpg"),
+    new ImageRenderer());
 ----
 
 [classname]#DateRenderer#:: Formats a column with a [classname]#Date# type using string formatter. The
@@ -479,9 +482,9 @@ For example:
 +
 [source, java]
 ----
-// Use String.format() formatting
-Column<Double> ratingCol = grid.addColumn("rating",
-      new NumberRenderer("%02.4f", Locale.ENGLISH));
+// Use decimal format
+Column<Integer> birthYear = grid.addColumn(Person::getBirthYear,
+      new NumberRenderer(new DecimalFormat("in #### AD")));
 ----
 
 [classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
