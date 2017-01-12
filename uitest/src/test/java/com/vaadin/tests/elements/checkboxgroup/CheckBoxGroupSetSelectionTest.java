@@ -41,7 +41,7 @@ public class CheckBoxGroupSetSelectionTest extends MultiBrowserTest {
     @Test
     public void testSelectAll() {
         List<String> value = Arrays.asList("item1", "item2", "item3");
-        group.setSelection(value);
+        group.setValue(value);
         Assert.assertEquals(value, group.getValue());
     }
 

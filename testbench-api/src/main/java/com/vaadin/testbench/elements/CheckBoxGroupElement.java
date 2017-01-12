@@ -89,10 +89,10 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
      *            the options to select
      *
      * @see #getValue()
-     * @see #setSelection(List)
+     * @see #setValue(List)
      */
     public void setValue(String... options) {
-        setSelection(Arrays.asList(options));
+        setValue(Arrays.asList(options));
     }
 
     /**
@@ -104,7 +104,7 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
      * @see #getValue()
      * @see #setValue(String...)
      */
-    public void setSelection(List<String> options) {
+    public void setValue(List<String> options) {
         // Deselect everything that is not going to be selected again.
         getValue().stream().filter(option -> !options.contains(option))
                 .forEach(this::selectByText);
