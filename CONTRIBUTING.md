@@ -140,4 +140,4 @@ All our projects accept contributions as GitHub pull requests. The first time yo
 
 https://yangsu.github.io/pull-request-tutorial/ has instructions on how to create a pull request.
 
-**Remember to check the "Allow edits from maintainers" so we can rebase the PR or do small changes if necessary**.
+**Remember to check the "Allow edits from maintainers" so we can rebase the PR or make small changes if necessary**.
