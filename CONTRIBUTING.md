@@ -13,7 +13,7 @@ In other words:
  * Include a test to prove your patch works, or a benchmark if it’s a performance improvement.
  * Style-check your changes: it’s okay to have a separate commit to fix style issues.
  * Ensure you have Contributor Agreement signed up. This can be signed digitally in the code review system.
- * Create a pull request; it will then be reviewed by the Framework team, who will provide actionable feedback in a timely fashion if necessary. **Remember to check the "Allow edits from maintainers" so we can rebase the PR or do small changes if necessary** 
+ * Create a pull request; it will then be reviewed by the Framework team, who will provide actionable feedback in a timely fashion if necessary. **Remember to check the "Allow edits from maintainers" so we can rebase the PR or make small changes if necessary** 
  * Respond to review comments: review comments are meant to improve the quality of the code by pointing out defects or readability issues.
  * Don't get discouraged - or impatient: Reviewers are people too and will sometimes forget. Give them a friendly poke if you feel the PR has been forgotten about. 
  * Most PRs take a few iterations of review before they are merged. 
