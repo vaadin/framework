@@ -54,7 +54,7 @@ For example, if you have a list of beans, you show them in a [classname]#Grid# a
 [source, java]
 ----
 // Have some data
-List<Person> people = Lists.newArrayList(
+List<Person> people = Arrays.asList(
     new Person("Nicolaus Copernicus", 1543),
     new Person("Galileo Galilei", 1564),
     new Person("Johannes Kepler", 1571));
@@ -630,7 +630,7 @@ for (Column<?> col: grid.getColumns()) {
 
       // Filter the list of items
       List<String> filteredList =
-        Lists.newArrayList(personList.filter(persons,
+        Arrays.asList(personList.filter(persons,
             Predicates.containsPattern(event.getValue())));
 
         // Apply filtered data
