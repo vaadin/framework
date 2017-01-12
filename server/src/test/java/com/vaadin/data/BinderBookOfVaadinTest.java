@@ -461,7 +461,7 @@ public class BinderBookOfVaadinTest {
 
     @Test
     public void binder_saveIfValid() {
-        BeanBinder<BookPerson> binder = new BeanBinder<>(BookPerson.class);
+        Binder<BookPerson> binder = new Binder<>(BookPerson.class);
 
         // Phone or email has to be specified for the bean
         Validator<BookPerson> phoneOrEmail = Validator.from(
@@ -585,7 +585,7 @@ public class BinderBookOfVaadinTest {
     public void withBinderStatusLabelExample() {
         Label formStatusLabel = new Label();
 
-        BeanBinder<BookPerson> binder = new BeanBinder<>(BookPerson.class);
+        Binder<BookPerson> binder = new Binder<>(BookPerson.class);
 
         binder.setStatusLabel(formStatusLabel);
 

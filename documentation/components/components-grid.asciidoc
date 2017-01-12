@@ -765,7 +765,6 @@ grid.getEditor().setSaveCaption("Tallenna");
 grid.getEditor().setCancelCaption("Peruuta"));
 ----
 
-
 [[components.grid.editing.validation]]
 === Handling Validation Errors
 

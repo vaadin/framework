@@ -285,7 +285,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     @Test
     public void beanBinder_nullRepresentationIsNotDisabled() {
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.forField(nameField).bind("firstName");
 
         Person person = new Person();
@@ -297,7 +297,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void beanBinder_withConverter_nullRepresentationIsNotDisabled() {
         String customNullPointerRepresentation = "foo";
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.forField(nameField)
                 .withConverter(value -> value, value -> value == null
                         ? customNullPointerRepresentation : value)
@@ -425,5 +425,10 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         firstNameField.setValue("");
         Assert.assertEquals(6, invokes.get());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void noArgsConstructor_stringBind_throws() {
+        binder.bind(new TextField(), "firstName");
     }
 }
