@@ -15,12 +15,13 @@ package com.vaadin.tests.integration;
  * the License.
  */
 
-import com.vaadin.testbench.annotations.RunLocally;
-import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.tb3.AbstractTB3Test;
+import com.vaadin.testbench.TestBenchTestCase;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,13 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-@RunLocally(Browser.PHANTOMJS)
-public class JSPIntegrationIT extends AbstractTB3Test {
+public class JSPIntegrationIT extends TestBenchTestCase {
 
-    private final String primaryUIUrl = getBaseURL() + "/primaryui";
-    private final String jspUrl = getBaseURL() + "/staticfiles/vaadinsessions.jsp";
-    private final String secondaryUIUrl = getBaseURL() + "/secondaryui";
+    private static final String URL_PREFIX = "http://localhost:7888/";
+
+    private static final String primaryUIUrl = URL_PREFIX + "primaryui";
+    private static final String jspUrl = URL_PREFIX + "staticfiles/vaadinsessions.jsp";
+    private static final String secondaryUIUrl = URL_PREFIX + "secondaryui";
 
     @Test
     public void listVaadinSessions() {
@@ -41,14 +43,14 @@ public class JSPIntegrationIT extends AbstractTB3Test {
         assertUICount(0);
 
         // Open a new UI
-        getDriver().get(primaryUIUrl);
-        sleep(1000);
+        getDriver().navigate().to(primaryUIUrl);
+
+
         assertUICount(1);
         UIData firstUI = getUIs().get(0);
 
         // Open a new UI
-        getDriver().get(primaryUIUrl);
-        sleep(1000);
+        getDriver().navigate().to(primaryUIUrl);
         UIData secondUI = getUIs().get(0);
 
         // Should now have UI for the same service with different uiId
@@ -56,8 +58,7 @@ public class JSPIntegrationIT extends AbstractTB3Test {
         assertNotEquals(firstUI.uiId, secondUI.uiId);
         assertEquals(firstUI.serviceName, secondUI.serviceName);
 
-        getDriver().get(secondaryUIUrl);
-        sleep(1000);
+        getDriver().navigate().to(secondaryUIUrl);
         // Should now have another services
         List<UIData> twoUIs = getUIs();
         assertEquals(2, twoUIs.size());
@@ -92,13 +93,13 @@ public class JSPIntegrationIT extends AbstractTB3Test {
         assertEquals(i, getUIs().size());
     }
 
-    @Override
-    protected String getDeploymentHostname() {
-            return "localhost";
+    @Before
+    public void setup() {
+        setDriver(new PhantomJSDriver());
     }
 
-    @Override
-    protected int getDeploymentPort() {
-        return 7888;
+    @After
+    public void teardown() {
+        getDriver().quit();
     }
 }
