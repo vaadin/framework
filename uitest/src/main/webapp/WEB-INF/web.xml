@@ -211,11 +211,6 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>IntegrationTest</servlet-name>
-        <url-pattern>/integration/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>CommErrorEmulator</servlet-name>
         <url-pattern>/commerror/*</url-pattern>
     </servlet-mapping>
