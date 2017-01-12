@@ -1,5 +1,6 @@
+package com.vaadin.tests.integration;
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2017 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,27 +14,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.integration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.vaadin.testbench.annotations.RunLocally;
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.tests.tb3.AbstractTB3Test;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import java.util.ArrayList;
+import java.util.List;
 
-public class JSPIntegrationTest extends SingleBrowserTestPhantomJS2 {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-    final String appRunnerTestUrl = getBaseURL() + "/run/Buttons";
-    final String jspUrl = getBaseURL() + "/statictestfiles/vaadinsessions.jsp";
-    final String integrationUrl = getBaseURL() + "/integration";
+@RunLocally(Browser.PHANTOMJS)
+public class JSPIntegrationIT extends AbstractTB3Test {
+
+    private final String primaryUIUrl = getBaseURL() + "/primaryui";
+    private final String jspUrl = getBaseURL() + "/staticfiles/vaadinsessions.jsp";
+    private final String secondaryUIUrl = getBaseURL() + "/secondaryui";
 
     @Test
     public void listVaadinSessions() {
@@ -41,33 +41,27 @@ public class JSPIntegrationTest extends SingleBrowserTestPhantomJS2 {
         assertUICount(0);
 
         // Open a new UI
-        getDriver().get(integrationUrl);
+        getDriver().get(primaryUIUrl);
+        sleep(1000);
         assertUICount(1);
+        UIData firstUI = getUIs().get(0);
 
         // Open a new UI
-        getDriver().get(integrationUrl);
+        getDriver().get(primaryUIUrl);
+        sleep(1000);
+        UIData secondUI = getUIs().get(0);
 
-        // Should now have two UIs for the same service with different uiIds
+        // Should now have UI for the same service with different uiId
+        assertUICount(1);
+        assertNotEquals(firstUI.uiId, secondUI.uiId);
+        assertEquals(firstUI.serviceName, secondUI.serviceName);
+
+        getDriver().get(secondaryUIUrl);
+        sleep(1000);
+        // Should now have another services
         List<UIData> twoUIs = getUIs();
         assertEquals(2, twoUIs.size());
-        assertNotEquals(twoUIs.get(0).uiId, twoUIs.get(1).uiId);
-        assertEquals(twoUIs.get(0).serviceName, twoUIs.get(1).serviceName);
-
-        getDriver().get(appRunnerTestUrl);
-        // Should now have two services with 2 + 1 UIs
-        List<UIData> threeUIs = getUIs();
-        assertEquals(3, threeUIs.size());
-        Set<String> serviceNames = new HashSet<>();
-        Set<Integer> uiIds = new HashSet<>();
-        for (UIData uiData : threeUIs) {
-            serviceNames.add(uiData.serviceName);
-            uiIds.add(uiData.uiId);
-        }
-        assertGreaterOrEqual(
-                "There should be at least two unique service names",
-                serviceNames.size(), 2);
-        assertGreaterOrEqual("There should be at least two unique ui ids",
-                uiIds.size(), 2);
+        assertNotEquals(twoUIs.get(0).serviceName, twoUIs.get(1).serviceName);
     }
 
     private static class UIData {
@@ -96,5 +90,15 @@ public class JSPIntegrationTest extends SingleBrowserTestPhantomJS2 {
 
     private void assertUICount(int i) {
         assertEquals(i, getUIs().size());
+    }
+
+    @Override
+    protected String getDeploymentHostname() {
+            return "localhost";
+    }
+
+    @Override
+    protected int getDeploymentPort() {
+        return 7888;
     }
 }
