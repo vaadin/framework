@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.BeanToValidate;
-import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.UI;
 
 public class BeanValidatorTest extends ValidatorTestBase {
@@ -59,9 +58,7 @@ public class BeanValidatorTest extends ValidatorTestBase {
 
     @Test
     public void testInvalidDecimalsFailsInFrench() {
-        MockUI ui = new MockUI();
-        ui.setLocale(Locale.FRENCH);
-        UI.setCurrent(ui);
+        setLocale(Locale.FRENCH);
         BeanValidator v = validator("decimals");
         assertFails("1234.567", "Valeur numérique hors limite "
                 + "(<3 chiffres>.<2 chiffres> attendus)", v);
