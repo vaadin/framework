@@ -196,7 +196,7 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
 
     private void assertSelected(String... expectedSelection) {
         Assert.assertEquals(Arrays.asList(expectedSelection),
-                getSelect().getSelection());
+                getSelect().getValue());
     }
 
     @Override

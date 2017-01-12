@@ -26,31 +26,31 @@ public class CheckBoxGroupSetSelectionTest extends MultiBrowserTest {
 
     @Test
     public void testSetSelection() {
-        group.setSelection(NEW_VALUE);
+        group.setValue(NEW_VALUE);
         Assert.assertEquals(Collections.singletonList(NEW_VALUE),
-                group.getSelection());
+                group.getValue());
     }
 
     @Test
     public void testSelectByText() {
         group.selectByText(NEW_VALUE);
         Assert.assertEquals(Collections.singletonList(NEW_VALUE),
-                group.getSelection());
+                group.getValue());
     }
 
     @Test
     public void testSelectAll() {
         List<String> value = Arrays.asList("item1", "item2", "item3");
         group.setSelection(value);
-        Assert.assertEquals(value, group.getSelection());
+        Assert.assertEquals(value, group.getValue());
     }
 
     @Test
     public void testSelectNone() {
         testSelectByText();
 
-        group.setSelection();
-        Assert.assertEquals(Collections.emptyList(), group.getSelection());
+        group.setValue();
+        Assert.assertEquals(Collections.emptyList(), group.getValue());
     }
 
     @Test

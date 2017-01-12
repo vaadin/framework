@@ -74,7 +74,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         CheckBoxGroupElement elem = $(CheckBoxGroupElement.class).get(0);
         List<String> expected = Collections
                 .singletonList(ComponentElementGetValue.TEST_STRING_VALUE);
-        List<String> actual = elem.getSelection();
+        List<String> actual = elem.getValue();
         Assert.assertEquals(expected, actual);
     }
 
