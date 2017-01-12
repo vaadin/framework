@@ -17,6 +17,7 @@ public class ValidatorTestBase {
     @Before
     public void setUp() {
         localeContext = new Label();
+        setLocale(Locale.US);
     }
 
     protected <T> void assertPasses(T value, Validator<? super T> validator) {

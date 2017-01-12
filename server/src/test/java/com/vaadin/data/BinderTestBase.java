@@ -15,6 +15,8 @@
  */
 package com.vaadin.data;
 
+import java.util.Locale;
+
 import org.junit.Before;
 
 import com.vaadin.ui.TextField;
@@ -51,6 +53,8 @@ public abstract class BinderTestBase<BINDER extends Binder<ITEM>, ITEM> {
     @Before
     public void setUpBase() {
         nameField = new TextField();
+        nameField.setLocale(Locale.US);
         ageField = new TextField();
+        ageField.setLocale(Locale.US);
     }
 }
