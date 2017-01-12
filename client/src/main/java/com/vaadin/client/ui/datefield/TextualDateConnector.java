@@ -128,12 +128,13 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
                         public void focusChanged(Date date) {
-
-                            getWidget().updateValue(date);
-                            getWidget().buildDate();
-                            Date date2 = getWidget().calendar.getDate();
-                            date2.setYear(date.getYear());
-                            date2.setMonth(date.getMonth());
+                            if (isResolutionMonthOrHigher()) {
+                                getWidget().updateValue(date);
+                                getWidget().buildDate();
+                                Date date2 = getWidget().calendar.getDate();
+                                date2.setYear(date.getYear());
+                                date2.setMonth(date.getMonth());
+                            }
                         }
                     });
         } else {
