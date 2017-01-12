@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class PopupDateFieldStatesTest extends MultiBrowserTest {
+public class PopupDateTimeFieldStatesTest extends MultiBrowserTest {
 
     @Test
     public void readOnlyDateFieldPopupShouldNotOpen()
