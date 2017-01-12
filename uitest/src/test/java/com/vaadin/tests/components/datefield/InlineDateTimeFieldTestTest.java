@@ -13,19 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.components.datefield;
 
-package com.vaadin.client.ui.datefield;
+import org.junit.Test;
 
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.DateField;
+import com.google.gwt.editor.client.Editor.Ignore;
 
 /**
- * The client-side connector for DateField.
+ * Reuse tests from super DateTimeFieldTestTest class.
  * 
  * @author Vaadin Ltd
- * @since 8.0
+ *
  */
-@Connect(DateField.class)
-public class PopupDateFieldConnector extends DateFieldConnector {
+public class InlineDateTimeFieldTestTest extends DateTimeFieldTestTest {
 
+    @Override
+    @Test
+    @Ignore
+    public void testValueAfterOpeningPopupInRequiredField()
+            throws InterruptedException {
+        // no popup for inline date field
+    }
 }

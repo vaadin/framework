@@ -1,18 +1,17 @@
 package com.vaadin.tests.components.datefield;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.tests.components.TestDateField;
-import com.vaadin.ui.AbstractDateField;
+import com.vaadin.ui.DateTimeField;
 import com.vaadin.ui.Label;
 
 public class DateFieldDayResolutionOffset extends AbstractReindeerTestUI {
 
-    private final String initialDateString = "09/01/2014";
+    private final String initialDateString = "09/01/2014 00:00:00";
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -20,8 +19,7 @@ public class DateFieldDayResolutionOffset extends AbstractReindeerTestUI {
         dateValue.setId("dateValue");
 
         final DateTimeFormatter dateformat = getDateFormat();
-        final AbstractDateField<LocalDate, DateResolution> dateField = getDateField(
-                dateformat);
+        final DateTimeField dateField = getDateField(dateformat);
 
         addComponent(dateValue);
         addComponent(dateField);
@@ -30,19 +28,18 @@ public class DateFieldDayResolutionOffset extends AbstractReindeerTestUI {
                 .setValue(dateformat.format(dateField.getValue())));
     }
 
-    private AbstractDateField<LocalDate, DateResolution> getDateField(
-            DateTimeFormatter dateformat) {
-        final AbstractDateField<LocalDate, DateResolution> dateField = new TestDateField();
-        LocalDate initialDate = dateformat.parse(initialDateString,
-                LocalDate::from);
-        dateField.setResolution(DateResolution.DAY);
+    private DateTimeField getDateField(DateTimeFormatter dateformat) {
+        final DateTimeField dateField = new DateTimeField();
+        LocalDateTime initialDate = dateformat.parse(initialDateString,
+                LocalDateTime::from);
+        dateField.setResolution(DateTimeResolution.DAY);
         dateField.setValue(initialDate);
         return dateField;
     }
 
     private DateTimeFormatter getDateFormat() {
         final DateTimeFormatter dateformat = DateTimeFormatter
-                .ofPattern("MM/dd/yyyy");
+                .ofPattern("MM/dd/yyyy HH:mm:ss");
         return dateformat;
     }
 

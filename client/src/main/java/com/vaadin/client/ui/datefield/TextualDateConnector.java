@@ -30,6 +30,10 @@ import com.vaadin.client.ui.VAbstractPopupCalendar;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
 /**
+ * Abstract date/time field connector which extend
+ * {@link AbstractTextualDateConnector} functionality with widget that shows
+ * date/time chooser as a popup panel.
+ * 
  * @author Vaadin Ltd
  * 
  * @since 8.0
@@ -128,12 +132,13 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
                         public void focusChanged(Date date) {
-
-                            getWidget().updateValue(date);
-                            getWidget().buildDate();
-                            Date date2 = getWidget().calendar.getDate();
-                            date2.setYear(date.getYear());
-                            date2.setMonth(date.getMonth());
+                            if (isResolutionMonthOrHigher()) {
+                                getWidget().updateValue(date);
+                                getWidget().buildDate();
+                                Date date2 = getWidget().calendar.getDate();
+                                date2.setYear(date.getYear());
+                                date2.setMonth(date.getMonth());
+                            }
                         }
                     });
         } else {

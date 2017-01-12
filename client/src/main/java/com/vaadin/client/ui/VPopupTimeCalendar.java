@@ -144,8 +144,8 @@ public class VPopupTimeCalendar extends
     @Override
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
-        super.updateValue(newDate);
         Date currentDate = getCurrentDate();
+        super.updateValue(newDate);
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             if (getCurrentResolution().compareTo(DateTimeResolution.DAY) < 0) {
                 getClient().updateVariable(getId(),

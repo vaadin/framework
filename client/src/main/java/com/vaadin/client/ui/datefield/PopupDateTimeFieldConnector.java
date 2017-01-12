@@ -19,6 +19,13 @@ package com.vaadin.client.ui.datefield;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.DateTimeField;
 
+/**
+ * The client-side connector for DateTimeField.
+ * 
+ * @author Vaadin Ltd
+ * @since 8.0
+ *
+ */
 @Connect(DateTimeField.class)
 public class PopupDateTimeFieldConnector extends DateTimeFieldConnector {
 

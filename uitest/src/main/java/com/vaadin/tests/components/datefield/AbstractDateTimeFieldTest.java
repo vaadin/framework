@@ -2,21 +2,21 @@ package com.vaadin.tests.components.datefield;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
-import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
-import com.vaadin.ui.AbstractLocalDateField;
+import com.vaadin.ui.AbstractLocalDateTimeField;
 
-public abstract class AbstractDateFieldTest<T extends AbstractLocalDateField>
-        extends AbstractFieldTest<T, LocalDate> {
+public abstract class AbstractDateTimeFieldTest<T extends AbstractLocalDateTimeField>
+        extends AbstractFieldTest<T, LocalDateTime> {
 
-    private Command<T, LocalDate> setValue = new Command<T, LocalDate>() {
+    private Command<T, LocalDateTime> setValue = new Command<T, LocalDateTime>() {
 
         @Override
-        public void execute(T c, LocalDate value, Object data) {
+        public void execute(T c, LocalDateTime value, Object data) {
             c.setValue(value);
         }
     };
@@ -35,10 +35,10 @@ public abstract class AbstractDateFieldTest<T extends AbstractLocalDateField>
     }
 
     private void createSetValueAction(String category) {
-        LinkedHashMap<String, LocalDate> options = new LinkedHashMap<>();
+        LinkedHashMap<String, LocalDateTime> options = new LinkedHashMap<>();
         options.put("(null)", null);
-        options.put("(current time)", LocalDate.now());
-        options.put("2010-12-12", LocalDate.of(2010, 12, 12));
+        options.put("(current time)", LocalDateTime.now());
+        options.put("2010-12-12", LocalDateTime.of(2010, 12, 12, 6, 34, 23));
         createMultiClickAction("Set value", category, options, setValue, null);
     }
 
@@ -83,19 +83,22 @@ public abstract class AbstractDateFieldTest<T extends AbstractLocalDateField>
     }
 
     private void createResolutionSelectAction(String category) {
-        LinkedHashMap<String, DateResolution> options = new LinkedHashMap<>();
-        options.put("Year", DateResolution.YEAR);
-        options.put("Month", DateResolution.MONTH);
-        options.put("Day", DateResolution.DAY);
+        LinkedHashMap<String, DateTimeResolution> options = new LinkedHashMap<>();
+        options.put("Year", DateTimeResolution.YEAR);
+        options.put("Month", DateTimeResolution.MONTH);
+        options.put("Day", DateTimeResolution.DAY);
+        options.put("Hour", DateTimeResolution.HOUR);
+        options.put("Min", DateTimeResolution.MINUTE);
+        options.put("Sec", DateTimeResolution.SECOND);
 
         createSelectAction("Resolution", category, options, "Year",
                 resolutionCommand);
     }
 
-    private Command<T, DateResolution> resolutionCommand = new Command<T, DateResolution>() {
+    private Command<T, DateTimeResolution> resolutionCommand = new Command<T, DateTimeResolution>() {
 
         @Override
-        public void execute(T c, DateResolution value, Object data) {
+        public void execute(T c, DateTimeResolution value, Object data) {
             c.setResolution(value);
 
         }

@@ -22,6 +22,8 @@ import com.google.gwt.core.client.GWT;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
+ * A client side implementation for inline date/time field.
+ * 
  * @author Vaadin Ltd
  * @since 8.0
  *

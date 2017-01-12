@@ -27,6 +27,8 @@ import com.vaadin.shared.ui.datefield.LocalDateTimeFieldState;
 import com.vaadin.ui.AbstractLocalDateTimeField;
 
 /**
+ * The client-side connector for AbstractLocalDateTimeField.
+ * 
  * @author Vaadin Ltd
  * @since 8.0
  */

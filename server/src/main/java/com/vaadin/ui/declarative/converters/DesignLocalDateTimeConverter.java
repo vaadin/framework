@@ -49,7 +49,7 @@ public class DesignLocalDateTimeConverter
                         .ofPattern(pattern, effectiveLocale)
                         .parse(value, LocalDateTime::from);
                 return Result.ok(date);
-            } catch (DateTimeParseException e) {
+            } catch (DateTimeParseException ignored) {
                 // not parseable, ignore and try another format
             }
         }

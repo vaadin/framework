@@ -13,19 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.components.datefield;
 
-package com.vaadin.client.ui.datefield;
-
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.InlineDateTimeField;
 
 /**
- * The client-side connector for DateField.
- * 
  * @author Vaadin Ltd
- * @since 8.0
+ *
  */
-@Connect(DateField.class)
-public class PopupDateFieldConnector extends DateFieldConnector {
+public class InlineDateTimeFieldTest
+        extends AbstractDateTimeFieldTest<InlineDateTimeField> {
+
+    @Override
+    protected Class<InlineDateTimeField> getTestClass() {
+        return InlineDateTimeField.class;
+    }
 
 }

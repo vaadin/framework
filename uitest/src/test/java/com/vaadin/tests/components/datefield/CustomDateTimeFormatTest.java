@@ -13,19 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.components.datefield;
 
-package com.vaadin.client.ui.datefield;
+import static org.junit.Assert.assertEquals;
 
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.ui.DateField;
+import org.junit.Test;
+
+import com.vaadin.testbench.By;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
- * The client-side connector for DateField.
- * 
  * @author Vaadin Ltd
- * @since 8.0
+ *
  */
-@Connect(DateField.class)
-public class PopupDateFieldConnector extends DateFieldConnector {
+public class CustomDateTimeFormatTest extends MultiBrowserTest {
+
+    @Test
+    public void checkCustomDateFormat() {
+        openTestURL();
+
+        String text = findElement(By.tagName("input")).getAttribute("value");
+        assertEquals("1. tammikuuta 2010 klo 12.23.45", text);
+    }
 
 }

@@ -22,8 +22,10 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.InlineDateField;
 
 /**
+ * The client-side connector for InlineDateField.
+ * 
  * @author Vaadin Ltd
- *
+ * @since 8.0
  */
 @Connect(InlineDateField.class)
 public class InlineDateFieldConnector extends
