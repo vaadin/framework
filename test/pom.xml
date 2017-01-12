@@ -89,6 +89,7 @@
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
         <module>cdi</module>
+        <module>servlet-containers/jsp-integration</module>
     </modules>
 
     <build>
