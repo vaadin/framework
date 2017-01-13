@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import com.vaadin.data.provider.BackEndDataProvider;
 import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.SortOrder;
+import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 
 /**
@@ -134,7 +134,7 @@ public class DataProviderBoVTest {
                 // First callback fetches items based on a query
                 query -> {
                     List<PersonService.PersonSort> sortOrders = new ArrayList<>();
-                    for (SortOrder<String> queryOrder : query.getSortOrders()) {
+                    for (QuerySortOrder queryOrder : query.getSortOrders()) {
                         PersonService.PersonSort sort = personService
                                 .createSort(
                                         // The name of the sorted property

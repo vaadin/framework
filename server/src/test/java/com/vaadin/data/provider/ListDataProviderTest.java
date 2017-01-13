@@ -76,8 +76,8 @@ public class ListDataProviderTest
     }
 
     @Override
-    protected ListDataProvider<StrBean> sortingBy(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp) {
+    protected ListDataProvider<StrBean> sortingBy(List<QuerySortOrder> sortOrder,
+            Comparator<StrBean> comp) {
         return getDataProvider().sortingBy(comp);
     }
 

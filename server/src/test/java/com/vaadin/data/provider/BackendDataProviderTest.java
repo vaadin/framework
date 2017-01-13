@@ -23,7 +23,7 @@ public class BackendDataProviderTest extends
                 Comparator.comparing(StrBean::getRandomNumber));
     }
 
-    private Comparator<StrBean> getComparator(SortOrder<String> so) {
+    private Comparator<StrBean> getComparator(QuerySortOrder so) {
         Comparator<StrBean> comparator = propertyToComparatorMap
                 .get(so.getSorted());
         if (so.getDirection() == SortDirection.DESCENDING) {
@@ -54,7 +54,7 @@ public class BackendDataProviderTest extends
 
     @Override
     protected BackEndDataProvider<StrBean, SerializablePredicate<StrBean>> sortingBy(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp) {
+            List<QuerySortOrder> sortOrder, Comparator<StrBean> comp) {
         return getDataProvider().sortingBy(sortOrder);
     }
 }

@@ -74,12 +74,10 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
      * @return new data provider with modified sorting
      */
     @SuppressWarnings("serial")
-    public BackEndDataProvider<T, F> sortingBy(
-            List<SortOrder<String>> sortOrders) {
+    public BackEndDataProvider<T, F> sortingBy(List<QuerySortOrder> sortOrders) {
         BackEndDataProvider<T, F> parent = this;
         return new BackEndDataProvider<T, F>(query -> {
-            List<SortOrder<String>> queryOrder = new ArrayList<>(
-                    query.getSortOrders());
+            List<QuerySortOrder> queryOrder = new ArrayList<>(query.getSortOrders());
             queryOrder.addAll(sortOrders);
             return parent.fetch(new Query<>(query.getOffset(), query.getLimit(),
                     queryOrder, query.getInMemorySorting(),

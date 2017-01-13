@@ -15,51 +15,24 @@
  */
 package com.vaadin.data.provider;
 
-import java.io.Serializable;
-
 import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * Sorting information for one field.
  *
- * @param <T>
- *            the type of the sorting information, usually a String (field id)
- *            or a {@link java.util.Comparator}.
+ * @see Query
  */
-public class SortOrder<T> implements Serializable {
-
-    private final T sorted;
-    private final SortDirection direction;
+public class QuerySortOrder extends SortOrder<String> {
 
     /**
      * Constructs a field sorting information
      *
      * @param sorted
-     *            sorting information, usually field id or
-     *            {@link java.util.Comparator}
+     *            sorting information, usually field id
      * @param direction
      *            sorting direction
      */
-    public SortOrder(T sorted, SortDirection direction) {
-        this.sorted = sorted;
-        this.direction = direction;
-    }
-
-    /**
-     * Sorting information
-     *
-     * @return sorting entity, usually field id or {@link java.util.Comparator}
-     */
-    public T getSorted() {
-        return sorted;
-    }
-
-    /**
-     * Sorting direction
-     *
-     * @return sorting direction
-     */
-    public SortDirection getDirection() {
-        return direction;
+    public QuerySortOrder(String sorted, SortDirection direction) {
+        super(sorted, direction);
     }
 }

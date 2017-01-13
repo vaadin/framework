@@ -49,16 +49,16 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
         return dataProvider;
     }
 
-    protected abstract D sortingBy(List<SortOrder<String>> sortOrder,
+    protected abstract D sortingBy(List<QuerySortOrder> sortOrder,
             Comparator<StrBean> comp);
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp) {
+            List<QuerySortOrder> sortOrder, Comparator<StrBean> comp) {
         return createQuery(sortOrder, comp, null);
     }
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp,
+            List<QuerySortOrder> sortOrder, Comparator<StrBean> comp,
             SerializablePredicate<StrBean> filter) {
         return new Query<>(0, Integer.MAX_VALUE, sortOrder, comp, filter);
     }
