@@ -99,8 +99,6 @@
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
         <module>cdi</module>
-        <module>bean-api-validation</module>
-        <module>bean-impl-validation</module>
     </modules>
 
     <build>
