@@ -53,8 +53,8 @@ public class BackendDataProviderTest extends
     }
 
     @Override
-    protected BackEndDataProvider<StrBean, SerializablePredicate<StrBean>> sortingBy(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp) {
-        return getDataProvider().sortingBy(sortOrder);
+    protected void setSortOrder(List<SortOrder<String>> sortOrder,
+            Comparator<StrBean> comp) {
+        getDataProvider().setSortOrder(sortOrder);
     }
 }

@@ -16,13 +16,15 @@
 package com.vaadin.data.provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
-import com.vaadin.shared.Registration;
 
 /**
  * A {@link DataProvider} for any back end.
@@ -33,6 +35,8 @@ import com.vaadin.shared.Registration;
  *            data provider filter type
  */
 public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
+
+    private List<SortOrder<String>> sortOrders = new ArrayList<>();
 
     private final SerializableFunction<Query<T, F>, Stream<T>> request;
     private final SerializableToIntFunction<Query<T, F>> sizeCallback;
@@ -57,46 +61,65 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
 
     @Override
     public Stream<T> fetch(Query<T, F> query) {
-        return request.apply(query);
+        return request.apply(mixInSortOrders(query));
     }
 
     @Override
     public int size(Query<T, F> query) {
-        return sizeCallback.applyAsInt(query);
+        return sizeCallback.applyAsInt(mixInSortOrders(query));
+    }
+
+    private Query<T, F> mixInSortOrders(Query<T, F> query) {
+        Set<String> sortedPropertyNames = query.getSortOrders().stream()
+                .map(SortOrder::getSorted).collect(Collectors.toSet());
+
+        List<SortOrder<String>> combinedSortOrders = Stream
+                .concat(query.getSortOrders().stream(),
+                        sortOrders.stream()
+                                .filter(order -> !sortedPropertyNames
+                                        .contains(order.getSorted())))
+                .collect(Collectors.toList());
+
+        return new Query<>(query.getOffset(), query.getLimit(),
+                combinedSortOrders, query.getInMemorySorting(),
+                query.getFilter().orElse(null));
     }
 
     /**
-     * Sets a default sorting order to the data provider.
+     * Sets a list of sort orders to use as the default sorting for this data
+     * provider.
+     * <p>
+     * The default sorting is used if the query defines no sorting. The default
+     * sorting is also used to determine the ordering of items that are
+     * considered equal by the sorting defined in the query.
      *
      * @param sortOrders
-     *            a list of sorting information containing field ids and
-     *            directions
-     * @return new data provider with modified sorting
+     *            a list of sort orders to set, not <code>null</code>
      */
-    @SuppressWarnings("serial")
-    public BackEndDataProvider<T, F> sortingBy(
-            List<SortOrder<String>> sortOrders) {
-        BackEndDataProvider<T, F> parent = this;
-        return new BackEndDataProvider<T, F>(query -> {
-            List<SortOrder<String>> queryOrder = new ArrayList<>(
-                    query.getSortOrders());
-            queryOrder.addAll(sortOrders);
-            return parent.fetch(new Query<>(query.getOffset(), query.getLimit(),
-                    queryOrder, query.getInMemorySorting(),
-                    query.getFilter().orElse(null)));
-        }, sizeCallback) {
+    public void setSortOrder(List<SortOrder<String>> sortOrders) {
+        this.sortOrders = Objects.requireNonNull(sortOrders,
+                "Sort orders cannot be null");
+        refreshAll();
+    }
 
-            @Override
-            public Registration addDataProviderListener(
-                    DataProviderListener listener) {
-                return parent.addDataProviderListener(listener);
-            }
-
-            @Override
-            public void refreshAll() {
-                parent.refreshAll();
-            }
-        };
+    /**
+     * Sets a single sort orders to use as the default sorting for this data
+     * provider.
+     * <p>
+     * The default sorting is used if the query defines no sorting. The default
+     * sorting is also used to determine the ordering of items that are
+     * considered equal by the sorting defined in the query.
+     *
+     * @param sortOrder
+     *            a sort order to set, or <code>null</code> to clear any
+     *            previously set sort orders
+     */
+    public void setSortOrder(SortOrder<String> sortOrder) {
+        if (sortOrder == null) {
+            setSortOrder(Collections.emptyList());
+        } else {
+            setSortOrder(Collections.singletonList(sortOrder));
+        }
     }
 
     @Override
