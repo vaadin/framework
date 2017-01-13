@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import com.vaadin.client.ServerConnector;
 import com.vaadin.client.connectors.grid.MultiSelectionModelConnector;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
@@ -36,9 +35,10 @@ public class MySelectionModelConnector extends MultiSelectionModelConnector {
     private ClickSelectHandler<JsonObject> handler;
 
     @Override
-    protected void extend(ServerConnector target) {
-        handler = new ClickSelectHandler<>(getGrid());
+    protected void initSelectionModel() {
+        super.initSelectionModel();
         getGrid().setSelectionModel(new MyMultiSelectionModel());
+        handler = new ClickSelectHandler<>(getGrid());
     }
 
     @Override

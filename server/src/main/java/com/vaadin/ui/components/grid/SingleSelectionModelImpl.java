@@ -217,6 +217,16 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
+    @Override
+    public void setDeselectAllowed(boolean deselectAllowed) {
+        getState().deselectAllowed = deselectAllowed;
+    }
+
+    @Override
+    public boolean isDeselectAllowed() {
+        return getState().deselectAllowed;
+    }
+
     private boolean isUserSelectionAllowed() {
         return getState(false).selectionAllowed;
     }
