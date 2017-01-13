@@ -17,14 +17,25 @@ package com.vaadin.tests.navigator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class NavigatorViewBlocksBackButtonActionTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // IE web driver fails to read fragment properly, these must be tested
+        // manually. See
+        // https://github.com/SeleniumHQ/selenium-google-code-issue-archive/issues/7966
+        return getBrowsersExcludingIE();
+    }
 
     @Test
     public void testIfConfirmBack() {
