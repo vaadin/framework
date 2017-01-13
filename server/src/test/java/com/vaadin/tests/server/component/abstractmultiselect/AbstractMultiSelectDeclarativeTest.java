@@ -23,7 +23,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Listing;
 import com.vaadin.tests.design.DeclarativeTestBaseBase;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.AbstractMultiSelect;
@@ -44,7 +43,7 @@ import com.vaadin.ui.declarative.DesignContext;
  *            a component type
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMultiSelect & Listing>
+public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMultiSelect>
         extends AbstractListingDeclarativeTest<T> {
 
     @Override

@@ -42,7 +42,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
@@ -122,8 +122,8 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T> implements HasComponents,
-        Listing<T, DataProvider<T, ?>>, SortNotifier<Grid.Column<T, ?>> {
+public class Grid<T> extends AbstractListing<T>
+        implements HasComponents, HasDataProvider<T>, SortNotifier<Grid.Column<T, ?>> {
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(

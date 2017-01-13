@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.googlecode.gentyref.GenericTypeReflector;
-import com.vaadin.data.Listing;
 import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.VaadinRequest;
@@ -31,7 +30,7 @@ import com.vaadin.ui.AbstractListing;
  * @author Vaadin Ltd
  *
  */
-public abstract class AbstractListingFocusBlurTest<T extends AbstractListing<Integer> & FocusNotifier & BlurNotifier & Listing<Integer, ?>>
+public abstract class AbstractListingFocusBlurTest<T extends AbstractListing<Integer> & FocusNotifier & BlurNotifier>
         extends AbstractTestUIWithLog {
 
     @Override

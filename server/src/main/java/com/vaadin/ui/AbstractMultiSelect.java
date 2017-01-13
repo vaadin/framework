@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.Listing;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.provider.DataGenerator;
@@ -435,8 +434,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
                 .map(child -> readItem(child, selected, context))
                 .collect(Collectors.toList());
         deselectAll();
-        if (!items.isEmpty() && this instanceof Listing) {
-            ((Listing<T, ?>) this).setItems(items);
+        if (!items.isEmpty()) {
+            setItems(items);
         }
         selected.forEach(this::select);
     }
@@ -471,7 +470,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     }
 
     private void updateSelection(SerializableConsumer<Set<T>> handler,
-                                 boolean userOriginated) {
+            boolean userOriginated) {
         LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
         handler.accept(selection);
 
