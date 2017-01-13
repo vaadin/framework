@@ -431,4 +431,67 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void noArgsConstructor_stringBind_throws() {
         binder.bind(new TextField(), "firstName");
     }
+
+    @Test
+    public void setReadOnly_unboundBinder() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        binder.forField(ageField);
+
+        binder.setReadOnly(true);
+
+        Assert.assertTrue(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+
+        Assert.assertFalse(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+    }
+
+    @Test
+    public void setReadOnly_boundBinder() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(new Person());
+
+        binder.setReadOnly(true);
+
+        Assert.assertTrue(nameField.isReadOnly());
+        Assert.assertTrue(ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+
+        Assert.assertFalse(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+    }
+
+    @Test
+    public void setReadOnly_binderLoadedByReadBean() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.readBean(new Person());
+
+        binder.setReadOnly(true);
+
+        Assert.assertTrue(nameField.isReadOnly());
+        Assert.assertTrue(ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+
+        Assert.assertFalse(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+    }
+
 }
