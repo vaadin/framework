@@ -7,6 +7,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
+import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class UriFragmentTest extends MultiBrowserTest {
@@ -42,6 +43,12 @@ public class UriFragmentTest extends MultiBrowserTest {
         navigateToNull(); // Setting to null when there is a fragment actually
                           // sets it to #
         assertEquals("Current URI fragment:", getFragmentLabelValue());
+
+        // ensure IE works with new popstate based implementation, see
+        // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/3740423/
+        driver.findElement(By.xpath("//*[@id = 'link']/a")).click();
+        assertFragment("linktest");
+
     }
 
     private void assertFragment(String fragment) {

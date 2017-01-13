@@ -15,8 +15,11 @@
  */
 package com.vaadin.tests.urifragments;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -28,6 +31,14 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public class SettingNullFragmentTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // IE web driver fails to read fragment properly, these must be tested
+        // manually. See
+        // https://github.com/SeleniumHQ/selenium-google-code-issue-archive/issues/7966
+        return getBrowsersExcludingIE();
+    }
 
     @Test
     public void testSettingNullURIFragment() throws Exception {

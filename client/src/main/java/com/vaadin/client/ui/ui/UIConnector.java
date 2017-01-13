@@ -43,18 +43,17 @@ import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Focusable;
@@ -105,6 +104,8 @@ import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
 
+import elemental.client.Browser;
+
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, MayScrollChildren {
@@ -114,6 +115,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     private String activeTheme = null;
 
     private HandlerRegistration windowOrderRegistration;
+
+    /*
+     * Used to workaround IE bug related to popstate events and certain fragment
+     * only changes
+     */
+    private String currentLocation;
 
     private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
         @Override
@@ -232,6 +239,28 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 }
             }
         });
+
+        Browser.getWindow().setOnpopstate(evt -> {
+            final String newLocation = Browser.getWindow().getLocation()
+                    .toString();
+            getRpcProxy(UIServerRpc.class).popstate(newLocation);
+            currentLocation = newLocation;
+        });
+        // IE doesn't fire popstate correctly with certain hash changes.
+        // Simulate the missing event with History handler.
+        if (BrowserInfo.get().isIE()) {
+            History.addValueChangeHandler(evt -> {
+                final String newLocation = Browser.getWindow().getLocation()
+                        .toString();
+                if (!newLocation.equals(currentLocation)) {
+                    currentLocation = newLocation;
+                    getRpcProxy(UIServerRpc.class).popstate(
+                            Browser.getWindow().getLocation().toString());
+                }
+            });
+            currentLocation = Browser.getWindow().getLocation().toString();
+        }
+
     }
 
     private native void open(String url, String name)
@@ -402,34 +431,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             scrollIntoView(connector);
         }
 
-        if (uidl.hasAttribute(UIConstants.LOCATION_VARIABLE)) {
-            String location = uidl
-                    .getStringAttribute(UIConstants.LOCATION_VARIABLE);
-            String newFragment;
-
-            int fragmentIndex = location.indexOf('#');
-            if (fragmentIndex >= 0) {
-                // Decode fragment to avoid double encoding (#10769)
-                newFragment = URL.decodePathSegment(
-                        location.substring(fragmentIndex + 1));
-
-                if (newFragment.isEmpty()
-                        && Location.getHref().indexOf('#') == -1) {
-                    // Ensure there is a trailing # even though History and
-                    // Location.getHash() treat null and "" the same way.
-                    Location.assign(Location.getHref() + "#");
-                }
-            } else {
-                // No fragment in server-side location, but can't completely
-                // remove the browser fragment since that would reload the page
-                newFragment = "";
-            }
-
-            getWidget().currentFragment = newFragment;
-
-            if (!newFragment.equals(History.getToken())) {
-                History.newItem(newFragment, true);
-            }
+        if (uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
+            Browser.getWindow().getHistory().pushState(null, "",
+                    uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
+        }
+        if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
+            Browser.getWindow().getHistory().replaceState(null, "", uidl
+                    .getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (firstPaint) {

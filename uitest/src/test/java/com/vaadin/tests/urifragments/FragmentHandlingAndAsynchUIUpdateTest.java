@@ -18,9 +18,12 @@ package com.vaadin.tests.urifragments;
 import static com.vaadin.tests.urifragments.FragmentHandlingAndAsynchUIUpdate.FRAG_NAME_TPL;
 import static com.vaadin.tests.urifragments.FragmentHandlingAndAsynchUIUpdate.START_FRAG_ID;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
@@ -32,6 +35,14 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public class FragmentHandlingAndAsynchUIUpdateTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // IE web driver fails to read fragment properly, these must be tested
+        // manually. See
+        // https://github.com/SeleniumHQ/selenium-google-code-issue-archive/issues/7966
+        return getBrowsersExcludingIE();
+    }
 
     /**
      * The case when we successively set 10 fragments, go back 9 times and then

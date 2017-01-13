@@ -193,6 +193,12 @@ public abstract class UI extends AbstractSingleComponentContainer
         public void acknowledge() {
             // Nothing to do, just need the message to be sent and processed
         }
+
+		@Override
+		public void popstate(String uri) {
+			getPage().updateLocation(uri, true, true);
+			
+		}
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
         @Override
@@ -437,11 +443,6 @@ public abstract class UI extends AbstractSingleComponentContainer
             actionManager.handleActions(variables, this);
         }
 
-        if (variables.containsKey(UIConstants.LOCATION_VARIABLE)) {
-            String location = (String) variables
-                    .get(UIConstants.LOCATION_VARIABLE);
-            getPage().updateLocation(location, true);
-        }
     }
 
     /*
@@ -789,10 +790,10 @@ public abstract class UI extends AbstractSingleComponentContainer
         int newWidth = page.getBrowserWindowWidth();
         int newHeight = page.getBrowserWindowHeight();
 
-        page.updateLocation(oldLocation.toString(), false);
+        page.updateLocation(oldLocation.toString(), false, false);
         page.updateBrowserWindowSize(oldWidth, oldHeight, false);
 
-        page.updateLocation(newLocation.toString(), true);
+        page.updateLocation(newLocation.toString(), true, false);
         page.updateBrowserWindowSize(newWidth, newHeight, true);
     }
 
