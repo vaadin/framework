@@ -1,0 +1,138 @@
+[[migration]]
+== Migration form Vaadin 7 to Vaadin 8
+
+//todo remove this text from Release Notes
+//todo put achors to Release notes
+Most Vaadin Framework 7 applications need some changes when migrating to Vaadin Framework 8. In addition to updating
+dependencies, all references to Framework 7 style data binding and components using it need to be updated either to use
+new Framework 8 style data binding or to use the compatibility versions in separate packages.
+
+Vaadin Framework 7 compatible versions of the old data binding API and components (with the exception of Form) are available in the package com.vaadin.v7 in modules vaadin-compatibility-server, vaadin-compatibility-shared etc. that can be used instead of vaadin-server, vaadin-shared etc. The package vaadin-compatibility-client-compiled contains the widgetset com.vaadin.v7.Vaadin7WidgetSet which can be used instead of DefaultWidgetSet.
+
+All applications using either Reindeer, Runo, Chameleon or Base theme must include the vaadin-compability-themes package.
+
+There is a migration tool which helps with some of the migration steps.
+
+Some Vaadin Framework 7 add-ons do not work in version 8 - please check the add-ons in Vaadin Directory for Framework version 8 support.
+//todo What the fundamental differences are between Framework 7 and 8 (couple sentences per item max) and a link to the corresponding book page (web)
+
+//todo
+==== Binder
+[classname]#Binder# is a replacement for [classname]#FieldGroup#.
+
+//todo
+Data sources
+
+//todo
+New fields
+
+//todo
+New selects
+
+//todo
+Themes
+
+//todo
+Changes in defaults
+
+//todo
+Changes in components
+
+== How you get up and running aka quick'n'dirty migration
+. Ensure that Java version in your projects is 8
+. Change dependencies
+.. Change exisiting dependencies from Vaadin 7 to Vaadin 8 in all your maven project
+.. Add appropriate compatibility packages to your maven project.
+
+Example:
+//todo fix bullet point numbering
+```xml
+<dependency>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-client</artifactId>
+    <version>7.7.6</version>
+</dependency>
+```
+will became
+
+```xml
+<dependency>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-client</artifactId>
+    <version>8.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-compatibility-client</artifactId>
+    <version>8.0.0</version>
+</dependency>
+```
+
+List of packages which have compatibility variants
+
+* compatibility-server
+* compatibility-client
+* compatibility-client-compiled
+* compatibility-shared
+* compatibility-themes
+
+. If you have a custom widgetsets in your apllication, replace inheritance in your `.gwt.xml` and `@Widgetset`
+annotations from default(`com.vaadin.DefaultWidgetSet`) to `com.vaadin.v7.Vaadin7WidgetSet`
+
+. Source code modifications
+.. `import` statements. Legacy components must be imported from `com.vaadin.v7.ui` package.
+.. In declarative files, tag names prefixes have to be changed  from `<vaadin-...>` and `<v-...>` to `<vaadin7-...>`
+
+The migration utility (see https://github.com/vaadin/framework8-migration-tool) might be useful to automate this
+
+For more details, refer to _Release Notes_
+//todo link  to release notes
+
+Upgrade your project addons to be Vaadin 8 compatible.
+
+After finishing of those steps your project is going to be compatible with legacy API of Vaadin 8.
+
+Next step would be to upgrade your UIs to use new components piece by piece.
+
+== How you do a real migration.
+
+Most of the application changes durign migration are related to a new data model in Vaadin 8.
+You need to upgrade `Container`s to `DataPrider`s, `FieldGroup`s to 'Binder's and replace `Properties` with
+`ValueProvider`s and `Setter`s. There is no more `Item` object at all. Validation and data conversion API is rewritten
+from scratch using new Java 8 syntax.
+
+For more details, refer to _Release Notes_
+//todo link  to release notes
+
+
+
+=== Forms
+//todo
+Old fields -> new fields
+
+//todo
+FieldGroup -> Binder
+
+//todo
+Validator migration
+
+//todo
+Converter migration
+
+
+=== Data sources
+
+BeanItemContainer -> DataProvider
+
+IndexedContainer -> DataProvider
+
+JPAContainer -> DataProvider
+
+SQLContainer -> DataProvider
+
+Hierarchical container -> Hierarchical container (no changes)
+
+=== Incompatible or Behavior-altering Changes in 8.0.0.beta1
+//todo
+For more details, refer to _Release Notes_
+//todo link  to release notes
