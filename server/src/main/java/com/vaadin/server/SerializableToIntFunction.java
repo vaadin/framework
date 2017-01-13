@@ -20,16 +20,16 @@ import java.util.function.ToIntFunction;
 
 /**
  * A {@link ToIntFunction} that is also {@link Serializable}.
- * 
+ *
  * @see ToIntFunction
  * @author Vaadin Ltd
  * @since 8.0
- * 
+ *
  * @param <T>
  *            the type of the input for this function
  */
 @FunctionalInterface
 public interface SerializableToIntFunction<T>
         extends ToIntFunction<T>, Serializable {
-
+    // Only method inherited from Predicate
 }
