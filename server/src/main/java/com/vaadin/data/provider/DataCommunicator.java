@@ -201,7 +201,7 @@ public class DataCommunicator<T, F> extends AbstractExtension {
 
     private F filter;
     private Comparator<T> inMemorySorting;
-    private final List<SortOrder<String>> backEndSorting = new ArrayList<>();
+    private final List<QuerySortOrder> backEndSorting = new ArrayList<>();
     private final DataCommunicatorClientRpc rpc;
 
     public DataCommunicator() {
@@ -421,12 +421,12 @@ public class DataCommunicator<T, F> extends AbstractExtension {
     }
 
     /**
-     * Sets the {@link SortOrder}s to use with backend sorting.
+     * Sets the {@link QuerySortOrder}s to use with backend sorting.
      *
      * @param sortOrder
      *            list of sort order information to pass to a query
      */
-    public void setBackEndSorting(List<SortOrder<String>> sortOrder) {
+    public void setBackEndSorting(List<QuerySortOrder> sortOrder) {
         backEndSorting.clear();
         backEndSorting.addAll(sortOrder);
         reset();

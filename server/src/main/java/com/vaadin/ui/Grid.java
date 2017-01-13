@@ -47,6 +47,7 @@ import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.Query;
+import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.data.provider.SortOrder;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
@@ -122,8 +123,8 @@ import elemental.json.JsonValue;
  * @param <T>
  *            the grid bean type
  */
-public class Grid<T> extends AbstractListing<T>
-        implements HasComponents, HasDataProvider<T>, SortNotifier<Grid.Column<T, ?>> {
+public class Grid<T> extends AbstractListing<T> implements HasComponents,
+        HasDataProvider<T>, SortNotifier<Grid.Column<T, ?>> {
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
@@ -787,8 +788,8 @@ public class Grid<T> extends AbstractListing<T>
         private String userId;
 
         /**
-         * Constructs a new Column configuration with given renderer and
-         * value provider.
+         * Constructs a new Column configuration with given renderer and value
+         * provider.
          *
          * @param valueProvider
          *            the function to get values from items
@@ -1078,14 +1079,14 @@ public class Grid<T> extends AbstractListing<T>
         public Column<T, V> setSortProperty(String... properties) {
             Objects.requireNonNull(properties, "Sort properties can't be null");
             sortOrderProvider = dir -> Arrays.stream(properties)
-                    .map(s -> new SortOrder<>(s, dir));
+                    .map(s -> new QuerySortOrder(s, dir));
             return this;
         }
 
         /**
          * Sets the sort orders when sorting this column. The sort order
-         * provider is a function which provides {@link SortOrder} objects to
-         * describe how to sort by this column.
+         * provider is a function which provides {@link QuerySortOrder} objects
+         * to describe how to sort by this column.
          *
          * @param provider
          *            the function to use when generating sort orders with the
@@ -1107,7 +1108,7 @@ public class Grid<T> extends AbstractListing<T>
          *            the sorting direction
          * @return stream of sort orders
          */
-        public Stream<SortOrder<String>> getSortOrder(SortDirection direction) {
+        public Stream<QuerySortOrder> getSortOrder(SortDirection direction) {
             return sortOrderProvider.apply(direction);
         }
 
@@ -2772,7 +2773,7 @@ public class Grid<T> extends AbstractListing<T>
     }
 
     /**
-     * Sort this Grid in user-specified {@link SortOrder} by a column.
+     * Sort this Grid in user-specified {@link QuerySortOrder} by a column.
      *
      * @param column
      *            a column to sort against
@@ -3200,7 +3201,7 @@ public class Grid<T> extends AbstractListing<T>
         getDataCommunicator().setInMemorySorting(comparator);
 
         // Back-end sort properties
-        List<SortOrder<String>> sortProperties = new ArrayList<>();
+        List<QuerySortOrder> sortProperties = new ArrayList<>();
         sortOrder.stream().map(
                 order -> order.getSorted().getSortOrder(order.getDirection()))
                 .forEach(s -> s.forEach(sortProperties::add));

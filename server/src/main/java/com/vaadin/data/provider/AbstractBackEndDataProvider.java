@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 public abstract class AbstractBackEndDataProvider<T, F> extends
         AbstractDataProvider<T, F> implements BackEndDataProvider<T, F> {
 
-    private List<SortOrder<String>> sortOrders = new ArrayList<>();
+    private List<QuerySortOrder> sortOrders = new ArrayList<>();
 
     private Query<T, F> mixInSortOrders(Query<T, F> query) {
         if (sortOrders.isEmpty()) {
@@ -43,7 +43,7 @@ public abstract class AbstractBackEndDataProvider<T, F> extends
         Set<String> sortedPropertyNames = query.getSortOrders().stream()
                 .map(SortOrder::getSorted).collect(Collectors.toSet());
 
-        List<SortOrder<String>> combinedSortOrders = Stream
+        List<QuerySortOrder> combinedSortOrders = Stream
                 .concat(query.getSortOrders().stream(),
                         sortOrders.stream()
                                 .filter(order -> !sortedPropertyNames
@@ -86,7 +86,7 @@ public abstract class AbstractBackEndDataProvider<T, F> extends
     protected abstract int sizeInBackEnd(Query<T, F> query);
 
     @Override
-    public void setSortOrders(List<SortOrder<String>> sortOrders) {
+    public void setSortOrders(List<QuerySortOrder> sortOrders) {
         this.sortOrders = Objects.requireNonNull(sortOrders,
                 "Sort orders cannot be null");
         refreshAll();

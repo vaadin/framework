@@ -218,7 +218,7 @@ public class ListDataProviderTest
     }
 
     @Override
-    protected void setSortOrder(List<SortOrder<String>> sortOrder,
+    protected void setSortOrder(List<QuerySortOrder> sortOrder,
             Comparator<StrBean> comp) {
         SerializableComparator<StrBean> serializableComp = comp::compare;
         getDataProvider().setSortComparator(serializableComp);

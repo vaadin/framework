@@ -2,7 +2,6 @@ package com.vaadin.data.provider;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,23 +48,18 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
         return dataProvider;
     }
 
-    protected abstract void setSortOrder(List<SortOrder<String>> sortOrder,
+    protected abstract void setSortOrder(List<QuerySortOrder> sortOrder,
             Comparator<StrBean> comp);
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp) {
+            List<QuerySortOrder> sortOrder, Comparator<StrBean> comp) {
         return createQuery(sortOrder, comp, null);
     }
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp,
+            List<QuerySortOrder> sortOrder, Comparator<StrBean> comp,
             SerializablePredicate<StrBean> filter) {
         return new Query<>(0, Integer.MAX_VALUE, sortOrder, comp, filter);
-    }
-
-    private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            SerializablePredicate<StrBean> filter) {
-        return createQuery(Collections.emptyList(), null, filter);
     }
 
     // Tests start here.
