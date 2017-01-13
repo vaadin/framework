@@ -2,11 +2,14 @@ package com.vaadin.data.provider;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.data.sort.SortDirection;
 
 public class ListDataProviderTest
         extends DataProviderTestBase<ListDataProvider<StrBean>> {
@@ -75,10 +78,53 @@ public class ListDataProviderTest
                         .size(new Query<>("Zyx")));
     }
 
+    @Test
+    public void setSortByProperty_ascending() {
+        ListDataProvider<StrBean> dataProvider = getDataProvider();
+
+        dataProvider.setSortOrder(StrBean::getId, SortDirection.ASCENDING);
+
+        int[] threeFirstIds = dataProvider.fetch(new Query<>())
+                .mapToInt(StrBean::getId).limit(3).toArray();
+
+        Assert.assertArrayEquals(new int[] { 0, 1, 2 }, threeFirstIds);
+    }
+
+    @Test
+    public void setSortByProperty_descending() {
+        ListDataProvider<StrBean> dataProvider = getDataProvider();
+
+        dataProvider.setSortOrder(StrBean::getId, SortDirection.DESCENDING);
+
+        int[] threeFirstIds = dataProvider.fetch(new Query<>())
+                .mapToInt(StrBean::getId).limit(3).toArray();
+
+        Assert.assertArrayEquals(new int[] { 98, 97, 96 }, threeFirstIds);
+    }
+
+    @Test
+    public void testMultipleSortOrder_firstAddedWins() {
+        ListDataProvider<StrBean> dataProvider = getDataProvider();
+
+        dataProvider.addSortOrder(StrBean::getValue, SortDirection.DESCENDING);
+        dataProvider.addSortOrder(StrBean::getId, SortDirection.DESCENDING);
+
+        List<StrBean> threeFirstItems = dataProvider.fetch(new Query<>())
+                .limit(3).collect(Collectors.toList());
+
+        // First one is Xyz
+        Assert.assertEquals(new StrBean("Xyz", 10, 100),
+                threeFirstItems.get(0));
+        // The following are Foos ordered by id
+        Assert.assertEquals(new StrBean("Foo", 93, 2), threeFirstItems.get(1));
+        Assert.assertEquals(new StrBean("Foo", 91, 2), threeFirstItems.get(2));
+    }
+
     @Override
-    protected ListDataProvider<StrBean> sortingBy(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp) {
-        return getDataProvider().sortingBy(comp);
+    protected void setSortOrder(List<SortOrder<String>> sortOrder,
+            Comparator<StrBean> comp) {
+        SerializableComparator<StrBean> serializableComp = comp::compare;
+        getDataProvider().setSortOrder(serializableComp);
     }
 
 }
