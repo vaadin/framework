@@ -9,12 +9,12 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.customelements.AbstractDateFieldElement;
-import com.vaadin.testbench.customelements.ComboBoxElement;
-import com.vaadin.testbench.customelements.FixedNotificationElement;
-import com.vaadin.testbench.customelements.TableElement;
-import com.vaadin.testbench.customelements.WindowElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TabSheetElement;
+import com.vaadin.testbench.elements.TableElement;
+import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -130,7 +130,7 @@ public abstract class ThemeTest extends MultiBrowserTest {
             throws IOException {
         $(ButtonElement.class).id("notifButt" + id).click();
         compareScreen(identifier);
-        $(FixedNotificationElement.class).first().close();
+        $(NotificationElement.class).first().close();
     }
 
     protected void testWindows() throws IOException {

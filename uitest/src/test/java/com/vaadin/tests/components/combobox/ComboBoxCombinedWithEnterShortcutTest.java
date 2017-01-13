@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import com.vaadin.testbench.customelements.ComboBoxElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxCombinedWithEnterShortcutTest extends MultiBrowserTest {

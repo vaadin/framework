@@ -16,7 +16,9 @@
 package com.vaadin.testbench.elements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.WebElement;
 
@@ -33,12 +35,18 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     private static org.openqa.selenium.By byRadioInput = By.tagName("input");
 
     public List<String> getOptions() {
-        List<String> optionTexts = new ArrayList<String>();
-        List<WebElement> options = findElements(bySelectOption);
-        for (WebElement option : options) {
-            optionTexts.add(option.findElement(byLabel).getText());
-        }
-        return optionTexts;
+        return getOptionElements().stream()
+                .map(option -> option.findElement(byLabel).getText())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets the list of option elements for this check box group.
+     *
+     * @return list of option elements
+     */
+    public List<WebElement> getOptionElements() {
+        return findElements(bySelectOption);
     }
 
     public void selectByText(String text) throws ReadOnlyException {
@@ -55,11 +63,11 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Return list of the selected options in the checkbox group
+     * Return list of the selected options in the checkbox group.
      *
      * @return list of the selected options in the checkbox group
      */
-    public List<String> getSelection() {
+    public List<String> getValue() {
         List<String> values = new ArrayList<>();
         List<WebElement> options = findElements(bySelectOption);
         for (WebElement option : options) {
@@ -75,13 +83,35 @@ public class CheckBoxGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Select option in the option group with the specified value.
+     * Sets the selected options for this checkbox group.
      *
-     * @param chars
-     *            value of the option in the option group which will be selected
+     * @param options
+     *            the options to select
+     *
+     * @see #getValue()
+     * @see #setValue(List)
      */
-    public void setValue(CharSequence chars) throws ReadOnlyException {
-        selectByText((String) chars);
+    public void setValue(String... options) {
+        setValue(Arrays.asList(options));
+    }
+
+    /**
+     * Sets the selected options for this checkbox group.
+     *
+     * @param options
+     *            the list of options to select
+     *
+     * @see #getValue()
+     * @see #setValue(String...)
+     */
+    public void setValue(List<String> options) {
+        // Deselect everything that is not going to be selected again.
+        getValue().stream().filter(option -> !options.contains(option))
+                .forEach(this::selectByText);
+        // Select everything that still needs selecting.
+        List<String> selection = getValue();
+        options.stream().filter(option -> !selection.contains(option))
+                .forEach(this::selectByText);
     }
 
     /**

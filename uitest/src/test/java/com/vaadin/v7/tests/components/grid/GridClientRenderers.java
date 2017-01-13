@@ -28,7 +28,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeButtonElement;

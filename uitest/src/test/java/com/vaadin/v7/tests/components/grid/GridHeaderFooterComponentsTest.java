@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.TextFieldElement;

@@ -17,7 +17,7 @@ package com.vaadin.tests.contextclick;
 
 import static org.junit.Assert.assertEquals;
 
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 
 public abstract class TableContextClickTestBase
         extends AbstractContextClickTest {

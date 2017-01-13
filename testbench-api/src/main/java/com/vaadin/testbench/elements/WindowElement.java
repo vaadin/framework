@@ -17,6 +17,7 @@ package com.vaadin.testbench.elements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elementsbase.ServerClass;
 
@@ -91,4 +92,22 @@ public class WindowElement extends PanelElement {
         return findElement(By.className(HEADER_CLASS)).getText();
     }
 
+    /**
+     * Moves the window by given offset.
+     *
+     * @param xOffset
+     *            x offset
+     * @param yOffset
+     *            y offset
+     */
+    public void move(int xOffset, int yOffset) {
+        Actions action = new Actions(getDriver());
+        action.moveToElement(
+                findElement(org.openqa.selenium.By.className("v-window-wrap")),
+                5, 5);
+        action.clickAndHold();
+        action.moveByOffset(xOffset, yOffset);
+        action.release();
+        action.build().perform();
+    }
 }

@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.customelements.ProgressBarElement;
+import com.vaadin.testbench.elements.ProgressBarElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 

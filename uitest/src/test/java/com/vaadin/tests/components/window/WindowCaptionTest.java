@@ -21,7 +21,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.customelements.WindowElement;
+import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 

@@ -21,8 +21,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +33,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.server.FontAwesome;
-import com.vaadin.testbench.customelements.CheckBoxGroupElement;
+import com.vaadin.testbench.elements.CheckBoxGroupElement;
 import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -194,7 +196,7 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
 
     private void assertSelected(String... expectedSelection) {
         Assert.assertEquals(Arrays.asList(expectedSelection),
-                getSelect().getSelection());
+                getSelect().getValue());
     }
 
     @Override
@@ -230,7 +232,9 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
 
     @Test
     public void testDisabled() {
-        List<String> optionsCssClasses = getSelect().getOptionsCssClasses();
+        List<String> optionsCssClasses = getSelect().getOptionElements()
+                .stream().map(e -> e.getAttribute("class"))
+                .collect(Collectors.toList());
         for (int i = 0; i < optionsCssClasses.size(); i++) {
             String cssClassList = optionsCssClasses.get(i);
             if (i == 10) {
@@ -245,7 +249,15 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
 
     @Test
     public void testIconUrl() {
-        List<String> optionsIcons = getSelect().getOptionsIconUrls();
+        List<String> optionsIcons = new ArrayList<>();
+        for (WebElement option : getSelect().getOptionElements()) {
+            List<WebElement> images = option.findElements(By.tagName("img"));
+            if (images.size() > 0) {
+                optionsIcons.add(images.get(0).getAttribute("src"));
+            } else {
+                optionsIcons.add(null);
+            }
+        }
         for (int i = 0; i < optionsIcons.size(); i++) {
             String icon = optionsIcons.get(i);
             if (i == 2) {

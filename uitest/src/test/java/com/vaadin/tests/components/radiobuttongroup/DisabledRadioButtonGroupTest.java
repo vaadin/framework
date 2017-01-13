@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.RadioButtonGroupElement;
+import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

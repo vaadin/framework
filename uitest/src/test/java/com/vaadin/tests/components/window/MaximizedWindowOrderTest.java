@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.WindowElement;
+import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

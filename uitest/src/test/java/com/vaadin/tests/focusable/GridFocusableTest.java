@@ -4,7 +4,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basics.GridBasics;
 

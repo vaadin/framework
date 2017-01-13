@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.ComboBoxElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

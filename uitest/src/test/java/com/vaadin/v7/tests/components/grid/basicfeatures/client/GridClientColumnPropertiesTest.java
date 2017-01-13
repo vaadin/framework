@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.widgetset.client.v7.grid.GridBasicClientFeaturesWidget;

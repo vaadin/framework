@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.ParameterizedTB3Runner;
 
 /**

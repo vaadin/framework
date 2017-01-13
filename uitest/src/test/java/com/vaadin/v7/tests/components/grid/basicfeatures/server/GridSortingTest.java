@@ -31,7 +31,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;

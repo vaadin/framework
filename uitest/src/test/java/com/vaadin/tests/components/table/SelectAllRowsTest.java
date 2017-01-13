@@ -30,7 +30,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;

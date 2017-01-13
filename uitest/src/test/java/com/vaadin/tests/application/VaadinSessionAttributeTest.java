@@ -19,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class VaadinSessionAttributeTest extends MultiBrowserTest {
@@ -30,7 +30,7 @@ public class VaadinSessionAttributeTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).first().click();
         assertEquals("notification does not contain suitable text", "42 & 84",
-                $(FixedNotificationElement.class).first().getCaption());
+                $(NotificationElement.class).first().getCaption());
     }
 
 }
