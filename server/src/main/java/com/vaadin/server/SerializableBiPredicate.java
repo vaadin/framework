@@ -30,5 +30,5 @@ import java.util.function.BiPredicate;
  */
 public interface SerializableBiPredicate<T, U>
         extends BiPredicate<T, U>, Serializable {
-    // Only method inherited from Function
+    // Only method inherited from BiPredicate
 }
