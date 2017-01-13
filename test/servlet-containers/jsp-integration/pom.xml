@@ -16,25 +16,14 @@
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client-compiled</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-themes</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-uitest-common</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -83,20 +72,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -106,12 +82,6 @@
                 <artifactId>nexus-staging-maven-plugin</artifactId>
                 <configuration>
                     <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
