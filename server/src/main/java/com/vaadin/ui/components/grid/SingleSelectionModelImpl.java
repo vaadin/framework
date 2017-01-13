@@ -163,9 +163,10 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             return;
         }
 
+        T oldSelection = this.getSelectedItem().orElse(null);
         doSetSelectedKey(key);
-        fireEvent(
-                new SingleSelectionEvent<>(getGrid(), asSingleSelect(), true));
+        fireEvent(new SingleSelectionEvent<>(getGrid(), asSingleSelect(),
+                oldSelection, true));
     }
 
     /**
@@ -184,9 +185,11 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             return;
         }
 
+        T oldSelection = this.getSelectedItem()
+                .orElse(asSingleSelect().getEmptyValue());
         doSetSelectedKey(key);
-        fireEvent(
-                new SingleSelectionEvent<>(getGrid(), asSingleSelect(), false));
+        fireEvent(new SingleSelectionEvent<>(getGrid(), asSingleSelect(),
+                oldSelection, false));
     }
 
     /**

@@ -49,6 +49,7 @@ import com.vaadin.ui.declarative.DesignContext;
 public class AbstractSingleSelectTest {
 
     private List<Person> selectionChanges;
+    private List<Person> oldSelections;
 
     private static class PersonListing extends AbstractSingleSelect<Person>
             implements Listing<Person, DataProvider<Person, ?>> {
@@ -79,8 +80,11 @@ public class AbstractSingleSelectTest {
     public void initListing() {
         listing = new PersonListing();
         listing.setItems(PERSON_A, PERSON_B, PERSON_C);
+
         selectionChanges = new ArrayList<>();
+        oldSelections = new ArrayList<>();
         listing.addSelectionListener(e -> selectionChanges.add(e.getValue()));
+        listing.addSelectionListener(e -> oldSelections.add(e.getOldValue()));
     }
 
     public static final Person PERSON_C = new Person("c", 3);
@@ -106,6 +110,7 @@ public class AbstractSingleSelectTest {
         assertEquals(Optional.of(PERSON_B), listing.getSelectedItem());
 
         assertEquals(Arrays.asList(PERSON_B), selectionChanges);
+        verifyValueChanges();
     }
 
     @Test
@@ -123,6 +128,7 @@ public class AbstractSingleSelectTest {
         assertFalse(listing.getSelectedItem().isPresent());
 
         assertEquals(Arrays.asList(PERSON_B, null), selectionChanges);
+        verifyValueChanges();
     }
 
     @Test
@@ -140,6 +146,7 @@ public class AbstractSingleSelectTest {
         assertEquals(Optional.of(PERSON_C), listing.getSelectedItem());
 
         assertEquals(Arrays.asList(PERSON_B, PERSON_C), selectionChanges);
+        verifyValueChanges();
     }
 
     @Test
@@ -157,6 +164,7 @@ public class AbstractSingleSelectTest {
         assertEquals(Optional.of(PERSON_C), listing.getSelectedItem());
 
         assertEquals(Arrays.asList(PERSON_C), selectionChanges);
+        verifyValueChanges();
     }
 
     @Test
@@ -175,6 +183,7 @@ public class AbstractSingleSelectTest {
         assertFalse(listing.getSelectedItem().isPresent());
 
         assertEquals(Arrays.asList(PERSON_C, null), selectionChanges);
+        verifyValueChanges();
     }
 
     @Test
@@ -185,6 +194,7 @@ public class AbstractSingleSelectTest {
 
         listing.setValue(null);
         Assert.assertNull(listing.getValue());
+        verifyValueChanges();
     }
 
     @Test
@@ -211,6 +221,7 @@ public class AbstractSingleSelectTest {
         listing.setValue(null);
 
         Assert.assertFalse(listing.getSelectedItem().isPresent());
+        verifyValueChanges();
     }
 
     @Test
@@ -266,11 +277,22 @@ public class AbstractSingleSelectTest {
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get()
-                .selectionChange(new SingleSelectionEvent<>(select, true));
+                .selectionChange(
+                        new SingleSelectionEvent<>(select, value, true));
 
         Assert.assertEquals(select, event.get().getComponent());
+        Assert.assertEquals(value, event.get().getOldValue());
         Assert.assertEquals(value, event.get().getValue());
         Assert.assertTrue(event.get().isUserOriginated());
     }
 
+    private void verifyValueChanges() {
+        if (oldSelections.size() > 0) {
+            assertEquals(null, oldSelections.get(0));
+            assertEquals(selectionChanges.size(), oldSelections.size());
+            for (int i = 0; i < oldSelections.size() - 1; i++) {
+                assertEquals(selectionChanges.get(i), oldSelections.get(i + 1));
+            }
+        }
+    }
 }

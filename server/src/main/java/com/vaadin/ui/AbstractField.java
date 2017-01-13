@@ -136,11 +136,12 @@ public abstract class AbstractField<T> extends AbstractComponent
         if (!isDifferentValue(value)) {
             return false;
         }
+        T oldValue = this.getValue();
         doSetValue(value);
         if (!userOriginated) {
             markAsDirty();
         }
-        fireEvent(createValueChange(userOriginated));
+        fireEvent(createValueChange(oldValue, userOriginated));
 
         return true;
     }
@@ -178,13 +179,16 @@ public abstract class AbstractField<T> extends AbstractComponent
     /**
      * Returns a new value change event instance.
      *
+     * @param oldValue
+     *            the value of this field before this value change event
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      * @return the new event
      */
-    protected ValueChangeEvent<T> createValueChange(boolean userOriginated) {
-        return new ValueChangeEvent<>(this, userOriginated);
+    protected ValueChangeEvent<T> createValueChange(T oldValue,
+            boolean userOriginated) {
+        return new ValueChangeEvent<>(this, oldValue, userOriginated);
     }
 
     @Override

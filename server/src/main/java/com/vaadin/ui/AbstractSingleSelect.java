@@ -154,7 +154,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
         return addSelectionListener(event -> listener.valueChange(
-                new ValueChangeEvent<>(this, event.isUserOriginated())));
+                new ValueChangeEvent<>(this, event.getOldValue(),
+                        event.isUserOriginated())));
     }
 
     @Override
@@ -227,6 +228,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
             return;
         }
 
+        T oldSelection = getSelectedItem().orElse(getEmptyValue());
         doSetSelectedKey(key);
 
         // Update diffstate so that a change will be sent to the client if the
@@ -234,7 +236,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         updateDiffstate("selectedItemKey",
                 key == null ? Json.createNull() : Json.create(key));
 
-        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this, true));
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
+                oldSelection, true));
     }
 
     /**
@@ -253,8 +256,11 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
             return;
         }
 
+        T oldSelection = getSelectedItem().orElse(getEmptyValue());
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this, false));
+
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
+                oldSelection, false));
     }
 
     /**

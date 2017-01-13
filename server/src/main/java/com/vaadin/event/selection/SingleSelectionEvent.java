@@ -42,13 +42,15 @@ public class SingleSelectionEvent<T> extends ValueChangeEvent<T>
      *
      * @param source
      *            the listing that fired the event
+     * @param oldSelection
+     *            the item that was previously selected
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      */
-    public SingleSelectionEvent(AbstractSingleSelect<T> source,
+    public SingleSelectionEvent(AbstractSingleSelect<T> source, T oldSelection,
             boolean userOriginated) {
-        super(source, userOriginated);
+        super(source, oldSelection, userOriginated);
     }
 
     /**
@@ -58,13 +60,15 @@ public class SingleSelectionEvent<T> extends ValueChangeEvent<T>
      *            the component where the event originated
      * @param source
      *            the single select source
+     * @param oldSelection
+     *            the item that was previously selected
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      */
     public SingleSelectionEvent(Component component, SingleSelect<T> source,
-            boolean userOriginated) {
-        super(component, source, userOriginated);
+            T oldSelection, boolean userOriginated) {
+        super(component, source, oldSelection, userOriginated);
     }
 
     /**

@@ -129,9 +129,11 @@ public class GridAsSingleSelectInBinderTest
         select = grid.asSingleSelect();
 
         List<Sex> selected = new ArrayList<>();
+        List<Sex> oldSelected = new ArrayList<>();
         List<Boolean> userOriginated = new ArrayList<>();
         select.addValueChangeListener(event -> {
             selected.add(event.getValue());
+            oldSelected.add(event.getOldValue());
             userOriginated.add(event.isUserOriginated());
             assertSame(grid, event.getComponent());
             // cannot compare that the event source is the select since a new
@@ -150,6 +152,8 @@ public class GridAsSingleSelectInBinderTest
 
         assertEquals(Arrays.asList(Sex.UNKNOWN, Sex.MALE, null, Sex.FEMALE),
                 selected);
+        assertEquals(Arrays.asList(null, Sex.UNKNOWN, Sex.MALE, null),
+                oldSelected);
         assertEquals(Arrays.asList(false, true, true, false), userOriginated);
     }
 
