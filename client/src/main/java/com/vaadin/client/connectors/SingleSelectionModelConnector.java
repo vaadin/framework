@@ -153,8 +153,14 @@ public class SingleSelectionModelConnector extends
 
         @Override
         public boolean deselect(JsonObject row) {
-            if (getRowHandle(row).equals(selectedRow)) {
-                select(null);
+            if (isSelected(row)) {
+                // If no selection has happened client side, then selectedRow is
+                // null but must be set so that a deselection event with the
+                // correct key can be sent to the server
+                selectedRow = getRowHandle(row);
+                selectedRow.pin();
+
+                return select(null);
             }
             return false;
         }
