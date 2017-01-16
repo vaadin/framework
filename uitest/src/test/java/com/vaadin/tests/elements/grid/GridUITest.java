@@ -41,6 +41,13 @@ public class GridUITest extends MultiBrowserTest {
         Assert.assertEquals(100, checkRows());
     }
 
+    @Test
+    public void testGetHeadersByCaption() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        GridElement.GridCellElement cell = grid.getHeaderCellByCaption(0, "foo");
+        Assert.assertNotNull(cell);
+    }
     private int checkRows() {
         int rowCount = 0;
         for (final GridRowElement row : getRows()) {

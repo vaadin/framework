@@ -212,8 +212,26 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
+     * Gets header cell element with a given row by a header caption
+     *
+     * @param rowIndex
+     *            Row index
+     * @param caption
+     *            Header caption
+     * @return First header cell element with a given caption.
+     */
+    public GridCellElement getHeaderCellByCaption(int rowIndex, String caption) {
+        List<GridCellElement> headerCells= getHeaderCells( rowIndex);
+        for(GridCellElement cell: headerCells) {
+            if(caption.equals(cell.getAttribute("innerText"))) {
+                return cell;
+            }
+        }
+        return null;
+    }
+    /**
      * Gets footer cell element with given row and column index.
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @param colIndex
