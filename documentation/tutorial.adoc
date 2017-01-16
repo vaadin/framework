@@ -74,8 +74,6 @@ SE site].
 Also make sure you have the latest version of your IDE.
 Eclipse is available in various packages; be sure to download the *Eclipse IDE for Java EE Developers* from http://www.eclipse.org/downloads/[eclipse.org].
 
-Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for more information regarding installing the tools or watch the video of the next step.
-
 [[framework.tutorial.archetype]]
 == Creating a Project from an Archetype
 
