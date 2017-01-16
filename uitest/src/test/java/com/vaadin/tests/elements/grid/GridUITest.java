@@ -2,6 +2,7 @@ package com.vaadin.tests.elements.grid;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
@@ -39,6 +40,40 @@ public class GridUITest extends MultiBrowserTest {
         Assert.assertEquals(10, checkRows());
         openTestURL("rowCount=100&restartApplication");
         Assert.assertEquals(100, checkRows());
+    }
+
+    @Test
+    public void testGetHeadersByCaptionFirstRowFirstColumn() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        GridElement.GridCellElement cell = grid.getHeaderCellByCaption("foo");
+        Assert.assertNotNull(cell);
+    }
+
+    @Test
+    public void testGetHeadersByCaptionFirstRowNotFirstColumn() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        GridElement.GridCellElement cell = grid.getHeaderCellByCaption("bar");
+        Assert.assertNotNull(cell);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testGetHeadersByCaptionNoHeader() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        GridElement.GridCellElement cell = grid
+            .getHeaderCellByCaption(0, "not existing caption");
+        Assert.assertNull(cell);
+    }
+
+    @Test
+    public void testGetHeadersByCaptionNotFirstRow() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        GridElement.GridCellElement cell = grid
+            .getHeaderCellByCaption(1, "extra row");
+        Assert.assertNotNull(cell);
     }
 
     private int checkRows() {
