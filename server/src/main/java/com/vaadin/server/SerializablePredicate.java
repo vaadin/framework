@@ -28,5 +28,5 @@ import java.util.function.Predicate;
  *
  */
 public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
-    // Only method inherited from Function
+    // Only method inherited from Predicate
 }
