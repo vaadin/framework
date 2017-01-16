@@ -7,6 +7,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.components.grid.HeaderRow;
 
 public class GridUI extends AbstractTestUI {
 
@@ -19,7 +20,10 @@ public class GridUI extends AbstractTestUI {
 
         final Grid<Item> grid = new Grid<Item>();
         grid.setItems(getMockData(rowCount));
-        grid.addColumn(Item::getFoo).setCaption("foo");
+        Grid.Column<Item, String> column = grid.addColumn(Item::getFoo)
+            .setCaption("foo");
+        HeaderRow row =grid.addHeaderRowAt(1);
+        row.getCell(column).setText("extra row");
         grid.addColumn(Item::getBar).setCaption("bar");
 
         grid.setDetailsGenerator(item -> {
