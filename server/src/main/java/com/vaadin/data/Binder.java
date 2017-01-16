@@ -1909,6 +1909,23 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * Sets the read only state to the given value for all currently bound
+     * fields.
+     * <p>
+     * This is just a shorthand for calling setReadOnly for all currently bound
+     * fields. It means that fields bound after this method call won't be set
+     * read-only.
+     *
+     * @param fieldsReadOnly
+     *            true to set the fields to read only, false to set them to read
+     *            write
+     */
+    public void setReadOnly(boolean fieldsReadOnly) {
+        getBindings().stream().map(BindingImpl::getField)
+                .forEach(field -> field.setReadOnly(fieldsReadOnly));
+    }
+
+    /**
      * Returns the event router for this binder.
      *
      * @return the event router, not null
