@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.Query;
 
 /**
@@ -12,7 +12,8 @@ import com.vaadin.data.provider.Query;
  *
  * @author Vaadin Ltd
  */
-public class ItemDataProvider extends BackEndDataProvider<String, String> {
+public class ItemDataProvider
+        extends CallbackDataProvider<String, String> {
 
     public ItemDataProvider(int size) {
         super(q -> itemStream(q, size).skip(q.getOffset()).limit(q.getLimit()),

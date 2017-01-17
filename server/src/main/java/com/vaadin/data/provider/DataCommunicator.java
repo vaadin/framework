@@ -85,9 +85,9 @@ public class DataCommunicator<T, F> extends AbstractExtension {
      * <p>
      * When the {@link DataCommunicator} is pushing new data to the client-side
      * via {@link DataCommunicator#pushData(int, Stream)},
-     * {@link #addActiveData(Stream)} and {@link #cleanUp(Stream)} are
-     * called with the same parameter. In the clean up method any dropped data
-     * objects that are not in the given collection will be cleaned up and
+     * {@link #addActiveData(Stream)} and {@link #cleanUp(Stream)} are called
+     * with the same parameter. In the clean up method any dropped data objects
+     * that are not in the given collection will be cleaned up and
      * {@link DataGenerator#destroyData(Object)} will be called for them.
      */
     protected class ActiveDataHandler
@@ -190,8 +190,8 @@ public class DataCommunicator<T, F> extends AbstractExtension {
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
     /** Empty default data provider */
-    private DataProvider<T, F> dataProvider = new BackEndDataProvider<>(
-            q -> Stream.of(), q -> 0);
+    private DataProvider<T, F> dataProvider = new CallbackDataProvider<>(
+            q -> Stream.empty(), q -> 0);
     private final DataKeyMapper<T> keyMapper;
 
     private boolean reset = false;

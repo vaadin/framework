@@ -215,7 +215,7 @@ The sorting options set through the component will be available through [interfa
 
 [source, java]
 ----
-DataProvider<Person, Void> dataProvider = new BackEndDataProvider<>(
+DataProvider<Person, Void> dataProvider = new CallbackDataProvider<>(
   query -> {
     List<PersonSort> sortOrders = new ArrayList<>();
     for(SortOrder<String> queryOrder : query.getSortOrders()) {
@@ -362,7 +362,7 @@ It would then look for a string to filter by in the query and pass it to the ser
 
 [source, java]
 ----
-DataProvider<Person, String> dataProvider = new BackEndDataProvider<>(
+DataProvider<Person, String> dataProvider = new CallbackDataProvider<>(
   query -> {
     // getFilter returns Optional<String>
     String filter = query.getFilter().orElse(null);
