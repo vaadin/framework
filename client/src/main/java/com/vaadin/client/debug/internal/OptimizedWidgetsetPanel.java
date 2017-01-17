@@ -55,19 +55,19 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
                 s += Util.escapeHTML(connectorName) + "<br/>";
             }
 
-            s += "<h2>To make an optimized widgetset based on these connectors, do:</h2>";
-            s += "<h3>1. Add to your widgetset.gwt.xml file:</h2>";
+            s += "<h2>To make an optimized widgetset based on these connectors:</h2>";
+            s += "<h3>1. Add the following <b>to the end</b> of your widgetset.gwt.xml file:</h3>";
             s += "<textarea rows=\"3\" style=\"width:90%\">";
             s += "<generate-with class=\"OptimizedConnectorBundleLoaderFactory\">\n";
             s += "      <when-type-assignable class=\"com.vaadin.client.metadata.ConnectorBundleLoader\" />\n";
-            s += "</generate-with>";
+            s += "</generate-with>\n";
             s += "</textarea>";
 
-            s += "<h3>2. Add the following java file to your project:</h2>";
+            s += "<h3>2. Add the following code into OptimizedConnectorBundleLoaderFactory.java:</h3>";
             s += "<textarea rows=\"5\" style=\"width:90%\">";
             s += generateOptimizedWidgetSet(getUsedConnectorNames(conf));
             s += "</textarea>";
-            s += "<h3>3. Recompile widgetset</h2>";
+            s += "<h3>3. Recompile your widgetset. For example with Maven: 'mvn compile vaadin:compile'</h3>";
 
         }
 
