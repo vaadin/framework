@@ -11,6 +11,33 @@ public class DropTargetExtension extends AbstractExtension {
         super.extend(target);
     }
 
+    public void setDropEffect(DropEffect dropEffect) {
+        getState().dropEffect = dropEffect.name();
+    }
+
+    public enum DropEffect {
+        /**
+         * A copy of the source item is made at the new location.
+         */
+        COPY,
+
+        /**
+         * An item is moved to a new location.
+         */
+        MOVE,
+
+        /**
+         * A link is established to the source at the new location.
+         */
+        LINK,
+
+        /**
+         * The item may not be dropped.
+         */
+        NONE
+    }
+
+
     @Override
     protected DropTargetState getState() {
         return (DropTargetState) super.getState();

@@ -1,6 +1,7 @@
 package com.vaadin.client.extensions;
 
 import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.event.dom.client.DragEnterEvent;
 import com.google.gwt.event.dom.client.DragLeaveEvent;
 import com.google.gwt.event.dom.client.DragOverEvent;
@@ -30,6 +31,12 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         // dragover event
         widget.sinkBitlessEvent(BrowserEvents.DRAGOVER);
         widget.addHandler(event -> {
+
+            // Set dropEffect parameter
+            if (getState().dropEffect != null) {
+                event.getDataTransfer().setDropEffect(
+                        DataTransfer.DropEffect.valueOf(getState().dropEffect));
+            }
 
             // Prevent default to allow drop
             event.preventDefault();
