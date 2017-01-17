@@ -1,6 +1,7 @@
 package com.vaadin.client.extensions;
 
 import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.DragStartEvent;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,9 +25,18 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         widget.sinkBitlessEvent(BrowserEvents.DRAGSTART);
         widget.addHandler(event -> {
-            // TODO add actions here
+
+            // Set effectAllowed parameter
+            setEffectAllowed(event.getDataTransfer(), getState().effectAllowed);
         }, DragStartEvent.getType());
     }
+
+    private native void setEffectAllowed(DataTransfer dataTransfer,
+            String effectAllowed)/*-{
+        if (effectAllowed) {
+            dataTransfer.effectAllowed = effectAllowed;
+        }
+    }-*/;
 
     @Override
     public DragSourceState getState() {
