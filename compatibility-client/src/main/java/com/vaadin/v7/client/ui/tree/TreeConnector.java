@@ -46,7 +46,7 @@ import com.vaadin.v7.ui.Tree;
 public class TreeConnector extends AbstractLegacyComponentConnector
         implements Paintable {
 
-    protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<TreeNode, TooltipInfo>();
+    protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<>();
 
     @Override
     protected void init() {

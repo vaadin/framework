@@ -112,6 +112,7 @@ import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.v7.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.v7.shared.ui.table.CollapseMenuContent;
@@ -348,7 +349,7 @@ public class VScrollTable extends FlowPanel
 
     private SelectMode selectMode = SelectMode.NONE;
 
-    public final HashSet<String> selectedRowKeys = new HashSet<String>();
+    public final HashSet<String> selectedRowKeys = new HashSet<>();
 
     /*
      * When scrolling and selecting at the same time, the selections are not in
@@ -473,7 +474,7 @@ public class VScrollTable extends FlowPanel
 
         public Collection<SelectionRange> split(VScrollTableRow row) {
             assert row.isAttached();
-            ArrayList<SelectionRange> ranges = new ArrayList<SelectionRange>(2);
+            ArrayList<SelectionRange> ranges = new ArrayList<>(2);
 
             int endOfFirstRange = row.getIndex() - 1;
             if (endOfFirstRange >= startRow.getIndex()) {
@@ -500,7 +501,7 @@ public class VScrollTable extends FlowPanel
 
     }
 
-    private final HashSet<SelectionRange> selectedRowRanges = new HashSet<SelectionRange>();
+    private final HashSet<SelectionRange> selectedRowRanges = new HashSet<>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initializedAndAttached = false;
@@ -677,7 +678,7 @@ public class VScrollTable extends FlowPanel
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private final HashMap<Object, String> actionMap = new HashMap<Object, String>();
+    private final HashMap<Object, String> actionMap = new HashMap<>();
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
     private Element scrollPositionElement;
@@ -1098,7 +1099,7 @@ public class VScrollTable extends FlowPanel
         // "clickEvent" immediateness also.
         if (isMultiSelectModeDefault()) {
             // Convert ranges to a set of strings
-            Set<String> ranges = new HashSet<String>();
+            Set<String> ranges = new HashSet<>();
             for (SelectionRange range : selectedRowRanges) {
                 ranges.add(range.toString());
             }
@@ -1355,7 +1356,7 @@ public class VScrollTable extends FlowPanel
     }
 
     private boolean removeUnselectedRowKeys(final Set<String> selectedKeys) {
-        List<String> unselectedKeys = new ArrayList<String>(0);
+        List<String> unselectedKeys = new ArrayList<>(0);
         for (String key : selectedRowKeys) {
             if (!selectedKeys.contains(key)) {
                 unselectedKeys.add(key);
@@ -2759,7 +2760,7 @@ public class VScrollTable extends FlowPanel
                 client.updateVariable(paintableId, "reqrows", reqRows, true);
 
                 if (selectionChanged) {
-                    unSyncedselectionsBeforeRowFetch = new HashSet<Object>(
+                    unSyncedselectionsBeforeRowFetch = new HashSet<>(
                             selectedRowKeys);
                 }
                 isRequestHandlerRunning = false;
@@ -3535,9 +3536,9 @@ public class VScrollTable extends FlowPanel
 
         private static final int WRAPPER_WIDTH = 900000;
 
-        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
+        ArrayList<Widget> visibleCells = new ArrayList<>();
 
-        HashMap<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
+        HashMap<String, HeaderCell> availableCells = new HashMap<>();
 
         Element div = DOM.createDiv();
         Element hTableWrapper = DOM.createDiv();
@@ -3644,7 +3645,7 @@ public class VScrollTable extends FlowPanel
 
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> it = uidl.getChildIterator();
-            HashSet<String> updated = new HashSet<String>();
+            HashSet<String> updated = new HashSet<>();
             boolean refreshContentWidths = initializedAndAttached
                     && hadScrollBars != willHaveScrollbars();
             while (it.hasNext()) {
@@ -4035,7 +4036,7 @@ public class VScrollTable extends FlowPanel
                     cols[i++] = it.next();
                 }
             }
-            List<Action> actions = new ArrayList<Action>(cols.length);
+            List<Action> actions = new ArrayList<>(cols.length);
 
             for (int i = 0; i < cols.length; i++) {
                 final String cid = (String) cols[i];
@@ -4094,7 +4095,7 @@ public class VScrollTable extends FlowPanel
             }
             // fire column resize events for all columns but the source of the
             // resize action, since an event will fire separately for this.
-            ArrayList<HeaderCell> columns = new ArrayList<HeaderCell>(
+            ArrayList<HeaderCell> columns = new ArrayList<>(
                     availableCells.values());
             columns.remove(source);
             sendColumnWidthUpdates(columns);
@@ -4470,8 +4471,8 @@ public class VScrollTable extends FlowPanel
 
         private static final int WRAPPER_WIDTH = 900000;
 
-        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
-        HashMap<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
+        ArrayList<Widget> visibleCells = new ArrayList<>();
+        HashMap<String, FooterCell> availableCells = new HashMap<>();
 
         Element div = DOM.createDiv();
         Element hTableWrapper = DOM.createDiv();
@@ -4580,7 +4581,7 @@ public class VScrollTable extends FlowPanel
          */
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> columnIterator = uidl.getChildIterator();
-            HashSet<String> updated = new HashSet<String>();
+            HashSet<String> updated = new HashSet<>();
             while (columnIterator.hasNext()) {
                 final UIDL col = (UIDL) columnIterator.next();
                 final String cid = col.getStringAttribute("cid");
@@ -4760,7 +4761,7 @@ public class VScrollTable extends FlowPanel
 
         private double rowHeight = -1;
 
-        private final LinkedList<Widget> renderedRows = new LinkedList<Widget>();
+        private final LinkedList<Widget> renderedRows = new LinkedList<>();
 
         /**
          * Due some optimizations row height measuring is deferred and initial
@@ -4998,7 +4999,7 @@ public class VScrollTable extends FlowPanel
                 int rows) {
             aligns = tHead.getColumnAlignments();
             final Iterator<?> it = rowData.getChildIterator();
-            List<VScrollTableRow> insertedRows = new ArrayList<VScrollTableRow>();
+            List<VScrollTableRow> insertedRows = new ArrayList<>();
 
             if (firstIndex == lastRendered + 1) {
                 while (it.hasNext()) {
@@ -5475,7 +5476,7 @@ public class VScrollTable extends FlowPanel
 
             private static final int TOUCHSCROLL_TIMEOUT = 100;
             private static final int DRAGMODE_MULTIROW = 2;
-            protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
+            protected ArrayList<Widget> childWidgets = new ArrayList<>();
             private boolean selected = false;
             protected final int rowKey;
 
@@ -5494,7 +5495,7 @@ public class VScrollTable extends FlowPanel
                     this);
 
             private TooltipInfo tooltipInfo = null;
-            private Map<TableCellElement, TooltipInfo> cellToolTips = new HashMap<TableCellElement, TooltipInfo>();
+            private Map<TableCellElement, TooltipInfo> cellToolTips = new HashMap<>();
             private boolean isDragging = false;
             private String rowStyle = null;
             protected boolean applyZeroWidthFix = true;
@@ -5523,7 +5524,8 @@ public class VScrollTable extends FlowPanel
 
                 String rowDescription = uidl.getStringAttribute("rowdescr");
                 if (rowDescription != null && !rowDescription.equals("")) {
-                    tooltipInfo = new TooltipInfo(rowDescription, null, this);
+                    tooltipInfo = new TooltipInfo(rowDescription,
+                            ContentMode.HTML, null, this);
                 } else {
                     tooltipInfo = null;
                 }
@@ -8063,7 +8065,7 @@ public class VScrollTable extends FlowPanel
                 // Split the range if given row is in range
                 Collection<SelectionRange> splitranges = range.split(row);
                 if (newRanges == null) {
-                    newRanges = new ArrayList<SelectionRange>();
+                    newRanges = new ArrayList<>();
                 }
                 newRanges.addAll(splitranges);
                 iterator.remove();

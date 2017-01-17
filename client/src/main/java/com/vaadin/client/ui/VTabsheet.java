@@ -73,6 +73,7 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
@@ -339,7 +340,8 @@ public class VTabsheet extends VTabsheetBase
             if (tabState.description != null
                     || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
-                        tabState.componentError, this));
+                        ContentMode.PREFORMATTED, tabState.componentError,
+                        this));
             } else {
                 setTooltipInfo(null);
             }

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.label;
+package com.vaadin.shared.ui;
 
 /**
  * Content modes defining how the client should interpret a Label's value.
