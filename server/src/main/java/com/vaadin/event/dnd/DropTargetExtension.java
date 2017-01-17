@@ -1,0 +1,23 @@
+package com.vaadin.event.dnd;
+
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.ui.dnd.DropTargetState;
+
+public class DropTargetExtension extends AbstractExtension {
+
+    @Override
+    public void extend(AbstractClientConnector target) {
+        super.extend(target);
+    }
+
+    @Override
+    protected DropTargetState getState() {
+        return (DropTargetState) super.getState();
+    }
+
+    @Override
+    protected DropTargetState getState(boolean markAsDirty) {
+        return (DropTargetState) super.getState(markAsDirty);
+    }
+}
