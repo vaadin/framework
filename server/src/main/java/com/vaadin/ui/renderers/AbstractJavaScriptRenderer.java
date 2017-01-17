@@ -71,7 +71,7 @@ import elemental.json.JsonValue;
  * <li><code>init(cell)</code> - Prepares a cell for rendering. Corresponds to
  * {@link com.vaadin.client.renderers.ComplexRenderer#init(com.vaadin.client.widget.grid.RendererCellReference)}
  * .</li>
- * <li><code>destory(cell)</code> - Allows the renderer to release resources
+ * <li><code>destroy(cell)</code> - Allows the renderer to release resources
  * allocate for a cell that will no longer be used. Corresponds to
  * {@link com.vaadin.client.renderers.ComplexRenderer#destroy(com.vaadin.client.widget.grid.RendererCellReference)}
  * .</li>
