@@ -20,7 +20,7 @@ import java.util.Collection;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;

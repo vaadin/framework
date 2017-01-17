@@ -7,7 +7,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.communication.PushMode;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 import com.vaadin.ui.Button;

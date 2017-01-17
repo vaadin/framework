@@ -54,6 +54,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
 public class VMenuBar extends SimpleFocusablePanel
@@ -1087,7 +1088,8 @@ public class VMenuBar extends SimpleFocusablePanel
                 return null;
             }
 
-            return new TooltipInfo(description, null, this);
+            return new TooltipInfo(description, ContentMode.PREFORMATTED, null,
+                    this);
         }
 
         /**
