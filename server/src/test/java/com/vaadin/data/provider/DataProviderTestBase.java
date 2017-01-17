@@ -49,7 +49,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
         return dataProvider;
     }
 
-    protected abstract D sortingBy(List<SortOrder<String>> sortOrder,
+    protected abstract void setSortOrder(List<SortOrder<String>> sortOrder,
             Comparator<StrBean> comp);
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
@@ -110,11 +110,12 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     public void testDefaultSortWithSpecifiedPostSort() {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(Comparator.comparing(StrBean::getId).reversed());
-        List<StrBean> list = sortingBy(
-                Sort.asc("value").thenDesc("id").build(), comp)
-                        .fetch(createQuery(Sort.asc("randomNumber").build(),
-                                Comparator.comparing(StrBean::getRandomNumber)))
-                        .collect(Collectors.toList());
+        setSortOrder(Sort.asc("value").thenDesc("id").build(), comp);
+
+        List<StrBean> list = dataProvider
+                .fetch(createQuery(Sort.asc("randomNumber").build(),
+                        Comparator.comparing(StrBean::getRandomNumber)))
+                .collect(Collectors.toList());
 
         Assert.assertEquals("Sorted data and original data sizes don't match",
                 data.size(), list.size());
@@ -141,9 +142,11 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
 
     @Test
     public void testDefaultSortWithFunction() {
-        List<StrBean> list = sortingBy(Sort.asc("value").build(),
-                Comparator.comparing(StrBean::getValue)).fetch(new Query<>())
-                        .collect(Collectors.toList());
+        setSortOrder(Sort.asc("value").build(),
+                Comparator.comparing(StrBean::getValue));
+
+        List<StrBean> list = dataProvider.fetch(new Query<>())
+                .collect(Collectors.toList());
 
         Assert.assertEquals("Sorted data and original data sizes don't match",
                 data.size(), list.size());
@@ -155,112 +158,6 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
             // Test default sort
             Assert.assertTrue(prev.getValue().compareTo(cur.getValue()) <= 0);
         }
-    }
-
-    @Test
-    public void refreshAll_changeBeanInstance() {
-        StrBean bean = new StrBean("foo", -1, hashCode());
-        int size = dataProvider.size(new Query<>());
-
-        data.set(0, bean);
-        dataProvider.refreshAll();
-
-        List<StrBean> list = dataProvider.fetch(new Query<>())
-                .collect(Collectors.toList());
-        StrBean first = list.get(0);
-        Assert.assertEquals(bean.getValue(), first.getValue());
-        Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
-        Assert.assertEquals(bean.getId(), first.getId());
-
-        Assert.assertEquals(size, dataProvider.size(new Query<>()));
-    }
-
-    @Test
-    public void refreshAll_updateBean() {
-        int size = dataProvider.size(new Query<>());
-
-        StrBean bean = data.get(0);
-        bean.setValue("foo");
-        dataProvider.refreshAll();
-
-        List<StrBean> list = dataProvider.fetch(new Query<>())
-                .collect(Collectors.toList());
-        StrBean first = list.get(0);
-        Assert.assertEquals("foo", first.getValue());
-
-        Assert.assertEquals(size, dataProvider.size(new Query<>()));
-    }
-
-    @Test
-    public void refreshAll_sortingBy_changeBeanInstance() {
-        StrBean bean = new StrBean("foo", -1, hashCode());
-        int size = dataProvider.size(new Query<>());
-
-        data.set(0, bean);
-
-        D dSource = sortingBy(Sort.asc("id").build(),
-                Comparator.comparing(StrBean::getId));
-        dSource.refreshAll();
-
-        List<StrBean> list = dSource.fetch(new Query<>())
-                .collect(Collectors.toList());
-        StrBean first = list.get(0);
-        Assert.assertEquals(bean.getValue(), first.getValue());
-        Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
-        Assert.assertEquals(bean.getId(), first.getId());
-
-        Assert.assertEquals(size, dataProvider.size(new Query<>()));
-    }
-
-    @Test
-    public void refreshAll_addBeanInstance() {
-        StrBean bean = new StrBean("foo", -1, hashCode());
-
-        int size = dataProvider.size(new Query<>());
-
-        data.add(0, bean);
-        dataProvider.refreshAll();
-
-        List<StrBean> list = dataProvider.fetch(new Query<>())
-                .collect(Collectors.toList());
-        StrBean first = list.get(0);
-        Assert.assertEquals(bean.getValue(), first.getValue());
-        Assert.assertEquals(bean.getRandomNumber(), first.getRandomNumber());
-        Assert.assertEquals(bean.getId(), first.getId());
-
-        Assert.assertEquals(size + 1, dataProvider.size(new Query<>()));
-    }
-
-    @Test
-    public void refreshAll_removeBeanInstance() {
-        int size = dataProvider.size(new Query<>());
-
-        data.remove(0);
-        dataProvider.refreshAll();
-
-        Assert.assertEquals(size - 1, dataProvider.size(new Query<>()));
-    }
-
-    @Test
-    public void refreshAll_fromParentToSortedBy() {
-        D sortedDataProvider = sortingBy(Sort.asc("randomNumber").build(),
-                Comparator.comparing(StrBean::getRandomNumber));
-
-        CountingListener listener = new CountingListener();
-        sortedDataProvider.addDataProviderListener(listener);
-
-        Assert.assertEquals("Listener was not called prematurely", 0,
-                listener.getCounter());
-
-        dataProvider.refreshAll();
-
-        Assert.assertEquals("Listener was not called correctly", 1,
-                listener.getCounter());
-
-        sortedDataProvider.refreshAll();
-
-        Assert.assertEquals("Listener was not called correctly", 2,
-                listener.getCounter());
     }
 
     @Test
