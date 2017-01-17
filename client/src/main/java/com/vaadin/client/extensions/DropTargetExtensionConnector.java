@@ -1,5 +1,9 @@
 package com.vaadin.client.extensions;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.event.dom.client.DragEnterEvent;
@@ -11,6 +15,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
 
 @Connect(DropTargetExtension.class)
@@ -52,8 +57,21 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         widget.sinkBitlessEvent(BrowserEvents.DROP);
         widget.addHandler(event -> {
             event.preventDefault();
+
+            // Initiate firing server side drop event
+            JsArrayString types = getTypes(event.getDataTransfer());
+            Map<String, String> data = new LinkedHashMap<>();
+            for (int i = 0; i < types.length(); i++) {
+                data.put(types.get(i), event.getData(types.get(i)));
+            }
+            getRpcProxy(DropTargetRpc.class).drop(data, getState().dropEffect);
+
         }, DropEvent.getType());
     }
+
+    private native JsArrayString getTypes(DataTransfer dataTransfer)/*-{
+        return dataTransfer.types;
+    }-*/;
 
     @Override
     public DropTargetState getState() {

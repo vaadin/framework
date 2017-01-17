@@ -1,10 +1,29 @@
 package com.vaadin.event.dnd;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component;
+import com.vaadin.util.ReflectTools;
 
 public class DropTargetExtension extends AbstractExtension {
+
+    public DropTargetExtension() {
+        registerRpc((DropTargetRpc) (data, dropEffect) -> {
+            DropEvent event = new DropEvent((AbstractComponent) getParent());
+            event.setData(data);
+            event.setDropEffect(dropEffect);
+
+            fireEvent(event);
+        });
+    }
 
     @Override
     public void extend(AbstractClientConnector target) {
@@ -13,6 +32,20 @@ public class DropTargetExtension extends AbstractExtension {
 
     public void setDropEffect(DropEffect dropEffect) {
         getState().dropEffect = dropEffect.name();
+    }
+
+    public Registration addDropListener(DropListener listener) {
+        return addListener(DropEvent.class, listener, DropListener.DROP_METHOD);
+    }
+
+    @Override
+    protected DropTargetState getState() {
+        return (DropTargetState) super.getState();
+    }
+
+    @Override
+    protected DropTargetState getState(boolean markAsDirty) {
+        return (DropTargetState) super.getState(markAsDirty);
     }
 
     public enum DropEffect {
@@ -37,14 +70,37 @@ public class DropTargetExtension extends AbstractExtension {
         NONE
     }
 
+    public static class DropEvent extends Component.Event {
 
-    @Override
-    protected DropTargetState getState() {
-        return (DropTargetState) super.getState();
+        private Map<String, String> data;
+        private DropEffect dropEffect;
+
+        DropEvent(Component source) {
+            super(source);
+        }
+
+        void setData(Map<String, String> data) {
+            this.data = data;
+        }
+
+        public String getData(String format) {
+            return data != null ? data.get(format) : null;
+        }
+
+        void setDropEffect(String dropEffect) {
+            this.dropEffect = DropEffect.valueOf(dropEffect);
+        }
+
+        public DropEffect getDropEffect() {
+            return dropEffect;
+        }
     }
 
-    @Override
-    protected DropTargetState getState(boolean markAsDirty) {
-        return (DropTargetState) super.getState(markAsDirty);
+    @FunctionalInterface
+    public interface DropListener extends ConnectorEventListener {
+        static final Method DROP_METHOD = ReflectTools
+                .findMethod(DropListener.class, "drop", DropEvent.class);
+
+        void drop(DropEvent event);
     }
 }
