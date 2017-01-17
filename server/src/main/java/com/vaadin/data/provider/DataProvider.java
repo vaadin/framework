@@ -22,8 +22,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.HasDataProvider;
-import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
@@ -67,11 +65,11 @@ public interface DataProvider<T, F> extends Serializable {
     /**
      * Gets the amount of data in this DataProvider.
      *
-     * @param t
+     * @param query
      *            query with sorting and filtering
      * @return the size of the data provider
      */
-    int size(Query<T, F> t);
+    int size(Query<T, F> query);
 
     /**
      * Fetches data from this DataProvider using given {@code query}.
