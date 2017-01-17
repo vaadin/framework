@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;

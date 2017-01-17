@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;

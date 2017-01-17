@@ -15,11 +15,14 @@
  */
 package com.vaadin.client;
 
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
 
 public class TooltipInfo {
 
     private String title;
+
+    private ContentMode contentMode;
 
     private String errorMessageHtml;
 
@@ -32,16 +35,23 @@ public class TooltipInfo {
     }
 
     public TooltipInfo(String tooltip) {
+        this(tooltip, ContentMode.PREFORMATTED);
+    }
+
+    public TooltipInfo(String tooltip, ContentMode mode) {
         setTitle(tooltip);
+        setContentMode(mode);
     }
 
-    public TooltipInfo(String tooltip, String errorMessage) {
-        this(tooltip, errorMessage, null);
+    public TooltipInfo(String tooltip, ContentMode mode, String errorMessage) {
+        this(tooltip, mode, errorMessage, null);
     }
 
-    public TooltipInfo(String tooltip, String errorMessage, Object identifier) {
+    public TooltipInfo(String tooltip, ContentMode mode, String errorMessage,
+            Object identifier) {
         setIdentifier(identifier);
         setTitle(tooltip);
+        setContentMode(mode);
         setErrorMessage(errorMessage);
     }
 
@@ -67,6 +77,14 @@ public class TooltipInfo {
 
     public void setErrorMessage(String errorMessage) {
         errorMessageHtml = errorMessage;
+    }
+
+    public ContentMode getContentMode() {
+        return contentMode;
+    }
+
+    public void setContentMode(ContentMode contentMode) {
+        this.contentMode = contentMode;
     }
 
     /**

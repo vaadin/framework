@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.v7.grid.GridClientColumnRendererConnector.Renderers;
 import com.vaadin.tests.widgetset.client.v7.grid.GridClientColumnRendererRpc;

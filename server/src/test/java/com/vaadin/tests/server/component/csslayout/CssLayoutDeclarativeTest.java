@@ -17,7 +17,7 @@ package com.vaadin.tests.server.component.csslayout;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;

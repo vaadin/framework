@@ -43,7 +43,6 @@ import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.event.ContextClickEvent.ContextClickNotifier;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
@@ -62,6 +61,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -491,15 +491,32 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Sets the component's description. See {@link #getDescription()} for more
      * information on what the description is.
      *
-     * The description is displayed as HTML in tooltips or directly in certain
+     * @see #setDescription(String, ContentMode)
+     * @param description
+     *            the new description string for the component.
+     */
+    public void setDescription(String description) {
+        setDescription(description, ContentMode.PREFORMATTED);
+    }
+
+    /**
+     * Sets the component's description using given content {@code mode}. See
+     * {@link #getDescription()} for more information on what the description
+     * is.
+     * <p>
+     * If the content {@code mode} is {@literal ContentMode.HTML} the
+     * description is displayed as HTML in tooltips or directly in certain
      * components so care should be taken to avoid creating the possibility for
      * HTML injection and possibly XSS vulnerabilities.
      *
      * @param description
      *            the new description string for the component.
+     * @param mode
+     *            the content mode for the description
      */
-    public void setDescription(String description) {
+    public void setDescription(String description, ContentMode mode) {
         getState().description = description;
+        getState().descriptionContentMode = mode;
     }
 
     /*
@@ -949,7 +966,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         readSize(attr);
         // handle component error
         if (attr.hasKey("error")) {
-            UserError error = new UserError(attr.get("error"), ContentMode.HTML,
+            UserError error = new UserError(attr.get("error"),
+                    com.vaadin.server.AbstractErrorMessage.ContentMode.HTML,
                     ErrorLevel.ERROR);
             setComponentError(error);
         }

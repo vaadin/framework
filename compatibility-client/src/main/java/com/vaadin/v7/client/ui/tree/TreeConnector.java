@@ -33,6 +33,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.client.ui.VTree;
@@ -46,7 +47,7 @@ import com.vaadin.v7.ui.Tree;
 public class TreeConnector extends AbstractLegacyComponentConnector
         implements Paintable {
 
-    protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<TreeNode, TooltipInfo>();
+    protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<>();
 
     @Override
     protected void init() {
@@ -275,8 +276,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
 
         String description = uidl.getStringAttribute("descr");
         if (description != null) {
-            tooltipMap.put(treeNode,
-                    new TooltipInfo(description, null, treeNode));
+            tooltipMap.put(treeNode, new TooltipInfo(description,
+                    ContentMode.TEXT, null, treeNode));
         }
 
         if (uidl.getBooleanAttribute("expanded") && !treeNode.getState()) {

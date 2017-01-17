@@ -22,7 +22,7 @@ import java.util.Set;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 
 import elemental.json.JsonBoolean;
 import elemental.json.JsonValue;

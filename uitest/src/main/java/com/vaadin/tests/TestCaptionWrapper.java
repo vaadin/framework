@@ -20,7 +20,7 @@ import com.vaadin.server.ClassResource;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.UserError;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractDateField;

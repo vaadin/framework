@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
