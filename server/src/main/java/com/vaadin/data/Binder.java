@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
@@ -922,11 +923,10 @@ public class Binder<BEAN> implements Serializable {
             } else {
                 fieldValidationStatus = doValidation();
             }
-            BinderValidationStatus<BEAN> status = new BinderValidationStatus<>(
-                    getBinder(), Arrays.asList(fieldValidationStatus),
-                    binderValidationResults);
-            getBinder().getValidationStatusHandler().statusChange(status);
+            BinderValidationStatus<BEAN> status = getBinder().updateStatus(
+                    fieldValidationStatus, binderValidationResults);
             getBinder().fireStatusChangeEvent(status.hasErrors());
+            getBinder().fireFieldValueChangeEvent(this);
         }
 
         /**
@@ -1065,6 +1065,8 @@ public class Binder<BEAN> implements Serializable {
     private Label statusLabel;
 
     private BinderValidationStatusHandler<BEAN> statusHandler;
+
+    private BinderValidationStatus<BEAN> currentValidationStatus;
 
     private boolean hasChanges = false;
 
@@ -1338,7 +1340,7 @@ public class Binder<BEAN> implements Serializable {
             bindings.forEach(b -> b.initFieldValue(bean));
             // if there has been field value change listeners that trigger
             // validation, need to make sure the validation errors are cleared
-            getValidationStatusHandler().statusChange(
+            fireValidationStatusChange(
                     BinderValidationStatus.createUnresolvedStatus(this));
             fireStatusChangeEvent(false);
         }
@@ -1375,7 +1377,7 @@ public class Binder<BEAN> implements Serializable {
         setHasChanges(false);
         bindings.forEach(binding -> binding.initFieldValue(bean));
 
-        getValidationStatusHandler().statusChange(
+        fireValidationStatusChange(
                 BinderValidationStatus.createUnresolvedStatus(this));
         fireStatusChangeEvent(false);
     }
@@ -1575,7 +1577,7 @@ public class Binder<BEAN> implements Serializable {
             validationStatus = new BinderValidationStatus<>(this,
                     bindingStatuses, validateBean(bean));
         }
-        getValidationStatusHandler().statusChange(validationStatus);
+        fireValidationStatusChange(validationStatus);
         fireStatusChangeEvent(validationStatus.hasErrors());
         return validationStatus;
     }
@@ -1733,6 +1735,24 @@ public class Binder<BEAN> implements Serializable {
     public Registration addStatusChangeListener(StatusChangeListener listener) {
         return getEventRouter().addListener(StatusChangeEvent.class, listener,
                 StatusChangeListener.class.getDeclaredMethods()[0]);
+    }
+
+    /**
+     * Adds field value change listener to the binder.
+     * <p>
+     * Added listener is notified every time whenever any bound field value is
+     * changed. The same functionality can be achieved by adding a
+     * {@link ValueChangeListener} to all fields in the {@link Binder}.
+     * 
+     * @param listener
+     *            a field value change listener
+     * @return a registration for the listener
+     */
+    public Registration addFieldValueChangeListener(
+            FieldValueChangeListener<BEAN> listener) {
+        return getEventRouter().addListener(FieldValueChangeEvent.class,
+                listener,
+                FieldValueChangeListener.class.getDeclaredMethods()[0]);
     }
 
     /**
@@ -1941,17 +1961,39 @@ public class Binder<BEAN> implements Serializable {
         setHasChanges(false);
         if (bean != null) {
             bean = null;
+            if (fireStatusEvent) {
+                fireValidationStatusChange(
+                        BinderValidationStatus.createUnresolvedStatus(this));
+                fireStatusChangeEvent(false);
+            }
         }
-        getValidationStatusHandler().statusChange(
-                BinderValidationStatus.createUnresolvedStatus(this));
-        if (fireStatusEvent) {
-            fireStatusChangeEvent(false);
+    }
+
+    private BinderValidationStatus<BEAN> updateStatus(
+            BindingValidationStatus<?> fieldValidationStatus,
+            List<ValidationResult> binderValidationResults) {
+        BinderValidationStatus<BEAN> status = new BinderValidationStatus<>(this,
+                Arrays.asList(fieldValidationStatus), binderValidationResults);
+        fireValidationStatusChange(status);
+        return status;
+    }
+
+    private void fireValidationStatusChange(
+            BinderValidationStatus<BEAN> status) {
+        if (!status.equals(currentValidationStatus)) {
+            currentValidationStatus = status;
+            getValidationStatusHandler().statusChange(status);
         }
     }
 
     private void fireStatusChangeEvent(boolean hasValidationErrors) {
         getEventRouter()
                 .fireEvent(new StatusChangeEvent(this, hasValidationErrors));
+    }
+
+    private void fireFieldValueChangeEvent(Binding<BEAN, ?> binding) {
+        getEventRouter().fireEvent(
+                new FieldValueChangeEvent<>(this, binding.getField()));
     }
 
     private <FIELDVALUE> Converter<FIELDVALUE, FIELDVALUE> createNullRepresentationAdapter(

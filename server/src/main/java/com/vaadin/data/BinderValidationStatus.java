@@ -33,8 +33,8 @@ import com.vaadin.data.Binder.BindingBuilder;
  * Note: if there are any field level validation errors, the bean level
  * validation is not run.
  * <p>
- * Use {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler)} to handle
- * form level validation status changes.
+ * Use {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler)}
+ * to handle form level validation status changes.
  *
  * @author Vaadin Ltd
  *
@@ -187,5 +187,30 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     public List<ValidationResult> getBeanValidationErrors() {
         return binderStatuses.stream().filter(ValidationResult::isError)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass().equals(getClass())) {
+            BinderValidationStatus<?> that = (BinderValidationStatus<?>) obj;
+            return Objects.equals(getBinder(), that.getBinder())
+                    && Objects.equals(getFieldValidationStatuses(),
+                            that.getFieldValidationStatuses())
+                    && Objects.equals(getBeanValidationResults(),
+                            that.getBeanValidationResults());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBinder(), getFieldValidationStatuses(),
+                getBeanValidationResults());
     }
 }

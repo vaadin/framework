@@ -393,6 +393,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         AtomicInteger invokes = new AtomicInteger();
 
+        firstNameField.setValue("a");
+        lastNameField.setValue("a");
+
         binder.forField(firstNameField)
                 .withValidator(new NotEmptyValidator<>(""))
                 .withValidationStatusHandler(
@@ -403,28 +406,28 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind(Person::getLastName, Person::setLastName);
 
         binder.setBean(item);
-        // setting the bean causes 2:
-        Assert.assertEquals(2, invokes.get());
+        // setting the bean causes 1:
+        Assert.assertEquals(1, invokes.get());
 
         lastNameField.setValue("");
-        Assert.assertEquals(2, invokes.get());
+        Assert.assertEquals(1, invokes.get());
 
         firstNameField.setValue("");
-        Assert.assertEquals(3, invokes.get());
+        Assert.assertEquals(2, invokes.get());
 
         binder.removeBean();
         Person person = new Person();
         person.setFirstName("a");
         person.setLastName("a");
         binder.readBean(person);
-        // reading from a bean causes 2:
-        Assert.assertEquals(5, invokes.get());
+        // reading from a bean causes 1:
+        Assert.assertEquals(3, invokes.get());
 
         lastNameField.setValue("");
-        Assert.assertEquals(5, invokes.get());
+        Assert.assertEquals(3, invokes.get());
 
         firstNameField.setValue("");
-        Assert.assertEquals(6, invokes.get());
+        Assert.assertEquals(4, invokes.get());
     }
 
     @Test(expected = IllegalStateException.class)

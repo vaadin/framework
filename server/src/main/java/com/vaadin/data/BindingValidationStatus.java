@@ -191,4 +191,26 @@ public class BindingValidationStatus<TARGET> implements Serializable {
     public HasValue<?> getField() {
         return getBinding().getField();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass().equals(getClass())) {
+            BindingValidationStatus<?> that = (BindingValidationStatus<?>) obj;
+            return Objects.equals(getStatus(), that.getStatus())
+                    && Objects.equals(getResult(), that.getResult())
+                    && Objects.equals(getBinding(), that.getBinding());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStatus(), getResult(), getBinding());
+    }
 }

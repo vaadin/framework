@@ -55,6 +55,26 @@ public interface ValidationResult extends Serializable {
             return error != null;
         }
 
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj == this) {
+                return true;
+            }
+            if (obj.getClass().equals(getClass())) {
+                return Objects.equals(error,
+                        ((SimpleValidationResult) obj).error);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(error);
+        }
+
     }
 
     /**

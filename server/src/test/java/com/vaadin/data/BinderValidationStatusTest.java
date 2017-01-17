@@ -25,6 +25,8 @@ import org.junit.Test;
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.BindingValidationStatus.Status;
+import com.vaadin.data.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Label;
 
@@ -48,6 +50,8 @@ public class BinderValidationStatusTest
 
     @Test
     public void bindingWithStatusHandler_handlerGetsEvents() {
+        nameField.setValue("a");
+
         AtomicReference<BindingValidationStatus<?>> statusCapture = new AtomicReference<>();
         BindingBuilder<Person, String> binding = binder.forField(nameField)
                 .withValidator(notEmpty).withValidationStatusHandler(evt -> {
@@ -58,10 +62,6 @@ public class BinderValidationStatusTest
 
         nameField.setValue("");
 
-        // First validation fails => should be event with ERROR status and
-        // message
-        binder.validate();
-
         Assert.assertNotNull(statusCapture.get());
         BindingValidationStatus<?> evt = statusCapture.get();
         Assert.assertEquals(Status.ERROR, evt.getStatus());
@@ -70,11 +70,6 @@ public class BinderValidationStatusTest
 
         statusCapture.set(null);
         nameField.setValue("foo");
-
-        statusCapture.set(null);
-        // Second validation succeeds => should be event with OK status and
-        // no message
-        binder.validate();
 
         evt = statusCapture.get();
         Assert.assertNotNull(evt);
@@ -502,5 +497,107 @@ public class BinderValidationStatusTest
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
         Assert.assertFalse(results.get(0).isError());
+    }
+
+    @Test
+    public void setValidationStatusHandler_fireOnlyIfStateIsChanged() {
+        BindingBuilder<Person, String> binding = binder.forField(nameField)
+                .withValidator(new StringLengthValidator("", 0, 3));
+        binding.bind(Person::getFirstName, Person::setFirstName);
+
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.withValidator((person, contect) -> {
+            if (person.getAge() > 10) {
+                return ValidationResult.ok();
+            }
+            return ValidationResult.error("");
+        });
+
+        AtomicReference<BinderValidationStatus<Person>> status = new AtomicReference<>();
+        binder.setValidationStatusHandler(event -> {
+            Assert.assertNull(status.get());
+            status.set(event);
+        });
+
+        Person person = new Person();
+        person.setAge(11);
+        person.setFirstName("a");
+        binder.setBean(person);
+
+        // The very first status after "setBean" is Unresolved
+        Assert.assertNotNull(status.get());
+
+        status.set(null);
+        nameField.setValue("b");
+        // Now validation is done, status has changed according to validation
+        // result which is positive
+        Assert.assertNotNull(status.get());
+
+        status.set(null);
+        nameField.setValue("c");
+        // Second change, validation passes, status hasn't changed
+        Assert.assertNull(status.get());
+
+        status.set(null);
+        nameField.setValue("abcd");
+        // Validation fails on this change because of field validator
+        Assert.assertNotNull(status.get());
+
+        status.set(null);
+        nameField.setValue("abcde");
+        // Validation fails on this change but status is the same
+        Assert.assertNull(status.get());
+
+        status.set(null);
+        ageField.setValue(String.valueOf(9));
+        // Validation fails on this change because of bean validation (+previous
+        // field validation).
+        // Validation status has changed because validation results are
+        // different
+        Assert.assertNotNull(status.get());
+
+        status.set(null);
+        ageField.setValue(String.valueOf(8));
+        // Validation fails on this change but status is the same
+        Assert.assertNull(status.get());
+
+        status.set(null);
+        // Make field validation pass
+        nameField.setValue("c");
+        // Validation fails on this change because of bean validation only.
+        // Validation status has changed because validation results are
+        // different
+        Assert.assertNotNull(status.get());
+
+        status.set(null);
+        // Make field validation pass
+        nameField.setValue("c");
+        ageField.setValue(String.valueOf(11));
+        // Validation now doesn't fail, so validation status has changed
+        Assert.assertNotNull(status.get());
+    }
+
+    @Test
+    public void readBean_noValidationStatusChange_validationStatusIsNotFired() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        AtomicReference<BinderValidationStatus<Person>> status = new AtomicReference<>();
+        binder.setValidationStatusHandler(event -> {
+            Assert.assertNull(status.get());
+            status.set(event);
+        });
+
+        binder.readBean(new Person());
+        // Initial readBean() call changes the status
+        Assert.assertNotNull(status.get());
+
+        status.set(null);
+        binder.readBean(new Person());
+        // subsequent call doesn't change the status
+        Assert.assertNull(status.get());
     }
 }
