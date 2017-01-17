@@ -95,7 +95,13 @@ public abstract class DataProviderWrapper<T, F, M>
     }
 
     @Override
-    public Registration addDataProviderListener(DataProviderListener listener) {
+    public void refreshItem(T item) {
+        dataProvider.refreshItem(item);
+    }
+
+    @Override
+    public Registration addDataProviderListener(
+            DataProviderListener<T> listener) {
         return dataProvider.addDataProviderListener(listener);
     }
 

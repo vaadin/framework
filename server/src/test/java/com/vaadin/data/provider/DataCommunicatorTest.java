@@ -29,11 +29,15 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
 
+import elemental.json.JsonObject;
+
 /**
  * @author Vaadin Ltd
  *
  */
 public class DataCommunicatorTest {
+
+    private static final Object TEST_OBJECT = new Object();
 
     private static class TestUI extends UI {
 
@@ -59,7 +63,7 @@ public class DataCommunicatorTest {
         private Registration registration;
 
         public TestDataProvider() {
-            super(Collections.singleton(new Object()));
+            super(Collections.singleton(TEST_OBJECT));
         }
 
         @Override
@@ -85,6 +89,21 @@ public class DataCommunicatorTest {
             extends DataCommunicator<Object, SerializablePredicate<Object>> {
         protected void extend(UI ui) {
             super.extend(ui);
+        }
+    }
+
+    private static class TestDataGenerator implements DataGenerator<Object> {
+        Object refreshed = null;
+        Object generated = null;
+
+        @Override
+        public void generateData(Object item, JsonObject jsonObject) {
+            generated = item;
+        }
+
+        @Override
+        public void refreshData(Object item) {
+            refreshed = item;
         }
     }
 
@@ -127,6 +146,44 @@ public class DataCommunicatorTest {
         communicator.detach();
 
         Assert.assertFalse(dataProvider.isListenerAdded());
+    }
+
+    @Test
+    public void refresh_dataProviderListenerCallsRefreshInDataGeneartors() {
+        session.lock();
+
+        UI ui = new TestUI(session);
+
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        communicator.extend(ui);
+
+        TestDataProvider dataProvider = new TestDataProvider();
+        communicator.setDataProvider(dataProvider);
+
+        TestDataGenerator generator = new TestDataGenerator();
+        communicator.addDataGenerator(generator);
+
+        // Generate initial data.
+        communicator.beforeClientResponse(true);
+        Assert.assertEquals("DataGenerator generate was not called",
+                TEST_OBJECT, generator.generated);
+        generator.generated = null;
+
+        // Make sure data does not get re-generated
+        communicator.beforeClientResponse(false);
+        Assert.assertEquals("DataGenerator generate was called again", null,
+                generator.generated);
+
+        // Refresh a data object to trigger an update.
+        dataProvider.refreshItem(TEST_OBJECT);
+
+        Assert.assertEquals("DataGenerator refresh was not called", TEST_OBJECT,
+                generator.refreshed);
+
+        // Test refreshed data generation
+        communicator.beforeClientResponse(false);
+        Assert.assertEquals("DataGenerator generate was not called",
+                TEST_OBJECT, generator.generated);
     }
 
 }

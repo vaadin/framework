@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.DataChangeEvent.DataRefreshEvent;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.Range;
@@ -85,9 +86,9 @@ public class DataCommunicator<T, F> extends AbstractExtension {
      * <p>
      * When the {@link DataCommunicator} is pushing new data to the client-side
      * via {@link DataCommunicator#pushData(int, Stream)},
-     * {@link #addActiveData(Stream)} and {@link #cleanUp(Stream)} are
-     * called with the same parameter. In the clean up method any dropped data
-     * objects that are not in the given collection will be cleaned up and
+     * {@link #addActiveData(Stream)} and {@link #cleanUp(Stream)} are called
+     * with the same parameter. In the clean up method any dropped data objects
+     * that are not in the given collection will be cleaned up and
      * {@link DataGenerator#destroyData(Object)} will be called for them.
      */
     protected class ActiveDataHandler
@@ -542,8 +543,15 @@ public class DataCommunicator<T, F> extends AbstractExtension {
 
     private void attachDataProviderListener() {
         dataProviderUpdateRegistration = getDataProvider()
-                .addDataProviderListener(
-                        event -> getUI().access(() -> reset()));
+                .addDataProviderListener(event -> {
+                    if (event instanceof DataRefreshEvent) {
+                        T item = ((DataRefreshEvent<T>) event).getItem();
+                        generators.stream().forEach(g -> g.refreshData(item));
+                        refresh(item);
+                    } else {
+                        getUI().access(() -> reset());
+                    }
+                });
     }
 
     private void detachDataProviderListener() {

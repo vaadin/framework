@@ -84,6 +84,16 @@ public interface DataProvider<T, F> extends Serializable {
     Stream<T> fetch(Query<T, F> query);
 
     /**
+     * Refreshes the given item. This method should be used to inform all
+     * {@link DataProviderListener DataProviderListeners} that an item has been
+     * updated or replaced with a new instance.
+     *
+     * @param item
+     *            the item to refresh
+     */
+    void refreshItem(T item);
+
+    /**
      * Refreshes all data based on currently available data in the underlying
      * provider.
      */
@@ -102,7 +112,7 @@ public interface DataProvider<T, F> extends Serializable {
      *            the data change listener, not null
      * @return a registration for the listener
      */
-    Registration addDataProviderListener(DataProviderListener listener);
+    Registration addDataProviderListener(DataProviderListener<T> listener);
 
     /**
      * Returns a new wrapped data provider with given default filter. Default
