@@ -21,6 +21,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         widget.getElement().setDraggable(Element.DRAGGABLE_TRUE);
         widget.getElement().addClassName(CLASS_DRAGGABLE);
+
+        widget.sinkBitlessEvent(BrowserEvents.DRAGSTART);
+        widget.addHandler(event -> {
+            // TODO add actions here
+        }, DragStartEvent.getType());
     }
 
     @Override
