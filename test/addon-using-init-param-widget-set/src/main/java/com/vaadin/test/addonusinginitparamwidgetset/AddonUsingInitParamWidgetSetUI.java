@@ -3,8 +3,8 @@ package com.vaadin.test.addonusinginitparamwidgetset;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 
-import com.vaadin.addon.contextmenu.ContextMenu;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.contextmenu.ContextMenu;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.test.widgetset.AbstractTestWidgetSetUI;

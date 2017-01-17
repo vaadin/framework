@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.ui;
 
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.VaadinRequest;
@@ -7,6 +8,7 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 
 public class UriFragment extends AbstractReindeerTestUI {
 
@@ -29,6 +31,12 @@ public class UriFragment extends AbstractReindeerTestUI {
         addComponent(createButton("test", "Navigate to #test", "test"));
         addComponent(createButton("empty", "Navigate to #", ""));
         addComponent(createButton("null", "setUriFragment(null)", null));
+
+        Link link = new Link("Navigate to #linktest",
+                new ExternalResource("#linktest"));
+        link.setId("link");
+        addComponent(link);
+
     }
 
     private Button createButton(String id, String caption,

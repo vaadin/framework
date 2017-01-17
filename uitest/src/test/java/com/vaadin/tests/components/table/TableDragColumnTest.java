@@ -21,7 +21,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

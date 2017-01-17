@@ -17,13 +17,12 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -54,7 +53,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
-        implements FocusNotifier, BlurNotifier, Listing<T, DataProvider<T, ?>> {
+        implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
 
     private SerializablePredicate<T> itemEnabledProvider = item -> true;
 
@@ -63,7 +62,6 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      *
      * @param caption
      *            caption text
-     * @see Listing#setDataProvider(DataProvider)
      */
     public RadioButtonGroup(String caption) {
         this();
@@ -77,7 +75,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      *            the caption text
      * @param dataProvider
      *            the data provider, not null
-     * @see Listing#setDataProvider(DataProvider)
+     * @see HasDataProvider#setDataProvider(DataProvider)
      */
     public RadioButtonGroup(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
@@ -92,7 +90,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      *            the caption text
      * @param items
      *            the data items to use, not null
-     * @see Listing#setDataProvider(DataProvider)
+     * @see #setItems(Collection)
      */
     public RadioButtonGroup(String caption, Collection<T> items) {
         this(caption, DataProvider.create(items));
@@ -100,8 +98,6 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
 
     /**
      * Constructs a new RadioButtonGroup.
-     *
-     * @see Listing#setDataProvider(DataProvider)
      */
     public RadioButtonGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
@@ -236,9 +232,9 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         setItemEnabledProvider(new DeclarativeItemEnabledProvider<>());
-        return super.readItems(design, context);
+        super.readItems(design, context);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

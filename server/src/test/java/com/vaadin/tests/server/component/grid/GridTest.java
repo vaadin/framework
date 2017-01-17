@@ -35,6 +35,7 @@ public class GridTest {
 
         grid.addColumn(ValueProvider.identity()).setId("foo");
         grid.addColumn(String::length, new NumberRenderer());
+        grid.addColumn(string -> new Object());
         grid.addColumn(ValueProvider.identity()).setId("randomColumnId");
     }
 
@@ -147,6 +148,7 @@ public class GridTest {
 
         grid.getSelectionModel().deselect("foo");
 
+        event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
         assertEquals("bar", event.getFirstSelected().get());

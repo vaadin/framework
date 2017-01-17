@@ -38,9 +38,11 @@ public class ColorPickerGrid extends AbstractField<Color> {
 
         @Override
         public void select(int x, int y) {
+            Color oldValue = colorGrid[x][y];
             ColorPickerGrid.this.x = x;
             ColorPickerGrid.this.y = y;
-            fireEvent(new ValueChangeEvent<>(ColorPickerGrid.this, true));
+            fireEvent(new ValueChangeEvent<>(ColorPickerGrid.this, oldValue,
+                    true));
         }
 
         @Override

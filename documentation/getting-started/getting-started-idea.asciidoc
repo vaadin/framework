@@ -7,68 +7,12 @@ layout: page
 [[getting-started.idea]]
 = Creating a Project with IntelliJ IDEA
 
-The Ultimate Edition of IntelliJ IDEA includes support for creating Vaadin applications and running or debugging them in an integrated application server.
-
-With the Community Edition, you can create a Vaadin application most easily with a Maven archetype and deploy it to a server with a Maven run/debug configuration.
-
-[[getting-started.idea.project]]
-== Creating a Vaadin Web Application Project
-
-In the welcome page, do the following:
-
-. Download and extract the Vaadin installation package to a local folder, as
-instructed in <<dummy/../../../framework/getting-started/getting-started-package#getting-started.package,"Vaadin Installation Package">>.
-
-. Select [menuchoice]#New Project#
-
-. In the [guilabel]#New Project# window, select [menuchoice]#Java#
-
-. Enter a [guilabel]#Project name# and [guilabel]#Project location#, and select
-the [guilabel]#Java SDK# to be used for the project.
-Vaadin requires at least Java 8.
-If you have not configured a Java SDK previously, you can configure it here.
-+
-image::img/idea-newproject-1.png[scaledwidth=100%]
-+
-Click [guibutton]#Next#.
-
-. Select "Web Application > Vaadin" to add Vaadin Framework to the project.
-
-. Select Vaadin [guilabel]#Version# and [guilabel]#Distribution# installation
-path. You probably also want an application stub, so select [guilabel]#Create
-sample application# and give a name for the generated UI class.
-+
-image::img/idea-newproject-2.png[scaledwidth=100%]
-+
-Do __not__ click [guibutton]#Finish# yet.
-
-. Select [guilabel]#Application Server# in the same window.
-Set it as an integrated server that you have configured in IntelliJ IDEA, as described previously in <<DUMMY/../../../framework/installing/installing-idea#installing.idea.ultimate.server, "Configuring an Application Server">>.
-
-. Click [guibutton]#Finish#.
-
-The project is created with the UI class stub and a [filename]#web.xml#
-deployment descriptor.
-
-image::img/idea-newproject-4.png[scaledwidth=100%]
-
-The wizard does not currently create a servlet class automatically, and uses
-Servlet 2.4 compatible deployment with a [filename]#web.xml# deployment
-descriptor.
-
-[[getting-started.idea.project.running]]
-=== Deploying the Project
-
-To deploy the application to the integrated web server, right-click the
-[filename]#index.jsp# file in the project and select [menuchoice]#Run
-'index.jsp'#. This starts the integrated server, if it was not already running,
-and launches the default browser with the application page.
+With both Community Edition and Ultimate Edition, you can create a Vaadin application most easily with a Maven archetype and deploy it to a server with a Maven run/debug configuration.
 
 [[getting-started.idea.maven]]
 == Creating a Maven Project
 
-You can choose to create a Maven project in IntelliJ IDEA. This is the
-recommended way when using the Community Edition. You will not have the
+You can choose to create a Maven project in IntelliJ IDEA. You will not have the
 application server integration, but can deploy the application to an application
 server using a run/debug configuration.
 
@@ -77,22 +21,9 @@ server using a run/debug configuration.
 . In the [guilabel]#New Project# window, select [menuchoice]#Maven#
 //&lt;?dbfo-need height="8cm" ?&gt;
 
-. Enter a project name, location, and the Java SDK to be used for the project.
-Vaadin requires at least Java 8.
-+
-image::img/idea-maven-newproject-1.png[scaledwidth=100%]
-+
-Click [guibutton]#Next#.
-//&lt;?dbfo-need height="6cm" ?&gt;
+. Select the Java SDK to be used for the project. Vaadin requires at least Java 8.
 
-. Give a Maven [guilabel]#GroupID#, [guilabel]#ArtifactID#, and a
-[guilabel]#Version# for the project, or use the defaults.
-
-+
-image::img/idea-maven-newproject-2.png[scaledwidth=100%]
-
-. Check [guilabel]#Create from archetype#
-//&lt;?dbfo-need height="6cm" ?&gt;
+. Check [guilabel]#Create from archetype# checkbox
 
 . If the Vaadin archetype is not in the list, click [guibutton]#Add archetype#,
 enter [guilabel]#GroupId# [literal]#++com.vaadin++#, [guilabel]#ArtifactId#
@@ -103,21 +34,26 @@ enter [guilabel]#GroupId# [literal]#++com.vaadin++#, [guilabel]#ArtifactId#
 Click [guibutton]#OK# in the dialog.
 //&lt;?dbfo-need height="8cm" ?&gt;
 
-. Select the [literal]#++com.vaadin:vaadin-archetype-application++#.
-
+. Select the archetype
++
+image::img/idea-maven-newproject-1.png[scaledwidth=100%]
 +
 Click [guibutton]#Next#.
-//&lt;?dbfo-need height="8cm" ?&gt;
+//&lt;?dbfo-need height="6cm" ?&gt;
+
+. Give a Maven [guilabel]#GroupID#, [guilabel]#ArtifactID#, and a
+[guilabel]#Version# for the project, or use the defaults.
 
 . Review the general Maven settings and settings for the new project.
 You may need to override the settings, especially if you are creating a Maven project for the first time.
 
-+
-Click [guibutton]#Finish#.
+. Finish the wizard.
+//&lt;?dbfo-need height="8cm" ?&gt;
 
 Creating the Maven project takes some time as Maven fetches the dependencies.
 Once done, the project is created and the Maven POM is opened in the editor.
 
+Fort more detailed instructions, refer to https://www.jetbrains.com/help/idea/
 [[getting-started.idea.maven.compiling]]
 === Compiling the Project
 

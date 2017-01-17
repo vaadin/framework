@@ -21,7 +21,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
-import com.vaadin.testbench.customelements.ComboBoxElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

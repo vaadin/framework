@@ -183,6 +183,7 @@
                         <Bundle-RequiredExecutionEnvironment>${osgi.execution.environment}</Bundle-RequiredExecutionEnvironment>
                         <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
                         <Export-Package>VAADIN;version="${osgi.bundle.version}",com.vaadin.*;version="${osgi.bundle.version}"</Export-Package>
+                        <!-- Note that Liferay 6 does not use OSGi, and the dependency is optional for non-Liferay deployments -->
                         <Import-Package>javax.servlet;version="${osgi.javax.servlet.version}",
                             javax.servlet.http;version="${osgi.javax.servlet.version}",
                             javax.validation;version="${javax.validation.version}";resolution:=optional,
@@ -194,7 +195,7 @@
                             org.jsoup.select;version="${jsoup.version}",
                             javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
                             javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
-                            com.liferay.portal.kernel.util;resolution:=optional</Import-Package>
+                            com.liferay.portal.kernel.util;version="[7,8)";resolution:=optional</Import-Package>
                         <Require-Bundle>
                             com.vaadin.shared;bundle-version="${osgi.bundle.version}",
                             com.vaadin.push;bundle-version="${osgi.bundle.version}";resolution:=optional,

@@ -21,7 +21,7 @@ import static org.hamcrest.number.IsCloseTo.closeTo;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

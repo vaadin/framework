@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

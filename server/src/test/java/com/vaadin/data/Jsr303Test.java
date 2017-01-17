@@ -84,8 +84,7 @@ public class Jsr303Test {
         public void execute() {
             Assert.assertFalse(BeanUtil.checkBeanValidationAvailable());
 
-            BeanBinder<BeanToValidate> binder = new BeanBinder<>(
-                    BeanToValidate.class);
+            Binder<BeanToValidate> binder = new Binder<>(BeanToValidate.class);
             BeanToValidate item = new BeanToValidate();
             String name = "Johannes";
             item.setFirstname(name);

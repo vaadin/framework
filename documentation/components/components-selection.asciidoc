@@ -7,18 +7,19 @@ layout: page
 [[components.selection]]
 = Selection Components
 
-For a better overview on how selection works, see link:../datamodel/datamodel-selection.asciidoc[Selecting items]
+For a better overview on how selection works, see link:<<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
 
 Vaadin offers many alternative ways for selecting one or more items. The core
 library includes the following selection components, all based on either
 [classname]#AbstractSingleSelect# or [classname]#AbstractMultiSelect# class:
 
 [classname]#ComboBox# (<<components-combobox#components.combobox,"ComboBox">>)::
-A drop-down list with a text box, where the user can type text to find matching items.
+A drop-down list with a text box, where the user can type text to find matching items and
+select one item.
 The component also provides a placeholder and the user can enter new items.
 
 [classname]#ListSelect# (<<components-listselect#components.listselect,"ListSelect">>)::
-A vertical list box for selecting items in either single or multiple selection mode.
+A vertical list box for selecting items in multiple selection mode.
 
 [classname]#NativeSelect# (<<components-nativeselect#components.nativeselect, "NativeSelect">>)::
 Provides selection using the native selection component of the browser, typically a drop-down list for single selection and a multi-line list in multiselect mode.
@@ -108,7 +109,7 @@ elements.
 [[components.selection.getset]]
 == Getting and Setting Selection
 
-For a better overview on how selection works, see link:../datamodel/datamodel-selection.asciidoc[Selecting items]
+For a better overview on how selection works, see link:<<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
 
 You can get selected the item with [methodname]#getValue()# of the
 [interfacename]#HasValue# interface that returns either a single selected item
@@ -153,7 +154,7 @@ image::img/select-selected1.png[width=30%, scaledwidth=40%]
 [[components.selection.multiple]]
 == Multiple Selection
 
-For a better overview on how selection works, see link:../datamodel/datamodel-selection.asciidoc[Selecting items]
+For a better overview on how selection works, see link:<<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
 
 Some selection components, such as [classname]#CheckBoxGroup#,
 [classname]#ListSelect# and [classname]#TwinColSelect# are multiselect components,

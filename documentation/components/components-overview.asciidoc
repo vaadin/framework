@@ -7,49 +7,71 @@ layout: page
 [[components.overview]]
 = Overview
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 Vaadin provides a comprehensive set of user interface components and allows you
-to define custom components. <<figure.uicomponents>> illustrates the inheritance
-hierarchy of the UI component classes and interfaces. Interfaces are displayed
-in gray, abstract classes in orange, and regular classes in blue. An annotated
+to define custom components.
+
+The component hierarchy of Vaadin is presented in the next four diagrams:
+
+* <<figure.uicomponents>>
+illustrates the inheritance
+hierarchy of the UI component classes and interfaces not bound directly to
+business objects.
+
+* <<figure.uifields>>
+presents fields bound to single values
+
+* <<figure.uiselects>>
+presents components that show a list of data and allow selection
+
+* <<figure.uicontainers>>
+layouts and other component containers
+
+Interfaces are displayed
+with a dotted outline, abstract classes in gray, and regular classes in blue.
+////
+TODO outdated information. Uncomment when fixed.
+ An annotated
 version of the diagram is featured in the __Vaadin Cheat Sheet__.
+////
+
 
 [[figure.uicomponents]]
-.User Interface Component Class Hierarchy
-image::img/component-diagram-hi.png[width=100%, scaledwidth=100%]
+.Basic Components
+image::img/component-class-hierarchy.png[width=100%, scaledwidth=100%]
+
+[[figure.uifields]]
+.Field Components
+image::img/field-class-hierarchy.png[width=100%, scaledwidth=100%]
+
+[[figure.uiselects]]
+.Selection Components
+image::img/selects-class-hierarchy.png[width=100%, scaledwidth=100%]
+
+[[figure.uicontainers]]
+.Layouts and Component Containers
+image::img/component-container-class-hierarchy.png[width=100%, scaledwidth=100%]
+
 
 ((("[classname]#Component#")))
-At the top of the interface hierarchy, we have the [classname]#Component#
-interface.
+The [classname]#Component# is interface implemented by all components.
 ((("[classname]#AbstractComponent#")))
-At the top of the class hierarchy, we have the [classname]#AbstractComponent#
-class.
+In practice, all components extend the [classname]#AbstractComponent#
+abstract class.
+
 ((("[classname]#AbstractField#")))
 ((("[classname]#AbstractComponentContainer#")))
-It is inherited by two other abstract classes: [classname]#AbstractField#,
-inherited further by field components, and
-[classname]#AbstractComponentContainer#, inherited by various container and
-layout components. Components that are not bound to a content data model, such
-as labels and links, inherit [classname]#AbstractComponent# directly.
+((("[classname]#AbstractListing#")))
+There are three more specific types of components.
 
-((("layout")))
-((("[classname]#Layout#")))
-The layout of the various components in a window is controlled, logically, by
-layout components, just like in conventional Java UI toolkits for desktop
-applications. In addition, with the [classname]#CustomLayout# component, you can
-write a custom layout as an HTML template that includes the locations of any
-contained components. Looking at the inheritance diagram, we can see that layout
-components inherit the [classname]#AbstractComponentContainer# and the
-[classname]#Layout# interface. Layout components are described in detail in
+Field Components:: allow user to edit a value in the UI. All extend [classname]#AbstractField#. Field components are described in detail in
+<<dummy/../../../framework/component/components-fields.asciidoc#components.fields,"Field Components">>.
+
+Selection Component:: show a list of data that the user can select from. All extend [classname]#AbstractListing#. Selection components are described in detail in
+<<dummy/../../../framework/component/components-selection.asciidoc#components.selection,"Selection Components">>.
+
+Layouts and Component Containers:: Components that can contain other components. All layouts and containers implement the [interfacename]#HasComponents# interface. Layout components are described in detail in
 <<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing
 Layout">>.
-
-((("[classname]#Window#")))
-Looking at it from the perspective of an object hierarchy, we would have a
-[classname]#Window# object, which contains a hierachy of layout components,
-which again contain other layout components, field components, and other visible
-components.
 
 ((("Sampler")))
 ((("JavaDoc")))
@@ -64,7 +86,8 @@ in
 <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
 Vaadin Add-ons">>.
 
-
+////
+TODO outdated information. Uncomment when fixed.
 [NOTE]
 .Vaadin Cheat Sheet and Refcard
 ====
@@ -76,3 +99,4 @@ The diagram is also included in the six-page DZone Refcard, which you can find
 at https://vaadin.com/refcard.
 
 ====
+////

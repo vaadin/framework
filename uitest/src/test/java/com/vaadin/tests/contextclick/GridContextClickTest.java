@@ -21,7 +21,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.customelements.GridElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 
 public class GridContextClickTest extends AbstractContextClickTest {

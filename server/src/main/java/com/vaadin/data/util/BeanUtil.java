@@ -20,6 +20,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -229,14 +230,21 @@ public final class BeanUtil implements Serializable {
 
         private static boolean isAvailable() {
             try {
-                Class.forName("javax.validation.Validation");
+                Class<?> clazz = Class.forName("javax.validation.Validation");
+                Method method = clazz.getMethod("buildDefaultValidatorFactory");
+                method.invoke(null);
                 return true;
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException | NoSuchMethodException
+                    | InvocationTargetException e) {
                 Logger.getLogger(BeanValidator.class.getName())
                         .fine("A JSR-303 bean validation implementation not found on the classpath. "
                                 + BeanValidator.class.getSimpleName()
                                 + " cannot be used.");
                 return false;
+            } catch (IllegalAccessException | IllegalArgumentException e) {
+                throw new RuntimeException(
+                        "Unable to invoke javax.validation.Validation.buildDefaultValidatorFactory()",
+                        e);
             }
         }
 

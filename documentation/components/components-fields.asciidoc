@@ -7,8 +7,6 @@ layout: page
 [[components.fields]]
 = Field Components
 
-*_This section has not yet been updated for Vaadin Framework 8_*
-
 ((("[classname]#Field#", id="term.components.fields", range="startofrange")))
 
 _Fields_ are components that have a value that the user can change through the
@@ -16,8 +14,8 @@ user interface. <<figure.components.fields>> illustrates the inheritance relatio
 and the important interfaces and base classes.
 
 [[figure.components.fields]]
-.Field components
-image::img/field-diagram-hi.png[width=80%, scaledwidth=100%]
+.Field Components
+image::img/field-class-hierarchy.png[width=100%, scaledwidth=100%]
 
 Field components are built upon the framework defined in the [classname]#HasValue#
 interface.

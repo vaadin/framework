@@ -17,9 +17,11 @@ package com.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,15 +39,13 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.Listing;
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 
 @RunWith(Parameterized.class)
-public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Listing<String, DataProvider<String, ?>>> {
+public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
 
     @Parameters(name = "{0}")
     public static Iterable<?> multiSelects() {
@@ -60,14 +60,24 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
 
     private Registration registration;
 
+    private List<Set<String>> values;
+
+    private List<Set<String>> oldValues;
+
     @Before
     public void setUp() {
         selectToTest.deselectAll();
         // Intentional deviation from upcoming selection order
-        selectToTest.setDataProvider(
-                DataProvider.create("3", "2", "1", "5", "8", "7", "4", "6"));
+        selectToTest.setItems("3", "2", "1", "5", "8", "7", "4", "6");
         rpc = ComponentTest.getRpcProxy(selectToTest,
                 MultiSelectServerRpc.class);
+
+        values = new ArrayList<>();
+        oldValues = new ArrayList<>();
+        selectToTest
+                .addValueChangeListener(event -> values.add(event.getValue()));
+        selectToTest.addValueChangeListener(
+                event -> oldValues.add(event.getOldValue()));
     }
 
     @After
@@ -102,6 +112,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
                 new LinkedHashSet<>(Arrays.asList("5", "2")),
                 new LinkedHashSet<>(Arrays.asList("3", "8")));
         assertSelectionOrder("7", "5", "2");
+        verifyValueChangeEvents();
     }
 
     @Test
@@ -140,6 +151,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
         // deselect completely not selected
         selectToTest.select("1", "4");
         Assert.assertEquals(8, listenerCount.get());
+        verifyValueChangeEvents();
     }
 
     @Test
@@ -216,6 +228,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
         rpcUpdateSelection(new String[] { "6", "8" }, new String[] { "6" });
         Assert.assertEquals(11, listenerCount.get());
         assertSelectionOrder("6", "4", "8");
+        verifyValueChangeEvents();
     }
 
     @Test
@@ -235,6 +248,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
         set.add("3");
         selectToTest.select("3");
         Assert.assertEquals(set, selectToTest.getValue());
+        verifyValueChangeEvents();
     }
 
     @Test
@@ -247,9 +261,16 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
             public Set<String> getSelectedItems() {
                 return set;
             }
+
+            @Override
+            public void setItems(Collection<String> items) {
+                throw new UnsupportedOperationException(
+                        "Not implemented for this test");
+            }
         };
 
         Assert.assertSame(set, select.getValue());
+        verifyValueChangeEvents();
     }
 
     @Test
@@ -265,6 +286,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
         selectToTest.setValue(set);
 
         Assert.assertEquals(set, selectToTest.getSelectedItems());
+        verifyValueChangeEvents();
     }
 
     @Test
@@ -308,6 +330,12 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
             public Set<String> getValue() {
                 return set;
             }
+
+            @Override
+            public void setItems(Collection<String> items) {
+                throw new UnsupportedOperationException(
+                        "Not implemented for this test");
+            }
         };
 
         AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
@@ -350,5 +378,15 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String> & Lis
     private void assertSelectionOrder(String... selectionOrder) {
         Assert.assertEquals(Arrays.asList(selectionOrder),
                 new ArrayList<>(selectToTest.getSelectedItems()));
+    }
+
+    private void verifyValueChangeEvents() {
+        if (oldValues.size() > 0) {
+            Assert.assertTrue(oldValues.get(0).isEmpty());
+            Assert.assertEquals(values.size(), oldValues.size());
+            for (int i = 0; i < oldValues.size() - 1; i++) {
+                Assert.assertEquals(values.get(i), oldValues.get(i + 1));
+            }
+        }
     }
 }

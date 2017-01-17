@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.CheckBoxGroupElement;
+import com.vaadin.testbench.elements.CheckBoxGroupElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

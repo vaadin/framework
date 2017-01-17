@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Single;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.event.selection.SingleSelectionEvent;
@@ -154,7 +153,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
         return addSelectionListener(event -> listener.valueChange(
-                new ValueChangeEvent<>(this, event.isUserOriginated())));
+                new ValueChangeEvent<>(this, event.getOldValue(),
+                        event.isUserOriginated())));
     }
 
     @Override
@@ -211,9 +211,9 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
 
     /**
      * Sets the selection based on a client request. Does nothing if the select
-     * component is {@linkplain #isReadOnly()} or if the selection
-     * would not change. Otherwise updates the selection and fires a selection
-     * change event with {@code isUserOriginated == true}.
+     * component is {@linkplain #isReadOnly()} or if the selection would not
+     * change. Otherwise updates the selection and fires a selection change
+     * event with {@code isUserOriginated == true}.
      *
      * @param key
      *            the key of the item to select or {@code null} to clear
@@ -227,6 +227,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
             return;
         }
 
+        T oldSelection = getSelectedItem().orElse(getEmptyValue());
         doSetSelectedKey(key);
 
         // Update diffstate so that a change will be sent to the client if the
@@ -234,7 +235,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         updateDiffstate("selectedItemKey",
                 key == null ? Json.createNull() : Json.create(key));
 
-        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this, true));
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
+                oldSelection, true));
     }
 
     /**
@@ -253,8 +255,11 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
             return;
         }
 
+        T oldSelection = getSelectedItem().orElse(getEmptyValue());
         doSetSelectedKey(key);
-        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this, false));
+
+        fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
+                oldSelection, false));
     }
 
     /**
@@ -321,13 +326,15 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     }
 
     @Override
-    protected List<T> readItems(Element design, DesignContext context) {
+    protected void readItems(Element design, DesignContext context) {
         Set<T> selected = new HashSet<>();
         List<T> items = design.children().stream()
                 .map(child -> readItem(child, selected, context))
                 .collect(Collectors.toList());
+        if (!items.isEmpty()) {
+            setItems(items);
+        }
         selected.forEach(this::setValue);
-        return items;
     }
 
     /**

@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.data.provider.Query;
@@ -45,7 +45,7 @@ public class DummyData extends AbstractTestUIWithLog {
      * shown as bold text.
      */
     public static class DummyComponent extends AbstractSingleSelect<String>
-            implements Listing<String, DataProvider<String, ?>> {
+            implements HasDataProvider<String> {
 
         private String selected;
 

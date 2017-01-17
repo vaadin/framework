@@ -44,6 +44,11 @@ public abstract class AbstractSelectionModel<T> extends AbstractGridExtension<T>
     }
 
     @Override
+    public void destroyAllData() {
+        deselectAll();
+    }
+
+    @Override
     protected AbstractSelectionModelState getState() {
         return (AbstractSelectionModelState) super.getState();
     }

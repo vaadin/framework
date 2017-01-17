@@ -24,7 +24,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.TooltipTest;
 

@@ -26,11 +26,7 @@ import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.HasResizeHandlers;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -46,7 +42,6 @@ import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.ui.ui.UIConstants;
 
 /**
  *
@@ -99,50 +94,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean resizeLazy = false;
 
-    private HandlerRegistration historyHandlerRegistration;
-
     private TouchScrollHandler touchScrollHandler;
-
-    /**
-     * The current URI fragment, used to avoid sending updates if nothing has
-     * changed.
-     * <p>
-     * For internal use only. May be removed or replaced in the future.
-     */
-    public String currentFragment;
-
-    /**
-     * Listener for URI fragment changes. Notifies the server of the new value
-     * whenever the value changes.
-     */
-    private final ValueChangeHandler<String> historyChangeHandler = new ValueChangeHandler<String>() {
-
-        @Override
-        public void onValueChange(ValueChangeEvent<String> event) {
-            String newFragment = event.getValue();
-
-            // Send the location to the server if the fragment has changed
-            // and flush active connectors in UI.
-            if (!newFragment.equals(currentFragment) && connection != null) {
-                /*
-                 * Ensure the fragment is properly encoded in all browsers
-                 * (#10769)
-                 *
-                 * createUrlBuilder does not properly pass an empty fragment to
-                 * UrlBuilder on Webkit browsers so do it manually (#11686)
-                 */
-                String location = Window.Location.createUrlBuilder()
-                        .setHash(URL
-                                .decodeQueryString(Window.Location.getHash()))
-                        .buildString();
-
-                currentFragment = newFragment;
-                connection.flushActiveConnector();
-                connection.updateVariable(id, UIConstants.LOCATION_VARIABLE,
-                        location, true);
-            }
-        }
-    };
 
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
             new ScheduledCommand() {
@@ -184,21 +136,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
             };
             resizeTimer.schedule(MONITOR_PARENT_TIMER_INTERVAL);
         }
-    }
-
-    @Override
-    protected void onAttach() {
-        super.onAttach();
-        historyHandlerRegistration = History
-                .addValueChangeHandler(historyChangeHandler);
-        currentFragment = History.getToken();
-    }
-
-    @Override
-    protected void onDetach() {
-        super.onDetach();
-        historyHandlerRegistration.removeHandler();
-        historyHandlerRegistration = null;
     }
 
     /**

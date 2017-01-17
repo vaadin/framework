@@ -17,7 +17,7 @@ package com.vaadin.ui;
 
 import java.util.Collection;
 
-import com.vaadin.data.Listing;
+import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.shared.ui.listselect.ListSelectState;
 
@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.listselect.ListSelectState;
  *            item type
  */
 public class ListSelect<T> extends AbstractMultiSelect<T>
-        implements Listing<T, DataProvider<T, ?>> {
+        implements HasDataProvider<T> {
 
     /** Default number of rows visible for select. */
     // protected to allow javadoc linking

@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.CalendarElement;
+import com.vaadin.testbench.elements.CalendarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CalendarSmokeTest extends MultiBrowserTest {

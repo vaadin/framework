@@ -133,16 +133,35 @@ public abstract class AbstractField<T> extends AbstractComponent
         if (userOriginated && isReadOnly()) {
             return false;
         }
-        if (Objects.equals(value, getValue())) {
+        if (!isDifferentValue(value)) {
             return false;
         }
+        T oldValue = this.getValue();
         doSetValue(value);
         if (!userOriginated) {
             markAsDirty();
         }
-        fireEvent(createValueChange(userOriginated));
+        fireEvent(createValueChange(oldValue, userOriginated));
 
         return true;
+    }
+
+    /**
+     * Called when a new value is set to determine whether the provided new
+     * value is considered to be a change compared to the current value. This is
+     * used to determine whether {@link #doSetValue(Object)} should be called
+     * and a value change event fired.
+     *
+     * @param newValue
+     *            the new value candidate to check, may be <code>null</code>
+     *
+     * @return <code>true</code> if the provided value is considered to be
+     *         different and a value change event should be fired;
+     *         <code>false</code> if the values are considered to be the same
+     *         and no value change should be fired
+     */
+    protected boolean isDifferentValue(T newValue) {
+        return !Objects.equals(newValue, getValue());
     }
 
     /**
@@ -160,13 +179,16 @@ public abstract class AbstractField<T> extends AbstractComponent
     /**
      * Returns a new value change event instance.
      *
+     * @param oldValue
+     *            the value of this field before this value change event
      * @param userOriginated
      *            {@code true} if this event originates from the client,
      *            {@code false} otherwise.
      * @return the new event
      */
-    protected ValueChangeEvent<T> createValueChange(boolean userOriginated) {
-        return new ValueChangeEvent<>(this, userOriginated);
+    protected ValueChangeEvent<T> createValueChange(T oldValue,
+            boolean userOriginated) {
+        return new ValueChangeEvent<>(this, oldValue, userOriginated);
     }
 
     @Override

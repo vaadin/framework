@@ -37,7 +37,7 @@ public class MenuBarElement extends AbstractComponentElement {
      * If the item is another submenu, that submenu is opened.<br>
      * If the item is not a submenu, it will be clicked and trigger any actions
      * associated to it.
-     * 
+     *
      * @param item
      *            name of the item to click
      * @throws NullPointerException

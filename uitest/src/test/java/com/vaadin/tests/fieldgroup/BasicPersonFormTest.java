@@ -18,8 +18,8 @@ package com.vaadin.tests.fieldgroup;
 import org.junit.Assert;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.customelements.FixedNotificationElement;
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TableRowElement;
@@ -82,7 +82,7 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
     }
 
     protected void closeNotification() {
-        $(FixedNotificationElement.class).first().close();
+        $(NotificationElement.class).first().close();
     }
 
     protected CheckBoxElement getPostCommitFailsCheckBox() {

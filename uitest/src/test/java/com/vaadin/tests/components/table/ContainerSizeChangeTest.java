@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

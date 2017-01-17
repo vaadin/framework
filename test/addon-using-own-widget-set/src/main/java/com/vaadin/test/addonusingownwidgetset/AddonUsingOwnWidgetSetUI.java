@@ -2,9 +2,9 @@ package com.vaadin.test.addonusingownwidgetset;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.vaadin.addon.contextmenu.ContextMenu;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.contextmenu.ContextMenu;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.test.widgetset.AbstractTestWidgetSetUI;

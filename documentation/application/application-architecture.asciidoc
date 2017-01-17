@@ -42,7 +42,7 @@ The component hierarchy is illustrated in <<figure.application.architecture.sche
 
 [[figure.application.architecture.schematic]]
 .Schematic diagram of the UI
-image::img/ui-schematic-hi.png[width=80%, scaledwidth=100%]
+image::img/ui-schematic.png[width=80%, scaledwidth=100%]
 
 The actual UI is shown in <<figure.application.architecture.example>>.
 

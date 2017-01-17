@@ -14,13 +14,24 @@
         <jetty.version>9.3.7.v20160115</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
         <vaadin.version>8.0-SNAPSHOT</vaadin.version>
+        <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <contextmenu.version>2.0-SNAPSHOT</contextmenu.version>
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
     </properties>
-    </properties>
 
     <repositories>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
@@ -36,6 +47,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-test-widget-set-testutil</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -47,7 +63,7 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
         </dependency>
-        
+
         <!-- Project modules -->
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -83,9 +99,69 @@
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
         <module>cdi</module>
+        <module>bean-api-validation</module>
+        <module>bean-impl-validation</module>
     </modules>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse 
+                    m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.github.klieber
+                                        </groupId>
+                                        <artifactId>
+                                            phantomjs-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [0.7,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>install</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>vaadin-maven-plugin</artifactId>
+                    <version>${vaadin.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>resources</goal>
+                                <goal>update-widgetset</goal>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
@@ -152,50 +228,6 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e 
-                    settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            com.github.klieber
-                                        </groupId>
-                                        <artifactId>
-                                            phantomjs-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [0.7,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>install</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement> 
     </build>
 </project>

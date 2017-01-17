@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[datamodel.selection]]
-= Selecting items
+= Selecting Items
 
 Listing components displaying data also support allowing the user to select items. Depending on component, it the user can select either one or several items at a time.
 

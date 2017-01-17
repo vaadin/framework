@@ -96,17 +96,22 @@ public class GridSingleSelectionModelTest {
         customGrid.setItems("Foo", "Bar", "Baz");
 
         List<String> selectionChanges = new ArrayList<>();
+        List<String> oldSelectionValues = new ArrayList<>();
         ((SingleSelectionModelImpl<String>) customGrid.getSelectionModel())
-                .addSingleSelectionListener(
-                        e -> selectionChanges.add(e.getValue()));
+                .addSingleSelectionListener(e -> {
+                    selectionChanges.add(e.getValue());
+                    oldSelectionValues.add(e.getOldValue());
+                });
 
         customGrid.getSelectionModel().select("Foo");
         assertEquals("Foo",
                 customGrid.getSelectionModel().getFirstSelectedItem().get());
         assertEquals(Arrays.asList("Foo"), selectionChanges);
+        assertEquals(Arrays.asList((String) null), oldSelectionValues);
 
         customGrid.setSelectionMode(SelectionMode.MULTI);
         assertEquals(Arrays.asList("Foo", null), selectionChanges);
+        assertEquals(Arrays.asList(null, "Foo"), oldSelectionValues);
     }
 
     @Test
@@ -314,10 +319,11 @@ public class GridSingleSelectionModelTest {
         Assert.assertSame(registration, actualRegistration);
 
         selectionListener.get().selectionChange(new SingleSelectionEvent<>(grid,
-                select.asSingleSelect(), true));
+                select.asSingleSelect(), null, true));
 
         Assert.assertEquals(grid, event.get().getComponent());
         Assert.assertEquals(value, event.get().getValue());
+        Assert.assertEquals(null, event.get().getOldValue());
         Assert.assertTrue(event.get().isUserOriginated());
     }
 

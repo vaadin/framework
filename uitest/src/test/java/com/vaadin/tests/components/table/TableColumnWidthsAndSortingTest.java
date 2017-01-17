@@ -18,7 +18,7 @@ package com.vaadin.tests.components.table;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.TableElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TableColumnWidthsAndSortingTest extends MultiBrowserTest {

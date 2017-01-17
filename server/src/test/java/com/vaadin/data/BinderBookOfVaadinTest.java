@@ -17,6 +17,7 @@ package com.vaadin.data;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -139,6 +140,10 @@ public class BinderBookOfVaadinTest {
         field = new TextField();
         phoneField = new TextField();
         emailField = new TextField();
+        // make sure the test is not locale dependent
+        field.setLocale(Locale.US);
+        phoneField.setLocale(Locale.US);
+        emailField.setLocale(Locale.US);
     }
 
     @Test
@@ -245,6 +250,7 @@ public class BinderBookOfVaadinTest {
     @Test
     public void converterBookOfVaadinExample1() {
         TextField yearOfBirthField = new TextField();
+        yearOfBirthField.setLocale(Locale.US);
         // Slider for integers between 1 and 10
         Slider salaryLevelField = new Slider("Salary level", 1, 10);
 
@@ -461,7 +467,7 @@ public class BinderBookOfVaadinTest {
 
     @Test
     public void binder_saveIfValid() {
-        BeanBinder<BookPerson> binder = new BeanBinder<>(BookPerson.class);
+        Binder<BookPerson> binder = new Binder<>(BookPerson.class);
 
         // Phone or email has to be specified for the bean
         Validator<BookPerson> phoneOrEmail = Validator.from(
@@ -585,7 +591,7 @@ public class BinderBookOfVaadinTest {
     public void withBinderStatusLabelExample() {
         Label formStatusLabel = new Label();
 
-        BeanBinder<BookPerson> binder = new BeanBinder<>(BookPerson.class);
+        Binder<BookPerson> binder = new Binder<>(BookPerson.class);
 
         binder.setStatusLabel(formStatusLabel);
 

@@ -17,17 +17,17 @@ package com.vaadin.ui;
 
 import java.time.LocalDate;
 
-import com.vaadin.shared.ui.datefield.DateFieldState;
+import com.vaadin.shared.ui.datefield.LocalDateFieldState;
 
 /**
  * A date entry component, which displays the actual date selector as a popup.
  *
- * @see AbstractDateField
+ * @see AbstractLocalDateField
  * @see InlineDateField
  * @author Vaadin Ltd.
  * @since 8.0
  */
-public class DateField extends AbstractDateField {
+public class DateField extends AbstractLocalDateField {
 
     /**
      * Constructs an empty <code>DateField</code> with no caption.
@@ -81,13 +81,13 @@ public class DateField extends AbstractDateField {
     }
 
     @Override
-    protected DateFieldState getState() {
-        return (DateFieldState) super.getState();
+    protected LocalDateFieldState getState() {
+        return (LocalDateFieldState) super.getState();
     }
 
     @Override
-    protected DateFieldState getState(boolean markAsDirty) {
-        return (DateFieldState) super.getState(markAsDirty);
+    protected LocalDateFieldState getState(boolean markAsDirty) {
+        return (LocalDateFieldState) super.getState(markAsDirty);
     }
 
     /**

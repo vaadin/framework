@@ -107,7 +107,6 @@ expanding rows/columns.
 [source, java]
 ----
 GridLayout grid = new GridLayout(3,2);
-ifdef::web[]
 // Layout containing relatively sized components must have
 // a defined size, here is fixed size.
 grid.setWidth("600px");
@@ -127,7 +126,6 @@ for (int i=0; i<labels.length; i++) {
     label.setWidth(null); // Set width as undefined
     grid.addComponent(label);
 }
-endif::web[]
 // Set different expansion ratios for the two columns
 grid.setColumnExpandRatio(1, 1);
 grid.setColumnExpandRatio(2, 5);
@@ -135,7 +133,6 @@ grid.setColumnExpandRatio(2, 5);
 // Set the bottom row to expand
 grid.setRowExpandRatio(1, 1);
 
-ifdef::web[]
 // Align and size the labels.
 for (int col=0; col<grid.getColumns(); col++) {
     for (int row=0; row<grid.getRows(); row++) {
@@ -148,7 +145,6 @@ for (int col=0; col<grid.getColumns(); col++) {
             c.setHeight("100%");
     }
 }
-endif::web[]
 ----
 
 [[figure.ui.gridlayout.sizing.expanding]]

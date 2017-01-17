@@ -285,7 +285,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     @Test
     public void beanBinder_nullRepresentationIsNotDisabled() {
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.forField(nameField).bind("firstName");
 
         Person person = new Person();
@@ -297,7 +297,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void beanBinder_withConverter_nullRepresentationIsNotDisabled() {
         String customNullPointerRepresentation = "foo";
-        BeanBinder<Person> binder = new BeanBinder<>(Person.class);
+        Binder<Person> binder = new Binder<>(Person.class);
         binder.forField(nameField)
                 .withConverter(value -> value, value -> value == null
                         ? customNullPointerRepresentation : value)
@@ -426,4 +426,72 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         firstNameField.setValue("");
         Assert.assertEquals(6, invokes.get());
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void noArgsConstructor_stringBind_throws() {
+        binder.bind(new TextField(), "firstName");
+    }
+
+    @Test
+    public void setReadOnly_unboundBinder() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        binder.forField(ageField);
+
+        binder.setReadOnly(true);
+
+        Assert.assertTrue(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+
+        Assert.assertFalse(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+    }
+
+    @Test
+    public void setReadOnly_boundBinder() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(new Person());
+
+        binder.setReadOnly(true);
+
+        Assert.assertTrue(nameField.isReadOnly());
+        Assert.assertTrue(ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+
+        Assert.assertFalse(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+    }
+
+    @Test
+    public void setReadOnly_binderLoadedByReadBean() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.readBean(new Person());
+
+        binder.setReadOnly(true);
+
+        Assert.assertTrue(nameField.isReadOnly());
+        Assert.assertTrue(ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+
+        Assert.assertFalse(nameField.isReadOnly());
+        Assert.assertFalse(ageField.isReadOnly());
+    }
+
 }

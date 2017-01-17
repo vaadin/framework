@@ -23,7 +23,7 @@ of the component tree.
 
 [[figure.layout.intro.schematic]]
 .Layout schematic
-image::img/layout-schematic-hi.png[width=100%, scaledwidth=100%]
+image::img/layout-schematic.png[width=100%, scaledwidth=100%]
 
 Let us look at building a bit simplified version of the layout in <<figure.layout.intro.simple>>:
 
@@ -56,7 +56,7 @@ Or in the declarative format (roughly):
   <vaadin-label>The Ultimate Cat Finder</vaadin-label>
 
   <vaadin-horizontal-layout>
-    <vaadin-tree caption="Possible Places"/>
+    <vaadin-radio-button-group caption="Possible Places"/>
     <vaadin-panel/>
     ...
   </vaadin-horizontal-layout>

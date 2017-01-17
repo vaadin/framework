@@ -14,21 +14,11 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-test-widget-set-testutil</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-test-widget-set-testutil</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client-compiled</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
-
 
 </project>

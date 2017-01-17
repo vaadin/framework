@@ -73,6 +73,9 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
     /** The resize button. */
     private final Button resize = new Button("show/hide history");
 
+    /** The previously selected color. */
+    private Color previouslySelectedColor = Color.WHITE;
+
     /** The selected color. */
     private Color selectedColor = Color.WHITE;
 
@@ -448,7 +451,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
     }
 
     private void okButtonClick(ClickEvent event) {
-        fireEvent(new ValueChangeEvent<>(this, true));
+        fireEvent(new ValueChangeEvent<>(this, previouslySelectedColor, true));
         close();
     }
 
@@ -479,6 +482,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
     public void setValue(Color color) {
         Objects.requireNonNull(color, "color cannot be null");
 
+        previouslySelectedColor = selectedColor;
         selectedColor = color;
 
         hsvGradient.setValue(selectedColor);

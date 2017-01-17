@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.FixedNotificationElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CloseSessionTest extends MultiBrowserTest {
@@ -93,7 +93,7 @@ public class CloseSessionTest extends MultiBrowserTest {
 
     private void assertSessionExpired() {
         String expected = "Session Expired";
-        String actual = $(FixedNotificationElement.class).first().getCaption();
+        String actual = $(NotificationElement.class).first().getCaption();
         Assert.assertEquals("Unexpected notification,", actual, expected);
     }
 

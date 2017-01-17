@@ -17,10 +17,9 @@ package com.vaadin.tests.components.abstractlisting;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.data.Listing;
 import com.vaadin.ui.AbstractSingleSelect;
 
-public abstract class AbstractSingleSelectTestUI<T extends AbstractSingleSelect<Object> & Listing<Object, ?>>
+public abstract class AbstractSingleSelectTestUI<T extends AbstractSingleSelect<Object>>
         extends AbstractListingTestUI<T> {
 
     @Override

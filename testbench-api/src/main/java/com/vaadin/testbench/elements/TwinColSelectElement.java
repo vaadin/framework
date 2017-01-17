@@ -62,7 +62,17 @@ public class TwinColSelectElement extends AbstractSelectElement {
         }
     }
 
+    /**
+     * Deselects the option with the given option text, i.e. removes it from the
+     * right side column.
+     *
+     * @param text
+     *            the text of the option to deselect
+     */
     public void deselectByText(String text) {
+        if (isReadOnly()) {
+            throw new ReadOnlyException();
+        }
         selectedOptions.deselectAll();
         selectedOptions.selectByVisibleText(text);
         deselButton.click();
@@ -98,7 +108,18 @@ public class TwinColSelectElement extends AbstractSelectElement {
         return getOptionsFromSelect(options);
     }
 
+    /**
+     * Selects the option with the given option text, i.e. adds it to the right
+     * side column.
+     *
+     * @param text
+     *            the text of the option to select
+     */
     public void selectByText(String text) {
+        if (isReadOnly()) {
+            throw new ReadOnlyException();
+        }
+
         options.deselectAll();
         options.selectByVisibleText(text);
         selButton.click();
@@ -113,7 +134,9 @@ public class TwinColSelectElement extends AbstractSelectElement {
     }
 
     /**
-     * Return first selected item (item in the right part of component)
+     * Return first selected item (item in the right part of component).
+     *
+     * @return the option text for the item
      */
     public String getValue() {
         String value = "";

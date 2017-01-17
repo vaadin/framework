@@ -55,4 +55,11 @@ public interface DataGenerator<T> extends Serializable {
      */
     public default void destroyData(T item) {
     }
+
+    /**
+     * Informs the {@code DataGenerator} that all data has been dropped. This
+     * method should clean up any unneeded information stored for items.
+     */
+    public default void destroyAllData() {
+    }
 }

@@ -1308,21 +1308,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Write a redirect response to the main page of the application.
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     *             if sending the redirect fails due to an input/output error or
-     *             a bad application URL
-     */
-    private void redirectToApplication(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
-        String applicationUrl = getApplicationUrl(request).toExternalForm();
-        response.sendRedirect(response.encodeRedirectURL(applicationUrl));
-    }
-
-    /**
      * Gets the current application URL from request.
      *
      * @param request
