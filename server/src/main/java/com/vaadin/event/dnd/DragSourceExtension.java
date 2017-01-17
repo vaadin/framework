@@ -15,6 +15,18 @@ public class DragSourceExtension extends AbstractExtension {
         getState().effectAllowed = effect.getValue();
     }
 
+    public void setData(String format, String data) {
+        getState().data.put(format, data);
+    }
+
+    public void clearData(String format) {
+        getState().data.remove(format);
+    }
+
+    public void clearData() {
+        getState().data.clear();
+    }
+
     @Override
     protected DragSourceState getState() {
         return (DragSourceState) super.getState();
