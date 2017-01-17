@@ -29,8 +29,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
  * TestBench Element API for Grid
- * 
- * @since
+ *
  * @author Vaadin Ltd
  */
 @ServerClass("com.vaadin.ui.Grid")
@@ -65,8 +64,8 @@ public class GridElement extends AbstractComponentElement {
         }
 
         public GridCellElement getCell(int columnIndex) {
-            TestBenchElement e = (TestBenchElement) findElement(
-                    By.xpath("./td[" + (columnIndex + 1) + "]"));
+            TestBenchElement e = (TestBenchElement) findElement(By
+                    .xpath("./td[" + (columnIndex + 1) + "]"));
             return e.wrap(GridCellElement.class);
         }
     }
@@ -207,13 +206,66 @@ public class GridElement extends AbstractComponentElement {
      * @return Header cell element with given indices.
      */
     public GridCellElement getHeaderCell(int rowIndex, int colIndex) {
-        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]")
-                .wrap(GridCellElement.class);
+        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]").wrap(
+                GridCellElement.class);
+    }
+
+    /**
+     * Finds the header cell element with the given caption. If
+     * there are multiple headers with the same name, the first one is returned.
+     *
+     * @param caption
+     *            The header caption
+     * @return The first header cell element with a given caption.
+     * @throws NoSuchElementException
+     *             if there is no header row or no header cell with the given
+     *             text.
+     */
+    public GridCellElement getHeaderCellByCaption(String caption) {
+        List<WebElement> headerRows = findElement(By.vaadin("#header"))
+            .findElements(By.xpath("./tr/th"));
+        for (WebElement header : headerRows) {
+            if (caption.equals(header.getText())) {
+                return TestBenchElement
+                    .wrapElement(header, getCommandExecutor())
+                    .wrap(GridCellElement.class);
+            }
+        }
+        String errorMessage = String
+            .format("There is no header cell with %s caption. ", caption);
+        throw new NoSuchElementException(errorMessage);
+    }
+
+    /**
+     * Gets the header cell element with the given caption in the given header
+     * row. If there are multiple headers with the same name, the first one is
+     * returned.
+     *
+     * @param rowIndex
+     *            The index of the header row
+     * @param caption
+     *            The header caption
+     * @return The first header cell element with a given caption.
+     * @throws NoSuchElementException
+     *             if there is no header row or no header cell with the given
+     *             text.
+     */
+    public GridCellElement getHeaderCellByCaption(int rowIndex, String caption) {
+        List<GridCellElement> headerCells = getHeaderCells(rowIndex);
+        for (GridCellElement cell : headerCells) {
+            if (caption.equals(cell.getText())) {
+                return cell;
+            }
+        }
+        String errorMessage = String.format(
+                "The row with index %d does not have header with %s caption. ",
+                rowIndex, caption);
+        throw new NoSuchElementException(errorMessage);
     }
 
     /**
      * Gets footer cell element with given row and column index.
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @param colIndex
