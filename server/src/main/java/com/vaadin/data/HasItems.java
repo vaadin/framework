@@ -60,12 +60,11 @@ public interface HasItems<T> extends Component, Serializable {
     /**
      * Sets the data items of this listing provided as a stream.
      * <p>
-     * This is just a shorthand for {@link #setItems(Collection)}, by
-     * <b>collecting all the items in the stream to a list</b>.
-     * <p>
-     * <strong>Using big streams is not recommended, you should instead use a
-     * lazy data provider.</strong> See {@link BackEndDataProvider} for more
-     * info.
+     * This is just a shorthand for {@link #setItems(Collection)}, that
+     * <b>collects objects in the stream to a list</b>. Thus, using this method,
+     * instead of its array and Collection variations, doesn't save any memory.
+     * If you have a large data set to bind, using a lazy data provider is
+     * recommended. See {@link BackEndDataProvider} for more info.
      *
      * @param streamOfItems
      *            the stream of data items to display, not {@code null}
