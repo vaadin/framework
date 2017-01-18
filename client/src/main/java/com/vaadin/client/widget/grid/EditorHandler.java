@@ -54,9 +54,9 @@ public interface EditorHandler<T> {
         public int getRowIndex();
 
         /**
-         * Returns the index of the column being focused.
+         * Returns the DOM index of the column being focused.
          *
-         * @return the column index
+         * @return the column index (excluding hidden columns)
          */
         public int getColumnIndex();
 
