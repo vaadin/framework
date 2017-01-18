@@ -22,6 +22,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.HasDataProvider;
+import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
@@ -101,20 +103,6 @@ public interface DataProvider<T, F> extends Serializable {
      * @return a registration for the listener
      */
     Registration addDataProviderListener(DataProviderListener listener);
-
-    /**
-     * Returns a new wrapped data provider with given default filter. Default
-     * filter will apply to each query and further filtering will not be
-     * supported in the wrapped data provider.
-     *
-     * @param filter
-     *            the default filter
-     * @return wrapped data provider with provided filter
-     */
-    public default DataProvider<T, ?> withFilter(F filter) {
-        Objects.requireNonNull(filter, "Filter can't be null");
-        return DataProviderWrapper.filter(this, filter);
-    }
 
     /**
      * Convert the data provider to use a different filter type. It is used for

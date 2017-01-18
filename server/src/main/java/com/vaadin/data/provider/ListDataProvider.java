@@ -34,8 +34,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  *            data type
  */
 public class ListDataProvider<T>
-        extends AbstractDataProvider<T, SerializablePredicate<T>>
-        implements AppendableFilterDataProvider<T, SerializablePredicate<T>>,
+        extends AbstractDataProvider<T, SerializablePredicate<T>> implements
         ConfigurableFilterDataProvider<T, SerializablePredicate<T>, SerializablePredicate<T>> {
 
     private SerializableComparator<T> sortOrder = null;
@@ -368,12 +367,5 @@ public class ListDataProvider<T>
         Objects.requireNonNull(valueProvider, "Value provider cannot be null");
 
         return item -> Objects.equals(valueProvider.apply(item), requiredValue);
-    }
-
-    @Override
-    public SerializablePredicate<T> combineFilters(
-            SerializablePredicate<T> filter1,
-            SerializablePredicate<T> filter2) {
-        return t -> filter1.test(t) && filter2.test(t);
     }
 }

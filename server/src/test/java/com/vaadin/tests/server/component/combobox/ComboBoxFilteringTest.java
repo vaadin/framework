@@ -141,11 +141,11 @@ public class ComboBoxFilteringTest {
 
         // Filters by last name, regardless of the item caption generator
         ListDataProvider<Person> ldp = DataProvider.create(getPersonArray());
+        ldp.setFilter(person -> person.getFirstName().contains("nr"));
+
         // Same as above, but only showing a subset of the persons
-        comboBox.setDataProvider(ldp
-                .withFilter(person -> person.getFirstName().contains("nr"))
-                .convertFilter(
-                        text -> person -> person.getLastName().contains(text)));
+        comboBox.setDataProvider(ldp.convertFilter(
+                text -> person -> person.getLastName().contains(text)));
 
         checkFiltering("t", "Engel", 2, 1);
     }
