@@ -35,7 +35,8 @@ import com.vaadin.shared.data.sort.SortDirection;
  */
 public class ListDataProvider<T>
         extends AbstractDataProvider<T, SerializablePredicate<T>>
-        implements AppendableFilterDataProvider<T, SerializablePredicate<T>> {
+        implements AppendableFilterDataProvider<T, SerializablePredicate<T>>,
+        ConfigurableFilterDataProvider<T, SerializablePredicate<T>, SerializablePredicate<T>> {
 
     private SerializableComparator<T> sortOrder = null;
 
@@ -236,6 +237,7 @@ public class ListDataProvider<T>
      *            the filter to set, or <code>null</code> to remove any set
      *            filters
      */
+    @Override
     public void setFilter(SerializablePredicate<T> filter) {
         this.filter = filter;
         refreshAll();
