@@ -65,19 +65,21 @@ public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
 
     /**
      * Create size change button for component
+     *
      * @param component Component to controll with button
      * @return Created Expand Button
      */
     private Button expandButton(Component component) {
-        Button button = new Button("Change Size",
-                e -> {
-                    if (component.getWidthUnits().equals(Unit.PERCENTAGE)) {
-                        component.setWidth("250px");
-                    } else {
-                        component.setWidth("100%");
-                    }
-                });
+        Button button = new Button("Change Size", clickEvent -> resizeComponent(component));
         button.setId(component.getId() + "-button");
         return button;
+    }
+
+    private void resizeComponent(Component component) {
+        if (component.getWidthUnits().equals(Unit.PERCENTAGE)) {
+            component.setWidth("250px");
+        } else {
+            component.setWidth("100%");
+        }
     }
 }

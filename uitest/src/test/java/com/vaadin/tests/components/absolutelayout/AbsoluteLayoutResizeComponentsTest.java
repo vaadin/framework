@@ -5,7 +5,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import java.util.Optional;
@@ -101,14 +100,10 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
         WebElement panelWrapper = null;
 
         for (WebElement wrapper : findElements(By.className("v-absolutelayout-wrapper"))) {
-            try {
-                WebElement panel = wrapper.findElement(By.id(componentId));
-
-                if (panel != null) {
-                    panelWrapper = wrapper;
-                    break;
-                }
-            } catch (WebDriverException noop) {
+            // Check if this wrapper contains element with the wanted id.
+            if (!wrapper.findElements(By.id(componentId)).isEmpty()) {
+                panelWrapper = wrapper;
+                break;
             }
         }
         return Optional.ofNullable(panelWrapper);
