@@ -17,11 +17,13 @@ package com.vaadin.data.provider;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.data.ValueProvider;
+import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.data.sort.SortDirection;
@@ -373,5 +375,191 @@ public class ListDataProvider<T>
             SerializablePredicate<T> filter1,
             SerializablePredicate<T> filter2) {
         return t -> filter1.test(t) && filter2.test(t);
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by
+     * comparing an item property value to the filter value provided in the
+     * query.
+     * <p>
+     * The <code>comparer</code> predicate receives the property value as the
+     * first parameter and the query filter value as the second parameter, and
+     * should return <code>true</code> if the corresponding item should be
+     * included. The query filter value is never <code>null</code> – all items
+     * are included without running either callback if the query doesn't define
+     * any filter.
+     * <p>
+     *
+     * @param valueProvider
+     *            a value provider that gets the property value, not
+     *            <code>null</code>
+     * @param comparer
+     *            a predicate to use for comparing the property value to the
+     *            query filter, not <code>null</code>
+     *
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public <V, Q> DataProvider<T, Q> filteringBy(
+            ValueProvider<T, V> valueProvider,
+            SerializableBiPredicate<V, Q> comparer) {
+        Objects.requireNonNull(valueProvider, "Value provider cannot be null");
+        Objects.requireNonNull(comparer, "Comparer cannot be null");
+
+        return convertFilter(filterValue -> item -> comparer
+                .test(valueProvider.apply(item), filterValue));
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by
+     * comparing equality between an item property value and the filter value
+     * provided in the query. {@link Objects#equals(Object)} is used for testing
+     * equality.
+     *
+     * @param valueProvider
+     *            a value provider that gets the property value, not
+     *            <code>null</code>
+     *
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public <V> DataProvider<T, V> filteringByEquals(
+            ValueProvider<T, V> valueProvider) {
+        return filteringBy(valueProvider, Objects::equals);
+    }
+
+    private <V, Q> DataProvider<T, Q> filteringByIgnoreNull(
+            ValueProvider<T, V> valueProvider,
+            SerializableBiPredicate<V, Q> comparer) {
+        Objects.requireNonNull(comparer, "Comparer cannot be null");
+
+        return filteringBy(valueProvider,
+                (itemValue, queryFilter) -> itemValue != null
+                        && comparer.test(itemValue, queryFilter));
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by a
+     * string by checking whether an item property value contains the filter
+     * value provided in the query. The comparison is case sensitive. The filter
+     * never passes if the item property value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     *
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByCaseSensitiveContains(
+            ValueProvider<T, String> valueProvider) {
+        return filteringByIgnoreNull(valueProvider, String::contains);
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by a
+     * string by checking whether the lower case representation of an item
+     * property value contains the lower case representation of the filter value
+     * provided in the query. The filter never passes if the item property value
+     * is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @param locale
+     *            the locale to use for converting the strings to lower case,
+     *            not <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByCaseInsensitiveContains(
+            ValueProvider<T, String> valueProvider, Locale locale) {
+        return filteringByCaseInsensitiveString(valueProvider, String::contains,
+                locale);
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by a
+     * string by checking whether the lower case representation of an item
+     * property value contains the lower case representation of the filter value
+     * provided in the query. Conversion to lower case is done using
+     * {@link Locale#getDefault() the default locale} The filter never passes if
+     * the item property value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByCaseInsensitiveContains(
+            ValueProvider<T, String> valueProvider) {
+        return filteringByCaseInsensitiveContains(valueProvider,
+                Locale.getDefault());
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by a
+     * string by checking whether an item property value starts with the filter
+     * value provided in the query. The comparison is case sensitive. The filter
+     * never passes if the item property value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     *
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByCaseSensitiveStartsWith(
+            ValueProvider<T, String> valueProvider) {
+        return filteringByIgnoreNull(valueProvider, String::startsWith);
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by a
+     * string by checking whether the lower case representation of an item
+     * property value starts with the lower case representation of the filter
+     * value provided in the query. The filter never passes if the item property
+     * value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @param locale
+     *            the locale to use for converting the strings to lower case,
+     *            not <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByCaseInsensitiveStartsWith(
+            ValueProvider<T, String> valueProvider, Locale locale) {
+        return filteringByCaseInsensitiveString(valueProvider,
+                String::startsWith, locale);
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that is filtered by a
+     * string by checking whether the lower case representation of an item
+     * property value starts with the lower case representation of the filter
+     * value provided in the query. Conversion to lower case is done using
+     * {@link Locale#getDefault() the default locale} The filter never passes if
+     * the item property value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByCaseInsensitiveStartsWith(
+            ValueProvider<T, String> valueProvider) {
+        return filteringByCaseInsensitiveStartsWith(valueProvider,
+                Locale.getDefault());
+    }
+
+    private DataProvider<T, String> filteringByCaseInsensitiveString(
+            ValueProvider<T, String> valueProvider,
+            SerializableBiPredicate<String, String> comparer, Locale locale) {
+        assert comparer != null; // Only assert since this is only passed from
+                                 // our own code
+        Objects.requireNonNull(locale, "Locale cannot be null");
+
+        return filteringByIgnoreNull(valueProvider,
+                (itemString, filterString) -> comparer.test(
+                        itemString.toLowerCase(locale),
+                        filterString.toLowerCase(locale)));
     }
 }

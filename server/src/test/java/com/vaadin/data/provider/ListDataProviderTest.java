@@ -2,6 +2,7 @@ package com.vaadin.data.provider;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -230,6 +231,63 @@ public class ListDataProviderTest
         }));
 
         Assert.assertEquals(0, size);
+    }
+
+    @Test
+    public void filteringBy() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByEquals(StrBean::getValue);
+
+        assertSizeWithFilter(36, filteringBy, "Foo");
+    }
+
+    @Test
+    public void filteringBy_customComparer() {
+        DataProvider<StrBean, Integer> filteringBy = dataProvider.filteringBy(
+                StrBean::getId,
+                (beanValue, filterValue) -> beanValue >= filterValue);
+
+        assertSizeWithFilter(90, filteringBy, 10);
+    }
+
+    @Test
+    public void filteringBy_caseInsensitiveContains() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByCaseInsensitiveContains(StrBean::getValue,
+                        Locale.ENGLISH);
+
+        assertSizeWithFilter(36, filteringBy, "oo");
+        assertSizeWithFilter(36, filteringBy, "Oo");
+    }
+
+    @Test
+    public void filterBy_caseInsensitiveStartsWith() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByCaseInsensitiveStartsWith(StrBean::getValue,
+                        Locale.ENGLISH);
+
+        assertSizeWithFilter(36, filteringBy, "Fo");
+        assertSizeWithFilter(36, filteringBy, "fo");
+        assertSizeWithFilter(0, filteringBy, "oo");
+    }
+
+    @Test
+    public void filteringBy_caseSensitiveContains() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByCaseSensitiveContains(StrBean::getValue);
+
+        assertSizeWithFilter(36, filteringBy, "oo");
+        assertSizeWithFilter(0, filteringBy, "Oo");
+    }
+
+    @Test
+    public void filterBy_caseSensitiveStartsWith() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByCaseSensitiveStartsWith(StrBean::getValue);
+
+        assertSizeWithFilter(36, filteringBy, "Fo");
+        assertSizeWithFilter(0, filteringBy, "fo");
+        assertSizeWithFilter(0, filteringBy, "oo");
     }
 
     @Override
