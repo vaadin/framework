@@ -50,6 +50,7 @@ public class ListDataProvider<T>
      *            the initial data, not null
      */
     public ListDataProvider(Collection<T> items) {
+        super(t -> t);
         Objects.requireNonNull(items, "items cannot be null");
         backend = items;
         sortOrder = null;
@@ -109,7 +110,7 @@ public class ListDataProvider<T>
 
             @Override
             public Registration addDataProviderListener(
-                    DataProviderListener listener) {
+                    DataProviderListener<T> listener) {
                 return parent.addDataProviderListener(listener);
             }
 

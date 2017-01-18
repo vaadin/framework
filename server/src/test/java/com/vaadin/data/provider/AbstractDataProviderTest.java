@@ -31,6 +31,10 @@ public class AbstractDataProviderTest {
 
     private static class TestDataProvider
             extends AbstractDataProvider<Object, Object> {
+        public TestDataProvider() {
+            super(t -> t);
+        }
+
         @Override
         public Stream<Object> fetch(Query<Object, Object> t) {
             return null;

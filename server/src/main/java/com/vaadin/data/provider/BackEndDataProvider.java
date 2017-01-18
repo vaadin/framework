@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
@@ -49,6 +50,25 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
     public BackEndDataProvider(
             SerializableFunction<Query<T, F>, Stream<T>> request,
             SerializableToIntFunction<Query<T, F>> sizeCallback) {
+        this(request, sizeCallback, t -> t);
+    }
+
+    /**
+     * Constructs a new DataProvider to request data from an arbitrary back end
+     * request function.
+     *
+     * @param request
+     *            function that requests data from back end based on query
+     * @param sizeCallback
+     *            function that returns the amount of data in back end for query
+     * @param identifierGetter
+     *            function that returns the identifier for a given item
+     */
+    public BackEndDataProvider(
+            SerializableFunction<Query<T, F>, Stream<T>> request,
+            SerializableToIntFunction<Query<T, F>> sizeCallback,
+            ValueProvider<T, Object> identifierGetter) {
+        super(identifierGetter);
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
         this.request = request;
@@ -88,7 +108,7 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
 
             @Override
             public Registration addDataProviderListener(
-                    DataProviderListener listener) {
+                    DataProviderListener<T> listener) {
                 return parent.addDataProviderListener(listener);
             }
 

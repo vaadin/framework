@@ -100,6 +100,11 @@ public abstract class DataProviderWrapper<T, F, M>
     }
 
     @Override
+    public Object getId(T item) {
+        return dataProvider.getId(item);
+    }
+
+    @Override
     public Registration addDataProviderListener(
             DataProviderListener<T> listener) {
         return dataProvider.addDataProviderListener(listener);

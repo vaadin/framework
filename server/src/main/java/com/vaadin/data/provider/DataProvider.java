@@ -100,6 +100,20 @@ public interface DataProvider<T, F> extends Serializable {
     void refreshAll();
 
     /**
+     * Gets an identifier for the given item. This identifier is used by the
+     * framework to determine equality between two items.
+     * <p>
+     * Default is to use item itself as its own identifier. If the item has
+     * {@link Object#equals} implemented in a way that it can be compared to
+     * other items, no changes are required.
+     *
+     * @param item
+     *            the item to get identifier for
+     * @return the identifier for given item
+     */
+    public Object getId(T item);
+
+    /**
      * Adds a data provider listener. The listener is called when some piece of
      * data is updated.
      * <p>
