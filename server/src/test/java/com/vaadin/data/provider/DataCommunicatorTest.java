@@ -68,7 +68,7 @@ public class DataCommunicatorTest {
 
         @Override
         public Registration addDataProviderListener(
-                DataProviderListener listener) {
+                DataProviderListener<Object> listener) {
             registration = super.addDataProviderListener(listener);
             return this;
         }

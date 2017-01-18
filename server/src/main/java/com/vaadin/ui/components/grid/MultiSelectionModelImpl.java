@@ -15,9 +15,12 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -119,7 +122,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
-    private Set<T> selection = new LinkedHashSet<>();
+    private List<T> selection = new ArrayList<>();
 
     private SelectAllCheckBoxVisibility selectAllCheckBoxVisibility = SelectAllCheckBoxVisibility.DEFAULT;
 
@@ -199,8 +202,19 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     @Override
     public boolean isSelected(T item) {
         return isAllSelected()
-                || com.vaadin.ui.components.grid.MultiSelectionModel.super.isSelected(
-                        item);
+                || selectionContainsId(getGrid().getDataProvider().getId(item));
+    }
+
+    /**
+     * Returns if the given id belongs to one of the selected items.
+     *
+     * @param id
+     *            the id to check for
+     * @return {@code true} if id is selected, {@code false} if not
+     */
+    protected boolean selectionContainsId(Object id) {
+        return selection.stream().map(getGrid().getDataProvider()::getId)
+                .anyMatch(i -> id.equals(i));
     }
 
     @Override
@@ -447,7 +461,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         return getState(false).selectionAllowed;
     }
 
-    private void doUpdateSelection(Consumer<Set<T>> handler,
+    private void doUpdateSelection(Consumer<Collection<T>> handler,
             boolean userOriginated) {
         if (getParent() == null) {
             throw new IllegalStateException(
@@ -459,5 +473,18 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
         fireEvent(new MultiSelectionEvent<>(getGrid(), asMultiSelect(),
                 oldSelection, userOriginated));
+    }
+
+    @Override
+    public void refreshData(T item) {
+        Object refreshId = getGrid().getDataProvider().getId(item);
+        for (int i = 0; i < selection.size(); ++i) {
+            if (getGrid().getDataProvider().getId(selection.get(i))
+                    .equals(refreshId)) {
+                selection.remove(i);
+                selection.add(i, item);
+                return;
+            }
+        }
     }
 }

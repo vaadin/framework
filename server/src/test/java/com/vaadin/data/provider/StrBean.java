@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-class StrBean implements Serializable {
+public class StrBean implements Serializable {
 
     private static final String[] values = new String[] { "Foo", "Bar", "Baz" };
 
