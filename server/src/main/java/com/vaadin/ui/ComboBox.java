@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 
@@ -30,6 +31,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataKeyMapper;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -209,15 +211,64 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         });
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Filtering will use a case insensitive match to show all items where the
+     * filter text is a substring of the caption displayed for that item.
+     */
     @Override
     public void setItems(Collection<T> items) {
+        ListDataProvider<T> listDataProvider = DataProvider.create(items);
+
+        setDataProvider(listDataProvider);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Filtering will use a case insensitive match to show all items where the
+     * filter text is a substring of the caption displayed for that item.
+     */
+    @Override
+    public void setItems(Stream<T> streamOfItems) {
+        // Overridden only to add clarification to javadocs
+        super.setItems(streamOfItems);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Filtering will use a case insensitive match to show all items where the
+     * filter text is a substring of the caption displayed for that item.
+     */
+    @Override
+    public void setItems(T... items) {
+        // Overridden only to add clarification to javadocs
+        super.setItems(items);
+    }
+
+    /**
+     * Sets a list data provider as the data provider of this combo box.
+     * Filtering will use a case insensitive match to show all items where the
+     * filter text is a substring of the caption displayed for that item.
+     * <p>
+     * Note that this is a shorthand that calls
+     * {@link #setDataProvider(DataProvider)} with a wrapper of the provided
+     * list data provider. This means that {@link #getDataProvider()} will
+     * return the wrapper instead of the original list data provider.
+     *
+     * @param listDataProvider
+     *            the list data provider to use, not <code>null</code>
+     */
+    public void setDataProvider(ListDataProvider<T> listDataProvider) {
         // Cannot use the case insensitive contains shorthand from
         // ListDataProvider since it wouldn't react to locale changes
         CaptionFilter defaultCaptionFilter = (itemText, filterText) -> itemText
                 .toLowerCase(getLocale())
                 .contains(filterText.toLowerCase(getLocale()));
 
-        setItems(defaultCaptionFilter, items);
+        setDataProvider(defaultCaptionFilter, listDataProvider);
     }
 
     /**
@@ -234,11 +285,36 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            the data items to display
      */
     public void setItems(CaptionFilter captionFilter, Collection<T> items) {
+        ListDataProvider<T> listDataProvider = DataProvider.create(items);
+
+        setDataProvider(captionFilter, listDataProvider);
+    }
+
+    /**
+     * Sets a list data provider with an item caption filter as the data
+     * provider of this combo box. The caption filter is used to compare the
+     * displayed caption of each item to the filter text entered by the user.
+     * <p>
+     * Note that this is a shorthand that calls
+     * {@link #setDataProvider(DataProvider)} with a wrapper of the provided
+     * list data provider. This means that {@link #getDataProvider()} will
+     * return the wrapper instead of the original list data provider.
+     *
+     * @param captionFilter
+     *            filter to check if an item is shown when user typed some text
+     *            into the ComboBox
+     * @param listDataProvider
+     *            the list data provider to use, not <code>null</code>
+     */
+    public void setDataProvider(CaptionFilter captionFilter,
+            ListDataProvider<T> listDataProvider) {
+        Objects.requireNonNull(listDataProvider,
+                "List data provider cannot be null");
+
         // Must do getItemCaptionGenerator() for each operation since it might
         // not be the same as when this method was invoked
-        DataProvider<T, String> provider = DataProvider.create(items)
-                .filteringBy(item -> getItemCaptionGenerator().apply(item),
-                        captionFilter);
+        DataProvider<T, String> provider = listDataProvider.filteringBy(
+                item -> getItemCaptionGenerator().apply(item), captionFilter);
         setDataProvider(provider);
     }
 
