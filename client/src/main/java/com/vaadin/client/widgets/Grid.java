@@ -7455,11 +7455,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             Widget widget;
-            if (editor.focusedColumnIndexDOM < 0) {
+            int focusedColumnIndexDOM = editor.focusedColumnIndexDOM;
+            if (focusedColumnIndexDOM < 0) {
                 widget = null;
             } else {
                 widget = editor
-                        .getWidget(getColumn(editor.focusedColumnIndexDOM));
+                        .getWidget(getVisibleColumn(focusedColumnIndexDOM));
             }
 
             EditorDomEvent<T> editorEvent = new EditorDomEvent<T>(
