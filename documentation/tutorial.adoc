@@ -148,9 +148,7 @@ Creating your next Maven-based Vaadin project will be much faster.
 Right click on the newly created project and choose "Run as > Maven Install".
 This initiates a full build of your application and finally creates a https://en.wikipedia.org/wiki/WAR_(file_format)[WAR] file into the [filename]#target# directory.
 You can deploy the WAR file to your application server.
-The first build will take a while, as Maven might again need to download some new modules.
-Also, the project uses add-ons and contains a project specific theme.
-Compiling them takes a while.
+The first build might take a while, as Maven might again need to download some new modules.
 
 TIP: For the Maven compilation to work you need a JDK to be configured in your
 Eclipse in "Window > Preferences > Java > Installed JREs > Add...".
@@ -288,7 +286,7 @@ Also, let us get a reference to the [classname]#CustomerService#.
 public class MyUI extends UI {
     // Add the next two lines:
     private CustomerService service = CustomerService.getInstance();
-    private Grid grid = new Grid();
+    private Grid<Customer> grid = new Grid<>();
 
     // The rest is already there...
     @Override
@@ -319,9 +317,8 @@ protected void init(VaadinRequest vaadinRequest) {
 
     // fetch list of Customers from service and assign it to Grid
     List<Customer> customers = service.findAll();
-    grid.setContainerDataSource(new BeanItemContainer<>(Customer.class, customers));
+    grid.setItems(customers);
 
-    layout.setMargin(true);
     setContent(layout);
 }
 ----
@@ -340,18 +337,19 @@ Macs). The extracted method call looks like this:
 ----
     public void updateList() {
         List<Customer> customers = service.findAll();
-        grid.setContainerDataSource(new BeanItemContainer<>(Customer.class, customers));
+        grid.setItems(customers);
     }
 ----
 
-If you try the application now, you'll see that quite many properties of the
-customers are shown in the grid. To limit the visible properties, configure
-the Grid using the _setColumns_ method to only show "firstName", "lastName" and
+If you try the application now, you'll see an empty Grid with no columns. To add columns, configure
+the Grid using the _addColumn_ method to show the "firstName", "lastName" and
 "email" properties.
 
 [source,java]
 ----
-    grid.setColumns("firstName", "lastName", "email");
+    grid.addColumn(Customer::getFirstName).setCaption("First Name");
+    grid.addColumn(Customer::getLastName).setCaption("Last Name");
+    grid.addColumn(Customer::getEmail).setCaption("Email");
 ----
 
 At this point the body of the MyUI class should look like this (servlet declaration
@@ -366,20 +364,21 @@ private Grid grid = new Grid();
 protected void init(VaadinRequest vaadinRequest) {
     final VerticalLayout layout = new VerticalLayout();
 
-    grid.setColumns("firstName", "lastName", "email");
+    grid.addColumn(Customer::getFirstName).setCaption("First Name");
+    grid.addColumn(Customer::getLastName).setCaption("Last Name");
+    grid.addColumn(Customer::getEmail).setCaption("Email");
     // add Grid to the layout
     layout.addComponent(grid);
 
     updateList();
 
-    layout.setMargin(true);
     setContent(layout);
 }
 
 public void updateList() {
     // fetch list of Customers from service and assign it to Grid
     List<Customer> customers = service.findAll();
-    grid.setContainerDataSource(new BeanItemContainer<>(Customer.class, customers));
+    grid.setItems(customers);
 }
 ----
 
@@ -424,16 +423,16 @@ TIP: To keep your code more readable, you can use autoformat after you write or
 copy paste code snippets. The default keyboard shortcut in Eclipse is
 kbd:[Ctrl+Shift+F] or kbd:[Cmd+Shift+F]
 
-The text change listener is another listener (in addition to the more commonly
-used ValueChangeListener) you can use with text fields in Vaadin. It is fired
-lazily while the user is typing, but only when there is a small pause in the
-typing. This makes it perfect for this kind of automatic filtering. When the
-user has changed the text, we'll just update the listing like in the updateList
-method, but use the current text as a filter for entries.
+As its name implies, the value change listener allows you to react to changes in
+the value contained in the text field. It is configured so that the event is fired
+lazily while the user is typing, when there is a small pause in the typing.
+This makes it perfect for this kind of automatic filtering. When the
+user has changed the text, we'll just update the listing calling the _updateList_
+method.
 
-To keep the _updateList_ method functional, it should also take into
-consideration the possible value in the filterText field. Change the line for
-fetching the customers into this:
+To keep the _updateList_ method functional, it should take into consideration
+the possible value in the filterText field. Change the line for fetching the
+customers into this:
 
 [source,java]
 ----
@@ -444,7 +443,7 @@ Before adding the text field to the UI, let's improve the usability a bit
 and make a short exercise to compose better components from lower level UI
 components. The search field can naturally be cleared with the keyboard, but let's
 add a clear button next to the text field. Start by adding the following lines
-to the init method, for example right after your filterText configuration:
+to the init method, for example right after your _filterText_ configuration:
 
 [source,java]
 ----
@@ -479,7 +478,7 @@ filtering.addComponents(filterText, clearFilterTextBtn);
 filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 ----
 
-Finally, *change* the row in the init method that currently adds only the grid,
+Finally, *change* the line in the init method that currently adds only the grid,
 to add both _filtering_ composition and the _grid_ to the main _layout_ of the
 application.
 
@@ -727,7 +726,7 @@ fields to the CustomerForm:
 private TextField firstName = new TextField("First name");
 private TextField lastName = new TextField("Last name");
 private TextField email = new TextField("Email");
-private NativeSelect status = new NativeSelect("Status");
+private NativeSelect<CustomerStatus> status = new NativeSelect<>("Status");
 private PopupDateField birthdate = new PopupDateField("Birthday");
 private Button save = new Button("Save");
 private Button delete = new Button("Delete");
@@ -773,7 +772,6 @@ all of the available space more efficiently. Replace the line
 [source,java]
 ----
 HorizontalLayout main = new HorizontalLayout(grid, form);
-main.setSpacing(true);
 main.setSizeFull();
 grid.setSizeFull();
 main.setExpandRatio(grid, 1);
@@ -791,7 +789,7 @@ following line to the constructor:
 
 [source,java]
 ----
-status.addItems(CustomerStatus.values());
+status.setItems(CustomerStatus.values());
 ----
 
 Let's also improve the UX a bit. The most common thing your users will want to
@@ -807,8 +805,28 @@ save.setClickShortcut(KeyCode.ENTER);
 
 To finish our form, we need to create a public API that we will use in the next
 part from the MyUI, to pass in a Customer object that the form should edit. We
-will also add some logic to actually save the changes. We'll start by creating a
-setter method for the Customer field. Just type _setCus_ in the body of the
+will also add some logic to actually save the changes. We'll start by adding a
+_BeanBinder_ as a field to the _CustomerForm_ class:
+
+[source,java]
+----
+private BeanBinder<Customer> beanBinder = new BeanBinder<>(Customer.class);
+----
+
+In the constructor of the CustomerForm class add the following line to configure
+the BeanBinder:
+
+[source,java]
+----
+beanBinder.bindInstanceFields(this);
+----
+
+This configures the BeanBinder to use all the similary named editor fields in
+this form to bind their values with their counterpart in the Customer class.
+For example, the _CustomerForm.firstName_ TextField will be bound to the
+Cursomer.firstName property.
+
+Create a setter method for the Customer field. Just type _setCus_ in the body of the
 class and hit autocomplete (kbd:[Ctrl+Space]) and Eclipse will create a method
 stub for you. Complete it with the following implementation:
 
@@ -826,15 +844,13 @@ public void setCustomer(Customer customer) {
 ----
 
 In addition to saving the reference of the currently edited Customer object, we are
-calling _BeanFieldGroup.bindFieldsUnbuffered_ method. It will initialise all
-similarly named editor fields in this form with the values from their
-counterpart in the given Customer object. Also, it will automatically update the
-values in the domain objects as the corresponding field value changes in the
-user interface.
+calling the _BeanBinder.setBean_ method. This will initialise all
+fields in the form and automatically update the values in the domain objects as
+the corresponding field value changes in the user interface.
 
 TIP: If the naming convention based databinding doesn't fit your needs, you
 can use
-https://www.vaadin.com/api/com/vaadin/data/fieldgroup/PropertyId.html[PropertyId]
+https://www.vaadin.com/api/com/vaadin/annotations/PropertyId.html[PropertyId]
 annotation on fields to explicitly declare the edited property.
 
 We'll also want to ensure the form is visible and that the focus goes to the
@@ -865,8 +881,8 @@ simple lambda expressions to the constructor will take care of that:
 
 [source,java]
 ----
-save.addClickListener(e->this.save());
-delete.addClickListener(e->this.delete());
+save.addClickListener(e -> this.save());
+delete.addClickListener(e -> this.delete());
 ----
 
 TIP: For a truly re-usable form component in a real life project, you'd want to
@@ -902,12 +918,11 @@ the end of the _init_ method:
 
 [source,java]
 ----
-grid.addSelectionListener(event -> {
-    if (event.getSelected().isEmpty()) {
+grid.asSingleSelect().addValueChangeListener(event -> {
+    if (event.getValue() == null) {
         form.setVisible(false);
     } else {
-        Customer customer = (Customer) event.getSelected().iterator().next();
-        form.setCustomer(customer);
+        form.setCustomer(event.getValue());
     }
 });
 ----
@@ -927,7 +942,7 @@ right after where you introduced the _filtering_ composition:
 ----
 Button addCustomerBtn = new Button("Add new customer");
 addCustomerBtn.addClickListener(e -> {
-    grid.select(null);
+    grid.asSingleSelect().clear();
     form.setCustomer(new Customer());
 });
 ----
@@ -942,7 +957,6 @@ this after the previously created _addCustomerBtn_:
 [source,java]
 ----
 HorizontalLayout toolbar = new HorizontalLayout(filtering, addCustomerBtn);
-toolbar.setSpacing(true);
 ----
 
 And, again, *replace* the line that populates your main layout to add the
