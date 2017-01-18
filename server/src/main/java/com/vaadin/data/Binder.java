@@ -1579,6 +1579,26 @@ public class Binder<BEAN> implements Serializable {
         fireStatusChangeEvent(validationStatus.hasErrors());
         return validationStatus;
     }
+    
+    /**
+     * Runs all currently configured field level validators, as well as all bean
+     * level validators if a bean is currently set with
+     * {@link #setBean(Object)}, and returns whether any of the validators
+     * failed.
+     * 
+     * @return whether this binder is in a valid state
+     */
+    public boolean isValid() {
+        if (validateBindings().stream().filter(BindingValidationStatus::isError)
+                .findAny().isPresent()) {
+            return false;
+        }
+        if (getBean() != null && validateBean(getBean()).stream()
+                .filter(ValidationResult::isError).findAny().isPresent()) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Validates the bindings and returns the result of the validation as a list
