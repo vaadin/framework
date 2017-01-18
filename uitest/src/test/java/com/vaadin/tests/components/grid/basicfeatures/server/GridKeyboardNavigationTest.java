@@ -229,4 +229,18 @@ public class GridKeyboardNavigationTest extends GridBasicFeaturesTest {
                 column == focusedColumn
                         && Math.abs(row - focusedRow) <= rowTolerance);
     }
+
+    @Test
+    public void testNavigateOverHiddenColumnToFrozenColumn() {
+        openTestURL();
+        setFrozenColumns(3);
+        toggleColumnHidden(1);
+        getGridElement().getCell(0, 2).click();
+        assertFocusedCell(0, 2);
+        new Actions(getDriver()).sendKeys(Keys.ARROW_LEFT).perform();
+        assertFocusedCell(0, 1);
+        new Actions(getDriver()).sendKeys(Keys.ARROW_LEFT).perform();
+        assertFocusedCell(0, 0);
+    }
+
 }
