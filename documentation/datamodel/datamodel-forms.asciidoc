@@ -374,8 +374,8 @@ We can use that event to make the save and reset buttons of our forms become ena
 [source, java]
 ----
 binder.addStatusChangeListener(event -> {
-  boolean isValid = !event.hasValidationErrors();
-  boolean hasChanges = binder.hasChanges();
+  boolean isValid = event.getBinder().isValid();
+  boolean hasChanges = event.getBinder().hasChanges();
 
   saveButton.setEnabled(hasChanges && isValid);
   resetButton.setEnable(hasChanges);
