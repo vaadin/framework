@@ -27,6 +27,7 @@ import org.junit.Test;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.data.provider.Query;
+import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.ComboBox;
@@ -116,11 +117,36 @@ public class ComboBoxFilteringTest {
         checkFiltering("Er", "er", 3, 1);
     }
 
+    @Test
+    public void setListDataProvider_defaultFiltering() {
+        comboBox.setItemCaptionGenerator(Person::getFirstName);
+
+        // Result: typing "en" into the search field finds "Enrique Iglesias"
+        // and "Henry Dunant", but not "Erwin Engelbrecht"
+        comboBox.setDataProvider(DataProvider.create(getPersonCollection()));
+
+        checkFiltering("en", "ennen", 3, 2);
+    }
+
+    @Test
+    public void setListDataProvider_customFiltering() {
+        comboBox.setItemCaptionGenerator(Person::getFirstName);
+
+        // Result: typing "en" into the search field finds "Enrique Iglesias"
+        // and "Henry Dunant", but not "Erwin Engelbrecht"
+        comboBox.setDataProvider(DataProvider.create(getPersonCollection()),
+                String::startsWith);
+
+        checkFiltering("Er", "er", 3, 1);
+    }
+
     public void invalid_dataProvider_compile_error() {
-        // uncommenting this causes a compile time error
-        ListDataProvider<Person> ldp = DataProvider.create(getPersonArray());
-        // Compile error, because of invalid data provider filter type
-        // comboBox.setDataProvider(ldp);
+        DataProvider<Person, Address> dp = DataProvider.create(getPersonArray())
+                .filteringByEquals(Person::getAddress);
+
+        // uncommenting this causes a compile time error because of invalid data
+        // provider filter type
+        // comboBox.setDataProvider(dp);
     }
 
     @Test
