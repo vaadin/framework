@@ -16,6 +16,7 @@
 package com.vaadin.data.provider;
 
 import java.util.Collections;
+import java.util.concurrent.Future;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,6 +55,12 @@ public class DataCommunicatorTest {
         @Override
         public VaadinSession getSession() {
             return session;
+        }
+
+        @Override
+        public Future<Void> access(Runnable runnable) {
+            runnable.run();
+            return null;
         }
     }
 

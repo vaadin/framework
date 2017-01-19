@@ -294,7 +294,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     @Override
     public boolean isSelected(T item) {
-        return selectedItem != null
+        return item != null && selectedItem != null
                 && getGrid().getDataProvider().getId(selectedItem)
                         .equals(getGrid().getDataProvider().getId(item));
     }
