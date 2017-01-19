@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
@@ -664,7 +664,7 @@ public class GridMultiSelectionModelTest {
                 model.getSelectAllCheckBoxVisibility());
 
         grid.setDataProvider(
-                new BackEndDataProvider<String, String>(
+                new CallbackDataProvider<String, String>(
                         q -> IntStream
                                 .range(q.getOffset(),
                                         Math.max(q.getOffset() + q.getLimit()

@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.SortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
@@ -102,7 +102,7 @@ public class DataProviderBoVTest {
     }
 
     private DataProvider<Person, ?> createUnsortedDataProvider() {
-        DataProvider<Person, ?> dataProvider = new BackEndDataProvider<>(
+        DataProvider<Person, ?> dataProvider = new CallbackDataProvider<>(
                 // First callback fetches items based on a query
                 query -> {
                     // The index of the first item to load
@@ -130,7 +130,7 @@ public class DataProviderBoVTest {
     }
 
     private DataProvider<Person, ?> createSortedDataProvider() {
-        DataProvider<Person, ?> dataProvider = new BackEndDataProvider<>(
+        DataProvider<Person, ?> dataProvider = new CallbackDataProvider<>(
                 // First callback fetches items based on a query
                 query -> {
                     List<PersonService.PersonSort> sortOrders = new ArrayList<>();

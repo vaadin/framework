@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.HasDataProvider;
-import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.data.provider.Query;
@@ -40,8 +40,7 @@ public class AbstractListingTest {
         }
 
         @Override
-        protected void readItems(Element design,
-                DesignContext context) {
+        protected void readItems(Element design, DesignContext context) {
         }
 
         @Override
@@ -114,7 +113,7 @@ public class AbstractListingTest {
         listing.setDataProvider(dataProvider);
         Assert.assertEquals("setDataProvider did not set data provider",
                 dataProvider, listing.getDataProvider());
-        listing.setDataProvider(new BackEndDataProvider<>(q -> Stream
+        listing.setDataProvider(new CallbackDataProvider<>(q -> Stream
                 .of(ITEM_ARRAY).skip(q.getOffset()).limit(q.getLimit()),
                 q -> ITEM_ARRAY.length));
         Assert.assertNotEquals("setDataProvider did not replace data provider",

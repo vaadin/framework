@@ -34,7 +34,7 @@ public class BackendDataProviderTest extends
 
     @Override
     protected BackEndDataProvider<StrBean, SerializablePredicate<StrBean>> createDataProvider() {
-        return dataProvider = new BackEndDataProvider<>(query -> {
+        return dataProvider = new CallbackDataProvider<>(query -> {
             Stream<StrBean> stream = data.stream()
                     .filter(t -> query.getFilter().orElse(s -> true).test(t));
             if (!query.getSortOrders().isEmpty()) {
