@@ -519,14 +519,5 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         nameField.setValue("fail bean validation");
         Assert.assertFalse(binder.isValid());
-
-        // removing the bean should make isValid return true again, since bean
-        // level validation will no longer be run
-        binder.removeBean();
-        Assert.assertTrue(binder.isValid());
-
-        // should work correctly with unbound binder
-        nameField.setValue("fail field validation");
-        Assert.assertFalse(binder.isValid());
     }
 }
