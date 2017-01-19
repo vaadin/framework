@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.grid;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,6 +35,12 @@ public class GridStaleElementTest {
             @Override
             public VaadinSession getSession() {
                 return application;
+            }
+
+            @Override
+            public Future<Void> access(Runnable runnable) {
+                runnable.run();
+                return null;
             }
         };
         uI.setContent(grid);
