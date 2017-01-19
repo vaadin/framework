@@ -186,4 +186,8 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
         Assert.assertEquals("Unexpected number of matches for 'Foo'", 36,
                 dataProvider.size(new Query<>(fooFilter)));
     }
+
+    protected long sizeWithUnfilteredQuery() {
+        return dataProvider.fetch(new Query<>()).count();
+    }
 }

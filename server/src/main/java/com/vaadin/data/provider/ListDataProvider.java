@@ -38,6 +38,9 @@ public class ListDataProvider<T>
         implements AppendableFilterDataProvider<T, SerializablePredicate<T>> {
 
     private SerializableComparator<T> sortOrder = null;
+
+    private SerializablePredicate<T> filter;
+
     private final Collection<T> backend;
 
     /**
@@ -58,8 +61,7 @@ public class ListDataProvider<T>
 
     @Override
     public Stream<T> fetch(Query<T, SerializablePredicate<T>> query) {
-        Stream<T> stream = backend.stream()
-                .filter(t -> query.getFilter().orElse(p -> true).test(t));
+        Stream<T> stream = getFilteredStream(query);
 
         Optional<Comparator<T>> comparing = Stream
                 .of(query.getInMemorySorting(), sortOrder)
@@ -80,9 +82,22 @@ public class ListDataProvider<T>
 
     @Override
     public int size(Query<T, SerializablePredicate<T>> query) {
-        return (int) backend.stream()
-                .filter(t -> query.getFilter().orElse(p -> true).test(t))
-                .count();
+        return (int) getFilteredStream(query).count();
+    }
+
+    private Stream<T> getFilteredStream(
+            Query<T, SerializablePredicate<T>> query) {
+        Stream<T> stream = backend.stream();
+
+        // Apply our own filters first so that query filters never see the items
+        // that would already have been filtered out
+        if (filter != null) {
+            stream = stream.filter(filter);
+        }
+
+        stream = query.getFilter().map(stream::filter).orElse(stream);
+
+        return stream;
     }
 
     /**
@@ -207,6 +222,150 @@ public class ListDataProvider<T>
             comparator = comparator.reversed();
         }
         return comparator;
+    }
+
+    /**
+     * Sets a filter to be applied to all queries. The filter replaces any
+     * filter that has been set or added previously.
+     *
+     * @see #setFilter(ValueProvider, SerializablePredicate)
+     * @see #setFilterByValue(ValueProvider, Object)
+     * @see #addFilter(SerializablePredicate)
+     *
+     * @param filter
+     *            the filter to set, or <code>null</code> to remove any set
+     *            filters
+     */
+    public void setFilter(SerializablePredicate<T> filter) {
+        this.filter = filter;
+        refreshAll();
+    }
+
+    /**
+     * Adds a filter to be applied to all queries. The filter will be used in
+     * addition to any filter that has been set or added previously.
+     *
+     * @see #addFilter(ValueProvider, SerializablePredicate)
+     * @see #addFilterByValue(ValueProvider, Object)
+     * @see #setFilter(SerializablePredicate)
+     *
+     * @param filter
+     *            the filter to add, not <code>null</code>
+     */
+    public void addFilter(SerializablePredicate<T> filter) {
+        Objects.requireNonNull(filter, "Filter cannot be null");
+
+        if (this.filter == null) {
+            setFilter(filter);
+        } else {
+            SerializablePredicate<T> oldFilter = this.filter;
+            setFilter(item -> oldFilter.test(item) && filter.test(item));
+        }
+    }
+
+    /**
+     * Removes any filter that has been set or added previously.
+     *
+     * @see #setFilter(SerializablePredicate)
+     */
+    public void clearFilters() {
+        setFilter(null);
+    }
+
+    /**
+     * Sets a filter for an item property. The filter replaces any filter that
+     * has been set or added previously.
+     *
+     * @see #setFilter(SerializablePredicate)
+     * @see #setFilterByValue(ValueProvider, Object)
+     * @see #addFilter(ValueProvider, SerializablePredicate)
+     *
+     * @param valueProvider
+     *            value provider that gets the property value, not
+     *            <code>null</code>
+     * @param valueFilter
+     *            filter for testing the property value, not <code>null</code>
+     */
+    public <V> void setFilter(ValueProvider<T, V> valueProvider,
+            SerializablePredicate<V> valueFilter) {
+        setFilter(createValueProviderFilter(valueProvider, valueFilter));
+    }
+
+    /**
+     * Adds a filter for an item property. The filter will be used in addition
+     * to any filter that has been set or added previously.
+     *
+     * @see #addFilter(SerializablePredicate)
+     * @see #addFilterByValue(ValueProvider, Object)
+     * @see #setFilter(ValueProvider, SerializablePredicate)
+     *
+     * @param valueProvider
+     *            value provider that gets the property value, not
+     *            <code>null</code>
+     * @param valueFilter
+     *            filter for testing the property value, not <code>null</code>
+     */
+    public <V> void addFilter(ValueProvider<T, V> valueProvider,
+            SerializablePredicate<V> valueFilter) {
+        Objects.requireNonNull(valueProvider, "Value provider cannot be null");
+        Objects.requireNonNull(valueFilter, "Value filter cannot be null");
+
+        addFilter(createValueProviderFilter(valueProvider, valueFilter));
+    }
+
+    private static <T, V> SerializablePredicate<T> createValueProviderFilter(
+            ValueProvider<T, V> valueProvider,
+            SerializablePredicate<V> valueFilter) {
+        return item -> valueFilter.test(valueProvider.apply(item));
+    }
+
+    /**
+     * Sets a filter that requires an item property to have a specific value.
+     * The property value and the provided value are compared using
+     * {@link Object#equals(Object)}. The filter replaces any filter that has
+     * been set or added previously.
+     *
+     * @see #setFilter(SerializablePredicate)
+     * @see #setFilter(ValueProvider, SerializablePredicate)
+     * @see #addFilterByValue(ValueProvider, Object)
+     *
+     * @param valueProvider
+     *            value provider that gets the property value, not
+     *            <code>null</code>
+     * @param requiredValue
+     *            the value that the property must have for the filter to pass
+     */
+    public <V> void setFilterByValue(ValueProvider<T, V> valueProvider,
+            V requiredValue) {
+        setFilter(createEqualsFilter(valueProvider, requiredValue));
+    }
+
+    /**
+     * Adds a filter that requires an item property to have a specific value.
+     * The property value and the provided value are compared using
+     * {@link Object#equals(Object)}.The filter will be used in addition to any
+     * filter that has been set or added previously.
+     *
+     * @see #setFilterByValue(ValueProvider, Object)
+     * @see #addFilter(SerializablePredicate)
+     * @see #addFilter(ValueProvider, SerializablePredicate)
+     *
+     * @param valueProvider
+     *            value provider that gets the property value, not
+     *            <code>null</code>
+     * @param requiredValue
+     *            the value that the property must have for the filter to pass
+     */
+    public <V> void addFilterByValue(ValueProvider<T, V> valueProvider,
+            V requiredValue) {
+        addFilter(createEqualsFilter(valueProvider, requiredValue));
+    }
+
+    private static <T, V> SerializablePredicate<T> createEqualsFilter(
+            ValueProvider<T, V> valueProvider, V requiredValue) {
+        Objects.requireNonNull(valueProvider, "Value provider cannot be null");
+
+        return item -> Objects.equals(valueProvider.apply(item), requiredValue);
     }
 
     @Override
