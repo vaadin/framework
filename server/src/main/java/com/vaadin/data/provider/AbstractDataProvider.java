@@ -18,7 +18,6 @@ package com.vaadin.data.provider;
 import java.lang.reflect.Method;
 import java.util.EventObject;
 
-import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataChangeEvent.DataRefreshEvent;
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
@@ -39,17 +38,6 @@ import com.vaadin.shared.Registration;
 public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
 
     private EventRouter eventRouter;
-    private final ValueProvider<T, Object> identifierGetter;
-
-    /**
-     * Constructs an AbstractDataProvider with given identifier provider.
-     *
-     * @param identifierGetter
-     *            the function to get an identifier from an item
-     */
-    protected AbstractDataProvider(ValueProvider<T, Object> identifierGetter) {
-        this.identifierGetter = identifierGetter;
-    }
 
     @Override
     public Registration addDataProviderListener(
@@ -66,11 +54,6 @@ public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
     @Override
     public void refreshItem(T item) {
         fireEvent(new DataRefreshEvent<>(this, item));
-    }
-
-    @Override
-    public Object getId(T item) {
-        return identifierGetter.apply(item);
     }
 
     /**

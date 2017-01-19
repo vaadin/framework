@@ -104,14 +104,17 @@ public interface DataProvider<T, F> extends Serializable {
      * framework to determine equality between two items.
      * <p>
      * Default is to use item itself as its own identifier. If the item has
-     * {@link Object#equals} implemented in a way that it can be compared to
-     * other items, no changes are required.
+     * {@link Object#equals(Object)} and {@link Object#hashCode()} implemented
+     * in a way that it can be compared to other items, no changes are required.
      *
      * @param item
-     *            the item to get identifier for
-     * @return the identifier for given item
+     *            the item to get identifier for; not {@code null}
+     * @return the identifier for given item; not {@code null}
      */
-    public Object getId(T item);
+    public default Object getId(T item) {
+        Objects.requireNonNull(item, "Cannot provide an id for a null item.");
+        return item;
+    }
 
     /**
      * Adds a data provider listener. The listener is called when some piece of

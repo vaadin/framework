@@ -544,13 +544,16 @@ public class DataCommunicator<T, F> extends AbstractExtension {
     private void attachDataProviderListener() {
         dataProviderUpdateRegistration = getDataProvider()
                 .addDataProviderListener(event -> {
-                    if (event instanceof DataRefreshEvent) {
-                        T item = ((DataRefreshEvent<T>) event).getItem();
-                        generators.stream().forEach(g -> g.refreshData(item));
-                        refresh(item);
-                    } else {
-                        getUI().access(() -> reset());
-                    }
+                    getUI().access(() -> {
+                        if (event instanceof DataRefreshEvent) {
+                            T item = ((DataRefreshEvent<T>) event).getItem();
+                            generators.forEach(g -> g.refreshData(item));
+                            keyMapper.refresh(item, dataProvider::getId);
+                            refresh(item);
+                        } else {
+                            reset();
+                        }
+                    });
                 });
     }
 

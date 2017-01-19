@@ -37,6 +37,7 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
 
     private final SerializableFunction<Query<T, F>, Stream<T>> request;
     private final SerializableToIntFunction<Query<T, F>> sizeCallback;
+    private final ValueProvider<T, Object> idGetter;
 
     /**
      * Constructs a new DataProvider to request data from an arbitrary back end
@@ -68,11 +69,13 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
             SerializableFunction<Query<T, F>, Stream<T>> request,
             SerializableToIntFunction<Query<T, F>> sizeCallback,
             ValueProvider<T, Object> identifierGetter) {
-        super(identifierGetter);
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
+        Objects.requireNonNull(sizeCallback,
+                "Identifier getter function can't be null");
         this.request = request;
         this.sizeCallback = sizeCallback;
+        this.idGetter = identifierGetter;
     }
 
     @Override
@@ -124,4 +127,11 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
         return false;
     }
 
+    @Override
+    public Object getId(T item) {
+        Object itemId = idGetter.apply(item);
+        assert itemId != null : "BackEndDataProvider got null as an id for item: "
+                + item;
+        return itemId;
+    }
 }

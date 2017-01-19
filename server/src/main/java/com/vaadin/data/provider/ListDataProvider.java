@@ -50,7 +50,6 @@ public class ListDataProvider<T>
      *            the initial data, not null
      */
     public ListDataProvider(Collection<T> items) {
-        super(t -> t);
         Objects.requireNonNull(items, "items cannot be null");
         backend = items;
         sortOrder = null;
@@ -158,5 +157,12 @@ public class ListDataProvider<T>
             SerializablePredicate<T> filter1,
             SerializablePredicate<T> filter2) {
         return t -> filter1.test(t) && filter2.test(t);
+    }
+
+    @Override
+    public Object getId(T item) {
+        assert backend.contains(
+                item) : "Attempting to get an id for an item not in the list";
+        return super.getId(item);
     }
 }

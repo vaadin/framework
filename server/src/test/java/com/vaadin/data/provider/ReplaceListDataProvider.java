@@ -12,7 +12,6 @@ public class ReplaceListDataProvider
     private final List<StrBean> backend;
 
     public ReplaceListDataProvider(List<StrBean> items) {
-        super(StrBean::getId);
         backend = items;
     }
 
@@ -58,5 +57,10 @@ public class ReplaceListDataProvider
         boolean backEndHasInstanceWithSameId = backend.stream().map(this::getId)
                 .filter(i -> id.equals(i)).count() == 1;
         return !itemExistsInBackEnd && backEndHasInstanceWithSameId;
+    }
+
+    @Override
+    public Object getId(StrBean item) {
+        return item.getId();
     }
 }

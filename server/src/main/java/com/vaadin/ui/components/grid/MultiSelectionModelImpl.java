@@ -213,7 +213,8 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
      * @return {@code true} if id is selected, {@code false} if not
      */
     protected boolean selectionContainsId(Object id) {
-        return selection.stream().map(getGrid().getDataProvider()::getId)
+        DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
+        return selection.stream().map(dataProvider::getId)
                 .anyMatch(i -> id.equals(i));
     }
 
@@ -477,12 +478,11 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     @Override
     public void refreshData(T item) {
-        Object refreshId = getGrid().getDataProvider().getId(item);
+        DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
+        Object refreshId = dataProvider.getId(item);
         for (int i = 0; i < selection.size(); ++i) {
-            if (getGrid().getDataProvider().getId(selection.get(i))
-                    .equals(refreshId)) {
-                selection.remove(i);
-                selection.add(i, item);
+            if (dataProvider.getId(selection.get(i)).equals(refreshId)) {
+                selection.set(i, item);
                 return;
             }
         }
