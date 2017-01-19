@@ -2587,9 +2587,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     ++i;
                 } while (cell != null);
             }
-            int columnIndex = getColumns()
-                    .indexOf(getVisibleColumn(columnIndexDOM));
-            if (columnIndex >= escalator.getColumnConfiguration()
+            if (columnIndexDOM >= escalator.getColumnConfiguration()
                     .getFrozenColumnCount()) {
                 escalator.scrollToColumn(columnIndexDOM, ScrollDestination.ANY,
                         10);
