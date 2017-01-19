@@ -495,7 +495,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
-    public void isValidTest() {
+    public void isValidTest_bound_binder() {
         binder.forField(nameField)
                 .withValidator(
                         Validator.from(
@@ -519,5 +519,31 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         nameField.setValue("fail bean validation");
         Assert.assertFalse(binder.isValid());
+    }
+
+    @Test
+    public void isValidTest_unbound_binder() {
+        binder.forField(nameField)
+                .withValidator(Validator.from(
+                        name -> !name.equals("fail field validation"), ""))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        Assert.assertTrue(binder.isValid());
+
+        nameField.setValue("fail field validation");
+        Assert.assertFalse(binder.isValid());
+
+        nameField.setValue("");
+        Assert.assertTrue(binder.isValid());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isValidTest_unbound_binder_throws_with_bean_level_validation() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.withValidator(Validator.from(
+                person -> !person.getFirstName().equals("fail bean validation"),
+                ""));
+        binder.isValid();
     }
 }
