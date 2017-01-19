@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
-import java.util.Locale;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
@@ -63,7 +62,7 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  * <code>setCalendarPanel(VAbstractCalendarPanel panel)</code> method.
  *
  */
-public abstract class VAbstractPopupCalendar<R extends Enum<R>>
+public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>
         implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
@@ -71,7 +70,7 @@ public abstract class VAbstractPopupCalendar<R extends Enum<R>>
     public final Button calendarToggle = new Button();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public VAbstractCalendarPanel<R> calendar;
+    public PANEL calendar;
 
     /** For internal use only. May be removed or replaced in the future. */
     public final VOverlay popup;
@@ -100,8 +99,7 @@ public abstract class VAbstractPopupCalendar<R extends Enum<R>>
 
     private final String CALENDAR_TOGGLE_ID = "popupButton";
 
-    public VAbstractPopupCalendar(VAbstractCalendarPanel<R> calendarPanel,
-            R resolution) {
+    public VAbstractPopupCalendar(PANEL calendarPanel, R resolution) {
         super(resolution);
 
         calendarToggle.setText("");
@@ -230,8 +228,7 @@ public abstract class VAbstractPopupCalendar<R extends Enum<R>>
             if (!calendar.isYear(getCurrentResolution())) {
                 getClient().updateVariable(getId(),
                         getResolutionVariable(
-                                calendar.getResolution(calendar::isMonth))
-                                        .toLowerCase(Locale.ENGLISH),
+                                calendar.getResolution(calendar::isMonth)),
                         newDate.getMonth() + 1, false);
                 if (!calendar.isMonth(getCurrentResolution())) {
                     getClient().updateVariable(getId(),

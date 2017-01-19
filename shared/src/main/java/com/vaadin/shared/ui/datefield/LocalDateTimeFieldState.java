@@ -21,6 +21,6 @@ package com.vaadin.shared.ui.datefield;
  * @author Vaadin Ltd
  *
  */
-public class LocalDateTimeFieldState extends AbstractTextualDateFieldState {
+public class LocalDateTimeFieldState extends TextualDateFieldState {
 
 }

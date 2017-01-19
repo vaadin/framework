@@ -230,11 +230,11 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * 
      * @see #setCurrentDate(Map)
      * 
-     * @param dateVaules
+     * @param dateValues
      *            a map with date values to convert into a date
      * @return the date based on the dateValues map
      */
-    protected abstract Date getDate(Map<R, Integer> dateVaules);
+    protected abstract Date getDate(Map<R, Integer> dateValues);
 
     /**
      * Returns all available resolutions as an array.
