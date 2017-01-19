@@ -392,6 +392,7 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     public boolean html5DragDrop(VHtml5DragEvent event) {
         if (dropHandler == null || !currentlyValid) {
+            VDragAndDropManager.get().interruptDrag();
             return true;
         }
         try {
