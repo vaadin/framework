@@ -39,6 +39,8 @@ subnav:
 [[framework.tutorial]]
 = Vaadin Tutorial
 
+WARNING: Please keep in mind that some of the videos and screenshots in this tutorial were built with Vaadin Framework 7 and Designer 1.0. There are some small differences if you use the latest versions.
+
 This tutorial gives you an overview of how you can use https://vaadin.com/framework[Vaadin Framework] to build single-page web UIs for your Java application.
 All you need to start with it is JDK 8 and an https://en.wikipedia.org/wiki/Integrated_development_environment[IDE], such as Eclipse.
 While this tutorial is written for Eclipse users, you can use your IDE of choice.
@@ -248,6 +250,8 @@ In a real-world application, you will most likely have something similar, implem
 
 The following video covers steps 3 and 4 (<<framework.tutorial.grid>>) of this tutorial:
 
+WARNING: This video is built with Vaadin Framework 7. There are some small differences if you use the latest version.
+
 video::0W0frepDKWI[youtube, width="640", height="400"]
 
 Copy the following three classes from github to your project.
@@ -396,6 +400,8 @@ the Customer listing we created in the previous step.
 
 The following video shows how to do this step of the tutorial:
 
+WARNING: This video is built with Vaadin Framework 7. There are some small differences if you use the latest version.
+
 video::fAeC_mZH_7w[youtube, width="640", height="400"]
 
 We'll start by introducing a [classname]#TextField# component as a field to our [classname]#UI# class:
@@ -540,6 +546,8 @@ acquire a trial license.
 The following screencast will show you how to produce the
 _CustomerFormDesign.html_, a design file we need in this tutorial. Use pause and
 slow motion to follow better what is being done in the video. Feel free to get creative!
+
+WARNING: This video is built with Designer 1.0. There are some small differences if you use the latest version.
 
 video::B5dN69NSS78[youtube, width="640", height="400"]
 
@@ -724,6 +732,8 @@ completed the step using Vaadin Designer, you can proceed to
 <<Connecting the form to the application>>.
 
 The following video shows how to create a form using plain Java:
+
+WARNING: This video is built with Vaadin Framework 7. There are some small differences if you use the latest version.
 
 video::OA6-lSxiXO0[youtube, width="640", height="400"]
 
