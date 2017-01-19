@@ -3,6 +3,7 @@ package com.vaadin.tests.themes.valo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -40,19 +41,33 @@ public class ModalWindowTest extends SingleBrowserTest {
 
         openModalWindow();
         new Actions(getDriver())
-                .moveToElement(findElement(By.className("v-window-header")))
-                .clickAndHold().sendKeys(Keys.ESCAPE).perform();
+                .moveToElement(findHeaderElement())
+                .clickAndHold().moveByOffset(1, 1).perform();
+        assertTrue(isElementPresent(By.className("v-window-draggingCurtain")));
+        new Actions(getDriver()).sendKeys(findHeaderElement(), Keys.ESCAPE)
+                .release().perform();
         verifyCurtainsNotPresent();
 
         openModalWindow();
         new Actions(getDriver())
-                .moveToElement(findElement(By.className("v-window-resizebox")))
-                .clickAndHold().sendKeys(Keys.ESCAPE).perform();
+                .moveToElement(findResizingElement())
+                .clickAndHold().moveByOffset(1, 1).perform();
+        assertTrue(isElementPresent(By.className("v-window-resizingCurtain")));
+        new Actions(getDriver()).sendKeys(findResizingElement(), Keys.ESCAPE)
+                .release().perform();
         verifyCurtainsNotPresent();
     }
 
     private void openModalWindow() {
         $(ButtonElement.class).get(1).click();
+    }
+
+    private WebElement findHeaderElement() {
+        return findElement(By.className("v-window-header"));
+    }
+
+    private WebElement findResizingElement() {
+        return findElement(By.className("v-window-resizebox"));
     }
 
     private void verifyCurtainsNotPresent() {
