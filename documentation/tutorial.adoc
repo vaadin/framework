@@ -596,7 +596,6 @@ all of the available space more efficiently. Replace the line
 [source,java]
 ----
 HorizontalLayout main = new HorizontalLayout(grid, form);
-main.setSpacing(true);
 main.setSizeFull();
 grid.setSizeFull();
 main.setExpandRatio(grid, 1);
@@ -614,7 +613,7 @@ following line to the constructor:
 
 [source,java]
 ----
-status.addItems(CustomerStatus.values());
+status.setItems(CustomerStatus.values());
 ----
 
 Let's also improve the UX a bit. When building the design, we already
@@ -630,8 +629,28 @@ save.setClickShortcut(KeyCode.ENTER);
 
 To finish our form, we need to create a public API that we will use in the next
 part from MyUI, to pass in a Customer object that the form should edit. We
-will also add some logic to actually save the changes. We'll start by creating a
-setter method to the Customer field. Just type _setCus_ in the body of the
+will also add some logic to actually save the changes. We'll start by adding a
+_BeanBinder_ as a field to the _CustomerForm_ class:
+
+[source,java]
+----
+private BeanBinder<Customer> beanBinder = new BeanBinder<>(Customer.class);
+----
+
+In the constructor of the CustomerForm class add the following line to configure
+the BeanBinder:
+
+[source,java]
+----
+beanBinder.bindInstanceFields(this);
+----
+
+This configures the BeanBinder to use all the similary named editor fields in
+this form to bind their values with their counterpart in the Customer class.
+For example, the _CustomerForm.firstName_ TextField will be bound to the
+Cursomer.firstName property.
+
+Create a setter method for the Customer field. Just type _setCus_ in the body of the
 class and hit autocomplete (kbd:[Ctrl+Space]) and Eclipse will create a method
 stub for you. Complete it with the following implementation:
 
@@ -649,11 +668,9 @@ public void setCustomer(Customer customer) {
 ----
 
 In addition to saving the reference of the currently edited Customer object, we are
-calling the _BeanFieldGroup.bindFieldsUnbuffered_ method. It will initialize all
-similarly named editor fields in this form with the values from their
-counterpart in the given Customer object. Also, it will automatically update the
-values in the domain objects as the corresponding field value changes in the
-user interface.
+calling the _BeanBinder.setBean_ method. This will initialise all
+fields in the form and automatically update the values in the domain objects as
+the corresponding field value changes in the user interface.
 
 TIP: If the naming convention based databinding doesn't fit your needs, you
 can use
@@ -688,8 +705,8 @@ simple lambda expressions to the constructor will take care of that:
 
 [source,java]
 ----
-save.addClickListener(e->this.save());
-delete.addClickListener(e->this.delete());
+save.addClickListener(e -> this.save());
+delete.addClickListener(e -> this.delete());
 ----
 
 TIP: For a truly re-usable form component in a real life project, you'd want to
