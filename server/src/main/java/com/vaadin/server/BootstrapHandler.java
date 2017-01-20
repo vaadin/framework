@@ -437,23 +437,29 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .attr("href", themeUri + "/favicon.ico");
         }
 
-        JavaScript javaScript = uiClass.getAnnotation(JavaScript.class);
-        if (javaScript != null) {
-            String[] resources = javaScript.value();
-            for (String resource : resources) {
-                String url = registerDependency(context, uiClass, resource);
-                head.appendElement("script").attr("type", "text/javascript")
-                        .attr("src", url);
+        JavaScript[] javaScripts = uiClass
+                .getAnnotationsByType(JavaScript.class);
+        if (javaScripts != null) {
+            for (JavaScript javaScript : javaScripts) {
+                String[] resources = javaScript.value();
+                for (String resource : resources) {
+                    String url = registerDependency(context, uiClass, resource);
+                    head.appendElement("script").attr("type", "text/javascript")
+                            .attr("src", url);
+                }
             }
         }
 
-        StyleSheet styleSheet = uiClass.getAnnotation(StyleSheet.class);
-        if (styleSheet != null) {
-            String[] resources = styleSheet.value();
-            for (String resource : resources) {
-                String url = registerDependency(context, uiClass, resource);
-                head.appendElement("link").attr("rel", "stylesheet")
-                        .attr("type", "text/css").attr("href", url);
+        StyleSheet[] styleSheets = uiClass
+                .getAnnotationsByType(StyleSheet.class);
+        if (styleSheets != null) {
+            for (StyleSheet styleSheet : styleSheets) {
+                String[] resources = styleSheet.value();
+                for (String resource : resources) {
+                    String url = registerDependency(context, uiClass, resource);
+                    head.appendElement("link").attr("rel", "stylesheet")
+                            .attr("type", "text/css").attr("href", url);
+                }
             }
         }
 

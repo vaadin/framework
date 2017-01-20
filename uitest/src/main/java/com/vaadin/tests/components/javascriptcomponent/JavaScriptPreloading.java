@@ -28,7 +28,8 @@ public class JavaScriptPreloading extends AbstractReindeerTestUI {
         public String xhtml;
     }
 
-    @JavaScript({ "js_label.js", "wholly_different.js" })
+    @JavaScript("js_label.js")
+    @JavaScript("wholly_different.js")
     public class JsLabel extends AbstractJavaScriptComponent {
 
         public JsLabel(final String xhtml) {
