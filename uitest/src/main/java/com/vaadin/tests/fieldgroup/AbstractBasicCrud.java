@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;

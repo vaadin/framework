@@ -132,6 +132,9 @@ body &.v-app .v-app-loading {
 }
 .v-tooltip-text {
 	overflow: auto;
+        pre {
+          margin: 0px;
+        }
 }
 .v-tooltip .v-errormessage {
 	overflow: auto;

@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.caption;
 
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;

@@ -24,7 +24,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
