@@ -15,7 +15,9 @@
  */
 package com.vaadin.shared.ui.dnd;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.shared.communication.SharedState;
@@ -23,5 +25,6 @@ import com.vaadin.shared.communication.SharedState;
 public class DragSourceState extends SharedState {
     public String effectAllowed;
 
-    public Map<String, String> data = new LinkedHashMap<>();
+    public List<String> types = new ArrayList<>();
+    public Map<String, String> data = new HashMap<>();
 }
