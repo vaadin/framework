@@ -22,24 +22,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation enabling using multiple {@link JavaScript @JavaScript}
+ * Annotation enabling using multiple {@link HtmlImport @HtmlImport}
  * annotations.
  * <p>
- * <b>NOT meant to be used</b>, for multiple JavaScript dependencies,
- * {@link JavaScript @JavaScript} should be used instead.
+ * <b>NOT meant to be used</b>, for multiple HTML dependencies,
+ * {@link HtmlImport @HtmlImport} should be used instead.
  *
  * @author Vaadin Ltd
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@interface InternalContainerAnnotationForJS {
+@interface InternalContainerAnnotationForHtml {
 
     /**
-     * Not to be used, instead multiple {@link JavaScript @JavaScript}
+     * Not to be used, instead multiple {@link HtmlImport @HtmlImport}
      * annotations should be used.
      *
-     * @return an array of the JavaScript annotations
+     * @return an array of the HtmlImport annotations
      */
-    JavaScript[] value();
+    HtmlImport[] value();
 }

@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +40,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.annotations.HtmlImport;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.annotations.Viewport;
@@ -48,6 +50,7 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.ui.Dependency;
 import com.vaadin.ui.UI;
 
 import elemental.json.Json;
@@ -437,31 +440,28 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .attr("href", themeUri + "/favicon.ico");
         }
 
-        JavaScript[] javaScripts = uiClass
-                .getAnnotationsByType(JavaScript.class);
-        if (javaScripts != null) {
-            for (JavaScript javaScript : javaScripts) {
-                String[] resources = javaScript.value();
-                for (String resource : resources) {
-                    String url = registerDependency(context, uiClass, resource);
-                    head.appendElement("script").attr("type", "text/javascript")
-                            .attr("src", url);
-                }
-            }
-        }
+        Stream<String> javascripts = Dependency
+                .findAnnotatedResources(JavaScript.class, uiClass);
+        javascripts.forEach(resource -> {
+            String url = registerDependency(context, uiClass, resource);
+            head.appendElement("script").attr("type", "text/javascript")
+                    .attr("src", url);
+        });
 
-        StyleSheet[] styleSheets = uiClass
-                .getAnnotationsByType(StyleSheet.class);
-        if (styleSheets != null) {
-            for (StyleSheet styleSheet : styleSheets) {
-                String[] resources = styleSheet.value();
-                for (String resource : resources) {
-                    String url = registerDependency(context, uiClass, resource);
-                    head.appendElement("link").attr("rel", "stylesheet")
-                            .attr("type", "text/css").attr("href", url);
-                }
-            }
-        }
+        Stream<String> htmlImports = Dependency
+                .findAnnotatedResources(HtmlImport.class, uiClass);
+        htmlImports.forEach(resource -> {
+            String url = registerDependency(context, uiClass, resource);
+            head.appendElement("link").attr("rel", "import").attr("href", url);
+        });
+
+        Stream<String> styleSheets = Dependency
+                .findAnnotatedResources(StyleSheet.class, uiClass);
+        styleSheets.forEach(resource -> {
+            String url = registerDependency(context, uiClass, resource);
+            head.appendElement("link").attr("rel", "stylesheet")
+                    .attr("type", "text/css").attr("href", url);
+        });
 
         Element body = document.body();
         body.attr("scroll", "auto");
