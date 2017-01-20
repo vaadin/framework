@@ -38,10 +38,6 @@ import com.google.gwt.user.client.Timer;
  * ResourceLoader lets you dynamically include external scripts and styles on
  * the page and lets you know when the resource has been loaded.
  *
- * You can also preload resources, allowing them to get cached by the browser
- * without being evaluated. This enables downloading multiple resources at once
- * while still controlling in which order e.g. scripts are executed.
- *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
@@ -52,7 +48,6 @@ public class ResourceLoader {
     public static class ResourceLoadEvent {
         private final ResourceLoader loader;
         private final String resourceUrl;
-        private final boolean preload;
 
         /**
          * Creates a new event.
@@ -61,19 +56,14 @@ public class ResourceLoader {
          *            the resource loader that has loaded the resource
          * @param resourceUrl
          *            the url of the loaded resource
-         * @param preload
-         *            true if the resource has only been preloaded, false if
-         *            it's fully loaded
          */
-        public ResourceLoadEvent(ResourceLoader loader, String resourceUrl,
-                boolean preload) {
+        public ResourceLoadEvent(ResourceLoader loader, String resourceUrl) {
             this.loader = loader;
             this.resourceUrl = resourceUrl;
-            this.preload = preload;
         }
 
         /**
-         * Gets the resource loader that has fired this event
+         * Gets the resource loader that has fired this event.
          *
          * @return the resource loader
          */
@@ -90,22 +80,10 @@ public class ResourceLoader {
             return resourceUrl;
         }
 
-        /**
-         * Returns true if the resource has been preloaded, false if it's fully
-         * loaded
-         *
-         * @see ResourceLoader#preloadResource(String, ResourceLoadListener)
-         *
-         * @return true if the resource has been preloaded, false if it's fully
-         *         loaded
-         */
-        public boolean isPreload() {
-            return preload;
-        }
     }
 
     /**
-     * Event listener that gets notified when a resource has been loaded
+     * Event listener that gets notified when a resource has been loaded.
      */
     public interface ResourceLoadListener {
         /**
@@ -143,10 +121,8 @@ public class ResourceLoader {
     private ApplicationConnection connection;
 
     private final Set<String> loadedResources = new HashSet<>();
-    private final Set<String> preloadedResources = new HashSet<>();
 
     private final Map<String, Collection<ResourceLoadListener>> loadListeners = new HashMap<>();
-    private final Map<String, Collection<ResourceLoadListener>> preloadListeners = new HashMap<>();
 
     private final Element head;
 
@@ -204,8 +180,7 @@ public class ResourceLoader {
      */
     public void loadScript(final String scriptUrl,
             final ResourceLoadListener resourceLoadListener) {
-        loadScript(scriptUrl, resourceLoadListener,
-                !supportsInOrderScriptExecution());
+        loadScript(scriptUrl, resourceLoadListener, false);
     }
 
     /**
@@ -219,37 +194,20 @@ public class ResourceLoader {
      *            url of script to load
      * @param resourceLoadListener
      *            listener to notify when script is loaded
-     * @param async
-     *            What mode the script.async attribute should be set to
+     * @param defer
+     *            True to trigger loading of the script but possibly defer
+     *            execution, <code>false</code> to load and execute it
+     *            immediately
      * @since 7.2.4
      */
     public void loadScript(final String scriptUrl,
-            final ResourceLoadListener resourceLoadListener, boolean async) {
+            final ResourceLoadListener resourceLoadListener, boolean defer) {
         final String url = WidgetUtil.getAbsoluteUrl(scriptUrl);
-        ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
+        ResourceLoadEvent event = new ResourceLoadEvent(this, url);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
                 resourceLoadListener.onLoad(event);
             }
-            return;
-        }
-
-        if (preloadListeners.containsKey(url)) {
-            // Preload going on, continue when preloaded
-            preloadResource(url, new ResourceLoadListener() {
-                @Override
-                public void onLoad(ResourceLoadEvent event) {
-                    loadScript(url, resourceLoadListener);
-                }
-
-                @Override
-                public void onError(ResourceLoadEvent event) {
-                    // Preload failed -> signal error to own listener
-                    if (resourceLoadListener != null) {
-                        resourceLoadListener.onError(event);
-                    }
-                }
-            });
             return;
         }
 
@@ -258,7 +216,7 @@ public class ResourceLoader {
             scriptTag.setSrc(url);
             scriptTag.setType("text/javascript");
 
-            scriptTag.setPropertyBoolean("async", async);
+            scriptTag.setPropertyBoolean("defer", defer);
 
             addOnloadHandler(scriptTag, new ResourceLoadListener() {
                 @Override
@@ -272,71 +230,6 @@ public class ResourceLoader {
                 }
             }, event);
             head.appendChild(scriptTag);
-        }
-    }
-
-    /**
-     * The current browser supports script.async='false' for maintaining
-     * execution order for dynamically-added scripts.
-     *
-     * @return Browser supports script.async='false'
-     * @since 7.2.4
-     */
-    public static boolean supportsInOrderScriptExecution() {
-        return BrowserInfo.get().isIE11() || BrowserInfo.get().isEdge();
-    }
-
-    /**
-     * Download a resource and notify a listener when the resource is loaded
-     * without attempting to interpret the resource. When a resource has been
-     * preloaded, it will be present in the browser's cache (provided the HTTP
-     * headers allow caching), making a subsequent load operation complete
-     * without having to wait for the resource to be downloaded again.
-     *
-     * Calling this method when the resource is currently loading, currently
-     * preloading, already preloaded or already loaded doesn't cause the
-     * resource to be preloaded again, but the listener will still be notified
-     * when appropriate.
-     *
-     * @param url
-     *            the url of the resource to preload
-     * @param resourceLoadListener
-     *            the listener that will get notified when the resource is
-     *            preloaded
-     */
-    public void preloadResource(String url,
-            ResourceLoadListener resourceLoadListener) {
-        url = WidgetUtil.getAbsoluteUrl(url);
-        ResourceLoadEvent event = new ResourceLoadEvent(this, url, true);
-        if (loadedResources.contains(url) || preloadedResources.contains(url)) {
-            // Already loaded or preloaded -> just fire listener
-            if (resourceLoadListener != null) {
-                resourceLoadListener.onLoad(event);
-            }
-            return;
-        }
-
-        if (addListener(url, resourceLoadListener, preloadListeners)
-                && !loadListeners.containsKey(url)) {
-            // Inject loader element if this is the first time this is preloaded
-            // AND the resources isn't already being loaded in the normal way
-
-            final Element element = getPreloadElement(url);
-            addOnloadHandler(element, new ResourceLoadListener() {
-                @Override
-                public void onLoad(ResourceLoadEvent event) {
-                    fireLoad(event);
-                    Document.get().getBody().removeChild(element);
-                }
-
-                @Override
-                public void onError(ResourceLoadEvent event) {
-                    fireError(event);
-                    Document.get().getBody().removeChild(element);
-                }
-            }, event);
-
-            Document.get().getBody().appendChild(element);
         }
     }
 
@@ -424,30 +317,11 @@ public class ResourceLoader {
     public void loadStylesheet(final String stylesheetUrl,
             final ResourceLoadListener resourceLoadListener) {
         final String url = WidgetUtil.getAbsoluteUrl(stylesheetUrl);
-        final ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
+        final ResourceLoadEvent event = new ResourceLoadEvent(this, url);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
                 resourceLoadListener.onLoad(event);
             }
-            return;
-        }
-
-        if (preloadListeners.containsKey(url)) {
-            // Preload going on, continue when preloaded
-            preloadResource(url, new ResourceLoadListener() {
-                @Override
-                public void onLoad(ResourceLoadEvent event) {
-                    loadStylesheet(url, resourceLoadListener);
-                }
-
-                @Override
-                public void onError(ResourceLoadEvent event) {
-                    // Preload failed -> signal error to own listener
-                    if (resourceLoadListener != null) {
-                        resourceLoadListener.onError(event);
-                    }
-                }
-            });
             return;
         }
 
@@ -568,14 +442,8 @@ public class ResourceLoader {
     private void fireError(ResourceLoadEvent event) {
         String resource = event.getResourceUrl();
 
-        Collection<ResourceLoadListener> listeners;
-        if (event.isPreload()) {
-            // Also fire error for load listeners
-            fireError(new ResourceLoadEvent(this, resource, false));
-            listeners = preloadListeners.remove(resource);
-        } else {
-            listeners = loadListeners.remove(resource);
-        }
+        Collection<ResourceLoadListener> listeners = loadListeners
+                .remove(resource);
         if (listeners != null && !listeners.isEmpty()) {
             for (ResourceLoadListener listener : listeners) {
                 if (listener != null) {
@@ -587,19 +455,9 @@ public class ResourceLoader {
 
     private void fireLoad(ResourceLoadEvent event) {
         String resource = event.getResourceUrl();
-        Collection<ResourceLoadListener> listeners;
-        if (event.isPreload()) {
-            preloadedResources.add(resource);
-            listeners = preloadListeners.remove(resource);
-        } else {
-            if (preloadListeners.containsKey(resource)) {
-                // Also fire preload events for potential listeners
-                fireLoad(new ResourceLoadEvent(this, resource, true));
-            }
-            preloadedResources.remove(resource);
-            loadedResources.add(resource);
-            listeners = loadListeners.remove(resource);
-        }
+        Collection<ResourceLoadListener> listeners = loadListeners
+                .remove(resource);
+        loadedResources.add(resource);
         if (listeners != null && !listeners.isEmpty()) {
             for (ResourceLoadListener listener : listeners) {
                 if (listener != null) {

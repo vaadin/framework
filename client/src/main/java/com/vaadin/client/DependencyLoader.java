@@ -131,17 +131,9 @@ public class DependencyLoader {
         ApplicationConfiguration.startDependencyLoading();
         loader.loadScript(url, resourceLoadListener);
 
-        if (ResourceLoader.supportsInOrderScriptExecution()) {
-            for (int i = 0; i < dependencies.length(); i++) {
-                String preloadUrl = translateVaadinUri(dependencies.get(i));
-                loader.loadScript(preloadUrl, null);
-            }
-        } else {
-            // Preload all remaining
-            for (int i = 0; i < dependencies.length(); i++) {
-                String preloadUrl = translateVaadinUri(dependencies.get(i));
-                loader.preloadResource(preloadUrl, null);
-            }
+        for (int i = 0; i < dependencies.length(); i++) {
+            String preloadUrl = translateVaadinUri(dependencies.get(i));
+            loader.loadScript(preloadUrl, null);
         }
     }
 
