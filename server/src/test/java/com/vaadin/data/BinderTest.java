@@ -68,17 +68,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         assertEquals("Johannes", nameField.getValue());
         assertEquals("32", ageField.getValue());
 
-        binder.clear();
+        binder.readBean(null);
         assertEquals("", nameField.getValue());
         assertEquals("", ageField.getValue());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void clearForBoundBean_throws() {
-        binder.setBean(item);
-        assertNotNull(binder.getBean());
-
-        binder.clear();
     }
 
     @Test(expected = NullPointerException.class)

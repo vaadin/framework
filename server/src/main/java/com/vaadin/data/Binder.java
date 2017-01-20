@@ -1324,7 +1324,7 @@ public class Binder<BEAN> implements Serializable {
      *
      * @param bean
      *            the bean to edit, or {@code null} to remove a currently bound
-     *            bean
+     *            bean and clear bound fields
      */
     public void setBean(BEAN bean) {
         checkBindingsCompleted("setBean");
@@ -1368,10 +1368,14 @@ public class Binder<BEAN> implements Serializable {
      * @see #writeBean(Object)
      *
      * @param bean
-     *            the bean whose property values to read, not null
+     *            the bean whose property values to read or {@code null} to
+     *            clear bound fields
      */
     public void readBean(BEAN bean) {
-        Objects.requireNonNull(bean, "bean cannot be null");
+        if(bean == null) {
+            clearFields();
+            return;
+        }
         checkBindingsCompleted("readBean");
         setHasChanges(false);
         bindings.forEach(binding -> binding.initFieldValue(bean));
@@ -1550,17 +1554,6 @@ public class Binder<BEAN> implements Serializable {
     public Binder<BEAN> withValidator(SerializablePredicate<BEAN> predicate,
             ErrorMessageProvider errorMessageProvider) {
         return withValidator(Validator.from(predicate, errorMessageProvider));
-    }
-
-    /**
-     * Clear the values of all fields
-     */
-    public void clear() {
-        if (bean == null) {
-            clearFields();
-        } else {
-            throw new IllegalStateException("Fields can not be cleared when we have a bound bean.");
-        }
     }
 
     /**
