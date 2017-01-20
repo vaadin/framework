@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.extensions;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.BrowserEvents;
@@ -49,8 +50,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         setEffectAllowed(event.getDataTransfer(), getState().effectAllowed);
 
         // Set data parameter
+        List<String> types = getState().types;
         Map<String, String> data = getState().data;
-        for (String format : data.keySet()) {
+        for (String format : types) {
             event.setData(format, data.get(format));
         }
     }
