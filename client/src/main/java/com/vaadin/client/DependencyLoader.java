@@ -113,12 +113,6 @@ public class DependencyLoader {
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
             @Override
             public void onLoad(ResourceLoadEvent event) {
-                if (dependencies.length() != 0) {
-                    String url = translateVaadinUri(dependencies.shift());
-                    ApplicationConfiguration.startDependencyLoading();
-                    // Load next in chain (hopefully already preloaded)
-                    event.getResourceLoader().loadScript(url, this);
-                }
                 // Call start for next before calling end for current
                 ApplicationConfiguration.endDependencyLoading();
             }
@@ -133,23 +127,10 @@ public class DependencyLoader {
         };
 
         ResourceLoader loader = ResourceLoader.get();
-
-        // Start chain by loading first
-        String url = translateVaadinUri(dependencies.shift());
-        ApplicationConfiguration.startDependencyLoading();
-        loader.loadScript(url, resourceLoadListener);
-
-        if (ResourceLoader.supportsInOrderScriptExecution()) {
-            for (int i = 0; i < dependencies.length(); i++) {
-                String preloadUrl = translateVaadinUri(dependencies.get(i));
-                loader.loadScript(preloadUrl, null);
-            }
-        } else {
-            // Preload all remaining
-            for (int i = 0; i < dependencies.length(); i++) {
-                String preloadUrl = translateVaadinUri(dependencies.get(i));
-                loader.preloadResource(preloadUrl, null);
-            }
+        for (int i = 0; i < dependencies.length(); i++) {
+            ApplicationConfiguration.startDependencyLoading();
+            String preloadUrl = translateVaadinUri(dependencies.get(i));
+            loader.loadScript(preloadUrl, resourceLoadListener);
         }
     }
 
