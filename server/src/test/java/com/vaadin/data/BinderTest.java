@@ -48,12 +48,12 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withConverter(new StringToIntegerConverter(""))
                 .bind(Person::getAge, Person::setAge);
         binder.setBean(item);
-        assertEquals("Johannes", nameField.getValue());
-        assertEquals("32", ageField.getValue());
+        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No age field value", "32", ageField.getValue());
 
         binder.setBean(null);
-        assertEquals("", nameField.getValue());
-        assertEquals("", ageField.getValue());
+        assertEquals("Name field not empty", "", nameField.getValue());
+        assertEquals("Age field not empty", "", ageField.getValue());
     }
 
     @Test
@@ -65,12 +65,45 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind(Person::getAge, Person::setAge);
         binder.readBean(item);
 
-        assertEquals("Johannes", nameField.getValue());
-        assertEquals("32", ageField.getValue());
+        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No age field value", "32", ageField.getValue());
 
         binder.readBean(null);
-        assertEquals("", nameField.getValue());
-        assertEquals("", ageField.getValue());
+        assertEquals("Name field not empty", "", nameField.getValue());
+        assertEquals("Age field not empty", "", ageField.getValue());
+    }
+
+    @Test
+    public void clearReadOnlyField_shouldClearField() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        // Make name field read only
+        nameField.setReadOnly(true);
+
+        binder.setBean(item);
+        assertEquals("No name field value", "Johannes", nameField.getValue());
+
+        binder.setBean(null);
+
+        assertEquals("ReadOnly field not empty","", nameField.getValue());
+    }
+
+    @Test
+    public void clearReadOnlyBinder_shouldClearFields() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setReadOnly(true);
+
+        binder.setBean(item);
+
+        binder.setBean(null);
+        assertEquals("ReadOnly name field not empty", "", nameField.getValue());
+        assertEquals("ReadOnly age field not empty", "", ageField.getValue());
     }
 
     @Test(expected = NullPointerException.class)

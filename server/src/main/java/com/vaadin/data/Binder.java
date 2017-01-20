@@ -1560,17 +1560,7 @@ public class Binder<BEAN> implements Serializable {
      * Clear all the bound fields for this binder.
      */
     private void clearFields() {
-        for (Binding binding : bindings) {
-            HasValue field = binding.getField();
-            if (field.isReadOnly()) {
-                // Temporarily make the field read-write so we can clear the value.
-                field.setReadOnly(false);
-                field.clear();
-                field.setReadOnly(true);
-            } else {
-                field.clear();
-            }
-        }
+        bindings.forEach(binding -> binding.getField().clear());
     }
 
     /**
