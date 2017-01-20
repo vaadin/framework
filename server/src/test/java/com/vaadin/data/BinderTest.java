@@ -40,6 +40,47 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         assertNull(binder.getBean());
     }
 
+    @Test
+    public void bindNullBean_FieldsAreCleared() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+        binder.setBean(item);
+        assertEquals("Johannes", nameField.getValue());
+        assertEquals("32", ageField.getValue());
+
+        binder.setBean(null);
+        assertEquals("", nameField.getValue());
+        assertEquals("", ageField.getValue());
+    }
+
+    @Test
+    public void clearForReadBean_boundFieldsAreCleared() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+        binder.readBean(item);
+
+        assertEquals("Johannes", nameField.getValue());
+        assertEquals("32", ageField.getValue());
+
+        binder.clear();
+        assertEquals("", nameField.getValue());
+        assertEquals("", ageField.getValue());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void clearForBoundBean_throws() {
+        binder.setBean(item);
+        assertNotNull(binder.getBean());
+
+        binder.clear();
+    }
+
     @Test(expected = NullPointerException.class)
     public void bindNullField_throws() {
         binder.forField(null);

@@ -1331,6 +1331,7 @@ public class Binder<BEAN> implements Serializable {
         if (bean == null) {
             if (this.bean != null) {
                 doRemoveBean(true);
+                clearFields();
             }
         } else {
             doRemoveBean(false);
@@ -1549,6 +1550,34 @@ public class Binder<BEAN> implements Serializable {
     public Binder<BEAN> withValidator(SerializablePredicate<BEAN> predicate,
             ErrorMessageProvider errorMessageProvider) {
         return withValidator(Validator.from(predicate, errorMessageProvider));
+    }
+
+    /**
+     * Clear the values of all fields
+     */
+    public void clear() {
+        if (bean == null) {
+            clearFields();
+        } else {
+            throw new IllegalStateException("Fields can not be cleared when we have a bound bean.");
+        }
+    }
+
+    /**
+     * Clear all the bound fields for this binder.
+     */
+    private void clearFields() {
+        for (Binding binding : bindings) {
+            HasValue field = binding.getField();
+            if (field.isReadOnly()) {
+                // Temporarily make the field read-write so we can clear the value.
+                field.setReadOnly(false);
+                field.clear();
+                field.setReadOnly(true);
+            } else {
+                field.clear();
+            }
+        }
     }
 
     /**
