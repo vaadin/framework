@@ -69,4 +69,5 @@ public @interface JavaScript {
      * @return an array of JavaScript file URLs
      */
     public String[] value();
+
 }
