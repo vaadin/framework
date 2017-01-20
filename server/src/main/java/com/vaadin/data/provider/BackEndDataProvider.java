@@ -18,6 +18,8 @@ package com.vaadin.data.provider;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.server.SerializableBiFunction;
+
 /**
  * A data provider that lazy loads items from a back end.
  *
@@ -70,5 +72,45 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
     @Override
     default boolean isInMemory() {
         return false;
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that supports
+     * programmatically setting a filter that will be combined with a filter
+     * provided through the query.
+     *
+     * @see #withConfigurableFilter()
+     *
+     * @param filterCombiner
+     *            a callback for combining and the configured filter with the
+     *            filter from the query to get a filter to pass to the wrapped
+     *            provider. Will only be called if the query contains a filter.
+     *
+     * @return a data provider with a configurable filter, not <code>null</code>
+     */
+    public default <C> ConfigurableFilterDataProvider<T, C, F> withConfigurableFilter(
+            SerializableBiFunction<F, C, F> filterCombiner) {
+        return new ConfigurableFilterDataProviderWrapper<T, C, F>(this) {
+            @Override
+            protected F combineFilters(F configuredFilter, C queryFilter) {
+                return filterCombiner.apply(configuredFilter, queryFilter);
+            }
+        };
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that supports
+     * programmatically setting a filter but no filtering through the query.
+     *
+     * @see #withConfigurableFilter(SerializableBiFunction)
+     *
+     * @return a data provider with a configurable filter, not <code>null</code>
+     */
+    public default ConfigurableFilterDataProvider<T, Void, F> withConfigurableFilter() {
+        return withConfigurableFilter((configuredFilter, queryFilter) -> {
+            assert queryFilter == null : "Filter from Void query must be null";
+
+            return configuredFilter;
+        });
     }
 }

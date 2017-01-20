@@ -15,6 +15,7 @@
  */
 package com.vaadin.data.provider;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vaadin.server.SerializableFunction;
@@ -78,10 +79,11 @@ public abstract class DataProviderWrapper<T, F, M>
      * Constructs a filtering wrapper for a data provider.
      *
      * @param dataProvider
-     *            the wrapped data provider
+     *            the wrapped data provider, not <code>null</code>
      */
     protected DataProviderWrapper(DataProvider<T, M> dataProvider) {
-        this.dataProvider = dataProvider;
+        this.dataProvider = Objects.requireNonNull(dataProvider,
+                "The wrapped data provider cannot be null.");
     }
 
     @Override
