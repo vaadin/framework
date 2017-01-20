@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.annotations.HtmlImport;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ClientConnector;
@@ -40,10 +41,13 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.ConnectorTracker;
+import com.vaadin.ui.Dependency;
+import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.UI;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
@@ -284,8 +288,7 @@ public class UidlWriter implements Serializable {
                 }
             });
 
-            List<String> scriptDependencies = new ArrayList<>();
-            List<String> styleDependencies = new ArrayList<>();
+            List<Dependency> dependencies = new ArrayList<>();
 
             for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
                 JavaScript[] jsAnnotations = class1
@@ -293,8 +296,22 @@ public class UidlWriter implements Serializable {
                 if (jsAnnotations != null) {
                     for (JavaScript jsAnnotation : jsAnnotations) {
                         for (String uri : jsAnnotation.value()) {
-                            scriptDependencies.add(
-                                    manager.registerDependency(uri, class1));
+                            String url = manager.registerDependency(uri,
+                                    class1);
+                            dependencies
+                                    .add(new Dependency(Type.JAVASCRIPT, url));
+                        }
+                    }
+                }
+                HtmlImport[] htmlImportAnnotations = class1
+                        .getAnnotationsByType(HtmlImport.class);
+                if (htmlImportAnnotations != null) {
+                    for (HtmlImport htmlImportAnnotation : htmlImportAnnotations) {
+                        for (String uri : htmlImportAnnotation.value()) {
+                            String url = manager.registerDependency(uri,
+                                    class1);
+                            dependencies
+                                    .add(new Dependency(Type.HTMLIMPORT, url));
                         }
                     }
                 }
@@ -304,23 +321,19 @@ public class UidlWriter implements Serializable {
                 if (styleAnnotations != null) {
                     for (StyleSheet styleAnnotation : styleAnnotations) {
                         for (String uri : styleAnnotation.value()) {
-                            styleDependencies.add(
-                                    manager.registerDependency(uri, class1));
+                            String url = manager.registerDependency(uri,
+                                    class1);
+                            dependencies
+                                    .add(new Dependency(Type.STYLESHEET, url));
                         }
                     }
                 }
             }
 
-            // Include script dependencies in output if there are any
-            if (!scriptDependencies.isEmpty()) {
-                writer.write(", \"scriptDependencies\": "
-                        + JsonUtil.stringify(toJsonArray(scriptDependencies)));
-            }
-
-            // Include style dependencies in output if there are any
-            if (!styleDependencies.isEmpty()) {
-                writer.write(", \"styleDependencies\": "
-                        + JsonUtil.stringify(toJsonArray(styleDependencies)));
+            // Include dependencies in output if there are any
+            if (!dependencies.isEmpty()) {
+                writer.write(", \"dependencies\": "
+                        + JsonUtil.stringify(toJsonArray(dependencies)));
             }
 
             session.getDragAndDropService().printJSONResponse(writer);
@@ -339,10 +352,14 @@ public class UidlWriter implements Serializable {
         }
     }
 
-    private JsonArray toJsonArray(List<String> list) {
+    private JsonArray toJsonArray(List<Dependency> list) {
         JsonArray result = Json.createArray();
         for (int i = 0; i < list.size(); i++) {
-            result.set(i, list.get(i));
+            JsonObject dep = Json.createObject();
+            Dependency dependency = list.get(i);
+            dep.put("type", dependency.getType().name());
+            dep.put("url", dependency.getUrl());
+            result.set(i, dep);
         }
 
         return result;

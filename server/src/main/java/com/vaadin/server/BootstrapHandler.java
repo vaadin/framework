@@ -39,6 +39,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.annotations.HtmlImport;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.annotations.Viewport;
@@ -446,6 +447,19 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     String url = registerDependency(context, uiClass, resource);
                     head.appendElement("script").attr("type", "text/javascript")
                             .attr("src", url);
+                }
+            }
+        }
+
+        HtmlImport[] htmlImportAnnotations = uiClass
+                .getAnnotationsByType(HtmlImport.class);
+        if (htmlImportAnnotations != null) {
+            for (HtmlImport htmlImportAnnotation : htmlImportAnnotations) {
+                String[] resources = htmlImportAnnotation.value();
+                for (String resource : resources) {
+                    String url = registerDependency(context, uiClass, resource);
+                    head.appendElement("link").attr("rel", "import")
+                            .attr("href", url);
                 }
             }
         }
