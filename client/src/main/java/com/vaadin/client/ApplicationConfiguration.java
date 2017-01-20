@@ -624,14 +624,18 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
+     * Runs the given command when all pending dependencies have been loaded, or
+     * immediately if no dependencies are being loaded.
+     *
      * @since 7.6
-     * @param c
+     * @param command
+     *            the command to run
      */
-    public static void runWhenDependenciesLoaded(Command c) {
+    public static void runWhenDependenciesLoaded(Command command) {
         if (dependenciesLoading == 0) {
-            c.execute();
+            command.execute();
         } else {
-            callbacks.add(c);
+            callbacks.add(command);
         }
     }
 
