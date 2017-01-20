@@ -41,19 +41,18 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         widget.getElement().addClassName(CLASS_DRAGGABLE);
 
         widget.sinkBitlessEvent(BrowserEvents.DRAGSTART);
-        widget.addHandler(event -> {
+        widget.addHandler(this::onDragStart, DragStartEvent.getType());
+    }
 
-            // Set effectAllowed parameter
-            setEffectAllowed(event.getDataTransfer(), getState().effectAllowed);
+    protected void onDragStart(DragStartEvent event) {
+        // Set effectAllowed parameter
+        setEffectAllowed(event.getDataTransfer(), getState().effectAllowed);
 
-            // Set data parameter
-            Map<String, String> data = getState().data;
-            for (String format : data.keySet()) {
-                event.setData(format, data.get(format));
-            }
-
-            // TODO: 16/01/2017 Add source object to dataTransfer
-        }, DragStartEvent.getType());
+        // Set data parameter
+        Map<String, String> data = getState().data;
+        for (String format : data.keySet()) {
+            event.setData(format, data.get(format));
+        }
     }
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
