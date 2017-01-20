@@ -23,7 +23,8 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
 
 @JavaScript("uiDependency.js")
-@StyleSheet("theme://uiDependency.css")
+@StyleSheet({ "theme://uiDependency1.css", "theme://uiDependency2.css" })
+@StyleSheet("theme://uiDependency3.css")
 @Theme("tests-valo")
 public class UiDependenciesInHtml extends AbstractReindeerTestUI {
 
