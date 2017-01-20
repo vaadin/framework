@@ -418,11 +418,9 @@ object.
 
 [source,java]
 ----
-filterText.setInputPrompt("filter by name...");
-filterText.addTextChangeListener(e -> {
-    grid.setContainerDataSource(new BeanItemContainer<>(Customer.class,
-            service.findAll(e.getText())));
-});
+filterText.setPlaceholder("filter by name...");
+filterText.addValueChangeListener(e -> updateList());
+filterText.setValueChangeMode(ValueChangeMode.LAZY);
 ----
 
 TIP: To keep your code more readable, you can use autoformat after you write or
@@ -455,25 +453,21 @@ to the init method, for example right after your _filterText_ configuration:
 ----
 Button clearFilterTextBtn = new Button(FontAwesome.TIMES);
 clearFilterTextBtn.setDescription("Clear the current filter");
-clearFilterTextBtn.addClickListener(e -> {
-  filterText.clear();
-  updateList();
-});
+clearFilterTextBtn.addClickListener(e -> filterText.clear());
 ----
 
 Vaadin contains a set of built in icons, from which we use the "X" icon,
 _FontAwesome.TIMES_, here, which most users will recognise as a functionality to clear
 the value. If we set the description to a component, it will be shown as a
 tooltip for those users who hover the cursor over the button and wonder what to
-do with it. In the click listener, we simply clear the text from the field and
-refresh the content of the listing.
+do with it. In the click listener, we simply clear the text from the field.
 
 Vaadin contains lots of different kinds of layouts. The simplest way to align
 the text field and the button next to each other would be to use a
 HorizontalLayout. An alternative way we use here is using a CssLayout, which is
 a lightweight layout that is easy to customize with css. Even if you wouldn't
 want to play with CSS yourself, you can often use one of the existing style
-rules in the default _Valo_ theme. The following snippet will create a nice
+rules in the default https://demo.vaadin.com/valo-theme[_Valo_] theme. The following snippet will create a nice
 compact "composition" of both the TextField and the clear button. Add these
 lines to the init method right after you configured the _clearFilterTextBtn_:
 
@@ -656,7 +650,7 @@ beanBinder.bindInstanceFields(this);
 This configures the BeanBinder to use all the similary named editor fields in
 this form to bind their values with their counterpart in the Customer class.
 For example, the _CustomerForm.firstName_ TextField will be bound to the
-Cursomer.firstName property.
+Customer.firstName property.
 
 Create a setter method for the Customer field. Just type _setCus_ in the body of the
 class and hit autocomplete (kbd:[Ctrl+Space]) and Eclipse will create a method
@@ -666,7 +660,7 @@ stub for you. Complete it with the following implementation:
 ----
 public void setCustomer(Customer customer) {
     this.customer = customer;
-    BeanFieldGroup.bindFieldsUnbuffered(customer, this);
+    beanBinder.setBean(customer);
 
     // Show delete button for only customers already in the database
     delete.setVisible(customer.isPersisted());
@@ -744,7 +738,7 @@ click _finish_.
 
 In the form, we'll need editor fields for each property in our Customer domain
 class. There are different kinds of fields in Vaadin for editing different kinds
-of properties. In this example, we'll use a TextField, a PopupDateField and a
+of properties. In this example, we'll use a TextField, a DateField and a
 NativeSelect. Add the following field declarations and action buttons as Java
 fields to the CustomerForm:
 
@@ -754,7 +748,7 @@ private TextField firstName = new TextField("First name");
 private TextField lastName = new TextField("Last name");
 private TextField email = new TextField("Email");
 private NativeSelect<CustomerStatus> status = new NativeSelect<>("Status");
-private PopupDateField birthdate = new PopupDateField("Birthday");
+private DateField birthdate = new DateField("Birthday");
 private Button save = new Button("Save");
 private Button delete = new Button("Delete");
 ----
@@ -774,7 +768,6 @@ public CustomerForm(MyUI myUI) {
 
     setSizeUndefined();
     HorizontalLayout buttons = new HorizontalLayout(save, delete);
-    buttons.setSpacing(true);
     addComponents(firstName, lastName, email, status, birthdate, buttons);
 }
 ----
@@ -851,7 +844,7 @@ beanBinder.bindInstanceFields(this);
 This configures the BeanBinder to use all the similary named editor fields in
 this form to bind their values with their counterpart in the Customer class.
 For example, the _CustomerForm.firstName_ TextField will be bound to the
-Cursomer.firstName property.
+Customer.firstName property.
 
 Create a setter method for the Customer field. Just type _setCus_ in the body of the
 class and hit autocomplete (kbd:[Ctrl+Space]) and Eclipse will create a method
@@ -861,7 +854,7 @@ stub for you. Complete it with the following implementation:
 ----
 public void setCustomer(Customer customer) {
     this.customer = customer;
-    BeanFieldGroup.bindFieldsUnbuffered(customer, this);
+    beanBinder.setBean(customer);
 
     // Show delete button for only customers already in the database
     delete.setVisible(customer.isPersisted());
