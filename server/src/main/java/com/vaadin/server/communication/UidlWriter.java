@@ -288,21 +288,25 @@ public class UidlWriter implements Serializable {
             List<String> styleDependencies = new ArrayList<>();
 
             for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
-                JavaScript jsAnnotation = class1
-                        .getAnnotation(JavaScript.class);
-                if (jsAnnotation != null) {
-                    for (String uri : jsAnnotation.value()) {
-                        scriptDependencies
-                                .add(manager.registerDependency(uri, class1));
+                JavaScript[] jsAnnotations = class1
+                        .getAnnotationsByType(JavaScript.class);
+                if (jsAnnotations != null) {
+                    for (JavaScript jsAnnotation : jsAnnotations) {
+                        for (String uri : jsAnnotation.value()) {
+                            scriptDependencies.add(
+                                    manager.registerDependency(uri, class1));
+                        }
                     }
                 }
 
-                StyleSheet styleAnnotation = class1
-                        .getAnnotation(StyleSheet.class);
-                if (styleAnnotation != null) {
-                    for (String uri : styleAnnotation.value()) {
-                        styleDependencies
-                                .add(manager.registerDependency(uri, class1));
+                StyleSheet[] styleAnnotations = class1
+                        .getAnnotationsByType(StyleSheet.class);
+                if (styleAnnotations != null) {
+                    for (StyleSheet styleAnnotation : styleAnnotations) {
+                        for (String uri : styleAnnotation.value()) {
+                            styleDependencies.add(
+                                    manager.registerDependency(uri, class1));
+                        }
                     }
                 }
             }
