@@ -21,38 +21,7 @@ import com.vaadin.shared.ui.dnd.DragSourceState;
 
 public class DragSourceExtension extends AbstractExtension {
 
-    @Override
-    public void extend(AbstractClientConnector target) {
-        super.extend(target);
-    }
-
-    public void setEffectAllowed(DragEffect effect) {
-        getState().effectAllowed = effect.getValue();
-    }
-
-    public void setData(String format, String data) {
-        getState().data.put(format, data);
-    }
-
-    public void clearData(String format) {
-        getState().data.remove(format);
-    }
-
-    public void clearData() {
-        getState().data.clear();
-    }
-
-    @Override
-    protected DragSourceState getState() {
-        return (DragSourceState) super.getState();
-    }
-
-    @Override
-    protected DragSourceState getState(boolean markAsDirty) {
-        return (DragSourceState) super.getState(markAsDirty);
-    }
-
-    public enum DragEffect {
+    public enum EffectAllowed {
         /**
          * The item may not be dropped.
          */
@@ -93,9 +62,9 @@ public class DragSourceExtension extends AbstractExtension {
          */
         ALL("all");
 
-        private String value;
+        private final String value;
 
-        DragEffect(String value) {
+        EffectAllowed(String value) {
             this.value = value;
         }
 
@@ -104,4 +73,34 @@ public class DragSourceExtension extends AbstractExtension {
         }
     }
 
+    @Override
+    public void extend(AbstractClientConnector target) {
+        super.extend(target);
+    }
+
+    public void setEffectAllowed(EffectAllowed effect) {
+        getState().effectAllowed = effect.getValue();
+    }
+
+    public void setData(String format, String data) {
+        getState().data.put(format, data);
+    }
+
+    public void clearData(String format) {
+        getState().data.remove(format);
+    }
+
+    public void clearData() {
+        getState().data.clear();
+    }
+
+    @Override
+    protected DragSourceState getState() {
+        return (DragSourceState) super.getState();
+    }
+
+    @Override
+    protected DragSourceState getState(boolean markAsDirty) {
+        return (DragSourceState) super.getState(markAsDirty);
+    }
 }

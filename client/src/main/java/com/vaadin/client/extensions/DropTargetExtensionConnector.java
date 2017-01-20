@@ -21,6 +21,7 @@ import java.util.Map;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.DragEnterEvent;
 import com.google.gwt.event.dom.client.DragLeaveEvent;
 import com.google.gwt.event.dom.client.DragOverEvent;
@@ -45,43 +46,63 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         // dragenter event
         widget.sinkBitlessEvent(BrowserEvents.DRAGENTER);
         widget.addHandler(event -> {
-            widget.getElement().addClassName(CLASS_DRAG_OVER);
+            onDragEnter(event, widget.getElement());
         }, DragEnterEvent.getType());
 
         // dragover event
         widget.sinkBitlessEvent(BrowserEvents.DRAGOVER);
-        widget.addHandler(event -> {
-
-            // Set dropEffect parameter
-            if (getState().dropEffect != null) {
-                event.getDataTransfer().setDropEffect(
-                        DataTransfer.DropEffect.valueOf(getState().dropEffect));
-            }
-
-            // Prevent default to allow drop
-            event.preventDefault();
-        }, DragOverEvent.getType());
+        widget.addHandler(this::onDragOver, DragOverEvent.getType());
 
         // dragleave event
         widget.sinkBitlessEvent(BrowserEvents.DRAGLEAVE);
         widget.addHandler(event -> {
-            widget.getElement().removeClassName(CLASS_DRAG_OVER);
+            onDragLeave(event, widget.getElement());
         }, DragLeaveEvent.getType());
 
         // drop event
         widget.sinkBitlessEvent(BrowserEvents.DROP);
-        widget.addHandler(event -> {
-            event.preventDefault();
+        widget.addHandler(this::onDrop, DropEvent.getType());
+    }
 
-            // Initiate firing server side drop event
-            JsArrayString types = getTypes(event.getDataTransfer());
-            Map<String, String> data = new LinkedHashMap<>();
-            for (int i = 0; i < types.length(); i++) {
-                data.put(types.get(i), event.getData(types.get(i)));
-            }
-            getRpcProxy(DropTargetRpc.class).drop(data, getState().dropEffect);
+    protected void onDragEnter(DragEnterEvent event, Element draggableElement) {
+        addDragOverClass(draggableElement);
+    }
 
-        }, DropEvent.getType());
+    protected void onDragOver(DragOverEvent event) {
+        // Set dropEffect parameter
+        if (getState().dropEffect != null) {
+            event.getDataTransfer().setDropEffect(
+                    DataTransfer.DropEffect.valueOf(getState().dropEffect));
+        }
+
+        // Prevent default to allow drop
+        event.preventDefault();
+    }
+
+    protected void onDragLeave(DragLeaveEvent event, Element draggableElement) {
+        removeDragOverClass(draggableElement);
+    }
+
+    protected void onDrop(DropEvent event) {
+        event.preventDefault();
+
+        // Initiate firing server side drop event
+        JsArrayString types = getTypes(event.getDataTransfer());
+        Map<String, String> data = new LinkedHashMap<>();
+        for (int i = 0; i < types.length(); i++) {
+            data.put(types.get(i), event.getData(types.get(i)));
+        }
+
+
+        getRpcProxy(DropTargetRpc.class).drop(data, getState().dropEffect);
+    }
+
+    private void addDragOverClass(Element element) {
+        element.addClassName(CLASS_DRAG_OVER);
+    }
+
+    private void removeDragOverClass(Element element) {
+        element.removeClassName(CLASS_DRAG_OVER);
     }
 
     private native JsArrayString getTypes(DataTransfer dataTransfer)/*-{
