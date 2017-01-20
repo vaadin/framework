@@ -17,7 +17,7 @@ package com.vaadin.client;
 
 import java.util.logging.Logger;
 
-import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
@@ -34,9 +34,31 @@ import com.vaadin.client.ResourceLoader.ResourceLoadListener;
  */
 public class DependencyLoader {
 
-    private static final String STYLE_DEPENDENCIES = "styleDependencies";
-    private static final String SCRIPT_DEPENDENCIES = "scriptDependencies";
+    private static final String DEPENDENCIES = "dependencies";
+
     private ApplicationConnection connection;
+
+    private ResourceLoader loader = ResourceLoader.get();
+
+    private ResourceLoadListener dependencyLoadingTracker = new ResourceLoadListener() {
+
+        @Override
+        public void onLoad(ResourceLoadEvent event) {
+            ApplicationConfiguration.endDependencyLoading();
+        }
+
+        @Override
+        public void onError(ResourceLoadEvent event) {
+            String error = event.getResourceUrl() + " could not be loaded.";
+            if (event.getResourceUrl().endsWith("css")) {
+                error += " or the load detection failed because the stylesheet is empty.";
+            }
+            getLogger().severe(error);
+            // The show must go on
+            onLoad(event);
+        }
+
+    };
 
     /**
      * Sets the ApplicationConnection this instance is connected to.
@@ -53,81 +75,41 @@ public class DependencyLoader {
     /**
      * Loads the any dependencies present in the given json snippet.
      *
-     * Scans the key "{@literal scriptDependencies}" for JavaScripts and the key
-     * "{@literal styleDependencies}" for style sheets.
+     * Handles all dependencies found with the key "{@literal dependencies}".
      *
-     * Ensures that the given JavaScript dependencies are loaded in the given
-     * order. Does not ensure anything about stylesheet order.
+     * Ensures that
+     * <ul>
+     * <li>JavaScript dependencies are loaded in the given order.
+     * <li>HTML imports are loaded after all JavaScripts are loaded and
+     * executed.
+     * <li>Style sheets are loaded and evaluated in some undefined order
+     * </ul>
      *
      * @param json
      *            the JSON containing the dependencies to load
      */
     public void loadDependencies(ValueMap json) {
-        if (json.containsKey(SCRIPT_DEPENDENCIES)) {
-            loadScriptDependencies(json.getJSStringArray(SCRIPT_DEPENDENCIES));
-        }
-        if (json.containsKey(STYLE_DEPENDENCIES)) {
-            loadStyleDependencies(json.getJSStringArray(STYLE_DEPENDENCIES));
-        }
-
-    }
-
-    private void loadStyleDependencies(JsArrayString dependencies) {
-        // Assuming no reason to interpret in a defined order
-        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
-            @Override
-            public void onLoad(ResourceLoadEvent event) {
-                ApplicationConfiguration.endDependencyLoading();
-            }
-
-            @Override
-            public void onError(ResourceLoadEvent event) {
-                getLogger().severe(event.getResourceUrl()
-                        + " could not be loaded, or the load detection failed because the stylesheet is empty.");
-                // The show must go on
-                onLoad(event);
-            }
-        };
-        ResourceLoader loader = ResourceLoader.get();
-        for (int i = 0; i < dependencies.length(); i++) {
-            String url = translateVaadinUri(dependencies.get(i));
-            ApplicationConfiguration.startDependencyLoading();
-            loader.loadStylesheet(url, resourceLoadListener);
-        }
-    }
-
-    private void loadScriptDependencies(final JsArrayString dependencies) {
-        if (dependencies.length() == 0) {
+        if (!json.containsKey(DEPENDENCIES)) {
             return;
         }
+        JsArray<ValueMap> deps = json.getJSValueMapArray(DEPENDENCIES);
 
-        // Listener that loads the next when one is completed
-        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
-            @Override
-            public void onLoad(ResourceLoadEvent event) {
-                // Call start for next before calling end for current
-                ApplicationConfiguration.endDependencyLoading();
-            }
-
-            @Override
-            public void onError(ResourceLoadEvent event) {
-                getLogger().severe(
-                        event.getResourceUrl() + " could not be loaded.");
-                // The show must go on
-                onLoad(event);
-            }
-        };
-
-        ResourceLoader loader = ResourceLoader.get();
-        for (int i = 0; i < dependencies.length(); i++) {
+        for (int i = 0; i < deps.length(); i++) {
+            ValueMap dep = deps.get(i);
+            String type = dep.getAsString("type");
+            String url = connection.translateVaadinUri(dep.getAsString("url"));
             ApplicationConfiguration.startDependencyLoading();
-            String preloadUrl = translateVaadinUri(dependencies.get(i));
-            loader.loadScript(preloadUrl, resourceLoadListener);
+            if (type.equals("STYLESHEET")) {
+                loader.loadStylesheet(url, dependencyLoadingTracker);
+            } else if (type.equals("JAVASCRIPT")) {
+                loader.loadScript(url, dependencyLoadingTracker);
+            } else if (type.equals("HTMLIMPORT")) {
+                loader.loadHtmlImport(url, dependencyLoadingTracker);
+            } else {
+                ApplicationConfiguration.endDependencyLoading();
+                throw new IllegalArgumentException("Unknown type: " + type);
+            }
         }
-    }
-
-    private String translateVaadinUri(String url) {
-        return connection.translateVaadinUri(url);
     }
 
     private static Logger getLogger() {
