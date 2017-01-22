@@ -134,11 +134,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private StyleGenerator<T> itemStyleGenerator = item -> null;
 
-    private final SerializableBiPredicate<String, T> defaultFilterMethod = (
-            text, item) -> getItemCaptionGenerator().apply(item)
-                    .toLowerCase(getLocale())
-                    .contains(text.toLowerCase(getLocale()));
-
     /**
      * Constructs an empty combo box without a caption. The content of the combo
      * box can be set with {@link #setDataProvider(DataProvider)} or
@@ -216,10 +211,13 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     @Override
     public void setItems(Collection<T> items) {
-        DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> defaultFilterMethod
-                        .test(filterText, item));
-        setDataProvider(provider);
+        // Cannot use the case insensitive contains shorthand from
+        // ListDataProvider since it wouldn't react to locale changes
+        CaptionFilter defaultCaptionFilter = (itemText, filterText) -> itemText
+                .toLowerCase(getLocale())
+                .contains(filterText.toLowerCase(getLocale()));
+
+        setItems(defaultCaptionFilter, items);
     }
 
     /**
@@ -236,9 +234,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            the data items to display
      */
     public void setItems(CaptionFilter captionFilter, Collection<T> items) {
+        // Must do getItemCaptionGenerator() for each operation since it might
+        // not be the same as when this method was invoked
         DataProvider<T, String> provider = DataProvider.create(items)
-                .convertFilter(filterText -> item -> captionFilter.test(
-                        getItemCaptionGenerator().apply(item), filterText));
+                .filteringBy(item -> getItemCaptionGenerator().apply(item),
+                        captionFilter);
         setDataProvider(provider);
     }
 
@@ -300,8 +300,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     /**
      * Returns true if the user can enter text into the field to either filter
-     * the selections or enter a new value if new item handler is set
-     * (see {@link #setNewItemHandler(NewItemHandler)}. If text input is disabled,
+     * the selections or enter a new value if new item handler is set (see
+     * {@link #setNewItemHandler(NewItemHandler)}. If text input is disabled,
      * the comboBox will work in the same way as a {@link NativeSelect}
      *
      * @return true if text input is allowed

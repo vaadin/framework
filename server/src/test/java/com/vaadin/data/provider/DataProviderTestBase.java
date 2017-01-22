@@ -190,4 +190,11 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     protected long sizeWithUnfilteredQuery() {
         return dataProvider.fetch(new Query<>()).count();
     }
+
+    protected static <F> void assertSizeWithFilter(int expectedSize,
+            DataProvider<?, F> dataProvider, F filterValue) {
+        Assert.assertEquals(expectedSize,
+                dataProvider.size(new Query<>(filterValue)));
+    }
+
 }

@@ -2,6 +2,7 @@ package com.vaadin.data.provider;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -230,6 +231,50 @@ public class ListDataProviderTest
         }));
 
         Assert.assertEquals(0, size);
+    }
+
+    @Test
+    public void filteringBy_itemPredicate() {
+        DataProvider<StrBean, String> filteringBy = dataProvider.filteringBy(
+                (item, filterValue) -> item.getValue().equals(filterValue));
+
+        assertSizeWithFilter(36, filteringBy, "Foo");
+    }
+
+    @Test
+    public void filteringBy_equals() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByEquals(StrBean::getValue);
+
+        assertSizeWithFilter(36, filteringBy, "Foo");
+    }
+
+    @Test
+    public void filteringBy_propertyValuePredicate() {
+        DataProvider<StrBean, Integer> filteringBy = dataProvider.filteringBy(
+                StrBean::getId,
+                (propertyValue, filterValue) -> propertyValue >= filterValue);
+
+        assertSizeWithFilter(90, filteringBy, 10);
+    }
+
+    @Test
+    public void filteringBy_caseInsensitiveSubstring() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringBySubstring(StrBean::getValue, Locale.ENGLISH);
+
+        assertSizeWithFilter(36, filteringBy, "oo");
+        assertSizeWithFilter(36, filteringBy, "Oo");
+    }
+
+    @Test
+    public void filterBy_caseInsensitivePrefix() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByPrefix(StrBean::getValue, Locale.ENGLISH);
+
+        assertSizeWithFilter(36, filteringBy, "Fo");
+        assertSizeWithFilter(36, filteringBy, "fo");
+        assertSizeWithFilter(0, filteringBy, "oo");
     }
 
     @Override
