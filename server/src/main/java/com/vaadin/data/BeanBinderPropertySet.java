@@ -18,8 +18,7 @@ package com.vaadin.data;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -49,10 +48,66 @@ import com.vaadin.util.ReflectTools;
  */
 public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
 
+    /**
+     * Serialized form of a property set. When deserialized, the property set
+     * for the corresponding bean type is requested, which either returns the
+     * existing cached instance or creates a new one.
+     *
+     * @see #readResolve()
+     * @see BeanBinderPropertyDefinition#writeReplace()
+     */
+    private static class SerializedPropertySet implements Serializable {
+        private final Class<?> beanType;
+
+        private SerializedPropertySet(Class<?> beanType) {
+            this.beanType = beanType;
+        }
+
+        private Object readResolve() {
+            /*
+             * When this instance is deserialized, it will be replaced with a
+             * property set for the corresponding bean type and property name.
+             */
+            return get(beanType);
+        }
+    }
+
+    /**
+     * Serialized form of a property definition. When deserialized, the property
+     * set for the corresponding bean type is requested, which either returns
+     * the existing cached instance or creates a new one. The right property
+     * definition is then fetched from the property set.
+     *
+     * @see #readResolve()
+     * @see BeanBinderPropertySet#writeReplace()
+     */
+    private static class SerializedPropertyDefinition implements Serializable {
+        private final Class<?> beanType;
+        private final String propertyName;
+
+        private SerializedPropertyDefinition(Class<?> beanType,
+                String propertyName) {
+            this.beanType = beanType;
+            this.propertyName = propertyName;
+        }
+
+        private Object readResolve() throws IOException {
+            /*
+             * When this instance is deserialized, it will be replaced with a
+             * property definition for the corresponding bean type and property
+             * name.
+             */
+            return get(beanType).getProperty(propertyName)
+                    .orElseThrow(() -> new IOException(
+                            beanType + " no longer has a property named "
+                                    + propertyName));
+        }
+    }
+
     private static class BeanBinderPropertyDefinition<T, V>
             implements BinderPropertyDefinition<T, V> {
 
-        private transient PropertyDescriptor descriptor;
+        private final PropertyDescriptor descriptor;
         private final BeanBinderPropertySet<T> propertySet;
 
         public BeanBinderPropertyDefinition(
@@ -118,32 +173,14 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
             return propertySet;
         }
 
-        private void writeObject(ObjectOutputStream stream) throws IOException {
-            stream.defaultWriteObject();
-            stream.writeObject(descriptor.getName());
-            stream.writeObject(propertySet.beanType);
-        }
-
-        private void readObject(ObjectInputStream stream)
-                throws IOException, ClassNotFoundException {
-            stream.defaultReadObject();
-
-            String propertyName = (String) stream.readObject();
-            @SuppressWarnings("unchecked")
-            Class<T> beanType = (Class<T>) stream.readObject();
-
-            try {
-                descriptor = BeanUtil.getBeanPropertyDescriptors(beanType)
-                        .stream()
-                        .filter(descriptor -> descriptor.getName()
-                                .equals(propertyName))
-                        .findAny()
-                        .orElseThrow(() -> new IOException(
-                                "Property " + propertyName + " not found for "
-                                        + beanType.getName()));
-            } catch (IntrospectionException e) {
-                throw new IOException(e);
-            }
+        private Object writeReplace() {
+            /*
+             * Instead of serializing this actual property definition, only
+             * serialize a DTO that when deserialized will get the corresponding
+             * property definition from the cache.
+             */
+            return new SerializedPropertyDefinition(getPropertySet().beanType,
+                    getName());
         }
     }
 
@@ -213,5 +250,14 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
     @Override
     public String toString() {
         return "Property set for bean " + beanType.getName();
+    }
+
+    private Object writeReplace() {
+        /*
+         * Instead of serializing this actual property set, only serialize a DTO
+         * that when deserialized will get the corresponding property set from
+         * the cache.
+         */
+        return new SerializedPropertySet(beanType);
     }
 }
