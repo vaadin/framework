@@ -15,31 +15,45 @@
  */
 package com.vaadin.event.dnd;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.Component;
 
+/**
+ * Server side drop event. Fired when an HTML5 drop happens. See {@link
+ * DropTargetExtension#addDropListener(DropListener)}.
+ */
 public class DropEvent extends Component.Event {
     private Map<String, String> data;
-    private DropTargetExtension.DropEffect dropEffect;
+    private DropEffect dropEffect;
 
-    DropEvent(Component source) {
+    DropEvent(Component source, Map<String, String> data,
+            DropEffect dropEffect) {
         super(source);
+        this.data = new HashMap<>(data);
+        this.dropEffect = dropEffect;
     }
 
-    void setData(Map<String, String> data) {
-        this.data = data;
-    }
-
+    /**
+     * Get data set for the client side {@code dataTransfer}.
+     *
+     * @param format
+     *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
+     * @return Data for the given format if exists in the client side {@code
+     * dataTransfer}, otherwise {@code null}.
+     */
     public String getData(String format) {
         return data != null ? data.get(format) : null;
     }
 
-    void setDropEffect(String dropEffect) {
-        this.dropEffect = DropTargetExtension.DropEffect.valueOf(dropEffect);
-    }
-
-    public DropTargetExtension.DropEffect getDropEffect() {
+    /**
+     * Get drop effect set for the current drop target.
+     *
+     * @return {@code dropEffect} parameter set for the current drop target.
+     */
+    public DropEffect getDropEffect() {
         return dropEffect;
     }
 }

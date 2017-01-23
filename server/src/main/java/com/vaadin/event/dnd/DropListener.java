@@ -18,12 +18,15 @@ package com.vaadin.event.dnd;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.util.ReflectTools;
 
+/**
+ * Interface to be implemented when creating a drop listener on a drop target
+ * for HTML5 drag and drop. See {@link DropTargetExtension#addDropListener(DropListener)}.
+ */
 @FunctionalInterface
 public interface DropListener extends ConnectorEventListener {
-    static final Method DROP_METHOD = ReflectTools
-            .findMethod(DropListener.class, "drop", DropEvent.class);
+    static final Method DROP_METHOD = DropListener.class
+            .getDeclaredMethods()[0];
 
     void drop(DropEvent event);
 }

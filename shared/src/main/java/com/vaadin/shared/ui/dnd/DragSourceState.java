@@ -22,9 +22,23 @@ import java.util.Map;
 
 import com.vaadin.shared.communication.SharedState;
 
+/**
+ * State class containing parameters for DragSourceExtension.
+ */
 public class DragSourceState extends SharedState {
+    /**
+     * {@code DataTransfer.effectAllowed} parameter for the drag event.
+     */
     public EffectAllowed effectAllowed;
 
+    /**
+     * {@code DataTransfer.types} parameter. Used to keep track of data formats
+     * set for the drag event.
+     */
     public List<String> types = new ArrayList<>();
+
+    /**
+     * Used to store data in the {@code DataTransfer} object for the drag event.
+     */
     public Map<String, String> data = new HashMap<>();
 }
