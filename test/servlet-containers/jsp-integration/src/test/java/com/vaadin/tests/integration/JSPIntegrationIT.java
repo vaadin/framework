@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotEquals;
 
 public class JSPIntegrationIT extends TestBenchTestCase {
 
-    private static final String URL_PREFIX = "http://localhost:7888/";
+    private static final String URL_PREFIX = "http://localhost:8080/";
 
     private static final String primaryUIUrl = URL_PREFIX + "primaryui";
     private static final String jspUrl = URL_PREFIX + "staticfiles/vaadinsessions.jsp";
