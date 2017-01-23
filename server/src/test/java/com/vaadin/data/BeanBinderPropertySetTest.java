@@ -19,6 +19,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,5 +52,18 @@ public class BeanBinderPropertySetTest {
         Integer age = (Integer) getter.apply(person);
 
         Assert.assertEquals(Integer.valueOf(2000), age);
+    }
+
+    @Test
+    public void properties() {
+        BinderPropertySet<Person> propertySet = BeanBinderPropertySet
+                .get(Person.class);
+
+        Set<String> propertyNames = propertySet.getProperties()
+                .map(BinderPropertyDefinition::getName)
+                .collect(Collectors.toSet());
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList("name", "born")),
+                propertyNames);
     }
 }

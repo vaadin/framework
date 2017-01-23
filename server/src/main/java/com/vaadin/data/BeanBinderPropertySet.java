@@ -158,6 +158,7 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
 
         try {
             definitions = BeanUtil.getBeanPropertyDescriptors(beanType).stream()
+                    .filter(descriptor -> !"class".equals(descriptor.getName()))
                     .filter(BeanBinderPropertySet::hasReadMethod)
                     .map(descriptor -> new BeanBinderPropertyDefinition<>(this,
                             descriptor))
