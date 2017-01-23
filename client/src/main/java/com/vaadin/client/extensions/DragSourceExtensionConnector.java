@@ -21,8 +21,8 @@ import java.util.Map;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.DragStartEvent;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DragSourceExtension;
@@ -36,16 +36,24 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {
-        Widget widget = ((ComponentConnector) target).getWidget();
+        Element dragSourceElement = getDraggableElement();
 
-        widget.getElement().setDraggable(Element.DRAGGABLE_TRUE);
-        widget.getElement().addClassName(CLASS_DRAGGABLE);
+        dragSourceElement.setDraggable(Element.DRAGGABLE_TRUE);
+        dragSourceElement.addClassName(CLASS_DRAGGABLE);
 
-        widget.sinkBitlessEvent(BrowserEvents.DRAGSTART);
-        widget.addHandler(this::onDragStart, DragStartEvent.getType());
+        addEventListener(dragSourceElement, BrowserEvents.DRAGSTART,
+                this::onDragStart);
+
+        // TODO: 23/01/2017 Consider removing event listener on detach
     }
 
-    protected void onDragStart(DragStartEvent event) {
+    /**
+     * Event handler for the {@code dragstart} event. Called when {@code
+     * dragstart} event occurs.
+     *
+     * @param event browser event to be handled
+     */
+    protected void onDragStart(Event event) {
         // Set effectAllowed parameter
         setEffectAllowed(event.getDataTransfer(), getState().effectAllowed);
 
@@ -53,9 +61,28 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         List<String> types = getState().types;
         Map<String, String> data = getState().data;
         for (String format : types) {
-            event.setData(format, data.get(format));
+            event.getDataTransfer().setData(format, data.get(format));
         }
     }
+
+    /**
+     * Finds the draggable element within the widget. By default, returns the
+     * topmost element.
+     *
+     * @return the draggable element in the parent widget.
+     */
+    protected Element getDraggableElement() {
+        return ((ComponentConnector) getParent()).getWidget().getElement();
+    }
+
+    private native void addEventListener(Element element, String eventName,
+            EventListener listener)/*-{
+        var listenerFunction = function (event) {
+            listener.@com.google.gwt.user.client.EventListener::onBrowserEvent(*)(event);
+        }
+
+        element.addEventListener(eventName, listenerFunction, false);
+    }-*/;
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
             String effectAllowed)/*-{
