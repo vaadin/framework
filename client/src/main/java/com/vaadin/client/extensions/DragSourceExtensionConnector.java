@@ -60,7 +60,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      */
     protected void onDragStart(Event event) {
         // Set effectAllowed parameter
-        setEffectAllowed(event.getDataTransfer(), getState().effectAllowed);
+        if (getState().effectAllowed != null) {
+            setEffectAllowed(event.getDataTransfer(),
+                    getState().effectAllowed.getValue());
+        }
 
         // Set data parameter
         List<String> types = getState().types;
@@ -91,9 +94,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
             String effectAllowed)/*-{
-        if (effectAllowed) {
-            dataTransfer.effectAllowed = effectAllowed;
-        }
+        dataTransfer.effectAllowed = effectAllowed;
     }-*/;
 
     @Override

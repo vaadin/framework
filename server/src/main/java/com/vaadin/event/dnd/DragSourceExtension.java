@@ -18,6 +18,7 @@ package com.vaadin.event.dnd;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.EffectAllowed;
 
 /**
  * Extension to add drag source functionality to a widget for using HTML5 drag
@@ -25,65 +26,13 @@ import com.vaadin.shared.ui.dnd.DragSourceState;
  */
 public class DragSourceExtension extends AbstractExtension {
 
-    public enum EffectAllowed {
-        /**
-         * The item may not be dropped.
-         */
-        NONE("none"),
-
-        /**
-         * A copy of the source item may be made at the new location.
-         */
-        COPY("copy"),
-
-        /**
-         * An item may be moved to a new location.
-         */
-        MOVE("move"),
-
-        /**
-         * A link may be established to the source at the new location.
-         */
-        LINK("link"),
-
-        /**
-         * A copy or move operation is permitted.
-         */
-        COPY_MOVE("copyMove"),
-
-        /**
-         * A copy or link operation is permitted.
-         */
-        COPY_LINK("copyLink"),
-
-        /**
-         * A link or move operation is permitted.
-         */
-        LINK_MOVE("linkMove"),
-
-        /**
-         * All operations are permitted.
-         */
-        ALL("all");
-
-        private final String value;
-
-        EffectAllowed(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
     @Override
     public void extend(AbstractClientConnector target) {
         super.extend(target);
     }
 
     public void setEffectAllowed(EffectAllowed effect) {
-        getState().effectAllowed = effect.getValue();
+        getState().effectAllowed = effect;
     }
 
     /**

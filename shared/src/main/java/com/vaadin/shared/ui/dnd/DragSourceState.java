@@ -23,7 +23,7 @@ import java.util.Map;
 import com.vaadin.shared.communication.SharedState;
 
 public class DragSourceState extends SharedState {
-    public String effectAllowed;
+    public EffectAllowed effectAllowed;
 
     public List<String> types = new ArrayList<>();
     public Map<String, String> data = new HashMap<>();
