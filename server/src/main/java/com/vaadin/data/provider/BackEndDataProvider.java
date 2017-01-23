@@ -71,7 +71,7 @@ public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
             ValueProvider<T, Object> identifierGetter) {
         Objects.requireNonNull(request, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
-        Objects.requireNonNull(sizeCallback,
+        Objects.requireNonNull(identifierGetter,
                 "Identifier getter function can't be null");
         this.request = request;
         this.sizeCallback = sizeCallback;
