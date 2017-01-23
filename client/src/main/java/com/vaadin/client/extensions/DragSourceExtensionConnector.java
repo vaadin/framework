@@ -29,6 +29,10 @@ import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 
+/**
+ * Extension to add drag source functionality to a widget for using HTML5 drag
+ * and drop. Client side counterpart of {@link DragSourceExtension}.
+ */
 @Connect(DragSourceExtension.class)
 public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
@@ -51,7 +55,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Event handler for the {@code dragstart} event. Called when {@code
      * dragstart} event occurs.
      *
-     * @param event browser event to be handled
+     * @param event
+     *         browser event to be handled
      */
     protected void onDragStart(Event event) {
         // Set effectAllowed parameter

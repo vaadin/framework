@@ -32,6 +32,10 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
 
+/**
+ * Extension to add drop target functionality to a widget for using HTML5 drag
+ * and drop. Client side counterpart of {@link DropTargetExtension}.
+ */
 @Connect(DropTargetExtension.class)
 public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
@@ -69,10 +73,24 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         return ((ComponentConnector) getParent()).getWidget().getElement();
     }
 
+    /**
+     * Event handler for the {@code dragenter} event. Called when {@code
+     * dragenter} event occurs.
+     *
+     * @param event
+     *         browser event to be handled
+     */
     protected void onDragEnter(Event event) {
         addTargetIndicator(getDropTargetElement());
     }
 
+    /**
+     * Event handler for the {@code dragover} event. Called when {@code
+     * dragover} event occurs.
+     *
+     * @param event
+     *         browser event to be handled
+     */
     protected void onDragOver(Event event) {
         if (dragOverAllowed(event)) {
             // Set dropEffect parameter
@@ -101,10 +119,24 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         return true;
     }
 
+    /**
+     * Event handler for the {@code dragleave} event. Called when {@code
+     * dragleave} event occurs.
+     *
+     * @param event
+     *         browser event to be handled
+     */
     protected void onDragLeave(Event event) {
         removeTargetIndicator(getDropTargetElement());
     }
 
+    /**
+     * Event handler for the {@code drop} event. Called when {@code drop} event
+     * occurs.
+     *
+     * @param event
+     *         browser event to be handled
+     */
     protected void onDrop(Event event) {
         if (dropAllowed(event)) {
             event.preventDefault();

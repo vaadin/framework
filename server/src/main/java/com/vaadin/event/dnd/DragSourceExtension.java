@@ -19,6 +19,10 @@ import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 
+/**
+ * Extension to add drag source functionality to a widget for using HTML5 drag
+ * and drop.
+ */
 public class DragSourceExtension extends AbstractExtension {
 
     public enum EffectAllowed {
