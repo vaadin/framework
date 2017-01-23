@@ -1,7 +1,8 @@
 package com.vaadin.tests.components.absolutelayout;
 
+import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,7 +13,7 @@ import com.vaadin.ui.Panel;
 /**
  * Test UI with different cases for component size changes
  */
-public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
+public class AbsoluteLayoutResizeComponents extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -69,17 +70,18 @@ public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
      * @param component Component to controll with button
      * @return Created Expand Button
      */
-    private Button expandButton(Component component) {
-        Button button = new Button("Change Size", clickEvent -> resizeComponent(component));
+    private Button expandButton(final Component component) {
+        Button button = new Button("Change Size", new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                if (component.getWidthUnits().equals(Sizeable.Unit.PERCENTAGE)) {
+                    component.setWidth("250px");
+                } else {
+                    component.setWidth("100%");
+                }
+            }
+        });
         button.setId(component.getId() + "-button");
         return button;
-    }
-
-    private void resizeComponent(Component component) {
-        if (component.getWidthUnits().equals(Unit.PERCENTAGE)) {
-            component.setWidth("250px");
-        } else {
-            component.setWidth("100%");
-        }
     }
 }
