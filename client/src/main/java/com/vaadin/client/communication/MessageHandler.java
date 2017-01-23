@@ -382,14 +382,7 @@ public class MessageHandler {
         }
 
         getLogger().info("Handling resource dependencies");
-        if (json.containsKey("scriptDependencies")) {
-            connection.loadScriptDependencies(
-                    json.getJSStringArray("scriptDependencies"));
-        }
-        if (json.containsKey("styleDependencies")) {
-            connection.loadStyleDependencies(
-                    json.getJSStringArray("styleDependencies"));
-        }
+        connection.getDependencyLoader().loadDependencies(json);
 
         handleUIDLDuration.logDuration(
                 " * Handling type mappings from server completed", 10);
