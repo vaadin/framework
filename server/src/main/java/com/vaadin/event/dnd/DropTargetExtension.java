@@ -22,6 +22,10 @@ import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
 import com.vaadin.ui.AbstractComponent;
 
+/**
+ * Extension to add drop target functionality to a widget for using HTML5 drag
+ * and drop.
+ */
 public class DropTargetExtension extends AbstractExtension {
 
     public enum DropEffect {
