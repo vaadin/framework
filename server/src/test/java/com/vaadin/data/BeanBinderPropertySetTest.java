@@ -20,7 +20,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -98,4 +102,16 @@ public class BeanBinderPropertySetTest {
                 deserializedDefinition);
     }
 
+    @Test
+    public void properties() {
+        BinderPropertySet<Person> propertySet = BeanBinderPropertySet
+                .get(Person.class);
+
+        Set<String> propertyNames = propertySet.getProperties()
+                .map(BinderPropertyDefinition::getName)
+                .collect(Collectors.toSet());
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList("name", "born")),
+                propertyNames);
+    }
 }

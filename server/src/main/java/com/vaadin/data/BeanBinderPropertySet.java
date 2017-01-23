@@ -195,7 +195,7 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
 
         try {
             definitions = BeanUtil.getBeanPropertyDescriptors(beanType).stream()
-                    .filter(BeanBinderPropertySet::hasReadMethod)
+                    .filter(BeanBinderPropertySet::hasNonObjectReadMethod)
                     .map(descriptor -> new BeanBinderPropertyDefinition<>(this,
                             descriptor))
                     .collect(Collectors.toMap(BinderPropertyDefinition::getName,
@@ -234,8 +234,11 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
         return Optional.ofNullable(definitions.get(name));
     }
 
-    private static boolean hasReadMethod(PropertyDescriptor descriptor) {
-        return descriptor.getReadMethod() != null;
+    private static boolean hasNonObjectReadMethod(
+            PropertyDescriptor descriptor) {
+        Method readMethod = descriptor.getReadMethod();
+        return readMethod != null
+                && readMethod.getDeclaringClass() != Object.class;
     }
 
     private static Object invokeWrapExceptions(Method method, Object target,
