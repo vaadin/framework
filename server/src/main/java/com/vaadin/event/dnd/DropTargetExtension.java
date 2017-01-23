@@ -65,6 +65,14 @@ public class DropTargetExtension extends AbstractExtension {
         getState().dropEffect = dropEffect.name();
     }
 
+    public void setDragOverCriteria(String criteriaScript) {
+        getState().dragOverCriteria = criteriaScript;
+    }
+
+    public void setDropCriteria(String criteriaScript) {
+        getState().dropCriteria = criteriaScript;
+    }
+
     public Registration addDropListener(DropListener listener) {
         return addListener(DropEvent.class, listener, DropListener.DROP_METHOD);
     }

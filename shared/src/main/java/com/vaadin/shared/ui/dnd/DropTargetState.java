@@ -18,5 +18,18 @@ package com.vaadin.shared.ui.dnd;
 import com.vaadin.shared.communication.SharedState;
 
 public class DropTargetState extends SharedState {
+    /**
+     * DataTransfer.dropEffect parameter for the drag event
+     */
     public String dropEffect;
+
+    /**
+     * Criteria script to allow dragOver event on the element
+     */
+    public String dragOverCriteria;
+
+    /**
+     * Criteria script to allow drop event on the element
+     */
+    public String dropCriteria;
 }
