@@ -43,6 +43,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.SerializableConsumer;
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
@@ -125,7 +126,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         @Override
         public void setFilter(String filterText) {
-            getDataCommunicator().setFilter(filterText);
+            currentFilterText = filterText;
+            filterSlot.accept(filterText);
         }
     };
 
@@ -136,13 +138,20 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private StyleGenerator<T> itemStyleGenerator = item -> null;
 
+    private String currentFilterText;
+
+    private SerializableConsumer<String> filterSlot = filter -> {
+        throw new IllegalStateException(
+                "Filter text should not be updated before a data provider has been set");
+    };
+
     /**
      * Constructs an empty combo box without a caption. The content of the combo
      * box can be set with {@link #setDataProvider(DataProvider)} or
      * {@link #setItems(Collection)}
      */
     public ComboBox() {
-        super(new DataCommunicator<T, String>() {
+        super(new DataCommunicator<T>() {
             @Override
             protected DataKeyMapper<T> createKeyMapper() {
                 return new KeyMapper<T>() {
@@ -294,11 +303,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Sets a list data provider with an item caption filter as the data
      * provider of this combo box. The caption filter is used to compare the
      * displayed caption of each item to the filter text entered by the user.
-     * <p>
-     * Note that this is a shorthand that calls
-     * {@link #setDataProvider(DataProvider)} with a wrapper of the provided
-     * list data provider. This means that {@link #getDataProvider()} will
-     * return the wrapper instead of the original list data provider.
      *
      * @param captionFilter
      *            filter to check if an item is shown when user typed some text
@@ -313,9 +317,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         // Must do getItemCaptionGenerator() for each operation since it might
         // not be the same as when this method was invoked
-        DataProvider<T, String> provider = listDataProvider.filteringBy(
-                item -> getItemCaptionGenerator().apply(item), captionFilter);
-        setDataProvider(provider);
+        setDataProvider(listDataProvider, filterText -> item -> captionFilter
+                .test(getItemCaptionGenerator().apply(item), filterText));
     }
 
     /**
@@ -702,22 +705,30 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public DataProvider<T, String> getDataProvider() {
-        return (DataProvider<T, String>) internalGetDataProvider();
+    public DataProvider<T, ?> getDataProvider() {
+        return internalGetDataProvider();
     }
 
     @Override
-    public void setDataProvider(DataProvider<T, String> dataProvider) {
-        internalSetDataProvider(dataProvider);
-    }
+    public <C> void setDataProvider(DataProvider<T, C> dataProvider,
+            SerializableFunction<String, C> filterConverter) {
+        Objects.requireNonNull(dataProvider, "dataProvider cannot be null");
+        Objects.requireNonNull(filterConverter,
+                "filterConverter cannot be null");
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public DataCommunicator<T, String> getDataCommunicator() {
-        // Not actually an unsafe cast. DataCommunicator is final and set by
-        // ComboBox.
-        return (DataCommunicator<T, String>) super.getDataCommunicator();
+        SerializableFunction<String, C> convertOrNull = filterText -> {
+            if (filterText == null) {
+                return null;
+            }
+
+            return filterConverter.apply(filterText);
+        };
+
+        SerializableConsumer<C> providerFilterSlot = internalSetDataProvider(
+                dataProvider, convertOrNull.apply(currentFilterText));
+
+        filterSlot = filter -> providerFilterSlot
+                .accept(convertOrNull.apply(filter));
     }
 
     @Override

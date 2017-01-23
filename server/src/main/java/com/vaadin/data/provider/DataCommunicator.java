@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.server.SerializableConsumer;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
@@ -48,12 +49,10 @@ import elemental.json.JsonObject;
  *
  * @param <T>
  *            the bean type
- * @param <F>
- *            the filter type
  *
  * @since 8.0
  */
-public class DataCommunicator<T, F> extends AbstractExtension {
+public class DataCommunicator<T> extends AbstractExtension {
 
     private Registration dataProviderUpdateRegistration;
 
@@ -190,7 +189,7 @@ public class DataCommunicator<T, F> extends AbstractExtension {
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
     /** Empty default data provider */
-    private DataProvider<T, F> dataProvider = new CallbackDataProvider<>(
+    private DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
             q -> Stream.empty(), q -> 0);
     private final DataKeyMapper<T> keyMapper;
 
@@ -199,7 +198,7 @@ public class DataCommunicator<T, F> extends AbstractExtension {
     private int minPushSize = 40;
     private Range pushRows = Range.withLength(0, minPushSize);
 
-    private F filter;
+    private Object filter;
     private Comparator<T> inMemorySorting;
     private final List<SortOrder<String>> backEndSorting = new ArrayList<>();
     private final DataCommunicatorClientRpc rpc;
@@ -236,7 +235,8 @@ public class DataCommunicator<T, F> extends AbstractExtension {
         }
 
         if (initial || reset) {
-            int dataProviderSize = getDataProvider().size(new Query<>(filter));
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            int dataProviderSize = getDataProvider().size(new Query(filter));
             rpc.reset(dataProviderSize);
         }
 
@@ -244,7 +244,8 @@ public class DataCommunicator<T, F> extends AbstractExtension {
             int offset = pushRows.getStart();
             int limit = pushRows.length();
 
-            Stream<T> rowsToPush = getDataProvider().fetch(new Query<>(offset,
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            Stream<T> rowsToPush = getDataProvider().fetch(new Query(offset,
                     limit, backEndSorting, inMemorySorting, filter));
 
             pushData(offset, rowsToPush);
@@ -399,17 +400,6 @@ public class DataCommunicator<T, F> extends AbstractExtension {
     }
 
     /**
-     * Sets the filter to use.
-     *
-     * @param filter
-     *            the filter
-     */
-    public void setFilter(F filter) {
-        this.filter = filter;
-        reset();
-    }
-
-    /**
      * Sets the {@link Comparator} to use with in-memory sorting.
      *
      * @param comparator
@@ -459,19 +449,31 @@ public class DataCommunicator<T, F> extends AbstractExtension {
      *
      * @return the data provider
      */
-    public DataProvider<T, F> getDataProvider() {
+    public DataProvider<T, ?> getDataProvider() {
         return dataProvider;
     }
 
     /**
      * Sets the current data provider for this DataCommunicator.
+     * <p>
+     * The returned consumer can be used to set some other filter value that
+     * should be included in queries sent to the data provider. It is only valid
+     * until another data provider is set.
      *
      * @param dataProvider
-     *            the data provider to set, not null
+     *            the data provider to set, not <code>null</code>
+     * @param initialFilter
+     *            the initial filter value to use, or <code>null</code> to not
+     *            use any initial filter value
+     * @return a consumer that accepts a new filter value to use
      */
-    public void setDataProvider(DataProvider<T, F> dataProvider) {
+    public <F> SerializableConsumer<F> setDataProvider(
+            DataProvider<T, F> dataProvider, F initialFilter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
+
+        filter = initialFilter;
         this.dataProvider = dataProvider;
+
         detachDataProviderListener();
         dropAllData();
         /*
@@ -491,6 +493,15 @@ public class DataCommunicator<T, F> extends AbstractExtension {
             attachDataProviderListener();
         }
         reset();
+
+        return filter -> {
+            assert this.dataProvider == dataProvider : "Filter slot is no longer valid after data provider has been changed";
+
+            if (!Objects.equals(this.filter, filter)) {
+                this.filter = filter;
+                reset();
+            }
+        };
     }
 
     /**

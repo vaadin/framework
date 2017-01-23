@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.server.component.combobox;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -24,13 +25,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
-import com.vaadin.data.provider.Query;
+import com.vaadin.server.ClientMethodInvocation;
+import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.ComponentTest;
 
 /**
  * Test for ComboBox data providers and filtering.
@@ -176,21 +180,55 @@ public class ComboBoxFilteringTest {
         checkFiltering("t", "Engel", 2, 1);
     }
 
+    @Test
+    public void setListDataProvider_notWrapped() {
+        ListDataProvider<Person> provider = new ListDataProvider<>(
+                Collections.emptyList());
+
+        comboBox.setDataProvider(provider);
+
+        Assert.assertSame(provider, comboBox.getDataProvider());
+    }
+
+    @Test
+    public void setItems_hasListDataPrvider() {
+        comboBox.setItems();
+
+        Assert.assertEquals(ListDataProvider.class,
+                comboBox.getDataProvider().getClass());
+    }
+
     private void checkFiltering(String filterText, String nonMatchingFilterText,
             int totalMatches, int matchingResults) {
-        DataProvider<Person, String> dataProvider = comboBox.getDataProvider();
-
         Assert.assertEquals(
                 "ComboBox filtered out results with no filter applied",
-                totalMatches, dataProvider.size(new Query<>()));
+                totalMatches, comboBoxSizeWithFilter(null));
         Assert.assertEquals(
                 "ComboBox filtered out results with empty filter string",
-                totalMatches, dataProvider.size(new Query<>("")));
+                totalMatches, comboBoxSizeWithFilter(""));
         Assert.assertEquals("ComboBox filtered out wrong number of results",
-                matchingResults, dataProvider.size(new Query<>(filterText)));
+                matchingResults, comboBoxSizeWithFilter(filterText));
         Assert.assertEquals(
                 "ComboBox should have no results with a non-matching filter", 0,
-                dataProvider.size(new Query<>(nonMatchingFilterText)));
+                comboBoxSizeWithFilter(nonMatchingFilterText));
+    }
+
+    private int comboBoxSizeWithFilter(String filter) {
+        DataCommunicator<Person> dataCommunicator = comboBox
+                .getDataCommunicator();
+
+        // Discard any currently pending RPC calls
+        dataCommunicator.retrievePendingRpcCalls();
+
+        ComponentTest.getRpcProxy(comboBox, ComboBoxServerRpc.class)
+                .setFilter(filter);
+        dataCommunicator.beforeClientResponse(true);
+
+        ClientMethodInvocation resetInvocation = dataCommunicator
+                .retrievePendingRpcCalls().get(0);
+        assert resetInvocation.getMethodName().equals("reset");
+
+        return ((Integer) resetInvocation.getParameters()[0]).intValue();
     }
 
     private List<Person> getPersonCollection() {

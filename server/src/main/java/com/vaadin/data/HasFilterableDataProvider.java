@@ -16,6 +16,7 @@
 package com.vaadin.data;
 
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A generic interface for listing components that use a filterable data
@@ -39,16 +40,32 @@ public interface HasFilterableDataProvider<T, F> extends HasItems<T> {
     /**
      * Returns the source of data items used by this listing.
      *
-     * @return the data provider, not null
+     * @return the data provider, not <code>null</code>
      */
-    public DataProvider<T, F> getDataProvider();
+    public DataProvider<T, ?> getDataProvider();
 
     /**
      * Sets the data provider for this listing. The data provider is queried for
      * displayed items as needed.
      *
      * @param dataProvider
-     *            the data provider, not null
+     *            the data provider, not <code>null</code>
      */
-    public void setDataProvider(DataProvider<T, F> dataProvider);
+    public default void setDataProvider(DataProvider<T, F> dataProvider) {
+        setDataProvider(dataProvider, filter -> filter);
+    }
+
+    /**
+     * Sets the data provider and filter converter for this listing. The data
+     * provider is queried for displayed items as needed.
+     *
+     * @param dataProvider
+     *            the data provider, not <code>null</code>
+     * @param filterConverter
+     *            a function that converts filter values produced by this
+     *            listing into filter values expected by the provided data
+     *            provider, not <code>null</code>
+     */
+    public <C> void setDataProvider(DataProvider<T, C> dataProvider,
+            SerializableFunction<F, C> filterConverter);
 }
