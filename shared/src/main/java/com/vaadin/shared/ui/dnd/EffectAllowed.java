@@ -65,6 +65,10 @@ public enum EffectAllowed {
         this.value = value;
     }
 
+    /**
+     * Get the string value that is accepted by the client side drag event.
+     * @return String value accepted by the client side drag event.
+     */
     public String getValue() {
         return value;
     }

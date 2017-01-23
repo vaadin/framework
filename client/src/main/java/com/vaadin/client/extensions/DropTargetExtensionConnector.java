@@ -95,8 +95,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         if (dragOverAllowed(event)) {
             // Set dropEffect parameter
             if (getState().dropEffect != null) {
-                event.getDataTransfer().setDropEffect(
-                        DataTransfer.DropEffect.valueOf(getState().dropEffect));
+                event.getDataTransfer().setDropEffect(DataTransfer.DropEffect
+                        .valueOf(getState().dropEffect.name()));
             }
 
             // Prevent default to allow drop

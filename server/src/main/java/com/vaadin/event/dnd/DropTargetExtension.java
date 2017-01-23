@@ -18,6 +18,7 @@ package com.vaadin.event.dnd;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
 import com.vaadin.ui.AbstractComponent;
@@ -28,33 +29,13 @@ import com.vaadin.ui.AbstractComponent;
  */
 public class DropTargetExtension extends AbstractExtension {
 
-    public enum DropEffect {
-        /**
-         * A copy of the source item is made at the new location.
-         */
-        COPY,
-
-        /**
-         * An item is moved to a new location.
-         */
-        MOVE,
-
-        /**
-         * A link is established to the source at the new location.
-         */
-        LINK,
-
-        /**
-         * The item may not be dropped.
-         */
-        NONE
-    }
-
+    /**
+     * Constructor for {@link DropTargetExtension}.
+     */
     public DropTargetExtension() {
         registerRpc((DropTargetRpc) (data, dropEffect) -> {
-            DropEvent event = new DropEvent((AbstractComponent) getParent());
-            event.setData(data);
-            event.setDropEffect(dropEffect);
+            DropEvent event = new DropEvent((AbstractComponent) getParent(),
+                    data, dropEffect);
 
             fireEvent(event);
         });
@@ -65,18 +46,50 @@ public class DropTargetExtension extends AbstractExtension {
         super.extend(target);
     }
 
+    /**
+     * Sets drop effect for the current drop target. Used for the client side
+     * {@code DataTransfer.dropEffect} parameter.
+     *
+     * @param dropEffect
+     *         The drop effect to be set.
+     */
     public void setDropEffect(DropEffect dropEffect) {
-        getState().dropEffect = dropEffect.name();
+        getState().dropEffect = dropEffect;
     }
 
+    /**
+     * Sets criteria to allow dragover event on the current drop target. The
+     * script executes when dragover event happens and stops the event in case
+     * the script returns {@code false}.
+     *
+     * @param criteriaScript
+     *         JavaScript to be executed when dragover event happens.
+     */
     public void setDragOverCriteria(String criteriaScript) {
         getState().dragOverCriteria = criteriaScript;
     }
 
+    /**
+     * Sets criteria to allow drop event on the current drop target. The script
+     * executes when drop event happens and stops the event in case the script
+     * returns {@code false}.
+     *
+     * @param criteriaScript
+     *         JavaScript to be executed when drop event happens.
+     */
     public void setDropCriteria(String criteriaScript) {
         getState().dropCriteria = criteriaScript;
     }
 
+    /**
+     * Attaches drop listener for the current drop target. {@link
+     * DropListener#drop(DropEvent)} is called when drop event happens on the
+     * client side.
+     *
+     * @param listener
+     *         Listener to handle drop event.
+     * @return Handle to be used to remove this listener.
+     */
     public Registration addDropListener(DropListener listener) {
         return addListener(DropEvent.class, listener, DropListener.DROP_METHOD);
     }

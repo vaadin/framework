@@ -19,6 +19,19 @@ import java.util.Map;
 
 import com.vaadin.shared.communication.ServerRpc;
 
+/**
+ * RPC for firing server side drop event when client side drop event happens on
+ * drop target.
+ */
 public interface DropTargetRpc extends ServerRpc {
-    public void drop(Map<String, String> data, String dropEffect);
+
+    /**
+     * Called when drop event happens on client side.
+     *
+     * @param data
+     *         Contains data from {@code DataTransfer} object.
+     * @param dropEffect
+     *         Drop effect set for the drop target where drop happened.
+     */
+    public void drop(Map<String, String> data, DropEffect dropEffect);
 }

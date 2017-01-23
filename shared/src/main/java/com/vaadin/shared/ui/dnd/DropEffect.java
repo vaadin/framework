@@ -15,24 +15,27 @@
  */
 package com.vaadin.shared.ui.dnd;
 
-import com.vaadin.shared.communication.SharedState;
-
 /**
- * State class containing parameters for DropTargetExtension.
+ * Used to specify the drop effect to use on dragenter or dragover events.
  */
-public class DropTargetState extends SharedState {
+public enum DropEffect {
     /**
-     * {@code DataTransfer.dropEffect} parameter for the drag event
+     * A copy of the source item is made at the new location.
      */
-    public DropEffect dropEffect;
+    COPY,
 
     /**
-     * Criteria script to allow dragOver event on the element
+     * An item is moved to a new location.
      */
-    public String dragOverCriteria;
+    MOVE,
 
     /**
-     * Criteria script to allow drop event on the element
+     * A link is established to the source at the new location.
      */
-    public String dropCriteria;
+    LINK,
+
+    /**
+     * The item may not be dropped.
+     */
+    NONE
 }

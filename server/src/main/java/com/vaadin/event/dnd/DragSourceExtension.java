@@ -31,14 +31,28 @@ public class DragSourceExtension extends AbstractExtension {
         super.extend(target);
     }
 
+    /**
+     * Sets the allowed effects for the current drag source element. Used to set
+     * client side {@code DataTransfer.effectAllowed} parameter for the drag
+     * event.
+     *
+     * @param effect
+     *         Effects to allow for this draggable element.
+     */
     public void setEffectAllowed(EffectAllowed effect) {
         getState().effectAllowed = effect;
     }
 
     /**
+     * Sets the data for this drag source element. Used to set data for client
+     * side drag element using {@code DataTransfer.setData()}. To be used as a
+     * map, key-value pairs are stored. Order of entries are preserved.
      *
      * @param format
+     *         data type to store, e.g. {@code text/plain} or {@code
+     *         text/uri-list}.
      * @param data
+     *         data to store for the data type.
      */
     public void setData(String format, String data) {
         if (!getState().types.contains(format)) {
@@ -47,11 +61,21 @@ public class DragSourceExtension extends AbstractExtension {
         getState().data.put(format, data);
     }
 
+    /**
+     * Clears data with the given type for this drag source element when
+     * present.
+     *
+     * @param format
+     *         type of data to be cleared.
+     */
     public void clearData(String format) {
         getState().types.remove(format);
         getState().data.remove(format);
     }
 
+    /**
+     * Clears all data for this drag source element.
+     */
     public void clearData() {
         getState().types.clear();
         getState().data.clear();
