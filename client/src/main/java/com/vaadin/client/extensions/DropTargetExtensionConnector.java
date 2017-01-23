@@ -23,11 +23,8 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.DragEnterEvent;
-import com.google.gwt.event.dom.client.DragLeaveEvent;
-import com.google.gwt.event.dom.client.DragOverEvent;
-import com.google.gwt.event.dom.client.DropEvent;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
@@ -42,36 +39,41 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {
-        Widget widget = ((ComponentConnector) target).getWidget();
+        Element dropTargetElement = getDropTargetElement();
 
         // dragenter event
-        widget.sinkBitlessEvent(BrowserEvents.DRAGENTER);
-        widget.addHandler(event -> {
-            onDragEnter(event, widget.getElement());
-        }, DragEnterEvent.getType());
+        addEventListener(dropTargetElement, BrowserEvents.DRAGENTER,
+                this::onDragEnter);
 
         // dragover event
-        widget.sinkBitlessEvent(BrowserEvents.DRAGOVER);
-        widget.addHandler(event -> {
-            onDragOver(event, widget.getElement());
-        }, DragOverEvent.getType());
+        addEventListener(dropTargetElement, BrowserEvents.DRAGOVER,
+                this::onDragOver);
 
         // dragleave event
-        widget.sinkBitlessEvent(BrowserEvents.DRAGLEAVE);
-        widget.addHandler(event -> {
-            onDragLeave(event, widget.getElement());
-        }, DragLeaveEvent.getType());
+        addEventListener(dropTargetElement, BrowserEvents.DRAGLEAVE,
+                this::onDragLeave);
 
         // drop event
-        widget.sinkBitlessEvent(BrowserEvents.DROP);
-        widget.addHandler(this::onDrop, DropEvent.getType());
+        addEventListener(dropTargetElement, BrowserEvents.DROP, this::onDrop);
+
+        // TODO: 23/01/2017 Consider removing event listeners on detach
     }
 
-    protected void onDragEnter(DragEnterEvent event, Element draggableElement) {
-        addTargetIndicator(draggableElement);
+    /**
+     * Finds the drop target element within the widget. By default, returns the
+     * topmost element.
+     *
+     * @return the drop target element in the parent widget.
+     */
+    protected Element getDropTargetElement() {
+        return ((ComponentConnector) getParent()).getWidget().getElement();
     }
 
-    protected void onDragOver(DragOverEvent event, Element draggableElement) {
+    protected void onDragEnter(Event event) {
+        addTargetIndicator(getDropTargetElement());
+    }
+
+    protected void onDragOver(Event event) {
         if (dragOverAllowed(event)) {
             // Set dropEffect parameter
             if (getState().dropEffect != null) {
@@ -86,25 +88,24 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             event.getDataTransfer().setDropEffect(DataTransfer.DropEffect.NONE);
 
             // Remove drop target indicator
-            removeTargetIndicator(draggableElement);
+            removeTargetIndicator(getDropTargetElement());
         }
     }
 
-    private boolean dragOverAllowed(DragOverEvent event) {
+    private boolean dragOverAllowed(Event event) {
         if (getState().dragOverCriteria != null) {
-            return executeScript(event.getNativeEvent(),
-                    getState().dragOverCriteria);
+            return executeScript(event, getState().dragOverCriteria);
         }
 
         // Allow when criteria not set
         return true;
     }
 
-    protected void onDragLeave(DragLeaveEvent event, Element draggableElement) {
-        removeTargetIndicator(draggableElement);
+    protected void onDragLeave(Event event) {
+        removeTargetIndicator(getDropTargetElement());
     }
 
-    protected void onDrop(DropEvent event) {
+    protected void onDrop(Event event) {
         if (dropAllowed(event)) {
             event.preventDefault();
 
@@ -112,16 +113,17 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             JsArrayString types = getTypes(event.getDataTransfer());
             Map<String, String> data = new LinkedHashMap<>();
             for (int i = 0; i < types.length(); i++) {
-                data.put(types.get(i), event.getData(types.get(i)));
+                data.put(types.get(i),
+                        event.getDataTransfer().getData(types.get(i)));
             }
 
             getRpcProxy(DropTargetRpc.class).drop(data, getState().dropEffect);
         }
     }
 
-    private boolean dropAllowed(DropEvent event) {
+    private boolean dropAllowed(Event event) {
         if (getState().dropCriteria != null) {
-            return executeScript(event.getNativeEvent(), getState().dropCriteria);
+            return executeScript(event, getState().dropCriteria);
         }
 
         // Allow when criteria not set
@@ -136,8 +138,16 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         element.removeClassName(CLASS_DRAG_OVER);
     }
 
-    private native boolean executeScript(NativeEvent event,
-            String script)/*-{
+    private native void addEventListener(Element element, String eventName,
+            EventListener listener)/*-{
+        var listenerFunction = function (event) {
+            listener.@com.google.gwt.user.client.EventListener::onBrowserEvent(*)(event);
+        }
+
+        element.addEventListener(eventName, listenerFunction, false);
+    }-*/;
+
+    private native boolean executeScript(NativeEvent event, String script)/*-{
         return new Function('event', script)(event);
     }-*/;
 
