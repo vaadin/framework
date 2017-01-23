@@ -22,6 +22,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DragEnterEvent;
 import com.google.gwt.event.dom.client.DragLeaveEvent;
 import com.google.gwt.event.dom.client.DragOverEvent;
@@ -51,7 +52,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
         // dragover event
         widget.sinkBitlessEvent(BrowserEvents.DRAGOVER);
-        widget.addHandler(this::onDragOver, DragOverEvent.getType());
+        widget.addHandler(event -> {
+            onDragOver(event, widget.getElement());
+        }, DragOverEvent.getType());
 
         // dragleave event
         widget.sinkBitlessEvent(BrowserEvents.DRAGLEAVE);
@@ -65,45 +68,78 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     }
 
     protected void onDragEnter(DragEnterEvent event, Element draggableElement) {
-        addDragOverClass(draggableElement);
+        addTargetIndicator(draggableElement);
     }
 
-    protected void onDragOver(DragOverEvent event) {
-        // Set dropEffect parameter
-        if (getState().dropEffect != null) {
-            event.getDataTransfer().setDropEffect(
-                    DataTransfer.DropEffect.valueOf(getState().dropEffect));
+    protected void onDragOver(DragOverEvent event, Element draggableElement) {
+        if (dragOverAllowed(event)) {
+            // Set dropEffect parameter
+            if (getState().dropEffect != null) {
+                event.getDataTransfer().setDropEffect(
+                        DataTransfer.DropEffect.valueOf(getState().dropEffect));
+            }
+
+            // Prevent default to allow drop
+            event.preventDefault();
+        } else {
+            // Remove drop effect
+            event.getDataTransfer().setDropEffect(DataTransfer.DropEffect.NONE);
+
+            // Remove drop target indicator
+            removeTargetIndicator(draggableElement);
+        }
+    }
+
+    private boolean dragOverAllowed(DragOverEvent event) {
+        if (getState().dragOverCriteria != null) {
+            return executeScript(event.getNativeEvent(),
+                    getState().dragOverCriteria);
         }
 
-        // Prevent default to allow drop
-        event.preventDefault();
+        // Allow when criteria not set
+        return true;
     }
 
     protected void onDragLeave(DragLeaveEvent event, Element draggableElement) {
-        removeDragOverClass(draggableElement);
+        removeTargetIndicator(draggableElement);
     }
 
     protected void onDrop(DropEvent event) {
-        event.preventDefault();
+        if (dropAllowed(event)) {
+            event.preventDefault();
 
-        // Initiate firing server side drop event
-        JsArrayString types = getTypes(event.getDataTransfer());
-        Map<String, String> data = new LinkedHashMap<>();
-        for (int i = 0; i < types.length(); i++) {
-            data.put(types.get(i), event.getData(types.get(i)));
+            // Initiate firing server side drop event
+            JsArrayString types = getTypes(event.getDataTransfer());
+            Map<String, String> data = new LinkedHashMap<>();
+            for (int i = 0; i < types.length(); i++) {
+                data.put(types.get(i), event.getData(types.get(i)));
+            }
+
+            getRpcProxy(DropTargetRpc.class).drop(data, getState().dropEffect);
         }
-
-
-        getRpcProxy(DropTargetRpc.class).drop(data, getState().dropEffect);
     }
 
-    private void addDragOverClass(Element element) {
+    private boolean dropAllowed(DropEvent event) {
+        if (getState().dropCriteria != null) {
+            return executeScript(event.getNativeEvent(), getState().dropCriteria);
+        }
+
+        // Allow when criteria not set
+        return true;
+    }
+
+    private void addTargetIndicator(Element element) {
         element.addClassName(CLASS_DRAG_OVER);
     }
 
-    private void removeDragOverClass(Element element) {
+    private void removeTargetIndicator(Element element) {
         element.removeClassName(CLASS_DRAG_OVER);
     }
+
+    private native boolean executeScript(NativeEvent event,
+            String script)/*-{
+        return new Function('event', script)(event);
+    }-*/;
 
     private native JsArrayString getTypes(DataTransfer dataTransfer)/*-{
         return dataTransfer.types;
