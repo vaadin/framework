@@ -152,9 +152,9 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> listener.valueChange(
-                new ValueChangeEvent<>(this, event.getOldValue(),
-                        event.isUserOriginated())));
+        return addSelectionListener(
+                event -> listener.valueChange(new ValueChangeEvent<>(this,
+                        event.getOldValue(), event.isUserOriginated())));
     }
 
     @Override

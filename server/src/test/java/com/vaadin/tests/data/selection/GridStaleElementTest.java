@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.grid;
+package com.vaadin.tests.data.selection;
 
 import java.util.List;
 import java.util.concurrent.Future;
