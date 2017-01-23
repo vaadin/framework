@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.server.MockVaadinSession;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
@@ -81,8 +80,7 @@ public class DataCommunicatorTest {
 
     }
 
-    private static class TestDataCommunicator
-            extends DataCommunicator<Object, SerializablePredicate<Object>> {
+    private static class TestDataCommunicator extends DataCommunicator<Object> {
         protected void extend(UI ui) {
             super.extend(ui);
         }
@@ -100,7 +98,7 @@ public class DataCommunicatorTest {
         TestDataCommunicator communicator = new TestDataCommunicator();
 
         TestDataProvider dataProvider = new TestDataProvider();
-        communicator.setDataProvider(dataProvider);
+        communicator.setDataProvider(dataProvider, null);
 
         Assert.assertFalse(dataProvider.isListenerAdded());
 
@@ -118,7 +116,7 @@ public class DataCommunicatorTest {
         TestDataCommunicator communicator = new TestDataCommunicator();
 
         TestDataProvider dataProvider = new TestDataProvider();
-        communicator.setDataProvider(dataProvider);
+        communicator.setDataProvider(dataProvider, null);
 
         communicator.extend(ui);
 
