@@ -95,7 +95,7 @@ public class GridTest {
         SelectionEvent<String> event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
-        assertEquals("foo", event.getFirstSelected().get());
+        assertEquals("foo", event.getFirstSelectedItem().get());
         assertEquals("foo",
                 event.getAllSelectedItems().stream().findFirst().get());
 
@@ -104,7 +104,7 @@ public class GridTest {
         event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
-        assertEquals("bar", event.getFirstSelected().get());
+        assertEquals("bar", event.getFirstSelectedItem().get());
         assertEquals("bar",
                 event.getAllSelectedItems().stream().findFirst().get());
 
@@ -113,7 +113,7 @@ public class GridTest {
         event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
-        assertEquals(Optional.empty(), event.getFirstSelected());
+        assertEquals(Optional.empty(), event.getFirstSelectedItem());
         assertEquals(0, event.getAllSelectedItems().size());
     }
 
@@ -131,7 +131,7 @@ public class GridTest {
         SelectionEvent<String> event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
-        assertEquals("foo", event.getFirstSelected().get());
+        assertEquals("foo", event.getFirstSelectedItem().get());
         assertEquals("foo",
                 event.getAllSelectedItems().stream().findFirst().get());
 
@@ -140,7 +140,7 @@ public class GridTest {
         event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
-        assertEquals("foo", event.getFirstSelected().get());
+        assertEquals("foo", event.getFirstSelectedItem().get());
         assertEquals("foo",
                 event.getAllSelectedItems().stream().findFirst().get());
         Assert.assertArrayEquals(new String[] { "foo", "bar" },
@@ -151,7 +151,7 @@ public class GridTest {
         event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
-        assertEquals("bar", event.getFirstSelected().get());
+        assertEquals("bar", event.getFirstSelectedItem().get());
         assertEquals("bar",
                 event.getAllSelectedItems().stream().findFirst().get());
         Assert.assertArrayEquals(new String[] { "bar" },
@@ -162,7 +162,7 @@ public class GridTest {
         event = eventCapture.getValue();
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
-        assertEquals(Optional.empty(), event.getFirstSelected());
+        assertEquals(Optional.empty(), event.getFirstSelectedItem());
         assertEquals(0, event.getAllSelectedItems().size());
     }
 
