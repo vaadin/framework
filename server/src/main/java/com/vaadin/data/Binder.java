@@ -1346,8 +1346,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Removes the currently set bean, if any. If there is no bound bean, does
-     * nothing.
+     * Removes the currently set bean and clears bound fields. If there is no
+     * bound bean, does nothing.
      * <p>
      * This is a shorthand for {@link #setBean(Object)} with {@code null} bean.
      */
