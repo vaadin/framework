@@ -15,7 +15,9 @@
  */
 package com.vaadin.client.extensions;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.JsArrayString;
@@ -142,14 +144,17 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             event.preventDefault();
 
             // Initiate firing server side drop event
-            JsArrayString types = getTypes(event.getDataTransfer());
-            Map<String, String> data = new LinkedHashMap<>();
-            for (int i = 0; i < types.length(); i++) {
-                data.put(types.get(i),
-                        event.getDataTransfer().getData(types.get(i)));
+            JsArrayString typesJsArray = getTypes(event.getDataTransfer());
+            List<String> types = new ArrayList<>();
+            Map<String, String> data = new HashMap<>();
+            for (int i = 0; i < typesJsArray.length(); i++) {
+                types.add(typesJsArray.get(i));
+                data.put(typesJsArray.get(i),
+                        event.getDataTransfer().getData(typesJsArray.get(i)));
             }
 
-            getRpcProxy(DropTargetRpc.class).drop(data, getState().dropEffect);
+            getRpcProxy(DropTargetRpc.class)
+                    .drop(types, data, getState().dropEffect);
         }
     }
 
