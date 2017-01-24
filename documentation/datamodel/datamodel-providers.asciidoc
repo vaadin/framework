@@ -127,7 +127,7 @@ Button modifyPersonButton = new Button("Modify person",
 
     personToChange.setName("Changed person");
 
-    dataProvider.refreshAll();
+    dataProvider.refreshItem(personToChange);
 });
 ----
 
@@ -377,4 +377,45 @@ DataProvider<Person, String> dataProvider = new CallbackDataProvider<>(
     return getPersonService().getPersonCount(filter);
   }
 );
+----
+
+[[lazy-refresh]]
+=== Refreshing
+
+All data providers support have the `refreshAll`and `refreshItem` methods. These methods can be used when data in the backend has been updated.
+
+For example Spring Data gives you new instances with every request, and making changes to the repository will make old instances of the same object "stale".
+In these cases you should inform any interested component by calling `dataProvider.refreshItem(newInstance)`. This will work out of the box, if your beans have
+good equals and hashCode implementations. Since that is not always the case, the user of a `CallbackDataProvider` can give it a `ValueProvider` that will provide 
+a stable ID for the data objects. This is usually a method reference, eg. `Person::getId`.
+
+As an example, our service interface has an update method that returns a new instance of the item. Other functionality has been omitted to keep focus on the updating.
+
+[source, java]
+----
+public interface PersonService {
+  Person save(Person person);
+}
+----
+
+Part of the application code wants to update a persons name and save it to the backend.
+
+[source, java]
+----
+PersonService service;
+DataProvider<Person, String> allPersonsWithId = new CallbackDataProvider<>(
+  fetchCallback, sizeCallback, Person::getId);
+
+NativeSelect<Person> persons = new NativeSelect<>();
+persons.setDataProvider(allPersonsWithId);
+
+Button modifyPersonButton = new Button("Modify person",
+  clickEvent -> {
+    Person personToChange = persons.getValue();
+
+    personToChange.setName("Changed person");
+
+    Person newInstance = service.save(personToChange);
+    dataProvider.refreshItem(newInstance);
+});
 ----
