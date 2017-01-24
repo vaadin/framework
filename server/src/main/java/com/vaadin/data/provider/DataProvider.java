@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.HasFilterableDataProvider;
+import com.vaadin.server.SerializableBiFunction;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
@@ -108,9 +109,9 @@ public interface DataProvider<T, F> extends Serializable {
     Registration addDataProviderListener(DataProviderListener listener);
 
     /**
-     * Convert the data provider to use a different filter type. It is used for
-     * adapting this data provider to a filter type provided by a Component such
-     * as ComboBox.
+     * Wraps this data provider to create a data provider that uses a different
+     * filter type. This can be used for adapting this data provider to a filter
+     * type provided by a Component such as ComboBox.
      * <p>
      * For example receiving a String from ComboBox and making a Predicate based
      * on it:
@@ -119,7 +120,7 @@ public interface DataProvider<T, F> extends Serializable {
      * DataProvider&lt;Person, Predicate&lt;Person&gt;&gt; dataProvider;
      * // ComboBox uses String as the filter type
      * DataProvider&lt;Person, String&gt; wrappedProvider = dataProvider
-     *         .convertFilter(filterText -&gt; {
+     *         .withConvertedFilter(filterText -&gt; {
      *             Predicate&lt;Person&gt; predicate = person -&gt; person.getName()
      *                     .startsWith(filterText);
      *             return predicate;
@@ -127,18 +128,71 @@ public interface DataProvider<T, F> extends Serializable {
      * comboBox.setDataProvider(wrappedProvider);
      * </pre>
      *
-     * @param mapper
-     *            the mapper from new filter type to old filter type; not null
+     * @param filterConverter
+     *            callback that converts the filter in the query of the wrapped
+     *            data provider into a filter supported by this data provider.
+     *            Will only be called if the query contains a filter. Not
+     *            <code>null</code>
      *
-     * @param <M>
-     *            the filter type to map from; typically provided by a Component
+     * @param <C>
+     *            the filter type that the wrapped data provider accepts;
+     *            typically provided by a Component
      *
-     * @return wrapped data provider
+     * @return wrapped data provider, not <code>null</code>
      */
-    public default <M> DataProvider<T, M> convertFilter(
-            SerializableFunction<M, F> mapper) {
-        Objects.requireNonNull(mapper, "Filter mapper can't be null");
-        return DataProviderWrapper.convert(this, mapper);
+    public default <C> DataProvider<T, C> withConvertedFilter(
+            SerializableFunction<C, F> filterConverter) {
+        Objects.requireNonNull(filterConverter,
+                "Filter converter can't be null");
+        return new DataProviderWrapper<T, C, F>(this) {
+            @Override
+            protected F getFilter(Query<T, C> query) {
+                return query.getFilter().map(filterConverter).orElse(null);
+            }
+        };
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that supports
+     * programmatically setting a filter that will be combined with a filter
+     * provided through the query.
+     *
+     * @see #withConfigurableFilter()
+     * @see ConfigurableFilterDataProvider#setFilter(Object)
+     *
+     * @param filterCombiner
+     *            a callback for combining and the configured filter with the
+     *            filter from the query to get a filter to pass to the wrapped
+     *            provider. Will only be called if the query contains a filter.
+     *            Not <code>null</code>
+     *
+     * @return a data provider with a configurable filter, not <code>null</code>
+     */
+    public default <C> ConfigurableFilterDataProvider<T, C, F> withConfigurableFilter(
+            SerializableBiFunction<F, C, F> filterCombiner) {
+        return new ConfigurableFilterDataProviderWrapper<T, C, F>(this) {
+            @Override
+            protected F combineFilters(F configuredFilter, C queryFilter) {
+                return filterCombiner.apply(configuredFilter, queryFilter);
+            }
+        };
+    }
+
+    /**
+     * Wraps this data provider to create a data provider that supports
+     * programmatically setting a filter but no filtering through the query.
+     *
+     * @see #withConfigurableFilter(SerializableBiFunction)
+     * @see ConfigurableFilterDataProvider#setFilter(Object)
+     *
+     * @return a data provider with a configurable filter, not <code>null</code>
+     */
+    public default ConfigurableFilterDataProvider<T, Void, F> withConfigurableFilter() {
+        return withConfigurableFilter((configuredFilter, queryFilter) -> {
+            assert queryFilter == null : "Filter from Void query must be null";
+
+            return configuredFilter;
+        });
     }
 
     /**

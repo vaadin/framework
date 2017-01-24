@@ -402,7 +402,7 @@ public class ListDataProvider<T>
             SerializableBiPredicate<T, Q> predicate) {
         Objects.requireNonNull(predicate, "Predicate cannot be null");
 
-        return convertFilter(
+        return withConvertedFilter(
                 filterValue -> item -> predicate.test(item, filterValue));
     }
 
