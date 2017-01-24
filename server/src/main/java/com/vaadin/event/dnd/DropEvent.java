@@ -16,6 +16,8 @@
 package com.vaadin.event.dnd;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -29,10 +31,14 @@ public class DropEvent extends Component.Event {
     private Map<String, String> data;
     private DropEffect dropEffect;
 
-    DropEvent(Component source, Map<String, String> data,
+    DropEvent(Component source, List<String> types, Map<String, String> data,
             DropEffect dropEffect) {
         super(source);
-        this.data = new HashMap<>(data);
+
+        // Create a linked map that preserves the order of types
+        this.data = new LinkedHashMap<>();
+        types.forEach(type -> this.data.put(type, data.get(type)));
+
         this.dropEffect = dropEffect;
     }
 

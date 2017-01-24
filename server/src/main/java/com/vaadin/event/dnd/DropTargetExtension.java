@@ -33,9 +33,9 @@ public class DropTargetExtension extends AbstractExtension {
      * Constructor for {@link DropTargetExtension}.
      */
     public DropTargetExtension() {
-        registerRpc((DropTargetRpc) (data, dropEffect) -> {
+        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
             DropEvent event = new DropEvent((AbstractComponent) getParent(),
-                    data, dropEffect);
+                    types, data, dropEffect);
 
             fireEvent(event);
         });

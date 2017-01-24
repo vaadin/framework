@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.dnd;
 
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.shared.communication.ServerRpc;
@@ -28,10 +29,14 @@ public interface DropTargetRpc extends ServerRpc {
     /**
      * Called when drop event happens on client side.
      *
+     * @param types
+     *         Data types that are present in {@code data} map in the same order
+     *         as found in {@code DataTransfer.types}.
      * @param data
      *         Contains data from {@code DataTransfer} object.
      * @param dropEffect
      *         Drop effect set for the drop target where drop happened.
      */
-    public void drop(Map<String, String> data, DropEffect dropEffect);
+    public void drop(List<String> types, Map<String, String> data,
+            DropEffect dropEffect);
 }
