@@ -1372,17 +1372,16 @@ public class Binder<BEAN> implements Serializable {
      *            clear bound fields
      */
     public void readBean(BEAN bean) {
-        if(bean == null) {
-            clearFields();
-            return;
-        }
         checkBindingsCompleted("readBean");
-        setHasChanges(false);
-        bindings.forEach(binding -> binding.initFieldValue(bean));
-
-        getValidationStatusHandler().statusChange(
-                BinderValidationStatus.createUnresolvedStatus(this));
-        fireStatusChangeEvent(false);
+        if (bean == null) {
+            clearFields();
+        } else {
+            setHasChanges(false);
+            bindings.forEach(binding -> binding.initFieldValue(bean));
+            getValidationStatusHandler().statusChange(
+                    BinderValidationStatus.createUnresolvedStatus(this));
+            fireStatusChangeEvent(false);
+        }
     }
 
     /**
@@ -1561,6 +1560,7 @@ public class Binder<BEAN> implements Serializable {
      */
     private void clearFields() {
         bindings.forEach(binding -> binding.getField().clear());
+        setHasChanges(false);
     }
 
     /**
