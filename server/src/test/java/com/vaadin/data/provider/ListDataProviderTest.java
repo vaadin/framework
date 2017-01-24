@@ -16,7 +16,7 @@ public class ListDataProviderTest
 
     @Override
     protected ListDataProvider<StrBean> createDataProvider() {
-        return DataProvider.create(data);
+        return DataProvider.ofCollection(data);
     }
 
     @Test

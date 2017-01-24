@@ -35,7 +35,7 @@ public class RadioButtonGroupTest {
         radioButtonGroup = new RadioButtonGroup<>();
         // Intentional deviation from upcoming selection order
         radioButtonGroup.setDataProvider(
-                DataProvider.create("Third", "Second", "First"));
+                DataProvider.ofItems("Third", "Second", "First"));
     }
 
     @Test
