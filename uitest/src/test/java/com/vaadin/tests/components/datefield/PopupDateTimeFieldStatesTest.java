@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -11,6 +10,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PopupDateTimeFieldStatesTest extends MultiBrowserTest {
 
+    private boolean indicatorHasFullWidth;
+
     @Test
     public void readOnlyDateFieldPopupShouldNotOpen()
             throws IOException, InterruptedException {
@@ -19,10 +20,15 @@ public class PopupDateTimeFieldStatesTest extends MultiBrowserTest {
         // wait until loading indicator becomes invisible
         WebElement loadingIndicator = findElement(
                 By.className("v-loading-indicator"));
-        Pattern pattern = Pattern.compile("display: *none;");
         waitUntil(driver -> {
-            return pattern.matcher(loadingIndicator.getAttribute("style"))
-                    .find();
+            if (indicatorHasFullWidth) {
+                return true;
+            }
+            if (driver.manage().window().getSize()
+                    .getWidth() == loadingIndicator.getSize().getWidth()) {
+                indicatorHasFullWidth = true;
+            }
+            return false;
         });
 
         compareScreen("dateFieldStates");

@@ -18,6 +18,7 @@ package com.vaadin.tests.components.datefield;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.DateTimeField;
@@ -27,6 +28,7 @@ import com.vaadin.ui.GridLayout;
  * @author Vaadin Ltd
  *
  */
+@Theme("tests-valo-disabled-animations")
 public class PopupDateTimeFieldStates extends AbstractTestUI {
 
     @Override
