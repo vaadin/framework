@@ -402,7 +402,7 @@ DataProvider<Person, Set<String>> personProvider = getPersonProvider();
 
 ConfigurableFilterDataProvider<Person, String, Set<String>> wrapper =
   personProvider.withConfigurableFilter(
-    (Set<String> configuredFilters, String queryFilter) -> {
+    (String queryFilter, Set<String> configuredFilters) -> {
       Set<String> combinedFilters = new HashSet<>();
       combinedFilters.addAll(configuredFilters);
       combinedFilters.add(queryFilter);
@@ -529,7 +529,8 @@ everythingConfigurable.setFilter(
 // For use with ComboBox and separate department filtering
 ConfigurableDataProvider<Person, String, Department> mixed =
   dataProvider.withConfigurableFilter(
-    (department, filterText) -> {
+    // Can be shortened as PersonFilter::new
+    (filterText, department) -> {
       return new PersonFilter(filterText, department);
     }
   );
