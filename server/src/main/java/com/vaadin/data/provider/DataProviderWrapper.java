@@ -18,7 +18,6 @@ package com.vaadin.data.provider;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
 /**
@@ -90,36 +89,4 @@ public abstract class DataProviderWrapper<T, F, M>
      * @return filter for the modified Query
      */
     protected abstract M getFilter(Query<T, F> query);
-
-    /**
-     * Creates a data provider wrapper with filter type mapping. The mapper
-     * function will be applied to a query filter if it is present.
-     *
-     * @see DataProvider#convertFilter(SerializableFunction)
-     *
-     * @param dataProvider
-     *            the underlying data provider
-     * @param mapper
-     *            the function to map from one filter type to another
-     *
-     * @param <T>
-     *            data provider data type
-     * @param <F>
-     *            wrapper query filter type
-     * @param <M>
-     *            underlying data provider filter type
-     *
-     * @return wrapped data provider with filter conversion
-     */
-    public static <T, F, M> DataProvider<T, F> convert(
-            DataProvider<T, M> dataProvider,
-            SerializableFunction<F, M> mapper) {
-        return new DataProviderWrapper<T, F, M>(dataProvider) {
-
-            @Override
-            protected M getFilter(Query<T, F> query) {
-                return query.getFilter().map(mapper).orElse(null);
-            }
-        };
-    }
 }
