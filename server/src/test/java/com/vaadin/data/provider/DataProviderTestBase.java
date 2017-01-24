@@ -163,7 +163,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     @Test
     public void filteringListDataProvider_convertFilter() {
         DataProvider<StrBean, String> strFilterDataProvider = dataProvider
-                .convertFilter(
+                .withConvertedFilter(
                         text -> strBean -> strBean.getValue().contains(text));
         Assert.assertEquals("Only one item should match 'Xyz'", 1,
                 strFilterDataProvider.size(new Query<>("Xyz")));
