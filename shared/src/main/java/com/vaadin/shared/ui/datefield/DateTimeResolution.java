@@ -16,7 +16,7 @@
 package com.vaadin.shared.ui.datefield;
 
 /**
- * Resolutions for DateTimeFields
+ * Resolutions for DateTimeFields.
  *
  * @author Vaadin Ltd.
  * @since 8.0

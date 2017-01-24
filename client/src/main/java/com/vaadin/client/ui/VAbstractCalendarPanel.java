@@ -421,11 +421,21 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         this.resolution = resolution;
     }
 
-    private boolean isReadonly() {
+    /**
+     * Checks whether the widget is not editable (read-only).
+     * 
+     * @return {@code true} if the widget is read-only
+     */
+    protected boolean isReadonly() {
         return parent.isReadonly();
     }
 
-    private boolean isEnabled() {
+    /**
+     * Checks whether the widget is enabled.
+     * 
+     * @return {@code true} is the widget is enabled
+     */
+    protected boolean isEnabled() {
         return parent.isEnabled();
     }
 
@@ -583,8 +593,24 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     }
 
-    private DateTimeService getDateTimeService() {
+    /**
+     * Returns date time service for the widget.
+     * 
+     * @see #setDateTimeService(DateTimeService)
+     * 
+     * @return date time service
+     */
+    protected DateTimeService getDateTimeService() {
         return dateTimeService;
+    }
+
+    /**
+     * Returns the date field which this panel is attached to.
+     * 
+     * @return the "parent" date field
+     */
+    protected VDateField<R> getDateField() {
+        return parent;
     }
 
     public void setDateTimeService(DateTimeService dateTimeService) {
@@ -721,7 +747,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         setCellSpacing(0);
         getFlexCellFormatter().setColSpan(1, 0, 5);
         getFlexCellFormatter().setStyleName(1, 0,
-                parent.getStylePrimaryName() + "-calendarpanel-body");
+                getDateField().getStylePrimaryName() + "-calendarpanel-body");
 
         days.getFlexCellFormatter().setStyleName(headerRow, weekColumn,
                 "v-week");
@@ -731,7 +757,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 isShowISOWeekNumbers());
 
         days.getRowFormatter().setStyleName(headerRow,
-                parent.getStylePrimaryName() + "-calendarpanel-weekdays");
+                getDateField().getStylePrimaryName()
+                        + "-calendarpanel-weekdays");
 
         if (isShowISOWeekNumbers()) {
             days.getFlexCellFormatter().setStyleName(headerRow, weekColumn,
@@ -739,7 +766,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             days.getFlexCellFormatter().setStyleName(headerRow,
                     firstWeekdayColumn, "");
             days.getRowFormatter().addStyleName(headerRow,
-                    parent.getStylePrimaryName()
+                    getDateField().getStylePrimaryName()
                             + "-calendarpanel-weeknumbers");
         } else {
             days.getFlexCellFormatter().setStyleName(headerRow, weekColumn, "");
@@ -792,8 +819,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 Date dayDate = (Date) curr.clone();
                 Day day = new Day(dayDate);
 
-                day.setStyleName(
-                        parent.getStylePrimaryName() + "-calendarpanel-day");
+                day.setStyleName(getDateField().getStylePrimaryName()
+                        + "-calendarpanel-day");
 
                 if (!isDateInsideRange(dayDate, getResolution(this::isDay))) {
                     day.addStyleDependentName(CN_OUTSIDE_RANGE);
@@ -828,7 +855,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                         isShowISOWeekNumbers());
 
                 if (isShowISOWeekNumbers()) {
-                    final String baseCssClass = parent.getStylePrimaryName()
+                    final String baseCssClass = getDateField()
+                            .getStylePrimaryName()
                             + "-calendarpanel-weeknumber";
                     String weekCssClass = baseCssClass;
 
@@ -880,7 +908,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      */
     protected void doRenderCalendar(boolean updateDate) {
         super.setStylePrimaryName(
-                parent.getStylePrimaryName() + "-calendarpanel");
+                getDateField().getStylePrimaryName() + "-calendarpanel");
 
         if (focusedDate == null) {
             Date now = new Date();
@@ -896,7 +924,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         }
 
         final boolean needsMonth = !isYear(getResolution());
-        boolean needsBody = isDay(getResolution());
+        boolean needsBody = isBelowMonth(resolution);
         buildCalendarHeader(needsMonth);
         clearCalendarBody(!needsBody);
         if (needsBody) {
@@ -1976,8 +2004,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         }
 
         private void setLabel() {
-            if (parent instanceof VAbstractPopupCalendar) {
-                ((VAbstractPopupCalendar) parent).setFocusedDate(this);
+            if (getDateField() instanceof VAbstractPopupCalendar) {
+                ((VAbstractPopupCalendar) getDateField()).setFocusedDate(this);
             }
         }
     }

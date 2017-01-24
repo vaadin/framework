@@ -22,7 +22,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;

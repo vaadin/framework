@@ -18,7 +18,10 @@ package com.vaadin.client;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -38,6 +41,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VOverlay;
@@ -51,7 +55,7 @@ public class VTooltip extends VOverlay {
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN | Event.ONMOUSEOVER
             | Event.ONMOUSEOUT | Event.ONMOUSEMOVE | Event.ONCLICK;
     VErrorMessage em = new VErrorMessage();
-    Element description = DOM.createDiv();
+    HTML description = GWT.create(HTML.class);
 
     private TooltipInfo currentTooltipInfo = new TooltipInfo(" ");
 
@@ -88,8 +92,8 @@ public class VTooltip extends VOverlay {
         FlowPanel layout = new FlowPanel();
         setWidget(layout);
         layout.add(em);
-        DOM.setElementProperty(description, "className", CLASSNAME + "-text");
-        DOM.appendChild(layout.getElement(), description);
+        description.setStyleName(CLASSNAME + "-text");
+        layout.add(description);
 
         // When a tooltip is shown, the content of the tooltip changes. With a
         // tooltip being a live-area, this change is notified to a assistive
@@ -128,7 +132,7 @@ public class VTooltip extends VOverlay {
         setTooltipText(new TooltipInfo(" "));
         showTooltip();
         hideTooltip();
-        description.getParentElement().getStyle().clearWidth();
+        description.getParent().getElement().getStyle().clearWidth();
     }
 
     private void setTooltipText(TooltipInfo info) {
@@ -140,7 +144,24 @@ public class VTooltip extends VOverlay {
             em.setVisible(false);
         }
         if (info.getTitle() != null && !info.getTitle().isEmpty()) {
-            description.setInnerHTML(info.getTitle());
+            switch (info.getContentMode()) {
+            case HTML:
+                description.setHTML(info.getTitle());
+                break;
+            case TEXT:
+                description.setText(info.getTitle());
+                break;
+            case PREFORMATTED:
+                PreElement preElement = Document.get().createPreElement();
+                preElement.setInnerText(info.getTitle());
+                // clear existing content
+                description.setHTML("");
+                // add preformatted text to dom
+                description.getElement().appendChild(preElement);
+                break;
+            default:
+                break;
+            }
             /*
              * Issue #11871: to correctly update the offsetWidth of description
              * element we need to clear style width of its parent DIV from old
@@ -156,11 +177,11 @@ public class VTooltip extends VOverlay {
              * native GWT method getSubPixelOffsetWidth()) of description
              * element")
              */
-            description.getParentElement().getStyle().clearWidth();
-            description.getStyle().clearDisplay();
+            description.getParent().getElement().getStyle().clearWidth();
+            description.getElement().getStyle().clearDisplay();
         } else {
-            description.setInnerHTML("");
-            description.getStyle().setDisplay(Display.NONE);
+            description.setHTML("");
+            description.getElement().getStyle().setDisplay(Display.NONE);
         }
         currentTooltipInfo = info;
     }
@@ -439,7 +460,7 @@ public class VTooltip extends VOverlay {
     @Override
     public void hide() {
         em.updateMessage("");
-        description.setInnerHTML("");
+        description.setHTML("");
 
         updatePosition(null, true);
         setPopupPosition(tooltipEventMouseX, tooltipEventMouseY);

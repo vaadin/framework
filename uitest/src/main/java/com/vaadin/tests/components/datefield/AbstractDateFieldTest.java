@@ -7,18 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import com.vaadin.shared.ui.datefield.DateResolution;
-import com.vaadin.tests.components.TestDateField;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.AbstractLocalDateField;
 
-public class AbstractDateFieldTest<T extends AbstractLocalDateField>
+public abstract class AbstractDateFieldTest<T extends AbstractLocalDateField>
         extends AbstractFieldTest<T, LocalDate> {
-
-    @SuppressWarnings("unchecked")
-    @Override
-    protected Class<T> getTestClass() {
-        return (Class<T>) TestDateField.class;
-    }
 
     private Command<T, LocalDate> setValue = new Command<T, LocalDate>() {
 

@@ -1,15 +1,16 @@
 package com.vaadin.tests.components.label;
 
 import com.vaadin.server.UserError;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 
-public class LabelTooltip extends TestBase {
+public class LabelTooltip extends AbstractTestUI {
 
     @Override
-    protected void setup() {
+    protected void setup(VaadinRequest request) {
         addComponent(createLayout());
     }
 
@@ -41,7 +42,7 @@ public class LabelTooltip extends TestBase {
     }
 
     @Override
-    protected String getDescription() {
+    protected String getTestDescription() {
         return "The lower label should have an error indicator. The upper should not.";
     }
 

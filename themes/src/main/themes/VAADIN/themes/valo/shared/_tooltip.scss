@@ -104,6 +104,9 @@ $v-tooltip-border-radius: $v-border-radius - 1px !default;
       max-height: 10em;
       overflow: auto;
       margin-top: $v-tooltip-padding-vertical * 2;
+      pre {
+        margin: 0px;
+      }
     }
 
     .v-errormessage[aria-hidden="true"] + .v-tooltip-text {

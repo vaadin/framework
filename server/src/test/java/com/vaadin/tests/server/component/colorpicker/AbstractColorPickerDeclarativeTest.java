@@ -75,7 +75,8 @@ public abstract class AbstractColorPickerDeclarativeTest<T extends AbstractColor
     public void valueDeserialization()
             throws InstantiationException, IllegalAccessException {
         String rgb = "fafafa";
-        String design = String.format("<%s color='#%s'/>", getComponentTag());
+        String design = String.format("<%s color='#%s'/>", getComponentTag(),
+                rgb);
 
         T colorPicker = getComponentClass().newInstance();
         int colorInt = Integer.parseInt(rgb, 16);
@@ -91,7 +92,7 @@ public abstract class AbstractColorPickerDeclarativeTest<T extends AbstractColor
             throws InstantiationException, IllegalAccessException {
         String rgb = "fafafa";
         String design = String.format("<%s color='#%s' readonly/>",
-                getComponentTag());
+                getComponentTag(), rgb);
 
         T colorPicker = getComponentClass().newInstance();
         int colorInt = Integer.parseInt(rgb, 16);

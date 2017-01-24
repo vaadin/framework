@@ -13,28 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.label;
+package com.vaadin.testbench.customelements;
+
+import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
- * Content modes defining how the client should interpret a Label's value.
+ * @author Vaadin Ltd
  *
- * @since 7.0
  */
-public enum ContentMode {
-    /**
-     * Content mode, where the label contains only plain text.
-     */
-    TEXT,
-
-    /**
-     * Content mode, where the label contains preformatted text. In this mode
-     * newlines are preserved when rendered on the screen.
-     */
-    PREFORMATTED,
-
-    /**
-     * Content mode, where the label contains HTML.
-     */
-    HTML
+@ServerClass("com.vaadin.ui.DateTimeField")
+public class DateTimeFieldElement extends DateFieldElement {
 
 }
