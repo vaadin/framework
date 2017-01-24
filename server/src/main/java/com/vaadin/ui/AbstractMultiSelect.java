@@ -360,8 +360,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     public boolean isSelected(T item) {
         DataProvider<T, ?> dataProvider = internalGetDataProvider();
         Object id = dataProvider.getId(item);
-        return selection.stream().map(i -> dataProvider.getId(i))
-                .anyMatch(i -> i.equals(id));
+        return selection.stream().map(dataProvider::getId).anyMatch(id::equals);
 
     }
 

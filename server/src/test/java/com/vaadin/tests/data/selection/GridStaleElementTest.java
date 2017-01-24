@@ -64,14 +64,14 @@ public class GridStaleElementTest {
 
         assertStale(toReplace);
         model.getSelectedItems()
-                .forEach(i -> Assert.assertFalse(
+                .forEach(item -> Assert.assertFalse(
                         "Selection should not contain stale values",
-                        dataProvider.isStale(i)));
+                        dataProvider.isStale(item)));
 
+        Object oldId = dataProvider.getId(toReplace);
         Assert.assertTrue("Selection did not contain an item with matching Id.",
                 model.getSelectedItems().stream().map(dataProvider::getId)
-                        .filter(i -> dataProvider.getId(toReplace).equals(i))
-                        .findFirst().isPresent());
+                        .anyMatch(oldId::equals));
         Assert.assertTrue("Stale element is not considered selected.",
                 model.isSelected(toReplace));
     }

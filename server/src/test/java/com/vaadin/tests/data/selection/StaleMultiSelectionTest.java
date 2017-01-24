@@ -30,14 +30,14 @@ public class StaleMultiSelectionTest
 
         assertIsStale(toReplace);
         select.getSelectedItems()
-                .forEach(i -> Assert.assertFalse(
+                .forEach(item -> Assert.assertFalse(
                         "Selection should not contain stale values",
-                        dataProvider.isStale(i)));
+                        dataProvider.isStale(item)));
 
+        Object oldId = dataProvider.getId(toReplace);
         Assert.assertTrue("Selection did not contain an item with matching Id.",
                 select.getSelectedItems().stream().map(dataProvider::getId)
-                        .filter(i -> dataProvider.getId(toReplace).equals(i))
-                        .findFirst().isPresent());
+                        .anyMatch(oldId::equals));
         Assert.assertTrue("Stale element is not considered selected.",
                 select.isSelected(toReplace));
     }
@@ -47,7 +47,8 @@ public class StaleMultiSelectionTest
         return Stream
                 .of(new ListSelect<>(), new TwinColSelect<>(),
                         new CheckBoxGroup<>())
-                .map(c -> new Object[] { c.getClass().getSimpleName(), c })
+                .map(component -> new Object[] {
+                        component.getClass().getSimpleName(), component })
                 .collect(Collectors.toList());
     }
 }
