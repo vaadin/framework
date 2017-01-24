@@ -123,7 +123,8 @@ public class ComboBoxFilteringTest {
 
         // Result: typing "en" into the search field finds "Enrique Iglesias"
         // and "Henry Dunant", but not "Erwin Engelbrecht"
-        comboBox.setDataProvider(DataProvider.create(getPersonCollection()));
+        comboBox.setDataProvider(
+                DataProvider.ofCollection(getPersonCollection()));
 
         checkFiltering("en", "ennen", 3, 2);
     }
@@ -135,13 +136,14 @@ public class ComboBoxFilteringTest {
         // Result: typing "En" into the search field finds "Enrique Iglesias"
         // but not "Henry Dunant" or "Erwin Engelbrecht"
         comboBox.setDataProvider(String::startsWith,
-                DataProvider.create(getPersonCollection()));
+                DataProvider.ofCollection(getPersonCollection()));
 
         checkFiltering("En", "en", 3, 1);
     }
 
     public void invalid_dataProvider_compile_error() {
-        DataProvider<Person, Address> dp = DataProvider.create(getPersonArray())
+        DataProvider<Person, Address> dp = DataProvider
+                .ofItems(getPersonArray())
                 .filteringByEquals(Person::getAddress);
 
         // uncommenting this causes a compile time error because of invalid data
@@ -154,7 +156,7 @@ public class ComboBoxFilteringTest {
         comboBox.setItemCaptionGenerator(Person::getFirstName);
 
         // Filters by last name, regardless of the item caption generator
-        ListDataProvider<Person> ldp = DataProvider.create(getPersonArray());
+        ListDataProvider<Person> ldp = DataProvider.ofItems(getPersonArray());
         comboBox.setDataProvider(ldp.convertFilter(
                 text -> person -> person.getLastName().contains(text)));
 
@@ -166,7 +168,7 @@ public class ComboBoxFilteringTest {
         comboBox.setItemCaptionGenerator(Person::getFirstName);
 
         // Filters by last name, regardless of the item caption generator
-        ListDataProvider<Person> ldp = DataProvider.create(getPersonArray());
+        ListDataProvider<Person> ldp = DataProvider.ofItems(getPersonArray());
         ldp.setFilter(person -> person.getFirstName().contains("nr"));
 
         // Same as above, but only showing a subset of the persons

@@ -74,7 +74,7 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T>
      *            the options, cannot be {@code null}
      */
     public TwinColSelect(String caption, Collection<T> options) {
-        this(caption, DataProvider.create(options));
+        this(caption, DataProvider.ofCollection(options));
     }
 
     /**

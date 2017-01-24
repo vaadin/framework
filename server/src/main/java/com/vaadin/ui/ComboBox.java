@@ -219,7 +219,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      */
     @Override
     public void setItems(Collection<T> items) {
-        ListDataProvider<T> listDataProvider = DataProvider.create(items);
+        ListDataProvider<T> listDataProvider = DataProvider.ofCollection(items);
 
         setDataProvider(listDataProvider);
     }
@@ -285,7 +285,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            the data items to display
      */
     public void setItems(CaptionFilter captionFilter, Collection<T> items) {
-        ListDataProvider<T> listDataProvider = DataProvider.create(items);
+        ListDataProvider<T> listDataProvider = DataProvider.ofCollection(items);
 
         setDataProvider(captionFilter, listDataProvider);
     }

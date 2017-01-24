@@ -77,7 +77,7 @@ public class ListSelect<T> extends AbstractMultiSelect<T>
      *            the options, cannot be {@code null}
      */
     public ListSelect(String caption, Collection<T> options) {
-        this(caption, DataProvider.create(options));
+        this(caption, DataProvider.ofCollection(options));
     }
 
     /**
