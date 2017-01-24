@@ -218,6 +218,15 @@ public interface HasValue<V> extends Serializable {
     public default V getEmptyValue() {
         return null;
     }
+    
+    /**
+     * Returns the current value of this object, wrapped in an {@code Optional}.
+     *
+     * @return the current value, wrapped in an {@code Optional}
+     */
+    public default Optional<V> getOptionalValue() {
+        return isEmpty() ? Optional.empty() : Optional.ofNullable(getValue());
+    }
 
     /**
      * Returns whether this {@code HasValue} is considered to be empty.
