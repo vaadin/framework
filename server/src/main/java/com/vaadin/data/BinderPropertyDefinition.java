@@ -18,7 +18,6 @@ package com.vaadin.data;
 import java.io.Serializable;
 import java.util.Optional;
 
-import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.server.Setter;
 
 /**
@@ -54,20 +53,6 @@ public interface BinderPropertyDefinition<T, V> extends Serializable {
      * @return the property type. not <code>null</code>
      */
     public Class<V> getType();
-
-    /**
-     * Hook for modifying a binding before it is being bound to this property.
-     * This method can return the provided {@link BindingBuilder} as-is if no
-     * modifications are necessary.
-     *
-     * @param originalBuilder
-     *            the original binding builder that is being bound, not
-     *            <code>null</code>
-     * @return the binding builder to use for creating the binding, not
-     *         <code>null</code>
-     */
-    public BindingBuilder<T, V> beforeBind(
-            BindingBuilder<T, V> originalBuilder);
 
     /**
      * Gets the name of this property.

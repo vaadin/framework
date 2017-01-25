@@ -30,9 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.util.BeanUtil;
-import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.Setter;
 import com.vaadin.util.ReflectTools;
 
@@ -150,17 +148,6 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
         public Class<V> getType() {
             return (Class<V>) ReflectTools
                     .convertPrimitiveType(descriptor.getPropertyType());
-        }
-
-        @Override
-        public BindingBuilder<T, V> beforeBind(
-                BindingBuilder<T, V> originalBuilder) {
-            if (BeanUtil.checkBeanValidationAvailable()) {
-                return originalBuilder.withValidator(new BeanValidator(
-                        getPropertySet().beanType, descriptor.getName()));
-            } else {
-                return originalBuilder;
-            }
         }
 
         @Override
