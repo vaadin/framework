@@ -436,7 +436,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             set.addAll(addedItems);
 
             // refresh method is NOOP for items that are not present client side
-            DataCommunicator<T, ?> dataCommunicator = getGrid()
+            DataCommunicator<T> dataCommunicator = getGrid()
                     .getDataCommunicator();
             removedItems.forEach(dataCommunicator::refresh);
             addedItems.forEach(dataCommunicator::refresh);
