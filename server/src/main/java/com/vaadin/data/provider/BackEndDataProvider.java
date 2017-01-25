@@ -17,6 +17,7 @@ package com.vaadin.data.provider;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A data provider that lazy loads items from a back end.
@@ -43,6 +44,22 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
      *            a list of sort orders to set, not <code>null</code>
      */
     void setSortOrders(List<QuerySortOrder> sortOrders);
+
+    /**
+     * Sets the sort order to use, given a {@link QuerySortOrderBuilder}.
+     * Shorthand for {@code setSortOrders(builder.build())}.
+     * 
+     * @see QuerySortOrderBuilder
+     * 
+     * @param builder
+     *            the sort builder to retrieve the sort order from
+     * @throws IllegalArgumentException
+     *             if builder is null
+     */
+    default void setSortOrders(QuerySortOrderBuilder builder) {
+        Objects.requireNonNull("Sort builder cannot be null.");
+        setSortOrders(builder.build());
+    }
 
     /**
      * Sets a single sort order to use as the default sorting for this data
