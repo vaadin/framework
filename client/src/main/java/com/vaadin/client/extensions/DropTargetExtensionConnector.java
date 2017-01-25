@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
@@ -43,26 +44,51 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     private static final String CLASS_DRAG_OVER = "v-drag-over";
 
+    // Create native event listeners
+    private final JavaScriptObject dragEnterListener = createNativeFunction(
+            this::onDragEnter);
+    private final JavaScriptObject dragOverListener = createNativeFunction(
+            this::onDragOver);
+    private final JavaScriptObject dragLeaveListener = createNativeFunction(
+            this::onDragLeave);
+    private final JavaScriptObject dropListener = createNativeFunction(
+            this::onDrop);
+
     @Override
     protected void extend(ServerConnector target) {
         Element dropTargetElement = getDropTargetElement();
 
         // dragenter event
         addEventListener(dropTargetElement, BrowserEvents.DRAGENTER,
-                this::onDragEnter);
+                dragEnterListener);
 
         // dragover event
         addEventListener(dropTargetElement, BrowserEvents.DRAGOVER,
-                this::onDragOver);
+                dragOverListener);
 
         // dragleave event
         addEventListener(dropTargetElement, BrowserEvents.DRAGLEAVE,
-                this::onDragLeave);
+                dragLeaveListener);
 
         // drop event
-        addEventListener(dropTargetElement, BrowserEvents.DROP, this::onDrop);
+        addEventListener(dropTargetElement, BrowserEvents.DROP, dropListener);
+    }
 
-        // TODO: 23/01/2017 Consider removing event listeners on detach
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+
+        Element dropTargetElement = getDropTargetElement();
+
+        // Remove listeners
+        removeEventListener(dropTargetElement, BrowserEvents.DRAGENTER,
+                dragEnterListener);
+        removeEventListener(dropTargetElement, BrowserEvents.DRAGOVER,
+                dragOverListener);
+        removeEventListener(dropTargetElement, BrowserEvents.DRAGLEAVE,
+                dragLeaveListener);
+        removeEventListener(dropTargetElement, BrowserEvents.DROP,
+                dropListener);
     }
 
     /**
@@ -175,13 +201,21 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         element.removeClassName(CLASS_DRAG_OVER);
     }
 
-    private native void addEventListener(Element element, String eventName,
+    private native JavaScriptObject createNativeFunction(
             EventListener listener)/*-{
-        var listenerFunction = function (event) {
+        return $entry(function (event) {
             listener.@com.google.gwt.user.client.EventListener::onBrowserEvent(*)(event);
-        }
+        });
+    }-*/;
 
+    private native void addEventListener(Element element, String eventName,
+            JavaScriptObject listenerFunction)/*-{
         element.addEventListener(eventName, listenerFunction, false);
+    }-*/;
+
+    private native void removeEventListener(Element element, String eventName,
+            JavaScriptObject listenerFunction)/*-{
+        element.removeEventListener(eventName, listenerFunction, false);
     }-*/;
 
     private native boolean executeScript(NativeEvent event, String script)/*-{
