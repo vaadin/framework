@@ -796,7 +796,7 @@ public class Grid<T> extends AbstractListing<T>
          *            the type of value
          */
         protected Column(ValueProvider<T, ? extends V> valueProvider,
-                Renderer<V> renderer) {
+                         Renderer<V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -819,8 +819,14 @@ public class Grid<T> extends AbstractListing<T>
             if (Comparable.class.isAssignableFrom(valueType)) {
                 comparator = (a, b) -> {
                     @SuppressWarnings("unchecked")
-                    Comparable<V> comp = (Comparable<V>) valueProvider.apply(a);
-                    return comp.compareTo(valueProvider.apply(b));
+                    Comparable<V> valueA = (Comparable<V>) valueProvider.apply(a);
+                    V valueB = valueProvider.apply(b);
+                    if (valueA == null) {
+                        return valueB == null ? 0 : 1;
+                    } else {
+                        if (valueB == null) return -1;
+                    }
+                    return valueA.compareTo(valueB);
                 };
                 state.sortable = true;
             } else if (Number.class.isAssignableFrom(valueType)) {
@@ -829,10 +835,8 @@ public class Grid<T> extends AbstractListing<T>
                  * Provide explicit comparison support in this case even though
                  * Number itself isn't Comparable.
                  */
-                comparator = (a, b) -> {
-                    return compareNumbers((Number) valueProvider.apply(a),
-                            (Number) valueProvider.apply(b));
-                };
+                comparator = (a, b) -> compareNumbers((Number) valueProvider.apply(a),
+                        (Number) valueProvider.apply(b));
                 state.sortable = true;
             } else {
                 state.sortable = false;
@@ -841,8 +845,12 @@ public class Grid<T> extends AbstractListing<T>
 
         @SuppressWarnings("unchecked")
         private static int compareNumbers(Number a, Number b) {
+            if (a == null) {
+                return b == null ? 0 : 1;
+            } else {
+                if (b == null) return -1;
+            }
             assert a.getClass() == b.getClass();
-
             // Most Number implementations are Comparable
             if (a instanceof Comparable && a.getClass().isInstance(b)) {
                 return ((Comparable<Number>) a).compareTo(b);
