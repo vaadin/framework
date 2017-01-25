@@ -53,7 +53,17 @@
         <sonar.analysis.mode>preview</sonar.analysis.mode>
         <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+        <vaadin.icons.version>2.0.0</vaadin.icons.version>
     </properties>
+
+    <!-- TODO: remove this after Vaadin Icons have released to maven central -->
+    <repositories>
+        <!-- Used for vaadin icons -->
+        <repository>
+            <id>vaadin-addons</id>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+    </repositories>
 
     <!-- TODO: remove this after maven plugin has been released -->
     <pluginRepositories>
@@ -279,6 +289,26 @@
                 <groupId>com.github.siom79.japicmp</groupId>
                 <artifactId>japicmp-maven-plugin</artifactId>
                 <version>0.9.1</version>
+            </dependency>
+            <!--TODO resolve chicken-egg problem-->
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-icons</artifactId>
+                <version>${vaadin.icons.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.vaadin</groupId>
+                        <artifactId>vaadin-server</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.vaadin</groupId>
+                        <artifactId>vaadin-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
