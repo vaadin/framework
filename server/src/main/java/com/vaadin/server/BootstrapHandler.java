@@ -23,12 +23,15 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,8 +42,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
-import com.vaadin.annotations.JavaScript;
-import com.vaadin.annotations.StyleSheet;
 import com.vaadin.annotations.Viewport;
 import com.vaadin.annotations.ViewportGeneratorClass;
 import com.vaadin.server.communication.AtmospherePushConnection;
@@ -48,6 +49,8 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.ui.Dependency;
+import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.UI;
 
 import elemental.json.Json;
@@ -437,29 +440,25 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .attr("href", themeUri + "/favicon.ico");
         }
 
-        JavaScript[] javaScripts = uiClass
-                .getAnnotationsByType(JavaScript.class);
-        if (javaScripts != null) {
-            for (JavaScript javaScript : javaScripts) {
-                String[] resources = javaScript.value();
-                for (String resource : resources) {
-                    String url = registerDependency(context, uiClass, resource);
-                    head.appendElement("script").attr("type", "text/javascript")
-                            .attr("src", url);
-                }
-            }
-        }
-
-        StyleSheet[] styleSheets = uiClass
-                .getAnnotationsByType(StyleSheet.class);
-        if (styleSheets != null) {
-            for (StyleSheet styleSheet : styleSheets) {
-                String[] resources = styleSheet.value();
-                for (String resource : resources) {
-                    String url = registerDependency(context, uiClass, resource);
-                    head.appendElement("link").attr("rel", "stylesheet")
-                            .attr("type", "text/css").attr("href", url);
-                }
+        Collection<? extends Dependency> deps = Dependency.findDependencies(
+                Collections.singletonList(uiClass),
+                context.getSession().getCommunicationManager());
+        for (Dependency dependency : deps) {
+            Type type = dependency.getType();
+            String url = context.getUriResolver()
+                    .resolveVaadinUri(dependency.getUrl());
+            if (type == Type.HTMLIMPORT) {
+                head.appendElement("link").attr("rel", "import").attr("href",
+                        url);
+            } else if (type == Type.JAVASCRIPT) {
+                head.appendElement("script").attr("type", "text/javascript")
+                        .attr("src", url);
+            } else if (type == Type.STYLESHEET) {
+                head.appendElement("link").attr("rel", "stylesheet")
+                        .attr("type", "text/css").attr("href", url);
+            } else {
+                getLogger().severe("Ignoring unknown dependency type "
+                        + dependency.getType());
             }
         }
 
@@ -468,14 +467,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         body.addClass(ApplicationConstants.GENERATED_BODY_CLASSNAME);
     }
 
-    private String registerDependency(BootstrapContext context,
-            Class<? extends UI> uiClass, String resource) {
-        String url = context.getSession().getCommunicationManager()
-                .registerDependency(resource, uiClass);
-
-        url = context.getUriResolver().resolveVaadinUri(url);
-
-        return url;
+    private static Logger getLogger() {
+        return Logger.getLogger(BootstrapHandler.class.getName());
     }
 
     protected String getMainDivStyle(BootstrapContext context) {
