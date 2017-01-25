@@ -54,7 +54,7 @@ public interface HasDataProvider<T> extends HasItems<T> {
 
     @Override
     public default void setItems(Collection<T> items) {
-        setDataProvider(DataProvider.create(items));
+        setDataProvider(DataProvider.ofCollection(items));
     }
 
 }

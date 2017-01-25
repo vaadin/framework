@@ -45,8 +45,8 @@ public class CallbackDataProvider<T, F>
      *            function that returns a stream of items from the back end for
      *            a query
      * @param sizeCallback
-     *            function that return the number of items in the back end for a
-     *            query
+     *            function that returns the number of items in the back end for
+     *            a query
      */
     public CallbackDataProvider(
             SerializableFunction<Query<T, F>, Stream<T>> fetchCallback,

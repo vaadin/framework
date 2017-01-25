@@ -93,7 +93,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      * @see #setItems(Collection)
      */
     public RadioButtonGroup(String caption, Collection<T> items) {
-        this(caption, DataProvider.create(items));
+        this(caption, DataProvider.ofCollection(items));
     }
 
     /**
