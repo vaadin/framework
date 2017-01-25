@@ -79,7 +79,7 @@ public class GridColumnWidthsWithoutData extends AbstractTestUI {
         grid.setSelectionMode(selectionMode);
 
         items = new ArrayList<>();
-        provider = DataProvider.create(items);
+        provider = DataProvider.ofCollection(items);
         grid.setDataProvider(provider);
 
         if (withData) {

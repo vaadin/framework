@@ -26,6 +26,7 @@ import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.server.SerializableBiFunction;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 
 /**
@@ -47,9 +48,11 @@ import com.vaadin.shared.Registration;
  * @param <F>
  *            filter type
  *
- * @see #create(Collection)
- * @see #create(Stream)
- * @see #create(Object...)
+ * @see #ofCollection(Collection)
+ * @see #ofItems(Object...)
+ * @see #fromStream(Stream)
+ * @see #fromCallbacks(SerializableFunction, SerializableToIntFunction)
+ * @see #fromFilteringCallbacks(SerializableFunction, SerializableToIntFunction)
  * @see ListDataProvider
  * @see BackEndDataProvider
  *
@@ -187,17 +190,18 @@ public interface DataProvider<T, F> extends Serializable {
      * @param filterCombiner
      *            a callback for combining and the configured filter with the
      *            filter from the query to get a filter to pass to the wrapped
-     *            provider. Will only be called if the query contains a filter.
-     *            Not <code>null</code>
+     *            provider. Either parameter might be <code>null</code>, but the
+     *            callback will not be invoked at all if both would be
+     *            <code>null</code>. Not <code>null</code>.
      *
      * @return a data provider with a configurable filter, not <code>null</code>
      */
-    public default <C> ConfigurableFilterDataProvider<T, C, F> withConfigurableFilter(
-            SerializableBiFunction<F, C, F> filterCombiner) {
-        return new ConfigurableFilterDataProviderWrapper<T, C, F>(this) {
+    public default <Q, C> ConfigurableFilterDataProvider<T, Q, C> withConfigurableFilter(
+            SerializableBiFunction<Q, C, F> filterCombiner) {
+        return new ConfigurableFilterDataProviderWrapper<T, Q, C, F>(this) {
             @Override
-            protected F combineFilters(F configuredFilter, C queryFilter) {
-                return filterCombiner.apply(configuredFilter, queryFilter);
+            protected F combineFilters(Q queryFilter, C configuredFilter) {
+                return filterCombiner.apply(queryFilter, configuredFilter);
             }
         };
     }
@@ -212,7 +216,7 @@ public interface DataProvider<T, F> extends Serializable {
      * @return a data provider with a configurable filter, not <code>null</code>
      */
     public default ConfigurableFilterDataProvider<T, Void, F> withConfigurableFilter() {
-        return withConfigurableFilter((configuredFilter, queryFilter) -> {
+        return withConfigurableFilter((queryFilter, configuredFilter) -> {
             assert queryFilter == null : "Filter from Void query must be null";
 
             return configuredFilter;
@@ -220,24 +224,27 @@ public interface DataProvider<T, F> extends Serializable {
     }
 
     /**
-     * This method creates a new {@link ListDataProvider} from a given
-     * Collection. The ListDataProvider creates a protective List copy of all
-     * the contents in the Collection.
+     * Creates a new data provider backed by a collection.
+     * <p>
+     * The collection is used as-is. Changes in the collection will be visible
+     * via the created data provider. The caller should copy the collection if
+     * necessary.
      *
      * @param <T>
      *            the data item type
      * @param items
-     *            the collection of data, not null
+     *            the collection of data, not <code>null</code>
      * @return a new list data provider
      */
-    public static <T> ListDataProvider<T> create(Collection<T> items) {
+    public static <T> ListDataProvider<T> ofCollection(Collection<T> items) {
         return new ListDataProvider<>(items);
     }
 
     /**
-     * This method creates a new {@link ListDataProvider} from given objects.The
-     * ListDataProvider creates a protective List copy of all the contents in
-     * the array.
+     * Creates a new data provider from the given items.
+     * <p>
+     * The items are copied into a new backing list, so structural changes to
+     * the provided array will not be visible via the created data provider.
      *
      * @param <T>
      *            the data item type
@@ -246,22 +253,22 @@ public interface DataProvider<T, F> extends Serializable {
      * @return a new list data provider
      */
     @SafeVarargs
-    public static <T> ListDataProvider<T> create(T... items) {
+    public static <T> ListDataProvider<T> ofItems(T... items) {
         return new ListDataProvider<>(Arrays.asList(items));
     }
 
     /**
-     * This method creates a new {@link ListDataProvider} from the given stream.
-     * The ListDataProvider <b>collects all the items in the stream to a
-     * list</b>.
+     * Creates a new data provider from the given stream. <b>All items in the
+     * stream are eagerly collected to a list.</b>
      * <p>
-     * This is just a shorthand for using {@link #create(Collection)} after
+     * This is a shorthand for using {@link #ofCollection(Collection)} after
      * collecting the items in the stream to a list with e.g.
      * {@code stream.collect(Collectors.toList));}.
      * <p>
      * <strong>Using big streams is not recommended, you should instead use a
-     * lazy data provider.</strong> See {@link BackEndDataProvider} for more
-     * info.
+     * lazy data provider.</strong> See
+     * {@link #fromCallbacks(SerializableFunction, SerializableToIntFunction)}
+     * or {@link BackEndDataProvider} for more info.
      *
      * @param <T>
      *            the data item type
@@ -269,7 +276,49 @@ public interface DataProvider<T, F> extends Serializable {
      *            a stream of data items, not {@code null}
      * @return a new list data provider
      */
-    public static <T> ListDataProvider<T> create(Stream<T> items) {
+    public static <T> ListDataProvider<T> fromStream(Stream<T> items) {
         return new ListDataProvider<>(items.collect(Collectors.toList()));
+    }
+
+    /**
+     * Creates a new data provider that uses filtering callbacks for fetching
+     * and counting items from any backing store.
+     * <p>
+     * The query that is passed to each callback may contain a filter value that
+     * is provided by the component querying for data.
+     *
+     * @param fetchCallback
+     *            function that returns a stream of items from the back end for
+     *            a query
+     * @param sizeCallback
+     *            function that returns the number of items in the back end for
+     *            a query
+     * @return a new callback data provider
+     */
+    public static <T, F> CallbackDataProvider<T, F> fromFilteringCallbacks(
+            SerializableFunction<Query<T, F>, Stream<T>> fetchCallback,
+            SerializableToIntFunction<Query<T, F>> sizeCallback) {
+        return new CallbackDataProvider<>(fetchCallback, sizeCallback);
+    }
+
+    /**
+     * Creates a new data provider that uses callbacks for fetching and counting
+     * items from any backing store.
+     * <p>
+     * The query that is passed to each callback will not contain any filter
+     * values.
+     *
+     * @param fetchCallback
+     *            function that returns a stream of items from the back end for
+     *            a query
+     * @param sizeCallback
+     *            function that returns the number of items in the back end for
+     *            a query
+     * @return a new callback data provider
+     */
+    public static <T> CallbackDataProvider<T, Void> fromCallbacks(
+            SerializableFunction<Query<T, Void>, Stream<T>> fetchCallback,
+            SerializableToIntFunction<Query<T, Void>> sizeCallback) {
+        return fromFilteringCallbacks(fetchCallback, sizeCallback);
     }
 }

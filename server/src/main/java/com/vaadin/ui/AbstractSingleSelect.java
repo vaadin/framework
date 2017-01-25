@@ -74,7 +74,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      * @param dataCommunicator
      *            the data communicator to use, not null
      */
-    protected AbstractSingleSelect(DataCommunicator<T, ?> dataCommunicator) {
+    protected AbstractSingleSelect(DataCommunicator<T> dataCommunicator) {
         super(dataCommunicator);
         init();
     }
