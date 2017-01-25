@@ -52,7 +52,7 @@
 
     <target name="run-tb3-servlet-test">
         <antcall target="run-tb3-test" inheritall="true">
-            <param name="junit.test.suite" value="com.vaadin.tests.tb3.ServletIntegrationTests" />
+            <param name="junit.test.suite" value="com.vaadin.tests.integration.ServletIntegrationTests" />
         </antcall>
     </target>
     <target name="run-tb3-test">

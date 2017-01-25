@@ -14,20 +14,19 @@
  * the License.
  */
 
-package com.vaadin.tests.tb3;
+package com.vaadin.tests.integration;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.vaadin.tests.tb3.TB3TestLocator;
+import com.vaadin.tests.tb3.TB3TestSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
-import com.vaadin.tests.integration.AbstractIntegrationTest;
-import com.vaadin.tests.integration.ServletIntegrationJSR356WebsocketUITest;
-import com.vaadin.tests.integration.ServletIntegrationWebsocketUITest;
-import com.vaadin.tests.tb3.ServletIntegrationTests.ServletIntegrationTestSuite;
+import com.vaadin.tests.integration.ServletIntegrationTests.ServletIntegrationTestSuite;
 
 @RunWith(ServletIntegrationTestSuite.class)
 public class ServletIntegrationTests {
