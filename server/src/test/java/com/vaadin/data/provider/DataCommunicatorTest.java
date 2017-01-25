@@ -163,7 +163,7 @@ public class DataCommunicatorTest {
         communicator.extend(ui);
 
         TestDataProvider dataProvider = new TestDataProvider();
-        communicator.setDataProvider(dataProvider);
+        communicator.setDataProvider(dataProvider, null);
 
         TestDataGenerator generator = new TestDataGenerator();
         communicator.addDataGenerator(generator);

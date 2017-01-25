@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ReplaceListDataProvider;
 import com.vaadin.data.provider.StrBean;
 import com.vaadin.server.VaadinRequest;
@@ -53,8 +52,7 @@ public abstract class AbstractStaleSelectionTest<S extends AbstractListing<StrBe
         };
         uI.setContent(select);
         uI.attach();
-        select.getDataCommunicator()
-                .setDataProvider((DataProvider) dataProvider);
+        select.getDataCommunicator().setDataProvider(dataProvider, null);
     }
 
     protected final void assertIsStale(StrBean bean) {
