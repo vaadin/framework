@@ -14,10 +14,6 @@
     <url>https://vaadin.com/</url>
     <description>Vaadin themes</description>
 
-    <properties>
-        <vaadin.icons.version>2.0.0</vaadin.icons.version>
-    </properties>
-
     <dependencies>
         <!-- Maven plugin scans for vaadin-server... -->
         <dependency>
@@ -42,7 +38,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-icons</artifactId>
-            <version>${vaadin.icons.version}</version>
         </dependency>
 
         <dependency>
@@ -57,14 +52,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <!-- Used for vaadin icons -->
-        <repository>
-            <id>vaadin-addons</id>
-            <url>https://maven.vaadin.com/vaadin-addons</url>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>

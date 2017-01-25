@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.themes;
 
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Notification.Type;
 
 /**
