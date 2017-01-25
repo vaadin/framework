@@ -23,9 +23,12 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd
  * @since 8.0
+ *
+ * @param <T>
+ *            the data type
  */
 @FunctionalInterface
-public interface DataProviderListener extends Serializable {
+public interface DataProviderListener<T> extends Serializable {
 
     /**
      * Invoked when this listener receives a data change event from a data
@@ -39,5 +42,5 @@ public interface DataProviderListener extends Serializable {
      * @param event
      *            the received event, not null
      */
-    void onDataChange(DataChangeEvent event);
+    void onDataChange(DataChangeEvent<T> event);
 }

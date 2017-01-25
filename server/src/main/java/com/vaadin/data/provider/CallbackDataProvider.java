@@ -18,6 +18,7 @@ package com.vaadin.data.provider;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
 
@@ -36,6 +37,7 @@ public class CallbackDataProvider<T, F>
         extends AbstractBackEndDataProvider<T, F> {
     private final SerializableFunction<Query<T, F>, Stream<T>> fetchCallback;
     private final SerializableToIntFunction<Query<T, F>> sizeCallback;
+    private final ValueProvider<T, Object> idGetter;
 
     /**
      * Constructs a new DataProvider to request data using callbacks for
@@ -45,16 +47,40 @@ public class CallbackDataProvider<T, F>
      *            function that returns a stream of items from the back end for
      *            a query
      * @param sizeCallback
-     *            function that returns the number of items in the back end for
-     *            a query
+     *            function that return the number of items in the back end for a
+     *            query
+     *
+     * @see #CallbackDataProvider(SerializableFunction,
+     *      SerializableToIntFunction, ValueProvider)
      */
     public CallbackDataProvider(
             SerializableFunction<Query<T, F>, Stream<T>> fetchCallback,
             SerializableToIntFunction<Query<T, F>> sizeCallback) {
-        Objects.requireNonNull(fetchCallback, "Request function can't be null");
+        this(fetchCallback, sizeCallback, t -> t);
+    }
+
+    /**
+     * Constructs a new DataProvider to request data using callbacks for
+     * fetching and counting items in the back end.
+     *
+     * @param fetchCallBack
+     *            function that requests data from back end based on query
+     * @param sizeCallback
+     *            function that returns the amount of data in back end for query
+     * @param identifierGetter
+     *            function that returns the identifier for a given item
+     */
+    public CallbackDataProvider(
+            SerializableFunction<Query<T, F>, Stream<T>> fetchCallBack,
+            SerializableToIntFunction<Query<T, F>> sizeCallback,
+            ValueProvider<T, Object> identifierGetter) {
+        Objects.requireNonNull(fetchCallBack, "Request function can't be null");
         Objects.requireNonNull(sizeCallback, "Size callback can't be null");
-        this.fetchCallback = fetchCallback;
+        Objects.requireNonNull(identifierGetter,
+                "Identifier getter function can't be null");
+        this.fetchCallback = fetchCallBack;
         this.sizeCallback = sizeCallback;
+        this.idGetter = identifierGetter;
     }
 
     @Override
@@ -65,5 +91,13 @@ public class CallbackDataProvider<T, F>
     @Override
     protected int sizeInBackEnd(Query<T, F> query) {
         return sizeCallback.applyAsInt(query);
+    }
+
+    @Override
+    public Object getId(T item) {
+        Object itemId = idGetter.apply(item);
+        assert itemId != null : "CallbackDataProvider got null as an id for item: "
+                + item;
+        return itemId;
     }
 }

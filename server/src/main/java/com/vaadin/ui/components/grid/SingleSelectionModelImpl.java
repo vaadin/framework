@@ -284,4 +284,18 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             }
         };
     }
+
+    @Override
+    public void refreshData(T item) {
+        if (isSelected(item)) {
+            selectedItem = item;
+        }
+    }
+
+    @Override
+    public boolean isSelected(T item) {
+        return item != null && selectedItem != null
+                && getGrid().getDataProvider().getId(selectedItem)
+                        .equals(getGrid().getDataProvider().getId(item));
+    }
 }

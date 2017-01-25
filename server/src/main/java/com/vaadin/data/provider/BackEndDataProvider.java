@@ -71,5 +71,4 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
     default boolean isInMemory() {
         return false;
     }
-
 }
