@@ -163,17 +163,18 @@ public interface DataProvider<T, F> extends Serializable {
      * @param filterCombiner
      *            a callback for combining and the configured filter with the
      *            filter from the query to get a filter to pass to the wrapped
-     *            provider. Will only be called if the query contains a filter.
-     *            Not <code>null</code>
+     *            provider. Either parameter might be <code>null</code>, but the
+     *            callback will not be invoked at all if both would be
+     *            <code>null</code>. Not <code>null</code>.
      *
      * @return a data provider with a configurable filter, not <code>null</code>
      */
-    public default <C> ConfigurableFilterDataProvider<T, C, F> withConfigurableFilter(
-            SerializableBiFunction<F, C, F> filterCombiner) {
-        return new ConfigurableFilterDataProviderWrapper<T, C, F>(this) {
+    public default <Q, C> ConfigurableFilterDataProvider<T, Q, C> withConfigurableFilter(
+            SerializableBiFunction<Q, C, F> filterCombiner) {
+        return new ConfigurableFilterDataProviderWrapper<T, Q, C, F>(this) {
             @Override
-            protected F combineFilters(F configuredFilter, C queryFilter) {
-                return filterCombiner.apply(configuredFilter, queryFilter);
+            protected F combineFilters(Q queryFilter, C configuredFilter) {
+                return filterCombiner.apply(queryFilter, configuredFilter);
             }
         };
     }
@@ -188,7 +189,7 @@ public interface DataProvider<T, F> extends Serializable {
      * @return a data provider with a configurable filter, not <code>null</code>
      */
     public default ConfigurableFilterDataProvider<T, Void, F> withConfigurableFilter() {
-        return withConfigurableFilter((configuredFilter, queryFilter) -> {
+        return withConfigurableFilter((queryFilter, configuredFilter) -> {
             assert queryFilter == null : "Filter from Void query must be null";
 
             return configuredFilter;

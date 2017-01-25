@@ -28,9 +28,11 @@ package com.vaadin.data.provider;
  *            the query filter type
  * @param <C>
  *            the configurable filter type
+ * @param <F>
+ *            the filter type of the wrapped data provider
  */
-public abstract class ConfigurableFilterDataProviderWrapper<T, Q, C>
-        extends DataProviderWrapper<T, Q, C>
+public abstract class ConfigurableFilterDataProviderWrapper<T, Q, C, F>
+        extends DataProviderWrapper<T, Q, F>
         implements ConfigurableFilterDataProvider<T, Q, C> {
 
     private C configuredFilter;
@@ -43,33 +45,36 @@ public abstract class ConfigurableFilterDataProviderWrapper<T, Q, C>
      *            the data provider to wrap, not <code>null</code>
      */
     public ConfigurableFilterDataProviderWrapper(
-            DataProvider<T, C> dataProvider) {
+            DataProvider<T, F> dataProvider) {
         super(dataProvider);
     }
 
     @Override
-    protected C getFilter(Query<T, Q> query) {
-        return query.getFilter().map(
-                queryFilter -> combineFilters(configuredFilter, queryFilter))
-                .orElse(configuredFilter);
+    protected F getFilter(Query<T, Q> query) {
+        Q queryFilter = query.getFilter().orElse(null);
+        if (configuredFilter == null && queryFilter == null) {
+            return null;
+        }
+        return combineFilters(queryFilter, configuredFilter);
     }
 
     /**
      * Combines the configured filter and the filter from the query into one
-     * filter instance that can be passed to the wrapped data provider. This
-     * method is called only if there is a query filter, otherwise the
-     * configured filter will be directly passed to the query.
-     *
+     * filter instance that can be passed to the wrapped data provider. Will not
+     * be called if the configured filter is <code>null</code> and the query has
+     * no filter.
+     * 
+     * @param queryFilter
+     *            the filter received through the query, or <code>null</code> if
+     *            no filter was provided in the query
      * @param configuredFilter
      *            the filter that this data provider is configured to use, or
      *            <code>null</code> if no filter has been configured
-     * @param queryFilter
-     *            the filter received through the query, not <code>null</code>
      * @return a filter that combines the two provided queries, or
      *         <code>null</code> to not pass any filter to the wrapped data
      *         provider
      */
-    protected abstract C combineFilters(C configuredFilter, Q queryFilter);
+    protected abstract F combineFilters(Q queryFilter, C configuredFilter);
 
     @Override
     public void setFilter(C filter) {
