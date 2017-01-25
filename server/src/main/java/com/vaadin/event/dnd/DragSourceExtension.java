@@ -54,7 +54,7 @@ public class DragSourceExtension extends AbstractExtension {
      * @param data
      *         data to store for the data type.
      */
-    public void setData(String format, String data) {
+    public void setTransferData(String format, String data) {
         if (!getState().types.contains(format)) {
             getState().types.add(format);
         }
@@ -68,7 +68,7 @@ public class DragSourceExtension extends AbstractExtension {
      * @param format
      *         type of data to be cleared.
      */
-    public void clearData(String format) {
+    public void clearTransferData(String format) {
         getState().types.remove(format);
         getState().data.remove(format);
     }
@@ -76,7 +76,7 @@ public class DragSourceExtension extends AbstractExtension {
     /**
      * Clears all data for this drag source element.
      */
-    public void clearData() {
+    public void clearTransferData() {
         getState().types.clear();
         getState().data.clear();
     }

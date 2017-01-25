@@ -43,14 +43,14 @@ public class DropEvent extends Component.Event {
     }
 
     /**
-     * Get data set for the client side {@code dataTransfer}.
+     * Get data from the client side {@code DataTransfer} object.
      *
      * @param format
      *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
      * @return Data for the given format if exists in the client side {@code
-     * dataTransfer}, otherwise {@code null}.
+     * DataTransfer}, otherwise {@code null}.
      */
-    public String getData(String format) {
+    public String getTransferData(String format) {
         return data != null ? data.get(format) : null;
     }
 
