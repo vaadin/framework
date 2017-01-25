@@ -817,17 +817,7 @@ public class Grid<T> extends AbstractListing<T>
             Class<V> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
-                comparator = (a, b) -> {
-                    @SuppressWarnings("unchecked")
-                    Comparable<V> valueA = (Comparable<V>) valueProvider.apply(a);
-                    V valueB = valueProvider.apply(b);
-                    if (valueA == null) {
-                        return valueB == null ? 0 : 1;
-                    } else {
-                        if (valueB == null) return -1;
-                    }
-                    return valueA.compareTo(valueB);
-                };
+                comparator = (a, b) -> compareComparables(valueProvider.apply(a), valueProvider.apply(b));
                 state.sortable = true;
             } else if (Number.class.isAssignableFrom(valueType)) {
                 /*
@@ -844,13 +834,18 @@ public class Grid<T> extends AbstractListing<T>
         }
 
         @SuppressWarnings("unchecked")
+        private static int compareComparables(Object a, Object b) {
+            return ((Comparator) Comparator.nullsLast(Comparator.naturalOrder())).compare(a, b);
+        }
+
+        @SuppressWarnings("unchecked")
         private static int compareNumbers(Number a, Number b) {
             if (a == null) {
-                return b == null ? 0 : 1;
-            } else {
-                if (b == null) return -1;
+                a = Double.POSITIVE_INFINITY;
             }
-            assert a.getClass() == b.getClass();
+            if (b == null) {
+                b = Double.POSITIVE_INFINITY;
+            }
             // Most Number implementations are Comparable
             if (a instanceof Comparable && a.getClass().isInstance(b)) {
                 return ((Comparable<Number>) a).compareTo(b);
@@ -3198,14 +3193,7 @@ public class Grid<T> extends AbstractListing<T>
     private void sort(boolean userOriginated) {
         // Set sort orders
         // In-memory comparator
-        BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) -> SerializableComparator
-                        .asInstance((Comparator<T> & Serializable) comparator1
-                                .thenComparing(comparator2));
-        SerializableComparator<T> comparator = sortOrder.stream().map(
-                order -> order.getSorted().getComparator(order.getDirection()))
-                .reduce((x, y) -> 0, operator);
-        getDataCommunicator().setInMemorySorting(comparator);
+        getDataCommunicator().setInMemorySorting(createSortingComparator());
 
         // Back-end sort properties
         List<SortOrder<String>> sortProperties = new ArrayList<>();
@@ -3220,6 +3208,16 @@ public class Grid<T> extends AbstractListing<T>
         }
         fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
                 userOriginated));
+    }
+
+    protected SerializableComparator<T> createSortingComparator() {
+        BinaryOperator<SerializableComparator<T>> operator = (comparator1,
+                                                              comparator2) -> SerializableComparator
+                .asInstance((Comparator<T> & Serializable) comparator1
+                        .thenComparing(comparator2));
+        return sortOrder.stream().map(
+                order -> order.getSorted().getComparator(order.getDirection()))
+                .reduce((x, y) -> 0, operator);
     }
 
 }
