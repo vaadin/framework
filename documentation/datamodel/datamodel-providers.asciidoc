@@ -382,14 +382,18 @@ DataProvider<Person, String> dataProvider = new CallbackDataProvider<>(
 [[lazy-refresh]]
 === Refreshing
 
-All data providers support have the `refreshAll`and `refreshItem` methods. These methods can be used when data in the backend has been updated.
+When your application makes changes to the data that is in your backend, you might need to make sure all parts of the application are aware of these changes.
+All data providers have the `refreshAll`and `refreshItem` methods. 
+These methods can be used when data in the backend has been updated.
 
 For example Spring Data gives you new instances with every request, and making changes to the repository will make old instances of the same object "stale".
-In these cases you should inform any interested component by calling `dataProvider.refreshItem(newInstance)`. This will work out of the box, if your beans have
-good equals and hashCode implementations. Since that is not always the case, the user of a `CallbackDataProvider` can give it a `ValueProvider` that will provide 
-a stable ID for the data objects. This is usually a method reference, eg. `Person::getId`.
+In these cases you should inform any interested component by calling `dataProvider.refreshItem(newInstance)`. 
+This can work out of the box, if your beans have equals and hashCode implementations that check if the objects represent the same data.
+Since that is not always the case, the user of a `CallbackDataProvider` can give it a `ValueProvider` that will provide a stable ID for the data objects. 
+This is usually a method reference, eg. `Person::getId`.
 
-As an example, our service interface has an update method that returns a new instance of the item. Other functionality has been omitted to keep focus on the updating.
+As an example, our service interface has an update method that returns a new instance of the item. 
+Other functionality has been omitted to keep focus on the updating.
 
 [source, java]
 ----
