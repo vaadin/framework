@@ -619,13 +619,14 @@ public class Binder<BEAN> implements Serializable {
                         // Setter ignores value
                     });
 
-            BindingBuilder finalBinding = withConverter(
+            BindingBuilder<BEAN, ?> finalBinding = withConverter(
                     createConverter(definition.getType()), false);
 
-            finalBinding = definition.beforeBind(finalBinding);
+            finalBinding = getBinder().configureBinding(finalBinding,
+                    definition);
 
             try {
-                return finalBinding.bind(getter, setter);
+                return ((BindingBuilder) finalBinding).bind(getter, setter);
             } finally {
                 getBinder().boundProperties.add(propertyName);
                 getBinder().incompleteMemberFieldBindings.remove(getField());
@@ -1085,9 +1086,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Creates a new binder that uses reflection based on the provided bean type
-     * to resolve bean properties. If a JSR-303 bean validation implementation
-     * is present on the classpath, a {@link BeanValidator} is added to each
-     * binding that is defined using a property name.
+     * to resolve bean properties.
      *
      * @param beanType
      *            the bean type to use, not <code>null</code>
@@ -1935,6 +1934,22 @@ public class Binder<BEAN> implements Serializable {
             eventRouter = new EventRouter();
         }
         return eventRouter;
+    }
+
+    /**
+     * Configures the {@code binding} with the property definition
+     * {@code definition} before it's being bound.
+     * 
+     * @param binding
+     *            a binding to configure
+     * @param definition
+     *            a property definition information
+     * @return the new configured binding
+     */
+    protected BindingBuilder<BEAN, ?> configureBinding(
+            BindingBuilder<BEAN, ?> binding,
+            BinderPropertyDefinition<BEAN, ?> definition) {
+        return binding;
     }
 
     private void doRemoveBean(boolean fireStatusEvent) {
