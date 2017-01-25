@@ -34,16 +34,17 @@ import com.vaadin.server.ClientConnector;
  * There is no automatic loading of any polyfill.
  * <p>
  * <ul>
- * <li>Relative URLs are interpreted as relative to the {@code VAADIN} folder,
- * i.e. {@literal bower_components/paper-slider/paper-slider.html} is equal to
- * {@literal vaadin://bower_components/paper-slider/paper-slider.html}.
+ * <li>Relative URLs are mapped to APP/PUBLISHED/[url] which are by default
+ * served from the classpath relative to the class where the annotation is
+ * defined.
  * <li>Absolute URLs including protocol and host are used as is on the
  * client-side.
  * </ul>
- * Note that it is a good idea to use relative URLs and place all HTML imports
- * in the same folder. Polymer elements rely on importing dependencies using
- * relative paths {@literal ../../other-element/other-element.html}, which will
- * not work if they are installed in different locations.
+ * Note that it is a good idea to use URLs starting with {@literal vaadin://}
+ * and place all HTML imports inside {@literal VAADIN/bower_components}. Polymer
+ * elements rely on importing dependencies using relative paths
+ * {@literal ../../other-element/other-element.html}, which will not work if
+ * they are installed in different locations.
  * <p>
  * HTML imports are added to the page after any {@code @JavaScript} dependencies
  * added at the same time.
