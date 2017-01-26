@@ -513,10 +513,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Reimplementing the {@code attach()} method is useful for tasks that need
      * to get a reference to the parent, window, or application object with the
-     * {@link #getParent()}, {@link #getUI()}, and {@link #getSession()}
-     * methods. A component does not yet know these objects in the constructor,
-     * so in such case, the methods will return {@code null}. For example, the
-     * following is invalid:
+     * {@link #getParent()} and {@link #getUI()} methods. A component does not
+     * yet know these objects in the constructor, so in such case, the methods
+     * will return {@code null}. For example, the following is invalid:
      * </p>
      *
      * <pre>
@@ -537,7 +536,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * component from a container triggers calling the {@link #detach()} method.
      * If the parent of an added component is already connected to the
      * application, the {@code attach()} is called immediately from
-     * {@link #setParent(Component)}.
+     * {@link #setParent(HasComponents)}.
      * </p>
      *
      * <pre>

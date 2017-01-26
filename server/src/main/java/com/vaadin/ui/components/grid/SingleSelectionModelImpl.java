@@ -146,7 +146,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     /**
      * Sets the selection based on a client request. Does nothing if the select
-     * component is {@linkplain Component#isReadOnly()} or if the selection
+     * component is {@linkplain SingleSelect#isReadOnly()} or if the selection
      * would not change. Otherwise updates the selection and fires a selection
      * change event with {@code isUserOriginated == true}.
      *

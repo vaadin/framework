@@ -141,7 +141,7 @@ public class Upload extends AbstractComponent
     /**
      * Invoked when the value of a variable has changed.
      *
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
+     * @see com.vaadin.ui.LegacyComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
     @Override
@@ -344,7 +344,7 @@ public class Upload extends AbstractComponent
          * @param filename
          * @param MIMEType
          * @param length
-         * @param exception
+         * @param reason
          */
         public FailedEvent(Upload source, String filename, String MIMEType,
                 long length, Exception reason) {
@@ -358,7 +358,6 @@ public class Upload extends AbstractComponent
          * @param filename
          * @param MIMEType
          * @param length
-         * @param exception
          */
         public FailedEvent(Upload source, String filename, String MIMEType,
                 long length) {
@@ -456,7 +455,7 @@ public class Upload extends AbstractComponent
          * @param source
          * @param filename
          * @param MIMEType
-         * @param length
+         * @param contentLength
          */
         public StartedEvent(Upload source, String filename, String MIMEType,
                 long contentLength) {
@@ -775,7 +774,6 @@ public class Upload extends AbstractComponent
      *
      * @param filename
      * @param MIMEType
-     * @param length
      */
     protected void fireStarted(String filename, String MIMEType) {
         fireEvent(new Upload.StartedEvent(this, filename, MIMEType,

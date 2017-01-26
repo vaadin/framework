@@ -88,8 +88,6 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
     /**
      * Create a RPC manager for an RPC target.
      *
-     * @param target
-     *            RPC call target (normally a {@link Connector})
      * @param implementation
      *            RPC interface implementation for the target
      * @param rpcInterface

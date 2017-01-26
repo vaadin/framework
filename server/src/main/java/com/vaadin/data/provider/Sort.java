@@ -37,8 +37,8 @@ public abstract class Sort implements Serializable {
      *
      *
      * @see Sort
-     * @see Sort#asc(Object)
-     * @see Sort#desc(Object)
+     * @see Sort#asc(String)
+     * @see Sort#desc(String)
      * @see #build()
      */
     public static class SortBuilder implements Serializable {
@@ -104,8 +104,6 @@ public abstract class Sort implements Serializable {
      *
      * @param by
      *            the object to sort by
-     * @param <S>
-     *            sort order data type
      *
      * @return the sort builder
      */
@@ -119,8 +117,6 @@ public abstract class Sort implements Serializable {
      *
      * @param by
      *            the object to sort by
-     * @param <S>
-     *            sort order data type
      *
      * @return the sort builder
      */

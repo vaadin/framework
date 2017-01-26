@@ -498,7 +498,7 @@ public class PushHandler {
      * aware of a reconnect taking place.
      *
      * @since 7.6
-     * @param suspendTimeout
+     * @param longPollingSuspendTimeout
      *            the timeout to use for suspended AtmosphereResources
      */
     public void setLongPollingSuspendTimeout(int longPollingSuspendTimeout) {

@@ -63,8 +63,6 @@ public class UidlWriter implements Serializable {
      *            The {@link UI} whose changes to write
      * @param writer
      *            The writer to use
-     * @param analyzeLayouts
-     *            Whether detected layout problems should be logged.
      * @param async
      *            True if this message is sent by the server asynchronously,
      *            false if it is a response to a client message.

@@ -495,9 +495,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Check that cookie support is enabled in the browser. Only checks UIDL
      * requests.
      *
-     * @param requestType
-     *            Type of the request as returned by
-     *            {@link #getRequestType(HttpServletRequest)}
      * @param request
      *            The request from the browser
      * @param response

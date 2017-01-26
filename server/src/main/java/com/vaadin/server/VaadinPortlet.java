@@ -644,8 +644,8 @@ public class VaadinPortlet extends GenericPortlet
     /**
      * Gets the currently used Vaadin portlet. The current portlet is
      * automatically defined when processing requests related to the service
-     * (see {@link ThreadLocal}) and in {@link VaadinSession#access(Command)}
-     * and {@link UI#access(Command)}. In other cases, (e.g. from background
+     * (see {@link ThreadLocal}) and in {@link VaadinSession#access(Runnable)}
+     * and {@link UI#access(Runnable)}. In other cases, (e.g. from background
      * threads, the current service is not automatically defined.
      *
      * The current portlet is derived from the current service using
