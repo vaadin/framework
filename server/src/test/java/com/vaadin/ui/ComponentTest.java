@@ -15,15 +15,12 @@
  */
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.junit.Assert;
 
 import com.vaadin.server.ClientConnector;
-import com.vaadin.server.ServerRpcManager;
-import com.vaadin.shared.communication.ServerRpc;
 
 import elemental.json.JsonObject;
 
@@ -68,29 +65,6 @@ public class ComponentTest {
         component.getUI().getSession().getCommunicationManager()
                 .encodeState(component, component.getState());
 
-    }
-
-    /**
-     * Gets the server rpc handler registered for a component.
-     *
-     * @param component
-     *            the component which listens to the RPC
-     * @param serverRpcClass
-     *            the server RPC class
-     * @return the server RPC handler
-     */
-    public static <T extends ServerRpc> T getRpcProxy(Component component,
-            Class<T> serverRpcClass) {
-        try {
-            ServerRpcManager<?> rpcManager = component
-                    .getRpcManager(serverRpcClass.getName());
-            Method method = ServerRpcManager.class
-                    .getDeclaredMethod("getImplementation");
-            method.setAccessible(true);
-            return serverRpcClass.cast(method.invoke(rpcManager));
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

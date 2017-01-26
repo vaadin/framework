@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import org.junit.Test;
 
+import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.tests.util.MockUI;
 
@@ -38,7 +39,7 @@ public class ComboBoxTest {
         // Emulate selection of "one"
         String oneKey = comboBox.getDataCommunicator().getKeyMapper()
                 .key("one");
-        ComponentTest.getRpcProxy(comboBox, SelectionServerRpc.class)
+        ServerRpcManager.getRpcProxy(comboBox, SelectionServerRpc.class)
                 .select(oneKey);
 
         ComponentTest.assertEncodedStateProperties(comboBox,
