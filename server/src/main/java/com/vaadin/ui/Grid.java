@@ -840,24 +840,20 @@ public class Grid<T> extends AbstractListing<T>
 
         @SuppressWarnings("unchecked")
         private static int compareNumbers(Number a, Number b) {
-            if (a == null) {
-                a = Double.POSITIVE_INFINITY;
-            }
-            if (b == null) {
-                b = Double.POSITIVE_INFINITY;
-            }
+            Number valueA = a != null ? a : Double.POSITIVE_INFINITY;
+            Number valueB = b != null ? b : Double.POSITIVE_INFINITY;
             // Most Number implementations are Comparable
-            if (a instanceof Comparable && a.getClass().isInstance(b)) {
-                return ((Comparable<Number>) a).compareTo(b);
-            } else if (a.equals(b)) {
+            if (valueA instanceof Comparable && valueA.getClass().isInstance(valueB)) {
+                return ((Comparable<Number>) valueA).compareTo(valueB);
+            } else if (valueA.equals(valueB)) {
                 return 0;
             } else {
                 // Fall back to comparing based on potentially truncated values
-                int compare = Long.compare(a.longValue(), b.longValue());
+                int compare = Long.compare(valueA.longValue(), valueB.longValue());
                 if (compare == 0) {
                     // This might still produce 0 even though the values are not
                     // equals, but there's nothing more we can do about that
-                    compare = Double.compare(a.doubleValue(), b.doubleValue());
+                    compare = Double.compare(valueA.doubleValue(), valueB.doubleValue());
                 }
                 return compare;
             }
