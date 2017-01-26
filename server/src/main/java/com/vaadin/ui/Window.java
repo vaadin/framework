@@ -1282,7 +1282,7 @@ public class Window extends Panel
      * This postfix is read to assistive device users after the window caption,
      * but not visible on the page.
      *
-     * @param prefix
+     * @param assistivePostfix
      *            String that is placed after the window caption
      */
     public void setAssistivePostfix(String assistivePostfix) {

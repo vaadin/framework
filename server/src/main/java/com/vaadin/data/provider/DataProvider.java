@@ -88,10 +88,37 @@ public interface DataProvider<T, F> extends Serializable {
     Stream<T> fetch(Query<T, F> query);
 
     /**
+     * Refreshes the given item. This method should be used to inform all
+     * {@link DataProviderListener DataProviderListeners} that an item has been
+     * updated or replaced with a new instance.
+     *
+     * @param item
+     *            the item to refresh
+     */
+    void refreshItem(T item);
+
+    /**
      * Refreshes all data based on currently available data in the underlying
      * provider.
      */
     void refreshAll();
+
+    /**
+     * Gets an identifier for the given item. This identifier is used by the
+     * framework to determine equality between two items.
+     * <p>
+     * Default is to use item itself as its own identifier. If the item has
+     * {@link Object#equals(Object)} and {@link Object#hashCode()} implemented
+     * in a way that it can be compared to other items, no changes are required.
+     *
+     * @param item
+     *            the item to get identifier for; not {@code null}
+     * @return the identifier for given item; not {@code null}
+     */
+    public default Object getId(T item) {
+        Objects.requireNonNull(item, "Cannot provide an id for a null item.");
+        return item;
+    }
 
     /**
      * Adds a data provider listener. The listener is called when some piece of
@@ -106,7 +133,7 @@ public interface DataProvider<T, F> extends Serializable {
      *            the data change listener, not null
      * @return a registration for the listener
      */
-    Registration addDataProviderListener(DataProviderListener listener);
+    Registration addDataProviderListener(DataProviderListener<T> listener);
 
     /**
      * Wraps this data provider to create a data provider that uses a different

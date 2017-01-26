@@ -19,6 +19,7 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataKeyMapper;
 
 /**
@@ -112,5 +113,18 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
      */
     public boolean containsKey(String key) {
         return keyObjectMap.containsKey(key);
+    }
+
+    @Override
+    public void refresh(V dataObject,
+            ValueProvider<V, Object> identifierGetter) {
+        Object id = identifierGetter.apply(dataObject);
+        objectKeyMap.entrySet().stream()
+                .filter(e -> identifierGetter.apply(e.getKey()).equals(id))
+                .findAny().ifPresent(e -> {
+                    String key = objectKeyMap.remove(e.getKey());
+                    objectKeyMap.put(dataObject, key);
+                    keyObjectMap.put(key, dataObject);
+                });
     }
 }

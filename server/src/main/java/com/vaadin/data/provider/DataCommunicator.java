@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.DataChangeEvent.DataRefreshEvent;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.SerializableConsumer;
@@ -465,17 +466,20 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param initialFilter
      *            the initial filter value to use, or <code>null</code> to not
      *            use any initial filter value
+     *
+     * @param <F>
+     *            the filter type
+     *
      * @return a consumer that accepts a new filter value to use
      */
     public <F> SerializableConsumer<F> setDataProvider(
             DataProvider<T, F> dataProvider, F initialFilter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
-
         filter = initialFilter;
-        this.dataProvider = dataProvider;
-
         detachDataProviderListener();
         dropAllData();
+        this.dataProvider = dataProvider;
+
         /*
          * This introduces behavior which influence on the client-server
          * communication: now the very first response to the client will always
@@ -556,8 +560,18 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     private void attachDataProviderListener() {
         dataProviderUpdateRegistration = getDataProvider()
-                .addDataProviderListener(
-                        event -> getUI().access(() -> reset()));
+                .addDataProviderListener(event -> {
+                    getUI().access(() -> {
+                        if (event instanceof DataRefreshEvent) {
+                            T item = ((DataRefreshEvent<T>) event).getItem();
+                            generators.forEach(g -> g.refreshData(item));
+                            keyMapper.refresh(item, dataProvider::getId);
+                            refresh(item);
+                        } else {
+                            reset();
+                        }
+                    });
+                });
     }
 
     private void detachDataProviderListener() {

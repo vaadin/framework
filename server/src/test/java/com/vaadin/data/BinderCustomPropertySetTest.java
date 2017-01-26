@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.server.Setter;
 import com.vaadin.ui.TextField;
 
@@ -58,12 +57,6 @@ public class BinderCustomPropertySetTest {
         @Override
         public Class<String> getType() {
             return String.class;
-        }
-
-        @Override
-        public BindingBuilder<Map<String, String>, String> beforeBind(
-                BindingBuilder<Map<String, String>, String> originalBuilder) {
-            return originalBuilder;
         }
 
         @Override

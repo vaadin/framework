@@ -135,7 +135,7 @@ public class ResourceLoader {
         Document document = Document.get();
         head = document.getElementsByTagName("head").getItem(0);
 
-        // detect already loaded scripts and stylesheets
+        // detect already loaded scripts, html imports and stylesheets
         NodeList<Element> scripts = document.getElementsByTagName("script");
         for (int i = 0; i < scripts.getLength(); i++) {
             ScriptElement element = ScriptElement.as(scripts.getItem(i));
@@ -151,6 +151,10 @@ public class ResourceLoader {
             String rel = linkElement.getRel();
             String href = linkElement.getHref();
             if ("stylesheet".equalsIgnoreCase(rel) && href != null
+                    && href.length() != 0) {
+                loadedResources.add(href);
+            }
+            if ("import".equalsIgnoreCase(rel) && href != null
                     && href.length() != 0) {
                 loadedResources.add(href);
             }
@@ -211,6 +215,48 @@ public class ResourceLoader {
                 }
             }, event);
             head.appendChild(scriptTag);
+        }
+    }
+
+    /**
+     * Loads an HTML import and notify a listener when the HTML import is
+     * loaded. Calling this method when the HTML import is currently loading or
+     * already loaded doesn't cause the HTML import to be loaded again, but the
+     * listener will still be notified when appropriate.
+     *
+     * @param htmlUrl
+     *            url of HTML import to load
+     * @param resourceLoadListener
+     *            listener to notify when the HTML import is loaded
+     */
+    public void loadHtmlImport(final String htmlUrl,
+            final ResourceLoadListener resourceLoadListener) {
+        final String url = WidgetUtil.getAbsoluteUrl(htmlUrl);
+        ResourceLoadEvent event = new ResourceLoadEvent(this, url);
+        if (loadedResources.contains(url)) {
+            if (resourceLoadListener != null) {
+                resourceLoadListener.onLoad(event);
+            }
+            return;
+        }
+
+        if (addListener(url, resourceLoadListener, loadListeners)) {
+            LinkElement linkTag = Document.get().createLinkElement();
+            linkTag.setAttribute("rel", "import");
+            linkTag.setAttribute("href", url);
+
+            addOnloadHandler(linkTag, new ResourceLoadListener() {
+                @Override
+                public void onLoad(ResourceLoadEvent event) {
+                    fireLoad(event);
+                }
+
+                @Override
+                public void onError(ResourceLoadEvent event) {
+                    fireError(event);
+                }
+            }, event);
+            head.appendChild(linkTag);
         }
     }
 
@@ -355,12 +401,12 @@ public class ResourceLoader {
                     if (rules === undefined) {
                         rules = sheet.rules;
                     }
-    
+
                     if (rules === null) {
                         // Style sheet loaded, but can't access length because of XSS -> assume there's something there
                         return 1;
                     }
-    
+
                     // Return length so we can distinguish 0 (probably 404 error) from normal case.
                     return rules.length;
                 } catch (err) {
