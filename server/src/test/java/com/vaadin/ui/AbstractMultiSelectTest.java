@@ -69,8 +69,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
         selectToTest.deselectAll();
         // Intentional deviation from upcoming selection order
         selectToTest.setItems("3", "2", "1", "5", "8", "7", "4", "6");
-        rpc = ComponentTest.getRpcProxy(selectToTest,
-                MultiSelectServerRpc.class);
+        rpc = selectToTest.getServerRpcProxy(MultiSelectServerRpc.class);
 
         values = new ArrayList<>();
         oldValues = new ArrayList<>();

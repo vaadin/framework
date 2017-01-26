@@ -38,8 +38,7 @@ public class ComboBoxTest {
         // Emulate selection of "one"
         String oneKey = comboBox.getDataCommunicator().getKeyMapper()
                 .key("one");
-        ComponentTest.getRpcProxy(comboBox, SelectionServerRpc.class)
-                .select(oneKey);
+        comboBox.getServerRpcProxy(SelectionServerRpc.class).select(oneKey);
 
         ComponentTest.assertEncodedStateProperties(comboBox,
                 "Selection change done by the listener should be sent to the client",

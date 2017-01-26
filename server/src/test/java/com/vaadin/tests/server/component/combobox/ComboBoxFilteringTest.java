@@ -34,7 +34,6 @@ import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.ComponentTest;
 
 /**
  * Test for ComboBox data providers and filtering.
@@ -229,8 +228,7 @@ public class ComboBoxFilteringTest {
         // Discard any currently pending RPC calls
         dataCommunicator.retrievePendingRpcCalls();
 
-        ComponentTest.getRpcProxy(comboBox, ComboBoxServerRpc.class)
-                .setFilter(filter);
+        comboBox.getServerRpcProxy(ComboBoxServerRpc.class).setFilter(filter);
         dataCommunicator.beforeClientResponse(true);
 
         ClientMethodInvocation resetInvocation = dataCommunicator

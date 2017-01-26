@@ -65,8 +65,8 @@ public class RadioButtonGroupTest {
             Assert.assertTrue(event.isUserOriginated());
         });
 
-        SelectionServerRpc rpc = ComponentTest.getRpcProxy(radioButtonGroup,
-                SelectionServerRpc.class);
+        SelectionServerRpc rpc = radioButtonGroup
+                .getServerRpcProxy(SelectionServerRpc.class);
 
         rpc.select(getItemKey("First"));
         rpc.select(getItemKey("Second"));

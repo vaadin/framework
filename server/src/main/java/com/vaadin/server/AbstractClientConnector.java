@@ -374,6 +374,28 @@ public abstract class AbstractClientConnector
         }
     }
 
+    /**
+     * Returns an RPC proxy for a given client to server RPC interface for this
+     * component.
+     * <p>
+     * This method exists and is public to allow executing RPC methods when
+     * creating tests.
+     *
+     * @param rpcInterface
+     *            RPC interface type
+     *
+     * @return a server RPC handler which can be used to invoke RPC methods
+     * @since 7.0
+     */
+    public <T extends ServerRpc> T getServerRpcProxy(
+            final Class<T> rpcInterface) {
+
+        @SuppressWarnings("unchecked")
+        ServerRpcManager<T> rpcManager = (ServerRpcManager<T>) getRpcManager(
+                rpcInterface.getName());
+        return rpcManager.getImplementation();
+    }
+
     private class RpcInvocationHandler
             implements InvocationHandler, Serializable {
 
