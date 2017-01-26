@@ -23,7 +23,6 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.renderers.NumberRenderer;
 
 public class GridTest {
 
@@ -34,8 +33,8 @@ public class GridTest {
         grid = new Grid<>();
 
         grid.addColumn(ValueProvider.identity()).setId("foo");
-        grid.addColumn(String::length, new NumberRenderer());
-        grid.addColumn(string -> new Object());
+        grid.addColumn(String::length);
+        grid.addColumn(string -> String.valueOf(new Object()));
         grid.addColumn(ValueProvider.identity()).setId("randomColumnId");
     }
 

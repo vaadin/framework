@@ -106,8 +106,8 @@ import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.ObjectRenderer;
 import com.vaadin.ui.renderers.Renderer;
-import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
@@ -797,7 +797,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            the type of value
          */
         protected Column(ValueProvider<T, ? extends V> valueProvider,
-                Renderer<V> renderer) {
+                Renderer<? super V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -810,55 +810,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             state.caption = "";
             sortOrderProvider = d -> Stream.of();
 
+            state.sortable = false;
+
             // Add the renderer as a child extension of this extension, thus
             // ensuring the renderer will be unregistered when this column is
             // removed
             addExtension(renderer);
-
-            Class<V> valueType = renderer.getPresentationType();
-
-            if (Comparable.class.isAssignableFrom(valueType)) {
-                comparator = (a, b) -> {
-                    @SuppressWarnings("unchecked")
-                    Comparable<V> comp = (Comparable<V>) valueProvider.apply(a);
-                    return comp.compareTo(valueProvider.apply(b));
-                };
-                state.sortable = true;
-            } else if (Number.class.isAssignableFrom(valueType)) {
-                /*
-                 * Value type will be Number whenever using NumberRenderer.
-                 * Provide explicit comparison support in this case even though
-                 * Number itself isn't Comparable.
-                 */
-                comparator = (a, b) -> {
-                    return compareNumbers((Number) valueProvider.apply(a),
-                            (Number) valueProvider.apply(b));
-                };
-                state.sortable = true;
-            } else {
-                state.sortable = false;
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private static int compareNumbers(Number a, Number b) {
-            assert a.getClass() == b.getClass();
-
-            // Most Number implementations are Comparable
-            if (a instanceof Comparable && a.getClass().isInstance(b)) {
-                return ((Comparable<Number>) a).compareTo(b);
-            } else if (a.equals(b)) {
-                return 0;
-            } else {
-                // Fall back to comparing based on potentially truncated values
-                int compare = Long.compare(a.longValue(), b.longValue());
-                if (compare == 0) {
-                    // This might still produce 0 even though the values are not
-                    // equals, but there's nothing more we can do about that
-                    compare = Double.compare(a.doubleValue(), b.doubleValue());
-                }
-                return compare;
-            }
         }
 
         @Override
@@ -1039,6 +996,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sets a comparator to use with in-memory sorting with this column.
          * Sorting with a back-end is done using
          * {@link Column#setSortProperty(String...)}.
+         * <p>
+         * Setting a comparator enables client-side sorting by default. To
+         * configure client-side sorting call {@link #setSortable(boolean)}.
          *
          * @param comparator
          *            the comparator to use when sorting data in this column
@@ -1048,6 +1008,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 SerializableComparator<T> comparator) {
             Objects.requireNonNull(comparator, "Comparator can't be null");
             this.comparator = comparator;
+            setSortable(true);
             return this;
         }
 
@@ -1846,18 +1807,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Adds a new text column to this {@link Grid} with a value provider. The
-     * column will use a {@link TextRenderer}. The value is converted to a
-     * String using {@link Object#toString()}. Sorting in memory is executed by
-     * comparing the String values.
+     * column will use a {@link ObjectRenderer}. The value is presented as a
+     * String using {@link String#valueOf(Object)}. Sorting in memory is
+     * executed by comparing the values returned by the given ValueProvider.
      *
      * @param valueProvider
      *            the value provider
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(ValueProvider<T, ?> valueProvider) {
-        return addColumn(t -> String.valueOf(valueProvider.apply(t)),
-                new TextRenderer());
+    public <V extends Comparable<? super V>> Column<T, V> addColumn(
+            ValueProvider<T, V> valueProvider) {
+        return addColumn(t -> valueProvider.apply(t), new ObjectRenderer(),
+                (a, b) -> Comparator
+                        .nullsLast(Comparator.comparing(valueProvider))
+                        .compare(a, b));
     }
 
     /**
@@ -1875,12 +1839,43 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see AbstractRenderer
      */
+    public <V extends Comparable<? super V>> Column<T, V> addColumn(
+            ValueProvider<T, ? extends V> valueProvider,
+            AbstractRenderer<? super T, ? super V> renderer) {
+        return addColumn(valueProvider, renderer, (a, b) -> Comparator
+                .nullsLast(Comparator.comparing(valueProvider)).compare(a, b));
+    }
+
+    /**
+     * Adds a new column to this {@link Grid} with typed renderer, value
+     * provider and comparator. If the given comparator is {@code null},
+     * in-memory sorting will be disabled. To later configure a comparator see
+     * {@link Column#setComparator(SerializableComparator)}.
+     *
+     * @param valueProvider
+     *            the value provider
+     * @param renderer
+     *            the column value class
+     * @param comparator
+     *            the comparator to use for in memory sorting, {@code null} to
+     *            disable in memory sorting
+     * @param <V>
+     *            the column value type
+     *
+     * @return the new column
+     *
+     * @see AbstractRenderer
+     */
     public <V> Column<T, V> addColumn(
             ValueProvider<T, ? extends V> valueProvider,
-            AbstractRenderer<? super T, V> renderer) {
+            AbstractRenderer<? super T, ? super V> renderer,
+            SerializableComparator<T> comparator) {
         String generatedIdentifier = getGeneratedIdentifier();
         Column<T, V> column = new Column<>(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
+        if (comparator != null) {
+            column.setComparator(comparator);
+        }
         return column;
     }
 

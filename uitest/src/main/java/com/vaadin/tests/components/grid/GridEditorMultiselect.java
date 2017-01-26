@@ -20,7 +20,7 @@ public class GridEditorMultiselect extends AbstractTestUI {
 
         Column<Person, String> nameColumn = grid.addColumn(Person::getFirstName)
                 .setCaption("name");
-        Column<Person, Number> ageColumn = grid
+        Column<Person, Integer> ageColumn = grid
                 .addColumn(Person::getAge, new NumberRenderer())
                 .setCaption("age");
 

@@ -32,7 +32,8 @@ public class GridClickableRenderers extends AbstractReindeerTestUI {
         Grid<TestPOJO> grid = new Grid<>();
 
         grid.addColumn(pojo -> new ExternalResource(pojo.imageUrl),
-                new ImageRenderer<>()).setId("images").setCaption("Images");
+                new ImageRenderer<>(), null).setId("images")
+                .setCaption("Images");
         grid.addColumn(pojo -> pojo.buttonText,
                 new ButtonRenderer<>(event -> valueDisplayLabel
                         .setValue(event.getItem().testText + " clicked")))

@@ -2,7 +2,6 @@ package com.vaadin.tests.components.grid;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -42,7 +41,6 @@ public class GridAddColumnTest extends SingleBrowserTest {
     }
 
     @Test
-    @Ignore // TODO re-enable once #8128 is resolved
     public void sort_column_with_automatic_conversion() {
         grid.getHeaderCell(0, 2).click();
         assertCellEquals(0, 0, "a");

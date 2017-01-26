@@ -84,10 +84,10 @@ public class CustomRendererUI extends AbstractTestUI {
 
         Label debugLabel = new Label("Debug label placeholder");
         debugLabel.setId("debuglabel");
-        grid.addColumn(Data::getArray, new IntArrayRenderer());
+        grid.addColumn(Data::getArray, new IntArrayRenderer(), null);
         grid.addColumn(Data::getEmptyProperty,
                 new RowAwareRenderer(debugLabel));
-        grid.addColumn(Data::getBean, new BeanRenderer());
+        grid.addColumn(Data::getBean, new BeanRenderer(), null);
 
         grid.setSelectionMode(SelectionMode.NONE);
 
