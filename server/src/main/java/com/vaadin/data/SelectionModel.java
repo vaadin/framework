@@ -187,7 +187,7 @@ public interface SelectionModel<T> extends Serializable {
          */
         public default void selectItems(Collection<T> items) {
             Objects.requireNonNull(items);
-            items.stream().forEach(Objects::requireNonNull);
+            items.forEach(Objects::requireNonNull);
 
             updateSelection(
                     new LinkedHashSet<>(
@@ -229,7 +229,7 @@ public interface SelectionModel<T> extends Serializable {
          */
         public default void deselectItems(Collection<T> items) {
             Objects.requireNonNull(items);
-            items.stream().forEach(Objects::requireNonNull);
+            items.forEach(Objects::requireNonNull);
 
             updateSelection(Collections.emptySet(), new LinkedHashSet<>(
                     items.stream().collect(Collectors.toList())));
