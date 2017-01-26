@@ -57,7 +57,7 @@ public class TextField extends AbstractTextField {
      * @param caption
      *            the caption <code>String</code> for the editor.
      * @param value
-     *            the initial text content of the editor.
+     *            the initial text content of the editor, not {@code null}
      */
     public TextField(String caption, String value) {
         setValue(value);
@@ -103,7 +103,7 @@ public class TextField extends AbstractTextField {
      * @param caption
      *            the caption {@code String} for the editor.
      * @param value
-     *            the initial text content of the editor.
+     *            the initial text content of the editor, not {@code null}
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */

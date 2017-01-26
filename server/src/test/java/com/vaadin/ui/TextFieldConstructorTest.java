@@ -15,11 +15,13 @@
  */
 package com.vaadin.ui;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.mockito.Mockito;
+
+import com.vaadin.data.HasValue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 public class TextFieldConstructorTest {
 
@@ -40,25 +42,29 @@ public class TextFieldConstructorTest {
 
     @Test
     public void testValueChangeListener_eventOnValueChange() {
-        AtomicInteger eventCounter = new AtomicInteger(0);
-        TextField textField = new TextField(event -> eventCounter.incrementAndGet());
-
-        assertEquals(0, eventCounter.get());
+        HasValue.ValueChangeListener valueChangeListener = Mockito
+                .mock(HasValue.ValueChangeListener.class);
+        TextField textField = new TextField(valueChangeListener);
 
         textField.setValue("value change");
 
-        assertEquals(1, eventCounter.get());
+        verify(valueChangeListener)
+                .valueChange(Mockito.any(HasValue.ValueChangeEvent.class));
     }
 
     @Test
     public void testCaptionValueListener() {
-        AtomicInteger eventCounter = new AtomicInteger(0);
-        TextField textField = new TextField("Caption", "Initial value", event -> eventCounter.incrementAndGet());
+        HasValue.ValueChangeListener valueChangeListener = Mockito
+                .mock(HasValue.ValueChangeListener.class);
+        TextField textField = new TextField("Caption", "Initial value",
+                valueChangeListener);
 
-        assertEquals(0, eventCounter.get());
+        verify(valueChangeListener, never())
+                .valueChange(Mockito.any(HasValue.ValueChangeEvent.class));
 
         textField.setValue("value change");
 
-        assertEquals(1, eventCounter.get());
+        verify(valueChangeListener)
+                .valueChange(Mockito.any(HasValue.ValueChangeEvent.class));
     }
 }
