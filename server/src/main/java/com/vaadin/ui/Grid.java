@@ -44,6 +44,7 @@ import org.jsoup.select.Elements;
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.BackEndDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.Query;
@@ -2826,6 +2827,66 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public List<SortOrder<Column<T, ?>>> getSortOrder() {
         return Collections.unmodifiableList(sortOrder);
+    }
+
+    /**
+     * Sets the objects to be represented as rows in the Grid.
+     * <p>
+     * The given objects will be rendered as rows in the Grid, based on how the
+     * Grid has been configured. In case the Grid is used as a selection
+     * component, the given objects are also the values of the selection.
+     *
+     * @see #addColumn(ValueProvider)
+     *
+     * @param rows
+     *            the objects to be represented as rows in the Grid
+     */
+    public void setRows(T... rows) {
+        setItems(rows);
+    }
+
+    /**
+     * Sets the objects to be represented as rows in the Grid.
+     * <p>
+     * The given objects will be rendered as rows in the Grid, based on how the
+     * Grid has been configured. In case the Grid is used as a selection
+     * component, the given objects are also the values of the selection.
+     * <p>
+     * The provided collection instance may be used as-is. Subsequent
+     * modification of the collection might cause inconsistent data to be shown
+     * in the component unless it is explicitly instructed to read the data
+     * again.
+     *
+     * @see #addColumn(ValueProvider)
+     *
+     * @param rows
+     *            the objects to be represented as rows in the Grid
+     */
+    public void setRows(Collection<T> rows) {
+        setItems(rows);
+    }
+
+    /**
+     * Sets the objects to be represented as rows in the Grid.
+     * <p>
+     * The given objects will be rendered as rows in the Grid, based on how the
+     * Grid has been configured. In case the Grid is used as a selection
+     * component, the given objects are also the values of the selection.
+     * <p>
+     * Note, that this is just a shorthand for {@link #setRows(Collection)},
+     * that <b>collects objects in the stream to a list</b>. Thus, using this
+     * method, instead of its array and Collection variations, doesn't save any
+     * memory. If you have a large data set to bind, using a lazy data provider
+     * is recommended. See {@link BackEndDataProvider} for more info.
+     *
+     *
+     * @see #addColumn(ValueProvider)
+     *
+     * @param rows
+     *            the objects to be represented as rows in the Grid
+     */
+    public void setRows(Stream<T> rows) {
+        setItems(rows);
     }
 
     @Override

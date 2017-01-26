@@ -22,11 +22,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel.Single;
+import com.vaadin.data.provider.BackEndDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionListener;
@@ -147,6 +149,55 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public void setValue(T value) {
         setSelectedItem(value);
+    }
+
+    /**
+     * Sets the options available in this select.
+     * <p>
+     * By default options are displayed using their {@link Object#toString()}.
+     * You can override this using {@link ItemCaptionGenerator} and/or
+     * {@link IconGenerator}.
+     *
+     *
+     * @param options
+     *            the options to be available in this select
+     */
+    public void setOptions(T... options) {
+        setItems(options);
+    }
+
+    /**
+     * Sets the options available in this select.
+     * <p>
+     * By default options are displayed using their {@link Object#toString()}.
+     * You can override this using {@link ItemCaptionGenerator} and/or
+     * {@link IconGenerator}.
+     *
+     * @param options
+     *            the options to be available in this select
+     */
+    public void setOptions(Collection<T> options) {
+        setItems(options);
+    }
+
+    /**
+     * Sets the options available in this select.
+     * <p>
+     * By default options are displayed using their {@link Object#toString()}.
+     * You can override this using {@link ItemCaptionGenerator} and/or
+     * {@link IconGenerator}.
+     * <p>
+     * Note, that this is just a shorthand for {@link #setOptions(Collection)},
+     * that <b>collects objects in the stream to a list</b>. Thus, using this
+     * method, instead of its array and Collection variations, doesn't save any
+     * memory. If you have a large data set to bind, using a lazy data provider
+     * is recommended. See {@link BackEndDataProvider} for more info.
+     *
+     * @param options
+     *            the options to be available in this select
+     */
+    public void setOptions(Stream<T> options) {
+        setItems(options);
     }
 
     @Override
