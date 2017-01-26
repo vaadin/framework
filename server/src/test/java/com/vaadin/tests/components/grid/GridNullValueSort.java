@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -136,8 +137,9 @@ public class GridNullValueSort {
     }
 
 
-    private void performSort(List<Integer> data, List<Integer> expected) {
+    private void performSort(List<Integer> source, List<Integer> expected) {
         SerializableComparator<Integer> sortingComparator = grid.createSortingComparator();
+        List<Integer> data = new ArrayList<>(source);
         data.sort(sortingComparator);
         Assert.assertEquals(expected, data);
     }

@@ -3210,6 +3210,12 @@ public class Grid<T> extends AbstractListing<T>
                 userOriginated));
     }
 
+    /**
+     * Creates a comparator for grid to sort rows.
+     *
+     * @return the comparator based on column sorting information.
+     */
+
     protected SerializableComparator<T> createSortingComparator() {
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
                                                               comparator2) -> SerializableComparator
