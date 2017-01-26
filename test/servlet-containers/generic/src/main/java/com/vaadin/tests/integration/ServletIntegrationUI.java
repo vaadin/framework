@@ -1,6 +1,7 @@
 package com.vaadin.tests.integration;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
@@ -13,6 +14,7 @@ import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
+@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 public class ServletIntegrationUI extends UI {
 
     @Override
@@ -35,7 +37,7 @@ public class ServletIntegrationUI extends UI {
         item.getItemProperty("icon").setValue(new ClassResource("fi.gif"));
         item.getItemProperty("country").setValue("Finland");
         item = table.addItem("SE");
-        item.getItemProperty("icon").setValue(flagSeResource());
+        item.getItemProperty("icon").setValue(new FlagSeResource());
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new LabelFromDesign();
@@ -46,10 +48,6 @@ public class ServletIntegrationUI extends UI {
             }
         });
         layout.addComponent(selectedLabel);
-    }
-
-    private ClassResource flagSeResource() {
-        return new ClassResource(ServletIntegrationUI.class.getName().replace('.','/') + "se.gif");
     }
 
     @DesignRoot
