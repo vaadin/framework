@@ -3,7 +3,7 @@
 <project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant" name="Vaadin Integration Tests" basedir="." default="integration-test-all">
 
     <!-- Import common targets -->
-    <import file="../common.xml" />
+    <import file="../../../common.xml" />
     <dirname file="${ant.file.Vaadin Integration Tests}" property="integration_test.dir" />
 
     <!-- Target deploying demo.war -->
