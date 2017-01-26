@@ -6,8 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class NativeSelectCaptionGenerationTest extends SingleBrowserTest {
