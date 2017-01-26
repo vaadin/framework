@@ -31,6 +31,18 @@ public class NativeSelectState extends AbstractSingleSelectState {
      */
     public static final String STYLE_NAME = "v-select";
 
+    /**
+     * True to allow selecting nothing (a special empty selection item is shown
+     * at the beginning of the list), false not to allow empty selection by the
+     * user.
+     */
+    public boolean emptySelectionAllowed = true;
+
+    /**
+     * Caption for item which represents empty selection.
+     */
+    public String emptySelectionCaption = "";
+
     {
         primaryStyleName = STYLE_NAME;
     }
