@@ -49,45 +49,14 @@ public class EditorConnector extends AbstractExtensionConnector {
     /**
      * EditorHandler for communicating with the server-side implementation.
      */
-    private class CustomEditorHandler implements EditorHandler<JsonObject> {
+    private class CustomEditorHandler
+            implements EditorHandler<JsonObject>, EditorClientRpc {
         private EditorServerRpc rpc = getRpcProxy(EditorServerRpc.class);
         private EditorRequest<JsonObject> currentRequest = null;
         private boolean serverInitiated = false;
 
         public CustomEditorHandler() {
-            registerRpc(EditorClientRpc.class, new EditorClientRpc() {
-                @Override
-                public void cancel() {
-                    serverInitiated = true;
-                    getParent().getWidget().cancelEditor();
-                }
-
-                @Override
-                public void confirmBind(final boolean bindSucceeded) {
-                    endRequest(bindSucceeded);
-                }
-
-                @Override
-                public void confirmSave(boolean saveSucceeded) {
-                    endRequest(saveSucceeded);
-                }
-
-                @Override
-                public void setErrorMessage(String errorMessage,
-                        List<String> errorColumnsIds) {
-                    Collection<Column<?, JsonObject>> errorColumns;
-                    if (errorColumnsIds != null) {
-                        errorColumns = new ArrayList<>();
-                        for (String colId : errorColumnsIds) {
-                            errorColumns.add(getParent().getColumn(colId));
-                        }
-                    } else {
-                        errorColumns = null;
-                    }
-                    getParent().getWidget().getEditor()
-                            .setEditorError(errorMessage, errorColumns);
-                }
-            });
+            registerRpc(EditorClientRpc.class, this);
         }
 
         @Override
@@ -103,11 +72,12 @@ public class EditorConnector extends AbstractExtensionConnector {
         }
 
         @Override
-        public void cancel(EditorRequest<JsonObject> request) {
+        public void cancel(EditorRequest<JsonObject> request,
+                boolean afterBeingSaved) {
             if (!handleServerInitiated(request)) {
                 // No startRequest as we don't get (or need)
                 // a confirmation from the server
-                rpc.cancel();
+                rpc.cancel(afterBeingSaved);
             }
         }
 
@@ -119,6 +89,38 @@ public class EditorConnector extends AbstractExtensionConnector {
                 return null;
             }
             return getConnector(connId).getWidget();
+        }
+
+        @Override
+        public void cancel() {
+            serverInitiated = true;
+            getParent().getWidget().cancelEditor();
+        }
+
+        @Override
+        public void confirmBind(final boolean bindSucceeded) {
+            endRequest(bindSucceeded);
+        }
+
+        @Override
+        public void confirmSave(boolean saveSucceeded) {
+            endRequest(saveSucceeded);
+        }
+
+        @Override
+        public void setErrorMessage(String errorMessage,
+                List<String> errorColumnsIds) {
+            Collection<Column<?, JsonObject>> errorColumns;
+            if (errorColumnsIds != null) {
+                errorColumns = new ArrayList<>();
+                for (String colId : errorColumnsIds) {
+                    errorColumns.add(getParent().getColumn(colId));
+                }
+            } else {
+                errorColumns = null;
+            }
+            getParent().getWidget().getEditor().setEditorError(errorMessage,
+                    errorColumns);
         }
 
         private ComponentConnector getConnector(String id) {

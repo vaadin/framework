@@ -18,6 +18,7 @@ package com.vaadin.ui.components.grid;
 import java.io.Serializable;
 
 import com.vaadin.data.Binder;
+import com.vaadin.shared.Registration;
 
 /**
  * An editor in a Grid.
@@ -155,4 +156,22 @@ public interface Editor<T> extends Serializable {
      * @see EditorErrorGenerator
      */
     public EditorErrorGenerator<T> getErrorGenerator();
+
+    /**
+     * Adds an editor save {@code listener}.
+     * 
+     * @param listener
+     *            save listener
+     * @return a registration object for removing the listener
+     */
+    public Registration addSaveListener(EditorSaveListener<T> listener);
+
+    /**
+     * Adds an editor cancel {@code listener}.
+     * 
+     * @param listener
+     *            cancel listener
+     * @return a registration object for removing the listener
+     */
+    public Registration addCancelListener(EditorCancelListener<T> listener);
 }
