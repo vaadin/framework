@@ -103,11 +103,12 @@ public class EditorConnector extends AbstractExtensionConnector {
         }
 
         @Override
-        public void cancel(EditorRequest<JsonObject> request) {
+        public void cancel(EditorRequest<JsonObject> request,
+                boolean afterBeingSaved) {
             if (!handleServerInitiated(request)) {
                 // No startRequest as we don't get (or need)
                 // a confirmation from the server
-                rpc.cancel();
+                rpc.cancel(afterBeingSaved);
             }
         }
 
