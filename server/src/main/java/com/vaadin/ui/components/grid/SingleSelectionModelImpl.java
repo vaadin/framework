@@ -27,7 +27,6 @@ import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.grid.SingleSelectionModelState;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.SingleSelect;
 
 /**
@@ -227,10 +226,6 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         return getState().deselectAllowed;
     }
 
-    private boolean isUserSelectionAllowed() {
-        return getState(false).selectionAllowed;
-    }
-
     /**
      * Gets a wrapper for using this grid as a single select in a binder.
      *
@@ -275,7 +270,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                getState().selectionAllowed = !readOnly;
+                setUserSelectionAllowed(!readOnly);
             }
 
             @Override

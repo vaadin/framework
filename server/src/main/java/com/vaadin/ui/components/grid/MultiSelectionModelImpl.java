@@ -324,7 +324,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                getState().selectionAllowed = !readOnly;
+                setUserSelectionAllowed(!readOnly);
             }
 
             @Override
@@ -456,10 +456,6 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             removedItems.forEach(dataCommunicator::refresh);
             addedItems.forEach(dataCommunicator::refresh);
         }, userOriginated);
-    }
-
-    private boolean isUserSelectionAllowed() {
-        return getState(false).selectionAllowed;
     }
 
     private void doUpdateSelection(Consumer<Collection<T>> handler,
