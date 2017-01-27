@@ -11,4 +11,11 @@ public class NativeSelects
     protected Class<NativeSelect<Object>> getTestClass() {
         return (Class) NativeSelect.class;
     }
+
+    @Override
+    protected NativeSelect<Object> constructComponent() {
+        NativeSelect<Object> component = super.constructComponent();
+        component.setEmptySelectionAllowed(false);
+        return component;
+    }
 }
