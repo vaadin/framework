@@ -1388,7 +1388,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             public void onSuccess(EditorRequest<T> request) {
                 if (state == State.SAVING) {
                     cleanup();
-                    cancel();
+                    cancel(true);
                     grid.clearSortOrder();
                 }
             }
@@ -1640,6 +1640,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *             if this editor is not in edit mode
          */
         public void cancel() {
+            cancel(false);
+        }
+
+        private void cancel(boolean afterSave) {
             if (!enabled) {
                 throw new IllegalStateException(
                         "Cannot cancel edit: editor is not enabled");
@@ -1649,7 +1653,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         "Cannot cancel edit: editor is not in edit mode");
             }
             handler.cancel(new EditorRequestImpl<>(grid, rowIndex,
-                    focusedColumnIndex, null));
+                    focusedColumnIndex, null), afterSave);
             doCancel();
         }
 
