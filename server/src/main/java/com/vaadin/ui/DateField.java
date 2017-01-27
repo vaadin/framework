@@ -158,7 +158,7 @@ public class DateField extends AbstractLocalDateField {
      * Disabling it causes only the button for date selection to be active, thus
      * preventing the user from entering invalid dates.
      *
-     * See {@link http://dev.vaadin.com/ticket/6790}.
+     * See <a href="http://dev.vaadin.com/ticket/6790">issue 6790</a>.
      *
      * @param state
      *            <b>true</b> to enable text field, <b>false</b> to disable it.
