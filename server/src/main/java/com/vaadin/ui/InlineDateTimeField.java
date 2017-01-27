@@ -59,6 +59,58 @@ public class InlineDateTimeField extends AbstractLocalDateTimeField {
         super(caption);
     }
 
+    /**
+     * Constructs a new {@code InlineDateTimeField} with a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code InlineDateTimeField} is
+     * changed either by the user or programmatically.
+     *
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public InlineDateTimeField(ValueChangeListener valueChangeListener) {
+        super();
+        addValueChangeListener(valueChangeListener);
+    }
+
+    /**
+     * Constructs a new {@code InlineDateTimeField} with the given caption and a value
+     * change listener.
+     * <p>
+     * The listener is called when the value of this {@code InlineDateTimeField} is
+     * changed either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public InlineDateTimeField(String caption,
+            ValueChangeListener valueChangeListener) {
+        this(valueChangeListener);
+        setCaption(caption);
+    }
+
+    /**
+     * Constructs a new {@code InlineDateTimeField} with the given caption, initial
+     * text contents and a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code InlineDateTimeField} is
+     * changed either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param value
+     *            the value for the field, not {@code null}
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public InlineDateTimeField(String caption, LocalDateTime value,
+            ValueChangeListener valueChangeListener) {
+        this(caption, value);
+        addValueChangeListener(valueChangeListener);
+    }
+
     @Override
     protected InlineDateTimeFieldState getState() {
         return (InlineDateTimeFieldState) super.getState();
