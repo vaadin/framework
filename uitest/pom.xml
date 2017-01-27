@@ -322,7 +322,9 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <skip>${skip.uitest.failsafe}</skip>
-                    <includes>**/AllTB3Tests.java</includes>
+                    <includes>
+                        <include>**/AllTB3Tests.java</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
