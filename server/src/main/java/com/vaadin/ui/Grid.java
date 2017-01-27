@@ -2426,14 +2426,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param propertyIds
              *            The property ids of columns to merge
              * @return The remaining visible cell after the merge
              */
             public CELLTYPE join(Object... propertyIds) {
-                assert propertyIds.length > 1 : "You need to merge at least 2 properties";
+                if (propertyIds.length < 2) {
+                    throw new IllegalArgumentException(
+                            "You need to merge at least 2 properties");
+                }
 
                 Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
                 for (int i = 0; i < propertyIds.length; ++i) {
@@ -2444,14 +2447,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param cells
              *            The cells to merge. Must be from the same row.
              * @return The remaining visible cell after the merge
              */
             public CELLTYPE join(CELLTYPE... cells) {
-                assert cells.length > 1 : "You need to merge at least 2 cells";
+                if (cells.length < 2) {
+                    throw new IllegalArgumentException(
+                            "You need to merge at least 2 cells");
+                }
 
                 return join(new HashSet<CELLTYPE>(Arrays.asList(cells)));
             }

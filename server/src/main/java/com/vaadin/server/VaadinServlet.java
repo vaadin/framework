@@ -1156,6 +1156,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
             URL resourceUrl) {
+        String resourcePath = resourceUrl.getPath();
         if ("jar".equals(resourceUrl.getProtocol())) {
             // This branch is used for accessing resources directly from the
             // Vaadin JAR in development environments and in similar cases.
@@ -1165,8 +1166,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // However, performing a check in case some servers or class loaders
             // try to normalize the path by collapsing ".." before the class
             // loader sees it.
-
-            if (!resourceUrl.getPath().contains("!/VAADIN/")) {
+            if (!resourcePath.contains("!/VAADIN/")
+                    && !resourcePath.contains("!/META-INF/resources/VAADIN/")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access a JAR entry not starting with /VAADIN/: {0}",
                         resourceUrl);
@@ -1182,8 +1183,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             // Check that the URL is in a VAADIN directory and does not contain
             // "/../"
-            if (!resourceUrl.getPath().contains("/VAADIN/")
-                    || resourceUrl.getPath().contains("/../")) {
+            if (!resourcePath.contains("/VAADIN/")
+                    || resourcePath.contains("/../")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access file: {0}", resourceUrl);
                 return false;

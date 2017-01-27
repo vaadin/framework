@@ -1099,15 +1099,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private Grid<T> grid;
         private final int rowIndex;
-        private final int columnIndex;
+        private final int columnIndexDOM;
         private RequestCallback<T> callback;
         private boolean completed = false;
 
-        public EditorRequestImpl(Grid<T> grid, int rowIndex, int columnIndex,
+        public EditorRequestImpl(Grid<T> grid, int rowIndex, int columnIndexDOM,
                 RequestCallback<T> callback) {
             this.grid = grid;
             this.rowIndex = rowIndex;
-            this.columnIndex = columnIndex;
+            this.columnIndexDOM = columnIndexDOM;
             this.callback = callback;
         }
 
@@ -1118,7 +1118,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         @Override
         public int getColumnIndex() {
-            return columnIndex;
+            return columnIndexDOM;
         }
 
         @Override
@@ -1288,13 +1288,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
-         * Returns the column index the editor was opened at. If the editor is
-         * not open, returns -1.
+         * Returns the DOM column index (excluding hidden columns) the editor
+         * was opened at. If the editor is not open, returns -1.
          *
          * @return the column index or -1 if editor is not open
          */
         public int getFocusedColumnIndex() {
-            return getEditor().focusedColumnIndex;
+            return getEditor().focusedColumnIndexDOM;
         }
     }
 
@@ -1323,7 +1323,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 if (focusedElement == grid.getElement()
                         || focusedElement == Document.get().getBody()
                         || count > 2) {
-                    focusColumn(focusedColumnIndex);
+                    focusColumn(focusedColumnIndexDOM);
                 } else {
                     ++count;
                     Scheduler.get().scheduleDeferred(this);
@@ -1382,7 +1382,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private boolean enabled = false;
         private State state = State.INACTIVE;
         private int rowIndex = -1;
-        private int focusedColumnIndex = -1;
+        private int focusedColumnIndexDOM = -1;
         private String styleName = null;
 
         private HandlerRegistration hScrollHandler;
@@ -1447,10 +1447,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     bindTimeout.cancel();
 
                     rowIndex = request.getRowIndex();
-                    focusedColumnIndex = request.getColumnIndex();
-                    if (focusedColumnIndex >= 0) {
+                    focusedColumnIndexDOM = request.getColumnIndex();
+                    if (focusedColumnIndexDOM >= 0) {
                         // Update internal focus of Grid
-                        grid.focusCell(rowIndex, focusedColumnIndex);
+                        grid.focusCell(rowIndex, focusedColumnIndexDOM);
                     }
 
                     showOverlay();
@@ -1559,9 +1559,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *
          * @param rowIndex
          *            the index of the row to be edited
-         * @param columnIndex
-         *            the column index of the editor widget that should be
-         *            initially focused or -1 to not set focus
+         * @param columnIndexDOM
+         *            the column index (excluding hidden columns) of the editor
+         *            widget that should be initially focused or -1 to not set
+         *            focus
          *
          * @throws IllegalStateException
          *             if this editor is not enabled
@@ -1571,7 +1572,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *
          * @since 7.5
          */
-        public void editRow(final int rowIndex, final int columnIndex) {
+        public void editRow(final int rowIndex, final int columnIndexDOM) {
             if (!enabled) {
                 throw new IllegalStateException(
                         "Cannot edit row: editor is not enabled");
@@ -1596,35 +1597,35 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     return;
                 }
             }
-            if (columnIndex >= grid.getVisibleColumns().size()) {
+            if (columnIndexDOM >= grid.getVisibleColumns().size()) {
                 throw new IllegalArgumentException(
-                        "Edited column index " + columnIndex
+                        "Edited column index " + columnIndexDOM
                                 + " was bigger than visible column count.");
             }
 
             if (this.rowIndex == rowIndex
-                    && focusedColumnIndex == columnIndex) {
+                    && focusedColumnIndexDOM == columnIndexDOM) {
                 // NO-OP
                 return;
             }
 
             if (this.rowIndex == rowIndex) {
-                if (focusedColumnIndex != columnIndex) {
-                    if (columnIndex >= grid.getFrozenColumnCount()) {
+                if (focusedColumnIndexDOM != columnIndexDOM) {
+                    if (columnIndexDOM >= grid.getFrozenColumnCount()) {
                         // Scroll to new focused column.
-                        grid.getEscalator().scrollToColumn(columnIndex,
+                        grid.getEscalator().scrollToColumn(columnIndexDOM,
                                 ScrollDestination.ANY, 0);
                     }
 
-                    focusedColumnIndex = columnIndex;
+                    focusedColumnIndexDOM = columnIndexDOM;
                 }
 
                 updateHorizontalScrollPosition();
 
                 // Update Grid internal focus and focus widget if possible
-                if (focusedColumnIndex >= 0) {
-                    grid.focusCell(rowIndex, focusedColumnIndex);
-                    focusColumn(focusedColumnIndex);
+                if (focusedColumnIndexDOM >= 0) {
+                    grid.focusCell(rowIndex, focusedColumnIndexDOM);
+                    focusColumn(focusedColumnIndexDOM);
                 }
 
                 // No need to request anything from the editor handler.
@@ -1634,13 +1635,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             final Escalator escalator = grid.getEscalator();
             if (escalator.getVisibleRowRange().contains(rowIndex)) {
-                show(rowIndex, columnIndex);
+                show(rowIndex, columnIndexDOM);
             } else {
                 vScrollHandler = grid.addScrollHandler(new ScrollHandler() {
                     @Override
                     public void onScroll(ScrollEvent event) {
                         if (escalator.getVisibleRowRange().contains(rowIndex)) {
-                            show(rowIndex, columnIndex);
+                            show(rowIndex, columnIndexDOM);
                             vScrollHandler.removeHandler();
                         }
                     }
@@ -1669,7 +1670,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         "Cannot cancel edit: editor is not in edit mode");
             }
             handler.cancel(new EditorRequestImpl<T>(grid, rowIndex,
-                    focusedColumnIndex, null));
+                    focusedColumnIndexDOM, null));
             doCancel();
         }
 
@@ -1677,7 +1678,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             hideOverlay();
             state = State.INACTIVE;
             rowIndex = -1;
-            focusedColumnIndex = -1;
+            focusedColumnIndexDOM = -1;
             grid.getEscalator().setScrollLocked(Direction.VERTICAL, false);
             updateSelectionCheckboxesAsNeeded(true);
         }
@@ -1715,7 +1716,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             setButtonsEnabled(false);
             saveTimeout.schedule(SAVE_TIMEOUT_MS);
             EditorRequest<T> request = new EditorRequestImpl<T>(grid, rowIndex,
-                    focusedColumnIndex, saveRequestCallback);
+                    focusedColumnIndexDOM, saveRequestCallback);
             handler.save(request);
             updateSelectionCheckboxesAsNeeded(true);
         }
@@ -1887,11 +1888,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         grid.attachWidget(editor, cell);
                     }
 
-                    if (i == focusedColumnIndex) {
+                    if (i == focusedColumnIndexDOM) {
                         if (BrowserInfo.get().isIE8()) {
                             Scheduler.get().scheduleDeferred(fieldFocusCommand);
                         } else {
-                            focusColumn(focusedColumnIndex);
+                            focusColumn(focusedColumnIndexDOM);
                         }
                     }
                 } else {
@@ -1998,13 +1999,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     Unit.PX);
         }
 
-        private void focusColumn(int colIndex) {
-            if (colIndex < 0 || colIndex >= grid.getVisibleColumns().size()) {
+        private void focusColumn(int columnIndexDOM) {
+            if (columnIndexDOM < 0
+                    || columnIndexDOM >= grid.getVisibleColumns().size()) {
                 // NO-OP
                 return;
             }
 
-            Widget editor = getWidget(grid.getVisibleColumn(colIndex));
+            Widget editor = getWidget(grid.getVisibleColumn(columnIndexDOM));
             if (editor instanceof Focusable) {
                 ((Focusable) editor).focus();
             } else if (editor instanceof com.google.gwt.user.client.ui.Focusable) {
@@ -2589,9 +2591,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     ++i;
                 } while (cell != null);
             }
-            int columnIndex = getColumns()
-                    .indexOf(getVisibleColumn(columnIndexDOM));
-            if (columnIndex >= escalator.getColumnConfiguration()
+            if (columnIndexDOM >= escalator.getColumnConfiguration()
                     .getFrozenColumnCount()) {
                 escalator.scrollToColumn(columnIndexDOM, ScrollDestination.ANY,
                         10);
@@ -6330,21 +6330,22 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param rowIndex
      *            index of row to focus
-     * @param columnIndex
-     *            index of cell to focus
+     * @param columnIndexDOM
+     *            index (excluding hidden columns) of cell to focus
      */
-    void focusCell(int rowIndex, int columnIndex) {
+    void focusCell(int rowIndex, int columnIndexDOM) {
         final Range rowRange = Range.between(0, dataSource.size());
         final Range columnRange = Range.between(0, getVisibleColumns().size());
 
         assert rowRange.contains(
                 rowIndex) : "Illegal row index. Should be in range " + rowRange;
         assert columnRange.contains(
-                columnIndex) : "Illegal column index. Should be in range "
+                columnIndexDOM) : "Illegal column index. Should be in range "
                         + columnRange;
 
-        if (rowRange.contains(rowIndex) && columnRange.contains(columnIndex)) {
-            cellFocusHandler.setCellFocus(rowIndex, columnIndex,
+        if (rowRange.contains(rowIndex)
+                && columnRange.contains(columnIndexDOM)) {
+            cellFocusHandler.setCellFocus(rowIndex, columnIndexDOM,
                     escalator.getBody());
             WidgetUtil.focus(getElement());
         }
@@ -6587,13 +6588,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return columns.get(index);
     }
 
-    private Column<?, T> getVisibleColumn(int index)
+    private Column<?, T> getVisibleColumn(int columnIndexDOM)
             throws IllegalArgumentException {
         List<Column<?, T>> visibleColumns = getVisibleColumns();
-        if (index < 0 || index >= visibleColumns.size()) {
+        if (columnIndexDOM < 0 || columnIndexDOM >= visibleColumns.size()) {
             throw new IllegalStateException("Column not found.");
         }
-        return visibleColumns.get(index);
+        return visibleColumns.get(columnIndexDOM);
     }
 
     /**
@@ -7491,10 +7492,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             Widget widget;
-            if (editor.focusedColumnIndex < 0) {
+            if (editor.focusedColumnIndexDOM < 0) {
                 widget = null;
             } else {
-                widget = editor.getWidget(getColumn(editor.focusedColumnIndex));
+                widget = editor.getWidget(
+                        getVisibleColumn(editor.focusedColumnIndexDOM));
             }
 
             EditorDomEvent<T> editorEvent = new EditorDomEvent<T>(
