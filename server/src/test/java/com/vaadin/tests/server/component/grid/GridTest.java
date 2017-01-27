@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.ValueProvider;
-import com.vaadin.data.provider.SortOrder;
+import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -179,7 +179,7 @@ public class GridTest {
         Column<String, ?> column = grid.getColumns().get(1);
         grid.sort(column);
 
-        SortOrder<Column<String, ?>> sortOrder = grid.getSortOrder().get(0);
+        GridSortOrder<String> sortOrder = grid.getSortOrder().get(0);
         Assert.assertEquals(column, sortOrder.getSorted());
         Assert.assertEquals(SortDirection.ASCENDING, sortOrder.getDirection());
     }
@@ -189,7 +189,7 @@ public class GridTest {
         Column<String, ?> column = grid.getColumns().get(1);
         grid.sort(column, SortDirection.DESCENDING);
 
-        SortOrder<Column<String, ?>> sortOrder = grid.getSortOrder().get(0);
+        GridSortOrder<String> sortOrder = grid.getSortOrder().get(0);
         Assert.assertEquals(column, sortOrder.getSorted());
         Assert.assertEquals(SortDirection.DESCENDING, sortOrder.getDirection());
     }
@@ -198,12 +198,12 @@ public class GridTest {
     public void setSortOrder() {
         Column<String, ?> column1 = grid.getColumns().get(1);
         Column<String, ?> column2 = grid.getColumns().get(2);
-        List<SortOrder<Column<String, ?>>> order = Arrays.asList(
-                new SortOrder<>(column2, SortDirection.DESCENDING),
-                new SortOrder<>(column1, SortDirection.ASCENDING));
+        List<GridSortOrder<String>> order = Arrays.asList(
+                new GridSortOrder<>(column2, SortDirection.DESCENDING),
+                new GridSortOrder<>(column1, SortDirection.ASCENDING));
         grid.setSortOrder(order);
 
-        List<SortOrder<Column<String, ?>>> sortOrder = grid.getSortOrder();
+        List<GridSortOrder<String>> sortOrder = grid.getSortOrder();
         Assert.assertEquals(column2, sortOrder.get(0).getSorted());
         Assert.assertEquals(SortDirection.DESCENDING,
                 sortOrder.get(0).getDirection());
@@ -228,7 +228,7 @@ public class GridTest {
         Column<String, ?> column1 = grid.getColumns().get(1);
         Column<String, ?> column2 = grid.getColumns().get(2);
 
-        List<SortOrder<Column<String, ?>>> list = new ArrayList<>();
+        List<GridSortOrder<String>> list = new ArrayList<>();
         AtomicReference<Boolean> fired = new AtomicReference<>();
         grid.addSortListener(event -> {
             Assert.assertTrue(list.isEmpty());
@@ -241,9 +241,9 @@ public class GridTest {
         Assert.assertEquals(SortDirection.DESCENDING,
                 list.get(0).getDirection());
 
-        List<SortOrder<Column<String, ?>>> order = Arrays.asList(
-                new SortOrder<>(column2, SortDirection.DESCENDING),
-                new SortOrder<>(column1, SortDirection.ASCENDING));
+        List<GridSortOrder<String>> order = Arrays.asList(
+                new GridSortOrder<>(column2, SortDirection.DESCENDING),
+                new GridSortOrder<>(column1, SortDirection.ASCENDING));
         list.clear();
 
         grid.setSortOrder(order);

@@ -46,9 +46,10 @@ import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.GridSortOrder;
+import com.vaadin.data.provider.GridSortOrderBuilder;
 import com.vaadin.data.provider.Query;
 import com.vaadin.data.provider.QuerySortOrder;
-import com.vaadin.data.provider.SortOrder;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.SortEvent;
@@ -124,7 +125,7 @@ import elemental.json.JsonValue;
  *            the grid bean type
  */
 public class Grid<T> extends AbstractListing<T> implements HasComponents,
-        HasDataProvider<T>, SortNotifier<Grid.Column<T, ?>> {
+        HasDataProvider<T>, SortNotifier<GridSortOrder<T>> {
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
@@ -559,11 +560,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             assert columnInternalIds.length == directions.length : "Column and sort direction counts don't match.";
 
-            List<SortOrder<Column<T, ?>>> list = new ArrayList<>(
+            List<GridSortOrder<T>> list = new ArrayList<>(
                     directions.length);
             for (int i = 0; i < columnInternalIds.length; ++i) {
                 Column<T, ?> column = columnKeys.get(columnInternalIds[i]);
-                list.add(new SortOrder<>(column, directions[i]));
+                list.add(new GridSortOrder<>(column, directions[i]));
             }
             setSortOrder(list, isUserOriginated);
         }
@@ -1790,7 +1791,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     private final Map<String, Column<T, ?>> columnKeys = new HashMap<>();
     private final Map<String, Column<T, ?>> columnIds = new HashMap<>();
 
-    private final List<SortOrder<Column<T, ?>>> sortOrder = new ArrayList<>();
+    private final List<GridSortOrder<T>> sortOrder = new ArrayList<>();
     private final DetailsManager<T> detailsManager;
     private final Set<Component> extensionComponents = new HashSet<>();
     private StyleGenerator<T> styleGenerator = item -> null;
@@ -2783,7 +2784,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void sort(Column<T, ?> column, SortDirection direction) {
         setSortOrder(
-                Collections.singletonList(new SortOrder<>(column, direction)));
+                Collections
+                        .singletonList(new GridSortOrder<>(column, direction)));
     }
 
     /**
@@ -2803,8 +2805,24 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @throws IllegalArgumentException
      *             if order is null
      */
-    public void setSortOrder(List<SortOrder<Column<T, ?>>> order) {
+    public void setSortOrder(List<GridSortOrder<T>> order) {
         setSortOrder(order, false);
+    }
+
+    /**
+     * Sets the sort order to use, given a {@link GridSortOrderBuilder}.
+     * Shorthand for {@code setSortOrder(builder.build())}.
+     * 
+     * @see GridSortOrderBuilder
+     * 
+     * @param builder
+     *            the sort builder to retrieve the sort order from
+     * @throws NullPointerException
+     *             if builder is null
+     */
+    public void setSortOrder(GridSortOrderBuilder<T> builder) {
+        Objects.requireNonNull(builder, "Sort builder cannot be null");
+        setSortOrder(builder.build());
     }
 
     /**
@@ -2815,7 +2833,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the sort order change listener to add
      */
     @Override
-    public Registration addSortListener(SortListener<Column<T, ?>> listener) {
+    public Registration addSortListener(
+            SortListener<GridSortOrder<T>> listener) {
         return addListener(SortEvent.class, listener, SORT_ORDER_CHANGE_METHOD);
     }
 
@@ -2824,7 +2843,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @return a sort order list
      */
-    public List<SortOrder<Column<T, ?>>> getSortOrder() {
+    public List<GridSortOrder<T>> getSortOrder() {
         return Collections.unmodifiableList(sortOrder);
     }
 
@@ -3172,7 +3191,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return column.getInternalId();
     }
 
-    private void setSortOrder(List<SortOrder<Column<T, ?>>> order,
+    private void setSortOrder(List<GridSortOrder<T>> order,
             boolean userOriginated) {
         Objects.requireNonNull(order, "Sort order list cannot be null");
         sortOrder.clear();

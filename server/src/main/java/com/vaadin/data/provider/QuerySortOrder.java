@@ -45,4 +45,30 @@ public class QuerySortOrder extends SortOrder<String> {
     public String getSorted() {
         return super.getSorted();
     }
+
+    /**
+     * Creates a new query sort builder with given sorting using ascending sort
+     * direction.
+     *
+     * @param by
+     *            the string to sort by
+     *
+     * @return the query sort builder
+     */
+    public static QuerySortOrderBuilder asc(String by) {
+        return new QuerySortOrderBuilder().thenAsc(by);
+    }
+
+    /**
+     * Creates a new query sort builder with given sorting using descending sort
+     * direction.
+     *
+     * @param by
+     *            the string to sort by
+     *
+     * @return the query sort builder
+     */
+    public static QuerySortOrderBuilder desc(String by) {
+        return new QuerySortOrderBuilder().thenDesc(by);
+    }
 }

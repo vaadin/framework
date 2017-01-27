@@ -82,7 +82,8 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
                 .thenComparing(StrBean::getId);
 
         List<StrBean> list = dataProvider
-                .fetch(createQuery(Sort.asc("value").thenAsc("randomNumber")
+                .fetch(createQuery(
+                        QuerySortOrder.asc("value").thenAsc("randomNumber")
                         .thenAsc("id").build(), comp))
                 .collect(Collectors.toList());
 
@@ -104,10 +105,10 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     public void testDefaultSortWithSpecifiedPostSort() {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(Comparator.comparing(StrBean::getId).reversed());
-        setSortOrder(Sort.asc("value").thenDesc("id").build(), comp);
+        setSortOrder(QuerySortOrder.asc("value").thenDesc("id").build(), comp);
 
         List<StrBean> list = dataProvider
-                .fetch(createQuery(Sort.asc("randomNumber").build(),
+                .fetch(createQuery(QuerySortOrder.asc("randomNumber").build(),
                         Comparator.comparing(StrBean::getRandomNumber)))
                 .collect(Collectors.toList());
 
@@ -136,7 +137,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
 
     @Test
     public void testDefaultSortWithFunction() {
-        setSortOrder(Sort.asc("value").build(),
+        setSortOrder(QuerySortOrder.asc("value").build(),
                 Comparator.comparing(StrBean::getValue));
 
         List<StrBean> list = dataProvider.fetch(new Query<>())
