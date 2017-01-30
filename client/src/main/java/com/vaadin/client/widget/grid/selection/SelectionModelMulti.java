@@ -33,7 +33,7 @@ import com.vaadin.client.widgets.Grid;
  * @since 7.4
  */
 public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
-        implements SelectionModel.Multi.Batched<T> {
+        implements SelectionModel.Multi.Batched<T>, HasUserSelectionAllowed<T> {
 
     private final LinkedHashSet<RowHandle<T>> selectedRows;
     private Renderer<Boolean> renderer;
@@ -45,6 +45,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
     /* Event handling for selection with space key */
     private SpaceSelectHandler<T> spaceSelectHandler;
+    private boolean userSelectionAllowed = true;
 
     public SelectionModelMulti() {
         grid = null;
@@ -269,5 +270,15 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             rows.add(handle.getRow());
         }
         return rows;
+    }
+
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return userSelectionAllowed;
+    }
+
+    @Override
+    public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+        this.userSelectionAllowed = userSelectionAllowed;
     }
 }
