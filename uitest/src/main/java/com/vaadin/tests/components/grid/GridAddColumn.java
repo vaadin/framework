@@ -15,7 +15,7 @@ public class GridAddColumn extends AbstractTestUI {
         grid.addColumn(String::length, new NumberRenderer());
         grid.addColumn(String::length);
         grid.addColumn(string -> -string.length());
-        grid.addColumn(string -> new Object());
+        grid.addColumn(string -> String.valueOf(new Object()));
         grid.setItems("a", "aa", "aaa");
         addComponent(grid);
     }

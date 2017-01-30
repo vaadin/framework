@@ -49,11 +49,11 @@ public class GridColspans extends AbstractTestUI {
                 .addColumn(Person::getLastName);
         lastNameColumn.setCaption("Last name");
         Column<Person, String> emailColumn = grid.addColumn(Person::getEmail);
-        Column<Person, Number> ageColumn = grid.addColumn(Person::getAge,
+        Column<Person, Integer> ageColumn = grid.addColumn(Person::getAge,
                 new NumberRenderer());
         ageColumn.setCaption("Age");
         ageColumn.setId("ageColumn");
-        Column<Person, Number> salaryColumn = grid.addColumn(Person::getSalary,
+        Column<Person, Integer> salaryColumn = grid.addColumn(Person::getSalary,
                 new NumberRenderer());
 
         grid.setItems(person);
