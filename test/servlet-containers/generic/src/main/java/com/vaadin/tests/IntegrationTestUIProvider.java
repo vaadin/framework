@@ -8,6 +8,7 @@ import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.integration.ServletIntegrationUI;
+import com.vaadin.tests.integration.ServletIntegrationWebsocketUI;
 import com.vaadin.tests.integration.push.BasicPush;
 import com.vaadin.ui.UI;
 
@@ -15,7 +16,7 @@ public class IntegrationTestUIProvider extends UIProvider {
 
     public static final String[] defaultPackages = {
             "com.vaadin.tests.integration",
-            "com.vaadin.tests.integration.push"};
+            "com.vaadin.tests.integration.push" };
 
     @Override
     public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
@@ -57,23 +58,20 @@ public class IntegrationTestUIProvider extends UIProvider {
                     .loadClass(className.replace("/", "."));
             return (Class<? extends UI>) loadClass;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
             return null;
         }
     }
 
-    @WebServlet(urlPatterns = {"/run/*", "/VAADIN/*"}, name = "IntegrationTestUIProvider", asyncSupported = true, initParams = {
-            @WebInitParam(name = "UIProvider", value = "com.vaadin.tests.IntegrationTestUIProvider")})
+    @WebServlet(urlPatterns = "/*", name = "IntegrationTestUIProvider", asyncSupported = true, initParams = {
+            @WebInitParam(name = "UIProvider", value = "com.vaadin.tests.IntegrationTestUIProvider") })
     @VaadinServletConfiguration(ui = ServletIntegrationUI.class, productionMode = false)
     public static class MyServlet extends VaadinServlet {
     }
 
-    @WebServlet(urlPatterns = "/run-jsr356/*", name = "IntegrationUIProvider-Jsr356", asyncSupported = false,
-            initParams = {
-                    @WebInitParam(name = "UIProvider", value = "com.vaadin.tests.IntegrationTestUIProvider"),
-                    @WebInitParam(name = "org.atmosphere.cpr.asyncSupport", value = "org.atmosphere.container.JSR356AsyncSupport")
-            })
-    @VaadinServletConfiguration(ui = ServletIntegrationUI.class, productionMode = false)
+    @WebServlet(urlPatterns = "/run-jsr356/*", name = "IntegrationUIProvider-Jsr356", asyncSupported = false, initParams = {
+            @WebInitParam(name = "org.atmosphere.cpr.asyncSupport", value = "org.atmosphere.container.JSR356AsyncSupport") })
+    @VaadinServletConfiguration(ui = ServletIntegrationWebsocketUI.class, productionMode = false)
     public static class JSR356Servlet extends VaadinServlet {
+
     }
 }
