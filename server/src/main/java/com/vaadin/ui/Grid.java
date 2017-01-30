@@ -4810,7 +4810,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Type type = null;
                     try {
                         type = (getState(false).getClass()
-                                .getDeclaredField(diffStateKey)
+                                .getField(diffStateKey)
                                 .getGenericType());
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
@@ -4851,7 +4851,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Type type = null;
                     try {
                         type = (getState(false).getClass()
-                                .getDeclaredField(diffStateKey)
+                                .getField(diffStateKey)
                                 .getGenericType());
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
