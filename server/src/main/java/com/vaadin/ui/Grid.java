@@ -2020,6 +2020,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Gets a {@link Column} of this grid by its identifying string.
      *
+     * @see Column#setId(String)
+     *
      * @param columnId
      *            the identifier of the column to get
      * @return the column corresponding to the given column identifier
@@ -2860,9 +2862,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Sets the sort order to use, given a {@link GridSortOrderBuilder}.
      * Shorthand for {@code setSortOrder(builder.build())}.
-     * 
+     *
      * @see GridSortOrderBuilder
-     * 
+     *
      * @param builder
      *            the sort builder to retrieve the sort order from
      * @throws NullPointerException
@@ -3187,6 +3189,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets a user-defined identifier for given column.
+     *
+     * @see Column#setId(String)
      *
      * @param column
      *            the column
