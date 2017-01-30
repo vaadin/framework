@@ -5,11 +5,11 @@
     <description>
         Provides a uitest WAR containing Vaadin UI tests
     </description>
-    <include file="../../../common.xml" as="common" />
+    <include file="./common.xml" as="common" />
 
     <!-- global properties -->
     <property name="module.name" value="vaadin-test-generic-integration" />
-    <property name="uitest.dir" location="${vaadin.basedir}/test/servlet-containers/generic" /><!-- todo rename-->
+    <property name="uitest.dir" location="${common.basedir}" /><!-- todo rename-->
     <property name="result.dir" value="result" />
     <property name="result.war"
         location="${uitest.dir}/target/${module.name}-${vaadin.version}.war" />
