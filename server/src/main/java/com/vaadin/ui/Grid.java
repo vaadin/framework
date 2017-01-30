@@ -42,7 +42,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.HasDataProvider;
+import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
@@ -63,6 +65,7 @@ import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.Setter;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -84,7 +87,6 @@ import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
 import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.Editor;
-import com.vaadin.ui.components.grid.EditorComponentGenerator;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.FooterCell;
@@ -560,8 +562,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             assert columnInternalIds.length == directions.length : "Column and sort direction counts don't match.";
 
-            List<GridSortOrder<T>> list = new ArrayList<>(
-                    directions.length);
+            List<GridSortOrder<T>> list = new ArrayList<>(directions.length);
             for (int i = 0; i < columnInternalIds.length; ++i) {
                 Column<T, ?> column = columnKeys.get(columnInternalIds[i]);
                 list.add(new GridSortOrder<>(column, directions[i]));
@@ -778,13 +779,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public static class Column<T, V> extends AbstractGridExtension<T> {
 
         private final SerializableFunction<T, ? extends V> valueProvider;
+        private final Grid<T> grid;
 
         private SortOrderProvider sortOrderProvider;
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
 
-        private EditorComponentGenerator<T> componentGenerator;
+        private Binding<T, ?> editorBinding;
 
         private String userId;
 
@@ -792,16 +794,24 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Constructs a new Column configuration with given renderer and value
          * provider.
          *
+         * @param grid
+         *            the grid that this column belongs to, not
+         *            <code>null</code>
          * @param valueProvider
-         *            the function to get values from items
+         *            the function to get values from items, not
+         *            <code>null</code>
          * @param renderer
-         *            the type of value
+         *            the type of value, not <code>null</code>
          */
-        protected Column(ValueProvider<T, ? extends V> valueProvider,
-                         Renderer<V> renderer) {
+        protected Column(Grid<T> grid,
+                ValueProvider<T, ? extends V> valueProvider,
+                Renderer<V> renderer) {
+            Objects.requireNonNull(grid, "Grid can't be null");
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
+
+            this.grid = grid;
 
             ColumnState state = getState();
 
@@ -819,7 +829,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             Class<V> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
-                comparator = (a, b) -> compareComparables(valueProvider.apply(a), valueProvider.apply(b));
+                comparator = (a, b) -> compareComparables(
+                        valueProvider.apply(a), valueProvider.apply(b));
                 state.sortable = true;
             } else if (Number.class.isAssignableFrom(valueType)) {
                 /*
@@ -827,7 +838,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                  * Provide explicit comparison support in this case even though
                  * Number itself isn't Comparable.
                  */
-                comparator = (a, b) -> compareNumbers((Number) valueProvider.apply(a),
+                comparator = (a, b) -> compareNumbers(
+                        (Number) valueProvider.apply(a),
                         (Number) valueProvider.apply(b));
                 state.sortable = true;
             } else {
@@ -837,7 +849,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         @SuppressWarnings("unchecked")
         private static int compareComparables(Object a, Object b) {
-            return ((Comparator) Comparator.nullsLast(Comparator.naturalOrder())).compare(a, b);
+            return ((Comparator) Comparator
+                    .nullsLast(Comparator.naturalOrder())).compare(a, b);
         }
 
         @SuppressWarnings("unchecked")
@@ -845,17 +858,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             Number valueA = a != null ? a : Double.POSITIVE_INFINITY;
             Number valueB = b != null ? b : Double.POSITIVE_INFINITY;
             // Most Number implementations are Comparable
-            if (valueA instanceof Comparable && valueA.getClass().isInstance(valueB)) {
+            if (valueA instanceof Comparable
+                    && valueA.getClass().isInstance(valueB)) {
                 return ((Comparable<Number>) valueA).compareTo(valueB);
             } else if (valueA.equals(valueB)) {
                 return 0;
             } else {
                 // Fall back to comparing based on potentially truncated values
-                int compare = Long.compare(valueA.longValue(), valueB.longValue());
+                int compare = Long.compare(valueA.longValue(),
+                        valueB.longValue());
                 if (compare == 0) {
                     // This might still produce 0 even though the values are not
                     // equals, but there's nothing more we can do about that
-                    compare = Double.compare(valueA.doubleValue(), valueB.doubleValue());
+                    compare = Double.compare(valueA.doubleValue(),
+                            valueB.doubleValue());
                 }
                 return compare;
             }
@@ -1511,17 +1527,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets whether this Column has a component displayed in Editor or not.
+         * A column can only be editable if an editor component or binding has
+         * been set.
          *
          * @param editable
          *            {@code true} if column is editable; {@code false} if not
          * @return this column
          *
-         * @see #setEditorComponent(Component)
-         * @see #setEditorComponentGenerator(EditorComponentGenerator)
+         * @see #setEditorComponent(HasValue, Setter)
+         * @see #setEditorBinding(Binding)
          */
         public Column<T, V> setEditable(boolean editable) {
-            Objects.requireNonNull(componentGenerator,
-                    "Column has no editor component defined");
+            Objects.requireNonNull(editorBinding,
+                    "Column has no editor binding or component defined");
             getState().editable = editable;
             return this;
         }
@@ -1537,56 +1555,80 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Sets a static editor component for this column.
+         * Sets an editor binding for this column. The {@link Binding} is used
+         * when a row is in editor mode to define how to populate an editor
+         * component based on the edited row and how to update an item based on
+         * the value in the editor component.
          * <p>
-         * <strong>Note:</strong> The same component cannot be used for multiple
-         * columns.
+         * You can create a binding in the same way as a regular {@link Binder}
+         * binding through <code>grid.getEditor().getBinder()</code>. You can
+         * also use {@link #setEditorComponent(HasValue, Setter)} if no
+         * validator or converter is needed for the binding.
+         * <p>
+         * The {@link HasValue} that the binding is defined to use must be a
+         * {@link Component}.
          *
-         * @param component
-         *            the editor component
+         * @param binding
+         *            the binding to use for this column
          * @return this column
          *
+         * @see #setEditorComponent(HasValue, Setter)
+         * @see Binding
+         * @see Grid#getEditor()
          * @see Editor#getBinder()
-         * @see Editor#setBinder(Binder)
-         * @see #setEditorComponentGenerator(EditorComponentGenerator)
          */
-        public Column<T, V> setEditorComponent(Component component) {
-            Objects.requireNonNull(component,
-                    "null is not a valid editor field");
-            return setEditorComponentGenerator(t -> component);
-        }
+        public Column<T, V> setEditorBinding(Binding<T, ?> binding) {
+            Objects.requireNonNull(binding, "null is not a valid editor field");
 
-        /**
-         * Sets a component generator to provide an editor component for this
-         * Column. This method can be used to generate any dynamic component to
-         * be displayed in the editor row.
-         * <p>
-         * <strong>Note:</strong> The same component cannot be used for multiple
-         * columns.
-         *
-         * @param componentGenerator
-         *            the editor component generator
-         * @return this column
-         *
-         * @see EditorComponentGenerator
-         * @see #setEditorComponent(Component)
-         */
-        public Column<T, V> setEditorComponentGenerator(
-                EditorComponentGenerator<T> componentGenerator) {
-            Objects.requireNonNull(componentGenerator);
-            this.componentGenerator = componentGenerator;
+            if (!(binding.getField() instanceof Component)) {
+                throw new IllegalArgumentException(
+                        "Binding target must be a component.");
+            }
+
+            this.editorBinding = binding;
+
             return setEditable(true);
         }
 
         /**
-         * Gets the editor component generator for this Column.
+         * Gets the binder binding that is currently used for this column.
          *
-         * @return editor component generator
+         * @return the used binder binding, or <code>null</code> if no binding
+         *         is configured
          *
-         * @see EditorComponentGenerator
+         * @see #setEditorBinding(Binding)
          */
-        public EditorComponentGenerator<T> getEditorComponentGenerator() {
-            return componentGenerator;
+        public Binding<T, ?> getEditorBinding() {
+            return editorBinding;
+        }
+
+        /**
+         * Sets a component and setter to use for editing values of this column
+         * in the editor row. This is a shorthand for use in simple cases where
+         * no validator or converter is needed. Use
+         * {@link #setEditorBinding(Binding)} to support more complex cases.
+         * <p>
+         * <strong>Note:</strong> The same component cannot be used for multiple
+         * columns.
+         *
+         * @param editorComponent
+         *            the editor component
+         * @param setter
+         *            a setter that stores the component value in the row item
+         * @return this column
+         *
+         * @see Grid#getEditor()
+         */
+        public <C extends HasValue<V> & Component> Column<T, V> setEditorComponent(
+                C editorComponent, Setter<T, V> setter) {
+            Objects.requireNonNull(editorComponent,
+                    "Editor component cannot be null");
+            Objects.requireNonNull(setter, "Setter cannot be null");
+
+            Binding<T, V> binding = grid.getEditor().getBinder()
+                    .bind(editorComponent, valueProvider::apply, setter);
+
+            return setEditorBinding(binding);
         }
 
         /**
@@ -1672,6 +1714,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param designContext
          *            the design context
          */
+        @SuppressWarnings("unchecked")
         protected void readDesign(Element design, DesignContext designContext) {
             Attributes attributes = design.attributes();
 
@@ -1690,9 +1733,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                  * inline data type. It will work incorrectly for other types
                  * but we don't support them anyway.
                  */
-                setEditorComponentGenerator(item -> new TextField(
-                        Optional.ofNullable(valueProvider.apply(item))
-                                .map(Object::toString).orElse("")));
+                setEditorComponent((HasValue<V> & Component) new TextField(),
+                        (item, value) -> {
+                            // Ignore user value since we don't know the setter
+                        });
                 setEditable(DesignAttributeHandler.readAttribute("editable",
                         attributes, boolean.class));
             }
@@ -1840,7 +1884,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Creates a new {@code Grid} using the given caption
-     * 
+     *
      * @param caption
      *            the caption of the grid
      */
@@ -1852,7 +1896,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Creates a new {@code Grid} using the given caption and
      * {@code DataProvider}
-     * 
+     *
      * @param caption
      *            the caption of the grid
      * @param dataProvider
@@ -1865,7 +1909,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Creates a new {@code Grid} using the given {@code DataProvider}
-     * 
+     *
      * @param dataProvider
      *            the data provider, not {@code null}
      */
@@ -1877,7 +1921,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Creates a new {@code Grid} using the given caption and collection of
      * items
-     * 
+     *
      * @param caption
      *            the caption of the grid
      * @param items
@@ -1928,7 +1972,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             ValueProvider<T, ? extends V> valueProvider,
             AbstractRenderer<? super T, V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
-        Column<T, V> column = new Column<>(valueProvider, renderer);
+        Column<T, V> column = new Column<>(this, valueProvider, renderer);
         addColumn(generatedIdentifier, column);
         return column;
     }
@@ -2831,9 +2875,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      */
     public void sort(Column<T, ?> column, SortDirection direction) {
-        setSortOrder(
-                Collections
-                        .singletonList(new GridSortOrder<>(column, direction)));
+        setSortOrder(Collections
+                .singletonList(new GridSortOrder<>(column, direction)));
     }
 
     /**
@@ -2860,9 +2903,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Sets the sort order to use, given a {@link GridSortOrderBuilder}.
      * Shorthand for {@code setSortOrder(builder.build())}.
-     * 
+     *
      * @see GridSortOrderBuilder
-     * 
+     *
      * @param builder
      *            the sort builder to retrieve the sort order from
      * @throws NullPointerException
@@ -3086,7 +3129,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
             DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-            Column<T, String> column = new Column<>(provider,
+            Column<T, String> column = new Column<>(this, provider,
                     new HtmlRenderer());
             addColumn(getGeneratedIdentifier(), column);
             if (id != null) {
@@ -3283,9 +3326,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     protected SerializableComparator<T> createSortingComparator() {
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                                                              comparator2) -> SerializableComparator
-                .asInstance((Comparator<T> & Serializable) comparator1
-                        .thenComparing(comparator2));
+                comparator2) -> SerializableComparator
+                        .asInstance((Comparator<T> & Serializable) comparator1
+                                .thenComparing(comparator2));
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);

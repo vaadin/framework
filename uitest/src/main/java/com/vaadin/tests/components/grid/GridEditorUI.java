@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-import com.vaadin.data.Binder;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Person;
@@ -67,9 +66,6 @@ public class GridEditorUI extends AbstractTestUI {
     protected Grid<Person> createGrid() {
         Grid<Person> grid = new Grid<>();
 
-        Binder<Person> binder = new Binder<>();
-        grid.getEditor().setBinder(binder);
-
         grid.addColumn(Person::getEmail).setCaption("Email");
         Column<Person, String> fistNameColumn = grid
                 .addColumn(Person::getFirstName).setCaption("First Name");
@@ -88,19 +84,15 @@ public class GridEditorUI extends AbstractTestUI {
         grid.getEditor().setEnabled(true);
 
         PasswordField passwordField = new PasswordField();
-        fistNameColumn.setEditorComponent(passwordField);
-        binder.bind(passwordField, Person::getFirstName, Person::setFirstName);
+        fistNameColumn.setEditorComponent(passwordField, Person::setFirstName);
 
         TextField lastNameEditor = new TextField();
-        lastNameColumn.setEditorComponent(lastNameEditor);
+        lastNameColumn.setEditorComponent(lastNameEditor, Person::setLastName);
         lastNameEditor.setMaxLength(50);
-        binder.bind(lastNameEditor, Person::getLastName, Person::setLastName);
 
         TextField phoneEditor = new TextField();
         phoneEditor.setReadOnly(true);
-        phoneColumn.setEditorComponent(phoneEditor);
-        binder.bind(phoneEditor, Person::getPhoneNumber,
-                Person::setPhoneNumber);
+        phoneColumn.setEditorComponent(phoneEditor, Person::setPhoneNumber);
 
         return grid;
     }
