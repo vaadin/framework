@@ -798,7 +798,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            the type of value
          */
         protected Column(ValueProvider<T, ? extends V> valueProvider,
-                Renderer<V> renderer) {
+                         Renderer<V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -819,11 +819,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             Class<V> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
-                comparator = (a, b) -> {
-                    @SuppressWarnings("unchecked")
-                    Comparable<V> comp = (Comparable<V>) valueProvider.apply(a);
-                    return comp.compareTo(valueProvider.apply(b));
-                };
+                comparator = (a, b) -> compareComparables(valueProvider.apply(a), valueProvider.apply(b));
                 state.sortable = true;
             } else if (Number.class.isAssignableFrom(valueType)) {
                 /*
@@ -831,10 +827,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                  * Provide explicit comparison support in this case even though
                  * Number itself isn't Comparable.
                  */
-                comparator = (a, b) -> {
-                    return compareNumbers((Number) valueProvider.apply(a),
-                            (Number) valueProvider.apply(b));
-                };
+                comparator = (a, b) -> compareNumbers((Number) valueProvider.apply(a),
+                        (Number) valueProvider.apply(b));
                 state.sortable = true;
             } else {
                 state.sortable = false;
@@ -842,21 +836,26 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @SuppressWarnings("unchecked")
-        private static int compareNumbers(Number a, Number b) {
-            assert a.getClass() == b.getClass();
+        private static int compareComparables(Object a, Object b) {
+            return ((Comparator) Comparator.nullsLast(Comparator.naturalOrder())).compare(a, b);
+        }
 
+        @SuppressWarnings("unchecked")
+        private static int compareNumbers(Number a, Number b) {
+            Number valueA = a != null ? a : Double.POSITIVE_INFINITY;
+            Number valueB = b != null ? b : Double.POSITIVE_INFINITY;
             // Most Number implementations are Comparable
-            if (a instanceof Comparable && a.getClass().isInstance(b)) {
-                return ((Comparable<Number>) a).compareTo(b);
-            } else if (a.equals(b)) {
+            if (valueA instanceof Comparable && valueA.getClass().isInstance(valueB)) {
+                return ((Comparable<Number>) valueA).compareTo(valueB);
+            } else if (valueA.equals(valueB)) {
                 return 0;
             } else {
                 // Fall back to comparing based on potentially truncated values
-                int compare = Long.compare(a.longValue(), b.longValue());
+                int compare = Long.compare(valueA.longValue(), valueB.longValue());
                 if (compare == 0) {
                     // This might still produce 0 even though the values are not
                     // equals, but there's nothing more we can do about that
-                    compare = Double.compare(a.doubleValue(), b.doubleValue());
+                    compare = Double.compare(valueA.doubleValue(), valueB.doubleValue());
                 }
                 return compare;
             }
@@ -3259,14 +3258,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     private void sort(boolean userOriginated) {
         // Set sort orders
         // In-memory comparator
-        BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) -> SerializableComparator
-                        .asInstance((Comparator<T> & Serializable) comparator1
-                                .thenComparing(comparator2));
-        SerializableComparator<T> comparator = sortOrder.stream().map(
-                order -> order.getSorted().getComparator(order.getDirection()))
-                .reduce((x, y) -> 0, operator);
-        getDataCommunicator().setInMemorySorting(comparator);
+        getDataCommunicator().setInMemorySorting(createSortingComparator());
 
         // Back-end sort properties
         List<QuerySortOrder> sortProperties = new ArrayList<>();
@@ -3281,6 +3273,22 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
         fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
                 userOriginated));
+    }
+
+    /**
+     * Creates a comparator for grid to sort rows.
+     *
+     * @return the comparator based on column sorting information.
+     */
+
+    protected SerializableComparator<T> createSortingComparator() {
+        BinaryOperator<SerializableComparator<T>> operator = (comparator1,
+                                                              comparator2) -> SerializableComparator
+                .asInstance((Comparator<T> & Serializable) comparator1
+                        .thenComparing(comparator2));
+        return sortOrder.stream().map(
+                order -> order.getSorted().getComparator(order.getDirection()))
+                .reduce((x, y) -> 0, operator);
     }
 
 }
