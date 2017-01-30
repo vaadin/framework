@@ -1839,6 +1839,55 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         });
     }
 
+    /**
+     * Creates a new {@code Grid} using the given caption
+     * 
+     * @param caption
+     *            the caption of the grid
+     */
+    public Grid(String caption) {
+        this();
+        setCaption(caption);
+    }
+
+    /**
+     * Creates a new {@code Grid} using the given caption and
+     * {@code DataProvider}
+     * 
+     * @param caption
+     *            the caption of the grid
+     * @param dataProvider
+     *            the data provider, not {@code null}
+     */
+    public Grid(String caption, DataProvider<T, ?> dataProvider) {
+        this(caption);
+        setDataProvider(dataProvider);
+    }
+
+    /**
+     * Creates a new {@code Grid} using the given {@code DataProvider}
+     * 
+     * @param dataProvider
+     *            the data provider, not {@code null}
+     */
+    public Grid(DataProvider<T, ?> dataProvider) {
+        this();
+        setDataProvider(dataProvider);
+    }
+
+    /**
+     * Creates a new {@code Grid} using the given caption and collection of
+     * items
+     * 
+     * @param caption
+     *            the caption of the grid
+     * @param items
+     *            the data items to use, not {@çode null}
+     */
+    public Grid(String caption, Collection<T> items) {
+        this(caption, DataProvider.ofCollection(items));
+    }
+
     public <V> void fireColumnVisibilityChangeEvent(Column<T, V> column,
             boolean hidden, boolean userOriginated) {
         fireEvent(new ColumnVisibilityChangeEvent(this, column, hidden,
