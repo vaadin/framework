@@ -68,7 +68,7 @@
             <exclude org="javax.servlet"></exclude>
             <exclude type="pom" />
         </dependency>
-        <dependency org="com.vaadin" name="vaadin-icons" rev="2.0.0"
+        <dependency org="com.vaadin" name="vaadin-icons" rev="3.0.0"
             conf="build->default">
             <exclude type="pom" />
         </dependency>

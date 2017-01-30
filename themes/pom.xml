@@ -38,6 +38,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-icons</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -66,7 +67,7 @@
                         <goals>
                             <goal>unpack-dependencies</goal>
                         </goals>
-                        <!-- Unpack Vaadin Icons font files and .scss to this project -->
+                        <!-- Vaadin Icons font files and .scss to included with Valo -->
                         <configuration>
                             <includeGroupIds>com.vaadin</includeGroupIds>
                             <includeArtifactIds>vaadin-icons</includeArtifactIds>
