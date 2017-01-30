@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionEvent;
@@ -199,38 +200,40 @@ public class GridBasics extends AbstractTestUIWithLog {
         TextField coordinates = new TextField();
         TextField rowNumber = new TextField();
 
-        binder.bind(html, DataObject::getHtmlString, DataObject::setHtmlString);
-        binder.forField(smallRandom)
+        Binding<DataObject, Integer> smallRandomBinding = binder
+                .forField(smallRandom)
                 .withConverter(new StringToIntegerConverter(
                         "Could not convert value to Integer"))
                 .withValidator(i -> i >= 0 && i < 5,
                         "Small random needs to be in range [0..5)")
                 .bind(DataObject::getSmallRandom, DataObject::setSmallRandom);
-        binder.bind(coordinates, DataObject::getCoordinates,
-                DataObject::setCoordinates);
-        binder.forField(rowNumber)
+        Binding<DataObject, Integer> rowNumberBinding = binder
+                .forField(rowNumber)
                 .withConverter(new StringToIntegerConverter(
                         "Could not convert value to Integer"))
                 .bind(DataObject::getRowNumber, DataObject::setRowNumber);
 
         grid.addColumn(DataObject::getCoordinates)
-                .setCaption(COLUMN_CAPTIONS[0]).setEditorComponent(coordinates);
+                .setCaption(COLUMN_CAPTIONS[0])
+                .setEditorComponent(coordinates, DataObject::setCoordinates);
         grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 1)")
                 .setCaption(COLUMN_CAPTIONS[1]);
         grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 2)")
                 .setCaption(COLUMN_CAPTIONS[2]);
 
         grid.addColumn(DataObject::getRowNumber, new NumberRenderer())
-                .setCaption(COLUMN_CAPTIONS[3]).setEditorComponent(rowNumber);
+                .setCaption(COLUMN_CAPTIONS[3])
+                .setEditorBinding(rowNumberBinding);
         grid.addColumn(DataObject::getDate, new DateRenderer())
                 .setCaption(COLUMN_CAPTIONS[4]);
         grid.addColumn(DataObject::getHtmlString, new HtmlRenderer())
-                .setCaption(COLUMN_CAPTIONS[5]).setEditorComponent(html);
+                .setCaption(COLUMN_CAPTIONS[5])
+                .setEditorComponent(html, DataObject::setHtmlString);
         grid.addColumn(DataObject::getBigRandom, new NumberRenderer())
                 .setCaption(COLUMN_CAPTIONS[6]);
         grid.addColumn(data -> data.getSmallRandom() / 5d,
                 new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7])
-                .setEditorComponent(smallRandom);
+                .setEditorBinding(smallRandomBinding);
 
         selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
                 .getSelectionModel())

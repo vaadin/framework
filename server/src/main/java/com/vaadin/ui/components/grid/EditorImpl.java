@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.BinderValidationStatusHandler;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
@@ -216,8 +217,12 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
 
         getParent().getColumns().stream().filter(Column::isEditable)
                 .forEach(c -> {
-                    Component component = c.getEditorComponentGenerator()
-                            .apply(edited);
+                    Binding<T, ?> binding = c.getEditorBinding();
+
+                    assert binding
+                            .getField() instanceof Component : "Grid should enforce that the binding field is a component";
+
+                    Component component = (Component) binding.getField();
                     addComponentToGrid(component);
                     columnFields.put(c, component);
                     getState().columnFields.put(getInternalIdForColumn(c),
