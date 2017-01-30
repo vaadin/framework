@@ -85,8 +85,7 @@ public class DateField extends AbstractLocalDateField {
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public DateField(String caption,
-            ValueChangeListener valueChangeListener) {
+    public DateField(String caption, ValueChangeListener valueChangeListener) {
         this(valueChangeListener);
         setCaption(caption);
     }

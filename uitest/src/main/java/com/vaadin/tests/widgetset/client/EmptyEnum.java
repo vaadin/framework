@@ -22,4 +22,3 @@ package com.vaadin.tests.widgetset.client;
 public enum EmptyEnum {
 
 }
-

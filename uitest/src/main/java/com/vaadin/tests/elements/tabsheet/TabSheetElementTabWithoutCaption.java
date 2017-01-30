@@ -42,18 +42,18 @@ public class TabSheetElementTabWithoutCaption extends AbstractTestUI {
         addComponent(ts);
         // Create a tab sheet that has icons instead of text captions
         TabSheet ts2 = new TabSheet();
-        newTab = ts2.addTab(createTabContent(10), null, new ThemeResource(
-                "favicon.ico"));
+        newTab = ts2.addTab(createTabContent(10), null,
+                new ThemeResource("favicon.ico"));
         newTab.setClosable(true);
-        newTab = ts2.addTab(createTabContent(11), null, new ThemeResource(
-                "window/img/maximize.png"));
+        newTab = ts2.addTab(createTabContent(11), null,
+                new ThemeResource("window/img/maximize.png"));
         newTab.setClosable(false);
         newTab = ts2.addTab(createTabContent(12));
         newTab.setClosable(false);
         newTab = ts2.addTab(createTabContent(12));
         newTab.setClosable(true);
-        newTab = ts2.addTab(createTabContent(13), null, new ThemeResource(
-                "window/img/restore.png"));
+        newTab = ts2.addTab(createTabContent(13), null,
+                new ThemeResource("window/img/restore.png"));
         newTab.setClosable(true);
         addComponent(ts2);
     }

@@ -57,8 +57,8 @@ public class PasswordFieldConstructorTest {
     public void testCaptionValueListener() {
         HasValue.ValueChangeListener valueChangeListener = Mockito
                 .mock(HasValue.ValueChangeListener.class);
-        PasswordField passwordField = new PasswordField("Caption", "Initial value",
-                valueChangeListener);
+        PasswordField passwordField = new PasswordField("Caption",
+                "Initial value", valueChangeListener);
 
         verify(valueChangeListener, never())
                 .valueChange(Mockito.any(HasValue.ValueChangeEvent.class));

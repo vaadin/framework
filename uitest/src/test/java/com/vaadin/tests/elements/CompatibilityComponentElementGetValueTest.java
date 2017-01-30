@@ -35,7 +35,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * the License.
  */
 
-public class CompatibilityComponentElementGetValueTest extends MultiBrowserTest {
+public class CompatibilityComponentElementGetValueTest
+        extends MultiBrowserTest {
 
     @Before
     public void init() {

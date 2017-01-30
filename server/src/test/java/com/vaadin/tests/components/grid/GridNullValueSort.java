@@ -34,111 +34,95 @@ public class GridNullValueSort {
     public void setup() {
         VaadinSession.setCurrent(null);
         grid = new TestGrid();
-        grid.addColumn(i -> i, new NumberRenderer()).setId("int").setSortable(true);
-        grid.addColumn(i -> i == null ? null : String.valueOf(i)).setId("String").setSortable(true);
-        grid.addColumn(i -> i == null ? null : i != 1, booleanRenderer()).setId("Boolean").setSortable(true);
+        grid.addColumn(i -> i, new NumberRenderer()).setId("int")
+                .setSortable(true);
+        grid.addColumn(i -> i == null ? null : String.valueOf(i))
+                .setId("String").setSortable(true);
+        grid.addColumn(i -> i == null ? null : i != 1, booleanRenderer())
+                .setId("Boolean").setSortable(true);
     }
 
     @Test
     public void testNumbersNotNulls() {
         grid.sort(grid.getColumn("int"), SortDirection.ASCENDING);
-        performSort(
-                Arrays.asList(2, 1, 3),
-                Arrays.asList(1, 2, 3));
+        performSort(Arrays.asList(2, 1, 3), Arrays.asList(1, 2, 3));
     }
 
     @Test
     public void testNumbers() {
         grid.sort(grid.getColumn("int"), SortDirection.ASCENDING);
-        performSort(
-                Arrays.asList(1, 2, null, 3, null, null),
+        performSort(Arrays.asList(1, 2, null, 3, null, null),
                 Arrays.asList(1, 2, 3, null, null, null));
     }
 
     @Test
     public void testNumbersNotNullsDescending() {
         grid.sort(grid.getColumn("int"), SortDirection.DESCENDING);
-        performSort(
-                Arrays.asList(1, 2, 3),
-                Arrays.asList(3, 2, 1));
+        performSort(Arrays.asList(1, 2, 3), Arrays.asList(3, 2, 1));
     }
 
     @Test
     public void testNumbersDescending() {
         grid.sort(grid.getColumn("int"), SortDirection.DESCENDING);
-        performSort(
-                Arrays.asList(1, 3, null, null, null, 2),
+        performSort(Arrays.asList(1, 3, null, null, null, 2),
                 Arrays.asList(null, null, null, 3, 2, 1));
     }
 
     @Test
     public void testStringsNotNulls() {
         grid.sort(grid.getColumn("String"), SortDirection.ASCENDING);
-        performSort(
-                Arrays.asList(2, 1, 3),
-                Arrays.asList(1, 2, 3));
+        performSort(Arrays.asList(2, 1, 3), Arrays.asList(1, 2, 3));
     }
 
     @Test
     public void testStrings() {
         grid.sort(grid.getColumn("String"), SortDirection.ASCENDING);
-        performSort(
-                Arrays.asList(1, 2, null, 3, null, null),
+        performSort(Arrays.asList(1, 2, null, 3, null, null),
                 Arrays.asList(1, 2, 3, null, null, null));
     }
 
     @Test
     public void testStringsNotNullsDescending() {
         grid.sort(grid.getColumn("String"), SortDirection.DESCENDING);
-        performSort(
-                Arrays.asList(1, 2, 3),
-                Arrays.asList(3, 2, 1));
+        performSort(Arrays.asList(1, 2, 3), Arrays.asList(3, 2, 1));
     }
 
     @Test
     public void testStringsDescending() {
         grid.sort(grid.getColumn("String"), SortDirection.DESCENDING);
-        performSort(
-                Arrays.asList(1, 3, null, null, null, 2),
+        performSort(Arrays.asList(1, 3, null, null, null, 2),
                 Arrays.asList(null, null, null, 3, 2, 1));
     }
-
 
     @Test
     public void testBooleansNotNulls() {
         grid.sort(grid.getColumn("Boolean"), SortDirection.ASCENDING);
-        performSort(
-                Arrays.asList(2, 1),
-                Arrays.asList(1, 2));
+        performSort(Arrays.asList(2, 1), Arrays.asList(1, 2));
     }
 
     @Test
     public void testBooleans() {
         grid.sort(grid.getColumn("Boolean"), SortDirection.ASCENDING);
-        performSort(
-                Arrays.asList(1, null, 2, null, null),
+        performSort(Arrays.asList(1, null, 2, null, null),
                 Arrays.asList(1, 2, null, null, null));
     }
 
     @Test
     public void testBooleansNotNullsDescending() {
         grid.sort(grid.getColumn("Boolean"), SortDirection.DESCENDING);
-        performSort(
-                Arrays.asList(1, 2),
-                Arrays.asList(2, 1));
+        performSort(Arrays.asList(1, 2), Arrays.asList(2, 1));
     }
 
     @Test
     public void testBooleansDescending() {
         grid.sort(grid.getColumn("Boolean"), SortDirection.DESCENDING);
-        performSort(
-                Arrays.asList(1, null, null, null, 2),
+        performSort(Arrays.asList(1, null, null, null, 2),
                 Arrays.asList(null, null, null, 2, 1));
     }
 
-
     private void performSort(List<Integer> source, List<Integer> expected) {
-        SerializableComparator<Integer> sortingComparator = grid.createSortingComparator();
+        SerializableComparator<Integer> sortingComparator = grid
+                .createSortingComparator();
         List<Integer> data = new ArrayList<>(source);
         data.sort(sortingComparator);
         Assert.assertEquals(expected, data);
