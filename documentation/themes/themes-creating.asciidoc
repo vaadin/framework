@@ -184,7 +184,6 @@ style names for specific components.
 
 
 ----
-@Theme("Valo")
 public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest request) {

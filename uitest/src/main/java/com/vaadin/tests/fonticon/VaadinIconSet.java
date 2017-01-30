@@ -2,14 +2,13 @@ package com.vaadin.tests.fonticon;
 
 import java.util.List;
 
-import com.vaadin.data.Listing;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontIcon;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.Accordion;
@@ -132,7 +131,7 @@ public class VaadinIconSet extends AbstractTestUI {
             }
             sel.setCaption(clazz.getSimpleName());
             sel.setIcon(icon);
-            ((Listing) sel).setItems("One", "Two");
+            sel.setItems("One", "Two");
             if (sel instanceof RadioButtonGroup) {
                 ((RadioButtonGroup) sel).setItemIconGenerator(item -> icon);
             } else if (sel instanceof CheckBoxGroup) {
