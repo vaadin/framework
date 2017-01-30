@@ -16,7 +16,7 @@ public class PerformanceTestIndexedContainerTest {
     private static final long ADD_ITEM_FAIL_THRESHOLD = 200;
     // TODO should improve performance of these methods
     private static final long ADD_ITEM_AT_FAIL_THRESHOLD = 5000;
-    private static final long ADD_ITEM_AFTER_FAIL_THRESHOLD = 5000;
+    private static final long ADD_ITEM_AFTER_FAIL_THRESHOLD = 6000;
     private static final long ADD_ITEM_AFTER_LAST_FAIL_THRESHOLD = 5000;
     private static final long ADD_ITEMS_CONSTRUCTOR_FAIL_THRESHOLD = 200;
 
