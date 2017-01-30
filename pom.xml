@@ -486,6 +486,23 @@
 
         <plugins>
             <plugin>
+                <groupId>com.marvinformatics.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>1.8.1</version>
+                <configuration>
+                    <configFile>classpath:/eclipse/VaadinJavaConventions.xml</configFile>
+                    <!-- Provide a dummy JS config file to avoid errors -->
+                    <configJsFile>classpath:/eclipse/VaadinJavaConventions.xml</configJsFile>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>vaadin-buildhelpers</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
                 <executions>

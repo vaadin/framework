@@ -194,11 +194,11 @@ public abstract class UI extends AbstractSingleComponentContainer
             // Nothing to do, just need the message to be sent and processed
         }
 
-		@Override
-		public void popstate(String uri) {
-			getPage().updateLocation(uri, true, true);
-			
-		}
+        @Override
+        public void popstate(String uri) {
+            getPage().updateLocation(uri, true, true);
+
+        }
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
         @Override

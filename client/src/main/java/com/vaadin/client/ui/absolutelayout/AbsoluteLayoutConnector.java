@@ -72,7 +72,8 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
                         childStyles.toArray(new String[childStyles.size()]));
             }
 
-            if (stateChangeEvent.hasPropertyChanged("height") || stateChangeEvent.hasPropertyChanged("width")) {
+            if (stateChangeEvent.hasPropertyChanged("height")
+                    || stateChangeEvent.hasPropertyChanged("width")) {
                 setChildWidgetPosition(child);
             }
         }

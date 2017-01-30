@@ -125,13 +125,13 @@ public class SuperDevMode {
     private native static String getRecompileParameters(String moduleName)
     /*-{
         var prop_map = $wnd.__gwt_activeModules[moduleName].bindings();
-
+    
         // convert map to URL parameter string
         var props = [];
         for (var key in prop_map) {
            props.push(encodeURIComponent(key) + '=' + encodeURIComponent(prop_map[key]))
         }
-
+    
         return props.join('&') + '&';
     }-*/;
 
@@ -225,12 +225,12 @@ public class SuperDevMode {
         var mod = $wnd.__gwt_activeModules[moduleName];
         if (!mod)
             return false;
-
+    
         if (mod.superdevmode) {
            // Running in super dev mode already, it is supported
            return true;
         }
-
+    
         return !!mod.canRedirect;
     }-*/;
 

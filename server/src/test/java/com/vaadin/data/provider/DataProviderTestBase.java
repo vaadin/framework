@@ -82,9 +82,8 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
                 .thenComparing(StrBean::getId);
 
         List<StrBean> list = dataProvider
-                .fetch(createQuery(
-                        QuerySortOrder.asc("value").thenAsc("randomNumber")
-                        .thenAsc("id").build(), comp))
+                .fetch(createQuery(QuerySortOrder.asc("value")
+                        .thenAsc("randomNumber").thenAsc("id").build(), comp))
                 .collect(Collectors.toList());
 
         // First value in data is { Xyz, 10, 100 } which should be last in list

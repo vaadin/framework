@@ -124,8 +124,7 @@ public abstract class AbstractConnector
         // been set but before init() is called to enable e.g.
         // JavaScriptConnector to use connection when determining the tag name
         if (this instanceof ComponentConnector) {
-            setConnectorId(
-                    ((ComponentConnector) this).getWidget().getElement(),
+            setConnectorId(((ComponentConnector) this).getWidget().getElement(),
                     connectorId);
         }
 

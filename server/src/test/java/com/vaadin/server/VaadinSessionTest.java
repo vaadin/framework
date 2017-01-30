@@ -74,12 +74,10 @@ public class VaadinSessionTest implements Serializable {
                 Object res;
                 try {
                     Thread.sleep(100); // for deadlock testing
+
+                    // simulates servlet container's session locking
                     org.junit.Assert.assertTrue("Deadlock detected",
-                            httpSessionLock.tryLock(5, TimeUnit.SECONDS)); // simulates
-                                                                           // servlet
-                                                                           // container's
-                                                                           // session
-                                                                           // locking
+                            httpSessionLock.tryLock(5, TimeUnit.SECONDS));
                     String lockAttribute = mockService.getServiceName()
                             + ".lock";
                     if (lockAttribute.equals(name)) {
