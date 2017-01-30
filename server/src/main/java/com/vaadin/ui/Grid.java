@@ -997,8 +997,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sorting with a back-end is done using
          * {@link Column#setSortProperty(String...)}.
          * <p>
-         * Setting a comparator enables client-side sorting by default. To
-         * configure client-side sorting call {@link #setSortable(boolean)}.
+         * Setting a comparator enables client-side sorting.
          *
          * @param comparator
          *            the comparator to use when sorting data in this column

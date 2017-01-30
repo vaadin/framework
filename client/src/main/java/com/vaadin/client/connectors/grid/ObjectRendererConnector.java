@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.connectors.grid;
 
-import com.vaadin.client.renderers.ObjectRenderer;
+import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.renderers.ObjectRendererState;
 
@@ -30,8 +30,8 @@ public class ObjectRendererConnector
         extends AbstractGridRendererConnector<String> {
 
     @Override
-    public ObjectRenderer getRenderer() {
-        return (ObjectRenderer) super.getRenderer();
+    public TextRenderer getRenderer() {
+        return (TextRenderer) super.getRenderer();
     }
 
     @Override
