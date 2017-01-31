@@ -64,8 +64,8 @@
             a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
-		With this beta release we will change things based on your feedback 
-		and that may lead to breaking changes.
+		This beta release contains breaking changes based on your feedback on the previous beta version,
+		and we will change things on future beta versions based on your feedback if necessary.
 	</p>
 	<p>	Special note for add-on developers: please test your add-on against 
 		Framework 8.0 and update your add-on as needed.
@@ -130,8 +130,8 @@
                 <li><tt>SQLContainer</tt> is deprecated in v7 compatibility package and not directly replaced</li>
                 <li><tt>HierarchicalContainer</tt> is deprecated in v7 compatibility package and a replacement is planned for 8.1</li>
             </ul>
-            <li>All components that list data are based on <tt>Listing / AbstractListing</tt></li>
-            <li>All <tt>Listing</tt> components have been typed with the type of items they are listing</li>
+            <li>All components that list data are based on <tt>AbstractListing</tt></li>
+            <li>All <tt>AbstractListing</tt> components have been typed with the type of items they are listing</li>
             <li><tt>HasValue</tt> replaces the <tt>Field</tt> interface as the basis for all field components</li>
             <li>Field components based on <tt>HasValue</tt> may or may not accept null values, depending on each component. There is no <tt>setNullRepresentation</tt> anymore</li>
             <li><tt>AbstractField::setRequired(boolean)</tt> has been replaced with:
@@ -154,12 +154,15 @@
             <li>Valo is the only included theme, all other themes have been moved to the <tt>compatiblity-themes</tt> package and are available as a separate dependency</li>
             <li><tt>SharedState</tt> and the getter methods for it have been added to each component, regardless of whether those are used for anything or not</li>
             <li>The old liferay theme (Liferay 6.0 look) has been removed</li>
-            <li>FontAwesome icon constants have been deprecated, and will be moved to <tt>compability-server</tt> before 8.0 final. They will be replaced with <a href="https://vaadin.com/icons">Vaadin icons</a> in an upcoming beta</li>
+            <li>FontAwesome icon constants have been deprecated, and will not be updated. It will be replaced with <a href="https://vaadin.com/icons">Vaadin icons</a> in an upcoming beta</li>
         </ul>
         <ul><h4>Component specific API changes</h4>
+            <li><tt>setDescription(String)</tt> now renders tooltip as inner text by default, instead of HTML. HTML can be still used by using <tt>setDescription(String, ContentMode)</tt></li>
             <li><tt>DateField</tt> replaces old <tt>PopupDateField</tt></li>
             <li><tt>DateField</tt> and <tt>InlineDateField</tt> are now based on Java 8 <tt>LocalDate</tt> instead of <tt>Date</tt></li>
-            <li><tt>DateField</tt> and <tt>InlineDateField</tt> don't support time anymore, meaning the highest resolution for those is <tt>Resolution.DAY</tt></li>
+            <li><tt>DateTimeField</tt> and <tt>InlineDateTimeField</tt> based on Java 8 <tt>LocalDateTime</tt> are introduced for time selecting time (hour / minute / second) </li>
+            <ul><li><tt>DateField</tt> and <tt>InlineDateField</tt> don't support time anymore, meaning the highest resolution for those is <tt>DateResolution.DAY</tt></li>
+            <li><tt>Resolution</tt> for <tt>DateField</tt> and <tt>InlineDateField</tt> is replaced by <tt>DateResolution</tt> and <tt>DateTimeResolution</tt></li></ul>
             <li><tt>OptionGroup</tt> has been removed and replaced by:</li>
             <ul>
                 <li><tt>CheckBoxGroup</tt> replaces <tt>OptionGroup</tt> in multiselect mode</li>
@@ -204,17 +207,17 @@
             <li><tt>ColorPickerArea</tt></li>
             <li><tt>ComboBox</tt></li>
             <li><tt>CustomField</tt></li>
-            <li><tt>DateField</tt> - the replacing 8 version does not support selecting time</li>
+            <li><tt>DateField</tt> - replaced in 8 by <tt>DataTimeField</tt></li>
             <li><tt>Form</tt> - no replacement in 8</li>
             <li><tt>Grid</tt> (and renderers)</li>
             <li><tt>HorizontalLayout</tt></li>
-            <li><tt>InlineDateField</tt> - the replacing 8 version does not support selecting time</li>
+            <li><tt>InlineDateField</tt> - replaced in 8 by <tt>InlineDateTimeField</tt></li>
             <li><tt>Label</tt></li>
             <li><tt>ListSelect</tt></li>
             <li><tt>NativeSelect</tt></li>
             <li><tt>OptionGroup</tt> - replaced by <tt>CheckBoxGroup</tt> (multiselection) and <tt>RadioButtonGroup</tt> (single selection)</li>
             <li><tt>PasswordField</tt></li>
-            <li><tt>PopupDateField</tt> - replaced by partly by <tt>DateField</tt>, but doesn't allow selecting time</li>
+            <li><tt>PopupDateField</tt> - replaced in 8 by <tt>DateTimeField</tt></li>
             <li><tt>ProgressBar</tt></li>
             <li><tt>ProgressIndicator</tt></li>
             <li><tt>RichTextArea</tt></li>
