@@ -17,14 +17,28 @@ package com.vaadin.event.dnd;
 
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.ui.AbstractComponent;
 
 /**
  * Extension to add drag source functionality to a widget for using HTML5 drag
  * and drop.
  */
 public class DragSourceExtension extends AbstractExtension {
+
+    /**
+     * Constructor for {@link DragSourceExtension}
+     */
+    public DragSourceExtension() {
+        registerRpc((DragSourceRpc) () -> {
+            DragStartEvent event = new DragStartEvent(
+                    (AbstractComponent) getParent());
+            fireEvent(event);
+        });
+    }
 
     @Override
     public void extend(AbstractClientConnector target) {
@@ -79,6 +93,20 @@ public class DragSourceExtension extends AbstractExtension {
     public void clearTransferData() {
         getState().types.clear();
         getState().data.clear();
+    }
+
+    /**
+     * Attaches dragstart listener for the current drag source. {@link
+     * DragStartListener#dragStart(DragStartEvent)} is called when dragstart
+     * event happens on the client side.
+     *
+     * @param listener
+     *         Listener to handle dragstart event.
+     * @return Handle to be used to remove this listener.
+     */
+    public Registration addDragStartListener(DragStartListener listener) {
+        return addListener(DragStartEvent.class, listener,
+                DragStartListener.DRAGSTART_METHOD);
     }
 
     @Override

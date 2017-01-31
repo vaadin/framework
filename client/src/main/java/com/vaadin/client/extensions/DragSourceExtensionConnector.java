@@ -28,6 +28,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 
 /**
@@ -86,6 +87,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         for (String format : types) {
             event.getDataTransfer().setData(format, data.get(format));
         }
+
+        // Initiate firing server side dragstart event
+        getRpcProxy(DragSourceRpc.class).dragStart();
     }
 
     /**
