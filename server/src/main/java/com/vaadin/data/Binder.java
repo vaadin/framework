@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
@@ -928,6 +929,7 @@ public class Binder<BEAN> implements Serializable {
                     binderValidationResults);
             getBinder().getValidationStatusHandler().statusChange(status);
             getBinder().fireStatusChangeEvent(status.hasErrors());
+            getBinder().fireBinderChangeEvent(event);
         }
 
         /**
@@ -1735,6 +1737,23 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * Adds field value change listener to the binder.
+     * <p>
+     * Added listener is notified every time whenever any bound field value is
+     * changed. The same functionality can be achieved by adding a
+     * {@link ValueChangeListener} to all fields in the {@link Binder}.
+     *
+     * @param listener
+     *            a field value change listener
+     * @return a registration for the listener
+     */
+    public Registration addBinderChangeListener(
+            BinderChangeListener<BEAN> listener) {
+        return getEventRouter().addListener(BinderChangeEvent.class, listener,
+                BinderChangeListener.class.getDeclaredMethods()[0]);
+    }
+
+    /**
      * Creates a new binding with the given field.
      *
      * @param <FIELDVALUE>
@@ -2239,4 +2258,9 @@ public class Binder<BEAN> implements Serializable {
         return fieldName.toLowerCase(Locale.ENGLISH).replace("_", "");
     }
 
+    private <V> void fireBinderChangeEvent(ValueChangeEvent<V> event) {
+        getEventRouter().fireEvent(new BinderChangeEvent<>(this,
+                event.getComponent(), event.getSource(), event.getOldValue(),
+                event.isUserOriginated()));
+    }
 }
