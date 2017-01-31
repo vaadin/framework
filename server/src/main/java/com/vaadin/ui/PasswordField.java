@@ -69,8 +69,8 @@ public class PasswordField extends TextField {
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public PasswordField(ValueChangeListener valueChangeListener) {
-        addValueChangeListener(valueChangeListener);
+    public PasswordField(ValueChangeListener<String> valueChangeListener) {
+        super(valueChangeListener);
     }
 
     /**
@@ -86,9 +86,8 @@ public class PasswordField extends TextField {
      *            the value change listener, not {@code null}
      */
     public PasswordField(String caption,
-            ValueChangeListener valueChangeListener) {
-        this(valueChangeListener);
-        setCaption(caption);
+            ValueChangeListener<String> valueChangeListener) {
+        super(caption, valueChangeListener);
     }
 
     /**
@@ -106,9 +105,8 @@ public class PasswordField extends TextField {
      *            the value change listener, not {@code null}
      */
     public PasswordField(String caption, String value,
-            ValueChangeListener valueChangeListener) {
-        this(caption, value);
-        addValueChangeListener(valueChangeListener);
+            ValueChangeListener<String> valueChangeListener) {
+        super(caption, value, valueChangeListener);
     }
 
     @Override
