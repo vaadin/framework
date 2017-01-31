@@ -40,9 +40,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     private static final String CLASS_DRAGGABLE = "v-draggable";
 
-    // Create native event listener
+    // Create native event listeners
     private final JavaScriptObject dragStartListener = createNativeFunction(
             this::onDragStart);
+    private final JavaScriptObject dragEndListener = createNativeFunction(
+            this::onDragEnd);
 
     @Override
     protected void extend(ServerConnector target) {
@@ -54,6 +56,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // dragstart
         addEventListener(dragSourceElement, BrowserEvents.DRAGSTART,
                 dragStartListener);
+
+        // dragend event
+        addEventListener(dragSourceElement, BrowserEvents.DRAGEND,
+                dragEndListener);
     }
 
     @Override
@@ -65,6 +71,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Remove listeners
         removeEventListener(dragSourceElement, BrowserEvents.DRAGSTART,
                 dragStartListener);
+
+        removeEventListener(dragSourceElement, BrowserEvents.DRAGEND,
+                dragEndListener);
     }
 
     /**
@@ -90,6 +99,16 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         // Initiate firing server side dragstart event
         getRpcProxy(DragSourceRpc.class).dragStart();
+    }
+
+    /**
+     * Event handler for the {@code dragend} event. Called when {@code dragend}
+     * event occurs.
+     *
+     * @param event
+     */
+    protected void onDragEnd(Event event) {
+
     }
 
     /**
