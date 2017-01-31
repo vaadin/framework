@@ -186,17 +186,18 @@ We can save the binding to a local variable and trigger a revalidation when anot
 
 [source, java]
 ----
+Binder<Trip> binder = new Binder<>();
 DateField departing = new DateField("Departing");
 DateField returning = new DateField("Returning");
 
 // Store return date binding so we can revalidate it later
-Binding<Trip, LocalDate> returnBinding = binder.forField(returning)
+Binder.BindingBuilder<Trip, LocalDate> returnBindingBuilder = binder.forField(returning)
   .withValidator(returnDate -> !returnDate.isBefore(departing.getValue()),
   "Cannot return before departing");
-returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
+Binder.Binding<Trip, LocalDate> returnBinder = returnBindingBuilder.bind(Trip::getReturnDate, Trip::setReturnDate);
 
 // Revalidate return date when departure date changes
-departing.addValueChangeListener(event -> returnBinding.validate());
+departing.addValueChangeListener(event -> returnBinder.validate());
 ----
 
 [[datamodel.forms.conversion]]
@@ -362,7 +363,7 @@ if (saved) {
   MyBackend.updatePersonInDatabase(person);
 } else {
   Notification.show("Validation error count: "
-    + binder.getValidationErrors().size());
+    + binder.validate().getValidationErrors().size());
 }
 ----
 --
@@ -378,7 +379,7 @@ binder.addStatusChangeListener(event -> {
   boolean hasChanges = binder.hasChanges();
 
   saveButton.setEnabled(hasChanges && isValid);
-  resetButton.setEnable(hasChanges);
+  resetButton.setEnabled(hasChanges);
 });
 ----
 
@@ -439,13 +440,15 @@ binder.forField(yearOfBirthField)
 [NOTE]
 Code using strings to identify properties will cause exceptions during runtime if the string contains a typo or if the name of the setter and getter methods have been changed without also updating the string.
 
+//todo change to new JSR303 support
+
 Bindings created based on a property name will automatically use JSR 303 Bean Validation annotations from the bean class if a Bean Validation implementation is available.
 Constraints defined for properties in the bean will work in the same way as if configured when the binding is created.
 
 [source, java]
 ----
 public class Person {
-  @Min(2000)
+  @Max(2000)
   private int yearOfBirth;
 
   //Non-standard constraint provided by Hibernate Validator
@@ -536,7 +539,7 @@ public class PersonFormDesign extends FormLayout {
     protected TextField yearOfBirth;
     protected Button save;
 
-    public MyFormDesign() {
+    public PersonFormDesign() {
         Design.read(this);
     }
 }
