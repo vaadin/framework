@@ -37,6 +37,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.components.grid.FooterCell;
 import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.HeaderCell;
@@ -175,7 +176,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         boolean sortable = false;
         column1.setSortable(sortable);
         boolean editable = true;
-        column1.setEditorComponentGenerator(component -> null);
+        column1.setEditorComponent(new TextField(), Person::setLastName);
         column1.setEditable(editable);
         boolean resizable = false;
         column1.setResizable(resizable);

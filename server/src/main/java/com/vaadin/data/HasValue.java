@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.EventObject;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.Setter;
@@ -217,6 +218,18 @@ public interface HasValue<V> extends Serializable {
      */
     public default V getEmptyValue() {
         return null;
+    }
+
+    /**
+     * Returns the current value of this object, wrapped in an {@code Optional}.
+     * <p>
+     * The {@code Optional} will be empty if the value is {@code null} or
+     * {@code isEmpty()} returns {@code true}. 
+     *
+     * @return the current value, wrapped in an {@code Optional}
+     */
+    public default Optional<V> getOptionalValue() {
+        return isEmpty() ? Optional.empty() : Optional.ofNullable(getValue());
     }
 
     /**

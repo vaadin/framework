@@ -18,6 +18,7 @@ package com.vaadin.ui;
 
 import java.util.Objects;
 
+import elemental.json.Json;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -25,8 +26,6 @@ import com.vaadin.shared.ui.richtextarea.RichTextAreaClientRpc;
 import com.vaadin.shared.ui.richtextarea.RichTextAreaServerRpc;
 import com.vaadin.shared.ui.richtextarea.RichTextAreaState;
 import com.vaadin.ui.declarative.DesignContext;
-
-import elemental.json.Json;
 
 /**
  * A simple RichTextArea to edit HTML format text.
@@ -74,11 +73,62 @@ public class RichTextArea extends AbstractField<String>
      * @param caption
      *            the caption for the editor.
      * @param value
-     *            the initial text content of the editor.
+     *            the initial text content of the editor, not {@code null}
      */
     public RichTextArea(String caption, String value) {
         this(caption);
         setValue(value);
+    }
+
+    /**
+     * Constructs a new {@code RichTextArea} with a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code TextField} is
+     * changed either by the user or programmatically.
+     *
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public RichTextArea(ValueChangeListener<String> valueChangeListener) {
+        addValueChangeListener(valueChangeListener);
+    }
+
+    /**
+     * Constructs a new {@code RichTextArea} with the given caption and a value
+     * change listener.
+     * <p>
+     * The listener is called when the value of this {@code TextField} is
+     * changed either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public RichTextArea(String caption,
+            ValueChangeListener<String> valueChangeListener) {
+        this(valueChangeListener);
+        setCaption(caption);
+    }
+
+    /**
+     * Constructs a new {@code RichTextArea} with the given caption, initial
+     * text contents and a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code RichTextArea} is
+     * changed either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param value
+     *            the value for the field, not {@code null}
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public RichTextArea(String caption, String value,
+            ValueChangeListener<String> valueChangeListener) {
+        this(caption, value);
+        addValueChangeListener(valueChangeListener);
     }
 
     @Override

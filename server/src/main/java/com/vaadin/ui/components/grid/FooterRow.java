@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 /**
  * A footer row in a Grid.
@@ -30,6 +31,8 @@ public interface FooterRow extends Serializable {
 
     /**
      * Returns the cell on this row corresponding to the given column id.
+     *
+     * @see Column#setId(String)
      *
      * @param columnId
      *            the id of the column whose footer cell to get, not null

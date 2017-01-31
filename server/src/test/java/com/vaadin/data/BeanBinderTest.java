@@ -48,7 +48,7 @@ public class BeanBinderTest
 
     @Before
     public void setUp() {
-        binder = new Binder<>(BeanToValidate.class);
+        binder = new BeanValidationBinder<>(BeanToValidate.class);
         item = new BeanToValidate();
         item.setFirstname("Johannes");
         item.setAge(32);
