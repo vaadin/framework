@@ -68,7 +68,7 @@ public class DateField extends AbstractLocalDateField {
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public DateField(ValueChangeListener valueChangeListener) {
+    public DateField(ValueChangeListener<LocalDate> valueChangeListener) {
         super();
         addValueChangeListener(valueChangeListener);
     }
@@ -86,7 +86,7 @@ public class DateField extends AbstractLocalDateField {
      *            the value change listener, not {@code null}
      */
     public DateField(String caption,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<LocalDate> valueChangeListener) {
         this(valueChangeListener);
         setCaption(caption);
     }
@@ -106,7 +106,7 @@ public class DateField extends AbstractLocalDateField {
      *            the value change listener, not {@code null}
      */
     public DateField(String caption, LocalDate value,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<LocalDate> valueChangeListener) {
         this(caption, value);
         addValueChangeListener(valueChangeListener);
     }
