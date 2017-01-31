@@ -56,7 +56,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
     @Override
     protected BindingBuilder<BEAN, ?> configureBinding(
             BindingBuilder<BEAN, ?> binding,
-            BinderPropertyDefinition<BEAN, ?> definition) {
+            PropertyDefinition<BEAN, ?> definition) {
         return binding.withValidator(
                 new BeanValidator(beanType, definition.getName()));
     }

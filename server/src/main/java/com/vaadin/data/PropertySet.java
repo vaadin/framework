@@ -20,7 +20,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Describes a set of properties that can be used with a {@link Binder}.
+ * Describes a set of properties that can be used for configuration based on
+ * property names instead of setter and getter callbacks.
  *
  * @author Vaadin Ltd
  *
@@ -29,13 +30,13 @@ import java.util.stream.Stream;
  * @param <T>
  *            the type for which the properties are defined
  */
-public interface BinderPropertySet<T> extends Serializable {
+public interface PropertySet<T> extends Serializable {
     /**
      * Gets all known properties as a stream.
      *
      * @return a stream of property names, not <code>null</code>
      */
-    public Stream<BinderPropertyDefinition<T, ?>> getProperties();
+    public Stream<PropertyDefinition<T, ?>> getProperties();
 
     /**
      * Gets the definition for the named property, or an empty optional if there
@@ -46,5 +47,5 @@ public interface BinderPropertySet<T> extends Serializable {
      * @return the property definition, or empty optional if property doesn't
      *         exist
      */
-    public Optional<BinderPropertyDefinition<T, ?>> getProperty(String name);
+    public Optional<PropertyDefinition<T, ?>> getProperty(String name);
 }

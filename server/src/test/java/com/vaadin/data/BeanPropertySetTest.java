@@ -32,13 +32,13 @@ import org.junit.Test;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.tests.server.ClassesSerializableTest;
 
-public class BeanBinderPropertySetTest {
+public class BeanPropertySetTest {
     @Test
     public void testSerializeDeserialize_propertySet() throws Exception {
-        BinderPropertySet<Person> originalPropertySet = BeanBinderPropertySet
+        PropertySet<Person> originalPropertySet = BeanPropertySet
                 .get(Person.class);
 
-        BinderPropertySet<Person> deserializedPropertySet = ClassesSerializableTest
+        PropertySet<Person> deserializedPropertySet = ClassesSerializableTest
                 .serializeAndDeserialize(originalPropertySet);
 
         Assert.assertSame(
@@ -49,7 +49,7 @@ public class BeanBinderPropertySetTest {
     @Test
     public void testSerializeDeserialize_propertySet_cacheCleared()
             throws Exception {
-        BinderPropertySet<Person> originalPropertySet = BeanBinderPropertySet
+        PropertySet<Person> originalPropertySet = BeanPropertySet
                 .get(Person.class);
 
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
@@ -59,7 +59,7 @@ public class BeanBinderPropertySetTest {
 
         // Simulate deserializing into a different JVM by clearing the instance
         // map
-        Field instancesField = BeanBinderPropertySet.class
+        Field instancesField = BeanPropertySet.class
                 .getDeclaredField("instances");
         instancesField.setAccessible(true);
         Map<?, ?> instances = (Map<?, ?>) instancesField.get(null);
@@ -67,13 +67,12 @@ public class BeanBinderPropertySetTest {
 
         ObjectInputStream in = new ObjectInputStream(
                 new ByteArrayInputStream(data));
-        BinderPropertySet<Person> deserializedPropertySet = (BinderPropertySet<Person>) in
+        PropertySet<Person> deserializedPropertySet = (PropertySet<Person>) in
                 .readObject();
 
         Assert.assertSame(
                 "Deserialized instance should be the same as in the cache",
-                BeanBinderPropertySet.get(Person.class),
-                deserializedPropertySet);
+                BeanPropertySet.get(Person.class), deserializedPropertySet);
         Assert.assertNotSame(
                 "Deserialized instance should not be the same as the original",
                 originalPropertySet, deserializedPropertySet);
@@ -81,11 +80,11 @@ public class BeanBinderPropertySetTest {
 
     @Test
     public void testSerializeDeserialize_propertyDefinition() throws Exception {
-        BinderPropertyDefinition<Person, ?> definition = BeanBinderPropertySet
+        PropertyDefinition<Person, ?> definition = BeanPropertySet
                 .get(Person.class).getProperty("born")
                 .orElseThrow(RuntimeException::new);
 
-        BinderPropertyDefinition<Person, ?> deserializedDefinition = ClassesSerializableTest
+        PropertyDefinition<Person, ?> deserializedDefinition = ClassesSerializableTest
                 .serializeAndDeserialize(definition);
 
         ValueProvider<Person, ?> getter = deserializedDefinition.getGetter();
@@ -97,19 +96,17 @@ public class BeanBinderPropertySetTest {
 
         Assert.assertSame(
                 "Deserialized instance should be the same as in the cache",
-                BeanBinderPropertySet.get(Person.class).getProperty("born")
+                BeanPropertySet.get(Person.class).getProperty("born")
                         .orElseThrow(RuntimeException::new),
                 deserializedDefinition);
     }
 
     @Test
     public void properties() {
-        BinderPropertySet<Person> propertySet = BeanBinderPropertySet
-                .get(Person.class);
+        PropertySet<Person> propertySet = BeanPropertySet.get(Person.class);
 
         Set<String> propertyNames = propertySet.getProperties()
-                .map(BinderPropertyDefinition::getName)
-                .collect(Collectors.toSet());
+                .map(PropertyDefinition::getName).collect(Collectors.toSet());
 
         Assert.assertEquals(new HashSet<>(Arrays.asList("name", "born")),
                 propertyNames);

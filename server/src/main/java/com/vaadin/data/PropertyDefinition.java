@@ -21,17 +21,17 @@ import java.util.Optional;
 import com.vaadin.server.Setter;
 
 /**
- * A property from a {@link BinderPropertySet}.
+ * A property from a {@link PropertySet}.
  *
  * @author Vaadin Ltd
  * @since
  *
  * @param <T>
- *            the type of the binder property set
+ *            the type of the property set
  * @param <V>
  *            the property type
  */
-public interface BinderPropertyDefinition<T, V> extends Serializable {
+public interface PropertyDefinition<T, V> extends Serializable {
     /**
      * Gets the value provider that is used for finding the value of this
      * property for a bean.
@@ -62,9 +62,16 @@ public interface BinderPropertyDefinition<T, V> extends Serializable {
     public String getName();
 
     /**
-     * Gets the {@link BinderPropertySet} that this property belongs to.
+     * Gets the human readable caption to show for this property.
      *
-     * @return the binder property set, not <code>null</code>
+     * @return the caption to show, not <code>null</code>
      */
-    public BinderPropertySet<T> getPropertySet();
+    public String getCaption();
+
+    /**
+     * Gets the {@link PropertySet} that this property belongs to.
+     *
+     * @return the property set, not <code>null</code>
+     */
+    public PropertySet<T> getPropertySet();
 }

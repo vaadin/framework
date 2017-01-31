@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -194,7 +193,7 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Completes this binding by connecting the field to the property with
          * the given name. The getter and setter of the property are looked up
-         * using a {@link BinderPropertySet}.
+         * using a {@link PropertySet}.
          * <p>
          * For a <code>Binder</code> created using the
          * {@link Binder#Binder(Class)} constructor, introspection will be used
@@ -216,7 +215,7 @@ public class Binder<BEAN> implements Serializable {
          *             if the property has no accessible getter
          * @throws IllegalStateException
          *             if the binder is not configured with an appropriate
-         *             {@link BinderPropertySet}
+         *             {@link PropertySet}
          *
          * @see Binder.BindingBuilder#bind(ValueProvider, Setter)
          */
@@ -607,7 +606,7 @@ public class Binder<BEAN> implements Serializable {
                     "Property name cannot be null");
             checkUnbound();
 
-            BinderPropertyDefinition<BEAN, ?> definition = getBinder().propertySet
+            PropertyDefinition<BEAN, ?> definition = getBinder().propertySet
                     .getProperty(propertyName)
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Could not resolve property name " + propertyName
@@ -626,9 +625,11 @@ public class Binder<BEAN> implements Serializable {
                     definition);
 
             try {
-                return ((BindingBuilder) finalBinding).bind(getter, setter);
+                Binding binding = ((BindingBuilder) finalBinding).bind(getter,
+                        setter);
+                getBinder().boundProperties.put(propertyName, binding);
+                return binding;
             } finally {
-                getBinder().boundProperties.add(propertyName);
                 getBinder().incompleteMemberFieldBindings.remove(getField());
             }
         }
@@ -1042,12 +1043,12 @@ public class Binder<BEAN> implements Serializable {
         }
     }
 
-    private final BinderPropertySet<BEAN> propertySet;
+    private final PropertySet<BEAN> propertySet;
 
     /**
      * Property names that have been used for creating a binding.
      */
-    private final Set<String> boundProperties = new HashSet<>();
+    private final Map<String, Binding<BEAN, ?>> boundProperties = new HashMap<>();
 
     private final Map<HasValue<?>, BindingBuilder<BEAN, ?>> incompleteMemberFieldBindings = new IdentityHashMap<>();
 
@@ -1070,16 +1071,15 @@ public class Binder<BEAN> implements Serializable {
     private boolean hasChanges = false;
 
     /**
-     * Creates a binder using a custom {@link BinderPropertySet} implementation
-     * for finding and resolving property names for
+     * Creates a binder using a custom {@link PropertySet} implementation for
+     * finding and resolving property names for
      * {@link #bindInstanceFields(Object)}, {@link #bind(HasValue, String)} and
      * {@link BindingBuilder#bind(String)}.
      *
      * @param propertySet
-     *            the binder property set implementation to use, not
-     *            <code>null</code>.
+     *            the property set implementation to use, not <code>null</code>.
      */
-    protected Binder(BinderPropertySet<BEAN> propertySet) {
+    protected Binder(PropertySet<BEAN> propertySet) {
         Objects.requireNonNull(propertySet, "propertySet cannot be null");
         this.propertySet = propertySet;
     }
@@ -1092,7 +1092,7 @@ public class Binder<BEAN> implements Serializable {
      *            the bean type to use, not <code>null</code>
      */
     public Binder(Class<BEAN> beanType) {
-        this(BeanBinderPropertySet.get(beanType));
+        this(BeanPropertySet.get(beanType));
     }
 
     /**
@@ -1104,15 +1104,15 @@ public class Binder<BEAN> implements Serializable {
      * {@link #bind(HasValue, String)} or {@link BindingBuilder#bind(String)}.
      */
     public Binder() {
-        this(new BinderPropertySet<BEAN>() {
+        this(new PropertySet<BEAN>() {
             @Override
-            public Stream<BinderPropertyDefinition<BEAN, ?>> getProperties() {
+            public Stream<PropertyDefinition<BEAN, ?>> getProperties() {
                 throw new IllegalStateException(
                         "A Binder created with the default constructor doesn't support listing properties.");
             }
 
             @Override
-            public Optional<BinderPropertyDefinition<BEAN, ?>> getProperty(
+            public Optional<PropertyDefinition<BEAN, ?>> getProperty(
                     String name) {
                 throw new IllegalStateException(
                         "A Binder created with the default constructor doesn't support finding properties by name.");
@@ -1121,8 +1121,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Creates a binder using a custom {@link BinderPropertySet} implementation
-     * for finding and resolving property names for
+     * Creates a binder using a custom {@link PropertySet} implementation for
+     * finding and resolving property names for
      * {@link #bindInstanceFields(Object)}, {@link #bind(HasValue, String)} and
      * {@link BindingBuilder#bind(String)}.
      * <p>
@@ -1135,13 +1135,12 @@ public class Binder<BEAN> implements Serializable {
      * @see Binder#Binder(Class)
      *
      * @param propertySet
-     *            the binder property set implementation to use, not
-     *            <code>null</code>.
+     *            the property set implementation to use, not <code>null</code>.
      * @return a new binder using the provided property set, not
      *         <code>null</code>
      */
     public static <BEAN> Binder<BEAN> withPropertySet(
-            BinderPropertySet<BEAN> propertySet) {
+            PropertySet<BEAN> propertySet) {
         return new Binder<>(propertySet);
     }
 
@@ -1270,7 +1269,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Binds the given field to the property with the given name. The getter and
-     * setter of the property are looked up using a {@link BinderPropertySet}.
+     * setter of the property are looked up using a {@link PropertySet}.
      * <p>
      * For a <code>Binder</code> created using the {@link Binder#Binder(Class)}
      * constructor, introspection will be used to find a Java Bean property. If
@@ -1295,7 +1294,7 @@ public class Binder<BEAN> implements Serializable {
      *             if the property has no accessible getter
      * @throws IllegalStateException
      *             if the binder is not configured with an appropriate
-     *             {@link BinderPropertySet}
+     *             {@link PropertySet}
      *
      * @see #bind(HasValue, ValueProvider, Setter)
      */
@@ -1939,7 +1938,7 @@ public class Binder<BEAN> implements Serializable {
     /**
      * Configures the {@code binding} with the property definition
      * {@code definition} before it's being bound.
-     * 
+     *
      * @param binding
      *            a binding to configure
      * @param definition
@@ -1948,7 +1947,7 @@ public class Binder<BEAN> implements Serializable {
      */
     protected BindingBuilder<BEAN, ?> configureBinding(
             BindingBuilder<BEAN, ?> binding,
-            BinderPropertyDefinition<BEAN, ?> definition) {
+            PropertyDefinition<BEAN, ?> definition) {
         return binding;
     }
 
@@ -2192,7 +2191,7 @@ public class Binder<BEAN> implements Serializable {
 
     private void handleProperty(Field field, Object objectWithMemberFields,
             BiConsumer<String, Class<?>> propertyHandler) {
-        Optional<BinderPropertyDefinition<BEAN, ?>> descriptor = getPropertyDescriptor(
+        Optional<PropertyDefinition<BEAN, ?>> descriptor = getPropertyDescriptor(
                 field);
 
         if (!descriptor.isPresent()) {
@@ -2200,7 +2199,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         String propertyName = descriptor.get().getName();
-        if (boundProperties.contains(propertyName)) {
+        if (boundProperties.containsKey(propertyName)) {
             return;
         }
 
@@ -2212,10 +2211,25 @@ public class Binder<BEAN> implements Serializable {
         }
 
         propertyHandler.accept(propertyName, descriptor.get().getType());
-        boundProperties.add(propertyName);
+        assert boundProperties.containsKey(propertyName);
     }
 
-    private Optional<BinderPropertyDefinition<BEAN, ?>> getPropertyDescriptor(
+    /**
+     * Gets the binding for a property name. Bindings are available by property
+     * name if bound using {@link #bind(HasValue, String)},
+     * {@link BindingBuilder#bind(String)} or indirectly using
+     * {@link #bindInstanceFields(Object)}.
+     *
+     * @param propertyName
+     *            the property name of the binding to get
+     * @return the binding corresponding to the property name, or an empty
+     *         optional if there is no binding with that property name
+     */
+    public Optional<Binding<BEAN, ?>> getBinding(String propertyName) {
+        return Optional.ofNullable(boundProperties.get(propertyName));
+    }
+
+    private Optional<PropertyDefinition<BEAN, ?>> getPropertyDescriptor(
             Field field) {
         PropertyId propertyIdAnnotation = field.getAnnotation(PropertyId.class);
 
@@ -2229,8 +2243,7 @@ public class Binder<BEAN> implements Serializable {
 
         String minifiedFieldName = minifyFieldName(propertyId);
 
-        return propertySet.getProperties()
-                .map(BinderPropertyDefinition::getName)
+        return propertySet.getProperties().map(PropertyDefinition::getName)
                 .filter(name -> minifyFieldName(name).equals(minifiedFieldName))
                 .findFirst().flatMap(propertySet::getProperty);
     }
