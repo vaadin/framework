@@ -32,10 +32,11 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.server.Setter;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.util.ReflectTools;
 
 /**
- * A {@link BinderPropertySet} that uses reflection to find bean properties.
+ * A {@link PropertySet} that uses reflection to find bean properties.
  *
  * @author Vaadin Ltd
  *
@@ -44,7 +45,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the type of the bean
  */
-public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
+public class BeanPropertySet<T> implements PropertySet<T> {
 
     /**
      * Serialized form of a property set. When deserialized, the property set
@@ -52,7 +53,7 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
      * existing cached instance or creates a new one.
      *
      * @see #readResolve()
-     * @see BeanBinderPropertyDefinition#writeReplace()
+     * @see BeanPropertyDefinition#writeReplace()
      */
     private static class SerializedPropertySet implements Serializable {
         private final Class<?> beanType;
@@ -77,7 +78,7 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
      * definition is then fetched from the property set.
      *
      * @see #readResolve()
-     * @see BeanBinderPropertySet#writeReplace()
+     * @see BeanPropertySet#writeReplace()
      */
     private static class SerializedPropertyDefinition implements Serializable {
         private final Class<?> beanType;
@@ -102,14 +103,13 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
         }
     }
 
-    private static class BeanBinderPropertyDefinition<T, V>
-            implements BinderPropertyDefinition<T, V> {
+    private static class BeanPropertyDefinition<T, V>
+            implements PropertyDefinition<T, V> {
 
         private final PropertyDescriptor descriptor;
-        private final BeanBinderPropertySet<T> propertySet;
+        private final BeanPropertySet<T> propertySet;
 
-        public BeanBinderPropertyDefinition(
-                BeanBinderPropertySet<T> propertySet,
+        public BeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDescriptor descriptor) {
             this.propertySet = propertySet;
             this.descriptor = descriptor;
@@ -156,7 +156,12 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
         }
 
         @Override
-        public BeanBinderPropertySet<T> getPropertySet() {
+        public String getCaption() {
+            return SharedUtil.propertyIdToHumanFriendly(getName());
+        }
+
+        @Override
+        public BeanPropertySet<T> getPropertySet() {
             return propertySet;
         }
 
@@ -171,21 +176,21 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
         }
     }
 
-    private static final ConcurrentMap<Class<?>, BeanBinderPropertySet<?>> instances = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, BeanPropertySet<?>> instances = new ConcurrentHashMap<>();
 
     private final Class<T> beanType;
 
-    private final Map<String, BinderPropertyDefinition<T, ?>> definitions;
+    private final Map<String, PropertyDefinition<T, ?>> definitions;
 
-    private BeanBinderPropertySet(Class<T> beanType) {
+    private BeanPropertySet(Class<T> beanType) {
         this.beanType = beanType;
 
         try {
             definitions = BeanUtil.getBeanPropertyDescriptors(beanType).stream()
-                    .filter(BeanBinderPropertySet::hasNonObjectReadMethod)
-                    .map(descriptor -> new BeanBinderPropertyDefinition<>(this,
+                    .filter(BeanPropertySet::hasNonObjectReadMethod)
+                    .map(descriptor -> new BeanPropertyDefinition<>(this,
                             descriptor))
-                    .collect(Collectors.toMap(BinderPropertyDefinition::getName,
+                    .collect(Collectors.toMap(PropertyDefinition::getName,
                             Function.identity()));
         } catch (IntrospectionException e) {
             throw new IllegalArgumentException(
@@ -196,28 +201,28 @@ public class BeanBinderPropertySet<T> implements BinderPropertySet<T> {
     }
 
     /**
-     * Gets a {@link BeanBinderPropertySet} for the given bean type.
+     * Gets a {@link BeanPropertySet} for the given bean type.
      *
      * @param beanType
      *            the bean type to get a property set for, not <code>null</code>
      * @return the bean binder property set, not <code>null</code>
      */
     @SuppressWarnings("unchecked")
-    public static <T> BinderPropertySet<T> get(Class<? extends T> beanType) {
+    public static <T> PropertySet<T> get(Class<? extends T> beanType) {
         Objects.requireNonNull(beanType, "Bean type cannot be null");
 
         // Cache the reflection results
-        return (BinderPropertySet<T>) instances.computeIfAbsent(beanType,
-                BeanBinderPropertySet::new);
+        return (PropertySet<T>) instances.computeIfAbsent(beanType,
+                BeanPropertySet::new);
     }
 
     @Override
-    public Stream<BinderPropertyDefinition<T, ?>> getProperties() {
+    public Stream<PropertyDefinition<T, ?>> getProperties() {
         return definitions.values().stream();
     }
 
     @Override
-    public Optional<BinderPropertyDefinition<T, ?>> getProperty(String name) {
+    public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
         return Optional.ofNullable(definitions.get(name));
     }
 

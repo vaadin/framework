@@ -41,10 +41,13 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.vaadin.data.BeanPropertySet;
 import com.vaadin.data.Binder;
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.HasValue;
+import com.vaadin.data.PropertyDefinition;
+import com.vaadin.data.PropertySet;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
@@ -1609,7 +1612,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            a setter that stores the component value in the row item
          * @return this column
          *
+         * @see #setEditorBinding(Binding)
          * @see Grid#getEditor()
+         * @see Binder#bind(HasValue, ValueProvider, Setter)
          */
         public <C extends HasValue<V> & Component> Column<T, V> setEditorComponent(
                 C editorComponent, Setter<T, V> setter) {
@@ -1619,6 +1624,48 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             Binding<T, V> binding = getGrid().getEditor().getBinder()
                     .bind(editorComponent, valueProvider::apply, setter);
+
+            return setEditorBinding(binding);
+        }
+
+        /**
+         * Sets a component to use for editing values of this columns in the
+         * editor row. This method can only be used if the column has an
+         * {@link #setId(String) id} and the {@link Grid} has been initialized
+         * with a {@link PropertySet} that supports the id of this column. Grid
+         * can be created with a suitable property set using the
+         * {@link #Grid(Class)} constructor or
+         * {@link Grid#withPropertySet(PropertySet)} factory method.
+         * <p>
+         * This is a shorthand for use in simple cases where no validator or
+         * converter is needed. Use {@link #setEditorBinding(Binding)} to
+         * support more complex cases.
+         * <p>
+         * <strong>Note:</strong> The same component cannot be used for multiple
+         * columns.
+         *
+         * @param editorComponent
+         *            the editor component
+         * @return this column
+         *
+         * @see #setEditorBinding(Binding)
+         * @see Grid#getEditor()
+         * @see Binder#bind(HasValue, String)
+         */
+        public <F, C extends HasValue<F> & Component> Column<T, V> setEditorComponent(
+                C editorComponent) {
+            Objects.requireNonNull(editorComponent,
+                    "Editor component cannot be null");
+
+            String propertyName = getId();
+            if (propertyName == null) {
+                throw new IllegalStateException(
+                        "setEditorComponent without a setter can only be used if the column has an id. "
+                                + "Use another overload or setEditorBinding instead.");
+            }
+
+            Binding<T, F> binding = getGrid().getEditor().getBinder()
+                    .bind(editorComponent, propertyName);
 
             return setEditorBinding(binding);
         }
@@ -1851,10 +1898,57 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     private Editor<T> editor;
 
+    private final PropertySet<T> propertySet;
+
     /**
-     * Constructor for the {@link Grid} component.
+     * Creates a new grid without support for creating columns based on property
+     * names. Use an alternative constructor, such as {@link Grid#Grid(Class)},
+     * to create a grid that automatically configures columns based on the type
+     * of presented data.
      */
     public Grid() {
+        this(new PropertySet<T>() {
+            @Override
+            public Stream<PropertyDefinition<T, ?>> getProperties() {
+                // No columns configured by default
+                return Stream.empty();
+            }
+
+            @Override
+            public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
+                throw new IllegalStateException(
+                        "A Grid created without a bean type class literal or a custom property set"
+                                + " doesn't support finding properties by name.");
+            }
+        });
+    }
+
+    /**
+     * Creates a new grid that uses reflection based on the provided bean type
+     * to automatically configure an initial set of columns.
+     *
+     * @param beanType
+     *            the bean type to use, not <code>null</code>
+     */
+    public Grid(Class<T> beanType) {
+        this(BeanPropertySet.get(beanType));
+    }
+
+    /**
+     * Creates a grid using a custom {@link PropertySet} implementation for
+     * configuring the initial columns and resolving property names for
+     * {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     *
+     * @see #withPropertySet(PropertySet)
+     *
+     * @param propertySet
+     *            the property set implementation to use, not <code>null</code>.
+     */
+    protected Grid(PropertySet<T> propertySet) {
+        Objects.requireNonNull(propertySet, "propertySet cannot be null");
+        this.propertySet = propertySet;
+
         registerRpc(new GridServerRpcImpl());
 
         setDefaultHeaderRow(appendHeaderRow());
@@ -1882,6 +1976,33 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 }
             }
         });
+
+        // Automatically add columns for all available properties
+        propertySet.getProperties().map(PropertyDefinition::getName)
+                .forEach(this::addColumn);
+    }
+
+    /**
+     * Creates a grid using a custom {@link PropertySet} implementation for
+     * creating a default set of columns and for resolving property names with
+     * {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     * <p>
+     * This functionality is provided as static method instead of as a public
+     * constructor in order to make it possible to use a custom property set
+     * without creating a subclass while still leaving the public constructors
+     * focused on the common use cases.
+     *
+     * @see Grid#Grid()
+     * @see Grid#Grid(Class)
+     *
+     * @param propertySet
+     *            the property set implementation to use, not <code>null</code>.
+     * @return a new grid using the provided property set, not <code>null</code>
+     */
+    public static <BEAN> Grid<BEAN> withPropertySet(
+            PropertySet<BEAN> propertySet) {
+        return new Grid<>(propertySet);
     }
 
     /**
@@ -1937,6 +2058,32 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             boolean hidden, boolean userOriginated) {
         fireEvent(new ColumnVisibilityChangeEvent(this, column, hidden,
                 userOriginated));
+    }
+
+    /**
+     * Adds a new column with the given property name. The property name will be
+     * used as the {@link Column#getId() column id} and the
+     * {@link Column#getCaption() column caption} will be set based on the
+     * property definition.
+     * <p>
+     * This method can only be used for a <code>Grid</code> created using
+     * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     *
+     * @param propertyName
+     *            the property name of the new column, not <code>null</code>
+     * @return the newly added column, not <code>null</code>
+     */
+    public Column<T, ?> addColumn(String propertyName) {
+        Objects.requireNonNull(propertyName, "Property name cannot be null");
+
+        PropertyDefinition<T, ?> definition = propertySet
+                .getProperty(propertyName)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Could not resolve property name " + propertyName
+                                + " from " + propertySet));
+
+        return addColumn(definition.getGetter()).setId(definition.getName())
+                .setCaption(definition.getCaption());
     }
 
     /**
@@ -2070,7 +2217,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param columnId
      *            the identifier of the column to get
-     * @return the column corresponding to the given column identifier
+     * @return the column corresponding to the given column identifier, or
+     *         <code>null</code> if there is no such column
      */
     public Column<T, ?> getColumn(String columnId) {
         return columnIds.get(columnId);
@@ -2983,7 +3131,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return editor
      */
     protected Editor<T> createEditor() {
-        return new EditorImpl<>();
+        return new EditorImpl<>(propertySet);
     }
 
     private void addExtensionComponent(Component c) {
