@@ -68,14 +68,14 @@ public class InlineDateField extends AbstractLocalDateField {
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public InlineDateField(ValueChangeListener valueChangeListener) {
+    public InlineDateField(ValueChangeListener<LocalDate> valueChangeListener) {
         super();
         addValueChangeListener(valueChangeListener);
     }
 
     /**
-     * Constructs a new {@code InlineDateField} with the given caption and a value
-     * change listener.
+     * Constructs a new {@code InlineDateField} with the given caption and a
+     * value change listener.
      * <p>
      * The listener is called when the value of this {@code InlineDateField} is
      * changed either by the user or programmatically.
@@ -86,7 +86,7 @@ public class InlineDateField extends AbstractLocalDateField {
      *            the value change listener, not {@code null}
      */
     public InlineDateField(String caption,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<LocalDate> valueChangeListener) {
         this(valueChangeListener);
         setCaption(caption);
     }
@@ -106,7 +106,7 @@ public class InlineDateField extends AbstractLocalDateField {
      *            the value change listener, not {@code null}
      */
     public InlineDateField(String caption, LocalDate value,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<LocalDate> valueChangeListener) {
         this(caption, value);
         addValueChangeListener(valueChangeListener);
     }

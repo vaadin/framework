@@ -72,7 +72,7 @@ public class TextField extends AbstractTextField {
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public TextField(ValueChangeListener valueChangeListener) {
+    public TextField(ValueChangeListener<String> valueChangeListener) {
         addValueChangeListener(valueChangeListener);
     }
 
@@ -88,7 +88,8 @@ public class TextField extends AbstractTextField {
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public TextField(String caption, ValueChangeListener valueChangeListener) {
+    public TextField(String caption,
+            ValueChangeListener<String> valueChangeListener) {
         this(valueChangeListener);
         setCaption(caption);
     }
@@ -108,7 +109,7 @@ public class TextField extends AbstractTextField {
      *            the value change listener, not {@code null}
      */
     public TextField(String caption, String value,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<String> valueChangeListener) {
         this(caption, value);
         addValueChangeListener(valueChangeListener);
     }

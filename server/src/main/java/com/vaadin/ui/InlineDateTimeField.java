@@ -60,25 +60,27 @@ public class InlineDateTimeField extends AbstractLocalDateTimeField {
     }
 
     /**
-     * Constructs a new {@code InlineDateTimeField} with a value change listener.
+     * Constructs a new {@code InlineDateTimeField} with a value change
+     * listener.
      * <p>
-     * The listener is called when the value of this {@code InlineDateTimeField} is
-     * changed either by the user or programmatically.
+     * The listener is called when the value of this {@code InlineDateTimeField}
+     * is changed either by the user or programmatically.
      *
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public InlineDateTimeField(ValueChangeListener valueChangeListener) {
+    public InlineDateTimeField(
+            ValueChangeListener<LocalDateTime> valueChangeListener) {
         super();
         addValueChangeListener(valueChangeListener);
     }
 
     /**
-     * Constructs a new {@code InlineDateTimeField} with the given caption and a value
-     * change listener.
+     * Constructs a new {@code InlineDateTimeField} with the given caption and a
+     * value change listener.
      * <p>
-     * The listener is called when the value of this {@code InlineDateTimeField} is
-     * changed either by the user or programmatically.
+     * The listener is called when the value of this {@code InlineDateTimeField}
+     * is changed either by the user or programmatically.
      *
      * @param caption
      *            the caption for the field
@@ -86,17 +88,17 @@ public class InlineDateTimeField extends AbstractLocalDateTimeField {
      *            the value change listener, not {@code null}
      */
     public InlineDateTimeField(String caption,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<LocalDateTime> valueChangeListener) {
         this(valueChangeListener);
         setCaption(caption);
     }
 
     /**
-     * Constructs a new {@code InlineDateTimeField} with the given caption, initial
-     * text contents and a value change listener.
+     * Constructs a new {@code InlineDateTimeField} with the given caption,
+     * initial text contents and a value change listener.
      * <p>
-     * The listener is called when the value of this {@code InlineDateTimeField} is
-     * changed either by the user or programmatically.
+     * The listener is called when the value of this {@code InlineDateTimeField}
+     * is changed either by the user or programmatically.
      *
      * @param caption
      *            the caption for the field
@@ -106,7 +108,7 @@ public class InlineDateTimeField extends AbstractLocalDateTimeField {
      *            the value change listener, not {@code null}
      */
     public InlineDateTimeField(String caption, LocalDateTime value,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<LocalDateTime> valueChangeListener) {
         this(caption, value);
         addValueChangeListener(valueChangeListener);
     }

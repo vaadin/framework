@@ -89,7 +89,7 @@ public class RichTextArea extends AbstractField<String>
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
-    public RichTextArea(ValueChangeListener valueChangeListener) {
+    public RichTextArea(ValueChangeListener<String> valueChangeListener) {
         addValueChangeListener(valueChangeListener);
     }
 
@@ -106,7 +106,7 @@ public class RichTextArea extends AbstractField<String>
      *            the value change listener, not {@code null}
      */
     public RichTextArea(String caption,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<String> valueChangeListener) {
         this(valueChangeListener);
         setCaption(caption);
     }
@@ -126,7 +126,7 @@ public class RichTextArea extends AbstractField<String>
      *            the value change listener, not {@code null}
      */
     public RichTextArea(String caption, String value,
-            ValueChangeListener valueChangeListener) {
+            ValueChangeListener<String> valueChangeListener) {
         this(caption, value);
         addValueChangeListener(valueChangeListener);
     }

@@ -692,11 +692,12 @@ editor. In the editor, the input fields can be edited, as well as navigated with
 kbd:[Tab] and kbd:[Shift+Tab] keys. If validation fails, an error is displayed and the user
 can correct the inputs.
 
-The [classname]#Editor# is accessible via [methodname]#getEditor()#, and to enable editing, you need to call [methodname]#setEnabled(true) on it.
+The [classname]#Editor# is accessible via [methodname]#getEditor()#, and to enable editing, you need to call [methodname]#setEnabled(true)# on it.
 
-The editor is based on [classname]#Binder# which is used to bind the data
-to the editor. See <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder.
-The [classname]#Binder# needs to be set with [methodname]#setBinder# in [classname]#Editor#.
+The editor is based on [classname]#Binder# which is used to bind the data to the editor.
+See <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder#.
+For each column that should be editable, a binding should be created in the editor binder and then the column is configured to use that binding.
+For simple cases where no conversion or validation is needed, it is also possible to directly use `setEditorComponent` on a `Column` to only define the editor component and a setter that updates the row object when saving.
 
 [source, java]
 ----
@@ -707,26 +708,22 @@ Grid<Todo> grid = new Grid<>();
 
 TextField taskField = new TextField();
 CheckBox doneField = new CheckBox();
-Binder<Todo> binder = new Binder<>();
 
-binder.bind(taskField, Todo::getTask, Todo::setTask);
-binder.bind(doneField, Todo::isDone, Todo::setDone);
+Binder<Todo> binder = grid.getEditor().getBinder();
 
-grid.getEditor().setBinder(binder);
-grid.getEditor().setEnabled(true);
+Binding<Todo, Boolean> doneBinding = binder.bind(
+    doneField, Todo::isDone, Todo::setDone);
 
-Column<Todo, String> column = grid
-        .addColumn(todo -> String.valueOf(todo.isDone()));
+Column<Todo, String> column = grid.addColumn(
+    todo -> String.valueOf(todo.isDone()));
 column.setWidth(75);
-column.setEditorComponent(doneField);
+column.setEditorBinding(doneBinding);
 
-grid.addColumn(Todo::getTask).setEditorComponent(taskField);
+grid.addColumn(Todo::getTask).setEditorComponent(
+    taskField, Todo::setTask).setExpandRatio(1);
+
+grid.getEditor().setEnabled(true);
 ----
-
-It is possible to customize the used editor component for each column and row,
-by using [methodname]#setEditorComponentGenerator(EditorComponentGenerator)# in
-[classname]#Column#.
-
 
 [[components.grid.editing.buffered]]
 === Buffered / Unbuffered Mode
