@@ -10,16 +10,6 @@
     <artifactId>vaadin-test-vaadin7-widget-set</artifactId>
     <packaging>war</packaging>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-test-widget-set-testutil</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
