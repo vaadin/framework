@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
@@ -928,6 +929,7 @@ public class Binder<BEAN> implements Serializable {
                     binderValidationResults);
             getBinder().getValidationStatusHandler().statusChange(status);
             getBinder().fireStatusChangeEvent(status.hasErrors());
+            getBinder().fireValueChangeEvent(event);
         }
 
         /**
@@ -1735,6 +1737,29 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * Adds field value change listener to all the fields in the binder.
+     * <p>
+     * Added listener is notified every time whenever any bound field value is
+     * changed. The same functionality can be achieved by adding a
+     * {@link ValueChangeListener} to all fields in the {@link Binder}.
+     * <p>
+     * The listener is added to all fields regardless of whether the method is
+     * invoked before or after field is bound.
+     * 
+     * @see ValueChangeEvent
+     * @see ValueChangeListener
+     *
+     * @param listener
+     *            a field value change listener
+     * @return a registration for the listener
+     */
+    public Registration addValueChangeListener(
+            ValueChangeListener<?> listener) {
+        return getEventRouter().addListener(ValueChangeEvent.class, listener,
+                ValueChangeListener.class.getDeclaredMethods()[0]);
+    }
+
+    /**
      * Creates a new binding with the given field.
      *
      * @param <FIELDVALUE>
@@ -2239,4 +2264,7 @@ public class Binder<BEAN> implements Serializable {
         return fieldName.toLowerCase(Locale.ENGLISH).replace("_", "");
     }
 
+    private <V> void fireValueChangeEvent(ValueChangeEvent<V> event) {
+        getEventRouter().fireEvent(event);
+    }
 }
