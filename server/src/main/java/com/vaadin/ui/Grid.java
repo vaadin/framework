@@ -6859,6 +6859,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
     }
 
+    /**
+     * Refreshes, i.e. causes the client side to re-render all rows.
+     */
+    public void refreshAllRows() {
+        datasourceExtension.refreshCache();
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(Grid.class.getName());
     }
