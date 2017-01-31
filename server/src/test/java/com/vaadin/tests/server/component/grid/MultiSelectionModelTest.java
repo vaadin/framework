@@ -17,6 +17,7 @@ package com.vaadin.tests.server.component.grid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
@@ -28,8 +29,11 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.shared.ui.grid.selection.MultiSelectionModelServerRpc;
 import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
+import com.vaadin.ui.ComponentTest;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionModel.HasUserSelectionAllowed;
 
 public class MultiSelectionModelTest {
 
@@ -187,4 +191,41 @@ public class MultiSelectionModelTest {
         }
         Assert.fail("Not all items were correctly selected");
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void refuseSelectWhenUserSelectionDisallowed() {
+        ((HasUserSelectionAllowed) grid.getSelectionModel())
+                .setUserSelectionAllowed(false);
+        MultiSelectionModelServerRpc serverRpc = ComponentTest.getRpcProxy(
+                grid.getSelectionModel(), MultiSelectionModelServerRpc.class);
+        serverRpc.select(Collections.singletonList("a"));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void refuseDeselectWhenUserSelectionDisallowed() {
+        ((HasUserSelectionAllowed) grid.getSelectionModel())
+                .setUserSelectionAllowed(false);
+        MultiSelectionModelServerRpc serverRpc = ComponentTest.getRpcProxy(
+                grid.getSelectionModel(), MultiSelectionModelServerRpc.class);
+        serverRpc.deselect(Collections.singletonList("a"));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void refuseSelectAllWhenUserSelectionDisallowed() {
+        ((HasUserSelectionAllowed) grid.getSelectionModel())
+                .setUserSelectionAllowed(false);
+        MultiSelectionModelServerRpc serverRpc = ComponentTest.getRpcProxy(
+                grid.getSelectionModel(), MultiSelectionModelServerRpc.class);
+        serverRpc.selectAll();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void refuseDeselectAllWhenUserSelectionDisallowed() {
+        ((HasUserSelectionAllowed) grid.getSelectionModel())
+                .setUserSelectionAllowed(false);
+        MultiSelectionModelServerRpc serverRpc = ComponentTest.getRpcProxy(
+                grid.getSelectionModel(), MultiSelectionModelServerRpc.class);
+        serverRpc.deselectAll();
+    }
+
 }
