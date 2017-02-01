@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -2175,6 +2176,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Removes the column with the given column id.
+     *
+     * @see #removeColumn(Column)
+     * @see Column#setId(String)
+     *
+     * @param columnId
+     *            the id of the column to remove, not <code>null</code>
+     */
+    public void removeColumn(String columnId) {
+        removeColumn(requireColumnById(columnId));
+    }
+
+    /**
      * Sets the details component generator.
      *
      * @param generator
@@ -2233,6 +2247,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public Column<T, ?> getColumn(String columnId) {
         return columnIds.get(columnId);
+    }
+
+    private Column<T, ?> requireColumnById(String columnId) {
+        Objects.requireNonNull(columnId, "Column id cannot be null");
+        Column<T, ?> column = getColumn(columnId);
+        if (column == null) {
+            throw new IllegalStateException(
+                    "There is no column with the id " + columnId);
+        }
+        return column;
     }
 
     @Override
@@ -2804,26 +2828,35 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Sets the columns and their order for the grid. Columns currently in this
-     * grid that are not present in columns are removed. Similarly, any new
-     * column in columns will be added to this grid.
+     * Sets the columns and their order based on their column ids. Columns
+     * currently in this grid that are not present in the list of column ids are
+     * removed. This includes any column that has no id. Similarly, any new
+     * column in columns will be added to this grid. New columns can only be
+     * added for a <code>Grid</code> created using {@link Grid#Grid(Class)} or
+     * {@link #withPropertySet(PropertySet)}.
      *
-     * @param columns
-     *            the columns to set
+     *
+     * @param columnIds
+     *            the column ids to set
+     *
+     * @see Column#setId(String)
      */
-    public void setColumns(Column<T, ?>... columns) {
-        List<Column<T, ?>> currentColumns = getColumns();
-        Set<Column<T, ?>> removeColumns = new HashSet<>(currentColumns);
-        Set<Column<T, ?>> addColumns = Arrays.stream(columns)
-                .collect(Collectors.toSet());
+    public void setColumns(String... columnIds) {
+        // Must extract to an explicitly typed variable because otherwise javac
+        // cannot determine which overload of setColumnOrder to use
+        Column<T, ?>[] newColumnOrder = Stream.of(columnIds)
+                .map((Function<String, Column<T, ?>>) id -> {
+                    Column<T, ?> column = getColumn(id);
+                    if (column == null) {
+                        column = addColumn(id);
+                    }
+                    return column;
+                }).toArray(Column[]::new);
+        setColumnOrder(newColumnOrder);
 
-        removeColumns.removeAll(addColumns);
-        removeColumns.stream().forEach(this::removeColumn);
-
-        addColumns.removeAll(currentColumns);
-        addColumns.stream().forEach(c -> addColumn(getIdentifier(c), c));
-
-        setColumnOrder(columns);
+        // The columns to remove are now at the end of the column list
+        getColumns().stream().skip(columnIds.length)
+                .forEach(this::removeColumn);
     }
 
     private String getIdentifier(Column<T, ?> column) {
@@ -2848,16 +2881,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the columns in the order they should be
      */
     public void setColumnOrder(Column<T, ?>... columns) {
+        setColumnOrder(Stream.of(columns));
+    }
+
+    private void setColumnOrder(Stream<Column<T, ?>> columns) {
         List<String> columnOrder = new ArrayList<>();
-        for (Column<T, ?> column : columns) {
+        columns.forEach(column -> {
             if (columnSet.contains(column)) {
                 columnOrder.add(column.getInternalId());
             } else {
-                throw new IllegalArgumentException(
+                throw new IllegalStateException(
                         "setColumnOrder should not be called "
                                 + "with columns that are not in the grid.");
             }
-        }
+
+        });
 
         List<String> stateColumnOrder = getState().columnOrder;
         if (stateColumnOrder.size() != columnOrder.size()) {
@@ -2867,6 +2905,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         getState().columnOrder = columnOrder;
         fireColumnReorderEvent(false);
+    }
+
+    /**
+     * Sets a new column order for the grid based on their column ids. All
+     * columns which are not ordered here will remain in the order they were
+     * before as the last columns of grid.
+     *
+     * @param columnIds
+     *            the column ids in the order they should be
+     *
+     * @see Column#setId(String)
+     */
+    public void setColumnOrder(String... columnIds) {
+        setColumnOrder(Stream.of(columnIds).map(this::requireColumnById));
     }
 
     /**
@@ -3029,7 +3081,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Sort this Grid in user-specified {@link QuerySortOrder} by a column.
+     * Sort this Grid in user-specified direction by a column.
      *
      * @param column
      *            a column to sort against
@@ -3040,6 +3092,32 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public void sort(Column<T, ?> column, SortDirection direction) {
         setSortOrder(Collections
                 .singletonList(new GridSortOrder<>(column, direction)));
+    }
+
+    /**
+     * Sort this Grid in ascending order by a specified column defined by id.
+     *
+     * @param columnId
+     *            the id of the column to sort against
+     *
+     * @see Column#setId(String)
+     */
+    public void sort(String columnId) {
+        sort(columnId, SortDirection.ASCENDING);
+    }
+
+    /**
+     * Sort this Grid in a user-specified direction by a column defined by id.
+     *
+     * @param columnId
+     *            the id of the column to sort against
+     * @param direction
+     *            a sort order value (ascending/descending)
+     *
+     * @see Column#setId(String)
+     */
+    public void sort(String columnId, SortDirection direction) {
+        sort(requireColumnById(columnId), direction);
     }
 
     /**

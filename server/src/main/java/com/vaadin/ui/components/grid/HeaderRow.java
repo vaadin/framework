@@ -83,4 +83,36 @@ public interface HeaderRow extends Serializable {
      */
     HeaderCell join(HeaderCell... cellsToMerge);
 
+    /**
+     * Merges cells corresponding to the given columns in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnsToMerge
+     *            the columns of the cells that should be merged. The cells
+     *            should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     */
+    HeaderCell join(Grid.Column<?, ?>... columnsToMerge);
+
+    /**
+     * Merges cells corresponding to the given column ids in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnIdsToMerge
+     *            the ids of the columns of the cells that should be merged. The
+     *            cells should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     * @see Column#setId(String)
+     */
+    HeaderCell join(String... columnIdsToMerge);
 }
