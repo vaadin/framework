@@ -10,9 +10,9 @@ layout: page
 Plain Vaadin applications do not have normal web page navigation as they usually
 run on a single page, as all Ajax applications do. Quite commonly, however,
 applications have different views between which the user should be able to
-navigate. The [classname]#Navigator# in Vaadin can be used for most cases of
-navigation. Views managed by the navigator automatically get a distinct URI
-fragment, which can be used to be able to bookmark the views and their states
+navigate. Also users often need to have direct links to specific views. The [classname]#Navigator# in Vaadin can be used for most cases of
+navigation. Views managed by the navigator automatically get a distinct URI, 
+which can be used to be able to bookmark the views and their states
 and to go back and forward in the browser history.
 
 [[advanced.navigator.navigating]]
@@ -61,16 +61,9 @@ public class NavigatorUI extends UI {
 }
 ----
 
-The [classname]#Navigator# automatically sets the URI fragment of the
-application URL. It also registers a [interfacename]#URIFragmentChangedListener#
-in the page
-
-ifdef::web[]
-(see <<dummy/../../../framework/advanced/advanced-urifu#advanced.urifu,"Managing
-URI
-Fragments">>)
-endif::web[]
- to show the view identified by the URI fragment if entered or navigated to in
+The [classname]#Navigator# automatically sets the URI of the
+application URL to contain identifier of the UI. It also registers a listener
+to show the view identified by the current URI if user navigated to a different view with a back or forward button in
 the browser. This also enables browser navigation history in the application.
 
 [[advanced.navigator.navigating.viewprovider]]
@@ -95,7 +88,7 @@ You can handle view changes also by implementing a
 [interfacename]#ViewChangeListener# and adding it to a [classname]#Navigator#.
 When a view change occurs, a listener receives a [classname]#ViewChangeEvent#
 object, which has references to the old and the activated view, the name of the
-activated view, as well as the fragment parameters.
+activated view, as well as the parameters (the part of of URI after the viewname).
 
 
 
@@ -104,7 +97,7 @@ activated view, as well as the fragment parameters.
 
 Views can be any objects that implement the [interfacename]#View# interface.
 When the [methodname]#navigateTo()# is called for the navigator, or the
-application is opened with the URI fragment associated with the view, the
+application is opened with the URI associated with the view, the
 navigator switches to the view and calls its [methodname]#enter()# method.
 
 To continue with the example, consider the following simple start view that just
@@ -143,21 +136,13 @@ latter method is that the view is attached to the view container as well as to
 the UI at that time, which is not the case in the constructor.
 
 
-[[advanced.navigator.urifragment]]
-== Handling URI Fragment Path
+[[advanced.navigator.pathparam]]
+== Handling Path Parameters
 
-URI fragment part of a URL is the part after a hash [literal]#++#++# character.
-Is used for within-UI URLs, because it is the only part of the URL that can be
-changed with JavaScript from within a page without reloading the page. The URLs
-with URI fragments can be used for hyperlinking and bookmarking, as well as
-browser history, just like any other URLs. In addition, an exclamation mark
-[literal]#++#!++# after the hash marks that the page is a stateful AJAX page,
-which can be crawled by search engines. Crawling requires that the application
-also responds to special URLs to get the searchable content. URI fragments are
-managed by [classname]#Page#, which provides a low-level API.
+In addition to the View identifier, URI can't contain additional parameters to be passed for views. The first part after the applications root url, until the first slash, is considered to be the identifier of the view. The part afther view identifier can be used for additional parameters for deep linking. Together the view identifier and parameters form a __navigation state__.
 
-URI fragments can be used with [classname]#Navigator# in two ways: for
-navigating to a view and to a state within a view. The URI fragment accepted by
+The navitation state can be used with [classname]#Navigator# in two ways: for
+navigating to a view and to a state within a view. The navigation state accepted by
 [methodname]#navigateTo()# can have the view name at the root, followed by
 fragment parameters after a slash (" [literal]#++/++#"). These parameters are
 passed to the [methodname]#enter()# method in the [interfacename]#View#.
@@ -274,12 +259,24 @@ The animal sub-view would have the following declarative design:
 ----
 
 The main view is shown in <<figure.advanced.navigator.mainview>>. At this point,
-the URL would be [literal]#++http://localhost:8080/myapp#!main/reindeer++#.
+the URL would be [literal]#++http://localhost:8080/myapp/main/reindeer++#.
 
 [[figure.advanced.navigator.mainview]]
 .Navigator Main View
 image::img/navigator-mainview.png[]
 
 
+[[advanced.navigator.urifragment]]
+== Using URI Fragments
 
+Old browsers didn't support __pushState__ function to dynamically change the location in the browser. Thus Vaadin previously used URI Fragments and so called "hashbang" style URIs for deep linkin and to detect view changes in the browser. For backwards compatibility, the old mode can still be used by configuring the Navigator as follows:
+
+[source, java]
+----
+    UriFragmentManager manager = new UriFragmentManager(Page.getCurrent());
+    Navigator navigator = new Navigator(ui, manager , viewDisplay);
+    ui.setNavigator(navigator);
+----
+
+The suggested method to fallback support old hashbang style URLs is to read the fragment with [methodname]#getUriFragment# method from [classname]#Page# object in the [methodname]#init# method of [classname]#UI# and assigning the fragment value to basic URL with [methodname]#pushState# method.
 

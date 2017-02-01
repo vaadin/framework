@@ -7,6 +7,9 @@ layout: page
 [[advanced.urifu]]
 = Managing URI Fragments
 
+NOTE: This chapter contains instructions how to manage URI fragments. As browser support for HTML5 History API has improved, developers should in most cases developers instead use real URIs with _pushState_ method. Read more from 
+<<dummy/../../../framework/advanced/advanced-navigator#advanced.pushstate,"Manipulating Browser History">>.
+
 A major issue in AJAX applications is that as they run in a single web page,
 bookmarking the application URL (or more generally the __URI__) can only
 bookmark the application, not an application state. This is a problem for many
