@@ -24,10 +24,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
@@ -56,10 +58,12 @@ import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
 import com.vaadin.shared.ui.grid.SectionState.RowState;
@@ -75,6 +79,11 @@ import elemental.json.JsonObject;
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractListingConnector
         implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
+    DetailsManagerConnector detailsManager;
+
+    public void setDetailsManager(DetailsManagerConnector detailsManager) {
+        this.detailsManager = detailsManager;
+    }
 
     private class ItemClickHandler
             implements BodyClickHandler, BodyDoubleClickHandler {
@@ -139,9 +148,59 @@ public class GridConnector extends AbstractListingConnector
         return (Grid<JsonObject>) super.getWidget();
     }
 
+    private void addDetailsRefreshListener(Runnable refreshListener) {
+        if (detailsManager != null) {
+            detailsManager.addRefreshListener(refreshListener);
+        }
+    }
+
+    /**
+     * Check if we have details for given row.
+     * 
+     * @param rowIndex
+     * @return
+     */
+    private boolean rowHasDetails(int rowIndex) {
+        JsonObject row = getWidget().getDataSource().getRow(rowIndex);
+
+        return row != null && row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                && !row.getString(GridState.JSONKEY_DETAILS_VISIBLE).isEmpty();
+    }
+
     @Override
     protected void init() {
         super.init();
+
+        registerRpc(GridClientRpc.class, new GridClientRpc() {
+
+            @Override
+            public void scrollToRow(int row, ScrollDestination destination) {
+                Scheduler.get().scheduleFinally(
+                        () -> getWidget().scrollToRow(row, destination));
+                // Add details refresh listener and handle possible detail for
+                // scrolled row.
+                addDetailsRefreshListener(() -> {
+                    if (rowHasDetails(row))
+                        getWidget().scrollToRow(row, destination);
+                });
+            }
+
+            @Override
+            public void scrollToStart() {
+                Scheduler.get()
+                        .scheduleFinally(() -> getWidget().scrollToStart());
+            }
+
+            @Override
+            public void scrollToEnd() {
+                Scheduler.get()
+                        .scheduleFinally(() -> getWidget().scrollToEnd());
+                addDetailsRefreshListener(() -> {
+                    if (rowHasDetails(getWidget().getDataSource().size() - 1))
+                        getWidget().scrollToEnd();
+                });
+            }
+        });
 
         getWidget().addSortHandler(this::handleSortEvent);
         getWidget().setRowStyleGenerator(rowRef -> {

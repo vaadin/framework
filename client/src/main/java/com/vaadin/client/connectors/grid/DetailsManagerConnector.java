@@ -16,14 +16,18 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
+
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
@@ -51,6 +55,8 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private boolean refreshing;
     /* Registration for data change handler. */
     private Registration dataChangeRegistration;
+
+    private Set<Runnable> callbacks = new HashSet<>();
 
     /**
      * DataChangeHandler for updating the visibility of detail widgets.
@@ -133,6 +139,15 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 .addDataChangeHandler(new DetailsChangeHandler());
     }
 
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        if (stateChangeEvent.isInitialStateChange()) {
+            getParent().setDetailsManager(this);
+        }
+    }
+
     private void detachIfNeeded(int rowIndex, String id) {
         if (indexToDetailConnectorId.containsKey(rowIndex)) {
             if (indexToDetailConnectorId.get(rowIndex).equals(id)) {
@@ -158,6 +173,19 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     @Override
     public GridConnector getParent() {
         return (GridConnector) super.getParent();
+    }
+
+    /**
+     * Add single usage callbacks for when there is need to know of details
+     * visibility refresh
+     * <p>
+     * All callbacks will be cleared after one call.
+     *
+     * @param callback
+     *            Callback to add
+     */
+    protected void addRefreshListener(Runnable callback) {
+        callbacks.add(callback);
     }
 
     @Override
@@ -205,6 +233,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     }
 
     private void refreshDetailsVisibility() {
+        boolean shownDetails = false;
         for (int i = 0; i < getWidget().getDataSource().size(); ++i) {
             String id = getDetailsComponentConnectorId(i);
 
@@ -216,7 +245,12 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
             indexToDetailConnectorId.put(i, id);
             getWidget().setDetailsVisible(i, true);
+            shownDetails = true;
         }
         refreshing = false;
+        if (shownDetails) {
+            callbacks.forEach(Runnable::run);
+        }
+        callbacks.clear();
     }
 }

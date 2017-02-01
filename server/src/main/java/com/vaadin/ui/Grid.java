@@ -74,12 +74,14 @@ import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.DetailsManagerState;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
@@ -2940,6 +2942,59 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public List<GridSortOrder<T>> getSortOrder() {
         return Collections.unmodifiableList(sortOrder);
+    }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has visible details, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            id of item to scroll to.
+     * @throws IllegalArgumentException
+     *             if the provided id is not recognized by the data source.
+     */
+    public void scrollTo(int row) throws IllegalArgumentException {
+        scrollTo(row, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the row has visible details, its size will also be taken into account.
+     *
+     * @param row
+     *            id of item to scroll to.
+     * @param destination
+     *            value specifying desired position of scrolled-to row, not
+     *            {@code null}
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     */
+    public void scrollTo(int row, ScrollDestination destination) {
+        Objects.requireNonNull(destination,
+                "ScrollDestination can not be null");
+
+        if (row > getDataProvider().size(new Query())) {
+            throw new IllegalArgumentException("Row outside dataProvider size");
+        }
+
+        getRpcProxy(GridClientRpc.class).scrollToRow(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     */
+    public void scrollToStart() {
+        getRpcProxy(GridClientRpc.class).scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     */
+    public void scrollToEnd() {
+        getRpcProxy(GridClientRpc.class).scrollToEnd();
     }
 
     @Override
