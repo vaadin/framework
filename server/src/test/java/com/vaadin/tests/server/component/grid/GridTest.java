@@ -6,24 +6,36 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.easymock.Capture;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Binder.Binding;
+import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.GridSortOrder;
+import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.NumberRenderer;
+
+import elemental.json.Json;
+import elemental.json.JsonObject;
 
 public class GridTest {
 
@@ -261,5 +273,84 @@ public class GridTest {
         grid.clearSortOrder();
         Assert.assertEquals(0, list.size());
         Assert.assertTrue(fired.get());
+    }
+
+    @Test
+    public void beanGrid() {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        Column<Person, ?> nameColumn = grid.getColumn("name");
+        Column<Person, ?> bornColumn = grid.getColumn("born");
+
+        Assert.assertNotNull(nameColumn);
+        Assert.assertNotNull(bornColumn);
+
+        Assert.assertEquals("Name", nameColumn.getCaption());
+        Assert.assertEquals("Born", bornColumn.getCaption());
+
+        JsonObject json = getRowData(grid, new Person("Lorem", 2000));
+
+        Set<String> values = Stream.of(json.keys()).map(json::getString)
+                .collect(Collectors.toSet());
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList("Lorem", "2000")),
+                values);
+    }
+
+    @Test
+    public void beanGrid_editor() throws ValidationException {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        Column<Person, ?> nameColumn = grid.getColumn("name");
+
+        TextField nameField = new TextField();
+        nameColumn.setEditorComponent(nameField);
+
+        Optional<Binding<Person, ?>> maybeBinding = grid.getEditor().getBinder()
+                .getBinding("name");
+        Assert.assertTrue(maybeBinding.isPresent());
+
+        Binding<Person, ?> binding = maybeBinding.get();
+        Assert.assertSame(nameField, binding.getField());
+
+        Person person = new Person("Lorem", 2000);
+        grid.getEditor().getBinder().setBean(person);
+
+        Assert.assertEquals("Lorem", nameField.getValue());
+
+        nameField.setValue("Ipsum");
+        Assert.assertEquals("Ipsum", person.getName());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void oneArgSetEditor_nonBeanGrid() {
+        Grid<Person> grid = new Grid<>();
+        Column<Person, String> nameCol = grid.addColumn(Person::getName)
+                .setId("name");
+
+        nameCol.setEditorComponent(new TextField());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void addExistingColumnById_throws() {
+        Grid<Person> grid = new Grid<>(Person.class);
+        grid.addColumn("name");
+    }
+
+    private static <T> JsonObject getRowData(Grid<T> grid, T row) {
+        JsonObject json = Json.createObject();
+        if (grid.getColumns().isEmpty()) {
+            return json;
+        }
+
+        // generateData only works if Grid is attached
+        new MockUI().setContent(grid);
+
+        grid.getColumns().forEach(column -> column.generateData(row, json));
+
+        // Detach again
+        grid.getUI().setContent(null);
+
+        return json.getObject("d");
     }
 }
