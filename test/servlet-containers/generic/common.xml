@@ -5,12 +5,13 @@
         <format property="build.date" pattern="yyyy-MM-dd" />
     </tstamp>
 
-    <dirname property="vaadin.basedir" file="${ant.file.common}" />
-    <property file="${vaadin.basedir}/build.properties" />
+    <dirname property="vaadin.basedir" file="${ant.file.common}/../../../" />
+    <dirname property="common.basedir" file="${ant.file.common}" />
+    <property file="${common.basedir}/build.properties" />
 
-    <ivy:settings file="${vaadin.basedir}/ivysettings.xml" />
-    <ivy:settings file="${vaadin.basedir}/ivysettings.xml" id="ivysettings" />
-    <ivy:resolve log="download-only" file="${vaadin.basedir}/ivy-taskdefs.xml" conf="taskdefs" />
+    <ivy:settings file="${common.basedir}/ivysettings.xml" />
+    <ivy:settings file="${common.basedir}/ivysettings.xml" id="ivysettings" />
+    <ivy:resolve log="download-only" file="${common.basedir}/ivy-taskdefs.xml" conf="taskdefs" />
     <ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
     <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
 

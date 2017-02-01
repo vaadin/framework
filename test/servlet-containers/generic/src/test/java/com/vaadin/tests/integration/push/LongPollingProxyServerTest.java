@@ -13,21 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.integration;
+package com.vaadin.tests.integration.push;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.tests.integration.AbstractIntegrationTest;
+import com.vaadin.tests.tb3.IncludeIfProperty;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.push.BasicPushLongPolling;
-import com.vaadin.tests.push.BasicPushTest;
-import com.vaadin.tests.tb3.IncludeIfProperty;
+import java.util.Collections;
+import java.util.List;
 
 @IncludeIfProperty(property = "server-name", value = "wildfly9-nginx")
 public class LongPollingProxyServerTest extends AbstractIntegrationTest {
