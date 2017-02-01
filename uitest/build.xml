@@ -1,0 +1,7 @@
+<project>
+
+    <target name="test-tb3">
+        <echo>This Ant script is no longer used to test the framework. Run `mvn verify -P test` to execute browser tests.</echo>
+    </target>
+
+</project>
