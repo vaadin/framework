@@ -325,6 +325,10 @@
                     <includes>
                         <include>**/AllTB3Tests.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
+                        <com.vaadin.testbench.max.retries>2</com.vaadin.testbench.max.retries>
+                    </systemPropertyVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -433,6 +437,36 @@
                         </configuration>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>validation</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-failsafe-plugin</artifactId>
+                            <configuration>
+                                <systemPropertyVariables>
+                                    <useLocalWebDriver>true</useLocalWebDriver>
+                                    <browsers.include>phantomjs1</browsers.include>
+                                    <categories.exclude>push,needs-ssh</categories.exclude>
+                                </systemPropertyVariables>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>integration-test</goal>
+                                        <goal>verify</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
