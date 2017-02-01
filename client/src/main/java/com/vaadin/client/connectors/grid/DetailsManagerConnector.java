@@ -16,9 +16,7 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
@@ -27,7 +25,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
@@ -56,8 +53,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     /* Registration for data change handler. */
     private Registration dataChangeRegistration;
 
-    private Set<Runnable> callbacks = new HashSet<>();
-
     /**
      * DataChangeHandler for updating the visibility of detail widgets.
      */
@@ -73,6 +68,9 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             for (int i = 0; i < numberOfRows; ++i) {
                 int index = firstRowIndex + i;
                 detachIfNeeded(index, getDetailsComponentConnectorId(index));
+            }
+            if (numberOfRows == 1) {
+                getParent().singleDetailsOpened(firstRowIndex);
             }
             // Deferred opening of new ones.
             refreshDetails();
@@ -139,15 +137,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 .addDataChangeHandler(new DetailsChangeHandler());
     }
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-
-        if (stateChangeEvent.isInitialStateChange()) {
-            getParent().setDetailsManager(this);
-        }
-    }
-
     private void detachIfNeeded(int rowIndex, String id) {
         if (indexToDetailConnectorId.containsKey(rowIndex)) {
             if (indexToDetailConnectorId.get(rowIndex).equals(id)) {
@@ -173,19 +162,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     @Override
     public GridConnector getParent() {
         return (GridConnector) super.getParent();
-    }
-
-    /**
-     * Add single usage callbacks for when there is need to know of details
-     * visibility refresh
-     * <p>
-     * All callbacks will be cleared after one call.
-     *
-     * @param callback
-     *            Callback to add
-     */
-    protected void addRefreshListener(Runnable callback) {
-        callbacks.add(callback);
     }
 
     @Override
@@ -248,9 +224,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             shownDetails = true;
         }
         refreshing = false;
-        if (shownDetails) {
-            callbacks.forEach(Runnable::run);
-        }
-        callbacks.clear();
+        getParent().detailsRefreshed(shownDetails);
     }
 }

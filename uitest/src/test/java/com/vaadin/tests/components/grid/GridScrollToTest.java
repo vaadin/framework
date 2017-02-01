@@ -78,9 +78,6 @@ public class GridScrollToTest extends SingleBrowserTest {
         // Open details
         clickCellContaining("199");
 
-        // This shouldn't be needed as the details should automatically scroll into view
-        $(ButtonElement.class).id("end").click();
-
         waitForElementPresent(By.className("v-grid-spacer"));
         waitForElementPresent(By.className("v-label"));
         assertTrue("Details not visible", getGrid().findElements(By.className("v-label")).stream()
@@ -110,29 +107,26 @@ public class GridScrollToTest extends SingleBrowserTest {
 
         $(ButtonElement.class).id("row").click();
 
-        // This shouldn't be needed as the details should automatically scroll into view
-        // Open details for 45 so it's in middle of list
-        clickCellContaining("45");
+        clickCellContaining("50");
 
         waitForElementPresent(By.className("v-grid-spacer"));
         waitForElementPresent(By.className("v-label"));
         assertTrue("Details not visible", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 45 details")).findFirst().get().isDisplayed());
+                .filter(element -> element.getText().contains("Name 50 details")).findFirst().get().isDisplayed());
         // scroll away
         $(ButtonElement.class).id("top").click();
 
         assertEquals("Found final element even though should be at top of list",
-                0, cellsContaining("45"));
+                0, cellsContaining("50"));
 
         assertFalse("Found final element  details even though should be at top of list", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 45 details")).findFirst().isPresent());
+                .filter(element -> element.getText().contains("Name 50 details")).findFirst().isPresent());
 
-        $(TextFieldElement.class).id("row-field").setValue("45");
         // Scroll to end
         $(ButtonElement.class).id("row").click();
 
         assertTrue("Details not visible", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 45 details")).findFirst().get().isDisplayed());
+                .filter(element -> element.getText().contains("Name 50 details")).findFirst().get().isDisplayed());
     }
 
     private GridElement getGrid() {

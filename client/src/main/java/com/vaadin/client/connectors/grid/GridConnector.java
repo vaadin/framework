@@ -18,6 +18,7 @@ package com.vaadin.client.connectors.grid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -79,11 +80,8 @@ import elemental.json.JsonObject;
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractListingConnector
         implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
-    DetailsManagerConnector detailsManager;
 
-    public void setDetailsManager(DetailsManagerConnector detailsManager) {
-        this.detailsManager = detailsManager;
-    }
+    private Set<Runnable> refreshDetailsCallbacks = new HashSet<>();
 
     private class ItemClickHandler
             implements BodyClickHandler, BodyDoubleClickHandler {
@@ -148,10 +146,43 @@ public class GridConnector extends AbstractListingConnector
         return (Grid<JsonObject>) super.getWidget();
     }
 
-    private void addDetailsRefreshListener(Runnable refreshListener) {
-        if (detailsManager != null) {
-            detailsManager.addRefreshListener(refreshListener);
+    /**
+     * Method called for a row details refresh. Runs all callbacks if any
+     * details were shown and clears the callbacks.
+     * 
+     * @param detailsShown
+     *            True if any details were set visible
+     */
+    protected void detailsRefreshed(boolean detailsShown) {
+        if (detailsShown) {
+            refreshDetailsCallbacks.forEach(Runnable::run);
         }
+        refreshDetailsCallbacks.clear();
+    }
+
+    /**
+     * Method target for when one single details has been updated and we might
+     * need to scroll it into view.
+     *
+     * @param rowIndex
+     *            index of updated row
+     */
+    protected void singleDetailsOpened(int rowIndex) {
+        addDetailsRefreshListener(() -> {
+            if (rowHasDetails(rowIndex)) {
+                getWidget().scrollToRow(rowIndex);
+            }
+        });
+    }
+
+    /**
+     * Add a single use details refresh listener.
+     * 
+     * @param refreshListener
+     *            Details refreshed listener
+     */
+    private void addDetailsRefreshListener(Runnable refreshListener) {
+        refreshDetailsCallbacks.add(refreshListener);
     }
 
     /**
