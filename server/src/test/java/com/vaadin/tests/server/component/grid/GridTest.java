@@ -40,15 +40,21 @@ import elemental.json.JsonObject;
 public class GridTest {
 
     private Grid<String> grid;
+    private Column<String, String> fooColumn;
+    private Column<String, Number> lengthColumn;
+    private Column<String, String> objectColumn;
+    private Column<String, String> randomColumn;
 
     @Before
     public void setUp() {
         grid = new Grid<>();
 
-        grid.addColumn(ValueProvider.identity()).setId("foo");
-        grid.addColumn(String::length, new NumberRenderer());
-        grid.addColumn(string -> new Object());
-        grid.addColumn(ValueProvider.identity()).setId("randomColumnId");
+        fooColumn = grid.addColumn(ValueProvider.identity()).setId("foo");
+        lengthColumn = grid.addColumn(String::length, new NumberRenderer())
+                .setId("length");
+        objectColumn = grid.addColumn(string -> new Object());
+        randomColumn = grid.addColumn(ValueProvider.identity())
+                .setId("randomColumnId");
     }
 
     @Test
@@ -335,6 +341,103 @@ public class GridTest {
     public void addExistingColumnById_throws() {
         Grid<Person> grid = new Grid<>(Person.class);
         grid.addColumn("name");
+    }
+
+    @Test
+    public void removeColumnByColumn() {
+        grid.removeColumn(fooColumn);
+
+        Assert.assertEquals(
+                Arrays.asList(lengthColumn, objectColumn, randomColumn),
+                grid.getColumns());
+    }
+
+    @Test
+    public void removeColumnByColumn_alreadyRemoved() {
+        grid.removeColumn(fooColumn);
+        // Questionable that this doesn't throw, but that's a separate ticket...
+        grid.removeColumn(fooColumn);
+
+        Assert.assertEquals(
+                Arrays.asList(lengthColumn, objectColumn, randomColumn),
+                grid.getColumns());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void removeColumnById_alreadyRemoved() {
+        grid.removeColumn("foo");
+        grid.removeColumn("foo");
+    }
+
+    @Test
+    public void removeColumnById() {
+        grid.removeColumn("foo");
+
+        Assert.assertEquals(
+                Arrays.asList(lengthColumn, objectColumn, randomColumn),
+                grid.getColumns());
+    }
+
+    @Test
+    public void setColumns_reorder() {
+        // Will remove other columns
+        grid.setColumns("length", "foo");
+
+        List<Column<String, ?>> columns = grid.getColumns();
+
+        Assert.assertEquals(2, columns.size());
+        Assert.assertEquals("length", columns.get(0).getId());
+        Assert.assertEquals("foo", columns.get(1).getId());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void setColumns_addColumn_notBeangrid() {
+        // Not possible to add a column in a grid that cannot add columns based
+        // on a string
+        grid.setColumns("notHere");
+    }
+
+    @Test
+    public void setColumns_addColumns_beangrid() {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        // Remove so we can add it back
+        grid.removeColumn("name");
+
+        grid.setColumns("born", "name");
+
+        List<Column<Person, ?>> columns = grid.getColumns();
+        Assert.assertEquals(2, columns.size());
+        Assert.assertEquals("born", columns.get(0).getId());
+        Assert.assertEquals("name", columns.get(1).getId());
+    }
+
+    @Test
+    public void setColumnOrder_byColumn() {
+        grid.setColumnOrder(randomColumn, lengthColumn);
+
+        Assert.assertEquals(Arrays.asList(randomColumn, lengthColumn, fooColumn,
+                objectColumn), grid.getColumns());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void setColumnOrder_byColumn_removedColumn() {
+        grid.removeColumn(randomColumn);
+        grid.setColumnOrder(randomColumn, lengthColumn);
+    }
+
+    @Test
+    public void setColumnOrder_byString() {
+        grid.setColumnOrder("randomColumnId", "length");
+
+        Assert.assertEquals(Arrays.asList(randomColumn, lengthColumn, fooColumn,
+                objectColumn), grid.getColumns());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void setColumnOrder_byString_removedColumn() {
+        grid.removeColumn("randomColumnId");
+        grid.setColumnOrder("randomColumnId", "length");
     }
 
     private static <T> JsonObject getRowData(Grid<T> grid, T row) {
