@@ -145,4 +145,18 @@
   .v-menubar-color1 {
     @include valo-menubar-style($background-color: $v-selection-color, $unit-size: null);
   }
+
+  .redicon .v-icon {
+    color: #ff3a49;
+  }
+  .v-caption-blueicon,
+  .blueicon {
+    .v-icon {
+      color: #00b4f0;
+  }}
+
+  .v-caption-amount .v-captiontext {
+    font-family: Vaadin-Icons;
+  }
+
 }

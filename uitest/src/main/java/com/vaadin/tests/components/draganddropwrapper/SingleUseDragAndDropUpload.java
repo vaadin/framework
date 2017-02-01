@@ -24,7 +24,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
@@ -39,7 +39,7 @@ public class SingleUseDragAndDropUpload extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Label upload = new Label(FontAwesome.UPLOAD.getHtml(),
+        Label upload = new Label(VaadinIcons.UPLOAD.getHtml(),
                 ContentMode.HTML);
         upload.setSizeUndefined();
         upload.setStyleName("upload");

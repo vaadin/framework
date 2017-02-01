@@ -53,6 +53,7 @@
         <sonar.analysis.mode>preview</sonar.analysis.mode>
         <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+        <vaadin.icons.version>3.0.0</vaadin.icons.version>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
@@ -279,6 +280,11 @@
                 <groupId>com.github.siom79.japicmp</groupId>
                 <artifactId>japicmp-maven-plugin</artifactId>
                 <version>0.9.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-icons</artifactId>
+                <version>${vaadin.icons.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
