@@ -62,8 +62,7 @@ public class AbstractSingleSelectTest {
         }
 
         @Override
-        protected void readItems(Element design,
-                DesignContext context) {
+        protected void readItems(Element design, DesignContext context) {
         }
 
         @Override
@@ -265,8 +264,7 @@ public class AbstractSingleSelectTest {
             }
 
             @Override
-            protected void readItems(Element design,
-                    DesignContext context) {
+            protected void readItems(Element design, DesignContext context) {
             }
 
             @Override
@@ -283,9 +281,8 @@ public class AbstractSingleSelectTest {
         });
         Assert.assertSame(registration, actualRegistration);
 
-        selectionListener.get()
-                .selectionChange(
-                        new SingleSelectionEvent<>(select, value, true));
+        selectionListener.get().selectionChange(
+                new SingleSelectionEvent<>(select, value, true));
 
         Assert.assertEquals(select, event.get().getComponent());
         Assert.assertEquals(value, event.get().getOldValue());

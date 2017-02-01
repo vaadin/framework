@@ -20,7 +20,8 @@ import com.vaadin.v7.ui.TextField;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.TwinColSelect;
 
-public class CompatibilityAbstractFieldElementSetValueReadOnly extends AbstractTestUI {
+public class CompatibilityAbstractFieldElementSetValueReadOnly
+        extends AbstractTestUI {
 
     AbstractField<?>[] elems = { new ComboBox(), new ListSelect(),
             new NativeSelect(), new OptionGroup(), new Table(), new Tree(),

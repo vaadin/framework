@@ -29,7 +29,8 @@ public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
      * Build test layout for #8255
      */
     private void addStartWithFullWidth(AbsoluteLayout layout) {
-        final Panel full = new Panel(new CssLayout(new Label("Start Width 100%")));
+        final Panel full = new Panel(
+                new CssLayout(new Label("Start Width 100%")));
         full.setWidth("100%");
         full.setId("expanding-panel");
 
@@ -41,7 +42,8 @@ public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
      * Build test layout for #8256
      */
     private void addStartWithDefinedWidth(AbsoluteLayout layout) {
-        final Panel small = new Panel(new CssLayout(new Label("Start Width 250px")));
+        final Panel small = new Panel(
+                new CssLayout(new Label("Start Width 250px")));
         small.setWidth("250px");
         small.setId("small-panel");
 
@@ -49,18 +51,19 @@ public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
         layout.addComponent(expandButton(small), "left: 10x; top: 150px;");
     }
 
-
     /**
      * Build test layout for #8257
      */
     private void addStartWithDefinedWidthAbsoluteLayout(AbsoluteLayout layout) {
         AbsoluteLayout layoutExpading = new AbsoluteLayout();
         layoutExpading.setWidth("250px");
-        layoutExpading.addComponent(new Panel(new CssLayout(new Label("Start Width 250px"))));
+        layoutExpading.addComponent(
+                new Panel(new CssLayout(new Label("Start Width 250px"))));
         layoutExpading.setId("absolute-expanding");
 
         layout.addComponent(layoutExpading, "right:0;top:200px;");
-        layout.addComponent(expandButton(layoutExpading), "left: 10x; top: 250px;");
+        layout.addComponent(expandButton(layoutExpading),
+                "left: 10x; top: 250px;");
     }
 
     /**
@@ -70,7 +73,8 @@ public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
      * @return Created Expand Button
      */
     private Button expandButton(Component component) {
-        Button button = new Button("Change Size", clickEvent -> resizeComponent(component));
+        Button button = new Button("Change Size",
+                clickEvent -> resizeComponent(component));
         button.setId(component.getId() + "-button");
         return button;
     }

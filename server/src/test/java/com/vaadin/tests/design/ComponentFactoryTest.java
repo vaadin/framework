@@ -88,14 +88,9 @@ public class ComponentFactoryTest {
     public void testComponentFactoryThrowingStuff() {
         currentComponentFactory.set((ComponentFactory) (
                 String fullyQualifiedClassName,
+                // Will throw because class is not found
                 DesignContext context) -> defaultFactory.createComponent(
-                        "foobar." + fullyQualifiedClassName, context) // Will
-                                                                      // throw
-                                                                      // because
-                                                                      // class
-                                                                      // is not
-                                                                      // found
-        );
+                        "foobar." + fullyQualifiedClassName, context));
 
         Design.read(new ByteArrayInputStream("<vaadin-label />".getBytes()));
     }

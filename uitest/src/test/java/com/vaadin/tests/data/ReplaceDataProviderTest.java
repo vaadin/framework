@@ -46,8 +46,7 @@ public class ReplaceDataProviderTest extends SingleBrowserTest {
 
     private void assertCellText(String text, int rowIndex, int colIndex) {
         String firstCellText = $(GridElement.class).first()
-                .getCell(rowIndex, colIndex)
-                .getText();
+                .getCell(rowIndex, colIndex).getText();
         Assert.assertEquals(text, firstCellText);
     }
 }

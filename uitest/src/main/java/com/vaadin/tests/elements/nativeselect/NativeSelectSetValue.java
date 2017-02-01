@@ -13,7 +13,6 @@ import com.vaadin.ui.NativeSelect;
 
 public class NativeSelectSetValue extends AbstractTestUI {
 
-
     private int counter = 0;
     Label lblCounter = new Label("0");
 

@@ -32,14 +32,17 @@ public class DateTimeFieldConstructorTest {
     public void initiallyEmpty() {
         DateTimeField dateTimeField = new DateTimeField();
         Assert.assertTrue(dateTimeField.isEmpty());
-        Assert.assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
+        Assert.assertEquals(DateTimeResolution.MINUTE,
+                dateTimeField.getResolution());
     }
 
     @Test
     public void testValueConstructor_emptyAfterClear() {
-        DateTimeField dateTimeField = new DateTimeField(null, LocalDateTime.now());
+        DateTimeField dateTimeField = new DateTimeField(null,
+                LocalDateTime.now());
         Assert.assertFalse(dateTimeField.isEmpty());
-        Assert.assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
+        Assert.assertEquals(DateTimeResolution.MINUTE,
+                dateTimeField.getResolution());
 
         dateTimeField.clear();
         Assert.assertTrue(dateTimeField.isEmpty());
@@ -50,7 +53,8 @@ public class DateTimeFieldConstructorTest {
         HasValue.ValueChangeListener valueChangeListener = Mockito
                 .mock(HasValue.ValueChangeListener.class);
         DateTimeField dateTimeField = new DateTimeField(valueChangeListener);
-        Assert.assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
+        Assert.assertEquals(DateTimeResolution.MINUTE,
+                dateTimeField.getResolution());
 
         dateTimeField.setValue(LocalDateTime.now());
 
@@ -64,9 +68,9 @@ public class DateTimeFieldConstructorTest {
         HasValue.ValueChangeListener valueChangeListener = Mockito
                 .mock(HasValue.ValueChangeListener.class);
         DateTimeField dateTimeField = new DateTimeField("Caption",
-                LocalDateTime.now(),
-                valueChangeListener);
-        Assert.assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
+                LocalDateTime.now(), valueChangeListener);
+        Assert.assertEquals(DateTimeResolution.MINUTE,
+                dateTimeField.getResolution());
 
         verify(valueChangeListener, never())
                 .valueChange(Mockito.any(HasValue.ValueChangeEvent.class));
