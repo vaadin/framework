@@ -13,23 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.dnd;
+package com.vaadin.event.dnd;
 
-import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.ui.Component;
 
 /**
- * RPC for firing server side event when client side dragstart event happens on
- * drag source.
+ * Server side dragend event. Fired when an HTML5 dragend happens. See
+ * {@link DragSourceExtension#addDragEndListener(DragEndListener)}
  */
-public interface DragSourceRpc extends ServerRpc {
-
-    /**
-     * Called when dragsource event happens on client side.
-     */
-    public void dragStart();
-
-    /**
-     * Called when dragend event happens on client side.
-     */
-    public void dragEnd();
+public class DragEndEvent extends Component.Event {
+    DragEndEvent(Component source) {
+        super(source);
+    }
 }

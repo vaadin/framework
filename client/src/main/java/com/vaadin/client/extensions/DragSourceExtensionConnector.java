@@ -26,6 +26,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
@@ -56,10 +57,6 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // dragstart
         addEventListener(dragSourceElement, BrowserEvents.DRAGSTART,
                 dragStartListener);
-
-        // dragend event
-        addEventListener(dragSourceElement, BrowserEvents.DRAGEND,
-                dragEndListener);
     }
 
     @Override
@@ -74,6 +71,20 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         removeEventListener(dragSourceElement, BrowserEvents.DRAGEND,
                 dragEndListener);
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+         // Add event listener only when listener added on server side
+        if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
+            addEventListener(getDraggableElement(), BrowserEvents.DRAGEND,
+                    dragEndListener);
+        } else {
+            removeEventListener(getDraggableElement(), BrowserEvents.DRAGEND,
+                    dragEndListener);
+        }
     }
 
     /**
@@ -108,7 +119,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @param event
      */
     protected void onDragEnd(Event event) {
-
+        // Initiate server start dragend event
+        getRpcProxy(DragSourceRpc.class).dragEnd();
     }
 
     /**

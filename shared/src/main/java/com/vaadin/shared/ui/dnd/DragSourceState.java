@@ -26,6 +26,12 @@ import com.vaadin.shared.communication.SharedState;
  * State class containing parameters for DragSourceExtension.
  */
 public class DragSourceState extends SharedState {
+
+    /**
+     * Event identifier for dragend event.
+     */
+    public static final String EVENT_DRAGEND = "dragend";
+
     /**
      * {@code DataTransfer.effectAllowed} parameter for the drag event.
      */

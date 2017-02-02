@@ -33,10 +33,20 @@ public class DragSourceExtension extends AbstractExtension {
      * Constructor for {@link DragSourceExtension}
      */
     public DragSourceExtension() {
-        registerRpc((DragSourceRpc) () -> {
-            DragStartEvent event = new DragStartEvent(
-                    (AbstractComponent) getParent());
-            fireEvent(event);
+        registerRpc(new DragSourceRpc() {
+            @Override
+            public void dragStart() {
+                DragStartEvent event = new DragStartEvent(
+                        (AbstractComponent) getParent());
+                fireEvent(event);
+            }
+
+            @Override
+            public void dragEnd() {
+                DragEndEvent event = new DragEndEvent(
+                        (AbstractComponent) getParent());
+                fireEvent(event);
+            }
         });
     }
 
@@ -107,6 +117,20 @@ public class DragSourceExtension extends AbstractExtension {
     public Registration addDragStartListener(DragStartListener listener) {
         return addListener(DragStartEvent.class, listener,
                 DragStartListener.DRAGSTART_METHOD);
+    }
+
+    /**
+     * Attaches dragend listener for the current drag source. {@link
+     * DragEndListener#dragEnd(DragEndEvent)} is called when dragend
+     * event happens on the client side.
+     *
+     * @param listener
+     *         Listener to handle dragend event.
+     * @return Handle to be used to remove this listener.
+     */
+    public Registration addDragEndListener(DragEndListener listener) {
+        return addListener(DragSourceState.EVENT_DRAGEND, DragEndEvent.class,
+                listener, DragEndListener.DRAGEND_METHOD);
     }
 
     @Override
