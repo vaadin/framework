@@ -67,6 +67,11 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
                 <!-- This execution builds an additional .war file with JBoss 6 specific descriptor -->
                 <executions>
                     <execution>
@@ -83,6 +88,46 @@
                                 </resource>
                             </webResources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.0.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.name}</Bundle-Name>
+                        <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
+                        <Import-Package>!com.vaadin.*,*</Import-Package>
+                        <Export-Package>false</Export-Package>
+                    </instructions>
+                    <supportedProjectTypes>
+                        <supportedProjectType>war</supportedProjectType>
+                    </supportedProjectTypes>
+                </configuration>
+                <executions>
+<!--
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                <configuration>
+                    <packaging>bundle</packaging>
+                    <buildDirectory>target/osgi</buildDirectory>
+                    <depth>2</depth>
+                </configuration>
+                    </execution>
+-->
+                    <execution>
+                        <id>osgi-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
