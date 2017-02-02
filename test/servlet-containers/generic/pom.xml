@@ -11,40 +11,33 @@
     <artifactId>vaadin-test-generic-integration</artifactId>
     <name>vaadin-test-generic-integration</name>
     <packaging>war</packaging>
+    <properties>
+        <osgi.bundle.version>8.0.0</osgi.bundle.version>
+    </properties>
 
     <dependencies>
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-compatibility-server</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-compatibility-client-compiled</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-client-compiled</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-themes</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-push</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-uitest-common</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -58,6 +51,14 @@
             <!--TODO run this on different servers-->
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -96,6 +97,11 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
                 <executions>
                     <execution>
                         <id>jboss6-war</id>
@@ -111,6 +117,46 @@
                                 </resource>
                             </webResources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.0.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.name}</Bundle-Name>
+                        <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
+                        <Import-Package>!com.vaadin.*,*</Import-Package>
+                        <Export-Package>false</Export-Package>
+                    </instructions>
+                    <supportedProjectTypes>
+                        <supportedProjectType>war</supportedProjectType>
+                    </supportedProjectTypes>
+                </configuration>
+                <executions>
+<!--
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                <configuration>
+                    <packaging>bundle</packaging>
+                    <buildDirectory>target/osgi</buildDirectory>
+                    <depth>2</depth>
+                </configuration>
+                    </execution>
+-->
+                    <execution>
+                        <id>osgi-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
