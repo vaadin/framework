@@ -1,18 +1,19 @@
 package com.vaadin.tests.components.grid;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class GridNullValueSort {
 
@@ -46,6 +47,28 @@ public class GridNullValueSort {
     public void testNumbersNotNulls() {
         grid.sort(grid.getColumn("int"), SortDirection.ASCENDING);
         performSort(Arrays.asList(2, 1, 3), Arrays.asList(1, 2, 3));
+    }
+
+    @Test
+    public void testSortByColumnId() {
+        grid.sort("int");
+        performSort(Arrays.asList(2, 1, 3), Arrays.asList(1, 2, 3));
+    }
+
+    @Test
+    public void testSortByColumnIdAndDirection() {
+        grid.sort("int", SortDirection.DESCENDING);
+        performSort(Arrays.asList(2, 1, 3), Arrays.asList(3, 2, 1));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testSortByMissingColumnId() {
+        grid.sort("notHere");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testSortByMissingColumnIdAndDirection() {
+        grid.sort("notHere", SortDirection.DESCENDING);
     }
 
     @Test
