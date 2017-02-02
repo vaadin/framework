@@ -67,27 +67,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <!-- This execution builds an additional .war file with JBoss 6 specific descriptor -->
-                <executions>
-                    <execution>
-                        <id>jboss6-war</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>war</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>jboss6</classifier>
-                            <webResources>
-                                <resource>
-                                    <directory>src/main/jboss-6</directory>
-                                </resource>
-                            </webResources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>jboss6-war</id>
