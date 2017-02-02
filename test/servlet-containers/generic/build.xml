@@ -13,6 +13,8 @@
     <property name="result.dir" value="result" />
     <property name="result.war"
         location="${uitest.dir}/target/${module.name}-${vaadin.version}.war" />
+    <property name="result.jboss6.war"
+        location="${uitest.dir}/target/${module.name}-${vaadin.version}-jboss6.war" />
 
     <!-- Need to give a default value to keep Ivy happy -->
     <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prereleases"/>
@@ -23,12 +25,12 @@
     </target>
 
     <target name="test-server" depends="clean-testbench-errors">
-        <property name="war.file" location="${result.war}" />
         <mkdir dir="${vaadin.basedir}/result" />
         <ant antfile="integration_tests.xml"
             target="integration-test-all" inheritall="false"
             inheritrefs="false">
-            <property name="demo.war" value="${war.file}" />
+            <property name="demo.war" value="${result.war}" />
+            <property name="demo.jboss6.war" value="${result.jboss6.war}" />
         </ant>
     </target>
 
