@@ -209,11 +209,6 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         updateSelection(copy, new LinkedHashSet<>(getSelectedItems()));
     }
 
-    @Override
-    public Set<T> getEmptyValue() {
-        return Collections.emptySet();
-    }
-
     /**
      * Adds a value change listener. The listener is called when the selection
      * set of this multi select is changed either by the user or

@@ -335,11 +335,6 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
                 return MultiSelectionModelImpl.this
                         .addMultiSelectionListener(listener);
             }
-
-            @Override
-            public Set<T> getEmptyValue() {
-                return new LinkedHashSet<T>();
-            }
         };
     }
 
