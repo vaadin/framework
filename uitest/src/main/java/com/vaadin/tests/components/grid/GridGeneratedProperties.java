@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
@@ -34,6 +34,9 @@ import com.vaadin.v7.data.util.filter.Compare;
 import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 import com.vaadin.v7.ui.Grid;
 
+/**
+ * Smoke tests for v7 generated properties in Grid
+ */
 public class GridGeneratedProperties extends AbstractReindeerTestUI {
 
     private GeneratedPropertyContainer container;
