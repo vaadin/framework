@@ -37,14 +37,16 @@ public class DragSourceExtension extends AbstractExtension {
             @Override
             public void dragStart() {
                 DragStartEvent event = new DragStartEvent(
-                        (AbstractComponent) getParent());
+                        (AbstractComponent) getParent(), getState().types,
+                        getState().data, getState().effectAllowed);
                 fireEvent(event);
             }
 
             @Override
             public void dragEnd() {
                 DragEndEvent event = new DragEndEvent(
-                        (AbstractComponent) getParent());
+                        (AbstractComponent) getParent(), getState().types,
+                        getState().data, getState().effectAllowed);
                 fireEvent(event);
             }
         });

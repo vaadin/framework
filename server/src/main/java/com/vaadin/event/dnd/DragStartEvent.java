@@ -15,6 +15,11 @@
  */
 package com.vaadin.event.dnd;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.Component;
 
 /**
@@ -22,7 +27,33 @@ import com.vaadin.ui.Component;
  * {@link DragSourceExtension#addDragStartListener(DragStartListener)}
  */
 public class DragStartEvent extends Component.Event {
-    DragStartEvent(Component source) {
+    private Map<String, String> data;
+    private EffectAllowed effectAllowed;
+
+    DragStartEvent(Component source, List<String> types,
+            Map<String, String> data, EffectAllowed effectAllowed) {
         super(source);
+
+        // Create a linked map that preserves the order of types
+        this.data = new LinkedHashMap<>();
+        types.forEach(type -> this.data.put(type, data.get(type)));
+
+        this.effectAllowed = effectAllowed;
+    }
+
+    /**
+     * Get data from the client side {@code DataTransfer} object.
+     *
+     * @param format
+     *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
+     * @return Data for the given format if exists in the client side {@code
+     * DataTransfer}, otherwise {@code null}.
+     */
+    public String getTransferData(String format) {
+        return data != null ? data.get(format) : null;
+    }
+
+    public EffectAllowed getEffectAllowed() {
+        return effectAllowed;
     }
 }
