@@ -15,11 +15,14 @@
  */
 package com.vaadin.tests.tb3;
 
+import java.util.logging.Logger;
+
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 public class RetryOnFail implements TestRule {
+
     @Override
     public Statement apply(Statement base, Description description) {
         return statement(base, description);
@@ -53,8 +56,15 @@ public class RetryOnFail implements TestRule {
                 String retryCount = System
                         .getProperty("com.vaadin.testbench.max.retries");
 
-                if (retryCount != null && retryCount != "") {
-                    return Integer.parseInt(retryCount);
+                if (retryCount != null && !retryCount.trim().isEmpty()) {
+                    try {
+                        return Integer.parseInt(retryCount);
+                    } catch (NumberFormatException e) {
+                        // TODO: See how this was implemented in TestBench
+                        Logger.getLogger(RetryOnFail.class.getName()).warning(
+                                "Could not parse max retry count. Retry count set to 0. Failed value: "
+                                        + retryCount);
+                    }
                 }
 
                 return 0;
