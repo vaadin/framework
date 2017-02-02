@@ -63,7 +63,10 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
             return create(browser, "40", Platform.VISTA);
         case FIREFOX:
         default:
-            return create(browser, "24", Platform.XP);
+            DesiredCapabilities dc = create(Browser.FIREFOX, "45",
+                    Platform.WINDOWS);
+            dc.setCapability("marionette", "false");
+            return dc;
         }
     }
 
