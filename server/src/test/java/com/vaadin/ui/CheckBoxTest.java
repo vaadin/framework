@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.tests.util.MockUI;
@@ -50,13 +51,13 @@ public class CheckBoxTest {
             userOriginated.set(e.isUserOriginated());
         });
         ComponentTest.syncToClient(cb);
-        ComponentTest.getRpcProxy(cb, CheckBoxServerRpc.class).setChecked(true,
-                new MouseEventDetails());
+        ServerRpcManager.getRpcProxy(cb, CheckBoxServerRpc.class)
+                .setChecked(true, new MouseEventDetails());
         Assert.assertTrue(userOriginated.get());
         userOriginated.set(false);
         ComponentTest.syncToClient(cb);
-        ComponentTest.getRpcProxy(cb, CheckBoxServerRpc.class).setChecked(false,
-                new MouseEventDetails());
+        ServerRpcManager.getRpcProxy(cb, CheckBoxServerRpc.class)
+                .setChecked(false, new MouseEventDetails());
         Assert.assertTrue(userOriginated.get());
     }
 
