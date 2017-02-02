@@ -60,6 +60,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -271,7 +272,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
         @Override
         public UI createInstance(UICreateEvent event) {
-            event.getRequest().setAttribute(UIProvider.UI_ROOT_PATH,
+            event.getRequest().setAttribute(ApplicationConstants.UI_ROOT_PATH,
                     "/" + event.getUIClass().getName());
             return super.createInstance(event);
         }

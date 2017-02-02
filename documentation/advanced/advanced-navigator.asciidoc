@@ -139,7 +139,7 @@ the UI at that time, which is not the case in the constructor.
 [[advanced.navigator.pathparam]]
 == Handling Path Parameters
 
-In addition to the View identifier, URI can't contain additional parameters to be passed for views. The first part after the applications root url, until the first slash, is considered to be the identifier of the view. The part afther view identifier can be used for additional parameters for deep linking. Together the view identifier and parameters form a __navigation state__.
+In addition to the View identifier, URI can contain additional parameters to be passed for views. The first part after the UI's "root url" (application URL + possible special mapping for UI), until the first slash or the the end of the path, is considered to be the identifier of the view. The part after view identifier, separated by slash character, can be used for additional parameters for deep linking. Together the view identifier and possible parameters form so called __navigation state__.
 
 The navitation state can be used with [classname]#Navigator# in two ways: for
 navigating to a view and to a state within a view. The navigation state accepted by
@@ -209,7 +209,7 @@ public class MainView extends VerticalLayout implements View {
                   new ButtonListener("sheep")));
 
         // Allow going back to the start
-        logout.addClickListener(event -> // Java 8
+        logout.addClickListener(event ->
             navigator.navigateTo(""));
     }        
     

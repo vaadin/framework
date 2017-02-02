@@ -36,12 +36,6 @@ public abstract class UIProvider implements Serializable {
 
     /* Default widgetset name to look for */
     private static final String APP_WIDGETSET_NAME = "AppWidgetset";
-    /**
-     * A request attribute name to store the part of pathInfo that was used to
-     * select the UI. Will be used by default Navigator to separate view
-     * identifiers from UI.
-     **/
-    public static final String UI_ROOT_PATH = "com.vaadin.server.UI_ROOT_PATH";
 
     public abstract Class<? extends UI> getUIClass(UIClassSelectionEvent event);
 

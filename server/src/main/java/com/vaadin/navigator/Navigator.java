@@ -41,9 +41,6 @@ import java.util.List;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.PopStateEvent;
-import com.vaadin.server.Page.PopStateListener;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
-import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
@@ -97,37 +94,39 @@ public class Navigator implements Serializable {
      * {@link PopStateEvent}s to track views and enable listening to view
      * changes.
      * <p>
-     * The part of path after UIs "root" path until first slash or end of the
-     * path is used as {@link View}s identifier. The rest can be used as extra
-     * parameters for the View.
+     * The part of path after UI's "root path" (UI's path without view
+     * identifier), until the next slash or to the end of the path is used as
+     * {@link View}s identifier. The rest of the path can be used by the
+     * developer for extra parameters for the View.
      * <p>
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
+     *
+     * @since 8.0
      */
     public static class PushStateManager implements NavigationStateManager {
-        private final Page page;
         private Navigator navigator;
         private Registration popStateListenerRegistration;
         private UI ui;
 
         /**
-         * Creates a new PushStateManager and attach it to listen to URI
-         * changes of a {@link Page} attached to given {@link UI}.
+         * Creates a new PushStateManager and attach it to listen to URI changes
+         * of a {@link Page} attached to given {@link UI}.
          *
          * @param ui
          *            the UI where the Navigator is attached to
          */
         public PushStateManager(UI ui) {
-            page = ui.getPage();
             this.ui = ui;
         }
 
         @Override
         public void setNavigator(Navigator navigator) {
             if (this.navigator == null && navigator != null) {
-                popStateListenerRegistration = page.addPopStateListener(e -> {
-                    navigator.navigateTo(getState());
-                });
+                popStateListenerRegistration = ui.getPage()
+                        .addPopStateListener(e -> {
+                            navigator.navigateTo(getState());
+                        });
             } else if (this.navigator != null && navigator == null) {
                 popStateListenerRegistration.remove();
             }
@@ -136,7 +135,7 @@ public class Navigator implements Serializable {
 
         @Override
         public String getState() {
-            URI location = page.getLocation();
+            URI location = ui.getPage().getLocation();
             String path = location.getPath();
             if (ui.getUiPathInfo() != null) {
                 path = path.substring(path.indexOf(ui.getUiPathInfo())
@@ -155,7 +154,8 @@ public class Navigator implements Serializable {
                 sb.append("/");
             }
             sb.append(state);
-            page.pushState(page.getLocation().resolve(sb.toString()));
+            ui.getPage().pushState(
+                    ui.getPage().getLocation().resolve(sb.toString()));
         }
     }
 
@@ -171,10 +171,10 @@ public class Navigator implements Serializable {
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
      *
-     * @deprecated Most applications should nowadays use
-     *             {@link PushStateManager} instead, but this may be handy still
-     *             in certain environments like portals or for backwards
-     *             compatibility.
+     * @deprecated Since 8.0 replaced by {@link PushStateManager}, which is
+     *             based on HTML5 History API, but this is still available for
+     *             backwards compatibility. This implementation may also be
+     *             still handy in certain environments like portals.
      */
     @Deprecated
     public static class UriFragmentManager implements NavigationStateManager {
