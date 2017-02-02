@@ -168,7 +168,7 @@ public class GridConnector extends AbstractListingConnector
      *            index of updated row
      */
     protected void singleDetailsOpened(int rowIndex) {
-        addDetailsRefreshListener(() -> {
+        addDetailsRefreshCallback(() -> {
             if (rowHasDetails(rowIndex)) {
                 getWidget().scrollToRow(rowIndex);
             }
@@ -176,13 +176,14 @@ public class GridConnector extends AbstractListingConnector
     }
 
     /**
-     * Add a single use details refresh listener.
+     * Add a single use details runnable callback for when we get a call to
+     * {@link #detailsRefreshed(boolean)}.
      * 
-     * @param refreshListener
-     *            Details refreshed listener
+     * @param refreshCallback
+     *            Details refreshed callback
      */
-    private void addDetailsRefreshListener(Runnable refreshListener) {
-        refreshDetailsCallbacks.add(refreshListener);
+    private void addDetailsRefreshCallback(Runnable refreshCallback) {
+        refreshDetailsCallbacks.add(refreshCallback);
     }
 
     /**
@@ -210,7 +211,7 @@ public class GridConnector extends AbstractListingConnector
                         () -> getWidget().scrollToRow(row, destination));
                 // Add details refresh listener and handle possible detail for
                 // scrolled row.
-                addDetailsRefreshListener(() -> {
+                addDetailsRefreshCallback(() -> {
                     if (rowHasDetails(row))
                         getWidget().scrollToRow(row, destination);
                 });
@@ -226,7 +227,7 @@ public class GridConnector extends AbstractListingConnector
             public void scrollToEnd() {
                 Scheduler.get()
                         .scheduleFinally(() -> getWidget().scrollToEnd());
-                addDetailsRefreshListener(() -> {
+                addDetailsRefreshCallback(() -> {
                     if (rowHasDetails(getWidget().getDataSource().size() - 1))
                         getWidget().scrollToEnd();
                 });
