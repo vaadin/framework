@@ -301,19 +301,21 @@ public class VCustomLayout extends ComplexPanel {
     }
 
     /** Update caption for given widget */
-    public void updateCaption(ComponentConnector paintable) {
-        Widget widget = paintable.getWidget();
-        if (widget.getParent() != this) {
+    public void updateCaption(ComponentConnector childConnector) {
+        Widget widget = childConnector.getWidget();
+
+        if (!widget.isAttached()) {
             // Widget has not been added because the location was not found
             return;
         }
+
         VCaptionWrapper wrapper = childWidgetToCaptionWrapper.get(widget);
-        if (VCaption.isNeeded(paintable.getState())) {
+        if (VCaption.isNeeded(childConnector.getState())) {
             if (wrapper == null) {
                 // Add a wrapper between the layout and the child widget
                 final String loc = getLocation(widget);
                 super.remove(widget);
-                wrapper = new VCaptionWrapper(paintable, client);
+                wrapper = new VCaptionWrapper(childConnector, client);
                 super.add(wrapper, locationToElement.get(loc));
                 childWidgetToCaptionWrapper.put(widget, wrapper);
             }
