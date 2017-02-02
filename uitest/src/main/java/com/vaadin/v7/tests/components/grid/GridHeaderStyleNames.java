@@ -28,6 +28,12 @@ import com.vaadin.v7.ui.Grid.HeaderCell;
 import com.vaadin.v7.ui.Grid.HeaderRow;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
+/**
+ * This test is about functionality which is not available in new the Grid
+ * version: https://github.com/vaadin/framework/issues/8422
+ *
+ * The test should be migrated once the issue is fixed.
+ */
 public class GridHeaderStyleNames extends AbstractTestUIWithLog {
 
     private HeaderCell ageHeaderCell;

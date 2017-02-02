@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
         openTestURL("debug");
         GridElement grid = $(GridElement.class).first();
         Assert.assertEquals("Rowling", grid.getCell(0, 0).getText());
-        Assert.assertEquals("Scott", grid.getCell(1, 0).getText());
+        Assert.assertEquals("Barks", grid.getCell(1, 0).getText());
 
         getSidebarOpenButton(grid).click();
         getColumnHidingToggle(grid, "First Name").click();
@@ -43,10 +43,10 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
 
         Assert.assertEquals("Umberto", grid.getCell(0, 0).getText());
         Assert.assertEquals("Rowling", grid.getCell(0, 1).getText());
-        Assert.assertEquals("25", grid.getCell(0, 2).getText());
-        Assert.assertEquals("Dan", grid.getCell(1, 0).getText());
-        Assert.assertEquals("Scott", grid.getCell(1, 1).getText());
-        Assert.assertEquals("54", grid.getCell(1, 2).getText());
+        Assert.assertEquals("40", grid.getCell(0, 2).getText());
+        Assert.assertEquals("Alex", grid.getCell(1, 0).getText());
+        Assert.assertEquals("Barks", grid.getCell(1, 1).getText());
+        Assert.assertEquals("25", grid.getCell(1, 2).getText());
 
     }
 
