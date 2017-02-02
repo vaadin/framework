@@ -1,3 +1,8 @@
+---
+title: Migrating to Framework 8
+order: 1
+layout: page
+---
 // TODO: Fix release note links to point to 8.0.0
 [[migration]]
 == Migration from Framework 7 to Framework 8
