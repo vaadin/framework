@@ -136,4 +136,15 @@ public interface MultiSelect<T> extends HasValue<Set<T>>, Serializable {
      */
     public Registration addSelectionListener(
             MultiSelectionListener<T> listener);
+
+    /**
+     * MultiSelect empty value should always be an empty set by default and not
+     * {@code null}.
+     *
+     * @return An empty set, not {@code null}
+     */
+    public default Set<T> getEmptyValue() {
+        return Collections.emptySet();
+    }
+
 }
