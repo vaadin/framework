@@ -13,17 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
+
+import java.util.stream.IntStream;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.util.IndexedContainer;
-import com.vaadin.v7.event.SelectionEvent;
-import com.vaadin.v7.event.SelectionEvent.SelectionListener;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.SelectionMode;
 
 public class GridScrollToLineWhileResizing extends AbstractReindeerTestUI {
 
@@ -36,28 +34,19 @@ public class GridScrollToLineWhileResizing extends AbstractReindeerTestUI {
         vsp.setSplitPosition(100, Unit.PERCENTAGE);
         addComponent(vsp);
 
-        IndexedContainer indexedContainer = new IndexedContainer();
-        indexedContainer.addContainerProperty("column1", String.class, "");
-
-        for (int i = 0; i < 100; i++) {
-            Item addItem = indexedContainer.addItem(i);
-            addItem.getItemProperty("column1").setValue("cell" + i);
-        }
-
-        final Grid grid = new Grid(indexedContainer);
+        Grid<Integer> grid = new Grid<>();
+        grid.addColumn(item -> "cell" + item);
+        grid.setItems(IntStream.range(0, 100).boxed());
         grid.setSizeFull();
 
         grid.setSelectionMode(SelectionMode.SINGLE);
-        grid.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void select(SelectionEvent event) {
-                vsp.setSplitPosition(50, Unit.PERCENTAGE);
-                grid.scrollTo(event.getSelected().iterator().next());
-            }
+        grid.addSelectionListener(event -> {
+            vsp.setSplitPosition(50, Unit.PERCENTAGE);
+            grid.scrollTo(event.getFirstSelectedItem().get());
         });
 
         vsp.setFirstComponent(grid);
+
     }
 
     @Override

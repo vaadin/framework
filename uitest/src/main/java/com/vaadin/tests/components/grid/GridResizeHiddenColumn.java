@@ -13,37 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.tests.fieldgroup.ComplexPerson;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.ColumnResizeEvent;
-import com.vaadin.v7.ui.Grid.ColumnResizeListener;
+import com.vaadin.tests.util.Person;
+import com.vaadin.ui.Grid;
 
 @SuppressWarnings("serial")
-public class GridResizeHiddenColumn extends AbstractTestUIWithLog {
+public class GridResizeHiddenColumn extends GridEditorUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
-        grid.setContainerDataSource(ComplexPerson.createContainer(100));
-        grid.setColumns("firstName", "lastName", "gender", "birthDate");
+        Grid<Person> grid = createGrid();
+        grid.setItems(createTestData());
+        addComponent(grid);
+
+        grid.setColumns("firstName", "phone", "lastName", "zip");
         grid.getColumn("firstName").setHidable(true);
+        grid.getColumn("phone").setHidable(true).setHidden(true);
         grid.getColumn("lastName").setHidable(true).setHidden(true);
-        grid.getColumn("gender").setHidable(true).setHidden(true);
-        grid.getColumn("birthDate").setHidable(true);
+        grid.getColumn("zip").setHidable(true);
 
         addComponent(grid);
 
-        grid.addColumnResizeListener(new ColumnResizeListener() {
-            @Override
-            public void columnResize(ColumnResizeEvent event) {
-                log(String.format("Column resized: id=%s, width=%s",
-                        event.getColumn().getPropertyId(),
-                        event.getColumn().getWidth()));
-            }
+        grid.addColumnResizeListener(event -> {
+            log(String.format("Column resized: id=%s, width=%s",
+                    event.getColumn().getId(), event.getColumn().getWidth()));
         });
     }
 
