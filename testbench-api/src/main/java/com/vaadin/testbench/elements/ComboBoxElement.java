@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
@@ -183,7 +183,9 @@ public class ComboBoxElement extends AbstractSelectElement {
         try {
             getSuggestionPopup().findElement(byNextPage).click();
             return true;
-        } catch (NoSuchElementException e) {
+        } catch (WebDriverException e) {
+            // PhantomJS driver can throw WDE instead of the more specific
+            // NoSuchElementException
             return false;
         }
     }
@@ -197,7 +199,9 @@ public class ComboBoxElement extends AbstractSelectElement {
         try {
             getSuggestionPopup().findElement(byPrevPage).click();
             return true;
-        } catch (NoSuchElementException e) {
+        } catch (WebDriverException e) {
+            // PhantomJS driver can throw WDE instead of the more specific
+            // NoSuchElementException
             return false;
         }
     }
