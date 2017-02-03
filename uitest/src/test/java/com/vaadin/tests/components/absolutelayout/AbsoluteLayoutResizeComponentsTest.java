@@ -38,8 +38,9 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
         // Click button to change component size
         $(ButtonElement.class).id(componentId + "-button").click();
 
-        // Not testing left here as testing AUTO doesn't work for chrome version
-        // 40 that calculates the actual left value, testing width instead
+        // Not testing "left" here as testing for AUTO doesn't work in chrome
+        // version 40 which calculates the actual left value, testing width
+        // instead of the wrapper instead
         String width = panelWrapper.get().getCssValue("width");
         Assert.assertEquals("Width was more that it should have been.", "250px",
                 width);
