@@ -10,7 +10,8 @@ import org.openqa.selenium.WebElement;
 import java.util.Optional;
 
 /**
- * Tests for component positioning after width changes from defined to relative and relative to defined
+ * Tests for component positioning after width changes from defined to relative
+ * and relative to defined
  */
 public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
 
@@ -37,10 +38,12 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
         // Click button to change component size
         $(ButtonElement.class).id(componentId + "-button").click();
 
-        left = panelWrapper.get().getCssValue("left");
-        Assert.assertEquals(
-                "Component wrapper did not have its left positioning reset to auto",
-                "auto", left);
+        // Not testing left here as testing AUTO doesn't work for chrome version
+        // 40 that calculates the actual left value, testing width instead
+        String width = panelWrapper.get().getCssValue("width");
+        Assert.assertEquals("Width was more that it should have been.", "250px",
+                width);
+
         Assert.assertNotEquals("Panel is still on the left side of the screen",
                 0, panelComponent.getLocation().getX());
     }
@@ -57,9 +60,9 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
                 "No wrapper element found for panel [ID: " + componentId + "]",
                 panelWrapper.isPresent());
 
-        String left = panelWrapper.get().getCssValue("left");
-        Assert.assertEquals("Component wrapper has a set Left marker", "auto",
-                left);
+        String width = panelWrapper.get().getCssValue("width");
+        Assert.assertEquals("Width was more that it should have been.", "250px",
+                width);
 
         WebElement panelComponent = findElement(By.id(componentId));
         Assert.assertNotEquals(
@@ -69,10 +72,14 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
         // Click button to change component size
         $(ButtonElement.class).id(componentId + "-button").click();
 
-        left = panelWrapper.get().getCssValue("left");
+        String left = panelWrapper.get().getCssValue("left");
         Assert.assertEquals(
                 "Component wrapper was missing left:0; from its css positioning",
                 "0px", left);
+
+        width = panelWrapper.get().getCssValue("width");
+        Assert.assertNotEquals("Width hasn't changed from the initial value.",
+                "250px", width);
 
         Assert.assertEquals("Panel is not on the left side of the screen", 0,
                 panelComponent.getLocation().getX());
@@ -89,10 +96,9 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
         Assert.assertTrue("No wrapper element found for AbsoluteLayout [ID: "
                 + componentId + "].", panelWrapper.isPresent());
 
-        String left = panelWrapper.get().getCssValue("left");
-        Assert.assertEquals(
-                "Component wrapper did not have its left positioning reset to auto",
-                "auto", left);
+        String width = panelWrapper.get().getCssValue("width");
+        Assert.assertEquals("Width was more that it should have been.", "250px",
+                width);
 
         WebElement panelComponent = findElement(By.id(componentId));
         Assert.assertNotEquals(
@@ -102,19 +108,25 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
         // Click button to change component size
         $(ButtonElement.class).id(componentId + "-button").click();
 
-        left = panelWrapper.get().getCssValue("left");
+        String left = panelWrapper.get().getCssValue("left");
         Assert.assertEquals(
                 "Component wrapper was missing left:0; from its css positioning",
                 "0px", left);
+
+        width = panelWrapper.get().getCssValue("width");
+        Assert.assertNotEquals("Width hasn't changed from the initial value.",
+                "250px", width);
 
         Assert.assertEquals("Panel is not on the left side of the screen", 0,
                 panelComponent.getLocation().getX());
     }
 
     /**
-     * Search for the AbsoluteLayout wrapper element that contains component for componentId
+     * Search for the AbsoluteLayout wrapper element that contains component for
+     * componentId
      *
-     * @param componentId Id of component contained in Wrapper component
+     * @param componentId
+     *            Id of component contained in Wrapper component
      * @return WrapperComponent or null
      */
     private Optional<WebElement> getComponentWrapper(String componentId) {
