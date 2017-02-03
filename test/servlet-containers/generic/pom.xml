@@ -67,6 +67,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
+                <!-- This execution builds an additional .war file with JBoss 6 specific descriptor -->
                 <executions>
                     <execution>
                         <id>jboss6-war</id>
