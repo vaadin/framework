@@ -30,18 +30,6 @@ public class GridDelegatesToSelectionModelTest {
     }
 
     @Test
-    public void grid_isSelected_delegated_to_SelectionModel() {
-        grid.isSelected("");
-        verify(selectionModelMock).isSelected("");
-    }
-
-    @Test
-    public void grid_getFirstSelectedItem_delegated_to_SelectionModel() {
-        grid.getFirstSelectedItem();
-        verify(selectionModelMock).getFirstSelectedItem();
-    }
-
-    @Test
     public void grid_getSelectedItems_delegated_to_SelectionModel() {
         grid.getSelectedItems();
         verify(selectionModelMock).getSelectedItems();

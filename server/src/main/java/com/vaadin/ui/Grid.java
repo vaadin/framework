@@ -3049,28 +3049,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @see #getSelectionModel()
      * @see GridSelectionModel
      */
-    public boolean isSelected(T item) {
-        return getSelectionModel().isSelected(item);
-    }
-
-    /**
-     * This method is a shorthand that delegates to the currently set selection
-     * model.
-     * 
-     * @see #getSelectionModel()
-     * @see GridSelectionModel
-     */
-    public Optional<T> getFirstSelectedItem() {
-        return getSelectionModel().getFirstSelectedItem();
-    }
-
-    /**
-     * This method is a shorthand that delegates to the currently set selection
-     * model.
-     * 
-     * @see #getSelectionModel()
-     * @see GridSelectionModel
-     */
     public Set<T> getSelectedItems() {
         return getSelectionModel().getSelectedItems();
     }
