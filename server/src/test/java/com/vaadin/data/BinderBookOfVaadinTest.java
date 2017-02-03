@@ -724,7 +724,7 @@ public class BinderBookOfVaadinTest {
         AtomicBoolean eventIsFired = new AtomicBoolean(false);
 
         binder.addStatusChangeListener(event -> {
-            boolean isValid = !event.hasValidationErrors();
+            boolean isValid = event.getBinder().isValid();
             boolean hasChanges = event.getBinder().hasChanges();
             eventIsFired.set(true);
 
@@ -782,7 +782,7 @@ public class BinderBookOfVaadinTest {
         AtomicBoolean eventIsFired = new AtomicBoolean(false);
 
         binder.addStatusChangeListener(event -> {
-            boolean isValid = !event.hasValidationErrors();
+            boolean isValid = event.getBinder().isValid();
             boolean hasChanges = event.getBinder().hasChanges();
             eventIsFired.set(true);
 
@@ -822,6 +822,31 @@ public class BinderBookOfVaadinTest {
         Assert.assertFalse(saveButton.isEnabled());
         Assert.assertFalse(resetButton.isEnabled());
         verifyEventIsFired(eventIsFired);
+    }
+
+    @Test
+    public void statusChangeListener_multipleRequiredFields() {
+        Button saveButton = new Button();
+
+        binder.addStatusChangeListener(event -> {
+            boolean isValid = event.getBinder().isValid();
+            boolean hasChanges = event.getBinder().hasChanges();
+
+            saveButton.setEnabled(hasChanges && isValid);
+        });
+
+        binder.forField(field).asRequired("").bind(BookPerson::getLastName,
+                BookPerson::setLastName);
+        binder.forField(emailField).asRequired("").bind(BookPerson::getEmail,
+                BookPerson::setEmail);
+
+        Assert.assertFalse(saveButton.isEnabled());
+        field.setValue("not empty");
+        Assert.assertFalse(saveButton.isEnabled());
+        emailField.setValue("not empty");
+        Assert.assertTrue(saveButton.isEnabled());
+        field.clear();
+        Assert.assertFalse(saveButton.isEnabled());
     }
 
     private void verifyEventIsFired(AtomicBoolean flag) {
