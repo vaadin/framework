@@ -67,6 +67,27 @@ public class GridColspansTest extends MultiBrowserTest {
     }
 
     @Test
+    public void testHideAndReAddFirstCOlumn() {
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+
+        assertEquals("Failed initial condition.", "first name",
+                grid.getHeaderCell(2, 1).getText().toLowerCase());
+
+        $(ButtonElement.class).caption("Show/Hide firstName").first().click();
+
+        assertEquals("Failed initial condition.", "last name",
+                grid.getHeaderCell(2, 1).getText().toLowerCase());
+
+        $(ButtonElement.class).caption("Show/Hide firstName").first().click();
+
+        assertEquals("Failed to find first name in last column", "first name",
+                grid.getHeaderCell(2, 5).getText().toLowerCase());
+
+    }
+
+    @Test
     public void testSplittingMergedHeaders() {
         openTestURL();
 

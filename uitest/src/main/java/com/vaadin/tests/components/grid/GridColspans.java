@@ -85,7 +85,7 @@ public class GridColspans extends AbstractTestUI {
             if (column != null) {
                 grid.removeColumn(column);
             } else {
-                grid.addColumn(Person::getFirstName).setId("firstName");
+                grid.addColumn(Person::getFirstName).setId("firstName").setCaption("First name");
             }
         }));
 
