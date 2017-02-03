@@ -3045,6 +3045,50 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     * 
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public Set<T> getSelectedItems() {
+        return getSelectionModel().getSelectedItems();
+    }
+
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     * 
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public void select(T item) {
+        getSelectionModel().select(item);
+    }
+
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     * 
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public void deselect(T item) {
+        getSelectionModel().deselect(item);
+    }
+
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     * 
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public void deselectAll() {
+        getSelectionModel().deselectAll();
+    }
+
+    /**
      * Adds a selection listener to the current selection model.
      * <p>
      * <em>NOTE:</em> If selection mode is switched with
@@ -3621,7 +3665,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @return the comparator based on column sorting information.
      */
-
     protected SerializableComparator<T> createSortingComparator() {
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
                 comparator2) -> SerializableComparator
@@ -3631,5 +3674,4 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);
     }
-
 }
