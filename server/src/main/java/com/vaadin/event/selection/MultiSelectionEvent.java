@@ -128,7 +128,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
     }
 
     @Override
-    public Optional<T> getFirstSelected() {
+    public Optional<T> getFirstSelectedItem() {
         return getValue().stream().findFirst();
     }
 

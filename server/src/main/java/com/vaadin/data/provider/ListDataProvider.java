@@ -38,8 +38,7 @@ import com.vaadin.ui.UI;
  *            data type
  */
 public class ListDataProvider<T>
-        extends AbstractDataProvider<T, SerializablePredicate<T>>
-        implements AppendableFilterDataProvider<T, SerializablePredicate<T>>,
+        extends AbstractDataProvider<T, SerializablePredicate<T>> implements
         ConfigurableFilterDataProvider<T, SerializablePredicate<T>, SerializablePredicate<T>> {
 
     private static final SerializableSupplier<Locale> CURRENT_LOCALE_SUPPLIER = () -> {
@@ -383,13 +382,6 @@ public class ListDataProvider<T>
         return item -> Objects.equals(valueProvider.apply(item), requiredValue);
     }
 
-    @Override
-    public SerializablePredicate<T> combineFilters(
-            SerializablePredicate<T> filter1,
-            SerializablePredicate<T> filter2) {
-        return t -> filter1.test(t) && filter2.test(t);
-    }
-
     /**
      * Wraps this data provider to create a new data provider that is filtered
      * by comparing an item to the filter value provided in the query.
@@ -410,7 +402,7 @@ public class ListDataProvider<T>
             SerializableBiPredicate<T, Q> predicate) {
         Objects.requireNonNull(predicate, "Predicate cannot be null");
 
-        return convertFilter(
+        return withConvertedFilter(
                 filterValue -> item -> predicate.test(item, filterValue));
     }
 

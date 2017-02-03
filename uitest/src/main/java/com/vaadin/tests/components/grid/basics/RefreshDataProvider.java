@@ -35,7 +35,8 @@ public class RefreshDataProvider extends AbstractReindeerTestUI {
         Grid<DataObject> grid = new Grid<>();
         List<DataObject> data = DataObject.generateObjects();
 
-        ListDataProvider<DataObject> dataProvider = DataProvider.create(data);
+        ListDataProvider<DataObject> dataProvider = DataProvider
+                .ofCollection(data);
         grid.setDataProvider(dataProvider);
 
         grid.setDataProvider(dataProvider);

@@ -67,6 +67,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-icons</artifactId>
+        </dependency>
+
         <!-- Jsoup for BootstrapHandler -->
         <dependency>
             <groupId>org.jsoup</groupId>

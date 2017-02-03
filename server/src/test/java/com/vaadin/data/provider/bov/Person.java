@@ -17,13 +17,8 @@ package com.vaadin.data.provider.bov;
 
 import java.io.Serializable;
 
-/**
- * POJO
- *
- * @author Vaadin Ltd
- */
 public class Person implements Serializable {
-    private final String name;
+    private String name;
     private final int born;
 
     public Person(String name, int born) {
@@ -33,6 +28,10 @@ public class Person implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getBorn() {

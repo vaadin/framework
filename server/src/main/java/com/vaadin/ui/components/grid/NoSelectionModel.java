@@ -64,4 +64,13 @@ public class NoSelectionModel<T> extends AbstractExtension
                 "This selection model doesn't allow selection, cannot add selection listeners to it");
     }
 
+    @Override
+    public void setUserSelectionAllowed(boolean allowed) {
+    }
+
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return false;
+    }
+
 }

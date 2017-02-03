@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 /**
  * A footer row in a Grid.
@@ -30,6 +31,8 @@ public interface FooterRow extends Serializable {
 
     /**
      * Returns the cell on this row corresponding to the given column id.
+     *
+     * @see Column#setId(String)
      *
      * @param columnId
      *            the id of the column whose footer cell to get, not null
@@ -79,4 +82,37 @@ public interface FooterRow extends Serializable {
      * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
      */
     FooterCell join(FooterCell... cellsToMerge);
+
+    /**
+     * Merges cells corresponding to the given columns in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnsToMerge
+     *            the columns of the cells that should be merged. The cells
+     *            should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     */
+    FooterCell join(Grid.Column<?, ?>... columnsToMerge);
+
+    /**
+     * Merges cells corresponding to the given column ids in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnIdsToMerge
+     *            the ids of the columns of the cells that should be merged. The
+     *            cells should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     * @see Column#setId(String)
+     */
+    FooterCell join(String... columnIdsToMerge);
 }

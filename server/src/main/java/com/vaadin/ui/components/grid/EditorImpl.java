@@ -24,8 +24,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.BinderValidationStatusHandler;
+import com.vaadin.data.PropertySet;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
 import com.vaadin.shared.ui.grid.editor.EditorServerRpc;
 import com.vaadin.shared.ui.grid.editor.EditorState;
@@ -111,8 +113,11 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
 
     /**
      * Constructor for internal implementation of the Editor.
+     *
+     * @param propertySet
+     *            the property set to use for configuring the default binder
      */
-    public EditorImpl() {
+    public EditorImpl(PropertySet<T> propertySet) {
         rpc = getRpcProxy(EditorClientRpc.class);
         registerRpc(new EditorServerRpc() {
 
@@ -141,7 +146,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             }
         });
 
-        setBinder(new Binder<>());
+        setBinder(Binder.withPropertySet(propertySet));
     }
 
     @Override
@@ -216,8 +221,12 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
 
         getParent().getColumns().stream().filter(Column::isEditable)
                 .forEach(c -> {
-                    Component component = c.getEditorComponentGenerator()
-                            .apply(edited);
+                    Binding<T, ?> binding = c.getEditorBinding();
+
+                    assert binding
+                            .getField() instanceof Component : "Grid should enforce that the binding field is a component";
+
+                    Component component = (Component) binding.getField();
                     addComponentToGrid(component);
                     columnFields.put(c, component);
                     getState().columnFields.put(getInternalIdForColumn(c),

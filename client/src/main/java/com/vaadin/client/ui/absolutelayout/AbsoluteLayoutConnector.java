@@ -71,6 +71,11 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
                 getWidget().setWidgetWrapperStyleNames(child.getWidget(),
                         childStyles.toArray(new String[childStyles.size()]));
             }
+
+            if (stateChangeEvent.hasPropertyChanged("height")
+                    || stateChangeEvent.hasPropertyChanged("width")) {
+                setChildWidgetPosition(child);
+            }
         }
     };
 

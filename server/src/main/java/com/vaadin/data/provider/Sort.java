@@ -35,16 +35,14 @@ public abstract class Sort implements Serializable {
      * lists. When the sort order is ready to be passed on, calling
      * {@link #build()} will create the list of sort orders
      *
-     * @param <S>
-     *            sort order data type
      *
      * @see Sort
-     * @see Sort#asc(Object)
-     * @see Sort#desc(Object)
+     * @see Sort#asc(String)
+     * @see Sort#desc(String)
      * @see #build()
      */
-    public static class SortBuilder<S> implements Serializable {
-        private List<SortOrder<S>> sortOrder = new ArrayList<>();
+    public static class SortBuilder implements Serializable {
+        private List<QuerySortOrder> sortOrder = new ArrayList<>();
 
         /**
          * Constructs an empty SortBuilder.
@@ -59,7 +57,7 @@ public abstract class Sort implements Serializable {
          *            the object to sort by
          * @return this sort builder
          */
-        public SortBuilder<S> thenAsc(S by) {
+        public SortBuilder thenAsc(String by) {
             return append(by, SortDirection.ASCENDING);
         }
 
@@ -70,7 +68,7 @@ public abstract class Sort implements Serializable {
          *            the object to sort by
          * @return this sort builder
          */
-        public SortBuilder<S> thenDesc(S by) {
+        public SortBuilder thenDesc(String by) {
             return append(by, SortDirection.DESCENDING);
         }
 
@@ -84,8 +82,8 @@ public abstract class Sort implements Serializable {
          *
          * @return this sort builder
          */
-        protected SortBuilder<S> append(S by, SortDirection direction) {
-            sortOrder.add(new SortOrder<>(by, direction));
+        protected SortBuilder append(String by, SortDirection direction) {
+            sortOrder.add(new QuerySortOrder(by, direction));
             return this;
         }
 
@@ -95,7 +93,7 @@ public abstract class Sort implements Serializable {
          *
          * @return the unmodifiable sort order list
          */
-        public List<SortOrder<S>> build() {
+        public List<QuerySortOrder> build() {
             return Collections.unmodifiableList(sortOrder);
         }
     }
@@ -106,13 +104,11 @@ public abstract class Sort implements Serializable {
      *
      * @param by
      *            the object to sort by
-     * @param <S>
-     *            sort order data type
      *
      * @return the sort builder
      */
-    public static <S> SortBuilder<S> asc(S by) {
-        return new SortBuilder<S>().thenAsc(by);
+    public static SortBuilder asc(String by) {
+        return new SortBuilder().thenAsc(by);
     }
 
     /**
@@ -121,12 +117,10 @@ public abstract class Sort implements Serializable {
      *
      * @param by
      *            the object to sort by
-     * @param <S>
-     *            sort order data type
      *
      * @return the sort builder
      */
-    public static <S> SortBuilder<S> desc(S by) {
-        return new SortBuilder<S>().thenDesc(by);
+    public static SortBuilder desc(String by) {
+        return new SortBuilder().thenDesc(by);
     }
 }

@@ -53,6 +53,7 @@
         <sonar.analysis.mode>preview</sonar.analysis.mode>
         <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+        <vaadin.icons.version>3.0.0</vaadin.icons.version>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
@@ -280,6 +281,11 @@
                 <artifactId>japicmp-maven-plugin</artifactId>
                 <version>0.9.1</version>
             </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-icons</artifactId>
+                <version>${vaadin.icons.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -485,6 +491,23 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>com.marvinformatics.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>1.8.1</version>
+                <configuration>
+                    <configFile>classpath:/eclipse/VaadinJavaConventions.xml</configFile>
+                    <!-- Provide a dummy JS config file to avoid errors -->
+                    <configJsFile>classpath:/eclipse/VaadinJavaConventions.xml</configJsFile>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>vaadin-buildhelpers</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>

@@ -84,7 +84,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      * @see #setItems(Collection)
      */
     public CheckBoxGroup(String caption, Collection<T> items) {
-        this(caption, DataProvider.create(items));
+        this(caption, DataProvider.ofCollection(items));
     }
 
     /**

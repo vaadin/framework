@@ -42,7 +42,7 @@ cell style generator.
 [[components.grid.data]]
 == Binding to Data
 
-[classname]#Grid# is normally used by binding it to a ,
+[classname]#Grid# is normally used by binding it to a data provider,
 described in
 <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.dataproviders,"Showing Many Items in a Listing">>.
 By default, it is bound to List of items. You can set the items with the
@@ -96,7 +96,7 @@ grid.setSelectionMode(SelectionMode.MULTI);
 grid.addSelectionListener(event -> {
     Set<Person> selected = event.getAllSelectedItems();
     Notification.show(selected.size() + " items selected");
-}
+});
 ----
 
 Programmatically selecting the value is possible via [methodname]#select(T)#.
@@ -214,7 +214,7 @@ selectionModel.addMultiSelectionListener(event -> {
     // Allow deleting only if there's any selected
     deleteSelected.setEnabled(
          event.getNewSelection().size() > 0);
-};
+});
 ----
 
 
@@ -241,7 +241,7 @@ and column.
 [source, java]
 ----
 grid.addCellClickListener(event ->
-    Notification.show("Value: " + event.getItem());
+    Notification.show("Value: " + event.getItem()));
 ----
 
 The clicked grid cell is also automatically focused.
@@ -255,15 +255,11 @@ well as disable cell focus, in a custom theme. See <<components.grid.css>>.
 [[components.grid.columns]]
 == Configuring Columns
 
-Columns are normally defined in the container data source. The
-[methodname]#addColumn()# method can be used to add columns to [classname]#Grid#.
+The [methodname]#addColumn()# method can be used to add columns to [classname]#Grid#.
 
-Column configuration is defined in [classname]#Grid.Column# objects, which can
-be obtained from the grid with [methodname]#getColumns()#.
+Column configuration is defined in [classname]#Grid.Column# objects, which are returned by `addColumn` and can also be obtained from the grid with [methodname]#getColumns()#.
 
-The setter methods in [classname]#Column# have _fluent API_, so you can easily chain
-the configuration calls for columns if you want to.
-
+The setter methods in [classname]#Column# have _fluent API_, so you can easily chain the configuration calls for columns if you want to.
 
 [source, java]
 ----
@@ -274,6 +270,22 @@ grid.addColumn(Person:getBirthDate, new DateRenderer())
 ----
 
 In the following, we describe the basic column configuration.
+
+[[components.grid.columns.automatic]]
+=== Automatically Adding Columns
+
+You can configure `Grid` to automatically add columns based on the properties in a bean.
+To do this, you need to pass the `Class` of the bean type to the constructor when creating a grid.
+You can then further configure the columns based on the bean property name.
+
+[source, java]
+----
+Grid<Person> grid = new Grid<>(Person.class);
+
+grid.getColumn("birthDate").setWidth("100px");
+
+grid.setItems(people);
+----
 
 [[components.grid.columns.order]]
 === Column Order
@@ -424,7 +436,7 @@ grid.addColumn(person -> "Delete",
       new ButtonRenderer(clickEvent -> {
           people.remove(clickEvent.getValue());
           grid.setItems(people);
-    });
+    }));
 ----
 
 [classname]#ImageRenderer#:: Renders the cell as an image.
@@ -692,11 +704,12 @@ editor. In the editor, the input fields can be edited, as well as navigated with
 kbd:[Tab] and kbd:[Shift+Tab] keys. If validation fails, an error is displayed and the user
 can correct the inputs.
 
-The [classname]#Editor# is accessible via [methodname]#getEditor()#, and to enable editing, you need to call [methodname]#setEnabled(true) on it.
+The [classname]#Editor# is accessible via [methodname]#getEditor()#, and to enable editing, you need to call [methodname]#setEnabled(true)# on it.
 
-The editor is based on [classname]#Binder# which is used to bind the data
-to the editor. See <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder.
-The [classname]#Binder# needs to be set with [methodname]#setBinder# in [classname]#Editor#.
+The editor is based on [classname]#Binder# which is used to bind the data to the editor.
+See <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder#.
+For each column that should be editable, a binding should be created in the editor binder and then the column is configured to use that binding.
+For simple cases where no conversion or validation is needed, it is also possible to directly use `setEditorComponent` on a `Column` to only define the editor component and a setter that updates the row object when saving.
 
 [source, java]
 ----
@@ -707,26 +720,22 @@ Grid<Todo> grid = new Grid<>();
 
 TextField taskField = new TextField();
 CheckBox doneField = new CheckBox();
-Binder<Todo> binder = new Binder<>();
 
-binder.bind(taskField, Todo::getTask, Todo::setTask);
-binder.bind(doneField, Todo::isDone, Todo::setDone);
+Binder<Todo> binder = grid.getEditor().getBinder();
 
-grid.getEditor().setBinder(binder);
-grid.getEditor().setEnabled(true);
+Binding<Todo, Boolean> doneBinding = binder.bind(
+    doneField, Todo::isDone, Todo::setDone);
 
-Column<Todo, String> column = grid
-        .addColumn(todo -> String.valueOf(todo.isDone()));
+Column<Todo, String> column = grid.addColumn(
+    todo -> String.valueOf(todo.isDone()));
 column.setWidth(75);
-column.setEditorComponent(doneField);
+column.setEditorBinding(doneBinding);
 
-grid.addColumn(Todo::getTask).setEditorComponent(taskField);
+grid.addColumn(Todo::getTask).setEditorComponent(
+    taskField, Todo::setTask).setExpandRatio(1);
+
+grid.getEditor().setEnabled(true);
 ----
-
-It is possible to customize the used editor component for each column and row,
-by using [methodname]#setEditorComponentGenerator(EditorComponentGenerator)# in
-[classname]#Column#.
-
 
 [[components.grid.editing.buffered]]
 === Buffered / Unbuffered Mode

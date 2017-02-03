@@ -62,12 +62,12 @@ import com.vaadin.ui.declarative.DesignContext;
  * @author Vaadin Ltd
  *
  * @since 8.0
- * 
+ *
  * @param <T>
  *            type of date ({@code LocalDate} or {@code LocalDateTime}).
  * @param <R>
  *            resolution enumeration type
- * 
+ *
  */
 public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
         extends AbstractField<T>
@@ -121,7 +121,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Constructs an empty <code>AbstractDateField</code> with no caption and
      * specified {@code resolution}.
-     * 
+     *
      * @param resolution
      *            initial resolution for the field
      */
@@ -317,8 +317,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                     && (newDate == null || !newDate.equals(oldDate))) {
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
-            } else if (!uiHasValidDateString) { // oldDate ==
-                                                // newDate == null
+            } else if (!uiHasValidDateString) {
+                // oldDate ==
+                // newDate == null
                 // Empty value set, previously contained unparsable date string,
                 // clear related internal fields
                 setValue(null);
@@ -693,7 +694,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Returns a date integer value part for the given {@code date} for the
      * given {@code resolution}.
-     * 
+     *
      * @param date
      *            the given date
      * @param resolution
@@ -707,7 +708,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * keys are resolution and integer values.
      * <p>
      * This is the opposite to {@link #getDatePart(Temporal, Enum)}.
-     * 
+     *
      * @param resolutionValues
      *            date values to construct a date
      * @return date built from the given map of date values
@@ -717,14 +718,14 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Returns a custom date range validator which is applicable for the type
      * {@code T}.
-     * 
+     *
      * @return the date range validator
      */
     protected abstract RangeValidator<T> getRangeValidator();
 
     /**
      * Converts {@link Date} to date type {@code T}.
-     * 
+     *
      * @param date
      *            a date to convert
      * @return object of type {@code T} representing the {@code date}
@@ -735,7 +736,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Converts the object of type {@code T} to {@link Date}.
      * <p>
      * This is the opposite to {@link #convertFromDate(Date)}.
-     * 
+     *
      * @param date
      *            the date of type {@code T}
      * @return converted date of type {@code Date}

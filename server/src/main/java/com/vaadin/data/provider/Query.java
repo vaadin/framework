@@ -36,7 +36,7 @@ public class Query<T, F> implements Serializable {
 
     private final int offset;
     private final int limit;
-    private final List<SortOrder<String>> sortOrders;
+    private final List<QuerySortOrder> sortOrders;
     private final Comparator<T> inMemorySorting;
     private final F filter;
 
@@ -83,7 +83,7 @@ public class Query<T, F> implements Serializable {
      * @param filter
      *            filtering for fetching; can be null
      */
-    public Query(int offset, int limit, List<SortOrder<String>> sortOrders,
+    public Query(int offset, int limit, List<QuerySortOrder> sortOrders,
             Comparator<T> inMemorySorting, F filter) {
         this.offset = offset;
         this.limit = limit;
@@ -123,7 +123,7 @@ public class Query<T, F> implements Serializable {
      *
      * @return list of sort orders
      */
-    public List<SortOrder<String>> getSortOrders() {
+    public List<QuerySortOrder> getSortOrders() {
         return sortOrders;
     }
 

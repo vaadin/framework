@@ -74,7 +74,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      * @param dataCommunicator
      *            the data communicator to use, not null
      */
-    protected AbstractSingleSelect(DataCommunicator<T, ?> dataCommunicator) {
+    protected AbstractSingleSelect(DataCommunicator<T> dataCommunicator) {
         super(dataCommunicator);
         init();
     }
@@ -152,9 +152,9 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> listener.valueChange(
-                new ValueChangeEvent<>(this, event.getOldValue(),
-                        event.isUserOriginated())));
+        return addSelectionListener(
+                event -> listener.valueChange(new ValueChangeEvent<>(this,
+                        event.getOldValue(), event.isUserOriginated())));
     }
 
     @Override

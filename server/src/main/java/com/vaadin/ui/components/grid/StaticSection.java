@@ -173,6 +173,8 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * Returns the cell in this section that corresponds to the given column
          * id.
          *
+         * @see Column#setId(String)
+         *
          * @param columnId
          *            the id of the column
          * @return the cell for the given column

@@ -22,7 +22,6 @@ import com.vaadin.shared.data.sort.SortDirection;
 /**
  * Sorting information for one field.
  *
- * @see Query
  * @param <T>
  *            the type of the sorting information, usually a String (field id)
  *            or a {@link java.util.Comparator}.

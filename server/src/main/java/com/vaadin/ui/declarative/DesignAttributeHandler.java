@@ -316,7 +316,7 @@ public class DesignAttributeHandler implements Serializable {
      * return value would be <code>primary-style-name</code>
      *
      * @param propertyName
-     *            the property name returned by {@link IntroSpector}
+     *            the property name returned by {@link Introspector}
      * @return the design attribute name corresponding the given method name
      */
     private static String toAttributeName(String propertyName) {

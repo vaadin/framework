@@ -17,6 +17,8 @@ package com.vaadin.data.provider;
 
 import java.io.Serializable;
 
+import com.vaadin.data.ValueProvider;
+
 /**
  * DataKeyMapper to map data objects to key strings.
  *
@@ -59,4 +61,16 @@ public interface DataKeyMapper<T> extends Serializable {
      * Dropped keys are not reused.
      */
     void removeAll();
+
+    /**
+     * Updates any existing mappings of given data object. The equality of two
+     * data objects is determined by the equality of their identifiers provided
+     * by the given value provider.
+     *
+     * @param dataObject
+     *            the data object to update
+     * @param identifierGetter
+     *            the function to get an identifier from a data object
+     */
+    void refresh(T dataObject, ValueProvider<T, Object> identifierGetter);
 }
