@@ -291,8 +291,10 @@ public class GridConnector extends AbstractListingConnector
     @SuppressWarnings("unchecked")
     @OnStateChange("columnOrder")
     void updateColumnOrder() {
-        getWidget().setColumnOrder(getState().columnOrder.stream()
-                .map(this::getColumn).toArray(size -> new Column[size]));
+        Scheduler.get()
+                .scheduleFinally(() -> getWidget().setColumnOrder(
+                        getState().columnOrder.stream().map(this::getColumn)
+                                .toArray(size -> new Column[size])));
     }
 
     @OnStateChange("columnResizeMode")
