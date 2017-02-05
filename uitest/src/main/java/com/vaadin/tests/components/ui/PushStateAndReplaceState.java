@@ -2,6 +2,7 @@ package com.vaadin.tests.components.ui;
 
 import java.net.URI;
 
+import com.vaadin.annotations.Title;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.PopStateEvent;
 import com.vaadin.server.Page.PopStateListener;
@@ -13,6 +14,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 
+@Title("Original title")
 public class PushStateAndReplaceState extends AbstractReindeerTestUI {
 
     private final Label locationLabel = new Label();
@@ -48,6 +50,7 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
         Button button = new Button(caption, new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
+                getPage().setTitle(caption);
                 if (replace.getValue()) {
                     getPage().replaceState(newUri);
                 } else {
