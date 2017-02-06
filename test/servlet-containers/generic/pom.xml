@@ -29,6 +29,10 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-push</artifactId>
         </dependency>
         <dependency>
@@ -100,7 +104,7 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.name}</Bundle-Name>
                         <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
-                        <Import-Package>javax.servlet,javax.servlet.http,!com.vaadin.*,*</Import-Package>
+                        <Import-Package>javax.servlet,javax.servlet.http,javax.websocket,!com.vaadin.*,*</Import-Package>
                         <Web-ContextPath>run</Web-ContextPath>
                     </instructions>
                     <supportedProjectTypes>
@@ -108,19 +112,6 @@
                     </supportedProjectTypes>
                 </configuration>
                 <executions>
-<!--
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                <configuration>
-                    <packaging>bundle</packaging>
-                    <buildDirectory>target/osgi</buildDirectory>
-                    <depth>2</depth>
-                </configuration>
-                    </execution>
--->
                     <execution>
                         <id>osgi-manifest</id>
                         <phase>process-classes</phase>
@@ -132,5 +123,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
