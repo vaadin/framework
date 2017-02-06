@@ -18,15 +18,14 @@ package com.vaadin.client.extensions;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.jsinterop.JsEventListener;
+import com.vaadin.client.jsinterop.JsEventTarget;
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
@@ -41,11 +40,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     private static final String CLASS_DRAGGABLE = "v-draggable";
 
-    // Create native event listeners
-    private final JavaScriptObject dragStartListener = createNativeFunction(
-            this::onDragStart);
-    private final JavaScriptObject dragEndListener = createNativeFunction(
-            this::onDragEnd);
+    // Create event listeners
+    private final JsEventListener dragStartListener = this::onDragStart;
+    private final JsEventListener dragEndListener = this::onDragEnd;
 
     @Override
     protected void extend(ServerConnector target) {
@@ -55,36 +52,25 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         dragSourceElement.addClassName(CLASS_DRAGGABLE);
 
         // dragstart
-        addEventListener(dragSourceElement, BrowserEvents.DRAGSTART,
-                dragStartListener);
+        ((JsEventTarget) dragSourceElement)
+                .addEventListener(BrowserEvents.DRAGSTART, dragStartListener);
+
+        // dragend
+        ((JsEventTarget) dragSourceElement)
+                .addEventListener(BrowserEvents.DRAGEND, dragEndListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        Element dragSourceElement = getDraggableElement();
+        JsEventTarget dragSourceElement = (JsEventTarget) getDraggableElement();
 
         // Remove listeners
-        removeEventListener(dragSourceElement, BrowserEvents.DRAGSTART,
+        dragSourceElement.removeEventListener(BrowserEvents.DRAGSTART,
                 dragStartListener);
-
-        removeEventListener(dragSourceElement, BrowserEvents.DRAGEND,
+        dragSourceElement.removeEventListener(BrowserEvents.DRAGEND,
                 dragEndListener);
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-
-        // Add event listener only when listener added on server side
-        if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
-            addEventListener(getDraggableElement(), BrowserEvents.DRAGEND,
-                    dragEndListener);
-        } else {
-            removeEventListener(getDraggableElement(), BrowserEvents.DRAGEND,
-                    dragEndListener);
-        }
     }
 
     /**
@@ -122,8 +108,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @param event
      */
     protected void onDragEnd(Event event) {
-        // Initiate server start dragend event
-        getRpcProxy(DragSourceRpc.class).dragEnd();
+        // Initiate server start dragend event when there is a DragEndListener
+        // attached on the server side
+        if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
+            getRpcProxy(DragSourceRpc.class).dragEnd();
+        }
     }
 
     /**
@@ -135,23 +124,6 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected Element getDraggableElement() {
         return ((ComponentConnector) getParent()).getWidget().getElement();
     }
-
-    private native JavaScriptObject createNativeFunction(
-            EventListener listener)/*-{
-        return $entry(function (event) {
-            listener.@com.google.gwt.user.client.EventListener::onBrowserEvent(*)(event);
-        });
-    }-*/;
-
-    private native void addEventListener(Element element, String eventName,
-            JavaScriptObject listenerFunction)/*-{
-        element.addEventListener(eventName, listenerFunction, false);
-    }-*/;
-
-    private native void removeEventListener(Element element, String eventName,
-            JavaScriptObject listenerFunction)/*-{
-        element.removeEventListener(eventName, listenerFunction, false);
-    }-*/;
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
             String effectAllowed)/*-{

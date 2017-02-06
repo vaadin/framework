@@ -20,16 +20,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.jsinterop.JsEventListener;
+import com.vaadin.client.jsinterop.JsEventTarget;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
@@ -44,51 +44,46 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     private static final String CLASS_DRAG_OVER = "v-drag-over";
 
-    // Create native event listeners
-    private final JavaScriptObject dragEnterListener = createNativeFunction(
-            this::onDragEnter);
-    private final JavaScriptObject dragOverListener = createNativeFunction(
-            this::onDragOver);
-    private final JavaScriptObject dragLeaveListener = createNativeFunction(
-            this::onDragLeave);
-    private final JavaScriptObject dropListener = createNativeFunction(
-            this::onDrop);
+    // Create event listeners
+    private final JsEventListener dragEnterListener = this::onDragEnter;
+    private final JsEventListener dragOverListener = this::onDragOver;
+    private final JsEventListener dragLeaveListener = this::onDragLeave;
+    private final JsEventListener dropListener = this::onDrop;
 
     @Override
     protected void extend(ServerConnector target) {
-        Element dropTargetElement = getDropTargetElement();
+        JsEventTarget dropTargetElement = (JsEventTarget) getDropTargetElement();
 
         // dragenter event
-        addEventListener(dropTargetElement, BrowserEvents.DRAGENTER,
+        dropTargetElement.addEventListener(BrowserEvents.DRAGENTER,
                 dragEnterListener);
 
         // dragover event
-        addEventListener(dropTargetElement, BrowserEvents.DRAGOVER,
+        dropTargetElement.addEventListener(BrowserEvents.DRAGOVER,
                 dragOverListener);
 
         // dragleave event
-        addEventListener(dropTargetElement, BrowserEvents.DRAGLEAVE,
+        dropTargetElement.addEventListener(BrowserEvents.DRAGLEAVE,
                 dragLeaveListener);
 
         // drop event
-        addEventListener(dropTargetElement, BrowserEvents.DROP, dropListener);
+        dropTargetElement.addEventListener(BrowserEvents.DROP, dropListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        Element dropTargetElement = getDropTargetElement();
+        JsEventTarget dropTargetElement = (JsEventTarget) getDropTargetElement();
 
         // Remove listeners
-        removeEventListener(dropTargetElement, BrowserEvents.DRAGENTER,
+        dropTargetElement.removeEventListener(BrowserEvents.DRAGENTER,
                 dragEnterListener);
-        removeEventListener(dropTargetElement, BrowserEvents.DRAGOVER,
+        dropTargetElement.removeEventListener(BrowserEvents.DRAGOVER,
                 dragOverListener);
-        removeEventListener(dropTargetElement, BrowserEvents.DRAGLEAVE,
+        dropTargetElement.removeEventListener(BrowserEvents.DRAGLEAVE,
                 dragLeaveListener);
-        removeEventListener(dropTargetElement, BrowserEvents.DROP,
-                dropListener);
+        dropTargetElement.removeEventListener(BrowserEvents.DROP, dropListener);
     }
 
     /**
@@ -200,23 +195,6 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     private void removeTargetIndicator(Element element) {
         element.removeClassName(CLASS_DRAG_OVER);
     }
-
-    private native JavaScriptObject createNativeFunction(
-            EventListener listener)/*-{
-        return $entry(function (event) {
-            listener.@com.google.gwt.user.client.EventListener::onBrowserEvent(*)(event);
-        });
-    }-*/;
-
-    private native void addEventListener(Element element, String eventName,
-            JavaScriptObject listenerFunction)/*-{
-        element.addEventListener(eventName, listenerFunction, false);
-    }-*/;
-
-    private native void removeEventListener(Element element, String eventName,
-            JavaScriptObject listenerFunction)/*-{
-        element.removeEventListener(eventName, listenerFunction, false);
-    }-*/;
 
     private native boolean executeScript(NativeEvent event, String script)/*-{
         return new Function('event', script)(event);
