@@ -995,6 +995,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
         WebElement cb = checkbox.findElement(By.xpath("input"));
         if (BrowserUtil.isChrome(getDesiredCapabilities())) {
             testBenchElement(cb).click(0, 0);
+        } else if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Firefox workaround
+            getCommandExecutor().executeScript("arguments[0].click()", cb);
         } else {
             cb.click();
         }
