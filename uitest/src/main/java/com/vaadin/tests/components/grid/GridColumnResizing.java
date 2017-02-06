@@ -22,7 +22,7 @@ public class GridColumnResizing extends AbstractReindeerTestUI {
         Grid<Person> grid = new Grid<>();
         Column<Person, String> nameColumn = grid.addColumn(Person::getFirstName)
                 .setCaption("Name");
-        Column<Person, Number> ageColumn = grid
+        Column<Person, Integer> ageColumn = grid
                 .addColumn(Person::getAge, new NumberRenderer())
                 .setCaption("Age");
         grid.addColumnResizeListener(event -> {

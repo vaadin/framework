@@ -805,8 +805,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param renderer
          *            the type of value, not <code>null</code>
          */
-        protected Column(ValueProvider<T, ? extends V> valueProvider,
-                Renderer<V> renderer) {
+        protected Column(ValueProvider<T, V> valueProvider,
+                Renderer<? super V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -824,7 +824,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             // removed
             addExtension(renderer);
 
-            Class<V> valueType = renderer.getPresentationType();
+            Class<? super V> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
                 comparator = (a, b) -> compareComparables(
@@ -2131,9 +2131,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see AbstractRenderer
      */
-    public <V> Column<T, V> addColumn(
-            ValueProvider<T, ? extends V> valueProvider,
-            AbstractRenderer<? super T, V> renderer) {
+    public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
+            AbstractRenderer<? super T, ? super V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
         Column<T, V> column = new Column<>(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
