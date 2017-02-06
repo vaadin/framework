@@ -74,12 +74,12 @@ public class GridColspansTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
 
         assertEquals("Failed initial condition.", "first name",
-                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH)));
+                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH));
 
         $(ButtonElement.class).caption("Show/Hide firstName").first().click();
 
         assertEquals("Failed initial condition.", "last name",
-                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH)));
+                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH));
 
         $(ButtonElement.class).caption("Show/Hide firstName").first().click();
 
