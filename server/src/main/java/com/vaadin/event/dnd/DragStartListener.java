@@ -18,23 +18,27 @@ package com.vaadin.event.dnd;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.ui.Component;
 
 /**
  * Interface to be implemented when creating a dragstart listener on a drag
  * source for HTML5 drag and drop.
  *
+ * @param <T>
+ *         Type of draggable component.
  * @see DragSourceExtension#addDragStartListener(DragStartListener)
  */
 @FunctionalInterface
-public interface DragStartListener extends ConnectorEventListener {
+public interface DragStartListener<T extends Component> extends
+        ConnectorEventListener {
     static final Method DRAGSTART_METHOD = DragStartListener.class
             .getDeclaredMethods()[0];
 
     /**
-     * Called when a server side dragstart event is fired.
+     * Called when dragstart event is fired.
      *
      * @param event
-     *         The dragstart event that is fired.
+     *         Server side dragstart event.
      */
-    void dragStart(DragStartEvent event);
+    void dragStart(DragStartEvent<T> event);
 }

@@ -17,7 +17,6 @@ package com.vaadin.event.dnd;
 
 import java.util.Objects;
 
-import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -28,28 +27,27 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Extension to add drop target functionality to a widget for using HTML5 drag
  * and drop.
+ *
+ * @param <T>
+ *         Type of the component to be extended.
  */
-public class DropTargetExtension extends AbstractExtension {
+public class DropTargetExtension<T extends AbstractComponent> extends
+        AbstractExtension {
 
     /**
-     * Constructor for {@link DropTargetExtension}.
-     */
-    public DropTargetExtension() {
-        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
-            DropEvent event = new DropEvent((AbstractComponent) getParent(),
-                    types, data, dropEffect);
-
-            fireEvent(event);
-        });
-    }
-
-    /**
-     * Makes {@code target} component a drop target.
+     * Extends {@code target} component and makes it a drop target.
      *
      * @param target
      *         Component to be extended.
      */
-    public void extend(AbstractComponent target) {
+    public DropTargetExtension(T target) {
+        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
+            DropEvent<T> event = new DropEvent<>(target, types, data,
+                    dropEffect);
+
+            fireEvent(event);
+        });
+
         super.extend(target);
     }
 
@@ -129,7 +127,7 @@ public class DropTargetExtension extends AbstractExtension {
      *         Listener to handle drop event.
      * @return Handle to be used to remove this listener.
      */
-    public Registration addDropListener(DropListener listener) {
+    public Registration addDropListener(DropListener<T> listener) {
         return addListener(DropEvent.class, listener, DropListener.DROP_METHOD);
     }
 
@@ -141,5 +139,11 @@ public class DropTargetExtension extends AbstractExtension {
     @Override
     protected DropTargetState getState(boolean markAsDirty) {
         return (DropTargetState) super.getState(markAsDirty);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T getParent() {
+        return (T) super.getParent();
     }
 }
