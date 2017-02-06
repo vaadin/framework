@@ -23,15 +23,16 @@ import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.Component;
 
 /**
- * Server side drop event. Fired when an HTML5 drop happens. See {@link
- * DropTargetExtension#addDropListener(DropListener)}.
+ * Server side drop event. Fired when an HTML5 drop happens.
+ *
+ * @see DropTargetExtension#addDropListener(DropListener)
  */
 public class DropEvent extends Component.Event {
-    private Map<String, String> data;
-    private DropEffect dropEffect;
+    private final Map<String, String> data;
+    private final DropEffect dropEffect;
 
-    DropEvent(Component source, List<String> types, Map<String, String> data,
-            DropEffect dropEffect) {
+    public DropEvent(Component source, List<String> types,
+            Map<String, String> data, DropEffect dropEffect) {
         super(source);
 
         // Create a linked map that preserves the order of types

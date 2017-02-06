@@ -15,6 +15,11 @@
  */
 package com.vaadin.event.dnd;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
@@ -24,8 +29,8 @@ import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
 
 /**
- * Extension to add drag source functionality to a widget for using HTML5 drag
- * and drop.
+ * Extension to add drag source functionality to a component for using HTML5
+ * drag and drop.
  */
 public class DragSourceExtension extends AbstractExtension {
 
@@ -63,24 +68,53 @@ public class DragSourceExtension extends AbstractExtension {
      * event.
      *
      * @param effect
-     *         Effects to allow for this draggable element.
+     *         Effects to allow for this draggable element. Cannot be {@code
+     *         null}.
      */
     public void setEffectAllowed(EffectAllowed effect) {
-        getState().effectAllowed = effect;
+        if (effect == null) {
+            throw new IllegalArgumentException("Allowed effect cannot be null");
+        }
+        if (!Objects.equals(getState(false).effectAllowed, effect)) {
+            getState().effectAllowed = effect;
+        }
+    }
+
+    /**
+     * Returns the allowed effects for the current drag source element. Used to
+     * set client side {@code DataTransfer.effectAllowed} parameter for the drag
+     * event.
+     *
+     * @return Effects that are allowed for this draggable element.
+     */
+    public EffectAllowed getEffectAllowed() {
+        return getState(false).effectAllowed;
     }
 
     /**
      * Sets the data for this drag source element. Used to set data for client
      * side drag element using {@code DataTransfer.setData()}. To be used as a
      * map, key-value pairs are stored. Order of entries are preserved.
+     * <p>
+     * Note that by HTML specification, the browser will change data type
+     * "{@code text}" to "{@code text/plain}" and "{@code url}" to "{@code
+     * text/uri-list}" during client side drag event.
      *
      * @param format
-     *         data type to store, e.g. {@code text/plain} or {@code
-     *         text/uri-list}.
+     *         Data type to store, e.g. {@code text/plain} or {@code
+     *         text/uri-list}. Cannot be {@code null}.
      * @param data
-     *         data to store for the data type.
+     *         Data to store for the data type. Cannot be {@code null}.
      */
     public void setTransferData(String format, String data) {
+        if (format == null) {
+            throw new IllegalArgumentException("Data type cannot be null");
+        }
+
+        if (data == null) {
+            throw new IllegalArgumentException("Data cannot be null");
+        }
+
         if (!getState().types.contains(format)) {
             getState().types.add(format);
         }
@@ -88,13 +122,49 @@ public class DragSourceExtension extends AbstractExtension {
     }
 
     /**
+     * Returns the data stored for {@code format} type in this drag source
+     * element.
+     *
+     * @param format
+     *         Data type of the requested data, e.g. {@code text/plain} or
+     *         {@code text/uri-list}.
+     * @return Data that is stored for {@code format} data type.
+     */
+    public String getTransferData(String format) {
+        return getState(false).data.get(format);
+    }
+
+    /**
+     * Returns the map of data stored in this drag source element. The returned
+     * map preserves the order of storage and is unmodifiable.
+     *
+     * @return Unmodifiable copy of the map of data in the order the data was
+     * stored.
+     */
+    public Map<String, String> getTransferData() {
+        Map<String, String> data = getState(false).data;
+
+        // Create a map of data that preserves the order of types
+        LinkedHashMap<String, String> orderedData = new LinkedHashMap<>(
+                data.size());
+        getState(false).types
+                .forEach(type -> orderedData.put(type, data.get(type)));
+
+        return Collections.unmodifiableMap(orderedData);
+    }
+
+    /**
      * Clears data with the given type for this drag source element when
      * present.
      *
      * @param format
-     *         type of data to be cleared.
+     *         Type of data to be cleared. Cannot be {@code null}.
      */
     public void clearTransferData(String format) {
+        if (format == null) {
+            throw new IllegalArgumentException("Data type cannot be null");
+        }
+
         getState().types.remove(format);
         getState().data.remove(format);
     }

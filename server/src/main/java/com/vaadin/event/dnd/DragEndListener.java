@@ -21,7 +21,9 @@ import com.vaadin.event.ConnectorEventListener;
 
 /**
  * Interface to be implemented when creating a dragend listener on a drag
- * source for HTML5 drag and drop. See {@link DragSourceExtension#addDragEndListener(DragEndListener)}.
+ * source for HTML5 drag and drop.
+ *
+ * @see DragSourceExtension#addDragEndListener(DragEndListener)
  */
 @FunctionalInterface
 public interface DragEndListener extends ConnectorEventListener {

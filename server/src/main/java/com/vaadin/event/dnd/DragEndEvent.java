@@ -23,15 +23,16 @@ import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.Component;
 
 /**
- * Server side dragend event. Fired when an HTML5 dragend happens. See
- * {@link DragSourceExtension#addDragEndListener(DragEndListener)}
+ * Server side dragend event. Fired when an HTML5 dragend happens.
+ *
+ * @see DragSourceExtension#addDragEndListener(DragEndListener)
  */
 public class DragEndEvent extends Component.Event {
-    private Map<String, String> data;
-    private EffectAllowed effectAllowed;
+    private final Map<String, String> data;
+    private final EffectAllowed effectAllowed;
 
-    DragEndEvent(Component source, List<String> types, Map<String, String> data,
-            EffectAllowed effectAllowed) {
+    public DragEndEvent(Component source, List<String> types,
+            Map<String, String> data, EffectAllowed effectAllowed) {
         super(source);
 
         // Create a linked map that preserves the order of types

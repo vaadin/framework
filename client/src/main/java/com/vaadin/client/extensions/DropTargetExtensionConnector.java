@@ -102,8 +102,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Event handler for the {@code dragenter} event. Called when {@code
-     * dragenter} event occurs.
+     * Event handler for the {@code dragenter} event.
      *
      * @param event
      *         browser event to be handled
@@ -113,14 +112,13 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Event handler for the {@code dragover} event. Called when {@code
-     * dragover} event occurs.
+     * Event handler for the {@code dragover} event.
      *
      * @param event
      *         browser event to be handled
      */
     protected void onDragOver(Event event) {
-        if (dragOverAllowed(event)) {
+        if (isDragOverAllowed(event)) {
             // Set dropEffect parameter
             if (getState().dropEffect != null) {
                 event.getDataTransfer().setDropEffect(DataTransfer.DropEffect
@@ -129,6 +127,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
             // Prevent default to allow drop
             event.preventDefault();
+            event.stopPropagation();
         } else {
             // Remove drop effect
             event.getDataTransfer().setDropEffect(DataTransfer.DropEffect.NONE);
@@ -138,7 +137,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         }
     }
 
-    private boolean dragOverAllowed(Event event) {
+    protected boolean isDragOverAllowed(Event event) {
         if (getState().dragOverCriteria != null) {
             return executeScript(event, getState().dragOverCriteria);
         }
@@ -148,8 +147,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Event handler for the {@code dragleave} event. Called when {@code
-     * dragleave} event occurs.
+     * Event handler for the {@code dragleave} event.
      *
      * @param event
      *         browser event to be handled
@@ -159,8 +157,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Event handler for the {@code drop} event. Called when {@code drop} event
-     * occurs.
+     * Event handler for the {@code drop} event.
      *
      * @param event
      *         browser event to be handled
@@ -168,6 +165,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     protected void onDrop(Event event) {
         if (dropAllowed(event)) {
             event.preventDefault();
+            event.stopPropagation();
 
             // Initiate firing server side drop event
             JsArrayString typesJsArray = getTypes(event.getDataTransfer());

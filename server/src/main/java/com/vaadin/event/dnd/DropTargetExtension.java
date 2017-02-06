@@ -15,6 +15,8 @@
  */
 package com.vaadin.event.dnd;
 
+import java.util.Objects;
+
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
@@ -47,14 +49,29 @@ public class DropTargetExtension extends AbstractExtension {
     }
 
     /**
-     * Sets drop effect for the current drop target. Used for the client side
-     * {@code DataTransfer.dropEffect} parameter.
+     * Sets the drop effect for the current drop target. Used for the client
+     * side {@code DataTransfer.dropEffect} parameter.
      *
      * @param dropEffect
-     *         The drop effect to be set.
+     *         The drop effect to be set. Cannot be {@code null}.
      */
     public void setDropEffect(DropEffect dropEffect) {
-        getState().dropEffect = dropEffect;
+        if (dropEffect == null) {
+            throw new IllegalArgumentException("Drop effect cannot be null.");
+        }
+
+        if (!Objects.equals(getState(false).dropEffect, dropEffect)) {
+            getState().dropEffect = dropEffect;
+        }
+    }
+
+    /**
+     * Returns the drop effect for the current drop target.
+     *
+     * @return The drop effect of this drop target.
+     */
+    public DropEffect getDropEffect() {
+        return getState(false).dropEffect;
     }
 
     /**
@@ -66,7 +83,9 @@ public class DropTargetExtension extends AbstractExtension {
      *         JavaScript to be executed when dragover event happens.
      */
     public void setDragOverCriteria(String criteriaScript) {
-        getState().dragOverCriteria = criteriaScript;
+        if (!Objects.equals(getState(false).dragOverCriteria, criteriaScript)) {
+            getState().dragOverCriteria = criteriaScript;
+        }
     }
 
     /**
@@ -78,7 +97,18 @@ public class DropTargetExtension extends AbstractExtension {
      *         JavaScript to be executed when drop event happens.
      */
     public void setDropCriteria(String criteriaScript) {
-        getState().dropCriteria = criteriaScript;
+        if (!Objects.equals(getState(false).dropCriteria, criteriaScript)) {
+            getState().dropCriteria = criteriaScript;
+        }
+    }
+
+    /**
+     * Returns the criteria for allowing drop event on the current drop target.
+     *
+     * @return JavaScript that executes when drop event happens.
+     */
+    public String getDropCriteria() {
+        return getState(false).dropCriteria;
     }
 
     /**
