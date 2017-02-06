@@ -33,6 +33,11 @@ public class DragSourceState extends SharedState {
     public static final String EVENT_DRAGEND = "dragend";
 
     /**
+     * Event identifier for dragstart event.
+     */
+    public static final String EVENT_DRAGSTART = "dragstart";
+
+    /**
      * {@code DataTransfer.effectAllowed} parameter for the drag event.
      */
     public EffectAllowed effectAllowed;

@@ -77,7 +77,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-         // Add event listener only when listener added on server side
+        // Add event listener only when listener added on server side
         if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
             addEventListener(getDraggableElement(), BrowserEvents.DRAGEND,
                     dragEndListener);
@@ -108,8 +108,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             event.getDataTransfer().setData(format, data.get(format));
         }
 
-        // Initiate firing server side dragstart event
-        getRpcProxy(DragSourceRpc.class).dragStart();
+        // Initiate firing server side dragstart event when there is a
+        // DragStartListener attached on the server side
+        if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
+            getRpcProxy(DragSourceRpc.class).dragStart();
+        }
     }
 
     /**

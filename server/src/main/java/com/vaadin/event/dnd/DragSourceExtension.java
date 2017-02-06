@@ -187,7 +187,8 @@ public class DragSourceExtension extends AbstractExtension {
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragStartListener(DragStartListener listener) {
-        return addListener(DragStartEvent.class, listener,
+        return addListener(DragSourceState.EVENT_DRAGSTART,
+                DragStartEvent.class, listener,
                 DragStartListener.DRAGSTART_METHOD);
     }
 
