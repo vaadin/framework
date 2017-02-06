@@ -429,7 +429,9 @@ public class VPopupCalendar extends VTextualDate
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
-            if (!preventOpenPopupCalendar) {
+            if (open) {
+                closeCalendarPanel();
+            } else if (!preventOpenPopupCalendar) {
                 openCalendarPanel();
             }
             preventOpenPopupCalendar = false;
