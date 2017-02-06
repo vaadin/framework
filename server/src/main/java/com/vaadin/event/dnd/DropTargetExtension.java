@@ -80,7 +80,8 @@ public class DropTargetExtension extends AbstractExtension {
      * the script returns {@code false}.
      *
      * @param criteriaScript
-     *         JavaScript to be executed when dragover event happens.
+     *         JavaScript to be executed when dragover event happens or {@code
+     *         null} to clear.
      */
     public void setDragOverCriteria(String criteriaScript) {
         if (!Objects.equals(getState(false).dragOverCriteria, criteriaScript)) {
@@ -94,7 +95,8 @@ public class DropTargetExtension extends AbstractExtension {
      * returns {@code false}.
      *
      * @param criteriaScript
-     *         JavaScript to be executed when drop event happens.
+     *         JavaScript to be executed when drop event happens or {@code null}
+     *         to clear.
      */
     public void setDropCriteria(String criteriaScript) {
         if (!Objects.equals(getState(false).dropCriteria, criteriaScript)) {
