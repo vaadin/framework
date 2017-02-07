@@ -18,18 +18,19 @@ package com.vaadin.client.extensions;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Event;
+import com.google.gwt.dom.client.NativeEvent;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.jsinterop.JsEventListener;
-import com.vaadin.client.jsinterop.JsEventTarget;
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
+
+import elemental.events.Event;
+import elemental.events.EventListener;
+import elemental.events.EventTarget;
 
 /**
  * Extension to add drag source functionality to a widget for using HTML5 drag
@@ -41,8 +42,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     private static final String CLASS_DRAGGABLE = "v-draggable";
 
     // Create event listeners
-    private final JsEventListener dragStartListener = this::onDragStart;
-    private final JsEventListener dragEndListener = this::onDragEnd;
+    private final EventListener dragStartListener = this::onDragStart;
+    private final EventListener dragEndListener = this::onDragEnd;
 
     @Override
     protected void extend(ServerConnector target) {
@@ -51,26 +52,24 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         dragSourceElement.setDraggable(Element.DRAGGABLE_TRUE);
         dragSourceElement.addClassName(CLASS_DRAGGABLE);
 
+        EventTarget dragSource = dragSourceElement.cast();
+
         // dragstart
-        ((JsEventTarget) dragSourceElement)
-                .addEventListener(BrowserEvents.DRAGSTART, dragStartListener);
+        dragSource.addEventListener(Event.DRAGSTART, dragStartListener);
 
         // dragend
-        ((JsEventTarget) dragSourceElement)
-                .addEventListener(BrowserEvents.DRAGEND, dragEndListener);
+        dragSource.addEventListener(Event.DRAGEND, dragEndListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        JsEventTarget dragSourceElement = (JsEventTarget) getDraggableElement();
+        EventTarget dragSource = (EventTarget) getDraggableElement();
 
         // Remove listeners
-        dragSourceElement.removeEventListener(BrowserEvents.DRAGSTART,
-                dragStartListener);
-        dragSourceElement.removeEventListener(BrowserEvents.DRAGEND,
-                dragEndListener);
+        dragSource.removeEventListener(Event.DRAGSTART, dragStartListener);
+        dragSource.removeEventListener(Event.DRAGEND, dragEndListener);
     }
 
     /**
@@ -81,9 +80,12 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragStart(Event event) {
+        // Convert elemental event to have access to dataTransfer
+        NativeEvent nativeEvent = (NativeEvent) event;
+
         // Set effectAllowed parameter
         if (getState().effectAllowed != null) {
-            setEffectAllowed(event.getDataTransfer(),
+            setEffectAllowed(nativeEvent.getDataTransfer(),
                     getState().effectAllowed.getValue());
         }
 
@@ -91,7 +93,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         List<String> types = getState().types;
         Map<String, String> data = getState().data;
         for (String format : types) {
-            event.getDataTransfer().setData(format, data.get(format));
+            nativeEvent.getDataTransfer().setData(format, data.get(format));
         }
 
         // Initiate firing server side dragstart event when there is a

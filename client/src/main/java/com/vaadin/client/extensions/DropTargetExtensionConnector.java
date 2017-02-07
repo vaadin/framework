@@ -25,15 +25,16 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.Event;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.jsinterop.JsEventListener;
-import com.vaadin.client.jsinterop.JsEventTarget;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+
+import elemental.events.Event;
+import elemental.events.EventListener;
+import elemental.events.EventTarget;
 
 /**
  * Extension to add drop target functionality to a widget for using HTML5 drag
@@ -45,45 +46,42 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     private static final String CLASS_DRAG_OVER = "v-drag-over";
 
     // Create event listeners
-    private final JsEventListener dragEnterListener = this::onDragEnter;
-    private final JsEventListener dragOverListener = this::onDragOver;
-    private final JsEventListener dragLeaveListener = this::onDragLeave;
-    private final JsEventListener dropListener = this::onDrop;
+    private final EventListener dragEnterListener = this::onDragEnter;
+    private final EventListener dragOverListener = this::onDragOver;
+    private final EventListener dragLeaveListener = this::onDragLeave;
+    private final EventListener dropListener = this::onDrop;
 
     @Override
     protected void extend(ServerConnector target) {
-        JsEventTarget dropTargetElement = (JsEventTarget) getDropTargetElement();
+        EventTarget dropTarget = getDropTargetElement().cast();
 
         // dragenter event
-        dropTargetElement.addEventListener(BrowserEvents.DRAGENTER,
-                dragEnterListener);
+        dropTarget.addEventListener(BrowserEvents.DRAGENTER, dragEnterListener);
 
         // dragover event
-        dropTargetElement.addEventListener(BrowserEvents.DRAGOVER,
-                dragOverListener);
+        dropTarget.addEventListener(BrowserEvents.DRAGOVER, dragOverListener);
 
         // dragleave event
-        dropTargetElement.addEventListener(BrowserEvents.DRAGLEAVE,
-                dragLeaveListener);
+        dropTarget.addEventListener(BrowserEvents.DRAGLEAVE, dragLeaveListener);
 
         // drop event
-        dropTargetElement.addEventListener(BrowserEvents.DROP, dropListener);
+        dropTarget.addEventListener(BrowserEvents.DROP, dropListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        JsEventTarget dropTargetElement = (JsEventTarget) getDropTargetElement();
+        EventTarget dropTarget = getDropTargetElement().cast();
 
         // Remove listeners
-        dropTargetElement.removeEventListener(BrowserEvents.DRAGENTER,
+        dropTarget.removeEventListener(BrowserEvents.DRAGENTER,
                 dragEnterListener);
-        dropTargetElement.removeEventListener(BrowserEvents.DRAGOVER,
+        dropTarget.removeEventListener(BrowserEvents.DRAGOVER,
                 dragOverListener);
-        dropTargetElement.removeEventListener(BrowserEvents.DRAGLEAVE,
+        dropTarget.removeEventListener(BrowserEvents.DRAGLEAVE,
                 dragLeaveListener);
-        dropTargetElement.removeEventListener(BrowserEvents.DROP, dropListener);
+        dropTarget.removeEventListener(BrowserEvents.DROP, dropListener);
     }
 
     /**
@@ -113,26 +111,29 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragOver(Event event) {
-        if (isDragOverAllowed(event)) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+        if (isDragOverAllowed(nativeEvent)) {
             // Set dropEffect parameter
             if (getState().dropEffect != null) {
-                event.getDataTransfer().setDropEffect(DataTransfer.DropEffect
-                        .valueOf(getState().dropEffect.name()));
+                nativeEvent.getDataTransfer().setDropEffect(
+                        DataTransfer.DropEffect
+                                .valueOf(getState().dropEffect.name()));
             }
 
             // Prevent default to allow drop
-            event.preventDefault();
-            event.stopPropagation();
+            nativeEvent.preventDefault();
+            nativeEvent.stopPropagation();
         } else {
             // Remove drop effect
-            event.getDataTransfer().setDropEffect(DataTransfer.DropEffect.NONE);
+            nativeEvent.getDataTransfer()
+                    .setDropEffect(DataTransfer.DropEffect.NONE);
 
             // Remove drop target indicator
             removeTargetIndicator(getDropTargetElement());
         }
     }
 
-    protected boolean isDragOverAllowed(Event event) {
+    protected boolean isDragOverAllowed(NativeEvent event) {
         if (getState().dragOverCriteria != null) {
             return executeScript(event, getState().dragOverCriteria);
         }
@@ -158,18 +159,20 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDrop(Event event) {
-        if (dropAllowed(event)) {
-            event.preventDefault();
-            event.stopPropagation();
+        NativeEvent nativeEvent = (NativeEvent) event;
+        if (dropAllowed(nativeEvent)) {
+            nativeEvent.preventDefault();
+            nativeEvent.stopPropagation();
 
             // Initiate firing server side drop event
-            JsArrayString typesJsArray = getTypes(event.getDataTransfer());
+            JsArrayString typesJsArray = getTypes(
+                    nativeEvent.getDataTransfer());
             List<String> types = new ArrayList<>();
             Map<String, String> data = new HashMap<>();
             for (int i = 0; i < typesJsArray.length(); i++) {
                 types.add(typesJsArray.get(i));
-                data.put(typesJsArray.get(i),
-                        event.getDataTransfer().getData(typesJsArray.get(i)));
+                data.put(typesJsArray.get(i), nativeEvent.getDataTransfer()
+                        .getData(typesJsArray.get(i)));
             }
 
             getRpcProxy(DropTargetRpc.class)
@@ -179,7 +182,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         removeTargetIndicator(getDropTargetElement());
     }
 
-    private boolean dropAllowed(Event event) {
+    private boolean dropAllowed(NativeEvent event) {
         if (getState().dropCriteria != null) {
             return executeScript(event, getState().dropCriteria);
         }
