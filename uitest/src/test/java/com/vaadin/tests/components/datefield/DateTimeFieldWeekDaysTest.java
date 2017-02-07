@@ -36,7 +36,7 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
     }
 
     @Test
-    public void testToggleWeekNumbers_rederedCorrectly() {
+    public void testToggleWeekNumbers_renderedCorrectly() {
         openTestURL();
 
         openPopupAndValidateWeekNumbers();
