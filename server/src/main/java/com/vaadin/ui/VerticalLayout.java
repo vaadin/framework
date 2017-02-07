@@ -62,4 +62,26 @@ public class VerticalLayout extends AbstractOrderedLayout {
     protected VerticalLayoutState getState(boolean markAsDirty) {
         return (VerticalLayoutState) super.getState(markAsDirty);
     }
+
+    /**
+     * Adds the given components to this layout and sets them as expanded. The
+     * height of all added child components are set to 100% so that the
+     * expansion will be effective. The height of this layout is also set to
+     * 100% if it is currently undefined.
+     *
+     * @param components
+     *            the components to set, not <code>null</code>
+     */
+    public void addComponentsAndExpand(Component... components) {
+        addComponents(components);
+
+        if (getHeight() < 0) {
+            setHeight(100, Unit.PERCENTAGE);
+        }
+
+        for (Component child : components) {
+            child.setHeight(100, Unit.PERCENTAGE);
+            setExpandRatio(child, 1);
+        }
+    }
 }
