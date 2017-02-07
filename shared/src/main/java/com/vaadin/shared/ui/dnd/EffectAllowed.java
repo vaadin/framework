@@ -57,7 +57,12 @@ public enum EffectAllowed {
     /**
      * All operations are permitted.
      */
-    ALL("all");
+    ALL("all"),
+
+    /**
+     * Default state, equivalent to ALL
+     */
+    UNINITIALIZED("uninitialized");
 
     private final String value;
 
@@ -67,6 +72,7 @@ public enum EffectAllowed {
 
     /**
      * Get the string value that is accepted by the client side drag event.
+     *
      * @return String value accepted by the client side drag event.
      */
     public String getValue() {

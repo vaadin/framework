@@ -40,7 +40,7 @@ public class DragSourceState extends SharedState {
     /**
      * {@code DataTransfer.effectAllowed} parameter for the drag event.
      */
-    public EffectAllowed effectAllowed;
+    public EffectAllowed effectAllowed = EffectAllowed.UNINITIALIZED;
 
     /**
      * {@code DataTransfer.types} parameter. Used to keep track of data formats

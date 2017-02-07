@@ -42,16 +42,16 @@ public class DragSourceExtension extends AbstractExtension {
             @Override
             public void dragStart() {
                 DragStartEvent event = new DragStartEvent(
-                        (AbstractComponent) getParent(), getState().types,
-                        getState().data, getState().effectAllowed);
+                        (AbstractComponent) getParent(), getState(false).types,
+                        getState(false).data, getState(false).effectAllowed);
                 fireEvent(event);
             }
 
             @Override
             public void dragEnd() {
                 DragEndEvent event = new DragEndEvent(
-                        (AbstractComponent) getParent(), getState().types,
-                        getState().data, getState().effectAllowed);
+                        (AbstractComponent) getParent(), getState(false).types,
+                        getState(false).data, getState(false).effectAllowed);
                 fireEvent(event);
             }
         });
@@ -63,9 +63,12 @@ public class DragSourceExtension extends AbstractExtension {
     }
 
     /**
-     * Sets the allowed effects for the current drag source element. Used to set
-     * client side {@code DataTransfer.effectAllowed} parameter for the drag
-     * event.
+     * Sets the allowed effects for the current drag source element. Used for
+     * setting client side {@code DataTransfer.effectAllowed} parameter for the
+     * drag event.
+     * <p>
+     * By default the value is {@link EffectAllowed#UNINITIALIZED} which is
+     * equivalent to {@link EffectAllowed#ALL}.
      *
      * @param effect
      *         Effects to allow for this draggable element. Cannot be {@code
@@ -115,7 +118,7 @@ public class DragSourceExtension extends AbstractExtension {
             throw new IllegalArgumentException("Data cannot be null");
         }
 
-        if (!getState().types.contains(format)) {
+        if (!getState(false).types.contains(format)) {
             getState().types.add(format);
         }
         getState().data.put(format, data);
