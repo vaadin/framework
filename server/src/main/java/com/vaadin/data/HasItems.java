@@ -49,7 +49,8 @@ public interface HasItems<T> extends Component, Serializable {
 
     /**
      * Sets the data items of this listing.
-     *
+     * 
+     * @see #setItems(Collection)
      * @param items
      *            the data items to display
      */
@@ -65,6 +66,8 @@ public interface HasItems<T> extends Component, Serializable {
      * instead of its array and Collection variations, doesn't save any memory.
      * If you have a large data set to bind, using a lazy data provider is
      * recommended. See {@link BackEndDataProvider} for more info.
+     *
+     * @see #setItems(Collection)
      *
      * @param streamOfItems
      *            the stream of data items to display, not {@code null}

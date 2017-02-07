@@ -18,6 +18,7 @@ package com.vaadin.data;
 import java.util.Collection;
 
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 
 /**
  * A generic interface for listing components that use a data provider for
@@ -52,6 +53,34 @@ public interface HasDataProvider<T> extends HasItems<T> {
      */
     public void setDataProvider(DataProvider<T, ?> dataProvider);
 
+    /**
+     * Sets the data items of this component provided as a collection.
+     * <p>
+     * The provided items are wrapped into a {@link ListDataProvider} and this
+     * instance is used as a data provider for the
+     * {@link #setDataProvider(DataProvider)} method. It means that the items
+     * collection can be accessed later on via
+     * {@link ListDataProvider#getItems()}:
+     * 
+     * <pre>
+     * <code>
+     * HasDataProvider<String> listing = new CheckBoxGroup<>();
+     * listing.setItems(Arrays.asList("a","b"));
+     * ...
+     * 
+     * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();
+     * </code>
+     * </pre>
+     * <p>
+     * The provided collection instance may be used as-is. Subsequent
+     * modification of the collection might cause inconsistent data to be shown
+     * in the component unless it is explicitly instructed to read the data
+     * again.
+     *
+     * @param items
+     *            the data items to display, not null
+     *
+     */
     @Override
     public default void setItems(Collection<T> items) {
         setDataProvider(DataProvider.ofCollection(items));
