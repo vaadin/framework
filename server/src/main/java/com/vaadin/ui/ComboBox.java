@@ -220,10 +220,34 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the data items of this component provided as a collection.
      * <p>
+     * The provided items are wrapped into a {@link ListDataProvider} and this
+     * instance is used as a data provider for the
+     * {@link #setDataProvider(DataProvider)} method. It means that the items
+     * collection can be accessed later on via
+     * {@link ListDataProvider#getItems()}:
+     * 
+     * <pre>
+     * <code>
+     * ComboBox<String> comboBox = new ComboBox<>();
+     * comboBox.setItems(Arrays.asList("a","b"));
+     * ...
+     * 
+     * Collection<String> collection = ((ListDataProvider<String>)comboBox.getDataProvider()).getItems();
+     * </code>
+     * </pre>
+     * <p>
+     * The provided collection instance may be used as-is. Subsequent
+     * modification of the collection might cause inconsistent data to be shown
+     * in the component unless it is explicitly instructed to read the data
+     * again.
+     *
      * Filtering will use a case insensitive match to show all items where the
      * filter text is a substring of the caption displayed for that item.
+     * 
+     * @param items
+     *            the data items to display, not null
      */
     @Override
     public void setItems(Collection<T> items) {
