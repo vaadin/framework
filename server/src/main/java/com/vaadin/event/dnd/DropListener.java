@@ -28,5 +28,11 @@ public interface DropListener extends ConnectorEventListener {
     static final Method DROP_METHOD = DropListener.class
             .getDeclaredMethods()[0];
 
+    /**
+     * Called when a server side drop event is fired.
+     *
+     * @param event
+     *         The drop event that is fired.
+     */
     void drop(DropEvent event);
 }

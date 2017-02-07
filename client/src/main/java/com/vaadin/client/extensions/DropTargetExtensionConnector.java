@@ -133,6 +133,15 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         }
     }
 
+    /**
+     * Determines if dragover event is allowed on this drop target according to
+     * the dragover criteria.
+     *
+     * @param event
+     *         Native dragover event.
+     * @return {@code true} if dragover is allowed, {@code false} otherwise.
+     * @see DropTargetExtension#setDragOverCriteria(String)
+     */
     protected boolean isDragOverAllowed(NativeEvent event) {
         if (getState().dragOverCriteria != null) {
             return executeScript(event, getState().dragOverCriteria);

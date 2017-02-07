@@ -31,6 +31,18 @@ public class DropEvent extends Component.Event {
     private final Map<String, String> data;
     private final DropEffect dropEffect;
 
+    /**
+     * Creates a new server side drop event.
+     *
+     * @param source
+     *         Drop target component.
+     * @param types
+     *         List of data types from {@code DataTransfer.types}.
+     * @param data
+     *         Map of all data from {@code DataTransfer}.
+     * @param dropEffect
+     *         Parameter from {@code DataTransfer.dropEffect}.
+     */
     public DropEvent(Component source, List<String> types,
             Map<String, String> data, DropEffect dropEffect) {
         super(source);

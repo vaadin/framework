@@ -31,6 +31,18 @@ public class DragStartEvent extends Component.Event {
     private final Map<String, String> data;
     private final EffectAllowed effectAllowed;
 
+    /**
+     * Creates a new server side dragend event.
+     *
+     * @param source
+     *         Draggable component.
+     * @param types
+     *         List of data types from {@code DataTransfer.types}.
+     * @param data
+     *         Map of all data from {@code DataTransfer}.
+     * @param effectAllowed
+     *         Parameter from {@code DataTransfer.effectAllowed}.
+     */
     public DragStartEvent(Component source, List<String> types,
             Map<String, String> data, EffectAllowed effectAllowed) {
         super(source);
@@ -54,6 +66,11 @@ public class DragStartEvent extends Component.Event {
         return data != null ? data.get(format) : null;
     }
 
+    /**
+     * Returns the {@code effectAllowed} parameter of this event.
+     *
+     * @return This event's {@code effectAllowed} parameter.
+     */
     public EffectAllowed getEffectAllowed() {
         return effectAllowed;
     }

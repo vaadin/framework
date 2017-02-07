@@ -30,5 +30,11 @@ public interface DragStartListener extends ConnectorEventListener {
     static final Method DRAGSTART_METHOD = DragStartListener.class
             .getDeclaredMethods()[0];
 
+    /**
+     * Called when a server side dragstart event is fired.
+     *
+     * @param event
+     *         The dragstart event that is fired.
+     */
     void dragStart(DragStartEvent event);
 }

@@ -30,5 +30,11 @@ public interface DragEndListener extends ConnectorEventListener {
     static final Method DRAGEND_METHOD = DragEndListener.class
             .getDeclaredMethods()[0];
 
+    /**
+     * Called when a server side dragend event is fired.
+     *
+     * @param event
+     *         The dragend event that is fired.
+     */
     void dragEnd(DragEndEvent event);
 }
