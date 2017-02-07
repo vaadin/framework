@@ -2096,10 +2096,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Adds a new column with the given property name. The property name will be
-     * used as the {@link Column#getId() column id} and the
-     * {@link Column#getCaption() column caption} will be set based on the
-     * property definition.
+     * Adds a new column with the given property name. The column will use a
+     * {@link TextRenderer}. The value is converted to a String using
+     * {@link Object#toString()}. The property name will be used as the
+     * {@link Column#getId() column id} and the {@link Column#getCaption()
+     * column caption} will be set based on the property definition.
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
@@ -2109,7 +2110,28 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return the newly added column, not <code>null</code>
      */
     public Column<T, ?> addColumn(String propertyName) {
+        return addColumn(propertyName, new TextRenderer());
+    }
+
+    /**
+     * Adds a new column with the given property name and renderer. The property
+     * name will be used as the {@link Column#getId() column id} and the
+     * {@link Column#getCaption() column caption} will be set based on the
+     * property definition.
+     * <p>
+     * This method can only be used for a <code>Grid</code> created using
+     * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     *
+     * @param propertyName
+     *            the property name of the new column, not <code>null</code>
+     * @param renderer
+     *            the renderer to use, not <code>null</code>
+     * @return the newly added column, not <code>null</code>
+     */
+    public Column<T, ?> addColumn(String propertyName,
+            AbstractRenderer<? super T, ?> renderer) {
         Objects.requireNonNull(propertyName, "Property name cannot be null");
+        Objects.requireNonNull(renderer, "Renderer cannot be null");
 
         if (getColumn(propertyName) != null) {
             throw new IllegalStateException(
@@ -2122,8 +2144,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         "Could not resolve property name " + propertyName
                                 + " from " + propertySet));
 
-        return addColumn(definition.getGetter()).setId(definition.getName())
-                .setCaption(definition.getCaption());
+        if (!renderer.getPresentationType()
+                .isAssignableFrom(definition.getType())) {
+            throw new IllegalArgumentException(renderer.toString()
+                    + " cannot be used with a property of type "
+                    + definition.getType().getName());
+        }
+
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        Column<T, ?> column = addColumn(definition.getGetter(),
+                (AbstractRenderer) renderer).setId(definition.getName())
+                        .setCaption(definition.getCaption());
+
+        return column;
     }
 
     /**
