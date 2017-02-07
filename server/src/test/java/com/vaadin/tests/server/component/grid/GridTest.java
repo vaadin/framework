@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -492,6 +493,31 @@ public class GridTest {
 
         Assert.assertArrayEquals(expectedOrder,
                 values.stream().sorted(comparator).toArray());
+    }
+
+    @Test
+    public void addBeanColumn_validRenderer() {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        grid.removeColumn("born");
+        grid.addColumn("born", new NumberRenderer(new DecimalFormat("#,###")));
+
+        Person person = new Person("Name", 2017);
+
+        JsonObject rowData = getRowData(grid, person);
+
+        String formattedValue = Stream.of(rowData.keys())
+                .map(rowData::getString).filter(value -> !value.equals("Name"))
+                .findFirst().orElse(null);
+        Assert.assertEquals(formattedValue, "2,017");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addBeanColumn_invalidRenderer() {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        grid.removeColumn("name");
+        grid.addColumn("name", new NumberRenderer());
     }
 
     private static <T> JsonObject getRowData(Grid<T> grid, T row) {
