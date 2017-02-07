@@ -1111,6 +1111,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * client side selection while still allowing programmatic selection on
          * the server.
          *
+         * @since 7.7.7
          */
         public interface HasUserSelectionAllowed extends SelectionModel {
 
@@ -6861,6 +6862,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
     /**
      * Refreshes, i.e. causes the client side to re-render all rows.
+     *
+     * @since 7.7.7
      */
     public void refreshAllRows() {
         datasourceExtension.refreshCache();

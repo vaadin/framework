@@ -276,6 +276,7 @@ public class BeanItem<BT> extends PropertysetItem {
      * 
      * @param bean
      *            The new bean to use for this item, not <code>null</code>
+     * @since 7.7.7
      */
     public void setBean(BT bean) {
         if (bean == null) {
