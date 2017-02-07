@@ -630,8 +630,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     public void setShowISOWeekNumbers(boolean showISOWeekNumbers) {
         this.showISOWeekNumbers = showISOWeekNumbers;
-        if(initialRenderDone) {
-            renderCalendar();
+        if (initialRenderDone && isBelowMonth(resolution)) {
+            clearCalendarBody(false);
+            buildCalendarBody();
         }
     }
 
