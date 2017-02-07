@@ -771,6 +771,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * The instance used by this property
      *
      * @return the instance used for fetching the property value
+     * @since 7.7.7
      */
     public Object getInstance() {
         return instance;
@@ -786,6 +787,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      *
      * @param instance
      *            the instance to use
+     * @since 7.7.7
      */
     public void setInstance(Object instance) {
         if (this.instance.getClass() != instance.getClass()) {
