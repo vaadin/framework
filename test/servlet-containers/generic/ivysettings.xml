@@ -71,8 +71,6 @@
             resolver="vaadin-maven" />
         <module organisation="com.vaadin" name="vaadin-uitest-common"
             resolver="vaadin-maven" />
-        <module organisation="com.vaadin" name="vaadin-icons"
-            resolver="vaadin-maven" />
     </modules>
 
 
