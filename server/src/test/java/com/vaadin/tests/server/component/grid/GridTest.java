@@ -6,10 +6,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +28,7 @@ import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
+import com.vaadin.server.SerializableComparator;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.util.MockUI;
@@ -41,8 +45,8 @@ public class GridTest {
 
     private Grid<String> grid;
     private Column<String, String> fooColumn;
-    private Column<String, Number> lengthColumn;
-    private Column<String, String> objectColumn;
+    private Column<String, Integer> lengthColumn;
+    private Column<String, Object> objectColumn;
     private Column<String, String> randomColumn;
 
     @Before
@@ -451,6 +455,43 @@ public class GridTest {
     public void setColumnOrder_byString_removedColumn() {
         grid.removeColumn("randomColumnId");
         grid.setColumnOrder("randomColumnId", "length");
+    }
+
+    @Test
+    public void defaultSorting_comparableTypes() {
+        testValueProviderSorting(1, 2, 3);
+    }
+
+    @Test
+    public void defaultSorting_strings() {
+        testValueProviderSorting("a", "b", "c");
+    }
+
+    @Test
+    public void defaultSorting_notComparable() {
+        assert !Comparable.class.isAssignableFrom(AtomicInteger.class);
+
+        testValueProviderSorting(new AtomicInteger(10), new AtomicInteger(8),
+                new AtomicInteger(9));
+    }
+
+    @Test
+    public void defaultSorting_differentComparables() {
+        testValueProviderSorting(10.1, 200, 3000.1, 4000);
+    }
+
+    private static void testValueProviderSorting(Object... expectedOrder) {
+        SerializableComparator<Object> comparator = new Grid<>()
+                .addColumn(ValueProvider.identity())
+                .getComparator(SortDirection.ASCENDING);
+
+        Assert.assertNotNull(comparator);
+
+        List<Object> values = new ArrayList<>(Arrays.asList(expectedOrder));
+        Collections.shuffle(values, new Random(42));
+
+        Assert.assertArrayEquals(expectedOrder,
+                values.stream().sorted(comparator).toArray());
     }
 
     private static <T> JsonObject getRowData(Grid<T> grid, T row) {

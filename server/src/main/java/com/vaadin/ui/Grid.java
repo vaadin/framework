@@ -805,8 +805,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param renderer
          *            the type of value, not <code>null</code>
          */
-        protected Column(ValueProvider<T, ? extends V> valueProvider,
-                Renderer<V> renderer) {
+        protected Column(ValueProvider<T, V> valueProvider,
+                Renderer<? super V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -824,12 +824,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             // removed
             addExtension(renderer);
 
-            Class<V> valueType = renderer.getPresentationType();
+            Class<? super V> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
                 comparator = (a, b) -> compareComparables(
                         valueProvider.apply(a), valueProvider.apply(b));
-                state.sortable = true;
             } else if (Number.class.isAssignableFrom(valueType)) {
                 /*
                  * Value type will be Number whenever using NumberRenderer.
@@ -839,10 +838,37 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 comparator = (a, b) -> compareNumbers(
                         (Number) valueProvider.apply(a),
                         (Number) valueProvider.apply(b));
-                state.sortable = true;
             } else {
-                state.sortable = false;
+                comparator = (a, b) -> compareMaybeComparables(
+                        valueProvider.apply(a), valueProvider.apply(b));
             }
+        }
+
+        private static int compareMaybeComparables(Object a, Object b) {
+            if (hasCommonComparableBaseType(a, b)) {
+                return compareComparables(a, b);
+            } else {
+                return compareComparables(a.toString(), b.toString());
+            }
+        }
+
+        private static boolean hasCommonComparableBaseType(Object a, Object b) {
+            if (a instanceof Comparable<?> && b instanceof Comparable<?>) {
+                Class<?> aClass = a.getClass();
+                Class<?> bClass = b.getClass();
+
+                if (aClass == bClass) {
+                    return true;
+                }
+
+                Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
+                        bClass);
+                if (!baseType.isAssignableFrom(Comparable.class)) {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         @SuppressWarnings("unchecked")
@@ -2103,17 +2129,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Adds a new text column to this {@link Grid} with a value provider. The
      * column will use a {@link TextRenderer}. The value is converted to a
-     * String using {@link Object#toString()}. Sorting in memory is executed by
-     * comparing the String values.
+     * String using {@link Object#toString()}. In-memory sorting will use the
+     * natural ordering of elements if they are mutually comparable and
+     * otherwise fall back to comparing the string representations of the
+     * values.
      *
      * @param valueProvider
      *            the value provider
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(ValueProvider<T, ?> valueProvider) {
-        return addColumn(t -> String.valueOf(valueProvider.apply(t)),
-                new TextRenderer());
+    public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider) {
+        return addColumn(valueProvider, new TextRenderer());
     }
 
     /**
@@ -2131,9 +2158,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see AbstractRenderer
      */
-    public <V> Column<T, V> addColumn(
-            ValueProvider<T, ? extends V> valueProvider,
-            AbstractRenderer<? super T, V> renderer) {
+    public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
+            AbstractRenderer<? super T, ? super V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
         Column<T, V> column = new Column<>(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
@@ -3047,7 +3073,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * This method is a shorthand that delegates to the currently set selection
      * model.
-     * 
+     *
      * @see #getSelectionModel()
      * @see GridSelectionModel
      */
@@ -3058,7 +3084,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * This method is a shorthand that delegates to the currently set selection
      * model.
-     * 
+     *
      * @see #getSelectionModel()
      * @see GridSelectionModel
      */
@@ -3069,7 +3095,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * This method is a shorthand that delegates to the currently set selection
      * model.
-     * 
+     *
      * @see #getSelectionModel()
      * @see GridSelectionModel
      */
@@ -3080,7 +3106,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * This method is a shorthand that delegates to the currently set selection
      * model.
-     * 
+     *
      * @see #getSelectionModel()
      * @see GridSelectionModel
      */

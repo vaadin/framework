@@ -21,7 +21,7 @@ public class ColumnState extends AbstractGridExtensionState {
 
     public String caption;
     public String internalId;
-    public boolean sortable;
+    public boolean sortable = true;
     public boolean editable = false;
 
     /** The caption for the column hiding toggle. */
