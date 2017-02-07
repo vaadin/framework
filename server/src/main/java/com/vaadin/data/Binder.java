@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -1579,7 +1579,7 @@ public class Binder<BEAN> implements Serializable {
         fireStatusChangeEvent(validationStatus.hasErrors());
         return validationStatus;
     }
-    
+
     /**
      * Runs all currently configured field level validators, as well as all bean
      * level validators if a bean is currently set with
@@ -1593,10 +1593,9 @@ public class Binder<BEAN> implements Serializable {
      */
     public boolean isValid() {
         if (getBean() == null && !validators.isEmpty()) {
-            throw new IllegalStateException(
-                    "Cannot validate binder: "
-                            + "bean level validators have been configured "
-                            + "but no bean is currently set");
+            throw new IllegalStateException("Cannot validate binder: "
+                    + "bean level validators have been configured "
+                    + "but no bean is currently set");
         }
         if (validateBindings().stream().filter(BindingValidationStatus::isError)
                 .findAny().isPresent()) {
@@ -2104,13 +2103,19 @@ public class Binder<BEAN> implements Serializable {
     public void bindInstanceFields(Object objectWithMemberFields) {
         Class<?> objectClass = objectWithMemberFields.getClass();
 
-        getFieldsInDeclareOrder(objectClass).stream()
+        Integer numberOfBoundFields = getFieldsInDeclareOrder(objectClass)
+                .stream()
                 .filter(memberField -> HasValue.class
                         .isAssignableFrom(memberField.getType()))
-                .forEach(memberField -> handleProperty(memberField,
+                .map(memberField -> handleProperty(memberField,
                         objectWithMemberFields,
                         (property, type) -> bindProperty(objectWithMemberFields,
-                                memberField, property, type)));
+                                memberField, property, type)))
+                .reduce(0, (acc, value) -> value ? acc + 1 : acc, Integer::sum);
+        if (numberOfBoundFields == 0) {
+            throw new IllegalStateException("There are no instance fields "
+                    + "found for automatic binding");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -2142,8 +2147,8 @@ public class Binder<BEAN> implements Serializable {
      * @param propertyType
      *            type of the property
      */
-    private void bindProperty(Object objectWithMemberFields, Field memberField,
-            String property, Class<?> propertyType) {
+    private boolean bindProperty(Object objectWithMemberFields,
+            Field memberField, String property, Class<?> propertyType) {
         Type valueType = GenericTypeReflector.getTypeParameter(
                 memberField.getGenericType(),
                 HasValue.class.getTypeParameters()[0]);
@@ -2163,7 +2168,7 @@ public class Binder<BEAN> implements Serializable {
             } catch (IllegalArgumentException | IllegalAccessException
                     | InvocationTargetException e) {
                 // If we cannot determine the value, just skip the field
-                return;
+                return false;
             }
             if (field == null) {
                 field = makeFieldInstance(
@@ -2171,6 +2176,7 @@ public class Binder<BEAN> implements Serializable {
                 initializeField(objectWithMemberFields, memberField, field);
             }
             forField(field).bind(property);
+            return true;
         } else {
             throw new IllegalStateException(String.format(
                     "Property type '%s' doesn't "
@@ -2243,29 +2249,32 @@ public class Binder<BEAN> implements Serializable {
         }
     }
 
-    private void handleProperty(Field field, Object objectWithMemberFields,
-            BiConsumer<String, Class<?>> propertyHandler) {
+    private boolean handleProperty(Field field, Object objectWithMemberFields,
+            BiFunction<String, Class<?>, Boolean> propertyHandler) {
         Optional<PropertyDefinition<BEAN, ?>> descriptor = getPropertyDescriptor(
                 field);
 
         if (!descriptor.isPresent()) {
-            return;
+            return false;
         }
 
         String propertyName = descriptor.get().getName();
         if (boundProperties.containsKey(propertyName)) {
-            return;
+            return false;
         }
 
         BindingBuilder<BEAN, ?> tentativeBinding = getIncompleteMemberFieldBinding(
                 field, objectWithMemberFields);
+        System.out.println("xxxxx " + tentativeBinding);
         if (tentativeBinding != null) {
             tentativeBinding.bind(propertyName);
-            return;
+            return false;
         }
 
-        propertyHandler.accept(propertyName, descriptor.get().getType());
+        Boolean result = propertyHandler.apply(propertyName,
+                descriptor.get().getType());
         assert boundProperties.containsKey(propertyName);
+        return result;
     }
 
     /**
