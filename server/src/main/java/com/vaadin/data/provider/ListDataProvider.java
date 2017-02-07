@@ -72,6 +72,15 @@ public class ListDataProvider<T>
         sortOrder = null;
     }
 
+    /**
+     * Returns the underlying backend data.
+     * 
+     * @return the underlying backend data
+     */
+    public Collection<T> getItems() {
+        return backend;
+    }
+
     @Override
     public Stream<T> fetch(Query<T, SerializablePredicate<T>> query) {
         Stream<T> stream = getFilteredStream(query);
