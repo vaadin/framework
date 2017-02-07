@@ -3086,6 +3086,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @param userSelectionAllowed
          *            <code>true</code> if the user is allowed to change the
          *            selection, <code>false</code> otherwise
+         * @since 7.7.7
          */
         public void setUserSelectionAllowed(boolean userSelectionAllowed) {
             if (userSelectionAllowed == this.userSelectionAllowed) {
@@ -9249,6 +9250,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * 
      * @return <code>true</code> if selection by the user is allowed by the
      *         selection model (the default), <code>false</code> otherwise
+     * @since 7.7.7
      */
     public boolean isUserSelectionAllowed() {
         if (!(getSelectionModel() instanceof HasUserSelectionAllowed)) {

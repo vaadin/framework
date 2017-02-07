@@ -21,6 +21,8 @@ package com.vaadin.client.widget.grid.selection;
  *
  * @param <T>
  *            Grid's row type
+ * 
+ * @since 7.7.7
  */
 public interface HasUserSelectionAllowed<T> extends SelectionModel<T> {
 
