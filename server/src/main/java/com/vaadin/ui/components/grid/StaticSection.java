@@ -205,6 +205,25 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         }
 
         /**
+         * Returns the custom style name for this row.
+         *
+         * @return the style name or null if no style name has been set
+         */
+        public String getStyleName() {
+            return getRowState().styleName;
+        }
+
+        /**
+         * Sets a custom style name for this row.
+         *
+         * @param styleName
+         *            the style name to set or null to not use any style name
+         */
+        public void setStyleName(String styleName) {
+            getRowState().styleName = styleName;
+        }
+
+        /**
          * Returns the cell in this section that corresponds to the given
          * internal column id.
          *
@@ -514,6 +533,27 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          */
         public GridStaticCellType getCellType() {
             return cellState.type;
+        }
+        
+        /**
+         * Returns the custom style name for this cell.
+         *
+         * @return the style name or null if no style name has been set
+         */
+        public String getStyleName() {
+            return cellState.styleName;
+        }
+
+        /**
+         * Sets a custom style name for this cell.
+         *
+         * @param styleName
+         *            the style name to set or null to not use any style
+         *            name
+         */
+        public void setStyleName(String styleName) {
+            cellState.styleName = styleName;
+            row.section.markAsDirty();
         }
 
         /**

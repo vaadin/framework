@@ -13,80 +13,76 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.tests.components.beanitemcontainer.BeanItemContainerGenerator;
+import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.FooterCell;
-import com.vaadin.v7.ui.Grid.FooterRow;
-import com.vaadin.v7.ui.Grid.HeaderCell;
-import com.vaadin.v7.ui.Grid.HeaderRow;
-import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.components.grid.FooterCell;
+import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.HeaderCell;
+import com.vaadin.ui.components.grid.HeaderRow;
 
-public class GridHeaderStyleNames extends AbstractTestUIWithLog {
+public class GridHeaderStyleNames extends GridEditorUI {
 
-    private HeaderCell ageHeaderCell;
+    private HeaderCell nameHeaderCell;
     private HeaderCell mergedCityCountryCell;
-    private FooterCell ageFooterCell;
+    private FooterCell nameFooterCell;
     private HeaderRow headerRow;
     private FooterRow footerRow;
 
+    private boolean stylesOn = true;
+
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        Grid<Person> grid = createGrid();
+        grid.setItems(createTestData());
         grid.setSelectionMode(SelectionMode.MULTI);
-        grid.setContainerDataSource(
-                BeanItemContainerGenerator.createContainer(100));
 
-        ageHeaderCell = grid.getDefaultHeaderRow().getCell("age");
+        nameHeaderCell = grid.getDefaultHeaderRow().getCell("firstName");
         grid.getDefaultHeaderRow().setStyleName("foo");
         headerRow = grid.prependHeaderRow();
-        mergedCityCountryCell = headerRow.join("city", "country");
+        mergedCityCountryCell = headerRow.join("city", "street");
         mergedCityCountryCell.setText("Merged cell");
+
+        grid.setColumns("email", "firstName", "city", "street", "lastName",
+                "zip");
         addComponent(grid);
 
         footerRow = grid.appendFooterRow();
-        ageFooterCell = footerRow.getCell("age");
+        nameFooterCell = footerRow.getCell("firstName");
 
         getPage().getStyles().add(
-                ".age {background-image: linear-gradient(to bottom,green 2%, #efefef 98%) !important;}");
+                ".name {background-image: linear-gradient(to bottom,green 2%, #efefef 98%) !important;}");
         getPage().getStyles().add(
                 ".valo .v-grid-header .v-grid-cell.city-country {background-image: linear-gradient(to bottom,yellow 2%, #efefef 98%) !important;}");
         getPage().getStyles().add(
-                ".valo .v-grid-footer .v-grid-cell.age-footer {background-image: linear-gradient(to bottom,blue 2%, #efefef 98%) !important;}");
+                ".valo .v-grid-footer .v-grid-cell.name-footer {background-image: linear-gradient(to bottom,blue 2%, #efefef 98%) !important;}");
         getPage().getStyles().add(
                 ".valo .v-grid .v-grid-row.custom-row > * {background-image: linear-gradient(to bottom,purple 2%, #efefef 98%);}");
 
         setCellStyles(true);
         setRowStyles(true);
 
-        Button b = new Button("Toggle styles");
-        b.addClickListener(new ClickListener() {
-            private boolean stylesOn = true;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setCellStyles(!stylesOn);
-                setRowStyles(!stylesOn);
-                stylesOn = !stylesOn;
-            }
+        Button button = new Button("Toggle styles");
+        button.addClickListener(event -> {
+            setCellStyles(!stylesOn);
+            setRowStyles(!stylesOn);
+            stylesOn = !stylesOn;
         });
-        addComponent(b);
+        addComponent(button);
     }
 
     protected void setCellStyles(boolean set) {
         if (set) {
-            ageHeaderCell.setStyleName("age");
-            ageFooterCell.setStyleName("age-footer");
+            nameHeaderCell.setStyleName("name");
+            nameFooterCell.setStyleName("name-footer");
             mergedCityCountryCell.setStyleName("city-country");
         } else {
-            ageHeaderCell.setStyleName(null);
-            ageFooterCell.setStyleName(null);
+            nameHeaderCell.setStyleName(null);
+            nameFooterCell.setStyleName(null);
             mergedCityCountryCell.setStyleName(null);
         }
 
