@@ -531,6 +531,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     public void setShowISOWeekNumbers(boolean showISOWeekNumbers) {
         this.showISOWeekNumbers = showISOWeekNumbers;
+        if(initialRenderDone) {
+            renderCalendar();
+        }
     }
 
     /**
