@@ -311,25 +311,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <skip>${skip.uitest.failsafe}</skip>
-                    <includes>
-                        <include>**/AllTB3Tests.java</include>
-                    </includes>
                     <systemPropertyVariables>
                         <!-- Static path for screenshots pointing to submodule -->
                         <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
@@ -342,7 +326,11 @@
                         <categories.include>${categories.include}</categories.include>
                         <categories.exclude>${categories.exclude}</categories.exclude>
                         <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
+                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
                     </systemPropertyVariables>
+                    <includes>
+                        <include>**/AllTB3Tests.java</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
@@ -352,6 +340,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>animal-sniffer-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -406,7 +407,7 @@
                                     <id>start-jetty</id>
                                     <phase>pre-integration-test</phase>
                                     <goals>
-                                        <goal>start</goal>
+                                        <!-- <goal>start</goal> -->
                                     </goals>
                                 </execution>
                                 <execution>
@@ -435,19 +436,8 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                         <configuration>
                             <groups>com.vaadin.testcategory.MeasurementTest</groups>
-                            <systemPropertyVariables>
-                                <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
-                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
