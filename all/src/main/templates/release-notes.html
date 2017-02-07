@@ -155,6 +155,7 @@
             <li><tt>SharedState</tt> and the getter methods for it have been added to each component, regardless of whether those are used for anything or not</li>
             <li>The old liferay theme (Liferay 6.0 look) has been removed</li>
             <li>FontAwesome icon constants have been deprecated, and will not be updated. It is replaced with <a href="https://vaadin.com/icons">Vaadin Icons</a> that are included in the Framework</li>
+            <li>It is no longer possible to configure a <tt>CurrentInstance</tt> to be automatically inherited into spawned threads.</li>
         </ul>
         <ul><h4>Component specific API changes</h4>
             <li><tt>setDescription(String)</tt> now renders tooltip as inner text by default, instead of HTML. HTML can be still used by using <tt>setDescription(String, ContentMode)</tt></li>
