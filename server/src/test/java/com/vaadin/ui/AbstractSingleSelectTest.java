@@ -272,6 +272,11 @@ public class AbstractSingleSelectTest {
                 throw new UnsupportedOperationException(
                         "Not needed in this test");
             }
+
+            @Override
+            public DataProvider<String, ?> getDataProvider() {
+                return null;
+            }
         };
 
         AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
