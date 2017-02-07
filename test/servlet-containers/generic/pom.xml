@@ -108,7 +108,7 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.name}</Bundle-Name>
                         <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
-                        <Import-Package>javax.servlet,javax.servlet.http,javax.websocket,!com.vaadin.*,*</Import-Package>
+                        <Import-Package>javax.servlet,javax.servlet.http,javax.websocket,javax.websocket.server,!com.vaadin.*,*</Import-Package>
                         <Web-ContextPath>run</Web-ContextPath>
                     </instructions>
                     <supportedProjectTypes>

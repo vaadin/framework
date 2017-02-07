@@ -1,14 +1,7 @@
 package com.vaadin.tests;
 
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
-
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.tests.integration.ServletIntegrationUI;
-import com.vaadin.tests.integration.ServletIntegrationWebsocketUI;
 import com.vaadin.tests.integration.push.BasicPush;
 import com.vaadin.ui.UI;
 
