@@ -366,7 +366,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         private final T item;
         private final int rowIndex;
-        private final Column<?, ?> column;
+        private final Column<T, ?> column;
         private final Section section;
 
         /**
@@ -387,7 +387,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public GridContextClickEvent(Grid<T> source,
                 MouseEventDetails mouseEventDetails, Section section,
-                int rowIndex, T item, Column<?, ?> column) {
+                int rowIndex, T item, Column<T, ?> column) {
             super(source, mouseEventDetails);
             this.item = item;
             this.section = section;
@@ -409,7 +409,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return the clicked column
          */
-        public Column<?, ?> getColumn() {
+        public Column<T, ?> getColumn() {
             return column;
         }
 
