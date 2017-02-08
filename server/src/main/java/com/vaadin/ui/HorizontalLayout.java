@@ -60,4 +60,32 @@ public class HorizontalLayout extends AbstractOrderedLayout {
         return (HorizontalLayoutState) super.getState(markAsDirty);
     }
 
+    /**
+     * Expands given the components to consume all available space. The method
+     * basically uses {@link #setExpandRatio(Component, float)} method and
+     * configures both given components and this component so that all available
+     * space is distributed to given components. The method also adds given
+     * components to layout if they are not added yet.
+     *
+     * @param componentsToExpand
+     *            the component(s) which should be expanded
+     */
+    public void expand(Component... componentsToExpand) {
+        configureParentForExpansion();
+        for (Component component : componentsToExpand) {
+            if (component.getParent() != this) {
+                addComponent(component);
+            }
+            setExpandRatio(component, 1);
+            component.setWidth(100, Unit.PERCENTAGE);
+        }
+    }
+
+    private void configureParentForExpansion() {
+        if (getWidth() < 0) {
+            // Make full width if no other size is set
+            setWidth(100, Unit.PERCENTAGE);
+        }
+    }
+
 }
