@@ -407,7 +407,7 @@
                                     <id>start-jetty</id>
                                     <phase>pre-integration-test</phase>
                                     <goals>
-                                        <!-- <goal>start</goal> -->
+                                        <goal>start</goal>
                                     </goals>
                                 </execution>
                                 <execution>
