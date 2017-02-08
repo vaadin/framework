@@ -22,12 +22,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.ListBox;
+
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.connectors.AbstractMultiSelectConnector.MultiSelectWidget;
@@ -40,7 +41,7 @@ import elemental.json.JsonObject;
  *
  * @author Vaadin Ltd
  */
-public class VListSelect extends Composite implements ClickHandler, Field,
+public class VListSelect extends Composite implements ChangeHandler, Field,
         Focusable, HasEnabled, MultiSelectWidget {
 
     private List<BiConsumer<Set<String>, Set<String>>> selectionChangeListeners = new ArrayList<>();
@@ -63,7 +64,7 @@ public class VListSelect extends Composite implements ClickHandler, Field,
 
         select = new ListBox();
         select.setMultipleSelect(true);
-        select.addClickHandler(this);
+        select.addChangeHandler(this);
 
         container.add(select);
 
@@ -161,8 +162,8 @@ public class VListSelect extends Composite implements ClickHandler, Field,
     }
 
     @Override
-    public void onClick(ClickEvent event) {
-        if (event.getSource() == select) {
+    public void onChange(ChangeEvent changeEvent) {
+        if (changeEvent.getSource() == select) {
             // selection can change by adding and at the same time removing
             // previous keys, or by just adding (e.g. when modifier keys are
             // pressed)
