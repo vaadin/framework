@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -3726,9 +3725,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     protected SerializableComparator<T> createSortingComparator() {
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) -> SerializableComparator
-                        .asInstance((Comparator<T> & Serializable) comparator1
-                                .thenComparing(comparator2));
+                comparator2) -> {
+            /*
+             * thenComparing is defined to return a serializable comparator as
+             * long as both original comparators are also serializable
+             */
+            return comparator1.thenComparing(comparator2)::compare;
+        };
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);
