@@ -17,7 +17,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  */
 public class AbsoluteLayoutResizeComponentsIE8Test extends MultiBrowserTest {
 
-    // Don't test IE8 with this test as it uses auto sizing.
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         return getBrowserCapabilities(Browser.IE8);

@@ -20,8 +20,7 @@ public class AbsoluteLayoutResizeComponentsTest extends MultiBrowserTest {
     // Don't test IE8 with this test as it uses auto sizing.
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowserCapabilities(Browser.IE9, Browser.IE10, Browser.IE11,
-                Browser.FIREFOX, Browser.CHROME, Browser.PHANTOMJS);
+        return getBrowsersExcludingIE8();
     }
 
     @Test
