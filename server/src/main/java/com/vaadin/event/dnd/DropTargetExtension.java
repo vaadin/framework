@@ -43,14 +43,21 @@ public class DropTargetExtension extends AbstractExtension {
         });
     }
 
-    @Override
-    public void extend(AbstractClientConnector target) {
+    /**
+     * Makes {@code target} component a drop target.
+     *
+     * @param target
+     *         Component to be extended.
+     */
+    public void extend(AbstractComponent target) {
         super.extend(target);
     }
 
     /**
      * Sets the drop effect for the current drop target. Used for the client
      * side {@code DataTransfer.dropEffect} parameter.
+     * <p>
+     * Default value is browser dependent and can depend on e.g. modifier keys.
      *
      * @param dropEffect
      *         The drop effect to be set. Cannot be {@code null}.

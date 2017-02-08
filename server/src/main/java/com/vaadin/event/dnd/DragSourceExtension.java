@@ -57,8 +57,13 @@ public class DragSourceExtension extends AbstractExtension {
         });
     }
 
-    @Override
-    public void extend(AbstractClientConnector target) {
+    /**
+     * Makes {@code target} component a drag source.
+     *
+     * @param target
+     *         Component to be extended.
+     */
+    public void extend(AbstractComponent target) {
         super.extend(target);
     }
 
