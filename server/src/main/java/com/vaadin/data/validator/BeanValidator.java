@@ -150,7 +150,7 @@ public class BeanValidator implements Validator<Object> {
      *
      * @return the validator to use
      */
-    protected javax.validation.Validator getJavaxBeanValidator() {
+    public javax.validation.Validator getJavaxBeanValidator() {
         return getJavaxBeanValidatorFactory().getValidator();
     }
 
