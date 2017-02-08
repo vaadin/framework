@@ -72,9 +72,8 @@
                             <includeGroupIds>com.vaadin</includeGroupIds>
                             <includeArtifactIds>vaadin-icons</includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
-                            <includes>VAADIN/addons/vaadin-icons/**</includes>
+                            <includes>VAADIN/addons/vaadin-icons/fonts/*</includes>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${project.basedir}/src/main/themes/</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -103,6 +102,25 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>**/valo/shared/_global.scss</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-font-files</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/VAADIN/themes/valo/fonts/vaadin-icons</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/dependency-unpack/VAADIN/addons/vaadin-icons/fonts/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>Vaadin-Icons.*</include>
                                     </includes>
                                 </resource>
                             </resources>
