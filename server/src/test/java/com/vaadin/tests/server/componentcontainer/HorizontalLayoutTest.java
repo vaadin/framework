@@ -5,19 +5,19 @@ import org.junit.Test;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.VerticalLayout;
 
-public class VerticalLayoutTest extends AbstractIndexedLayoutTestBase {
+public class HorizontalLayoutTest extends AbstractIndexedLayoutTestBase {
 
     @Override
     protected Layout createLayout() {
-        return new VerticalLayout();
+        return new HorizontalLayout();
     }
 
     @Override
-    public VerticalLayout getLayout() {
-        return (VerticalLayout) super.getLayout();
+    public HorizontalLayout getLayout() {
+        return (HorizontalLayout) super.getLayout();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class VerticalLayoutTest extends AbstractIndexedLayoutTestBase {
         Button b2 = new Button();
         Button b3 = new Button();
 
-        VerticalLayout layout = getLayout();
+        HorizontalLayout layout = getLayout();
         layout.addComponents(b3, b2);
 
         layout.addComponentsAndExpand(b1, b2);
@@ -56,31 +56,31 @@ public class VerticalLayoutTest extends AbstractIndexedLayoutTestBase {
         Assert.assertEquals(1, layout.getExpandRatio(b1), 0);
         Assert.assertEquals(1, layout.getExpandRatio(b2), 0);
 
-        Assert.assertEquals(-1, b3.getHeight(), 0);
-        Assert.assertEquals(100, b1.getHeight(), 0);
-        Assert.assertEquals(100, b2.getHeight(), 0);
+        Assert.assertEquals(-1, b3.getWidth(), 0);
+        Assert.assertEquals(100, b1.getWidth(), 0);
+        Assert.assertEquals(100, b2.getWidth(), 0);
     }
 
     @Test
     public void addAndExpand_undefinedHeightUpdated() {
-        VerticalLayout layout = getLayout();
+        HorizontalLayout layout = getLayout();
 
-        Assert.assertEquals(-1, layout.getHeight(), 0);
+        Assert.assertEquals(-1, layout.getWidth(), 0);
 
         layout.addComponentsAndExpand();
 
-        Assert.assertEquals(100, layout.getHeight(), 0);
+        Assert.assertEquals(100, layout.getWidth(), 0);
     }
 
     @Test
     public void addAndExpand_definedHeightPreserved() {
-        VerticalLayout layout = getLayout();
+        HorizontalLayout layout = getLayout();
 
-        layout.setHeight("150px");
+        layout.setWidth("150px");
 
         layout.addComponentsAndExpand();
 
-        Assert.assertEquals(150, layout.getHeight(), 0);
+        Assert.assertEquals(150, layout.getWidth(), 0);
     }
 
 }
