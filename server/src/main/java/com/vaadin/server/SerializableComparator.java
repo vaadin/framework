@@ -20,6 +20,15 @@ import java.util.Comparator;
 
 /**
  * A {@link Comparator} that is also {@link Serializable}.
+ * <p>
+ * You can create a serializable comparator from a regular comparator through a
+ * method reference by appending <code>::compare</code>. For example
+ * <code>SerializableComparator&lt;Employee&gt;
+ * comparator = Comparator.comparing(Employee::getFirstName)::compare</code>.
+ * The resulting comparator will in most cases cause exceptions if it is
+ * actually being serialized, but this construct will enable using the
+ * shorthands in {@link Comparator} in applications where session will not be
+ * serialized.
  *
  * @author Vaadin Ltd
  * @param <T>
@@ -29,21 +38,5 @@ import java.util.Comparator;
  */
 @FunctionalInterface
 public interface SerializableComparator<T> extends Comparator<T>, Serializable {
-
-    /**
-     * Returns a {@link SerializableComparator} instance which delegates its
-     * logic to the provided {@code comparator}.
-     *
-     * @param comparator
-     *            comparator to convert
-     * @param <T>
-     *            the type of objects that may be compared by this comparator
-     * @param <C>
-     *            the comparator type
-     * @return a SerializableComparator view of the {@code comparator}
-     */
-    static <C extends Comparator<T> & Serializable, T> SerializableComparator<T> asInstance(
-            C comparator) {
-        return (arg1, arg2) -> comparator.compare(arg1, arg2);
-    }
+    // Relevant methods inherited from Comparator
 }
