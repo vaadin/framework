@@ -17,22 +17,23 @@ public abstract class AbstractConverterTest {
 
     protected abstract Converter<?, ?> getConverter();
 
-    protected void assertValue(Object object, Result<?> result) {
-        assertValue(null, object, result);
+    protected <T> void assertValue(T expectedValue, Result<?> result) {
+        assertValue(null, expectedValue, result);
     }
 
-    protected void assertValue(String error, Object object, Result<?> result) {
+    protected <T> void assertValue(String assertMessage, T expectedValue,
+            Result<?> result) {
         Assert.assertNotNull("Result should never be null", result);
         Assert.assertFalse("Result is not ok", result.isError());
-        Assert.assertEquals(object,
+        Assert.assertEquals(expectedValue,
                 result.getOrThrow(message -> new AssertionError(
-                        error != null ? error : message)));
+                        assertMessage != null ? assertMessage : message)));
     }
 
-    protected void assertError(String expected, Result<?> result) {
+    protected void assertError(String expectedResultMessage, Result<?> result) {
         Assert.assertNotNull("Result should never be null", result);
         Assert.assertTrue("Result should be an error", result.isError());
-        Assert.assertEquals(expected, result.getMessage().get());
+        Assert.assertEquals(expectedResultMessage, result.getMessage().get());
     }
 
     protected String getErrorMessage() {
