@@ -42,14 +42,15 @@ public class VaadinSpringBootSmokeIT extends TestBenchTestCase {
 
     @Test
     public void testPageLoadsAndButtonWorks() {
-        getDriver().navigate().to("http://localhost:" + port + "");
+        getDriver().navigate()
+                .to("http://localhost:" + port + "/" + DemoApplication.CONTEXT);
         runSmokeTest();
     }
 
     @Test
     public void testSubPathPageLoadsAndButtonWorks() {
-        getDriver().navigate()
-                .to("http://localhost:" + port + "/" + SubPathUI.SUBPATH);
+        getDriver().navigate().to("http://localhost:" + port + "/"
+                + DemoApplication.CONTEXT + "/" + SubPathUI.SUBPATH);
         runSmokeTest();
     }
 

@@ -5,6 +5,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -14,6 +16,7 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.server.SpringVaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -27,8 +30,16 @@ import com.vaadin.ui.themes.ValoTheme;
 @SpringBootApplication
 public class DemoApplication {
 
+    public static final String CONTEXT = "/subcontext";
+
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @Bean
+    ServletRegistrationBean servlet() {
+        return new ServletRegistrationBean(new SpringVaadinServlet(), false,
+                CONTEXT + "/*", "/VAADIN/*");
     }
 
 }

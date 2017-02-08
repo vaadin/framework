@@ -101,6 +101,7 @@
         <module>space in directory</module>
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
+        <module>spring-boot-subcontext</module>
         <module>servlet-containers/generic</module>
         <module>cdi</module>
         <module>servlet-containers/jsp-integration</module>
