@@ -591,17 +591,20 @@
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
                 <module>testbench-api</module>
-                <!-- Nexus staging bug needs the last module to be deployed. -->
                 <module>bom</module>
             </modules>
         </profile>
         <profile>
+            <!-- Profile for running integration tests. Vaadin version to 
+                be tested can be defined with property vaadin.version -->
             <id>slowtest</id>
             <modules>
                 <module>test</module>
             </modules>
         </profile>
         <profile>
+            <!-- This profile builds the assembled parts of the Framework 
+                for website release. Should be run after running the release profile -->
             <id>release-assemblies</id>
             <modules>
                 <module>liferay</module>
@@ -609,16 +612,12 @@
             </modules>
         </profile>
         <profile>
+            <!-- Release build only builds artifacts that are deployed or 
+                needed by them -->
             <id>release</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <properties>
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
-
-            <!-- Release build only builds artifacts that are deployed or 
-                needed by them -->
             <modules>
                 <module>buildhelpers</module>
                 <module>shared</module>
@@ -743,9 +742,6 @@
             <!-- Testing profile for measurement tests. Use along with default 
                 profile -->
             <id>measurements</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <properties>
                 <skipTests>true</skipTests>
             </properties>
