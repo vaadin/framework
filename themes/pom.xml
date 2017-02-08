@@ -72,7 +72,7 @@
                             <includeGroupIds>com.vaadin</includeGroupIds>
                             <includeArtifactIds>vaadin-icons</includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
-                            <includes>VAADIN\/addons\/vaadin-icons\/**</includes>
+                            <includes>VAADIN/addons/vaadin-icons/**</includes>
                             <overWrite>true</overWrite>
                             <outputDirectory>${project.basedir}/src/main/themes/</outputDirectory>
                         </configuration>
