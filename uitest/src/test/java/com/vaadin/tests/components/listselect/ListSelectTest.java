@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -66,6 +67,23 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         removeItemsFromSelection("Item 0", "Item 2", "Item 9"); // will cause 3
                                                                 // events
         Assert.assertEquals("10. Selected: [Item 4, Item 10]", getLogRow(0));
+    }
+
+    @Test
+    public void keyboardSelect() {
+        selectMenuPath("Component", "Listeners", "Selection listener");
+
+        selectItem("Item 4");
+        Assert.assertEquals("1. Selected: [Item 4]", getLogRow(0));
+
+        getListSelect().findElement(By.tagName("select")).sendKeys(Keys.ARROW_UP);
+
+        Assert.assertEquals("2. Selected: [Item 3]", getLogRow(0));
+
+        getListSelect().findElement(By.tagName("select")).sendKeys(Keys.ARROW_DOWN, Keys.ARROW_DOWN);
+
+        Assert.assertEquals("4. Selected: [Item 5]", getLogRow(0));
+
     }
 
     @Test
