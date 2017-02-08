@@ -46,6 +46,7 @@ import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
@@ -88,9 +89,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
          * @param filter
          *            a non-null filter string
          * @param offset
-         *            the offset
+         *            the first index to fetch
          * @param limit
-         *            the limit
+         *            the fetched item count
          * @return stream of items
          */
         public Stream<T> fetchItems(String filter, int offset, int limit);
@@ -767,11 +768,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            a callback for getting the count of items
      */
     public void setDataProvider(FetchItemsCallback<T> fetchItems,
-            SerializableFunction<String, Integer> sizeCallback) {
+            SerializableToIntFunction<String> sizeCallback) {
         setDataProvider(new CallbackDataProvider<>(
                 q -> fetchItems.fetchItems(q.getFilter().orElse(""),
                         q.getOffset(), q.getLimit()),
-                q -> sizeCallback.apply(q.getFilter().orElse(""))));
+                q -> sizeCallback.applyAsInt(q.getFilter().orElse(""))));
     }
 
     @Override

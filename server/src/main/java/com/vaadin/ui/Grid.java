@@ -154,9 +154,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param sortOrder
          *            a list of sort orders
          * @param offset
-         *            the offset
+         *            the first index to fetch
          * @param limit
-         *            the limit
+         *            the fetched item count
          * @return stream of items
          */
         public Stream<T> fetchItems(List<QuerySortOrder> sortOrder, int offset,
