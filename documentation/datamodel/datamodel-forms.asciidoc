@@ -440,9 +440,10 @@ binder.forField(yearOfBirthField)
 [NOTE]
 Code using strings to identify properties will cause exceptions during runtime if the string contains a typo or if the name of the setter and getter methods have been changed without also updating the string.
 
-//todo change to new JSR303 support
-
-Bindings created based on a property name will automatically use JSR 303 Bean Validation annotations from the bean class if a Bean Validation implementation is available.
+If you have a Bean Validation implementation available in your classpath and 
+want to use JSR 303 Bean Validation annotations then a [classname]#BeanValidationBinder# should be used.
+[classname]#BeanValidationBinder# extends [classname]#Binder# class so it has the same API but its implementation 
+automatically adds a bean validator which takes care of JSR 303 constraints.
 Constraints defined for properties in the bean will work in the same way as if configured when the binding is created.
 
 [source, java]
@@ -460,7 +461,24 @@ public class Person {
 }
 ----
 
+[source, java]
+----
+BeanValidationBinder<Person> binder = new BeanValidationBinder<>(Person.class);
+
+binder.bind(nameField, "name");
+binder.forField(yearOfBirthField)
+  .withConverter(
+    new StringToIntegerConverter("Please enter a number"))
+  .bind("yearOfBirth");
+----
+
 Constraint annotations can also be defined on the bean level instead of being defined for any specific property.
+
+There are some number of predefined constraint annotations that mark a bound field as required using 
+[classname]#BeanValidationBinder#.[methodname]#setRequiredIndicatorVisible#. By default [classname]#@NotNull#,
+[classname]#@NotEmpty# and [classname]#@Size# (if [methodname]#min()# value is greater than 0) 
+configures the field as required. It's possible to change this behavior using 
+the [classname]#BeanValidationBinder#.[methodname]#setRequiredConfigurator# method.
 
 [NOTE]
 Bean level validation can only be performed once the bean has been updated. This means that this functionality can only be used together with `setBean`. You need to trigger validation manually if using `readBean` and `writeBean`.
