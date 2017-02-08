@@ -2211,6 +2211,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         getState().columnOrder.add(identifier);
         getHeader().addColumn(identifier);
+        getFooter().addColumn(identifier);
 
         if (getDefaultHeaderRow() != null) {
             getDefaultHeaderRow().getCell(column).setText(column.getCaption());
