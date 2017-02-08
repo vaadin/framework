@@ -38,13 +38,28 @@ public class StringToFloatConverter
         extends AbstractStringToNumberConverter<Float> {
 
     /**
-     * Creates a new converter instance with the given error message.
+     * Creates a new converter instance with the given error message. Empty
+     * strings are converted to <code>null</code>.
      *
      * @param errorMessage
      *            the error message to use if conversion fails
      */
     public StringToFloatConverter(String errorMessage) {
-        super(errorMessage);
+        this(null, errorMessage);
+    }
+
+    /**
+     * Creates a new converter instance with the given empty string value and
+     * error message.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    public StringToFloatConverter(Float emptyValue, String errorMessage) {
+        super(emptyValue, errorMessage);
     }
 
     @Override
