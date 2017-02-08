@@ -13,16 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
@@ -42,18 +41,8 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
         return grid.getHeaderCell(0, 3);
     }
 
-    private WebElement getMergedHeaderCellContent() {
-        return getMergedHeaderCell().findElement(
-                By.cssSelector("div.v-grid-column-header-content"));
-    }
-
-    private GridCellElement getAgeFooterCell() {
+    private GridCellElement getNameFooterCell() {
         return grid.getFooterCell(0, 2);
-    }
-
-    private WebElement getAgeFooterCellContent() {
-        return getAgeFooterCell().findElement(
-                By.cssSelector("div.v-grid-column-footer-content"));
     }
 
     @Test
@@ -84,21 +73,21 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
     private void assertStylesSet(boolean set) {
         if (set) {
             assertHasStyleName(
-                    "Footer cell should have the assigned 'age-footer' class name",
-                    getAgeFooterCell(), "age-footer");
+                    "Footer cell should have the assigned 'name-footer' class name",
+                    getNameFooterCell(), "name-footer");
             assertHasStyleName(
-                    "Header cell should have the assigned 'age' class name",
-                    getAgeHeaderCell(), "age");
+                    "Header cell should have the assigned 'name' class name",
+                    getAgeHeaderCell(), "name");
             assertHasStyleName(
                     "The merged header cell should have the assigned 'city-country' class name",
                     getMergedHeaderCell(), "city-country");
         } else {
             assertHasNotStyleName(
-                    "Footer cell should not have the removed 'age-footer' class name",
-                    getAgeFooterCell(), "age-footer");
+                    "Footer cell should not have the removed 'name-footer' class name",
+                    getNameFooterCell(), "name-footer");
             assertHasNotStyleName(
-                    "Header cell should not have the removed 'age' class name",
-                    getAgeHeaderCell(), "age");
+                    "Header cell should not have the removed 'name' class name",
+                    getAgeHeaderCell(), "name");
             assertHasNotStyleName(
                     "Ther merged header cell should not have the removed 'city-country' class name",
                     getMergedHeaderCell(), "city-country");
@@ -108,7 +97,7 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
                 getAgeHeaderCell(), "v-grid-cell");
         assertHasStyleName(
                 "The default v-grid-cell style name should not be removed from the footer cell",
-                getAgeFooterCell(), "v-grid-cell");
+                getNameFooterCell(), "v-grid-cell");
         assertHasStyleName(
                 "The default v-grid-cell style name should not be removed from the merged header cell",
                 getMergedHeaderCell(), "v-grid-cell");
@@ -142,11 +131,6 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
 
     private WebElement getAgeHeaderCell() {
         return grid.getHeaderCell(1, 2);
-    }
-
-    private WebElement getAgeHeaderCellContent() {
-        return getAgeHeaderCell().findElement(
-                By.cssSelector("div.v-grid-column-header-content"));
     }
 
     private WebElement getFooterRow() {
