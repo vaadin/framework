@@ -68,6 +68,10 @@ public class VerticalLayout extends AbstractOrderedLayout {
      * height of all added child components are set to 100% so that the
      * expansion will be effective. The height of this layout is also set to
      * 100% if it is currently undefined.
+     * <p>
+     * The components are added in the provided order to the end of this layout.
+     * Any components that are already children of this layout will be moved to
+     * new positions.
      *
      * @param components
      *            the components to set, not <code>null</code>
