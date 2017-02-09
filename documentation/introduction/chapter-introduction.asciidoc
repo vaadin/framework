@@ -10,7 +10,7 @@ include::intro-overview.asciidoc[leveloffset=+2]
 
 include::intro-walkthrough.asciidoc[leveloffset=+2]
 
-include::intro-eclipse.asciidoc[leveloffset=+2]
+include::intro-ide.asciidoc[leveloffset=+2]
 
 include::intro-goals.asciidoc[leveloffset=+2]
 
