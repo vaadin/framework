@@ -22,15 +22,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.ListBox;
-
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.connectors.AbstractMultiSelectConnector.MultiSelectWidget;
@@ -43,8 +38,8 @@ import elemental.json.JsonObject;
  *
  * @author Vaadin Ltd
  */
-public class VListSelect extends Composite implements ClickHandler, ChangeHandler, Field,
-        Focusable, HasEnabled, MultiSelectWidget {
+public class VListSelect extends Composite
+        implements Field, Focusable, HasEnabled, MultiSelectWidget {
 
     private List<BiConsumer<Set<String>, Set<String>>> selectionChangeListeners = new ArrayList<>();
 
@@ -66,8 +61,12 @@ public class VListSelect extends Composite implements ClickHandler, ChangeHandle
 
         select = new ListBox();
         select.setMultipleSelect(true);
-        select.addClickHandler(this);
-        select.addChangeHandler(this);
+
+        // Add event handlers
+        select.addClickHandler(
+                clickEvent -> selectionEvent(clickEvent.getSource()));
+        select.addChangeHandler(
+                changeEvent -> selectionEvent(changeEvent.getSource()));
 
         container.add(select);
 
@@ -162,16 +161,6 @@ public class VListSelect extends Composite implements ClickHandler, ChangeHandle
             }
         }
         return selectedItemKeys;
-    }
-
-    @Override
-    public void onChange(ChangeEvent changeEvent) {
-        selectionEvent(changeEvent.getSource());
-    }
-
-    @Override
-    public void onClick(ClickEvent clickEvent) {
-        selectionEvent(clickEvent.getSource());
     }
 
     private void selectionEvent(Object source){
