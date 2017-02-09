@@ -1560,6 +1560,9 @@ public class Binder<BEAN> implements Serializable {
      */
     private void clearFields() {
         bindings.forEach(binding -> binding.getField().clear());
+        if(hasChanges()) {
+            fireStatusChangeEvent(false);
+        }
         setHasChanges(false);
     }
 
