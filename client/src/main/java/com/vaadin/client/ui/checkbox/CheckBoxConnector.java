@@ -48,7 +48,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
 
     @Override
     public boolean delegateCaptionHandling() {
-        return false;
+        return true;
     }
 
     @Override
