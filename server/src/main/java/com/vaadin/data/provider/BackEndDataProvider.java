@@ -17,8 +17,7 @@ package com.vaadin.data.provider;
 
 import java.util.Collections;
 import java.util.List;
-
-import com.vaadin.server.SerializableBiFunction;
+import java.util.Objects;
 
 /**
  * A data provider that lazy loads items from a back end.
@@ -39,12 +38,28 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
      * sorting is also used to determine the ordering of items that are
      * considered equal by the sorting defined in the query.
      *
-     * @see #setSortOrder(SortOrder)
+     * @see #setSortOrder(QuerySortOrder)
      *
      * @param sortOrders
      *            a list of sort orders to set, not <code>null</code>
      */
-    void setSortOrders(List<SortOrder<String>> sortOrders);
+    void setSortOrders(List<QuerySortOrder> sortOrders);
+
+    /**
+     * Sets the sort order to use, given a {@link QuerySortOrderBuilder}.
+     * Shorthand for {@code setSortOrders(builder.build())}.
+     * 
+     * @see QuerySortOrderBuilder
+     * 
+     * @param builder
+     *            the sort builder to retrieve the sort order from
+     * @throws NullPointerException
+     *             if builder is null
+     */
+    default void setSortOrders(QuerySortOrderBuilder builder) {
+        Objects.requireNonNull("Sort builder cannot be null.");
+        setSortOrders(builder.build());
+    }
 
     /**
      * Sets a single sort order to use as the default sorting for this data
@@ -61,7 +76,7 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
      *            a sort order to set, or <code>null</code> to clear any
      *            previously set sort orders
      */
-    default void setSortOrder(SortOrder<String> sortOrder) {
+    default void setSortOrder(QuerySortOrder sortOrder) {
         if (sortOrder == null) {
             setSortOrders(Collections.emptyList());
         } else {
@@ -72,45 +87,5 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
     @Override
     default boolean isInMemory() {
         return false;
-    }
-
-    /**
-     * Wraps this data provider to create a data provider that supports
-     * programmatically setting a filter that will be combined with a filter
-     * provided through the query.
-     *
-     * @see #withConfigurableFilter()
-     *
-     * @param filterCombiner
-     *            a callback for combining and the configured filter with the
-     *            filter from the query to get a filter to pass to the wrapped
-     *            provider. Will only be called if the query contains a filter.
-     *
-     * @return a data provider with a configurable filter, not <code>null</code>
-     */
-    public default <C> ConfigurableFilterDataProvider<T, C, F> withConfigurableFilter(
-            SerializableBiFunction<F, C, F> filterCombiner) {
-        return new ConfigurableFilterDataProviderWrapper<T, C, F>(this) {
-            @Override
-            protected F combineFilters(F configuredFilter, C queryFilter) {
-                return filterCombiner.apply(configuredFilter, queryFilter);
-            }
-        };
-    }
-
-    /**
-     * Wraps this data provider to create a data provider that supports
-     * programmatically setting a filter but no filtering through the query.
-     *
-     * @see #withConfigurableFilter(SerializableBiFunction)
-     *
-     * @return a data provider with a configurable filter, not <code>null</code>
-     */
-    public default ConfigurableFilterDataProvider<T, Void, F> withConfigurableFilter() {
-        return withConfigurableFilter((configuredFilter, queryFilter) -> {
-            assert queryFilter == null : "Filter from Void query must be null";
-
-            return configuredFilter;
-        });
     }
 }

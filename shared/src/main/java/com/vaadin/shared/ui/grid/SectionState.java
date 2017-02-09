@@ -46,6 +46,11 @@ public class SectionState implements Serializable {
          * rows.
          */
         public boolean defaultHeader = false;
+
+        /**
+         * The style name for the row. Null if none.
+         */
+        public String styleName = null;
     }
 
     /** The state of a header or footer cell. */

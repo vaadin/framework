@@ -17,13 +17,16 @@ package com.vaadin.ui.declarative.converters;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
@@ -38,11 +41,14 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
  * A converter for {@link Resource} implementations supported by
  * {@link DesignAttributeHandler}.
  *
- * @since 7.4
  * @author Vaadin Ltd
+ * @since 7.4
  */
 @SuppressWarnings("serial")
 public class DesignResourceConverter implements Converter<String, Resource> {
+
+    private static final Map<Integer, VaadinIcons> CODE_POINTS =
+            Arrays.stream(VaadinIcons.values()).collect(Collectors.toMap(VaadinIcons::getCodepoint, icon -> icon));
 
     @Override
     public Result<Resource> convertToModel(String value, ValueContext context) {
@@ -101,14 +107,18 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         FONTICON {
             @Override
             public Resource parse(String value) {
-                final String address = (value.split("://", 2))[1];
+                final String address = value.split("://", 2)[1];
                 final String[] familyAndCode = address.split("/", 2);
                 final int codepoint = Integer.valueOf(familyAndCode[1], 16);
 
-                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) {
-                    return FontAwesome.fromCodepoint(codepoint);
+                if (VAADIN_ICONS_NAME.equals(familyAndCode[0])) {
+                    return CODE_POINTS.get(codepoint);
                 }
 
+                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { //Left for compatibility
+                    return FontAwesome.fromCodepoint(codepoint);
+                }
+                // all vaadin icons should have a codepoint
                 FontIcon generic = new GenericFontIcon(familyAndCode[0],
                         codepoint);
                 return generic;
@@ -128,7 +138,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             public Resource parse(String value) {
                 // Deprecated, 7.4 syntax is
                 // font://"+FontAwesome.valueOf(foo) eg. "font://AMBULANCE"
-                final String iconName = (value.split("://", 2))[1];
+                final String iconName = value.split("://", 2)[1];
                 return FontAwesome.valueOf(iconName);
             }
 
@@ -158,6 +168,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
 
         };
 
+        public static final String VAADIN_ICONS_NAME = VaadinIcons.ABACUS.getFontFamily();
+
         @Override
         public Resource parse(String value) {
             // default behavior for HTTP, HTTPS, FTP and FTPS
@@ -171,6 +183,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         }
 
         private static final Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<>();
+
         static {
             typeToConverter.put(ExternalResource.class, HTTP);
             // ^ any of non-specialized would actually work

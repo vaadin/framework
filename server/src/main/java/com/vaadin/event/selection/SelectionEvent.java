@@ -40,7 +40,7 @@ public interface SelectionEvent<T> extends Serializable {
      *
      * @return the first selected item.
      */
-    Optional<T> getFirstSelected();
+    Optional<T> getFirstSelectedItem();
 
     /**
      * Gets all the currently selected items.

@@ -18,6 +18,7 @@ package com.vaadin.data.provider;
 import java.lang.reflect.Method;
 import java.util.EventObject;
 
+import com.vaadin.data.provider.DataChangeEvent.DataRefreshEvent;
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 
@@ -39,14 +40,20 @@ public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
     private EventRouter eventRouter;
 
     @Override
-    public Registration addDataProviderListener(DataProviderListener listener) {
+    public Registration addDataProviderListener(
+            DataProviderListener<T> listener) {
         return addListener(DataChangeEvent.class, listener,
                 DataProviderListener.class.getMethods()[0]);
     }
 
     @Override
     public void refreshAll() {
-        fireEvent(new DataChangeEvent(this));
+        fireEvent(new DataChangeEvent<>(this));
+    }
+
+    @Override
+    public void refreshItem(T item) {
+        fireEvent(new DataRefreshEvent<>(this, item));
     }
 
     /**
@@ -65,7 +72,7 @@ public abstract class AbstractDataProvider<T, F> implements DataProvider<T, F> {
      * @return a registration for the listener
      */
     protected Registration addListener(Class<?> eventType,
-            DataProviderListener listener, Method method) {
+            DataProviderListener<T> listener, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }

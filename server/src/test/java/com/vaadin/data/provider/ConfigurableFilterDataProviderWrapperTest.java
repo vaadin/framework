@@ -29,13 +29,19 @@ public class ConfigurableFilterDataProviderWrapperTest {
             StrBean.generateRandomBeans(100));
     private ConfigurableFilterDataProvider<StrBean, Void, SerializablePredicate<StrBean>> configurableVoid = backEndProvider
             .withConfigurableFilter();
-    private ConfigurableFilterDataProvider<StrBean, SerializablePredicate<StrBean>, SerializablePredicate<StrBean>> configurablePredicate = backEndProvider
-            .withConfigurableFilter((configuredFilter, queryFilter) -> item -> {
-                if (configuredFilter != null && !configuredFilter.test(item)) {
+    private ConfigurableFilterDataProvider<StrBean, String, Integer> configurablePredicate = backEndProvider
+            .withConfigurableFilter((queryFilter, configuredFilter) -> item -> {
+                if (queryFilter != null
+                        && !item.getValue().equals(queryFilter)) {
                     return false;
                 }
 
-                return queryFilter.test(item);
+                if (configuredFilter != null
+                        && item.getId() < configuredFilter.intValue()) {
+                    return false;
+                }
+
+                return true;
             });
 
     @Test
@@ -60,9 +66,9 @@ public class ConfigurableFilterDataProviderWrapperTest {
 
     @Test
     public void predicate_setFilter() {
-        configurablePredicate.setFilter(xyzFilter);
+        configurablePredicate.setFilter(Integer.valueOf(50));
 
-        Assert.assertEquals("Set filter should be used", 1,
+        Assert.assertEquals("Set filter should be used", 49,
                 configurablePredicate.size(new Query<>()));
 
         configurablePredicate.setFilter(null);
@@ -74,7 +80,7 @@ public class ConfigurableFilterDataProviderWrapperTest {
     @Test
     public void predicate_queryFilter() {
         Assert.assertEquals("Query filter should be used", 1,
-                configurablePredicate.size(new Query<>(xyzFilter)));
+                configurablePredicate.size(new Query<>("Xyz")));
 
         Assert.assertEquals("null query filter should return all items", 100,
                 configurablePredicate.size(new Query<>()));
@@ -82,15 +88,15 @@ public class ConfigurableFilterDataProviderWrapperTest {
 
     @Test
     public void predicate_combinedFilters() {
-        configurablePredicate.setFilter(item -> item.getValue().equals("Foo"));
+        configurablePredicate.setFilter(Integer.valueOf(50));
 
         Assert.assertEquals("Both filters should be used", 0,
-                configurablePredicate.size(new Query<>(xyzFilter)));
+                configurablePredicate.size(new Query<>("Xyz")));
 
         configurablePredicate.setFilter(null);
 
         Assert.assertEquals("Only zyz filter should be used", 1,
-                configurablePredicate.size(new Query<>(xyzFilter)));
+                configurablePredicate.size(new Query<>("Xyz")));
     }
 
 }

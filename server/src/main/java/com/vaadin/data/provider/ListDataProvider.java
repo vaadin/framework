@@ -17,14 +17,18 @@ package com.vaadin.data.provider;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.data.ValueProvider;
+import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.server.SerializableSupplier;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.ui.UI;
 
 /**
  * {@link DataProvider} wrapper for {@link Collection}s. This class does not
@@ -34,9 +38,17 @@ import com.vaadin.shared.data.sort.SortDirection;
  *            data type
  */
 public class ListDataProvider<T>
-        extends AbstractDataProvider<T, SerializablePredicate<T>>
-        implements AppendableFilterDataProvider<T, SerializablePredicate<T>>,
+        extends AbstractDataProvider<T, SerializablePredicate<T>> implements
         ConfigurableFilterDataProvider<T, SerializablePredicate<T>, SerializablePredicate<T>> {
+
+    private static final SerializableSupplier<Locale> CURRENT_LOCALE_SUPPLIER = () -> {
+        UI currentUi = UI.getCurrent();
+        if (currentUi != null) {
+            return currentUi.getLocale();
+        } else {
+            return Locale.getDefault();
+        }
+    };
 
     private SerializableComparator<T> sortOrder = null;
 
@@ -58,6 +70,15 @@ public class ListDataProvider<T>
         Objects.requireNonNull(items, "items cannot be null");
         backend = items;
         sortOrder = null;
+    }
+
+    /**
+     * Returns the underlying data items.
+     * 
+     * @return the underlying data items
+     */
+    public Collection<T> getItems() {
+        return backend;
     }
 
     @Override
@@ -370,10 +391,185 @@ public class ListDataProvider<T>
         return item -> Objects.equals(valueProvider.apply(item), requiredValue);
     }
 
-    @Override
-    public SerializablePredicate<T> combineFilters(
-            SerializablePredicate<T> filter1,
-            SerializablePredicate<T> filter2) {
-        return t -> filter1.test(t) && filter2.test(t);
+    /**
+     * Wraps this data provider to create a new data provider that is filtered
+     * by comparing an item to the filter value provided in the query.
+     * <p>
+     * The predicate receives the item as the first parameter and the query
+     * filter value as the second parameter, and should return <code>true</code>
+     * if the corresponding item should be included. The query filter value is
+     * never <code>null</code> – all items are included without running the
+     * predicate if the query doesn't define any filter.
+     *
+     * @param predicate
+     *            a predicate to use for comparing the item to the query filter,
+     *            not <code>null</code>
+     *
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public <Q> DataProvider<T, Q> filteringBy(
+            SerializableBiPredicate<T, Q> predicate) {
+        Objects.requireNonNull(predicate, "Predicate cannot be null");
+
+        return withConvertedFilter(
+                filterValue -> item -> predicate.test(item, filterValue));
+    }
+
+    /**
+     * Wraps this data provider to create a new data provider that is filtered
+     * by comparing an item property value to the filter value provided in the
+     * query.
+     * <p>
+     * The predicate receives the property value as the first parameter and the
+     * query filter value as the second parameter, and should return
+     * <code>true</code> if the corresponding item should be included. The query
+     * filter value is never <code>null</code> – all items are included without
+     * running either callback if the query doesn't define any filter.
+     *
+     * @param valueProvider
+     *            a value provider that gets the property value, not
+     *            <code>null</code>
+     * @param predicate
+     *            a predicate to use for comparing the property value to the
+     *            query filter, not <code>null</code>
+     *
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public <V, Q> DataProvider<T, Q> filteringBy(
+            ValueProvider<T, V> valueProvider,
+            SerializableBiPredicate<V, Q> predicate) {
+        Objects.requireNonNull(valueProvider, "Value provider cannot be null");
+        Objects.requireNonNull(predicate, "Predicate cannot be null");
+
+        return filteringBy((item, filterValue) -> predicate
+                .test(valueProvider.apply(item), filterValue));
+    }
+
+    /**
+     * Wraps this data provider to create a new data provider that is filtered
+     * by testing whether the value of a property is equals to the filter value
+     * provided in the query. Equality is tested using
+     * {@link Objects#equals(Object, Object)}.
+     *
+     * @param valueProvider
+     *            a value provider that gets the property value, not
+     *            <code>null</code>
+     *
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public <V> DataProvider<T, V> filteringByEquals(
+            ValueProvider<T, V> valueProvider) {
+        return filteringBy(valueProvider, Objects::equals);
+    }
+
+    private <V, Q> DataProvider<T, Q> filteringByIgnoreNull(
+            ValueProvider<T, V> valueProvider,
+            SerializableBiPredicate<V, Q> predicate) {
+        Objects.requireNonNull(predicate, "Predicate cannot be null");
+
+        return filteringBy(valueProvider,
+                (itemValue, queryFilter) -> itemValue != null
+                        && predicate.test(itemValue, queryFilter));
+    }
+
+    /**
+     * Wraps this data provider to create a new data provider that is filtered
+     * by a string by checking whether the lower case representation of the
+     * filter value provided in the query is a substring of the lower case
+     * representation of an item property value. The filter never passes if the
+     * item property value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @param locale
+     *            the locale to use for converting the strings to lower case,
+     *            not <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringBySubstring(
+            ValueProvider<T, String> valueProvider, Locale locale) {
+        Objects.requireNonNull(locale, "Locale cannot be null");
+        return filteringByCaseInsensitiveString(valueProvider, String::contains,
+                () -> locale);
+    }
+
+    /**
+     * Wraps this data provider to create a new data provider that is filtered
+     * by a string by checking whether the lower case representation of the
+     * filter value provided in the query is a substring of the lower case
+     * representation of an item property value. Conversion to lower case is
+     * done using the locale of the {@link UI#getCurrent() current UI} if
+     * available, or otherwise {@link Locale#getDefault() the default locale}.
+     * The filter never passes if the item property value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringBySubstring(
+            ValueProvider<T, String> valueProvider) {
+        return filteringByCaseInsensitiveString(valueProvider, String::contains,
+                CURRENT_LOCALE_SUPPLIER);
+    }
+
+    /**
+     * Wraps this data provider to create a new data provider that is filtered
+     * by a string by checking whether the lower case representation of an item
+     * property value starts with the lower case representation of the filter
+     * value provided in the query. The filter never passes if the item property
+     * value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @param locale
+     *            the locale to use for converting the strings to lower case,
+     *            not <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByPrefix(
+            ValueProvider<T, String> valueProvider, Locale locale) {
+        return filteringByCaseInsensitiveString(valueProvider,
+                String::startsWith, () -> locale);
+    }
+
+    /**
+     * Wraps this data provider to create a new data provider that is filtered
+     * by a string by checking whether the lower case representation of an item
+     * property value starts with the lower case representation of the filter
+     * value provided in the query. Conversion to lower case is done using the
+     * locale of the {@link UI#getCurrent() current UI} if available, or
+     * otherwise {@link Locale#getDefault() the default locale}. The filter
+     * never passes if the item property value is <code>null</code>.
+     *
+     * @param valueProvider
+     *            a value provider that gets the string property value, not
+     *            <code>null</code>
+     * @return a data provider that filters accordingly, not <code>null</code>
+     */
+    public DataProvider<T, String> filteringByPrefix(
+            ValueProvider<T, String> valueProvider) {
+        return filteringByCaseInsensitiveString(valueProvider,
+                String::startsWith, CURRENT_LOCALE_SUPPLIER);
+    }
+
+    private DataProvider<T, String> filteringByCaseInsensitiveString(
+            ValueProvider<T, String> valueProvider,
+            SerializableBiPredicate<String, String> predicate,
+            SerializableSupplier<Locale> localeSupplier) {
+        // Only assert since these are only passed from our own code
+        assert predicate != null;
+        assert localeSupplier != null;
+
+        return filteringByIgnoreNull(valueProvider,
+                (itemString, filterString) -> {
+                    Locale locale = localeSupplier.get();
+                    assert locale != null;
+
+                    return predicate.test(itemString.toLowerCase(locale),
+                            filterString.toLowerCase(locale));
+                });
     }
 }

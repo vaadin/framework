@@ -209,10 +209,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
                     @Override
                     public void run() {
-                        cancelParentTouchTimers(); // we're handling this event,
-                                                   // our parent components
-                                                   // don't need to bother with
-                                                   // it anymore.
+                        // we're handling this event, our parent components
+                        // don't need to bother with it anymore.
+                        cancelParentTouchTimers();
                         // The default context click
                         // implementation only provides the
                         // mouse coordinates relative to root

@@ -6,6 +6,13 @@ import static org.junit.Assert.assertSame;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,9 +53,46 @@ public class BeanBinderTest
         }
     }
 
+    public class RequiredConstraints {
+        @NotNull
+        @Max(10)
+        private String firstname;
+
+        @Size(min = 3, max = 16)
+        @Digits(integer = 3, fraction = 2)
+        private String age;
+
+        @NotEmpty
+        private String lastname;
+
+        public String getFirstname() {
+            return firstname;
+        }
+
+        public void setFirstname(String firstname) {
+            this.firstname = firstname;
+        }
+
+        public String getAge() {
+            return age;
+        }
+
+        public void setAge(String age) {
+            this.age = age;
+        }
+
+        public String getLastname() {
+            return lastname;
+        }
+
+        public void setLastname(String lastname) {
+            this.lastname = lastname;
+        }
+    }
+
     @Before
     public void setUp() {
-        binder = new Binder<>(BeanToValidate.class);
+        binder = new BeanValidationBinder<>(BeanToValidate.class);
         item = new BeanToValidate();
         item.setFirstname("Johannes");
         item.setAge(32);
@@ -247,6 +291,45 @@ public class BeanBinderTest
 
         ageField.setValue(String.valueOf(20));
         assertEquals(20, item.getAge());
+    }
+
+    @Test
+    public void firstName_isNotNullConstraint_fieldIsRequired() {
+        BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
+                RequiredConstraints.class);
+        RequiredConstraints bean = new RequiredConstraints();
+
+        TextField field = new TextField();
+        binder.bind(field, "firstname");
+        binder.setBean(bean);
+
+        Assert.assertTrue(field.isRequiredIndicatorVisible());
+    }
+
+    @Test
+    public void age_minSizeConstraint_fieldIsRequired() {
+        BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
+                RequiredConstraints.class);
+        RequiredConstraints bean = new RequiredConstraints();
+
+        TextField field = new TextField();
+        binder.bind(field, "age");
+        binder.setBean(bean);
+
+        Assert.assertTrue(field.isRequiredIndicatorVisible());
+    }
+
+    @Test
+    public void lastName_minSizeConstraint_fieldIsRequired() {
+        BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
+                RequiredConstraints.class);
+        RequiredConstraints bean = new RequiredConstraints();
+
+        TextField field = new TextField();
+        binder.bind(field, "lastname");
+        binder.setBean(bean);
+
+        Assert.assertTrue(field.isRequiredIndicatorVisible());
     }
 
     private void assertInvalid(HasValue<?> field, String message) {

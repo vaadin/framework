@@ -173,6 +173,8 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * Returns the cell in this section that corresponds to the given column
          * id.
          *
+         * @see Column#setId(String)
+         *
          * @param columnId
          *            the id of the column
          * @return the cell for the given column
@@ -200,6 +202,25 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          */
         public CELL getCell(Column<?, ?> column) {
             return internalGetCell(section.getInternalIdForColumn(column));
+        }
+
+        /**
+         * Returns the custom style name for this row.
+         *
+         * @return the style name or null if no style name has been set
+         */
+        public String getStyleName() {
+            return getRowState().styleName;
+        }
+
+        /**
+         * Sets a custom style name for this row.
+         *
+         * @param styleName
+         *            the style name to set or null to not use any style name
+         */
+        public void setStyleName(String styleName) {
+            getRowState().styleName = styleName;
         }
 
         /**
@@ -512,6 +533,27 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          */
         public GridStaticCellType getCellType() {
             return cellState.type;
+        }
+        
+        /**
+         * Returns the custom style name for this cell.
+         *
+         * @return the style name or null if no style name has been set
+         */
+        public String getStyleName() {
+            return cellState.styleName;
+        }
+
+        /**
+         * Sets a custom style name for this cell.
+         *
+         * @param styleName
+         *            the style name to set or null to not use any style
+         *            name
+         */
+        public void setStyleName(String styleName) {
+            cellState.styleName = styleName;
+            row.section.markAsDirty();
         }
 
         /**

@@ -87,16 +87,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
-        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
-        <!-- Force web sockets to use JSR 356 standard -->
-        <init-param>
-            <param-name>org.atmosphere.cpr.asyncSupport</param-name>
-            <param-value>org.atmosphere.container.JSR356AsyncSupport</param-value>
-        </init-param>
-        <async-supported>true</async-supported>
-    </servlet>
-    <servlet>
         <servlet-name>CommErrorEmulator</servlet-name>
         <servlet-class>com.vaadin.tests.application.CommErrorEmulatorServlet</servlet-class>
         <init-param>
@@ -156,17 +146,6 @@
         <async-supported>true</async-supported>
     </servlet>
 
-    <!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
-    <servlet>
-        <servlet-name>IntegrationTest</servlet-name>
-        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
-        <init-param>
-            <param-name>UI</param-name>
-            <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
-        </init-param>
-        <async-supported>true</async-supported>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>Embed App 1</servlet-name>
         <url-pattern>/embed1/*</url-pattern>
@@ -203,16 +182,6 @@
     <servlet-mapping>
         <servlet-name>VaadinApplicationRunnerWithPushTimeout</servlet-name>
         <url-pattern>/run-push-timeout/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
-        <url-pattern>/run-jsr356/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>IntegrationTest</servlet-name>
-        <url-pattern>/integration/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

@@ -64,8 +64,8 @@ public class GridElement extends AbstractComponentElement {
         }
 
         public GridCellElement getCell(int columnIndex) {
-            TestBenchElement e = (TestBenchElement) findElement(By
-                    .xpath("./td[" + (columnIndex + 1) + "]"));
+            TestBenchElement e = (TestBenchElement) findElement(
+                    By.xpath("./td[" + (columnIndex + 1) + "]"));
             return e.wrap(GridCellElement.class);
         }
     }
@@ -206,8 +206,8 @@ public class GridElement extends AbstractComponentElement {
      * @return Header cell element with given indices.
      */
     public GridCellElement getHeaderCell(int rowIndex, int colIndex) {
-        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]").wrap(
-                GridCellElement.class);
+        return getSubPart("#header[" + rowIndex + "][" + colIndex + "]")
+                .wrap(GridCellElement.class);
     }
 
     /**
@@ -223,16 +223,16 @@ public class GridElement extends AbstractComponentElement {
      */
     public GridCellElement getHeaderCellByCaption(String caption) {
         List<WebElement> headerRows = findElement(By.vaadin("#header"))
-            .findElements(By.xpath("./tr/th"));
+                .findElements(By.xpath("./tr/th"));
         for (WebElement header : headerRows) {
             if (caption.equals(header.getText())) {
                 return TestBenchElement
-                    .wrapElement(header, getCommandExecutor())
-                    .wrap(GridCellElement.class);
+                        .wrapElement(header, getCommandExecutor())
+                        .wrap(GridCellElement.class);
             }
         }
         String errorMessage = String
-            .format("There is no header cell with %s caption. ", caption);
+                .format("There is no header cell with %s caption. ", caption);
         throw new NoSuchElementException(errorMessage);
     }
 
@@ -250,7 +250,8 @@ public class GridElement extends AbstractComponentElement {
      *             if there is no header row or no header cell with the given
      *             text.
      */
-    public GridCellElement getHeaderCellByCaption(int rowIndex, String caption) {
+    public GridCellElement getHeaderCellByCaption(int rowIndex,
+            String caption) {
         List<GridCellElement> headerCells = getHeaderCells(rowIndex);
         for (GridCellElement cell : headerCells) {
             if (caption.equals(cell.getText())) {

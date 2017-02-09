@@ -87,4 +87,19 @@ public interface HeaderCell extends Serializable {
      * @return column id for this cell
      */
     public String getColumnId();
+
+    /**
+     * Returns the custom style name for this cell.
+     *
+     * @return the style name or null if no style name has been set
+     */
+    public String getStyleName();
+
+    /**
+     * Sets a custom style name for this cell.
+     *
+     * @param styleName
+     *            the style name to set or null to not use any style name
+     */
+    public void setStyleName(String styleName);
 }

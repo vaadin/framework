@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.testbench.elements.CheckBoxGroupElement;
 import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -168,9 +168,10 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
                 "Use Item Icon Generator");
         assertItemSuffices(20);
         List<WebElement> icons = getSelect()
-                .findElements(By.cssSelector(".v-icon.FontAwesome"));
+                .findElements(By.cssSelector(".v-select-optiongroup .v-icon"));
+        Assert.assertTrue(icons.size() > 0);
         for (int i = 0; i < icons.size(); i++) {
-            Assert.assertEquals(FontAwesome.values()[i + 1].getCodepoint(),
+            Assert.assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
                     icons.get(i).getText().charAt(0));
         }
     }

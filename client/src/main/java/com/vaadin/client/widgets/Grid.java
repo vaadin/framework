@@ -1388,7 +1388,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             public void onSuccess(EditorRequest<T> request) {
                 if (state == State.SAVING) {
                     cleanup();
-                    cancel();
+                    cancel(true);
                     grid.clearSortOrder();
                 }
             }
@@ -1640,6 +1640,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *             if this editor is not in edit mode
          */
         public void cancel() {
+            cancel(false);
+        }
+
+        private void cancel(boolean afterSave) {
             if (!enabled) {
                 throw new IllegalStateException(
                         "Cannot cancel edit: editor is not enabled");
@@ -1649,7 +1653,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         "Cannot cancel edit: editor is not in edit mode");
             }
             handler.cancel(new EditorRequestImpl<>(grid, rowIndex,
-                    focusedColumnIndex, null));
+                    focusedColumnIndex, null), afterSave);
             doCancel();
         }
 
@@ -2883,8 +2887,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         protected void setDefaultHeaderContent(HeaderCell selectionCell) {
             this.selectionCell = selectionCell;
 
-            // there is no checkbox yet -> create it
             if (selectAllCheckBox == null) {
+                // there is no checkbox yet -> create it
                 selectAllCheckBox = GWT.create(CheckBox.class);
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
@@ -2900,8 +2904,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // Select all with space when "select all" cell is active
                 addHeaderKeyUpHandler(this::onHeaderKeyUpEvent);
 
-            } else { // checkbox exists, but default header row has changed ->
-                     // clear rows
+            } else {
+                // checkbox exists, but default header row has changed -> clear
+                // rows
                 for (HeaderRow row : header.getRows()) {
                     if (row.getCell(this)
                             .getType() == GridStaticCellType.WIDGET) {
@@ -4594,8 +4599,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         cellColumnIndex = cellColumnRightIndex - 1;
                     }
 
-                    else { // can't drop inside a spanned cell, or this is the
-                           // dragged cell
+                    else {
+                        // can't drop inside a spanned cell, or this is the
+                        // dragged cell
                         while (colspan > 1) {
                             cellColumnIndex++;
                             colspan--;
@@ -6156,7 +6162,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param mode
      *            a ColumnResizeMode value
-     * 
+     *
      * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {

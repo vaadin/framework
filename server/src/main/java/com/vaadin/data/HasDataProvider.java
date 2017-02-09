@@ -37,13 +37,6 @@ import com.vaadin.data.provider.DataProvider;
 public interface HasDataProvider<T> extends HasItems<T> {
 
     /**
-     * Returns the source of data items used by this listing.
-     *
-     * @return the data provider, not null
-     */
-    public DataProvider<T, ?> getDataProvider();
-
-    /**
      * Sets the data provider for this listing. The data provider is queried for
      * displayed items as needed.
      *
@@ -54,7 +47,7 @@ public interface HasDataProvider<T> extends HasItems<T> {
 
     @Override
     public default void setItems(Collection<T> items) {
-        setDataProvider(DataProvider.create(items));
+        setDataProvider(DataProvider.ofCollection(items));
     }
 
 }

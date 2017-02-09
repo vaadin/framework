@@ -457,7 +457,7 @@ public class ServerRpcHandler implements Serializable {
      *            the UI containing the connector
      * @param connector
      *            the connector the RPC is targeted to
-     * @param invocation
+     * @param legacyInvocation
      *            information about the rpc to invoke
      */
     protected void handleInvocation(UI ui, ClientConnector connector,

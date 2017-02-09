@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
+
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
@@ -67,6 +68,9 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             for (int i = 0; i < numberOfRows; ++i) {
                 int index = firstRowIndex + i;
                 detachIfNeeded(index, getDetailsComponentConnectorId(index));
+            }
+            if (numberOfRows == 1) {
+                getParent().singleDetailsOpened(firstRowIndex);
             }
             // Deferred opening of new ones.
             refreshDetails();
@@ -205,6 +209,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     }
 
     private void refreshDetailsVisibility() {
+        boolean shownDetails = false;
         for (int i = 0; i < getWidget().getDataSource().size(); ++i) {
             String id = getDetailsComponentConnectorId(i);
 
@@ -216,7 +221,9 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
             indexToDetailConnectorId.put(i, id);
             getWidget().setDetailsVisible(i, true);
+            shownDetails = true;
         }
         refreshing = false;
+        getParent().detailsRefreshed(shownDetails);
     }
 }

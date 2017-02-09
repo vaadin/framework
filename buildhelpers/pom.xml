@@ -36,6 +36,14 @@
     </dependencies>
 
     <build>
+        <resources>
+            <!-- Include eclipse formatting settings in the jar to make them available 
+                as a dependency for all submodules -->
+            <resource>
+                <directory>${project.basedir}/../eclipse</directory>
+                <targetPath>eclipse</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -2,7 +2,6 @@ package com.vaadin.data.provider;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,23 +48,18 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
         return dataProvider;
     }
 
-    protected abstract void setSortOrder(List<SortOrder<String>> sortOrder,
+    protected abstract void setSortOrder(List<QuerySortOrder> sortOrder,
             Comparator<StrBean> comp);
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp) {
+            List<QuerySortOrder> sortOrder, Comparator<StrBean> comp) {
         return createQuery(sortOrder, comp, null);
     }
 
     private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            List<SortOrder<String>> sortOrder, Comparator<StrBean> comp,
+            List<QuerySortOrder> sortOrder, Comparator<StrBean> comp,
             SerializablePredicate<StrBean> filter) {
         return new Query<>(0, Integer.MAX_VALUE, sortOrder, comp, filter);
-    }
-
-    private Query<StrBean, SerializablePredicate<StrBean>> createQuery(
-            SerializablePredicate<StrBean> filter) {
-        return createQuery(Collections.emptyList(), null, filter);
     }
 
     // Tests start here.
@@ -88,8 +82,8 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
                 .thenComparing(StrBean::getId);
 
         List<StrBean> list = dataProvider
-                .fetch(createQuery(Sort.asc("value").thenAsc("randomNumber")
-                        .thenAsc("id").build(), comp))
+                .fetch(createQuery(QuerySortOrder.asc("value")
+                        .thenAsc("randomNumber").thenAsc("id").build(), comp))
                 .collect(Collectors.toList());
 
         // First value in data is { Xyz, 10, 100 } which should be last in list
@@ -110,10 +104,10 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     public void testDefaultSortWithSpecifiedPostSort() {
         Comparator<StrBean> comp = Comparator.comparing(StrBean::getValue)
                 .thenComparing(Comparator.comparing(StrBean::getId).reversed());
-        setSortOrder(Sort.asc("value").thenDesc("id").build(), comp);
+        setSortOrder(QuerySortOrder.asc("value").thenDesc("id").build(), comp);
 
         List<StrBean> list = dataProvider
-                .fetch(createQuery(Sort.asc("randomNumber").build(),
+                .fetch(createQuery(QuerySortOrder.asc("randomNumber").build(),
                         Comparator.comparing(StrBean::getRandomNumber)))
                 .collect(Collectors.toList());
 
@@ -142,7 +136,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
 
     @Test
     public void testDefaultSortWithFunction() {
-        setSortOrder(Sort.asc("value").build(),
+        setSortOrder(QuerySortOrder.asc("value").build(),
                 Comparator.comparing(StrBean::getValue));
 
         List<StrBean> list = dataProvider.fetch(new Query<>())
@@ -163,7 +157,7 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     @Test
     public void filteringListDataProvider_convertFilter() {
         DataProvider<StrBean, String> strFilterDataProvider = dataProvider
-                .convertFilter(
+                .withConvertedFilter(
                         text -> strBean -> strBean.getValue().contains(text));
         Assert.assertEquals("Only one item should match 'Xyz'", 1,
                 strFilterDataProvider.size(new Query<>("Xyz")));
@@ -190,4 +184,11 @@ public abstract class DataProviderTestBase<D extends DataProvider<StrBean, Seria
     protected long sizeWithUnfilteredQuery() {
         return dataProvider.fetch(new Query<>()).count();
     }
+
+    protected static <F> void assertSizeWithFilter(int expectedSize,
+            DataProvider<?, F> dataProvider, F filterValue) {
+        Assert.assertEquals(expectedSize,
+                dataProvider.size(new Query<>(filterValue)));
+    }
+
 }

@@ -30,7 +30,7 @@ public class UiDependenciesInHtmlTest extends SingleBrowserTest {
         String statusText = findElement(By.id("statusBox")).getText();
 
         Assert.assertEquals(
-                "Script loaded before vaadinBootstrap.js: true\nStyle tag before vaadin theme: true",
+                "Script loaded before vaadinBootstrap.js: true\nStyle tag before vaadin theme: true\nStyle tags in correct order: true",
                 statusText);
     }
 

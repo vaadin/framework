@@ -573,7 +573,7 @@ public class VBrowserDetails implements Serializable {
         if (isSafari() && getBrowserEngineVersion() < 533) {
             return true;
         }
-        if (isFirefox() && getBrowserMajorVersion() < 4) {
+        if (isFirefox() && getBrowserMajorVersion() < 45) {
             return true;
         }
         if (isOpera() && getBrowserMajorVersion() < 11) {

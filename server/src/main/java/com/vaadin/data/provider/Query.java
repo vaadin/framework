@@ -36,7 +36,7 @@ public class Query<T, F> implements Serializable {
 
     private final int offset;
     private final int limit;
-    private final List<SortOrder<String>> sortOrders;
+    private final List<QuerySortOrder> sortOrders;
     private final Comparator<T> inMemorySorting;
     private final F filter;
 
@@ -83,7 +83,7 @@ public class Query<T, F> implements Serializable {
      * @param filter
      *            filtering for fetching; can be null
      */
-    public Query(int offset, int limit, List<SortOrder<String>> sortOrders,
+    public Query(int offset, int limit, List<QuerySortOrder> sortOrders,
             Comparator<T> inMemorySorting, F filter) {
         this.offset = offset;
         this.limit = limit;
@@ -93,7 +93,8 @@ public class Query<T, F> implements Serializable {
     }
 
     /**
-     * Gets the first index of items to fetch.
+     * Gets the first index of items to fetch. The offset is only used when
+     * fetching items, but not when counting the number of available items.
      *
      * @return offset for data request
      */
@@ -102,7 +103,8 @@ public class Query<T, F> implements Serializable {
     }
 
     /**
-     * Gets the limit of items to fetch.
+     * Gets the limit of items to fetch. The limit is only used when fetching
+     * items, but not when counting the number of available items.
      * <p>
      * <strong>Note: </strong>It is possible that
      * {@code offset + limit > item count}
@@ -115,7 +117,8 @@ public class Query<T, F> implements Serializable {
 
     /**
      * Gets the sorting for items to fetch. This list of sort orders is used for
-     * sorting backends.
+     * sorting backends. The sort orders are only used when fetching items, but
+     * not when counting the number of available items.
      * <p>
      * <strong>Note: </strong> Sort orders and in-memory sorting are mutually
      * exclusive. If the {@link DataProvider} handles one, it should ignore the
@@ -123,7 +126,7 @@ public class Query<T, F> implements Serializable {
      *
      * @return list of sort orders
      */
-    public List<SortOrder<String>> getSortOrders() {
+    public List<QuerySortOrder> getSortOrders() {
         return sortOrders;
     }
 
@@ -137,7 +140,9 @@ public class Query<T, F> implements Serializable {
     }
 
     /**
-     * Gets the comparator for sorting in-memory data.
+     * Gets the comparator for sorting in-memory data. The comparator is only
+     * used when fetching items, but not when counting the number of available
+     * items.
      * <p>
      * <strong>Note: </strong> Sort orders and in-memory sorting are mutually
      * exclusive. If the {@link DataProvider} handles one, it should ignore the

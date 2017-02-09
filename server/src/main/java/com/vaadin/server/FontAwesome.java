@@ -31,10 +31,10 @@ package com.vaadin.server;
  *
  * @since 7.2
  * @author Vaadin Ltd
- * @see http://fortawesome.github.io/Font-Awesome/
- * @deprecated Planned to replace with Vaadin Icons https://vaadin.com/icons for
- *             8.0.0 (#7979). Will be moved to {@code compability-server}
- *             package and not updated to include new icons
+ * @see http://fontawesome.github.io/Font-Awesome/
+ * @deprecated Since 8.0 replaced with included Vaadin Icons
+ *             https://vaadin.com/icons (#7979). Will not be updated to include
+ *             new icons.
  */
 @Deprecated
 public enum FontAwesome implements FontIcon {
