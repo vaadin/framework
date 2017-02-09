@@ -285,6 +285,7 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-icons</artifactId>
                 <version>${vaadin.icons.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
