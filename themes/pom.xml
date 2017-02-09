@@ -17,13 +17,13 @@
     <dependencies>
         <!-- Maven plugin scans for vaadin-server... -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-server</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-buildhelpers</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
