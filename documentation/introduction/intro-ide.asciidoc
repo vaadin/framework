@@ -1,10 +1,10 @@
 ---
-title: Support for the Eclipse IDE
+title: Support for IDEs
 order: 3
 layout: page
 ---
 
-[[intro.eclipse]]
+[[intro.ide]]
 = Support for IDEs
 
 While Vaadin is not bound to any specific IDE, and you can in fact easily use it
