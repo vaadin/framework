@@ -1324,13 +1324,14 @@ public class Binder<BEAN> implements Serializable {
      *
      * @param bean
      *            the bean to edit, or {@code null} to remove a currently bound
-     *            bean
+     *            bean and clear bound fields
      */
     public void setBean(BEAN bean) {
         checkBindingsCompleted("setBean");
         if (bean == null) {
             if (this.bean != null) {
                 doRemoveBean(true);
+                clearFields();
             }
         } else {
             doRemoveBean(false);
@@ -1345,8 +1346,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Removes the currently set bean, if any. If there is no bound bean, does
-     * nothing.
+     * Removes the currently set bean and clears bound fields. If there is no
+     * bound bean, does nothing.
      * <p>
      * This is a shorthand for {@link #setBean(Object)} with {@code null} bean.
      */
@@ -1367,17 +1368,20 @@ public class Binder<BEAN> implements Serializable {
      * @see #writeBean(Object)
      *
      * @param bean
-     *            the bean whose property values to read, not null
+     *            the bean whose property values to read or {@code null} to
+     *            clear bound fields
      */
     public void readBean(BEAN bean) {
-        Objects.requireNonNull(bean, "bean cannot be null");
         checkBindingsCompleted("readBean");
-        setHasChanges(false);
-        bindings.forEach(binding -> binding.initFieldValue(bean));
-
-        getValidationStatusHandler().statusChange(
-                BinderValidationStatus.createUnresolvedStatus(this));
-        fireStatusChangeEvent(false);
+        if (bean == null) {
+            clearFields();
+        } else {
+            setHasChanges(false);
+            bindings.forEach(binding -> binding.initFieldValue(bean));
+            getValidationStatusHandler().statusChange(
+                    BinderValidationStatus.createUnresolvedStatus(this));
+            fireStatusChangeEvent(false);
+        }
     }
 
     /**
@@ -1549,6 +1553,17 @@ public class Binder<BEAN> implements Serializable {
     public Binder<BEAN> withValidator(SerializablePredicate<BEAN> predicate,
             ErrorMessageProvider errorMessageProvider) {
         return withValidator(Validator.from(predicate, errorMessageProvider));
+    }
+
+    /**
+     * Clear all the bound fields for this binder.
+     */
+    private void clearFields() {
+        bindings.forEach(binding -> binding.getField().clear());
+        if (hasChanges()) {
+            fireStatusChangeEvent(false);
+        }
+        setHasChanges(false);
     }
 
     /**
