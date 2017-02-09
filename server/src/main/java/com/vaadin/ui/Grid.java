@@ -150,6 +150,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Returns a stream of items ordered by given sort orders, limiting the
          * results with given offset and limit.
+         * <p>
+         * This method is called after the size of the data set is asked from a
+         * related size callback. The offset and limit are promised to be within
+         * the size of the data set.
          *
          * @param sortOrder
          *            a list of sort orders
@@ -3451,11 +3455,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Sets a CallbackDataProvider using the given fetch items callback and a
      * size callback.
+     * <p>
+     * This method is a shorthand for making a {@link CallbackDataProvider} that
+     * handles a partial {@link Query} object.
      *
      * @param fetchItems
      *            a callback for fetching items
      * @param sizeCallback
      *            a callback for getting the count of items
+     *
+     * @see CallbackDataProvider
+     * @see #setDataProvider(DataProvider)
      */
     public void setDataProvider(FetchItemsCallback<T> fetchItems,
             SerializableSupplier<Integer> sizeCallback) {

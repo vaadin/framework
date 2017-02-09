@@ -85,6 +85,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         /**
          * Returns a stream of items that match the given filter, limiting the
          * results with given offset and limit.
+         * <p>
+         * This method is called after the size of the data set is asked from a
+         * related size callback. The offset and limit are promised to be within
+         * the size of the data set.
          *
          * @param filter
          *            a non-null filter string
@@ -761,11 +765,17 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Sets a CallbackDataProvider using the given fetch items callback and a
      * size callback.
+     * <p>
+     * This method is a shorthand for making a {@link CallbackDataProvider} that
+     * handles a partial {@link Query} object.
      *
      * @param fetchItems
      *            a callback for fetching items
      * @param sizeCallback
      *            a callback for getting the count of items
+     *
+     * @see CallbackDataProvider
+     * @see #setDataProvider(DataProvider)
      */
     public void setDataProvider(FetchItemsCallback<T> fetchItems,
             SerializableToIntFunction<String> sizeCallback) {
