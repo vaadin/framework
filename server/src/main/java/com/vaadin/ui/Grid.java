@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.PropertyDefinition;
 import com.vaadin.data.PropertySet;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
@@ -68,6 +70,7 @@ import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializableSupplier;
 import com.vaadin.server.Setter;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -133,6 +136,36 @@ import elemental.json.JsonValue;
  */
 public class Grid<T> extends AbstractListing<T> implements HasComponents,
         HasDataProvider<T>, SortNotifier<GridSortOrder<T>> {
+
+    /**
+     * A callback method for fetching items. The callback is provided with a
+     * list of sort orders, offset index and limit.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    @FunctionalInterface
+    public interface FetchItemsCallback<T> extends Serializable {
+
+        /**
+         * Returns a stream of items ordered by given sort orders, limiting the
+         * results with given offset and limit.
+         * <p>
+         * This method is called after the size of the data set is asked from a
+         * related size callback. The offset and limit are promised to be within
+         * the size of the data set.
+         *
+         * @param sortOrder
+         *            a list of sort orders
+         * @param offset
+         *            the first index to fetch
+         * @param limit
+         *            the fetched item count
+         * @return stream of items
+         */
+        public Stream<T> fetchItems(List<QuerySortOrder> sortOrder, int offset,
+                int limit);
+    }
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
@@ -3417,6 +3450,30 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         internalSetDataProvider(dataProvider);
+    }
+
+    /**
+     * Sets a CallbackDataProvider using the given fetch items callback and a
+     * size callback.
+     * <p>
+     * This method is a shorthand for making a {@link CallbackDataProvider} that
+     * handles a partial {@link Query} object.
+     *
+     * @param fetchItems
+     *            a callback for fetching items
+     * @param sizeCallback
+     *            a callback for getting the count of items
+     *
+     * @see CallbackDataProvider
+     * @see #setDataProvider(DataProvider)
+     */
+    public void setDataProvider(FetchItemsCallback<T> fetchItems,
+            SerializableSupplier<Integer> sizeCallback) {
+        internalSetDataProvider(
+                new CallbackDataProvider<>(
+                        q -> fetchItems.fetchItems(q.getSortOrders(),
+                                q.getOffset(), q.getLimit()),
+                        q -> sizeCallback.get()));
     }
 
     @Override

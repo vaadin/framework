@@ -16,6 +16,7 @@
 
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.data.HasValue;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataKeyMapper;
 import com.vaadin.data.provider.DataProvider;
@@ -44,6 +46,7 @@ import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
@@ -68,6 +71,35 @@ import elemental.json.JsonObject;
 public class ComboBox<T> extends AbstractSingleSelect<T>
         implements HasValue<T>, FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier, HasFilterableDataProvider<T, String> {
+
+    /**
+     * A callback method for fetching items. The callback is provided with a
+     * non-null string filter, offset index and limit.
+     *
+     * @param <T>
+     *            item (bean) type in ComboBox
+     */
+    @FunctionalInterface
+    public interface FetchItemsCallback<T> extends Serializable {
+
+        /**
+         * Returns a stream of items that match the given filter, limiting the
+         * results with given offset and limit.
+         * <p>
+         * This method is called after the size of the data set is asked from a
+         * related size callback. The offset and limit are promised to be within
+         * the size of the data set.
+         *
+         * @param filter
+         *            a non-null filter string
+         * @param offset
+         *            the first index to fetch
+         * @param limit
+         *            the fetched item count
+         * @return stream of items
+         */
+        public Stream<T> fetchItems(String filter, int offset, int limit);
+    }
 
     /**
      * Handler that adds a new item based on user input when the new items
@@ -728,6 +760,29 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         filterSlot = filter -> providerFilterSlot
                 .accept(convertOrNull.apply(filter));
+    }
+
+    /**
+     * Sets a CallbackDataProvider using the given fetch items callback and a
+     * size callback.
+     * <p>
+     * This method is a shorthand for making a {@link CallbackDataProvider} that
+     * handles a partial {@link Query} object.
+     *
+     * @param fetchItems
+     *            a callback for fetching items
+     * @param sizeCallback
+     *            a callback for getting the count of items
+     *
+     * @see CallbackDataProvider
+     * @see #setDataProvider(DataProvider)
+     */
+    public void setDataProvider(FetchItemsCallback<T> fetchItems,
+            SerializableToIntFunction<String> sizeCallback) {
+        setDataProvider(new CallbackDataProvider<>(
+                q -> fetchItems.fetchItems(q.getFilter().orElse(""),
+                        q.getOffset(), q.getLimit()),
+                q -> sizeCallback.applyAsInt(q.getFilter().orElse(""))));
     }
 
     @Override
