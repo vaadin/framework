@@ -16,9 +16,9 @@
     <url>http://vaadin.com</url>
 
     <properties>
-        <vaadin.spring.version>2.0-SNAPSHOT</vaadin.spring.version>
+        <vaadin.spring.version>2.0.0.rc1</vaadin.spring.version>
         <vaadin.testbench.version>5.0.0.alpha2</vaadin.testbench.version>
-        <vaadin.cdi.version>2.0-SNAPSHOT</vaadin.cdi.version>
+        <vaadin.cdi.version>2.0.0.rc1</vaadin.cdi.version>
     </properties>
 
     <repositories>
