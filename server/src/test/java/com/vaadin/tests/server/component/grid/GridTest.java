@@ -27,6 +27,7 @@ import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.GridSortOrder;
+import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.server.SerializableComparator;
@@ -306,6 +307,9 @@ public class GridTest {
 
         Assert.assertEquals(new HashSet<>(Arrays.asList("Lorem", "2000")),
                 values);
+
+        assertSingleSortProperty(nameColumn, "name");
+        assertSingleSortProperty(bornColumn, "born");
     }
 
     @Test
@@ -518,6 +522,37 @@ public class GridTest {
 
         grid.removeColumn("name");
         grid.addColumn("name", new NumberRenderer());
+    }
+
+    @Test
+    public void columnId_sortProperty() {
+        assertSingleSortProperty(lengthColumn, "length");
+    }
+
+    @Test
+    public void columnId_sortProperty_noId() {
+        Assert.assertEquals(0,
+                objectColumn.getSortOrder(SortDirection.ASCENDING).count());
+    }
+
+    @Test
+    public void sortProperty_setId_doesntOverride() {
+        objectColumn.setSortProperty("foo");
+        objectColumn.setId("bar");
+
+        assertSingleSortProperty(objectColumn, "foo");
+    }
+
+    private static void assertSingleSortProperty(Column<?, ?> column,
+            String expectedProperty) {
+        QuerySortOrder[] sortOrders = column
+                .getSortOrder(SortDirection.ASCENDING)
+                .toArray(QuerySortOrder[]::new);
+
+        Assert.assertEquals(1, sortOrders.length);
+        Assert.assertEquals(SortDirection.ASCENDING,
+                sortOrders[0].getDirection());
+        Assert.assertEquals(expectedProperty, sortOrders[0].getSorted());
     }
 
     private static <T> JsonObject getRowData(Grid<T> grid, T row) {

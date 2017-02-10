@@ -818,7 +818,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         private final SerializableFunction<T, ? extends V> valueProvider;
 
-        private SortOrderProvider sortOrderProvider;
+        private SortOrderProvider sortOrderProvider = direction -> {
+            String id = getId();
+            if (id == null) {
+                return Stream.empty();
+            } else {
+                return Stream.of(new QuerySortOrder(id, direction));
+            }
+        };
+
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
@@ -849,7 +857,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             state.renderer = renderer;
 
             state.caption = "";
-            sortOrderProvider = d -> Stream.of();
 
             // Add the renderer as a child extension of this extension, thus
             // ensuring the renderer will be unregistered when this column is
@@ -1040,9 +1047,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Sets the user-defined identifier to map this column. The identifier
          * can be used for example in {@link Grid#getColumn(String)}.
+         * <p>
+         * The id is also used as the {@link #setSortProperty(String...) backend
+         * sort property} for this column no sort property or sort order
+         * provider has been set for this column.
+         *
+         * @see #setSortProperty(String...)
+         * @see #setSortOrderProvider(SortOrderProvider)
          *
          * @param id
          *            the identifier string
+         * @return this column
          */
         public Column<T, V> setId(String id) {
             Objects.requireNonNull(id, "Column identifier cannot be null");
@@ -1052,6 +1067,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
             this.userId = id;
             getGrid().setColumnId(id, this);
+
             return this;
         }
 
@@ -1143,6 +1159,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Sets strings describing back end properties to be used when sorting
          * this column.
+         * <p>
+         * By default, the {@link #setId(String) column id} will be used as the
+         * sort property.
          *
          * @param properties
          *            the array of strings describing backend properties
@@ -1159,6 +1178,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sets the sort orders when sorting this column. The sort order
          * provider is a function which provides {@link QuerySortOrder} objects
          * to describe how to sort by this column.
+         * <p>
+         * By default, the {@link #setId(String) column id} will be used as the
+         * sort property.
          *
          * @param provider
          *            the function to use when generating sort orders with the
@@ -1175,6 +1197,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Gets the sort orders to use with back-end sorting for this column
          * when sorting in the given direction.
+         *
+         * @see #setSortProperty(String...)
+         * @see #setId(String)
+         * @see #setSortOrderProvider(SortOrderProvider)
          *
          * @param direction
          *            the sorting direction
