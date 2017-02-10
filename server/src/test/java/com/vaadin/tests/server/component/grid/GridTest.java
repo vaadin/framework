@@ -27,6 +27,7 @@ import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.GridSortOrder;
+import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.server.SerializableComparator;
@@ -306,6 +307,13 @@ public class GridTest {
 
         Assert.assertEquals(new HashSet<>(Arrays.asList("Lorem", "2000")),
                 values);
+
+        Assert.assertEquals("name",
+                nameColumn.getSortOrder(SortDirection.ASCENDING).findFirst()
+                        .orElse(null).getSorted());
+        Assert.assertEquals("born",
+                bornColumn.getSortOrder(SortDirection.ASCENDING).findFirst()
+                        .orElse(null).getSorted());
     }
 
     @Test
@@ -518,6 +526,18 @@ public class GridTest {
 
         grid.removeColumn("name");
         grid.addColumn("name", new NumberRenderer());
+    }
+
+    @Test
+    public void columnId_sortProperty() {
+        QuerySortOrder[] sortOrders = lengthColumn
+                .getSortOrder(SortDirection.ASCENDING)
+                .toArray(QuerySortOrder[]::new);
+
+        Assert.assertEquals(1, sortOrders.length);
+        Assert.assertEquals(SortDirection.ASCENDING,
+                sortOrders[0].getDirection());
+        Assert.assertEquals("length", sortOrders[0].getSorted());
     }
 
     private static <T> JsonObject getRowData(Grid<T> grid, T row) {
