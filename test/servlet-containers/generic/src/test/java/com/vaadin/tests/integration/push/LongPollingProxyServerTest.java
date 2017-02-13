@@ -15,91 +15,92 @@
  */
 package com.vaadin.tests.integration.push;
 
-import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.integration.AbstractIntegrationTest;
-import com.vaadin.tests.tb3.IncludeIfProperty;
-import org.junit.Assert;
-import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-@IncludeIfProperty(property = "server-name", value = "wildfly9-nginx")
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.tests.integration.AbstractIntegrationTest;
+
+@RunWith(Parameterized.class)
 public class LongPollingProxyServerTest extends AbstractIntegrationTest {
 
+    @Parameters(name = "{0}")
+    public static List<String[]> getTestParameters() {
+        List<String[]> parameters = new ArrayList<>();
+        addTestParams(parameters, "Buffering+Timeout", "buffering-timeout");
+        addTestParams(parameters, "NonBuffering+Timeout",
+                "nonbuffering-timeout");
+        addTestParams(parameters, "Buffering", "buffering");
+        addTestParams(parameters, "NonBuffering", "nonbuffering");
+        return parameters;
+    }
+
+    private static void addTestParams(List<String[]> parameters,
+            String... pair) {
+        parameters.add(pair);
+    }
+
+    @Parameter(0)
+    public String name;
+
+    @Parameter(1)
+    public String path;
+
     @Override
-    protected Class<?> getUIClass() {
-        return BasicPushLongPolling.class;
+    public void setup() throws Exception {
+        setDesiredCapabilities(Browser.PHANTOMJS.getDesiredCapabilities());
+
+        super.setup();
     }
 
     @Test
-    public void bufferingTimeoutBasicPush() throws Exception {
-        basicPush("buffering-timeout");
-    }
-
-    @Test
-    public void nonbufferingTimeoutBasicPush() throws Exception {
-        basicPush("nonbuffering-timeout");
-    }
-
-    @Test
-    public void bufferingBasicPush() throws Exception {
-        basicPush("buffering");
-    }
-
-    @Test
-    public void nonbufferingBasicPush() throws Exception {
-        basicPush("nonbuffering");
-    }
-
-    @Test
-    public void bufferingTimeoutActionAfterFirstTimeout() throws Exception {
-        actionAfterFirstTimeout("buffering-timeout");
-    }
-
-    @Test
-    public void nonbufferingTimeoutActionAfterFirstTimeout() throws Exception {
-        actionAfterFirstTimeout("nonbuffering-timeout");
-    }
-
-    private String getUrl(String bufferingOrNot) {
-        return getBaseURL() + "/" + bufferingOrNot + "/demo"
-                + getDeploymentPath();
-    }
-
-    private void actionAfterFirstTimeout(String bufferingOrNot)
-            throws Exception {
-        String url = getUrl(bufferingOrNot);
-        getDriver().get(url);
+    public void actionAfterFirstTimeout() throws Exception {
         // The wildfly9-nginx server has a configured timeout of 10s for
         // *-timeout urls
         Thread.sleep(15000);
-        Assert.assertEquals(0, BasicPushTest.getClientCounter(this));
-        BasicPushTest.getIncrementButton(this).click();
-        Assert.assertEquals(1, BasicPushTest.getClientCounter(this));
+        Assert.assertEquals(0, getClientCounter());
+        getIncrementButton().click();
+        Assert.assertEquals(1, getClientCounter());
     }
 
-    private void basicPush(String bufferingOrNot) throws Exception {
-        String url = getUrl(bufferingOrNot);
-        getDriver().get(url);
-
-        Assert.assertEquals(0, BasicPushTest.getServerCounter(this));
-        BasicPushTest.getServerCounterStartButton(this).click();
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getServerCounter(LongPollingProxyServerTest.this) > 1;
-            }
-        });
+    @Test
+    public void basicPush() {
+        Assert.assertEquals(0, getServerCounter());
+        getServerCounterStartButton().click();
+        waitUntil(e -> getServerCounter() > 1, 10);
     }
 
     @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return Collections
-                .singletonList(Browser.PHANTOMJS.getDesiredCapabilities());
+    protected String getTestPath() {
+        return "/" + path + "/demo";
+    }
+
+    private int getClientCounter() {
+        WebElement clientCounterElem = findElement(
+                By.id(BasicPush.CLIENT_COUNTER_ID));
+        return Integer.parseInt(clientCounterElem.getText());
+    }
+
+    private int getServerCounter() {
+        WebElement serverCounterElem = findElement(
+                By.id(BasicPush.SERVER_COUNTER_ID));
+        return Integer.parseInt(serverCounterElem.getText());
+    }
+
+    private WebElement getServerCounterStartButton() {
+        return findElement(By.id(BasicPush.START_TIMER_ID));
+    }
+
+    private WebElement getIncrementButton() {
+        return findElement(By.id(BasicPush.INCREMENT_BUTTON_ID));
     }
 }

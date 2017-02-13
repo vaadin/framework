@@ -1,37 +1,83 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.integration;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.UIElement;
-import com.vaadin.testbench.parallel.TestNameSuffix;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-/**
- * Base class for integration tests. Integration tests use the
- * {@literal deployment.url} parameter to determine the base deployment url
- * (http://hostname:123)
- *
- * @author Vaadin Ltd
- */
-@TestNameSuffix(property = "server-name")
-public abstract class AbstractIntegrationTest
-        extends SingleBrowserTestPhantomJS2 {
+import org.junit.After;
+import org.junit.runner.RunWith;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.vaadin.testbench.annotations.BrowserConfiguration;
+import com.vaadin.testbench.annotations.BrowserFactory;
+import com.vaadin.testbench.annotations.RunOnHub;
+import com.vaadin.testbench.elements.UIElement;
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.testbench.parallel.ParallelRunner;
+import com.vaadin.testbench.parallel.ParallelTest;
+
+@RunOnHub("tb3-hub.intra.itmill.com")
+@RunWith(ParallelRunner.class)
+@BrowserFactory(CustomBrowserFactory.class)
+public abstract class AbstractIntegrationTest extends ParallelTest {
+
+    /**
+     * Height of the screenshots we want to capture
+     */
+    private static final int SCREENSHOT_HEIGHT = 850;
+
+    /**
+     * Width of the screenshots we want to capture
+     */
+    private static final int SCREENSHOT_WIDTH = 1500;
+
+    private boolean screenshotErrors;
+
+    @BrowserConfiguration
+    public final List<DesiredCapabilities> getBrowsersToTest() {
+        return getBrowsers().map(BrowserUtil.getBrowserFactory()::create)
+                .collect(Collectors.toList());
+    }
+
+    protected Stream<Browser> getBrowsers() {
+        return Stream.of(Browser.PHANTOMJS, Browser.CHROME);
+    }
+
     @Override
-    protected String getBaseURL() {
+    public void setup() throws Exception {
+        super.setup();
+
+        testBench().resizeViewPortTo(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
+
+        openTestURL();
+    }
+
+    private void openTestURL() {
+        String url = getDeploymentURL() + getTestPath() + "?"
+                + getParameters().collect(Collectors.joining("&"));
+        driver.get(url);
+
+        if (!isElementPresent(UIElement.class)) {
+            waitUntil(e -> isElementPresent(UIElement.class), 10);
+        }
+    }
+
+    protected Stream<String> getParameters() {
+        return Stream.of("restartApplication");
+    }
+
+    /**
+     * Returns a path where the test UI is found.
+     *
+     * @return path for test
+     */
+    protected abstract String getTestPath();
+
+    private String getDeploymentURL() {
         String deploymentUrl = System.getProperty("deployment.url");
         if (deploymentUrl == null || deploymentUrl.equals("")) {
             throw new RuntimeException(
@@ -40,17 +86,30 @@ public abstract class AbstractIntegrationTest
         return deploymentUrl;
     }
 
-    @Override
-    protected void openTestURL() {
-        super.openTestURL();
-
-        waitForApplication();
+    protected void compareScreen(String identifier) throws IOException {
+        if (testBench().compareScreen(identifier)) {
+            return;
+        }
+        screenshotErrors = true;
     }
 
-    protected void waitForApplication() {
-        if (!isElementPresent(UIElement.class)) {
-            // Wait for UI element.
-            waitForElementPresent(By.vaadin("//com.vaadin.ui.UI"));
+    @After
+    public void teardown() {
+        if (screenshotErrors) {
+            throw new RuntimeException("Screenshots failed.");
         }
+    }
+
+    /**
+     * Waits the given number of seconds for the given condition to become true.
+     * Use e.g. as
+     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
+     *
+     * @param condition
+     *            the condition to wait for to become true
+     */
+    protected <T> void waitUntil(ExpectedCondition<T> condition,
+            long timeoutInSeconds) {
+        new WebDriverWait(driver, timeoutInSeconds).until(condition);
     }
 }

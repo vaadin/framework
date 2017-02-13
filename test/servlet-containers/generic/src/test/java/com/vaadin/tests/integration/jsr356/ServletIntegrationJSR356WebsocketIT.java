@@ -13,20 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.integration;
+package com.vaadin.tests.integration.jsr356;
 
-public class ServletIntegrationJSR356WebsocketUITest
-        extends AbstractServletIntegrationTest {
+import com.vaadin.tests.integration.ServletIntegrationWebsocketIT;
+
+public class ServletIntegrationJSR356WebsocketIT
+        extends ServletIntegrationWebsocketIT {
     // Uses the test method declared in the super class
 
     @Override
-    protected String getDeploymentPath(Class<?> uiClass) {
-        return super.getDeploymentPath(uiClass).replace("/run/",
-                "/run-jsr356/");
-    }
-
-    @Override
-    protected Class<?> getUIClass() {
-        return ServletIntegrationWebsocketUI.class;
+    protected String getTestPath() {
+        return super.getTestPath().replace("/run/", "/run-jsr356/");
     }
 }
