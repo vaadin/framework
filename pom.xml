@@ -24,7 +24,6 @@
 
         <!-- Used version numbers for dependencies -->
         <liferay.portal-service.version>6.2.5</liferay.portal-service.version>
-        <jetty.version>9.3.9.v20160517</jetty.version>
 
         <vaadin.gwt.version>2.8.0</vaadin.gwt.version>
         <vaadin.plugin.version>8.0-SNAPSHOT</vaadin.plugin.version>
@@ -45,7 +44,9 @@
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
 
-        <jetty.version>9.3.7.v20160115</jetty.version>
+        <!-- Cannot use 9.3 or 9.4 because they sometimes reset the connection too early in case of errors -->
+        <!-- See e.g. https://issues.apache.org/jira/browse/SOLR-8453 -->
+        <jetty.version>9.2.9.v20150224</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
 
         <!-- Sonar properties -->
