@@ -31,7 +31,7 @@ import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.integration.AbstractIntegrationTest;
 
 @RunWith(Parameterized.class)
-public class LongPollingProxyServerTest extends AbstractIntegrationTest {
+public class LongPollingProxyServerIT extends AbstractIntegrationTest {
 
     @Parameters(name = "{0}")
     public static List<String[]> getTestParameters() {

@@ -44,7 +44,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     }
 
     protected Stream<Browser> getBrowsers() {
-        return Stream.of(Browser.PHANTOMJS, Browser.CHROME);
+        return Stream.of(Browser.PHANTOMJS);
     }
 
     @Override
