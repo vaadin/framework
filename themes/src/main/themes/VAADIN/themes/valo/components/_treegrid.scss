@@ -1,0 +1,60 @@
+/** Expander button visual - expanded */
+$tg-expander-char-expanded: '\f0d7' !default;
+
+/** Expander button visual - collapsed */
+$tg-expander-char-collapsed: '\f0da' !default;
+
+/** Expander button width */
+$tg-expander-width: 10px !default;
+
+/** Expander button right side padding */
+$tg-expander-padding: 10px !default;
+
+@mixin treegrid {
+
+  // Expander with and item indentation constants
+  $indent: $tg-expander-width + $tg-expander-padding;
+
+  // Classname for depth styling
+  $class-depth: depth !default;
+
+  .v-tree-grid-expander {
+    display: inline-block;
+    width: $tg-expander-width;
+    padding-right: $tg-expander-padding;
+
+    &::before {
+      display: inline-block;
+      padding-right: 4px;
+      font-family: FontAwesome;
+    }
+
+    // Expander for expanded item
+    &.expanded {
+      &::before {
+        content: $tg-expander-char-expanded;
+      }
+    }
+
+    // Expander for collapsed item
+    &.collapsed {
+      &::before {
+        content: $tg-expander-char-collapsed;
+      }
+    }
+  }
+
+  // Hierarchy depth styling
+  .v-tree-grid-node {
+    @for $i from 0 through 15 {
+      &.#{$class-depth}-#{$i} {
+        padding-left: $indent * $i;
+      }
+    }
+  }
+
+  // Expander and cell content in same line
+  .v-tree-grid-cell-content {
+    display: inline-block;
+  }
+}
