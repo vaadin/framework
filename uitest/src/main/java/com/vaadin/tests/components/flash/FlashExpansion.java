@@ -34,10 +34,4 @@ public class FlashExpansion extends TestBase {
         return "Flash object should expand according to percentile sizes";
     }
 
-    @Override
-    protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }
