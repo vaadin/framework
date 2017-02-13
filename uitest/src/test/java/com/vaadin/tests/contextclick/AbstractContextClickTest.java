@@ -31,6 +31,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -137,13 +138,26 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
      * @param e
      *            web element
      * @param xCoord
-     *            x coordinate
+     *            x coordinate relative to the top-left corner of the element
      * @param yCoord
-     *            y coordinate
+     *            y coordinate relative to the top-left corner of the element
      */
     protected void contextClick(WebElement e, int xCoord, int yCoord) {
-        new Actions(getDriver()).moveToElement(e, xCoord, yCoord).contextClick()
-                .moveByOffset(-5, -5).click().perform();
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Workaround for Selenium/TB and Firefox 45 issue
+            int x = e.getLocation().getX() + xCoord;
+            int y = e.getLocation().getY() + yCoord;
+            getCommandExecutor().executeScript(
+                    "var ev = document.createEvent('MouseEvents'); ev.initMouseEvent('contextmenu', true, true, document.defaultView, 1, arguments[1], arguments[2], arguments[1], arguments[2], false, false, false, false, 2, null); arguments[0].dispatchEvent(ev);",
+                    e, x, y);
+            // make sure browser context menu does not block the test
+            getCommandExecutor().executeScript(
+                    "var ev = document.createEvent('MouseEvents'); ev.initMouseEvent('click', true, true, document.defaultView, 1, arguments[1]-5, arguments[2]-5, arguments[1]-5, arguments[2]-5, false, false, false, false, 1, null); arguments[0].dispatchEvent(ev);",
+                    e, x, y);
+        } else {
+            new Actions(getDriver()).moveToElement(e, xCoord, yCoord)
+                    .contextClick().moveByOffset(-5, -5).click().perform();
+        }
     }
 
 }

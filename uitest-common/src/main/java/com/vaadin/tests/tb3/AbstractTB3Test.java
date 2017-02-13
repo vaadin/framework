@@ -1012,6 +1012,17 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }
     }
 
+    protected void contextClickElement(WebElement element) {
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Workaround for Selenium/TB and Firefox 45 issue
+            getCommandExecutor().executeScript(
+                    "var ev = document.createEvent('HTMLEvents'); ev.initEvent('contextmenu', true, false); arguments[0].dispatchEvent(ev);",
+                    element);
+        } else {
+            new Actions(getDriver()).contextClick(element).perform();
+        }
+    }
+
     protected boolean isLoadingIndicatorVisible() {
         WebElement loadingIndicator = findElement(
                 By.className("v-loading-indicator"));
