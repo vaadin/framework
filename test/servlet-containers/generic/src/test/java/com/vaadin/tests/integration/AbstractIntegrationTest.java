@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -108,7 +109,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
                 return;
             }
         } catch (IOException e) {
-            System.err.println(
+            Logger.getLogger(getClass().getName()).error(
                     "Missing screenshot reference: " + referenceFile.getPath());
         }
         screenshotErrors = true;

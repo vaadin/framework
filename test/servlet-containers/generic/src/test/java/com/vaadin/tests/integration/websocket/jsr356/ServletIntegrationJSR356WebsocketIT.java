@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.integration.jsr356;
+package com.vaadin.tests.integration.websocket.jsr356;
 
-import com.vaadin.tests.integration.ServletIntegrationWebsocketIT;
+import com.vaadin.tests.integration.websocket.ServletIntegrationWebsocketIT;
 
 public class ServletIntegrationJSR356WebsocketIT
         extends ServletIntegrationWebsocketIT {

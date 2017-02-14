@@ -13,7 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.integration;
+package com.vaadin.tests.integration.websocket;
+
+import com.vaadin.tests.integration.AbstractServletIntegrationTest;
 
 public class ServletIntegrationWebsocketIT
         extends AbstractServletIntegrationTest {
