@@ -343,7 +343,8 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         new Actions(driver).keyUp(Keys.SHIFT).perform();
 
         // TODO: remove this once #14406 has been fixed
-        if (BrowserUtil.isIE(getDesiredCapabilities())) {
+        if (BrowserUtil.isIE(getDesiredCapabilities())
+                || BrowserUtil.isFirefox(getDesiredCapabilities())) {
             popup.findElement(
                     By.className("v-datefield-calendarpanel-prevmonth"))
                     .findElement(By.tagName("button")).click();
@@ -366,7 +367,8 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
                         .size());
         // TODO: remove this check once #14406 has been fixed -- clicking the
         // button instead of navigating with arrow keys steals the focus
-        if (!BrowserUtil.isIE(getDesiredCapabilities())) {
+        if (!BrowserUtil.isIE(getDesiredCapabilities())
+                && !BrowserUtil.isFirefox(getDesiredCapabilities())) {
             assertEquals("unexpected focus", "16",
                     popup.findElement(By
                             .className("v-datefield-calendarpanel-day-focused"))
