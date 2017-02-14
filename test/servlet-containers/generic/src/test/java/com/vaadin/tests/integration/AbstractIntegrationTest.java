@@ -19,10 +19,12 @@ import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.ParallelRunner;
 import com.vaadin.testbench.parallel.ParallelTest;
+import com.vaadin.testbench.parallel.TestNameSuffix;
 
 @RunOnHub("tb3-hub.intra.itmill.com")
 @RunWith(ParallelRunner.class)
 @BrowserFactory(CustomBrowserFactory.class)
+@TestNameSuffix(property = "server-name")
 public abstract class AbstractIntegrationTest extends ParallelTest {
 
     /**
