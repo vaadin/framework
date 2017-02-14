@@ -59,7 +59,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     }
 
     private void openTestURL() {
-        String url = getDeploymentURL() + getTestPath() + "?"
+        String url = getDeploymentURL() + getContextPath() + getTestPath() + "?"
                 + getParameters().collect(Collectors.joining("&"));
         driver.get(url);
 
@@ -113,5 +113,9 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     protected <T> void waitUntil(ExpectedCondition<T> condition,
             long timeoutInSeconds) {
         new WebDriverWait(driver, timeoutInSeconds).until(condition);
+    }
+
+    protected String getContextPath() {
+        return "/demo";
     }
 }
