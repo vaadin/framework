@@ -1,16 +1,22 @@
 package com.vaadin.tests.integration;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.imageio.ImageIO;
+
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.annotations.BrowserConfiguration;
 import com.vaadin.testbench.annotations.BrowserFactory;
 import com.vaadin.testbench.annotations.RunOnHub;
@@ -20,12 +26,17 @@ import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.ParallelRunner;
 import com.vaadin.testbench.parallel.ParallelTest;
 import com.vaadin.testbench.parallel.TestNameSuffix;
+import com.vaadin.testbench.screenshot.ImageFileUtil;
 
 @RunOnHub("tb3-hub.intra.itmill.com")
 @RunWith(ParallelRunner.class)
 @BrowserFactory(CustomBrowserFactory.class)
 @TestNameSuffix(property = "server-name")
 public abstract class AbstractIntegrationTest extends ParallelTest {
+
+    @Rule
+    public ScreenshotOnFailureRule screenshotOnFailure = new ScreenshotOnFailureRule(
+            this, true);
 
     /**
      * Height of the screenshots we want to capture
@@ -89,8 +100,22 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     }
 
     protected void compareScreen(String identifier) throws IOException {
-        if (testBench().compareScreen(identifier)) {
-            return;
+        String refFileName = identifier + "-"
+                + getDesiredCapabilities().getBrowserName().toLowerCase()
+                + ".png";
+        String errorFileName = identifier + "-"
+                + getDesiredCapabilities().getBrowserName().toLowerCase() + "-"
+                + System.getProperty("server-name") + ".png";
+        File referenceFile = ImageFileUtil
+                .getReferenceScreenshotFile(refFileName);
+        try {
+            BufferedImage reference = ImageIO.read(referenceFile);
+            if (testBench().compareScreen(reference, errorFileName)) {
+                return;
+            }
+        } catch (IOException e) {
+            System.err.println(
+                    "Missing screenshot reference: " + referenceFile.getPath());
         }
         screenshotErrors = true;
     }
