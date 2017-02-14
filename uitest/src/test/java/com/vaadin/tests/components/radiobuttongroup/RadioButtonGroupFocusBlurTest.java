@@ -23,9 +23,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -84,5 +85,11 @@ public class RadioButtonGroupFocusBlurTest extends MultiBrowserTest {
         radioButtons.get(4).sendKeys(Keys.TAB);
         // focus has gone away
         waitUntil(driver -> logContainsText("4. Blur Event"), 5);
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Focus does not move when expected with Selenium/TB and Firefox 45
+        return getBrowsersExcludingFirefox();
     }
 }
