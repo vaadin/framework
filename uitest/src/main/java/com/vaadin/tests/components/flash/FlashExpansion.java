@@ -34,4 +34,9 @@ public class FlashExpansion extends TestBase {
         return "Flash object should expand according to percentile sizes";
     }
 
+    @Override
+    protected Integer getTicketNumber() {
+        return 4035;
+    }
+
 }
