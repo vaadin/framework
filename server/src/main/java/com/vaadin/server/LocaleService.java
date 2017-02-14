@@ -158,57 +158,31 @@ public class LocaleService implements Serializable {
         /*
          * Date formatting (MM/DD/YYYY etc.)
          */
-
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                DateFormat.SHORT, locale);
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT,
+                locale);
+        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT,
+                locale);
         if (!(dateFormat instanceof SimpleDateFormat)) {
             getLogger().warning("Unable to get default date pattern for locale "
                     + locale.toString());
             dateFormat = new SimpleDateFormat();
         }
-        final String df = ((SimpleDateFormat) dateFormat).toPattern();
-
-        int timeStart = df.indexOf("H");
-        if (timeStart < 0) {
-            timeStart = df.indexOf("h");
+        if (!(timeFormat instanceof SimpleDateFormat)) {
+            getLogger().warning("Unable to get default time pattern for locale "
+                    + locale.toString());
+            timeFormat = new SimpleDateFormat();
         }
-        final int ampm_first = df.indexOf("a");
-        // E.g. in Korean locale AM/PM is before h:mm
-        // TODO should take that into consideration on client-side as well,
-        // now always h:mm a
-        if (ampm_first > 0 && ampm_first < timeStart) {
-            timeStart = ampm_first;
-        }
-        // Hebrew locale has time before the date
-        final boolean timeFirst = timeStart == 0;
-        String dateformat;
-        if (timeFirst) {
-            int dateStart = df.indexOf(' ');
-            if (ampm_first > dateStart) {
-                dateStart = df.indexOf(' ', ampm_first);
-            }
-            dateformat = df.substring(dateStart + 1);
-        } else {
-            dateformat = df.substring(0, timeStart - 1);
-        }
+        final String datePattern = ((SimpleDateFormat) dateFormat).toPattern();
+        final String timePattern = ((SimpleDateFormat) timeFormat).toPattern();
 
-        localeData.dateFormat = dateformat.trim();
+        localeData.dateFormat = datePattern.trim();
 
-        /*
-         * Time formatting (24 or 12 hour clock and AM/PM suffixes)
-         */
-        final String timeformat = df.substring(timeStart, df.length());
-        /*
-         * Doesn't return second or milliseconds.
-         *
-         * We use timeformat to determine 12/24-hour clock
-         */
-        final boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
+        final boolean twelve_hour_clock = timePattern.indexOf("a") > -1;
         // TODO there are other possibilities as well, like 'h' in french
         // (ignore them, too complicated)
-        final String hour_min_delimiter = timeformat.indexOf(".") > -1 ? "."
+        final String hour_min_delimiter = timePattern.indexOf(".") > -1 ? "."
                 : ":";
-        // outWriter.print("\"tf\":\"" + timeformat + "\",");
+
         localeData.twelveHourClock = twelve_hour_clock;
         localeData.hourMinuteDelimiter = hour_min_delimiter;
         if (twelve_hour_clock) {

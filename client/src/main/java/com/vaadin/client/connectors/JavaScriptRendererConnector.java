@@ -17,6 +17,7 @@ package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
@@ -141,9 +142,15 @@ public class JavaScriptRendererConnector
                     "JavaScriptRenderer " + helper.getInitFunctionName()
                             + " must have a function named 'render'");
         }
+        if (hasFunction("destory")) {
+            getLogger().severe("Your JavaScript connector ("
+                    + helper.getInitFunctionName()
+                    + ") has a typo. The destory method should be renamed to destroy.");
 
+        }
         final boolean hasInit = hasFunction("init");
-        final boolean hasDestroy = hasFunction("destroy");
+        final boolean hasDestroy = hasFunction("destroy")
+                || hasFunction("destory");
         final boolean hasOnActivate = hasFunction("onActivate");
         final boolean hasGetConsumedEvents = hasFunction("getConsumedEvents");
         final boolean hasOnBrowserEvent = hasFunction("onBrowserEvent");
@@ -190,16 +197,20 @@ public class JavaScriptRendererConnector
             @Override
             public void destroy(RendererCellReference cell) {
                 if (hasDestroy) {
-                    destory(helper.getConnectorWrapper(), getJsCell(cell));
+                    destroy(helper.getConnectorWrapper(), getJsCell(cell));
                 } else {
                     super.destroy(cell);
                 }
             }
 
-            private native void destory(JavaScriptObject wrapper,
+            private native void destroy(JavaScriptObject wrapper,
                     JavaScriptObject cell)
             /*-{
-                wrapper.destory(cell);
+                if (wrapper.destroy) {
+                    wrapper.destroy(cell);
+                } else  {
+                    wrapper.destory(cell);
+                }
             }-*/;
 
             @Override
@@ -263,6 +274,10 @@ public class JavaScriptRendererConnector
                 return !!wrapper.onBrowserEvent(cell, event);
             }-*/;
         };
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(JavaScriptRendererConnector.class.getName());
     }
 
     @Override

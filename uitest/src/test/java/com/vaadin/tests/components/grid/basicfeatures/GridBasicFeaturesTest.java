@@ -251,4 +251,9 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         }
         return null;
     }
+
+    protected void toggleColumnHidden(int column) {
+        selectMenuPath("Component", "Columns", "Column " + column, "Hidden");
+    }
+
 }

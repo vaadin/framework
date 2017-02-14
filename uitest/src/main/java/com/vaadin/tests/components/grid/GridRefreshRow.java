@@ -70,13 +70,20 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
             }
         });
         refresh10.setId("refresh10");
+        Button refreshAll = new Button("Refresh all", new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                grid.refreshAllRows();
+            }
+        });
+        refreshAll.setId("refreshAll");
         addComponents(new HorizontalLayout(refresh(0), refresh(1), refresh(2),
                 new Button("Refresh non-existant", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         grid.refreshRows("foobar");
                     }
-                })), refresh10);
+                })), refresh10, refreshAll);
         addComponents(new HorizontalLayout(style(0), style(1), style(2)));
     }
 

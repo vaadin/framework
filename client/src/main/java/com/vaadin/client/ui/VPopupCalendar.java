@@ -267,9 +267,9 @@ public class VPopupCalendar extends VTextualDate
      * Sets the state of the text field of this component. By default the text
      * field is enabled. Disabling it causes only the button for date selection
      * to be active, thus preventing the user from entering invalid dates. See
-     * {@link http://dev.vaadin.com/ticket/6790}.
+     * <a href="http://dev.vaadin.com/ticket/6790">6790</a>.
      *
-     * @param state
+     * @param textFieldEnabled
      */
     public void setTextFieldEnabled(boolean textFieldEnabled) {
         this.textFieldEnabled = textFieldEnabled;
@@ -426,7 +426,9 @@ public class VPopupCalendar extends VTextualDate
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
-            if (!preventOpenPopupCalendar) {
+            if (open) {
+                closeCalendarPanel();
+            } else if (!preventOpenPopupCalendar) {
                 openCalendarPanel();
             }
             preventOpenPopupCalendar = false;
@@ -612,7 +614,7 @@ public class VPopupCalendar extends VTextualDate
      * and it depends on the current resolution, what is considered inside the
      * range.
      *
-     * @param startDate
+     * @param rangeStart
      *            - the allowed range's start date
      */
     public void setRangeStart(Date rangeStart) {
@@ -623,7 +625,7 @@ public class VPopupCalendar extends VTextualDate
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
      *
-     * @param endDate
+     * @param rangeEnd
      *            - the allowed range's end date
      */
     public void setRangeEnd(Date rangeEnd) {

@@ -327,6 +327,19 @@ grid.addSelectionListener(selection -> { // Java 8
 });
 ----
 
+[[components.grid.selection.disallowuser]]
+=== Disallowing User Selection
+It is possible to prevent the user from changing the selection in grid for both single- and multi-selection models:
+
+[source, java]
+----
+HasUserSelectionAllowed model = (HasUserSelectionAllowed) grid.getSelectionModel();
+model.setUserSelectionAllowed(false);
+----
+
+[NOTE]
+Both `SingleSelectionModel` and `MultiSelectModel` implement `HasUserSelectionAllowed` so the cast is generally safe.
+
 
 [[components.grid.selection.clicks]]
 === Focus and Clicks

@@ -105,6 +105,7 @@ import com.vaadin.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Grid.SelectionModel.HasUserSelectionAllowed;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
@@ -569,11 +570,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
         }
 
-        private void bindFields(List<Field<?>> fields,
-                Item itemDataSource) {
+        private void bindFields(List<Field<?>> fields, Item itemDataSource) {
             for (Field<?> field : fields) {
-                if (itemDataSource.getItemProperty(getPropertyId(field))
-                        != null) {
+                if (itemDataSource
+                        .getItemProperty(getPropertyId(field)) != null) {
                     bind(field, getPropertyId(field));
                 }
             }
@@ -1105,6 +1105,35 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * SelectionModel should extend {@link AbstractGridExtension}.
      */
     public interface SelectionModel extends Serializable, Extension {
+
+        /**
+         * Interface implemented by selection models which support disabling
+         * client side selection while still allowing programmatic selection on
+         * the server.
+         *
+         * @since 7.7.7
+         */
+        public interface HasUserSelectionAllowed extends SelectionModel {
+
+            /**
+             * Checks if the user is allowed to change the selection.
+             * 
+             * @return <code>true</code> if the user is allowed to change the
+             *         selection, <code>false</code> otherwise
+             */
+            public boolean isUserSelectionAllowed();
+
+            /**
+             * Sets whether the user is allowed to change the selection.
+             * 
+             * @param userSelectionAllowed
+             *            <code>true</code> if the user is allowed to change the
+             *            selection, <code>false</code> otherwise
+             */
+            public void setUserSelectionAllowed(boolean userSelectionAllowed);
+
+        }
+
         /**
          * Checks whether an item is selected or not.
          *
@@ -1464,7 +1493,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      * A default implementation of a {@link SelectionModel.Single}
      */
     public static class SingleSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Single {
+            implements SelectionModel.Single, HasUserSelectionAllowed {
 
         @Override
         protected void extend(AbstractClientConnector target) {
@@ -1473,6 +1502,11 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void select(String rowKey) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select '" + rowKey
+                                        + "' although user selection is disallowed");
+                    }
                     SingleSelectionModel.this.select(getItemId(rowKey), false);
                 }
             });
@@ -1563,6 +1597,21 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         protected SingleSelectionModelState getState() {
             return (SingleSelectionModelState) super.getState();
         }
+
+        @Override
+        protected SingleSelectionModelState getState(boolean markAsDirty) {
+            return (SingleSelectionModelState) super.getState(markAsDirty);
+        }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return getState(false).userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            getState().userSelectionAllowed = userSelectionAllowed;
+        }
     }
 
     /**
@@ -1590,13 +1639,15 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         public void reset() {
             // NOOP
         }
+
     }
 
     /**
      * A default implementation of a {@link SelectionModel.Multi}
      */
     public static class MultiSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Multi {
+            implements SelectionModel.Multi,
+            SelectionModel.HasUserSelectionAllowed {
 
         /**
          * The default selection size limit.
@@ -1614,6 +1665,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void select(List<String> rowKeys) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select '" + rowKeys
+                                        + "' although user selection is disallowed");
+                    }
+
                     List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
@@ -1623,6 +1680,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void deselect(List<String> rowKeys) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to deselect '" + rowKeys
+                                        + "' although user selection is disallowed");
+                    }
+
                     List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
@@ -1632,11 +1695,21 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
                 @Override
                 public void selectAll() {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select all although user selection is disallowed");
+                    }
+
                     MultiSelectionModel.this.selectAll(false);
                 }
 
                 @Override
                 public void deselectAll() {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to deselect all although user selection is disallowed");
+                    }
+
                     MultiSelectionModel.this.deselectAll(false);
                 }
             });
@@ -1919,6 +1992,21 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         @Override
         protected MultiSelectionModelState getState() {
             return (MultiSelectionModelState) super.getState();
+        }
+
+        @Override
+        protected MultiSelectionModelState getState(boolean markAsDirty) {
+            return (MultiSelectionModelState) super.getState(markAsDirty);
+        }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return getState(false).userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            getState().userSelectionAllowed = userSelectionAllowed;
         }
     }
 
@@ -2228,8 +2316,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             Item item = cell.getItem();
             Property itemProperty = item.getItemProperty(cell.getPropertyId());
-            Object modelValue =
-                    itemProperty == null ? null : itemProperty.getValue();
+            Object modelValue = itemProperty == null ? null
+                    : itemProperty.getValue();
 
             data.put(columnKeys.key(cell.getPropertyId()), AbstractRenderer
                     .encodeValue(modelValue, renderer, converter, getLocale()));
@@ -2339,14 +2427,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param propertyIds
              *            The property ids of columns to merge
              * @return The remaining visible cell after the merge
              */
             public CELLTYPE join(Object... propertyIds) {
-                assert propertyIds.length > 1 : "You need to merge at least 2 properties";
+                if (propertyIds.length < 2) {
+                    throw new IllegalArgumentException(
+                            "You need to merge at least 2 properties");
+                }
 
                 Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
                 for (int i = 0; i < propertyIds.length; ++i) {
@@ -2357,14 +2448,17 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param cells
              *            The cells to merge. Must be from the same row.
              * @return The remaining visible cell after the merge
              */
             public CELLTYPE join(CELLTYPE... cells) {
-                assert cells.length > 1 : "You need to merge at least 2 cells";
+                if (cells.length < 2) {
+                    throw new IllegalArgumentException(
+                            "You need to merge at least 2 cells");
+                }
 
                 return join(new HashSet<CELLTYPE>(Arrays.asList(cells)));
             }
@@ -2504,6 +2598,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
             void detach() {
                 for (CELLTYPE cell : cells.values()) {
+                    cell.detach();
+                }
+                for (CELLTYPE cell : cellGroups.values()) {
                     cell.detach();
                 }
             }
@@ -4554,8 +4651,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     private FieldGroup editorFieldGroup = new CustomFieldGroup();
 
     /**
-     * Poperty ID to Field mapping that stores editor fields set by {@link
-     * #setEditorField(Object, Field)}.
+     * Poperty ID to Field mapping that stores editor fields set by
+     * {@link #setEditorField(Object, Field)}.
      */
     private Map<Object, Field<?>> editorFields = new HashMap<Object, Field<?>>();
 
@@ -4714,7 +4811,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Type type = null;
                     try {
                         type = (getState(false).getClass()
-                                .getDeclaredField(diffStateKey)
+                                .getField(diffStateKey)
                                 .getGenericType());
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
@@ -4755,7 +4852,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Type type = null;
                     try {
                         type = (getState(false).getClass()
-                                .getDeclaredField(diffStateKey)
+                                .getField(diffStateKey)
                                 .getGenericType());
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
@@ -5262,10 +5359,12 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Sets the column resize mode to use. The default mode is {@link ColumnResizeMode#ANIMATED}.
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
      *
-     * @param mode a ColumnResizeMode value
-
+     * @param mode
+     *            a ColumnResizeMode value
+     * 
      * @since 7.7.5
      */
     public void setColumnResizeMode(ColumnResizeMode mode) {
@@ -5273,7 +5372,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * Returns the current column resize mode. The default mode is {@link ColumnResizeMode#ANIMATED}.
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode#ANIMATED}.
      *
      * @return a ColumnResizeMode value
      * 
@@ -6760,6 +6860,15 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         }
     }
 
+    /**
+     * Refreshes, i.e. causes the client side to re-render all rows.
+     *
+     * @since 7.7.7
+     */
+    public void refreshAllRows() {
+        datasourceExtension.refreshCache();
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(Grid.class.getName());
     }
@@ -6864,7 +6973,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
 
         Field<?> editor = editorFieldGroup.getField(propertyId);
 
-        // If field group has no field for this property, see if we have it stored
+        // If field group has no field for this property, see if we have it
+        // stored
         if (editor == null) {
             editor = editorFields.get(propertyId);
             if (editor != null) {
@@ -6928,9 +7038,9 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
         editorFieldGroup.setItemDataSource(item);
 
         for (Column column : getColumns()) {
-            column.getState().editorConnector =
-                    item.getItemProperty(column.getPropertyId()) == null
-                            ? null : getEditorField(column.getPropertyId());
+            column.getState().editorConnector = item
+                    .getItemProperty(column.getPropertyId()) == null ? null
+                            : getEditorField(column.getPropertyId());
         }
 
         editorActive = true;

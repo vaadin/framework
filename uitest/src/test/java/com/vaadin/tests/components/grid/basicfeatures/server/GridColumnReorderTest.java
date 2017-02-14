@@ -209,6 +209,29 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testColumnReorder_draggingFrozenColumnsContainingHiddenColumns_impossible() {
+        // given
+        openTestURL();
+        selectMenuPath("Component", "Size", "Width", "900px");
+        toggleColumnReordering();
+        setFrozenColumns(4);
+        toggleColumnHidden(1);
+        toggleColumnHidden(2);
+        assertColumnHeaderOrder(0, 3, 4, 5);
+
+        // when
+        // drag frozen column out between non-frozen columns
+        dragAndDropDefaultColumnHeader(1, 2, CellSide.RIGHT);
+
+        // then
+        // everything should be as before
+        assertColumnHeaderOrder(0, 3, 4, 5);
+        assertTrue(getGridElement().getHeaderCell(0, 0).isFrozen());
+        assertTrue(getGridElement().getHeaderCell(0, 1).isFrozen());
+        assertFalse(getGridElement().getHeaderCell(0, 2).isFrozen());
+    }
+
+    @Test
     public void testColumnReorder_draggingColumnOnTopOfFrozenColumn_columnDroppedRightOfFrozenColumns() {
         // given
         openTestURL();

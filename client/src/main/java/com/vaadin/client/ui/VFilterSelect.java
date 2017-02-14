@@ -1445,7 +1445,10 @@ public class VFilterSelect extends Composite
     };
 
     private class IconWidget extends Widget {
+        private Icon icon;
+
         IconWidget(Icon icon) {
+            this.icon = icon;
             setElement(icon.getElement());
             addDomHandler(VFilterSelect.this, ClickEvent.getType());
         }
@@ -1903,23 +1906,57 @@ public class VFilterSelect extends Composite
                 afterSelectedItemIconChange();
             }
         } else {
+            IconWidget newIcon = new IconWidget(client.getIcon(iconUri));
+            if (iconEquals(newIcon, selectedItemIcon)) {
+                /*
+                 * Do not update the icon if nothing has changed. Otherwise we
+                 * can cause problems such as not being able to click in the
+                 * icon to open the popup (blur might occur and call this
+                 * method, icon is replaced and the click event is not delivered
+                 * to the new icon)
+                 */
+                return;
+            }
+
             if (selectedItemIcon != null) {
                 panel.remove(selectedItemIcon);
             }
-            selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+
             // Older IE versions don't scale icon correctly if DOM
             // contains height and width attributes.
-            selectedItemIcon.getElement().removeAttribute("height");
-            selectedItemIcon.getElement().removeAttribute("width");
-            selectedItemIcon.addDomHandler(new LoadHandler() {
+            newIcon.getElement().removeAttribute("height");
+            newIcon.getElement().removeAttribute("width");
+            newIcon.addDomHandler(new LoadHandler() {
                 @Override
                 public void onLoad(LoadEvent event) {
                     afterSelectedItemIconChange();
                 }
             }, LoadEvent.getType());
-            panel.insert(selectedItemIcon, 0);
+            panel.insert(newIcon, 0);
+            selectedItemIcon = newIcon;
             afterSelectedItemIconChange();
         }
+    }
+
+    /**
+     * Checks if the icon widgets show the same icon.
+     * 
+     * @param icon1
+     *            the first widget
+     * @param icon2
+     *            the second widget
+     * @return <code>true</code> if they show the same icon, <code>false</code>
+     *         otherwise
+     */
+    private static boolean iconEquals(IconWidget icon1, IconWidget icon2) {
+        if (icon1 == null) {
+            return icon2 == null;
+        } else if (icon2 == null) {
+            return false;
+        } else {
+            return icon1.icon.getUri().equals(icon2.icon.getUri());
+        }
+
     }
 
     private void afterSelectedItemIconChange() {
@@ -2387,6 +2424,7 @@ public class VFilterSelect extends Composite
                 }
             } else if (currentSuggestion != null) {
                 setPromptingOff(currentSuggestion.caption);
+                setSelectedItemIcon(currentSuggestion.getIconUri());
             }
         }
         removeStyleDependentName("focus");
