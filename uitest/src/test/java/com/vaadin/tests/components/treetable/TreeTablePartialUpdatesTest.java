@@ -28,6 +28,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
 import com.vaadin.testbench.elements.TreeTableElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -67,7 +68,12 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // scroll far enough down to drop the first row from the cache
         // but not far enough to reach the last row
-        scrollable.scroll(1692);
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            // Chrome 56 requires different scroll position
+            scrollable.scroll(846);
+        } else {
+            scrollable.scroll(1692);
+        }
 
         // wait for the scrollposition element to disappear
         waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
