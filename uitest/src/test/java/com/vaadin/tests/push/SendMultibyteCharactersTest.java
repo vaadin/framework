@@ -30,9 +30,10 @@ public abstract class SendMultibyteCharactersTest extends MultiBrowserTest {
             text.append("之は日本語です、テストです。");
         }
 
-        textArea.sendKeys(text.toString());
-
+        // timing matters for Firefox, this needs to be before sendKeys
         clearDebugMessages();
+
+        textArea.sendKeys(text.toString());
 
         findElement(By.tagName("body")).click();
 
