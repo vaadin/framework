@@ -54,7 +54,7 @@
         <sonar.analysis.mode>preview</sonar.analysis.mode>
         <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
-        <vaadin.icons.version>3.0.0</vaadin.icons.version>
+        <vaadin.icons.version>3.0.1</vaadin.icons.version>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
