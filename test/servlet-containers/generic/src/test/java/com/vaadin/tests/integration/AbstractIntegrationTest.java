@@ -10,13 +10,11 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
 import org.junit.After;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.annotations.BrowserConfiguration;
 import com.vaadin.testbench.annotations.BrowserFactory;
 import com.vaadin.testbench.annotations.RunOnHub;
@@ -33,10 +31,6 @@ import com.vaadin.testbench.screenshot.ImageFileUtil;
 @BrowserFactory(CustomBrowserFactory.class)
 @TestNameSuffix(property = "server-name")
 public abstract class AbstractIntegrationTest extends ParallelTest {
-
-    @Rule
-    public ScreenshotOnFailureRule screenshotOnFailure = new ScreenshotOnFailureRule(
-            this, true);
 
     /**
      * Height of the screenshots we want to capture
