@@ -39,7 +39,7 @@ import com.vaadin.client.ui.FocusableFlowPanel;
  * (child) elements.
  *
  * @author Vaadin Ltd
- *
+ * @since 8.0
  */
 public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
         implements HasAllFocusHandlers {

@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.grid.renderers.HtmlRendererState;
 /**
  * A connector for {@link UnsafeHtmlRenderer}
  *
- * @since 7.4
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderers.HtmlRenderer.class)
