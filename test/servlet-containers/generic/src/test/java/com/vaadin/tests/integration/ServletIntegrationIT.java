@@ -15,6 +15,11 @@
  */
 package com.vaadin.tests.integration;
 
-public class ServletIntegrationUITest extends AbstractServletIntegrationTest {
+public class ServletIntegrationIT extends AbstractServletIntegrationTest {
     // Uses the test method declared in the super class
+
+    @Override
+    protected String getTestPath() {
+        return "/run/ServletIntegrationUI";
+    }
 }
