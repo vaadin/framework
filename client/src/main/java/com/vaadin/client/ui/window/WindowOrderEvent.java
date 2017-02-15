@@ -23,7 +23,7 @@ import com.vaadin.client.ui.VWindow;
 /**
  * Event for window order position updates.
  *
- * @since 8.0.0
+ * @since 8.0
  *
  * @author Vaadin Ltd
  */

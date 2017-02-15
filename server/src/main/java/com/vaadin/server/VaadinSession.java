@@ -615,6 +615,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *
      * @param converterFactory
      *            The converter factory used in the session
+     * @since 8.0
      */
     @Deprecated
     public void setConverterFactory(Object converterFactory) {
@@ -811,6 +812,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param listener
      *            the bootstrap listener to add
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addBootstrapListener(BootstrapListener listener) {
         assert hasLock();

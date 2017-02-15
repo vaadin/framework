@@ -22,14 +22,15 @@ import com.vaadin.ui.Grid.Column;
  * Helper classes with fluent API for constructing {@link GridSortOrder} lists.
  * When the sort order is ready to be passed on, calling {@link #build()} will
  * create the list of sort orders.
- * 
+ *
  * @see GridSortOrder
  * @see #thenAsc(Column)
  * @see #thenDesc(Column)
  * @see #build()
- * 
+ *
  * @param <T>
  *            the type of the grid
+ * @since 8.0
  */
 public class GridSortOrderBuilder<T>
         extends SortOrderBuilder<GridSortOrder<T>, Column<T, ?>> {

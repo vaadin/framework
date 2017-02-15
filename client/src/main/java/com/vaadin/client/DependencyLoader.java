@@ -30,7 +30,7 @@ import com.vaadin.client.ResourceLoader.ResourceLoadListener;
  * execute a command after all dependencies have finished loading.
  *
  * @author Vaadin Ltd
- * @since 8.0.0
+ * @since 8.0
  */
 public class DependencyLoader {
 

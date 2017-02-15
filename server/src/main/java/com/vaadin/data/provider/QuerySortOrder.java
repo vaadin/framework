@@ -21,6 +21,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * Sorting information for {@link Query}.
  *
  * @see Query
+ * @since 8.0
  */
 public class QuerySortOrder extends SortOrder<String> {
 
