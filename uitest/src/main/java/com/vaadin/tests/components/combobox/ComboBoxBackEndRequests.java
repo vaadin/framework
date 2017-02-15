@@ -51,19 +51,17 @@ public class ComboBoxBackEndRequests extends AbstractTestUI {
         scrollToSelectedItem.addValueChangeListener(event -> cb
                 .setScrollToSelectedItem(scrollToSelectedItem.getValue()));
 
-        HorizontalLayout options = new HorizontalLayout(new VerticalLayout(
-                textInputAllowed, emptySelectionAllowed, scrollToSelectedItem),
-
-                new VerticalLayout(new Button("Swap DataProvider",
+        VerticalLayout options = new VerticalLayout(textInputAllowed,
+                emptySelectionAllowed, scrollToSelectedItem,
+                new Button("Swap DataProvider",
                         event -> cb.setDataProvider(new LoggingItemDataProvider(
                                 500, logContainer))),
-                        new Button("Clear logs",
-                                event -> logContainer.removeAllComponents())));
+                new Button("Clear logs",
+                        event -> logContainer.removeAllComponents()));
 
         cb.setDataProvider(new LoggingItemDataProvider(items, logContainer));
         Panel panel = new Panel(logContainer);
-        addComponents(
-                new VerticalLayout(options, new HorizontalLayout(cb, panel)));
+        addComponent(new HorizontalLayout(cb, panel, options));
     }
 
     @Override

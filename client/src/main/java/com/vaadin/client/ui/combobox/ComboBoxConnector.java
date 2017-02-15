@@ -200,18 +200,19 @@ public class ComboBoxConnector extends AbstractListingConnector
 
         if (page < 0) {
             if (getState().scrollToSelectedItem) {
+                // TODO this should be optimized not to try to fetch everything
                 getDataSource().ensureAvailability(0, getDataSource().size());
                 return;
             } else {
                 page = 0;
             }
         }
-        int adjustment = getWidget().nullSelectionAllowed
-                && "".equals(getWidget().lastFilter) ? 1 : 0;
+        int adjustment = getWidget().nullSelectionAllowed && "".equals(filter)
+                ? 1 : 0;
         int startIndex = Math.max(0,
                 page * getWidget().pageLength - adjustment);
         int pageLength = getWidget().pageLength > 0 ? getWidget().pageLength
-                : 10000;
+                : getDataSource().size();
         getDataSource().ensureAvailability(startIndex, pageLength);
     }
 
@@ -297,7 +298,7 @@ public class ComboBoxConnector extends AbstractListingConnector
 
         getWidget().currentSuggestions.clear();
 
-        if (nullSelectionItemShouldBeVisible()) {
+        if (getWidget().getNullSelectionItemShouldBeVisible()) {
             // add special null selection item...
             if (isFirstPage()) {
                 addEmptySelectionItem();
@@ -306,24 +307,19 @@ public class ComboBoxConnector extends AbstractListingConnector
                 start = start - 1;
             }
             // in either case, the last item to show is
-            // shifted by one
-            end = end - 1;
+            // shifted by one, unless no paging is used
+            if (getState().pageLength != 0) {
+                end = end - 1;
+            }
         }
 
         updateSuggestions(start, end);
-        getWidget().totalMatches = getDataSource().size()
-                + (nullSelectionItemShouldBeVisible() ? 1 : 0);
+        getWidget().setTotalSuggestions(getDataSource().size());
 
         getDataReceivedHandler().dataReceived();
     }
 
-    private boolean nullSelectionItemShouldBeVisible() {
-        return getWidget().nullSelectionAllowed
-                && "".equals(getWidget().lastFilter);
-    }
-
     private void updateSuggestions(int start, int end) {
-
         for (int i = start; i < end; ++i) {
             JsonObject row = getDataSource().getRow(i);
             if (row != null) {
@@ -417,11 +413,10 @@ public class ComboBoxConnector extends AbstractListingConnector
             if (getState().pageLength == 0) {
                 if (getWidget().suggestionPopup.isShowing()) {
                     dataSource.ensureAvailability(0, estimatedNewDataSize);
-                } else {
-                    // just remove all current options, everything is fetched
-                    // when filter is entered or popup opened
-                    refreshData();
                 }
+                // else lets just wait till the popup is opened before
+                // everything is fetched to it. this could be optimized later on
+                // to fetch everything if in-memory data is used.
             } else {
                 // reset data: clear any current options, set page to 0
                 getWidget().currentPage = 0;
