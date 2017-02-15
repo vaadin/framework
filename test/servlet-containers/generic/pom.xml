@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
@@ -13,6 +13,7 @@
     <packaging>war</packaging>
     <properties>
         <osgi.bundle.version>8.0.0</osgi.bundle.version>
+        <jetty.skip>true</jetty.skip>
     </properties>
 
     <dependencies>
@@ -41,8 +42,7 @@
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-uitest-common</artifactId>
-            <version>${project.version}</version>
+            <artifactId>vaadin-testbench-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -51,13 +51,15 @@
     <build>
 
         <plugins>
-            <!--TODO run this on different servers-->
+            <!--TODO run this on different servers -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-                    <skip>true</skip>
+                    <webApp>
+                        <contextPath>/demo</contextPath>
+                    </webApp>
                 </configuration>
             </plugin>
             <plugin>
@@ -73,13 +75,21 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- Currently tested using an Ant script. -->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
-                <!-- This execution builds an additional .war file with JBoss 6 specific descriptor -->
+                <!-- This execution builds an additional .war file with JBoss 
+                    6 specific descriptor -->
                 <executions>
                     <execution>
                         <id>jboss6-war</id>
