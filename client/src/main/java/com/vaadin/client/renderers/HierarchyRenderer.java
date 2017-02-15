@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.treegrid.HierarchyRendererCellReferenceWrapper;
-import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 
 import elemental.json.JsonObject;
 
@@ -62,12 +62,17 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         int depth = 0;
         boolean leaf = false;
         boolean collapsed = false;
-        if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
-            JsonObject rowDescription = row.getObject(GridState.JSONKEY_ROWDESCRIPTION);
+        if (row.hasKey(
+                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
+            JsonObject rowDescription = row.getObject(
+                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
 
-            depth = (int) rowDescription.getNumber("depth");
-            leaf = rowDescription.getBoolean("leaf");
-            collapsed = rowDescription.getBoolean("collapsed");
+            depth = (int) rowDescription
+                    .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
+            leaf = rowDescription
+                    .getBoolean(TreeGridCommunicationConstants.ROW_LEAF);
+            collapsed = rowDescription
+                    .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
         }
 
         HierarchyItem cellWidget = (HierarchyItem) widget;

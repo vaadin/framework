@@ -35,8 +35,8 @@ import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 
 import elemental.json.JsonObject;
@@ -256,12 +256,16 @@ public class TreeGridConnector extends GridConnector {
                     boolean collapsed, leaf;
                     int depth, parentIndex;
                     if (event.getCell().getRow()
-                            .hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
+                            .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
                         JsonObject rowDescription = event.getCell().getRow()
-                                .getObject(GridState.JSONKEY_ROWDESCRIPTION);
-                        collapsed = rowDescription.getBoolean("collapsed");
-                        leaf = rowDescription.getBoolean("leaf");
-                        depth = (int) rowDescription.getNumber("depth");
+                                .getObject(
+                                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                        collapsed = rowDescription.getBoolean(
+                                TreeGridCommunicationConstants.ROW_COLLAPSED);
+                        leaf = rowDescription.getBoolean(
+                                TreeGridCommunicationConstants.ROW_LEAF);
+                        depth = (int) rowDescription.getNumber(
+                                TreeGridCommunicationConstants.ROW_DEPTH);
                         parentIndex = (int) rowDescription
                                 .getNumber("parentIndex");
 

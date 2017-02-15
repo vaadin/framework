@@ -19,20 +19,23 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
-import com.vaadin.server.JsonCodec;
-import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 
+import elemental.json.Json;
+import elemental.json.JsonObject;
+
 /**
+ * A grid component for displaying hierarchical tabular data.
  * 
  * @author Vaadin Ltd
  * @since 8.1
  * 
  * @param <T>
+ *            the grid bean type
  */
 public class TreeGrid<T> extends Grid<T> {
 
@@ -41,23 +44,19 @@ public class TreeGrid<T> extends Grid<T> {
 
         // Attaches hierarchy data to the row
         addDataGenerator((item, rowData) -> {
-            HierarchyData hierarchyData = new HierarchyData();
 
-            // calculate depth
-            hierarchyData.setDepth(getDataProvider().getDepth(item));
-
-            // set collapsed state
-            hierarchyData.setCollapsed(getDataProvider().isCollapsed(item));
-
-            // set leaf state
-            hierarchyData.setLeaf(!getDataProvider().hasChildren(item));
+            JsonObject hierarchyData = Json.createObject();
+            hierarchyData.put(TreeGridCommunicationConstants.ROW_DEPTH,
+                    getDataProvider().getDepth(item));
+            hierarchyData.put(TreeGridCommunicationConstants.ROW_COLLAPSED,
+                    getDataProvider().isCollapsed(item));
+            hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
+                    !getDataProvider().hasChildren(item));
 
             // add hierarchy information to row as metadata
-            rowData.put(GridState.JSONKEY_ROWDESCRIPTION,
-                    JsonCodec
-                            .encode(hierarchyData, null, HierarchyData.class,
-                                    getUI().getConnectorTracker())
-                            .getEncodedValue());
+            rowData.put(
+                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION,
+                    hierarchyData);
         });
 
         registerRpc(new NodeCollapseRpc() {
