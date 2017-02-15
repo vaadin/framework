@@ -16,20 +16,22 @@ import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.Query;
 import com.vaadin.shared.Registration;
 import com.vaadin.tests.components.AbstractComponentTest;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.TreeGrid;
 
 public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
     private TreeGrid<TestBean> grid;
-
-    @Override
-    protected Class<TreeGrid> getTestClass() {
-        return TreeGrid.class;
-    }
+    private TestDataProvider dataProvider = new TestDataProvider();
 
     @Override
     public TreeGrid getComponent() {
         return grid;
+    }
+
+    @Override
+    protected Class<TreeGrid> getTestClass() {
+        return TreeGrid.class;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         grid.addColumn(TestBean::getStringValue).setId("First column");
         grid.addColumn(TestBean::getStringValue).setId("Second column");
         grid.setHierarchyColumn("First column");
+        grid.setDataProvider(dataProvider);
 
         grid.setId("testComponent");
         addTestComponent(grid);
@@ -49,6 +52,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         super.createActions();
 
         createHierarchyColumnSelect();
+        createToggleCollapseSelect();
     }
 
     private void createHierarchyColumnSelect() {
@@ -56,9 +60,17 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         grid.getColumns().stream()
                 .forEach(column -> options.put(column.getId(), column.getId()));
 
-        createSelectAction("Set hierarchy", CATEGORY_FEATURES, options,
+        createSelectAction("Set hierarchy column", CATEGORY_FEATURES, options,
                 grid.getColumns().get(0).getId(),
                 (treeGrid, value, data) -> treeGrid.setHierarchyColumn(value));
+    }
+
+    private void createToggleCollapseSelect() {
+        MenuItem menu = createCategory("Toggle collapse", CATEGORY_FEATURES);
+        dataProvider.getAllItems().forEach(testBean -> {
+            createClickAction(testBean.getStringValue(), "Toggle collapse",
+                    (grid, bean, data) -> grid.toggleExpansion(bean), testBean);
+        });
     }
 
     private static class TestBean {
@@ -78,7 +90,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         }
     }
 
-    private static class DemoDataProvider
+    private static class TestDataProvider
             implements HierarchicalDataProvider<TestBean, Void> {
 
         private static class HierarchyWrapper<T> {
@@ -131,7 +143,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         private Map<HierarchyWrapper<TestBean>, TestBean> wrapperToItemMap;
         private Map<TestBean, HierarchyWrapper<TestBean>> rootNodes;
 
-        public DemoDataProvider() {
+        public TestDataProvider() {
             itemToWrapperMap = new LinkedHashMap<>();
             wrapperToItemMap = new LinkedHashMap<>();
             rootNodes = new LinkedHashMap<>();
@@ -179,12 +191,12 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
         @Override
         public void refreshItem(TestBean item) {
-            // TODO Auto-generated method stub
+            // NO-OP
         }
 
         @Override
         public void refreshAll() {
-            // TODO Auto-generated method stub
+            // NO-OP
         }
 
         @Override
@@ -192,6 +204,10 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                 DataProviderListener<TestBean> listener) {
             return () -> {
             };
+        }
+
+        private List<TestBean> getAllItems() {
+            return new ArrayList<>(itemToWrapperMap.keySet());
         }
 
         private List<TestBean> getVisibleItemsRecursive(
