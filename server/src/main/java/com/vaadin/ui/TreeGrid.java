@@ -120,6 +120,13 @@ public class TreeGrid<T> extends Grid<T> {
 
     @Override
     public HierarchicalDataProvider<T, ?> getDataProvider() {
-        return (HierarchicalDataProvider<T, ?>) super.getDataProvider();
+        DataProvider<T, ?> dataProvider = super.getDataProvider();
+        // FIXME DataCommunicator by default has a CallbackDataProvider if no
+        // DataProvider is set, resulting in a class cast exception if we don't
+        // check it here
+        if (!(dataProvider instanceof HierarchicalDataProvider)) {
+            return null;
+        }
+        return (HierarchicalDataProvider<T, ?>) dataProvider;
     }
 }
