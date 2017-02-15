@@ -398,14 +398,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          *
          * @param currentPage
          *            The current page number
-         * @param totalSuggestions
-         *            The total amount of suggestions
          */
-        public void showSuggestions(final int currentPage,
-                final int totalSuggestions) {
+        public void showSuggestions(final int currentPage) {
 
             debug("VComboBox.SP: showSuggestions(" + currentPage + ", "
-                    + totalSuggestions + ")");
+                    + getTotalSuggestions() + ")");
 
             final SuggestionPopup popup = this;
             // Add TT anchor point
@@ -418,14 +415,13 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             setPopupPosition(x, topPosition);
 
-            int nullOffset = nullSelectionAllowed && "".equals(lastFilter) ? 1
-                    : 0;
+            int nullOffset = getNullSelectionItemShouldBeVisible() ? 1 : 0;
             boolean firstPage = currentPage == 0;
             final int first = currentPage * pageLength + 1
                     - (firstPage ? 0 : nullOffset);
             final int last = first + currentSuggestions.size() - 1
                     - (firstPage && "".equals(lastFilter) ? nullOffset : 0);
-            final int matches = totalSuggestions - nullOffset;
+            final int matches = getTotalSuggestions();
             if (last > 0) {
                 // nullsel not counted, as requested by user
                 status.setInnerText((matches == 0 ? 0 : first) + "-" + last
@@ -435,7 +431,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
             // We don't need to show arrows or statusbar if there is
             // only one page
-            if (totalSuggestions <= pageLength || pageLength == 0) {
+            if (getTotalSuggestionsIncludingNullSelectionItem() <= pageLength
+                    || pageLength == 0) {
                 setPagingEnabled(false);
             } else {
                 setPagingEnabled(true);
@@ -609,8 +606,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             public void scrollDown() {
                 debug("VComboBox.SP.LPS: scrollDown()");
                 if (pageLength > 0
-                        && totalMatches > (currentPage + pagesToScroll + 1)
-                                * pageLength) {
+                        && getTotalSuggestionsIncludingNullSelectionItem() > (currentPage
+                                + pagesToScroll + 1) * pageLength) {
                     pagesToScroll++;
                     cancel();
                     schedule(200);
@@ -1089,7 +1086,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     }
                 }
             }
-            if ("".equals(enteredItemValue) && nullSelectionAllowed) {
+            if (getNullSelectionItemShouldBeVisible()) {
                 onNullSelected();
             } else if (allowNewItems) {
                 if (!enteredItemValue.equals(lastNewItemString)) {
@@ -1367,7 +1364,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 showPopup = true;
             }
             if (showPopup) {
-                suggestionPopup.showSuggestions(currentPage, totalMatches);
+                suggestionPopup.showSuggestions(currentPage);
             }
 
             waitingForFilteringResponse = false;
@@ -1617,8 +1614,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean allowNewItems;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public int totalMatches;
+    /** Total number of suggestions, excluding null selection item. */
+    private int totalSuggestions;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean nullSelectionAllowed;
@@ -1765,7 +1762,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
      *         last page
      */
     public boolean hasNextPage() {
-        return pageLength > 0 && totalMatches > (currentPage + 1) * pageLength;
+        return pageLength > 0
+                && getTotalSuggestionsIncludingNullSelectionItem() > (currentPage
+                        + 1) * pageLength;
     }
 
     /**
@@ -2763,4 +2762,52 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         this.allowNewItems = allowNewItems;
     }
 
+    /**
+     * Sets the total number of suggestions.
+     * <p>
+     * NOTE: this excluded the possible null selection item!
+     * <p>
+     * NOTE: this just updates the state, but doesn't update any UI.
+     *
+     * @since 8.0
+     * @param totalSuggestions
+     *            total number of suggestions
+     */
+    public void setTotalSuggestions(int totalSuggestions) {
+        this.totalSuggestions = totalSuggestions;
+    }
+
+    /**
+     * Gets the total number of suggestions, excluding the null selection item.
+     *
+     * @since 8.0
+     * @return total number of suggestions
+     */
+    public int getTotalSuggestions() {
+        return totalSuggestions;
+    }
+
+    /**
+     * Gets the total number of suggestions, including the possible null
+     * selection item, if it should be visible.
+     *
+     * @return total number of suggestions with null selection items
+     */
+    private int getTotalSuggestionsIncludingNullSelectionItem() {
+        return getTotalSuggestions()
+                + (getNullSelectionItemShouldBeVisible() ? 1 : 0);
+    }
+
+    /**
+     * Returns null selection item should be visible or not.
+     * <p>
+     * NOTE: this checks for any entered filter value, and whether the feature
+     * is enabled
+     *
+     * @since 8.0
+     * @return {@code true} if it should be visible, {@code}
+     */
+    public boolean getNullSelectionItemShouldBeVisible() {
+        return nullSelectionAllowed && "".equals(lastFilter);
+    }
 }
