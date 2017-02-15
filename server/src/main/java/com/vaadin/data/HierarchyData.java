@@ -15,12 +15,15 @@
  */
 package com.vaadin.data;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class HierarchyData {
+public class HierarchyData implements Serializable {
+
     private int depth;
     private boolean collapsed;
     private boolean leaf = true;

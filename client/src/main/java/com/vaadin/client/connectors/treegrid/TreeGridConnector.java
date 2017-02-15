@@ -18,9 +18,11 @@ package com.vaadin.client.connectors.treegrid;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.user.client.Event;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.grid.GridConnector;
 import com.vaadin.client.renderers.ClickableRenderer;
@@ -31,7 +33,10 @@ import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 
 import elemental.json.JsonObject;
@@ -68,7 +73,7 @@ public class TreeGridConnector extends GridConnector {
 
             // Id of new hierarchy column. Choose first when nothing explicitly
             // set
-            String newHierarchyColumnId = null; // getState().hierarchyColumnId;
+            String newHierarchyColumnId = getState().hierarchyColumnId;
             if (newHierarchyColumnId == null) {
                 newHierarchyColumnId = getState().columnOrder.get(0);
             }
@@ -113,25 +118,20 @@ public class TreeGridConnector extends GridConnector {
     }
 
     // Expander click event handling
-
     private HandlerRegistration expanderClickHandlerRegistration;
 
     @Override
     protected void init() {
         super.init();
 
+        getWidget().addBrowserEventHandler(5, new NavigationEventHandler());
         expanderClickHandlerRegistration = getHierarchyRenderer()
                 .addClickHandler(
                         new ClickableRenderer.RendererClickHandler<JsonObject>() {
                             @Override
                             public void onClick(
                                     ClickableRenderer.RendererClickEvent<JsonObject> event) {
-                                TreeGridNavigationExtensionConnector navigation = getNavigationExtensionConnector();
-                                if (navigation != null) {
-                                    navigation.toggleCollapse(
-                                            getRowKey(event.getRow()));
-                                }
-
+                                toggleCollapse(getRowKey(event.getRow()));
                                 event.stopPropagation();
                                 event.preventDefault();
                             }
@@ -147,15 +147,6 @@ public class TreeGridConnector extends GridConnector {
         expanderClickHandlerRegistration.removeHandler();
     }
 
-    private TreeGridNavigationExtensionConnector getNavigationExtensionConnector() {
-        for (ServerConnector c : getChildren()) {
-            if (c instanceof TreeGridNavigationExtensionConnector) {
-                return (TreeGridNavigationExtensionConnector) c;
-            }
-        }
-        return null;
-    }
-
     /**
      * Replaces the following members
      * <ul>
@@ -169,8 +160,9 @@ public class TreeGridConnector extends GridConnector {
 
         // Swap Grid's CellFocusEventHandler to this custom one
         // The handler is identical to the original one except for the child
-        // widget check
-        replaceCellFocusEventHandler(getWidget(), new CellFocusEventHandler());
+        // widget check. FocusEventHandler is initially 5th in the list of
+        // browser event handlers.
+        getWidget().addBrowserEventHandler(5, new CellFocusEventHandler());
 
         // Swap Grid#clickEvent field
         // The event is identical to the original one except for the child
@@ -179,14 +171,6 @@ public class TreeGridConnector extends GridConnector {
                 new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
     }
 
-    private native void replaceCellFocusEventHandler(Grid<?> grid,
-            GridEventHandler<?> eventHandler)/*-{
-        var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-         
-        // FocusEventHandler is initially 5th in the list of browser event handlers
-        browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
-    }-*/;
-
     private native void replaceClickEvent(Grid<?> grid, GridClickEvent event)/*-{
         grid.@com.vaadin.client.widgets.Grid::clickEvent = event;
     }-*/;
@@ -194,6 +178,14 @@ public class TreeGridConnector extends GridConnector {
     private native EventCellReference<?> getEventCell(Grid<?> grid)/*-{
         return grid.@com.vaadin.client.widgets.Grid::eventCell;
     }-*/;
+
+    private boolean isHierarchyColumn(EventCellReference<JsonObject> cell) {
+        return cell.getColumn().getRenderer() instanceof HierarchyRenderer;
+    }
+
+    private void toggleCollapse(String rowKey) {
+        getRpcProxy(NodeCollapseRpc.class).toggleCollapse(rowKey);
+    }
 
     /**
      * Class to replace
@@ -238,5 +230,75 @@ public class TreeGridConnector extends GridConnector {
             event.@com.vaadin.client.widgets.Grid.GridEvent::getDomEvent()(),
             event.@com.vaadin.client.widgets.Grid.GridEvent::getCell()())
         }-*/;
+    }
+
+    private class NavigationEventHandler
+            implements GridEventHandler<JsonObject> {
+
+        @Override
+        public void onEvent(Grid.GridEvent<JsonObject> event) {
+            if (event.isHandled()) {
+                return;
+            }
+
+            Event domEvent = event.getDomEvent();
+
+            if (domEvent.getType().equals(BrowserEvents.KEYDOWN)) {
+
+                // Navigate within hierarchy with ALT/OPTION + ARROW KEY when
+                // hierarchy column is selected
+                if (isHierarchyColumn(event.getCell()) && domEvent.getAltKey()
+                        && (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
+                                || domEvent
+                                        .getKeyCode() == KeyCodes.KEY_RIGHT)) {
+
+                    // Hierarchy metadata
+                    boolean collapsed, leaf;
+                    int depth, parentIndex;
+                    if (event.getCell().getRow()
+                            .hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
+                        JsonObject rowDescription = event.getCell().getRow()
+                                .getObject(GridState.JSONKEY_ROWDESCRIPTION);
+                        collapsed = rowDescription.getBoolean("collapsed");
+                        leaf = rowDescription.getBoolean("leaf");
+                        depth = (int) rowDescription.getNumber("depth");
+                        parentIndex = (int) rowDescription
+                                .getNumber("parentIndex");
+
+                        switch (domEvent.getKeyCode()) {
+                        case KeyCodes.KEY_RIGHT:
+                            if (!leaf) {
+                                if (collapsed) {
+                                    toggleCollapse(
+                                            event.getCell().getRow().getString(
+                                                    DataCommunicatorConstants.KEY));
+                                } else {
+                                    // Focus on next row
+                                    getWidget().focusCell(
+                                            event.getCell().getRowIndex() + 1,
+                                            event.getCell().getColumnIndex());
+                                }
+                            }
+                            break;
+                        case KeyCodes.KEY_LEFT:
+                            if (!collapsed) {
+                                // collapse node
+                                toggleCollapse(
+                                        event.getCell().getRow().getString(
+                                                DataCommunicatorConstants.KEY));
+                            } else if (depth > 0) {
+                                // jump to parent
+                                getWidget().focusCell(parentIndex,
+                                        event.getCell().getColumnIndex());
+                            }
+                            break;
+                        }
+                    }
+                    event.setHandled(true);
+                    return;
+                }
+            }
+            event.setHandled(false);
+        }
     }
 }

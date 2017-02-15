@@ -646,7 +646,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 Type type = null;
                 try {
                     type = getState(false).getClass()
-                            .getDeclaredField(diffStateKey).getGenericType();
+                            .getField(diffStateKey).getGenericType();
                 } catch (NoSuchFieldException | SecurityException e) {
                     e.printStackTrace();
                 }
