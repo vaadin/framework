@@ -631,7 +631,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      */
     public void setNewItemHandler(NewItemHandler newItemHandler) {
         this.newItemHandler = newItemHandler;
-        getState().allowNewItems = (newItemHandler != null);
+        getState().allowNewItems = newItemHandler != null;
         markAsDirty();
     }
 
@@ -748,7 +748,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 "filterConverter cannot be null");
 
         SerializableFunction<String, C> convertOrNull = filterText -> {
-            if (filterText == null) {
+            if (filterText == null || filterText.isEmpty()) {
                 return null;
             }
 
@@ -814,10 +814,12 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             extends SerializableBiPredicate<String, String> {
 
         /**
-         * Check item caption against entered text
+         * Check item caption against entered text.
          *
          * @param itemCaption
+         *            the caption of the item to filter, not {@code null}
          * @param filterText
+         *            user entered filter, not {@code null}
          * @return {@code true} if item passes the filter and should be listed,
          *         {@code false} otherwise
          */
