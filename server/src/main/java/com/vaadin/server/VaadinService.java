@@ -442,6 +442,7 @@ public abstract class VaadinService implements Serializable {
      * @param listener
      *            the Vaadin service session initialization listener
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addSessionInitListener(SessionInitListener listener) {
         sessionInitListeners.add(listener);
@@ -477,6 +478,7 @@ public abstract class VaadinService implements Serializable {
      * @param listener
      *            the vaadin service session destroy listener
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addSessionDestroyListener(
             SessionDestroyListener listener) {
@@ -1905,7 +1907,7 @@ public abstract class VaadinService implements Serializable {
      * it is not guaranteed that listeners will be invoked in the order they
      * were added.
      *
-     * @since 7.2
+     * @since 8.0
      * @param listener
      *            the service destroy listener to add
      *

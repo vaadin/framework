@@ -21,6 +21,7 @@ package com.vaadin.data.provider;
  * the wrapped provider through the query.
  *
  * @author Vaadin Ltd
+ * @since 8.0
  *
  * @param <T>
  *            the data provider item type
@@ -63,7 +64,7 @@ public abstract class ConfigurableFilterDataProviderWrapper<T, Q, C, F>
      * filter instance that can be passed to the wrapped data provider. Will not
      * be called if the configured filter is <code>null</code> and the query has
      * no filter.
-     * 
+     *
      * @param queryFilter
      *            the filter received through the query, or <code>null</code> if
      *            no filter was provided in the query

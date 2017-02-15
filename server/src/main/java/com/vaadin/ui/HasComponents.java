@@ -56,6 +56,7 @@ public interface HasComponents extends Component, Iterable<Component> {
          * @param listener
          *            the listener to add, not null
          * @return a registration object for removing the listener
+         * @since 8.0
          */
         public Registration addComponentAttachListener(
                 ComponentAttachListener listener);
@@ -70,6 +71,7 @@ public interface HasComponents extends Component, Iterable<Component> {
          *             the registration object returned from
          *             {@link #addComponentAttachListener(ComponentAttachListener)}
          *             .
+         * @since 8.0
          */
         @Deprecated
         public void removeComponentAttachListener(

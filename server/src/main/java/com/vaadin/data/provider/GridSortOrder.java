@@ -23,12 +23,13 @@ import com.vaadin.ui.Grid.Column;
  *
  * @param <T>
  *            the grid type
+ * @since 8.0
  */
 public class GridSortOrder<T> extends SortOrder<Column<T, ?>> {
 
     /**
      * Construct sorting information for usage in a {@link Grid}.
-     * 
+     *
      * @param column
      *            the column to be sorted
      * @param direction

@@ -137,7 +137,7 @@ public class ValueChangeHandler {
     /**
      * Checks whether the value change is scheduled for sending.
      * 
-     * @since 8.0.0
+     * @since 8.0
      * 
      * @return {@code true} if value change is scheduled for sending,
      *         {@code false} otherwise

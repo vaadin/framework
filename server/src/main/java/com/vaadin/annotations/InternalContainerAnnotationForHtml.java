@@ -29,6 +29,7 @@ import java.lang.annotation.Target;
  * {@link HtmlImport @HtmlImport} should be used instead.
  *
  * @author Vaadin Ltd
+ * @since 8.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

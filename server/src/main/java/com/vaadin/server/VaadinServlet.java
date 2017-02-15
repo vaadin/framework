@@ -1268,6 +1268,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return getStaticFilePath(request) != null;
     }
 
+    /**
+     * Returns the relative path at which static files are served for a request
+     * (if any).
+     * 
+     * @param request
+     *            HTTP request
+     * @return relative servlet path or null if the request path does not
+     *         contain "/VAADIN/" or the request has no path info
+     * @since 8.0
+     */
     protected String getStaticFilePath(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) {

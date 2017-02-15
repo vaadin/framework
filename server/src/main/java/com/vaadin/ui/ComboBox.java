@@ -78,6 +78,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @param <T>
      *            item (bean) type in ComboBox
+     * @since 8.0
      */
     @FunctionalInterface
     public interface FetchItemsCallback<T> extends Serializable {
@@ -104,6 +105,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Handler that adds a new item based on user input when the new items
      * allowed mode is active.
+     *
+     * @since 8.0
      */
     @FunctionalInterface
     public interface NewItemHandler extends SerializableConsumer<String> {
@@ -116,6 +119,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @param <T>
      *            item type
+     * @since 8.0
      */
     protected static class DeclarativeStyleGenerator<T>
             implements StyleGenerator<T> {
@@ -300,6 +304,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @param listDataProvider
      *            the list data provider to use, not <code>null</code>
+     * @since 8.0
      */
     public void setDataProvider(ListDataProvider<T> listDataProvider) {
         // Cannot use the case insensitive contains shorthand from
@@ -323,6 +328,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            into the ComboBox
      * @param items
      *            the data items to display
+     * @since 8.0
      */
     public void setItems(CaptionFilter captionFilter, Collection<T> items) {
         ListDataProvider<T> listDataProvider = DataProvider.ofCollection(items);
@@ -340,6 +346,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            into the ComboBox
      * @param listDataProvider
      *            the list data provider to use, not <code>null</code>
+     * @since 8.0
      */
     public void setDataProvider(CaptionFilter captionFilter,
             ListDataProvider<T> listDataProvider) {
@@ -364,6 +371,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            into the ComboBox
      * @param items
      *            the data items to display
+     * @since 8.0
      */
     public void setItems(CaptionFilter captionFilter,
             @SuppressWarnings("unchecked") T... items) {
@@ -376,6 +384,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @see #setPlaceholder(String)
      * @return the current placeholder string, or null if not enabled
+     * @since 8.0
      */
     public String getPlaceholder() {
         return getState(false).placeholder;
@@ -387,6 +396,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @param placeholder
      *            the desired placeholder, or null to disable
+     * @since 8.0
      */
     public void setPlaceholder(String placeholder) {
         getState().placeholder = placeholder;
@@ -468,6 +478,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Returns whether the user is allowed to select nothing in the combo box.
      *
      * @return true if empty selection is allowed, false otherwise
+     * @since 8.0
      */
     public boolean isEmptySelectionAllowed() {
         return getState(false).emptySelectionAllowed;
@@ -480,6 +491,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @param emptySelectionAllowed
      *            true to allow not selecting anything, false to require
      *            selection
+     * @since 8.0
      */
     public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {
         getState().emptySelectionAllowed = emptySelectionAllowed;
@@ -496,6 +508,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @see #isSelected(Object)
      *
      * @return the empty selection caption, not {@code null}
+     * @since 8.0
      */
     public String getEmptySelectionCaption() {
         return getState(false).emptySelectionCaption;
@@ -513,6 +526,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @param caption
      *            the caption to set, not {@code null}
      * @see #isSelected(Object)
+     * @since 8.0
      */
     public void setEmptySelectionCaption(String caption) {
         Objects.nonNull(caption);
@@ -589,6 +603,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *            the item style generator to set, not null
      * @throws NullPointerException
      *             if {@code itemStyleGenerator} is {@code null}
+     * @since 8.0
      */
     public void setStyleGenerator(StyleGenerator<T> itemStyleGenerator) {
         Objects.requireNonNull(itemStyleGenerator,
@@ -606,6 +621,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @see #setStyleGenerator(StyleGenerator)
      *
      * @return the currently used item style generator, not null
+     * @since 8.0
      */
     public StyleGenerator<T> getStyleGenerator() {
         return itemStyleGenerator;
@@ -628,6 +644,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @param newItemHandler
      *            handler called for new items, null to only permit the
      *            selection of existing items
+     * @since 8.0
      */
     public void setNewItemHandler(NewItemHandler newItemHandler) {
         this.newItemHandler = newItemHandler;
@@ -808,6 +825,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @see #setItems(CaptionFilter, Collection)
      * @see #setItems(CaptionFilter, Object[])
+     * @since 8.0
      */
     @FunctionalInterface
     public interface CaptionFilter
