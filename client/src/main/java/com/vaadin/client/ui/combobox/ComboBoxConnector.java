@@ -107,10 +107,11 @@ public class ComboBoxConnector extends AbstractListingConnector
         }
     }
 
-    @OnStateChange({ "selectedItemKey", "selectedItemCaption" })
+    @OnStateChange({ "selectedItemKey", "selectedItemCaption", "selectedItemIcon" })
     private void onSelectionChange() {
         getDataReceivedHandler().updateSelectionFromServer(
-                getState().selectedItemKey, getState().selectedItemCaption);
+                getState().selectedItemKey, getState().selectedItemCaption,
+                getState().selectedItemIcon);
     }
 
     @Override
