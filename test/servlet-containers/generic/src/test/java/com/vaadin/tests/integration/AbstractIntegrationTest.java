@@ -4,12 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -109,7 +109,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
                 return;
             }
         } catch (IOException e) {
-            Logger.getLogger(getClass().getName()).error(
+            Logger.getLogger(getClass().getName()).warning(
                     "Missing screenshot reference: " + referenceFile.getPath());
         }
         screenshotErrors = true;
