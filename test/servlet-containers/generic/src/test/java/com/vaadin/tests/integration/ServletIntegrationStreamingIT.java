@@ -15,7 +15,12 @@
  */
 package com.vaadin.tests.integration;
 
-public class ServletIntegrationDefaultPushUITest
+public class ServletIntegrationStreamingIT
         extends AbstractServletIntegrationTest {
     // Uses the test method declared in the super class
+
+    @Override
+    protected String getTestPath() {
+        return "/run/ServletIntegrationStreamingUI";
+    }
 }

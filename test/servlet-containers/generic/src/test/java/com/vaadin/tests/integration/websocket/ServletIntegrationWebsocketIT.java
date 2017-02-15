@@ -13,9 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.integration;
+package com.vaadin.tests.integration.websocket;
 
-public class ServletIntegrationWebsocketUITest
+import com.vaadin.tests.integration.AbstractServletIntegrationTest;
+
+public class ServletIntegrationWebsocketIT
         extends AbstractServletIntegrationTest {
     // Uses the test method declared in the super class
+
+    @Override
+    protected String getTestPath() {
+        return "/run/ServletIntegrationWebsocketUI";
+    }
 }
