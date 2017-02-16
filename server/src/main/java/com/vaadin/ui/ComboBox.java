@@ -575,6 +575,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public void setItemCaptionGenerator(
             ItemCaptionGenerator<T> itemCaptionGenerator) {
         super.setItemCaptionGenerator(itemCaptionGenerator);
+        if (getSelectedItem().isPresent()) {
+            updateSelectedItemCaption();
+        }
     }
 
     /**
@@ -614,6 +617,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
         super.setItemIconGenerator(itemIconGenerator);
+
+        if (getSelectedItem().isPresent()) {
+            updateSelectedItemIcon();
+        }
     }
 
     @Override
@@ -631,7 +638,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      */
     public void setNewItemHandler(NewItemHandler newItemHandler) {
         this.newItemHandler = newItemHandler;
-        getState().allowNewItems = (newItemHandler != null);
+        getState().allowNewItems = newItemHandler != null;
         markAsDirty();
     }
 
@@ -670,12 +677,30 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     protected void doSetSelectedKey(String key) {
         super.doSetSelectedKey(key);
 
+        updateSelectedItemCaption();
+        updateSelectedItemIcon();
+    }
+
+    private void updateSelectedItemCaption() {
         String selectedCaption = null;
-        T value = getDataCommunicator().getKeyMapper().get(key);
+        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
         getState().selectedItemCaption = selectedCaption;
+    }
+
+    private void updateSelectedItemIcon() {
+        String selectedItemIcon = null;
+        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
+        if (value != null) {
+            Resource icon = getItemIconGenerator().apply(value);
+            if (icon != null) {
+                selectedItemIcon = ResourceReference
+                        .create(icon, ComboBox.this, null).getURL();
+            }
+        }
+        getState().selectedItemIcon = selectedItemIcon;
     }
 
     @Override
@@ -748,7 +773,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 "filterConverter cannot be null");
 
         SerializableFunction<String, C> convertOrNull = filterText -> {
-            if (filterText == null) {
+            if (filterText == null || filterText.isEmpty()) {
                 return null;
             }
 
@@ -814,10 +839,12 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             extends SerializableBiPredicate<String, String> {
 
         /**
-         * Check item caption against entered text
+         * Check item caption against entered text.
          *
          * @param itemCaption
+         *            the caption of the item to filter, not {@code null}
          * @param filterText
+         *            user entered filter, not {@code null}
          * @return {@code true} if item passes the filter and should be listed,
          *         {@code false} otherwise
          */
