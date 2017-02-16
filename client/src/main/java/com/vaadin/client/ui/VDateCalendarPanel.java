@@ -19,7 +19,7 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
  * @author Vaadin Ltd
- *
+ * @since 8.0
  */
 public class VDateCalendarPanel extends VAbstractCalendarPanel<DateResolution> {
 

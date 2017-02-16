@@ -226,7 +226,7 @@ public class ReflectTools implements Serializable {
      *            another class to get the base type for, not <code>null</code>
      * @return the most specific base class, not <code>null</code>
      *
-     * @since
+     * @since 8.0
      */
     public static Class<?> findCommonBaseType(Class<?> a, Class<?> b) {
         if (a.isInterface()) {

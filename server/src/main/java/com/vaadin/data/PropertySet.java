@@ -25,7 +25,7 @@ import java.util.stream.Stream;
  *
  * @author Vaadin Ltd
  *
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            the type for which the properties are defined

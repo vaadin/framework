@@ -71,6 +71,7 @@ public class ContextClickEvent extends ClickEvent {
          * @param listener
          *            the context click listener to add, not null
          * @return a registration object for removing the listener
+         * @since 8.0
          */
         public Registration addContextClickListener(
                 ContextClickListener listener);

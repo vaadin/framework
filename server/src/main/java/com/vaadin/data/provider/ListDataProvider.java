@@ -36,6 +36,7 @@ import com.vaadin.ui.UI;
  *
  * @param <T>
  *            data type
+ * @since 8.0
  */
 public class ListDataProvider<T>
         extends AbstractDataProvider<T, SerializablePredicate<T>> implements

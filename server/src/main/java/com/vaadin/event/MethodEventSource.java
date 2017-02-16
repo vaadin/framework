@@ -62,6 +62,7 @@ public interface MethodEventSource extends Serializable {
      *             <code>object</code>
      * @throws NullPointerException
      *             if {@code object} is {@code null}
+     * @since 8.0
      */
     public Registration addListener(Class<?> eventType, Object object,
             Method method);
@@ -99,6 +100,7 @@ public interface MethodEventSource extends Serializable {
      *             <code>object</code>
      * @throws NullPointerException
      *             if {@code object} is {@code null}
+     * @since 8.0
      */
     public Registration addListener(Class<?> eventType, Object object,
             String methodName);

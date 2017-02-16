@@ -19,6 +19,8 @@ import com.vaadin.client.ComponentConnector;
 
 /**
  * Implemented by connectors supporting a required flag.
+ * 
+ * @since 8.0
  */
 public interface HasRequiredIndicator extends ComponentConnector {
 

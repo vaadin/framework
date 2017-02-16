@@ -41,6 +41,7 @@ import com.vaadin.server.Setter;
  *
  * @author Vaadin Ltd
  *
+ * @since 8.0
  */
 public class StatusChangeEvent extends EventObject {
 

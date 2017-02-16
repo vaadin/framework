@@ -634,6 +634,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addStartedListener(StartedListener listener) {
         return addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
@@ -655,6 +656,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addFinishedListener(FinishedListener listener) {
         return addListener(FinishedEvent.class, listener,
@@ -677,6 +679,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addFailedListener(FailedListener listener) {
         return addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
@@ -698,6 +701,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addSucceededListener(SucceededListener listener) {
         return addListener(SucceededEvent.class, listener,
@@ -720,6 +724,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the progress listener to be added
+     * @since 8.0
      */
     public Registration addProgressListener(ProgressListener listener) {
         Objects.requireNonNull(listener, "Listener must not be null.");
@@ -752,6 +757,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to add, not null
+     * @since 8.0
      */
     public Registration addChangeListener(ChangeListener listener) {
         return addListener(EventId.CHANGE, ChangeEvent.class, listener,
@@ -1136,6 +1142,7 @@ public class Upload extends AbstractComponent
      *
      * @param immediateMode
      *            {@code true} for immediate mode, {@code false} for not
+     * @since 8.0
      */
     public void setImmediateMode(boolean immediateMode) {
         getState().immediateMode = immediateMode;
@@ -1149,6 +1156,7 @@ public class Upload extends AbstractComponent
      * @return {@code true} if the upload is in immediate mode, {@code false} if
      *         the upload is not in immediate mode
      * @see #setImmediateMode(boolean)
+     * @since 8.0
      */
     public boolean isImmediateMode() {
         return getState(false).immediateMode;

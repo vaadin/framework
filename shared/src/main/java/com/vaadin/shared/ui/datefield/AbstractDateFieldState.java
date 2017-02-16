@@ -22,8 +22,9 @@ import com.vaadin.shared.annotations.NoLayout;
 
 /**
  * Shared state for the AbstractDateField component.
- * 
+ *
  * @author Vaadin Ltd
+ * @since 8.0
  *
  */
 public class AbstractDateFieldState extends AbstractFieldState {

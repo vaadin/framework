@@ -78,6 +78,7 @@ public class TextArea extends AbstractTextField {
      *
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public TextArea(ValueChangeListener<String> valueChangeListener) {
         addValueChangeListener(valueChangeListener);
@@ -94,6 +95,7 @@ public class TextArea extends AbstractTextField {
      *            the caption for the field
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public TextArea(String caption,
             ValueChangeListener<String> valueChangeListener) {
@@ -114,6 +116,7 @@ public class TextArea extends AbstractTextField {
      *            the value for the field, not {@code null}
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public TextArea(String caption, String value,
             ValueChangeListener<String> valueChangeListener) {

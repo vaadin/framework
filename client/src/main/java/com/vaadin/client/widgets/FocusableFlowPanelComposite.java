@@ -27,7 +27,7 @@ import com.vaadin.client.Focusable;
  * panel that tracks focus/blur events from its children).
  *
  * @author Vaadin Ltd
- *
+ * @since 8.0
  */
 public abstract class FocusableFlowPanelComposite extends Composite
         implements HasAllFocusHandlers, Focusable {

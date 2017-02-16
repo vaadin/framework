@@ -75,6 +75,7 @@ public class VerticalLayout extends AbstractOrderedLayout {
      *
      * @param components
      *            the components to set, not <code>null</code>
+     * @since 8.0
      */
     public void addComponentsAndExpand(Component... components) {
         addComponents(components);
