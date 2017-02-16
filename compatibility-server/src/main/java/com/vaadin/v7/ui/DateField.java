@@ -35,6 +35,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateTimeField;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -65,6 +66,9 @@ import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, use {@link com.vaadin.ui.DateField} or
+ *             {@link DateTimeField} instead.
  */
 @SuppressWarnings("serial")
 @Deprecated
