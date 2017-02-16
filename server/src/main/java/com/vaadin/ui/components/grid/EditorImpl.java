@@ -45,7 +45,7 @@ import elemental.json.JsonObject;
  *
  * @param <T>
  *            the grid bean type
- * @since 8.0 s
+ * @since 8.0
  */
 public class EditorImpl<T> extends AbstractGridExtension<T>
         implements Editor<T> {
