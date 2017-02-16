@@ -1602,7 +1602,7 @@ public class Binder<BEAN> implements Serializable {
      * level validators if a bean is currently set with
      * {@link #setBean(Object)}, and returns whether any of the validators
      * failed.
-     * 
+     *
      * @return whether this binder is in a valid state
      * @throws IllegalStateException
      *             if bean level validators have been configured and no bean is
@@ -1789,7 +1789,7 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * The listener is added to all fields regardless of whether the method is
      * invoked before or after field is bound.
-     * 
+     *
      * @see ValueChangeEvent
      * @see ValueChangeListener
      *
@@ -2201,10 +2201,11 @@ public class Binder<BEAN> implements Serializable {
             return true;
         } else {
             throw new IllegalStateException(String.format(
-                    "Property type '%s' doesn't "
+                    "Binding for the field '%s' failed. Property type '%s' doesn't "
                             + "match the field type '%s'. "
                             + "Binding should be configured manually using converter.",
-                    propertyType.getName(), valueType.getTypeName()));
+                    memberField.getName(), propertyType.getName(),
+                    valueType.getTypeName()));
         }
     }
 
