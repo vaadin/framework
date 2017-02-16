@@ -19,12 +19,6 @@
             <artifactId>vaadin-client-compiled</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-uitest-common</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 </project>
