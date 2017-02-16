@@ -313,6 +313,7 @@ public class Button extends AbstractFocusable
      * @param listener
      *            the Listener to be added.
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addClickListener(ClickListener listener) {
         return addListener(ClickEvent.class, listener,

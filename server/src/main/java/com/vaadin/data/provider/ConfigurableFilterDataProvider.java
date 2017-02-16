@@ -20,6 +20,7 @@ package com.vaadin.data.provider;
  * applied to all queries.
  *
  * @author Vaadin Ltd
+ * @since 8.0
  *
  * @param <T>
  *            the data provider item type

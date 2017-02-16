@@ -26,6 +26,7 @@ import com.vaadin.data.ValueProvider;
  * another callback for counting the number of available items.
  *
  * @author Vaadin Ltd
+ * @since 8.0
  *
  * @param <T>
  *            data provider data type

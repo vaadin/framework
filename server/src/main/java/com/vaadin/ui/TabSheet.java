@@ -829,6 +829,7 @@ public class TabSheet extends AbstractComponentContainer
      * @param listener
      *            the Listener to be added, not null
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addSelectedTabChangeListener(
             SelectedTabChangeListener listener) {

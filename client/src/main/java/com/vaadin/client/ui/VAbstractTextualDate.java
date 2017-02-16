@@ -41,11 +41,12 @@ import com.vaadin.shared.EventId;
  * Abstract textual date field base implementation. Provides a text box as an
  * editor for a date. The class is parameterized by the date resolution
  * enumeration type.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @param <R>
  *            the resolution type which this field is based on (day, month, ...)
+ * @since 8.0
  */
 public abstract class VAbstractTextualDate<R extends Enum<R>>
         extends VDateField<R> implements Field, ChangeHandler, Focusable,
@@ -91,7 +92,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
     /**
      * Gets the date format string for the current locale.
-     * 
+     *
      * @return the format string
      */
     protected String getFormatString() {
@@ -240,9 +241,9 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /**
      * Clean date format string to make it suitable for
      * {@link #getFormatString()}.
-     * 
+     *
      * @see #getFormatString()
-     * 
+     *
      * @param format
      *            date format string
      * @return cleaned up string

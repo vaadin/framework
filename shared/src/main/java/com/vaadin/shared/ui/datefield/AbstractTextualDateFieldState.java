@@ -17,9 +17,9 @@ package com.vaadin.shared.ui.datefield;
 
 /**
  * Shared state for the AbstractLocalDateField component.
- * 
- * @author Vaadin Ltd
  *
+ * @author Vaadin Ltd
+ * @since 8.0
  */
 public class AbstractTextualDateFieldState extends AbstractDateFieldState {
 

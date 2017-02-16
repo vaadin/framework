@@ -33,6 +33,7 @@ import com.vaadin.ui.InlineDateField;
  * {@link InlineDateField} is bound to a {@link Date} property.
  *
  * @author Vaadin Ltd
+ * @since 8.0
  */
 public class LocalDateToDateConverter implements Converter<LocalDate, Date> {
 

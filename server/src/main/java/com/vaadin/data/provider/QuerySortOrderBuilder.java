@@ -26,6 +26,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @see #thenDesc(String)
  * @see #thenDesc(String)
  * @see #build()
+ * @since 8.0
  */
 public class QuerySortOrderBuilder
         extends SortOrderBuilder<QuerySortOrder, String> {

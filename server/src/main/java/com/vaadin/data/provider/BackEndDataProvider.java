@@ -26,6 +26,7 @@ import java.util.Objects;
  *            data provider data type
  * @param <F>
  *            data provider filter type
+ * @since 8.0
  */
 public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
 
@@ -48,9 +49,9 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
     /**
      * Sets the sort order to use, given a {@link QuerySortOrderBuilder}.
      * Shorthand for {@code setSortOrders(builder.build())}.
-     * 
+     *
      * @see QuerySortOrderBuilder
-     * 
+     *
      * @param builder
      *            the sort builder to retrieve the sort order from
      * @throws NullPointerException
