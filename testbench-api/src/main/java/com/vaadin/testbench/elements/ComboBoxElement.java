@@ -109,6 +109,15 @@ public class ComboBoxElement extends AbstractSelectElement {
         return !isReadOnly(getInputField());
     }
 
+    /**
+     * Checks whether the suggestion popup is open or not.
+     *
+     * @return {@code true} if popup is open, {@code false if not}
+     */
+    public boolean isPopupOpen() {
+        return isElementPresent(bySuggestionPopup);
+    }
+
     /*
      * Workaround selenium's bug: sendKeys() will not send left parentheses
      * properly. See #14048.
@@ -147,7 +156,7 @@ public class ComboBoxElement extends AbstractSelectElement {
      * @return List of suggestion texts
      */
     public List<String> getPopupSuggestions() {
-        List<String> suggestionsTexts = new ArrayList<String>();
+        List<String> suggestionsTexts = new ArrayList<>();
         List<WebElement> suggestions = getPopupSuggestionElements();
         for (WebElement suggestion : suggestions) {
             String text = suggestion.getText();
@@ -280,7 +289,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     private void clickElement(WebElement element) {
         if (isFirefox()) {
             // Workaround for Selenium/TB and Firefox 45 issue
-            ((TestBenchElement) (element)).clickHiddenElement();
+            ((TestBenchElement) element).clickHiddenElement();
         } else {
             element.click();
         }
