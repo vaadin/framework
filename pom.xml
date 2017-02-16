@@ -585,7 +585,6 @@
                 <module>client-compiler</module>
                 <module>client-compiled</module>
                 <module>themes</module>
-                <module>uitest-common</module>
                 <module>uitest</module>
                 <module>liferay</module>
                 <module>all</module>
