@@ -576,7 +576,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             ItemCaptionGenerator<T> itemCaptionGenerator) {
         super.setItemCaptionGenerator(itemCaptionGenerator);
         if (getSelectedItem().isPresent()) {
-        	updateSelectedItemCaption();
+            updateSelectedItemCaption();
         }
     }
 
@@ -617,9 +617,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
         super.setItemIconGenerator(itemIconGenerator);
-        
+
         if (getSelectedItem().isPresent()) {
-        	updateSelectedItemIcon();
+            updateSelectedItemIcon();
         }
     }
 
@@ -676,11 +676,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     protected void doSetSelectedKey(String key) {
         super.doSetSelectedKey(key);
-        
+
         updateSelectedItemCaption();
         updateSelectedItemIcon();
     }
-    
+
     private void updateSelectedItemCaption() {
         String selectedCaption = null;
         T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
@@ -689,9 +689,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         }
         getState().selectedItemCaption = selectedCaption;
     }
-    
+
     private void updateSelectedItemIcon() {
-    	String selectedItemIcon = null;
+        String selectedItemIcon = null;
         T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);

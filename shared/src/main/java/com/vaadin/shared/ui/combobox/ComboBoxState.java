@@ -95,9 +95,9 @@ public class ComboBoxState extends AbstractSingleSelectState {
 
     /**
      * Selected item icon uri.
-     * 
+     *
      * @since 8.0
      */
-	public String selectedItemIcon;
+    public String selectedItemIcon;
 
 }
