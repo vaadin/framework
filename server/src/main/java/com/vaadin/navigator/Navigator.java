@@ -969,6 +969,7 @@ public class Navigator implements Serializable {
      *
      * @param listener
      *            Listener to invoke during a view change.
+     * @since 8.0
      */
     public Registration addViewChangeListener(ViewChangeListener listener) {
         listeners.add(listener);

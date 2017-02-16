@@ -47,8 +47,8 @@ import com.vaadin.ui.declarative.DesignContext;
  *
  * <p>
  * The {@link #getParent()} method allows retrieving the parent component of a
- * component. While there is a {@link #setParent(HasComponents)}, you
- * rarely need it as you normally add components with the
+ * component. While there is a {@link #setParent(HasComponents)}, you rarely
+ * need it as you normally add components with the
  * {@link ComponentContainer#addComponent(Component) addComponent()} method of
  * the layout or other {@code ComponentContainer}, which automatically sets the
  * parent.
@@ -900,6 +900,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return a registration object for removing this listener
      * @see Component.Event
      * @see Registration
+     * @since 8.0
      */
     public Registration addListener(Component.Listener listener);
 

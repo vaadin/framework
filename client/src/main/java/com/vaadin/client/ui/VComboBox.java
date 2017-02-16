@@ -87,6 +87,8 @@ import com.vaadin.shared.util.SharedUtil;
  * Client side implementation of the ComboBox component.
  *
  * TODO needs major refactoring (to be extensible etc)
+ * 
+ * @since 8.0
  */
 @SuppressWarnings("deprecation")
 public class VComboBox extends Composite implements Field, KeyDownHandler,

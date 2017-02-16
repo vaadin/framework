@@ -35,6 +35,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @see SortOrderBuilder#thenAsc(Object)
  * @see SortOrderBuilder#thenDesc(Object)
  * @see #build()
+ * @since 8.0
  */
 public abstract class SortOrderBuilder<T extends SortOrder<V>, V>
         implements Serializable {

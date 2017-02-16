@@ -56,7 +56,7 @@ import com.vaadin.server.ClientConnector;
  * the {@code init()} method of the client side connector is invoked.
  *
  * @author Vaadin Ltd
- * @since 8.0.0
+ * @since 8.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

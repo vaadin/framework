@@ -33,6 +33,12 @@ import com.vaadin.ui.CheckBoxGroup;
 
 import elemental.json.JsonObject;
 
+/**
+ * CheckBoxGroup client side connector.
+ *
+ * @author Vaadin Ltd
+ * @since 8.0
+ */
 @Connect(CheckBoxGroup.class)
 // We don't care about the framework-provided selection model at this point
 // TODO refactor to extend AbstractMultiSelectConnector, maybe when

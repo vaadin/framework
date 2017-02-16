@@ -20,6 +20,8 @@ import com.vaadin.shared.ui.ValueChangeMode;
 
 /**
  * Implemented by components which support value change modes.
+ * 
+ * @since 8.0
  */
 public interface HasValueChangeMode extends Component {
     /**

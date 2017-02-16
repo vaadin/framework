@@ -17,6 +17,13 @@ package com.vaadin.shared.ui;
 
 import java.io.Serializable;
 
+/**
+ * JSON key constants for common listing item attributes in server-client
+ * communication.
+ *
+ * @author Vaadin Ltd
+ * @since 8.0
+ */
 public class ListingJsonConstants implements Serializable {
     public static final String JSONKEY_ITEM_DISABLED = "d";
 

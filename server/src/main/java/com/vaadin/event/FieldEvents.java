@@ -192,7 +192,7 @@ public interface FieldEvents {
      * using a provided event handler.
      *
      * @author Vaadin Ltd
-     *
+     * @since 8.0
      */
     public static class FocusAndBlurServerRpcDecorator
             extends FocusAndBlurServerRpcImpl {

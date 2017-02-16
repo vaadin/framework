@@ -71,6 +71,7 @@ public class ProgressBar extends AbstractComponent {
      *
      * @param newValue
      *            the current progress value
+     * @since 8.0
      */
     public void setValue(float newValue) {
         getState().state = newValue;
@@ -131,6 +132,8 @@ public class ProgressBar extends AbstractComponent {
 
     /**
      * Resets the value of this component, effectively displaying zero progress.
+     *
+     * @since 8.0
      */
     public void reset() {
         setValue(DEFAULT_VALUE);

@@ -17,7 +17,7 @@ package com.vaadin.shared.ui.datefield;
 
 /**
  * @author Vaadin Ltd
- *
+ * @since 8.0
  */
 public class InlineDateTimeFieldState extends AbstractTextualDateFieldState {
     {

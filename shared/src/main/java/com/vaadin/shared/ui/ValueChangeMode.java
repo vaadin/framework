@@ -19,6 +19,8 @@ package com.vaadin.shared.ui;
 /**
  * Different modes for when and how often field value changes are transmitted
  * from the client to the server.
+ * 
+ * @since 8.0
  */
 public enum ValueChangeMode {
 

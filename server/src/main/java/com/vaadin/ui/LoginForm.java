@@ -271,9 +271,9 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * implementations, override {@link #createUsernameField()},
      * {@link #createPasswordField()} and {@link #createLoginButton()}. If you
      * only want to change the default captions, override
-     * {@link #getUsernameCaption()}, {@link #getPasswordCaption()}
-     * and {@link #getLoginButtonCaption()}. You do not have to use the login
-     * button in your layout.
+     * {@link #getUsernameCaption()}, {@link #getPasswordCaption()} and
+     * {@link #getLoginButtonCaption()}. You do not have to use the login button
+     * in your layout.
      *
      * @param userNameField
      *            the user name text field
@@ -359,6 +359,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * @param listener
      *            the listener to add
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addLoginListener(LoginListener listener) {
         return addListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
