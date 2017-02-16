@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -408,6 +409,7 @@ public class GridSelectionTest extends GridBasicsTest {
     }
 
     @Test
+    @Ignore("Removing rows is not implemented in the UI")
     public void testRemoveSelectedRowMulti() {
         openTestURL();
 

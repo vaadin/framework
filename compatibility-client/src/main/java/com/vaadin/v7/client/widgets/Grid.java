@@ -8785,10 +8785,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             setDetailsVisible(row, false);
         }
 
-        for (int row : details) {
-            setDetailsVisible(row, false);
-        }
-
         super.onDetach();
     }
 

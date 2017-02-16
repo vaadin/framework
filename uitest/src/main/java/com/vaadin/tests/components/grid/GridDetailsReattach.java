@@ -16,6 +16,7 @@ public class GridDetailsReattach extends AbstractTestUI {
         final VerticalLayout layoutWithGrid = new VerticalLayout();
 
         Grid<String> grid = new Grid<>("Grid");
+        grid.addColumn(String::toString).setCaption("Foo");
         grid.setHeight("150px");
         grid.setItems("Foo");
         grid.setDetailsGenerator(str -> new Label("AnyDetails"));
