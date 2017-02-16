@@ -185,13 +185,6 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-uitest-common</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
         </dependency>
@@ -228,6 +221,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 
     <build>
