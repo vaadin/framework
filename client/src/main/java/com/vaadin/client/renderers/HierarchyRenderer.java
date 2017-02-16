@@ -34,6 +34,7 @@ import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import elemental.json.JsonObject;
 
 /**
+ * A renderer for displaying hierarchical columns in TreeGrid.
  * 
  * @author Vaadin Ltd
  * @since 8.1

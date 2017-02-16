@@ -3,6 +3,8 @@ package com.vaadin.tests.components.treegrid;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TreeGridElement;
@@ -23,16 +25,16 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         Assert.assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "a", "b", "c" });
 
-        selectMenuPath("Component", "Features", "Toggle collapse", "a");
+        selectMenuPath("Component", "Features", "Toggle expand", "a");
         Assert.assertEquals(6, grid.getRowCount());
         assertCellTexts(1, 0, new String[] { "a/a", "a/b", "a/c" });
 
-        selectMenuPath("Component", "Features", "Toggle collapse", "a");
+        selectMenuPath("Component", "Features", "Toggle expand", "a");
         Assert.assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "a", "b", "c" });
 
         // collapsing a leaf should have no effect
-        selectMenuPath("Component", "Features", "Toggle collapse", "a/a");
+        selectMenuPath("Component", "Features", "Toggle expand", "a/a");
         Assert.assertEquals(3, grid.getRowCount());
     }
 
@@ -56,7 +58,19 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
 
     @Test
     public void keyboard_navigation() {
+        grid.getRow(0).getCell(0).click();
 
+        // Should expand "a"
+        new Actions(getDriver()).keyDown(Keys.ALT).sendKeys(Keys.RIGHT)
+                .keyUp(Keys.ALT).perform();
+        Assert.assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "a/a", "a/b", "a/c" });
+
+        // Should collapse "a"
+        new Actions(getDriver()).keyDown(Keys.ALT).sendKeys(Keys.LEFT)
+                .keyUp(Keys.ALT).perform();
+        Assert.assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "a", "b", "c" });
     }
 
     @Test

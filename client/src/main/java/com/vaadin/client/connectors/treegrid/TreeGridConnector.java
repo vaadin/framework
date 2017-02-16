@@ -42,6 +42,7 @@ import com.vaadin.shared.ui.treegrid.TreeGridState;
 import elemental.json.JsonObject;
 
 /**
+ * A connector class for the TreeGrid component.
  * 
  * @author Vaadin Ltd
  * @since 8.1
@@ -124,7 +125,6 @@ public class TreeGridConnector extends GridConnector {
     protected void init() {
         super.init();
 
-        getWidget().addBrowserEventHandler(5, new NavigationEventHandler());
         expanderClickHandlerRegistration = getHierarchyRenderer()
                 .addClickHandler(
                         new ClickableRenderer.RendererClickHandler<JsonObject>() {
@@ -137,7 +137,18 @@ public class TreeGridConnector extends GridConnector {
                             }
                         });
 
-        replaceMemberFields();
+        // Swap Grid's CellFocusEventHandler to this custom one
+        // The handler is identical to the original one except for the child
+        // widget check
+        replaceCellFocusEventHandler(getWidget(), new CellFocusEventHandler());
+
+        getWidget().addBrowserEventHandler(5, new NavigationEventHandler());
+
+        // Swap Grid#clickEvent field
+        // The event is identical to the original one except for the child
+        // widget check
+        replaceClickEvent(getWidget(),
+                new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
     }
 
     @Override
@@ -147,29 +158,13 @@ public class TreeGridConnector extends GridConnector {
         expanderClickHandlerRegistration.removeHandler();
     }
 
-    /**
-     * Replaces the following members
-     * <ul>
-     * <li>{@link com.vaadin.client.widgets.Grid.CellFocusEventHandler} as an
-     * element of the {@link Grid#browserEventHandlers} list ->
-     * {@link CellFocusEventHandler}</li>
-     * <li>{@link Grid#clickEvent} field -> {@link TreeGridClickEvent}</li>
-     * </ul>
-     */
-    private void replaceMemberFields() {
-
-        // Swap Grid's CellFocusEventHandler to this custom one
-        // The handler is identical to the original one except for the child
-        // widget check. FocusEventHandler is initially 5th in the list of
-        // browser event handlers.
-        getWidget().addBrowserEventHandler(5, new CellFocusEventHandler());
-
-        // Swap Grid#clickEvent field
-        // The event is identical to the original one except for the child
-        // widget check
-        replaceClickEvent(getWidget(),
-                new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
-    }
+    private native void replaceCellFocusEventHandler(Grid<?> grid,
+            GridEventHandler<?> eventHandler)/*-{
+        var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
+        
+        // FocusEventHandler is initially 5th in the list of browser event handlers
+        browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
+    }-*/;
 
     private native void replaceClickEvent(Grid<?> grid, GridClickEvent event)/*-{
         grid.@com.vaadin.client.widgets.Grid::clickEvent = event;
@@ -240,7 +235,7 @@ public class TreeGridConnector extends GridConnector {
             if (event.isHandled()) {
                 return;
             }
-
+           
             Event domEvent = event.getDomEvent();
 
             if (domEvent.getType().equals(BrowserEvents.KEYDOWN)) {
@@ -254,7 +249,6 @@ public class TreeGridConnector extends GridConnector {
 
                     // Hierarchy metadata
                     boolean collapsed, leaf;
-                    int depth, parentIndex;
                     if (event.getCell().getRow()
                             .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
                         JsonObject rowDescription = event.getCell().getRow()
@@ -264,10 +258,6 @@ public class TreeGridConnector extends GridConnector {
                                 TreeGridCommunicationConstants.ROW_COLLAPSED);
                         leaf = rowDescription.getBoolean(
                                 TreeGridCommunicationConstants.ROW_LEAF);
-                        depth = (int) rowDescription.getNumber(
-                                TreeGridCommunicationConstants.ROW_DEPTH);
-                        parentIndex = (int) rowDescription
-                                .getNumber("parentIndex");
 
                         switch (domEvent.getKeyCode()) {
                         case KeyCodes.KEY_RIGHT:
@@ -276,11 +266,6 @@ public class TreeGridConnector extends GridConnector {
                                     toggleCollapse(
                                             event.getCell().getRow().getString(
                                                     DataCommunicatorConstants.KEY));
-                                } else {
-                                    // Focus on next row
-                                    getWidget().focusCell(
-                                            event.getCell().getRowIndex() + 1,
-                                            event.getCell().getColumnIndex());
                                 }
                             }
                             break;
@@ -290,10 +275,6 @@ public class TreeGridConnector extends GridConnector {
                                 toggleCollapse(
                                         event.getCell().getRow().getString(
                                                 DataCommunicatorConstants.KEY));
-                            } else if (depth > 0) {
-                                // jump to parent
-                                getWidget().focusCell(parentIndex,
-                                        event.getCell().getColumnIndex());
                             }
                             break;
                         }

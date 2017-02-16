@@ -66,9 +66,9 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     }
 
     private void createToggleCollapseSelect() {
-        MenuItem menu = createCategory("Toggle collapse", CATEGORY_FEATURES);
+        MenuItem menu = createCategory("Toggle expand", CATEGORY_FEATURES);
         dataProvider.getAllItems().forEach(testBean -> {
-            createClickAction(testBean.getStringValue(), "Toggle collapse",
+            createClickAction(testBean.getStringValue(), "Toggle expand",
                     (grid, bean, data) -> grid.toggleExpansion(bean), testBean);
         });
     }
@@ -154,7 +154,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                 TestBean rootBean = new TestBean(string);
 
                 HierarchyWrapper<TestBean> wrappedParent = new HierarchyWrapper<>(
-                        rootBean, null, false);
+                        rootBean, null, true);
                 itemToWrapperMap.put(rootBean, wrappedParent);
                 wrapperToItemMap.put(wrappedParent, rootBean);
 
@@ -162,7 +162,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                     TestBean childBean = new TestBean(string + "/" + string2);
                     HierarchyWrapper<TestBean> wrappedChild = new HierarchyWrapper<>(
                             new TestBean(string + "/" + string2), rootBean,
-                            false);
+                            true);
                     itemToWrapperMap.put(childBean, wrappedChild);
                     wrapperToItemMap.put(wrappedChild, childBean);
                     return childBean;
@@ -216,7 +216,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
             wrappedItems.forEach(wrappedItem -> {
                 items.add(wrapperToItemMap.get(wrappedItem));
-                if (wrappedItem.isCollapsed()) {
+                if (!wrappedItem.isCollapsed()) {
                     List<HierarchyWrapper<TestBean>> wrappedChildren = wrappedItem
                             .getChildren().stream()
                             .map(childItem -> getItem(childItem))

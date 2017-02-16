@@ -18,11 +18,11 @@ package com.vaadin.shared.ui.treegrid;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
+ * RPC to handle client originated collapse and expand actions on hierarchical
+ * rows in TreeGrid.
  * 
  * @author Vaadin Ltd
  * @since 8.1
- *
- * @param <T>
  */
 public interface NodeCollapseRpc extends ServerRpc {
 

@@ -111,6 +111,15 @@ public class TreeGrid<T> extends Grid<T> {
         return (TreeGridState) super.getState(markAsDirty);
     }
 
+    /**
+     * Toggle the expansion of an item in this grid. If the item is already
+     * expanded, it will be collapsed.
+     * <p>
+     * Toggling expansion on a leaf item in the hierarchy will have no effect.
+     * 
+     * @param item
+     *            the item to toggle expansion for
+     */
     public void toggleExpansion(T item) {
         getDataProvider().setCollapsed(item,
                 !getDataProvider().isCollapsed(item));
