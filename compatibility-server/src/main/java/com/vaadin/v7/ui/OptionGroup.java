@@ -41,10 +41,11 @@ import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 /**
  * Configures select to be used as an option group.
  *
- * @deprecated As of 8.0, use {@link RadioButtonGroup} or {@link CheckBoxGroup}
- *             instead
+ * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, use {@link RadioButtonGroup} for single select or
+ *             {@link CheckBoxGroup} for multiselect instead
  */
-@SuppressWarnings("serial")
 @Deprecated
 public class OptionGroup extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {

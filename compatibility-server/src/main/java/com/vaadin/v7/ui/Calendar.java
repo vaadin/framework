@@ -116,6 +116,8 @@ import com.vaadin.v7.ui.components.calendar.handler.BasicWeekClickHandler;
  *
  * @since 7.1
  * @author Vaadin Ltd.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -1003,7 +1005,7 @@ public class Calendar extends AbstractLegacyComponent
     /**
      * Sets sort order for events. By default sort order is
      * {@link EventSortOrder#DURATION_DESC}.
-     * 
+     *
      * @param order
      *            sort strategy for events
      */
@@ -1018,7 +1020,7 @@ public class Calendar extends AbstractLegacyComponent
 
     /**
      * Returns sort order for events.
-     * 
+     *
      * @return currently active sort strategy
      */
     public EventSortOrder getEventSortOrder() {

@@ -101,6 +101,8 @@ import com.vaadin.v7.shared.ui.table.TableState;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, use Grid instead
  */
 @Deprecated
 @SuppressWarnings({ "deprecation" })
