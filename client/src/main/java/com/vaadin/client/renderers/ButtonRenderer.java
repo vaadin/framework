@@ -29,6 +29,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  */
 public class ButtonRenderer extends ClickableRenderer<String, Button> {
 
+    private boolean html = false;
+
     @Override
     public Button createWidget() {
         Button b = GWT.create(Button.class);
@@ -37,8 +39,20 @@ public class ButtonRenderer extends ClickableRenderer<String, Button> {
         return b;
     }
 
+    public void setHtml(boolean html) {
+        this.html = html;
+    }
+
+    public boolean isHtml() {
+        return html;
+    }
+
     @Override
     public void render(RendererCellReference cell, String text, Button button) {
-        button.setText(text);
+        if (html) {
+            button.setHTML(text);
+        } else {
+            button.setText(text);
+        }
     }
 }

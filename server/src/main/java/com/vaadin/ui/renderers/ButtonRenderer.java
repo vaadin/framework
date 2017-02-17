@@ -83,4 +83,28 @@ public class ButtonRenderer<T> extends ClickableRenderer<T, String> {
         return (ButtonRendererState) super.getState(markAsDirty);
     }
 
+    /**
+     * Sets whether the data should be rendered as HTML (instead of text).
+     * <p>
+     * By default everything is rendered as text.
+     *
+     * @param html
+     *            <code>true</code> to render as HTML, <code>false</code> to
+     *            render as text
+     */
+    public void setHtml(boolean html) {
+        getState().html = html;
+    }
+
+    /**
+     * Gets whether the data should be rendered as HTML (instead of text).
+     * <p>
+     * By default everything is rendered as text.
+     *
+     * @return <code>true</code> if the renderer renders a HTML,
+     *         <code>false</code> if the content is rendered as text
+     */
+    public boolean isHtml() {
+        return getState(false).html;
+    }
 }
