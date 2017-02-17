@@ -421,7 +421,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
                         + "(:\\s*(.*?))?(\\s|$)")
                 .exec(responseText);
         if (refreshToken != null) {
-            WidgetUtil.redirect(refreshToken.getGroup(2));
+            WidgetUtil.redirect(getConnection()
+                    .translateVaadinUri(refreshToken.getGroup(2)));
         } else {
             handleUnrecoverableCommunicationError(
                     "Invalid JSON response from server: " + responseText,
