@@ -65,7 +65,7 @@ def getDemoValidationStatusHtml():
 def getDemoLinksHtml():
     demos_html = "Try demos"
     link_list = list(map(lambda demo: "<a href='{url}/{demoName}-{version}'>{demoName}</a>".format(url=args.deployUrl, demoName=demo, version=args.version), demos))
-    return demos_html + getHtmlList(link_list)
+    return demos_html + getHtmlList(link_list) + "Note that the deployed framework8-demo WARs have a suffix -0..-4."
 
 def getApiDiffHtml():
     apidiff_html = "Check API diff"
