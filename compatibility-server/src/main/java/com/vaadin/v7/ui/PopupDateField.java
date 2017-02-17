@@ -20,6 +20,7 @@ import java.util.Date;
 
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.ui.DateTimeField;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.shared.ui.datefield.PopupDateFieldState;
 
@@ -33,6 +34,9 @@ import com.vaadin.v7.shared.ui.datefield.PopupDateFieldState;
  * @see InlineDateField
  * @author Vaadin Ltd.
  * @since 5.0
+ *
+ * @deprecated As of 8.0, use {@link com.vaadin.ui.DateField} or
+ *             {@link DateTimeField} instead.
  */
 @Deprecated
 public class PopupDateField extends DateField {
