@@ -192,6 +192,9 @@ import elemental.json.JsonValue;
  *
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.Grid} based on the new
+ *             data binding API
  */
 @Deprecated
 public class Grid extends AbstractComponent
@@ -454,8 +457,8 @@ public class Grid extends AbstractComponent
          *            <code>true</code> if visible; <code>false</code> if not
          */
         public void setDetailsVisible(Object itemId, boolean visible) {
-            if ((visible && openDetails.contains(itemId))
-                    || (!visible && !openDetails.contains(itemId))) {
+            if (visible && openDetails.contains(itemId)
+                    || !visible && !openDetails.contains(itemId)) {
                 return;
             }
 
@@ -481,8 +484,8 @@ public class Grid extends AbstractComponent
                 Component detailsComponent = itemIdToDetailsComponent
                         .get(itemId);
                 rowData.put(GridState.JSONKEY_DETAILS_VISIBLE,
-                        (detailsComponent != null
-                                ? detailsComponent.getConnectorId() : ""));
+                        detailsComponent != null
+                                ? detailsComponent.getConnectorId() : "");
             }
         }
 
@@ -4773,9 +4776,9 @@ public class Grid extends AbstractComponent
                             .hasKey(diffStateKey) : "Field name has changed";
                     Type type = null;
                     try {
-                        type = (getState(false).getClass()
+                        type = getState(false).getClass()
                                 .getDeclaredField(diffStateKey)
-                                .getGenericType());
+                                .getGenericType();
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     } catch (SecurityException e) {
@@ -4814,9 +4817,9 @@ public class Grid extends AbstractComponent
                             .hasKey(diffStateKey) : "Field name has changed";
                     Type type = null;
                     try {
-                        type = (getState(false).getClass()
+                        type = getState(false).getClass()
                                 .getDeclaredField(diffStateKey)
-                                .getGenericType());
+                                .getGenericType();
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     } catch (SecurityException e) {
@@ -6641,8 +6644,8 @@ public class Grid extends AbstractComponent
     public void setCellDescriptionGenerator(
             CellDescriptionGenerator generator) {
         cellDescriptionGenerator = generator;
-        getState().hasDescriptions = (generator != null
-                || rowDescriptionGenerator != null);
+        getState().hasDescriptions = generator != null
+                || rowDescriptionGenerator != null;
         datasourceExtension.refreshCache();
     }
 
@@ -6676,8 +6679,8 @@ public class Grid extends AbstractComponent
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator) {
         rowDescriptionGenerator = generator;
-        getState().hasDescriptions = (generator != null
-                || cellDescriptionGenerator != null);
+        getState().hasDescriptions = generator != null
+                || cellDescriptionGenerator != null;
         datasourceExtension.refreshCache();
     }
 
@@ -7523,8 +7526,8 @@ public class Grid extends AbstractComponent
                     Object value = datasource.getItem(itemId)
                             .getItemProperty(c.getPropertyId()).getValue();
                     tableRow.appendElement("td")
-                            .append((value != null ? DesignFormatter
-                                    .encodeForTextNode(value.toString()) : ""));
+                            .append(value != null ? DesignFormatter
+                                    .encodeForTextNode(value.toString()) : "");
                 }
             }
         }

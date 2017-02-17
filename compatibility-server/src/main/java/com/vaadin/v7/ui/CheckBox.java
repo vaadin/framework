@@ -33,6 +33,12 @@ import com.vaadin.v7.data.Property;
 import com.vaadin.v7.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.v7.shared.ui.checkbox.CheckBoxState;
 
+/**
+ * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0 replaced by a new version based on the new data binding
+ *             API
+ */
 @Deprecated
 public class CheckBox extends AbstractField<Boolean> {
 
@@ -202,7 +208,7 @@ public class CheckBox extends AbstractField<Boolean> {
     @Deprecated
     public boolean booleanValue() {
         Boolean value = getValue();
-        return (null == value) ? false : value.booleanValue();
+        return null == value ? false : value.booleanValue();
     }
 
     /*

@@ -101,6 +101,8 @@ import com.vaadin.v7.shared.ui.table.TableState;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, use Grid instead
  */
 @Deprecated
 @SuppressWarnings({ "deprecation" })
@@ -1255,8 +1257,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         String header = columnHeaders.get(propertyId);
-        if ((header == null
-                && getColumnHeaderMode() == ColumnHeaderMode.EXPLICIT_DEFAULTS_ID)
+        if (header == null
+                && getColumnHeaderMode() == ColumnHeaderMode.EXPLICIT_DEFAULTS_ID
                 || getColumnHeaderMode() == ColumnHeaderMode.ID) {
             header = propertyId.toString();
         }
@@ -1950,7 +1952,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * buffer. Less than the rows we removed if the container does not
          * contain that many items afterwards.
          */
-        int maxRowsToRender = (totalRows - firstAppendedRow);
+        int maxRowsToRender = totalRows - firstAppendedRow;
         int rowsToAdd = rows;
         if (rowsToAdd > maxRowsToRender) {
             rowsToAdd = maxRowsToRender;
@@ -2133,8 +2135,8 @@ public class Table extends AbstractSelect implements Action.Container,
             getLogger().log(Level.FINEST,
                     "Page Buffer now contains {0} rows ({1}-{2})",
                     new Object[] { pageBuffer[CELL_ITEMID].length,
-                            pageBufferFirstIndex, (pageBufferFirstIndex
-                                    + pageBuffer[CELL_ITEMID].length - 1) });
+                            pageBufferFirstIndex, pageBufferFirstIndex
+                                    + pageBuffer[CELL_ITEMID].length - 1 });
         }
         return cells;
     }
@@ -2189,7 +2191,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (getLogger().isLoggable(Level.FINEST)) {
             getLogger().log(Level.FINEST,
                     "Render visible cells for rows {0}-{1}",
-                    new Object[] { firstIndex, (firstIndex + rows - 1) });
+                    new Object[] { firstIndex, firstIndex + rows - 1 });
         }
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
@@ -2473,7 +2475,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (getLogger().isLoggable(Level.FINEST)) {
             getLogger().log(Level.FINEST,
                     "Unregistering components in rows {0}-{1}",
-                    new Object[] { firstIx, (firstIx + count - 1) });
+                    new Object[] { firstIx, firstIx + count - 1 });
         }
         Object[] colids = getVisibleColumns();
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
@@ -3043,7 +3045,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (getLogger().isLoggable(Level.FINEST)) {
                 getLogger().log(Level.FINEST, "Client wants rows {0}-{1}",
                         new Object[] { reqFirstRowToPaint,
-                                (reqFirstRowToPaint + reqRowsToPaint - 1) });
+                                reqFirstRowToPaint + reqRowsToPaint - 1 });
             }
             clientNeedsContentRefresh = true;
         }
@@ -3570,8 +3572,8 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("cols", getVisibleColumns().length);
         target.addAttribute("rows", rows);
 
-        target.addAttribute("firstrow", (reqFirstRowToPaint >= 0
-                ? reqFirstRowToPaint : firstToBeRenderedInClient));
+        target.addAttribute("firstrow", reqFirstRowToPaint >= 0
+                ? reqFirstRowToPaint : firstToBeRenderedInClient);
         target.addAttribute("totalrows", total);
         if (getPageLength() != 0) {
             target.addAttribute("pagelength", getPageLength());
@@ -3625,9 +3627,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 target.startTag("column");
                 target.addAttribute("cid", columnIdMap.key(colId));
                 final String head = getColumnHeader(colId);
-                target.addAttribute("caption", (head != null ? head : ""));
+                target.addAttribute("caption", head != null ? head : "");
                 final String foot = getColumnFooter(colId);
-                target.addAttribute("fcaption", (foot != null ? foot : ""));
+                target.addAttribute("fcaption", foot != null ? foot : "");
                 if (isColumnCollapsed(colId)) {
                     target.addAttribute("collapsed", true);
                 }
@@ -3836,7 +3838,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         if (isSelectable()) {
             target.addAttribute("selectmode",
-                    (isMultiSelect() ? "multi" : "single"));
+                    isMultiSelect() ? "multi" : "single");
         } else {
             target.addAttribute("selectmode", "none");
         }
@@ -4146,7 +4148,7 @@ public class Table extends AbstractSelect implements Action.Container,
         // expect developer has e.g. PropertyFormatter that he wishes to use and
         // assign the property to the Viewer instead.
         boolean hasFilterProperty = field.getPropertyDataSource() != null
-                && (field.getPropertyDataSource() instanceof Property.Viewer);
+                && field.getPropertyDataSource() instanceof Property.Viewer;
         if (hasFilterProperty) {
             ((Property.Viewer) field.getPropertyDataSource())
                     .setPropertyDataSource(property);
@@ -4186,7 +4188,7 @@ public class Table extends AbstractSelect implements Action.Container,
             return converter.convertToPresentation(value, String.class,
                     getLocale());
         }
-        return (null != value) ? value.toString() : "";
+        return null != value ? value.toString() : "";
     }
 
     /* Action container */
@@ -4338,8 +4340,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public boolean removeItem(Object itemId) {
         final Object nextItemId = nextItemId(itemId);
         final boolean ret = super.removeItem(itemId);
-        if (ret && (itemId != null)
-                && (itemId.equals(currentPageFirstItemId))) {
+        if (ret && itemId != null && itemId.equals(currentPageFirstItemId)) {
             currentPageFirstItemId = nextItemId;
         }
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
@@ -4941,9 +4942,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param doSort
      */
     private void setSortContainerPropertyId(Object propertyId, boolean doSort) {
-        if ((sortContainerPropertyId != null
-                && !sortContainerPropertyId.equals(propertyId))
-                || (sortContainerPropertyId == null && propertyId != null)) {
+        if (sortContainerPropertyId != null
+                && !sortContainerPropertyId.equals(propertyId)
+                || sortContainerPropertyId == null && propertyId != null) {
             sortContainerPropertyId = propertyId;
 
             if (doSort) {
@@ -6026,7 +6027,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * column otherwise
          */
         public void setText(String... text) {
-            if (text == null || (text.length == 1 && text[0] == null)) {
+            if (text == null || text.length == 1 && text[0] == null) {
                 text = new String[] { "" };
             }
             this.text = text;
@@ -6381,7 +6382,7 @@ public class Table extends AbstractSelect implements Action.Container,
     private void writeHeader(Element table, Table def, DesignContext context) {
         Object[] columns = getVisibleColumns();
         if (columns.length == 0
-                || (columnIcons.isEmpty() && columnHeaders.isEmpty())) {
+                || columnIcons.isEmpty() && columnHeaders.isEmpty()) {
             return;
         }
 

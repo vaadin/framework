@@ -74,6 +74,8 @@ import com.vaadin.v7.shared.ui.tree.TreeState;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0. Replacement planned for 8.1
  */
 @SuppressWarnings({ "serial", "deprecation" })
 @Deprecated
@@ -642,7 +644,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             // Paint tree attributes
             if (isSelectable()) {
                 target.addAttribute("selectmode",
-                        (isMultiSelect() ? "multi" : "single"));
+                        isMultiSelect() ? "multi" : "single");
                 if (isMultiSelect()) {
                     target.addAttribute("multiselectmode",
                             multiSelectMode.toString());

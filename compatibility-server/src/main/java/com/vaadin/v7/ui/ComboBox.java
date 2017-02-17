@@ -45,6 +45,10 @@ import com.vaadin.v7.shared.ui.combobox.FilteringMode;
  * on newItemsAllowed and change filtering mode (and also turn it off), but you
  * can not turn on multi-select mode.
  *
+ * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.ComboBox} based on the
+ *             new data binding API
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -222,15 +226,15 @@ public class ComboBox extends AbstractSelect
             boolean needNullSelectOption = false;
             if (isNullSelectionAllowed()) {
                 target.addAttribute("nullselect", true);
-                needNullSelectOption = (getNullSelectionItemId() == null);
+                needNullSelectOption = getNullSelectionItemId() == null;
                 if (!needNullSelectOption) {
                     target.addAttribute("nullselectitem", true);
                 }
             }
 
             // Constructs selected keys array
-            String[] selectedKeys = new String[(getValue() == null
-                    && getNullSelectionItemId() == null ? 0 : 1)];
+            String[] selectedKeys = new String[getValue() == null
+                    && getNullSelectionItemId() == null ? 0 : 1];
 
             target.addAttribute("pagelength", pageLength);
 
@@ -472,7 +476,7 @@ public class ComboBox extends AbstractSelect
             // Compute the number of items to fetch from the indexes given or
             // based on the filtered size of the container
             int lastItemToFetch = Math.min(last, filteredSize - 1);
-            int nrOfItemsToFetch = (lastItemToFetch + 1) - first;
+            int nrOfItemsToFetch = lastItemToFetch + 1 - first;
 
             List<?> options = indexed.getItemIds(first, nrOfItemsToFetch);
 
@@ -619,7 +623,7 @@ public class ComboBox extends AbstractSelect
             int size, int first) {
         // page length usable for non-null items
         int effectivePageLength = pageLength
-                - (needNullSelectOption && (currentPage == 0) ? 1 : 0);
+                - (needNullSelectOption && currentPage == 0 ? 1 : 0);
         return Math.min(size - 1, first + effectivePageLength - 1);
     }
 
