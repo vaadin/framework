@@ -22,9 +22,11 @@ import com.vaadin.v7.shared.ui.colorpicker.Color;
  * component.
  *
  * @since 7.0.0
- *
  * @see ColorPickerArea
+ * @author Vaadin Ltd
  *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.ColorPicker} based on
+ *             new data binding API
  */
 @Deprecated
 public class ColorPicker extends AbstractColorPicker {

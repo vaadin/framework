@@ -3,7 +3,6 @@ title: Migrating to Framework 8
 order: 1
 layout: page
 ---
-// TODO: Fix release note links to point to 8.0.0
 [[migration]]
 == Migration from Framework 7 to Framework 8
 
@@ -17,7 +16,7 @@ This is primarily to get an existing Framework 7 project up and running with Fra
 
 The very first step in migration is to ensure that your project is configured to use Framework 8 dependencies, as well as include any of the desired compatibility packages needed in your migration.
 Also note that Framework 8 requires JDK 8 for development.
-For deployment configurations, refer to the list of supported technologies in the release notes, available at link:https://vaadin.com/download/prerelease/8.0/8.0.0/8.0.0.beta1/release-notes.html#supportedversions[].
+For deployment configurations, refer to the list of supported technologies in the release notes, available at link:https://vaadin.com/download/release/8.0/8.0.0/release-notes.html#supportedversions[].
 
 ==== Updating Maven Dependencies
 
@@ -76,6 +75,12 @@ For add-on developers, the same steps outlined in this guide can also be applied
 Once your project's dependencies have been updated for Framework 8 migration there are a few steps to begin using the compatibility versions of the old APIs, namely changing of imports and ensuring that your widgetset is correctly set up.
 Optionally, if you are using Vaadin Designer or declarative files otherwise, the tag names for compatibility components need to be updated.
 
+==== The Migration Tool
+
+To ease the migration process, the vaadin maven plugin has a target `vaadin:upgrade8` which updates all
+imports in java files and prefixes in design files to point to the versions in the compatibility packages.
+This migration tool is available separately at link:https://github.com/vaadin/framework8-migration-tool[].
+
 ==== Changing Imports
 
 The only change to classes in the compatibility packages is the change in their classpath. All compatibility classes can be found under `com.vaadin.v7.*`.
@@ -88,6 +93,9 @@ Typically, widgetset recompilation will handle this automatically for you, excep
 
 * Your project defines a custom widgetset, in which case you need to make sure `Vaadin7WidgetSet` is inherited
 * An UI in your project defines its widgetset with the annotation `@WidgetSet("com.vaadin.DefaultWidgetSet")`, which should be changed to `@WidgetSet("com.vaadin.v7.Vaadin7WidgetSet")`
+
+IMPORTANT: The widgetset compilation for `Vaadin7WidgetSet` requires at least 1G of memory. To ensure this, add
+`<extraJvmArgs>-Xmx1G</extraJvmArgs>` to the vaadin-maven-plugin configuration in your `pom.xml` file.
 
 ==== Using Compatibility Components In Declarative Files
 
@@ -106,10 +114,6 @@ to its compatibility equivalent, `com.vaadin.v7.ui.TextField`, would simply be a
 
 in the corresponding design html file.
 
-==== The Migration Tool
-
-To ease the process of the initial changing of imports and prefixes in design files, a tool for automatically applying these changes to a project is available at link:https://github.com/vaadin/framework8-migration-tool[].
-Please refer to the README available in the repository for up to date instructions on how to run the tool on your project.
 
 === Next Steps
 

@@ -53,6 +53,9 @@ import com.vaadin.v7.shared.ui.label.LabelState;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.ui.Label} that removes
+ *             data binding support
  */
 @SuppressWarnings("serial")
 @Deprecated
