@@ -59,13 +59,15 @@
 
         <p>
             Vaadin Framework @version@ is a
-<!--            feature release that includes -->
-            pre-release for evaluating
+            feature release that includes
+            <!-- pre-release for evaluating  -->
             a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
+        <!-- 
 		This beta release contains breaking changes based on your feedback on the previous beta version,
 		and we may change things on future beta versions based on your feedback if necessary.
+         -->
 	</p>
 	<p>	Special note for add-on developers: please test your add-on against 
 		Framework 8.0 and update your add-on as needed.
@@ -77,7 +79,7 @@
 	<!-- @release-notes-changelog@ -->
         <p>
             You can find the full list of all changes <a
-                href="https://github.com/vaadin/framework/releases/tag/@version@">in
+                href="https://github.com/vaadin/framework/releases/tag/@version@">in	
                 GitHub</a>.
         </p>
 
@@ -111,7 +113,7 @@
                 Notes for Vaadin Framework 7.7.0</a>.
         </p>
 
-        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version@</h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@ </h2>
         
         <ul><h4>Compatibility and requirements</h4>
             <li>Vaadin Framework now requires Java 8 or later and Servlet 3.0 or later</li>
@@ -215,7 +217,7 @@
             <li><tt>Grid</tt> (and renderers)</li>
             <li><tt>HorizontalLayout</tt></li>
             <li><tt>InlineDateField</tt> - replaced in 8 by <tt>InlineDateField</tt> and <tt>InlineDateTimeField</tt></li>
-            <li><tt>Label</tt></li>
+            <li><tt>Label</tt> - replacement in 8 doesn't support data binding</li>
             <li><tt>ListSelect</tt></li>
             <li><tt>NativeSelect</tt></li>
             <li><tt>OptionGroup</tt> - replaced by <tt>CheckBoxGroup</tt> (multiselection) and <tt>RadioButtonGroup</tt> (single selection)</li>
@@ -354,33 +356,30 @@
             components.)
         </p>
 
-        <h2 id="migrating">Migrating from Vaadin Framework 7.7</h2>
+        <h2 id="migrating">Migrating to Vaadin Framework 8.0</h2>
 
         <p>
-            Most Vaadin Framework 7 applications need some changes when migrating
+            Vaadin Framework 7 applications need some changes when migrating
             to Vaadin Framework 8. In addition to updating dependencies, all references to
             Framework 7 style data binding and components using it need to be
             updated either to use new Framework 8 style data binding or to use the
             compatibility versions in separate packages.
         </p>
-
         <p>
             Vaadin Framework 7 compatible versions of the old data binding API and
             components (with the exception of Form) are available in the package
-            com.vaadin.v7 in modules vaadin-compatibility-server,
+            <tt>com.vaadin.v7</tt> in modules <tt>vaadin-compatibility-server</tt>,
             vaadin-compatibility-shared etc. that can be used instead of
-            vaadin-server, vaadin-shared etc. The package
-            vaadin-compatibility-client-compiled contains the widgetset
+            <tt>vaadin-server</tt>, vaadin-shared etc. The package
+            <tt>vaadin-compatibility-client-compiled</tt> contains the widgetset
             <tt>com.vaadin.v7.Vaadin7WidgetSet</tt> which can be used instead of
-            <tt>DefaultWidgetSet</tt>.
-        </p>
+            <tt>DefaultWidgetSet</tt>. Note that the widgetset compilation for
+            <tt>Vaadin7WidgetSet</tt> compilation requires at least 1G of memory.
+            To ensure this, add <tt>&lt;extraJvmArgs&gt;-Xmx1G&lt;/extraJvmArgs&gt;</tt>
+            to the vaadin-maven-plugin configuration in your <tt>pom.xml</tt> file.
+        
         <p>
         All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compability-themes</tt> package.
-        </p>
-
-        <p>
-            There is a <a href="https://github.com/vaadin/framework8-migration-tool/">
-            migration tool</a> which helps with some of the migration steps.
         </p>
 
         <p>
@@ -388,8 +387,16 @@
                 href="http://vaadin.com/directory/">Vaadin Directory</a>
             for Framework version 8 support.
         </p>
+        <h3>The Migration Tool</h3>
+        <p>
+            To ease the migration, the vaadin maven plugin has a target <tt>vaadin:upgrade8</tt>,
+            which updates all necessary <tt>com.vaadin.*</tt> imports in java files and prefixes design files
+            in your project to point to the legacy 7 versions, e.g. <tt>com.vaadin.ui.TextField</tt> to <tt>com.vaadin.v7.TextField</tt>.
+            This step can be also run manually by building and running the <a href="https://github.com/vaadin/framework8-migration-tool/">
+            migration tool</a> locally. Note that you still need to add the legacy package dependencies to your <tt>pom.xml</tt>.
+        </p>
 
-        <h3 id="upgrading">Common Upgrade Steps</h3>
+        <h2 id="upgrading">Common Upgrade Steps For All Versions</h2>
 
         <p>Always when upgrading from an earlier Vaadin Framework version, you
             must:</p>
@@ -536,14 +543,12 @@
                     - Getting started with Vaadin Framework</a></li>
             <li><a href="http://vaadin.com/forum">vaadin.com/forum
                     - Forums for Vaadin Framework related discussions</a></li>
-            <li><a href="http://vaadin.com/book">vaadin.com/book
-                    - Book of Vaadin - everything you need to know about
-                    Vaadin Framework</a></li>
+            <li><a href="http://vaadin.com/docs">vaadin.com/docs
+                    - Documentation for Vaadin Framework</a></li>
             <li><a href="http://vaadin.com/api">vaadin.com/api
                     - Online javadocs</a></li>
             <li><a href="http://vaadin.com/directory">vaadin.com/directory
                     - Add-ons for Vaadin Framework</a></li>
-
             <li><a href="http://vaadin.com/pro-tools">vaadin.com/pro-tools
                     - Commercial tools for Vaadin Framework</a></li>
             <li><a href="http://vaadin.com/support">vaadin.com/support
