@@ -65,7 +65,7 @@ def getDemoValidationStatusHtml():
 def getDemoLinksHtml():
     demos_html = "Try demos"
     link_list = list(map(lambda demo: "<a href='{url}/{demoName}-{version}'>{demoName}</a>".format(url=args.deployUrl, demoName=demo, version=args.version), demos))
-    return demos_html + getHtmlList(link_list)
+    return demos_html + getHtmlList(link_list) + "Note that the deployed framework8-demo WARs have a suffix -0..-4."
 
 def getApiDiffHtml():
     apidiff_html = "Check API diff"
@@ -124,7 +124,7 @@ def completeArtifactNames(artifactIds, version):
 
 
 allowedPluginArtifacts = completeArtifactNames([ 'vaadin-maven-plugin' ], args.version)
-allowedArchetypeArtifacts = completeArtifactNames([ 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet' ], args.version)
+allowedArchetypeArtifacts = completeArtifactNames([ 'vaadin-archetypes', 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet' ], args.version)
 allowedFrameworkArtifacts = completeArtifactNames([ 'vaadin-root', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes', 'vaadin-testbench-api' ], args.version)
 
 content = "<html><head></head><body><table>"
