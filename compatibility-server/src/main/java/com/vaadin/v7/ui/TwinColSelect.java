@@ -27,6 +27,9 @@ import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectState;
 /**
  * Multiselect component with two lists: left side for available items and right
  * side for selected items.
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.TwinColSelect} based
+ *             on the new data binding API
  */
 @SuppressWarnings("serial")
 @Deprecated
