@@ -892,7 +892,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         private static boolean hasCommonComparableBaseType(Object a, Object b) {
-            if (a instanceof Comparable<?> && b instanceof Comparable<?>) {
+            if (a instanceof Comparable<?> || b instanceof Comparable<?>) {
+                if (a == null || b == null) {
+                    // "a" or "b" is null, so the other is a Comparable instance
+                    // and in compareComparables(Object, Object) we manage null values
+                    return true;
+                }
+                    
+                // "a" and "b" are Comparables
                 Class<?> aClass = a.getClass();
                 Class<?> bClass = b.getClass();
 
