@@ -141,6 +141,11 @@ public class DropTargetExtension<T extends AbstractComponent> extends
         return (DropTargetState) super.getState(markAsDirty);
     }
 
+    /**
+     * Returns the component this extension is attached to.
+     *
+     * @return Extended component.
+     */
     @Override
     @SuppressWarnings("unchecked")
     public T getParent() {

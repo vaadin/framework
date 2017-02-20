@@ -78,6 +78,11 @@ public class DragEndEvent<T extends Component> extends Component.Event {
         return effectAllowed;
     }
 
+    /**
+     * Returns the drag source component where the dragend event occurred.
+     *
+     * @return Component which was dragged.
+     */
     @Override
     @SuppressWarnings("unchecked")
     public T getComponent() {

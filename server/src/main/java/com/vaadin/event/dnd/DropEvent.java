@@ -78,6 +78,11 @@ public class DropEvent<T extends Component> extends Component.Event {
         return dropEffect;
     }
 
+    /**
+     * Returns the drop target component where the drop event occurred.
+     *
+     * @return Component on which a drag source was dropped.
+     */
     @Override
     @SuppressWarnings("unchecked")
     public T getComponent() {
