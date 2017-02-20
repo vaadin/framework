@@ -899,18 +899,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     return true;
                 }
                     
-                // "a" and "b" are Comparables
-                Class<?> aClass = a.getClass();
-                Class<?> bClass = b.getClass();
+                if (a instanceof Comparable<?> && b instanceof Comparable<?>) {
 
-                if (aClass == bClass) {
-                    return true;
-                }
+                        Class<?> aClass = a.getClass();
+                        Class<?> bClass = b.getClass();
 
-                Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
+                        if (aClass == bClass) {
+                        return true;
+                        }
+
+                        Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
                         bClass);
-                if (!baseType.isAssignableFrom(Comparable.class)) {
-                    return false;
+                        if (!baseType.isAssignableFrom(Comparable.class)) {
+                                return false;
+                        }
                 }
             }
 
