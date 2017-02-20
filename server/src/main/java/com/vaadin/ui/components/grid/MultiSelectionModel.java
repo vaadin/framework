@@ -20,6 +20,7 @@ import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.MultiSelect;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 
 /**
  * Multiselection model interface for Grid.
@@ -65,4 +66,39 @@ public interface MultiSelectionModel<T>
      */
     public Registration addMultiSelectionListener(
             MultiSelectionListener<T> listener);
+
+    /**
+     * Sets the select all checkbox visibility mode.
+     * <p>
+     * The default value is {@link SelectAllCheckBoxVisibility#DEFAULT}, which
+     * means that the checkbox is only visible if the grid's data provider is
+     * in- memory.
+     *
+     * @param selectAllCheckBoxVisibility
+     *            the visiblity mode to use
+     * @see SelectAllCheckBoxVisibility
+     */
+    public void setSelectAllCheckBoxVisibility(
+            SelectAllCheckBoxVisibility selectAllCheckBoxVisibility);
+
+    /**
+     * Gets the current mode for the select all checkbox visibility.
+     *
+     * @return the select all checkbox visibility mode
+     * @see SelectAllCheckBoxVisibility
+     * @see #isSelectAllCheckBoxVisible()
+     */
+    public SelectAllCheckBoxVisibility getSelectAllCheckBoxVisibility();
+
+    /**
+     * Returns whether the select all checkbox will be visible with the current
+     * setting of
+     * {@link #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)}.
+     *
+     * @return {@code true} if the checkbox will be visible with the current
+     *         settings
+     * @see SelectAllCheckBoxVisibility
+     * @see #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)
+     */
+    public boolean isSelectAllCheckBoxVisible();
 }

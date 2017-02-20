@@ -141,17 +141,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         return (MultiSelectionModelState) super.getState(markAsDirty);
     }
 
-    /**
-     * Sets the select all checkbox visibility mode.
-     * <p>
-     * The default value is {@link SelectAllCheckBoxVisibility#DEFAULT}, which
-     * means that the checkbox is only visible if the grid's data provider is
-     * in- memory.
-     *
-     * @param selectAllCheckBoxVisibility
-     *            the visiblity mode to use
-     * @see SelectAllCheckBoxVisibility
-     */
+    @Override
     public void setSelectAllCheckBoxVisibility(
             SelectAllCheckBoxVisibility selectAllCheckBoxVisibility) {
         if (this.selectAllCheckBoxVisibility != selectAllCheckBoxVisibility) {
@@ -160,27 +150,12 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
-    /**
-     * Gets the current mode for the select all checkbox visibility.
-     *
-     * @return the select all checkbox visibility mode
-     * @see SelectAllCheckBoxVisibility
-     * @see #isSelectAllCheckBoxVisible()
-     */
+    @Override
     public SelectAllCheckBoxVisibility getSelectAllCheckBoxVisibility() {
         return selectAllCheckBoxVisibility;
     }
 
-    /**
-     * Returns whether the select all checkbox will be visible with the current
-     * setting of
-     * {@link #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)}.
-     *
-     * @return {@code true} if the checkbox will be visible with the current
-     *         settings
-     * @see SelectAllCheckBoxVisibility
-     * @see #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)
-     */
+    @Override
     public boolean isSelectAllCheckBoxVisible() {
         updateCanSelectAll();
         return getState(false).selectAllCheckBoxVisible;
