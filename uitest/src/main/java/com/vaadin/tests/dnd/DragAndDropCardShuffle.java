@@ -71,8 +71,8 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
 
     private void addDragSourceExtension(Label source) {
         // Create and attach extension
-        DragSourceExtension dragSource = new DragSourceExtension();
-        dragSource.extend(source);
+        DragSourceExtension<Label> dragSource = new DragSourceExtension<>(
+                source);
 
         // Set component position as transfer data
         dragSource.setTransferData(DATA_INDEX,
@@ -81,19 +81,19 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         // Add listeners
         dragSource.addDragStartListener(event -> {
             event.getComponent().addStyleName("dragged");
-            log(((Label) event.getComponent()).getValue() + " dragstart");
+            log(event.getComponent().getValue() + " dragstart");
         });
 
         dragSource.addDragEndListener(event -> {
             event.getComponent().removeStyleName("dragged");
-            log(((Label) event.getComponent()).getValue() + " dragend");
+            log(event.getComponent().getValue() + " dragend");
         });
     }
 
     private void addDropTargetExtension(Label target) {
         // Create and attach extension
-        DropTargetExtension dropTarget = new DropTargetExtension();
-        dropTarget.extend(target);
+        DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
+                target);
 
         // Add listener
         dropTarget.addDropListener(event -> {
@@ -123,7 +123,7 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
                         String.valueOf(desk.getComponentIndex(source)));
             });
 
-            log(((Label) source).getValue() + " dropped onto " + ((Label) event
+            log(((Label) source).getValue() + " dropped onto " + (event
                     .getComponent()).getValue());
         });
     }
