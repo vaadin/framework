@@ -887,23 +887,32 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
             } else {
-                return compareComparables(a.toString(), b.toString());
+                return compareComparables(Objects.toString(a, null), Objects.toString(b, null));
             }
         }
 
         private static boolean hasCommonComparableBaseType(Object a, Object b) {
-            if (a instanceof Comparable<?> && b instanceof Comparable<?>) {
-                Class<?> aClass = a.getClass();
-                Class<?> bClass = b.getClass();
-
-                if (aClass == bClass) {
+            if (a instanceof Comparable<?> || b instanceof Comparable<?>) {
+                if (a == null || b == null) {
+                    // "a" or "b" is null, so the other is a Comparable instance
+                    // and in compareComparables(Object, Object) we manage null values
                     return true;
                 }
+                    
+                if (a instanceof Comparable<?> && b instanceof Comparable<?>) {
 
-                Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
+                        Class<?> aClass = a.getClass();
+                        Class<?> bClass = b.getClass();
+
+                        if (aClass == bClass) {
+                        return true;
+                        }
+
+                        Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
                         bClass);
-                if (!baseType.isAssignableFrom(Comparable.class)) {
-                    return false;
+                        if (!baseType.isAssignableFrom(Comparable.class)) {
+                                return false;
+                        }
                 }
             }
 
