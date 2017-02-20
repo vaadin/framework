@@ -22,6 +22,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 
 /**
+ * Wrapper for cell references. Used by HierarchyRenderer to get the correct
+ * inner element to render.
  * 
  * @author Vaadin Ltd
  * @since 8.1

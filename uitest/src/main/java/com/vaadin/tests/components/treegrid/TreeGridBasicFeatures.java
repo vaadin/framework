@@ -69,7 +69,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         MenuItem menu = createCategory("Toggle expand", CATEGORY_FEATURES);
         dataProvider.getAllItems().forEach(testBean -> {
             createClickAction(testBean.getStringValue(), "Toggle expand",
-                    (grid, bean, data) -> grid.toggleExpansion(bean), testBean);
+                    (grid, bean, data) -> grid.toggleCollapse(bean), testBean);
         });
     }
 

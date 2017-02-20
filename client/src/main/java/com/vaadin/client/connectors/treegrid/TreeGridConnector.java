@@ -52,6 +52,11 @@ public class TreeGridConnector extends GridConnector {
 
     private String hierarchyColumnId;
 
+    private HierarchyRenderer hierarchyRenderer;
+
+    // Expander click event handling
+    private HandlerRegistration expanderClickHandlerRegistration;
+
     @Override
     public TreeGrid getWidget() {
         return (TreeGrid) super.getWidget();
@@ -109,17 +114,12 @@ public class TreeGridConnector extends GridConnector {
         }
     }
 
-    private HierarchyRenderer hierarchyRenderer;
-
     private HierarchyRenderer getHierarchyRenderer() {
         if (hierarchyRenderer == null) {
             hierarchyRenderer = new HierarchyRenderer();
         }
         return hierarchyRenderer;
     }
-
-    // Expander click event handling
-    private HandlerRegistration expanderClickHandlerRegistration;
 
     @Override
     protected void init() {
@@ -235,55 +235,52 @@ public class TreeGridConnector extends GridConnector {
             if (event.isHandled()) {
                 return;
             }
-           
+
             Event domEvent = event.getDomEvent();
+            if (!domEvent.getType().equals(BrowserEvents.KEYDOWN)) {
+                return;
+            }
 
-            if (domEvent.getType().equals(BrowserEvents.KEYDOWN)) {
+            // Navigate within hierarchy with ALT/OPTION + ARROW KEY when
+            // hierarchy column is selected
+            if (isHierarchyColumn(event.getCell()) && domEvent.getAltKey()
+                    && (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
+                            || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT)) {
 
-                // Navigate within hierarchy with ALT/OPTION + ARROW KEY when
-                // hierarchy column is selected
-                if (isHierarchyColumn(event.getCell()) && domEvent.getAltKey()
-                        && (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
-                                || domEvent
-                                        .getKeyCode() == KeyCodes.KEY_RIGHT)) {
+                // Hierarchy metadata
+                boolean collapsed, leaf;
+                if (event.getCell().getRow().hasKey(
+                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
+                    JsonObject rowDescription = event.getCell().getRow()
+                            .getObject(
+                                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                    collapsed = rowDescription.getBoolean(
+                            TreeGridCommunicationConstants.ROW_COLLAPSED);
+                    leaf = rowDescription.getBoolean(
+                            TreeGridCommunicationConstants.ROW_LEAF);
 
-                    // Hierarchy metadata
-                    boolean collapsed, leaf;
-                    if (event.getCell().getRow()
-                            .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
-                        JsonObject rowDescription = event.getCell().getRow()
-                                .getObject(
-                                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
-                        collapsed = rowDescription.getBoolean(
-                                TreeGridCommunicationConstants.ROW_COLLAPSED);
-                        leaf = rowDescription.getBoolean(
-                                TreeGridCommunicationConstants.ROW_LEAF);
-
-                        switch (domEvent.getKeyCode()) {
-                        case KeyCodes.KEY_RIGHT:
-                            if (!leaf) {
-                                if (collapsed) {
-                                    toggleCollapse(
-                                            event.getCell().getRow().getString(
-                                                    DataCommunicatorConstants.KEY));
-                                }
-                            }
-                            break;
-                        case KeyCodes.KEY_LEFT:
-                            if (!collapsed) {
-                                // collapse node
+                    switch (domEvent.getKeyCode()) {
+                    case KeyCodes.KEY_RIGHT:
+                        if (!leaf) {
+                            if (collapsed) {
                                 toggleCollapse(
                                         event.getCell().getRow().getString(
                                                 DataCommunicatorConstants.KEY));
                             }
-                            break;
                         }
+                        break;
+                    case KeyCodes.KEY_LEFT:
+                        if (!collapsed) {
+                            // collapse node
+                            toggleCollapse(event.getCell().getRow()
+                                    .getString(DataCommunicatorConstants.KEY));
+                        }
+                        break;
                     }
-                    event.setHandled(true);
-                    return;
                 }
+                event.setHandled(true);
+                return;
             }
-            event.setHandled(false);
         }
     }
 }

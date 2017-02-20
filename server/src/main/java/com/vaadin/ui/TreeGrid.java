@@ -48,10 +48,17 @@ public class TreeGrid<T> extends Grid<T> {
             JsonObject hierarchyData = Json.createObject();
             hierarchyData.put(TreeGridCommunicationConstants.ROW_DEPTH,
                     getDataProvider().getDepth(item));
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_COLLAPSED,
-                    getDataProvider().isCollapsed(item));
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
-                    !getDataProvider().hasChildren(item));
+
+            boolean isLeaf = !getDataProvider().hasChildren(item);
+            if (isLeaf) {
+                hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
+                        true);
+            } else {
+                hierarchyData.put(TreeGridCommunicationConstants.ROW_COLLAPSED,
+                        getDataProvider().isCollapsed(item));
+                hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
+                        false);
+            }
 
             // add hierarchy information to row as metadata
             rowData.put(
@@ -63,7 +70,7 @@ public class TreeGrid<T> extends Grid<T> {
             @Override
             public void toggleCollapse(String rowKey) {
                 T item = getDataCommunicator().getKeyMapper().get(rowKey);
-                toggleExpansion(item);
+                TreeGrid.this.toggleCollapse(item);
             }
         });
     }
@@ -71,33 +78,47 @@ public class TreeGrid<T> extends Grid<T> {
     // TODO: construct a "flat" in memory hierarchical data provider?
     @Override
     public void setItems(Collection<T> items) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
     public void setItems(Stream<T> items) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
     public void setItems(T... items) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         if (!(dataProvider instanceof HierarchicalDataProvider)) {
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "TreeGrid only accepts hierarchical data providers");
         }
         super.setDataProvider(dataProvider);
     }
 
+    /**
+     * Set the column that displays the hierarchy of this grid's data. By
+     * default the hierarchy will be displayed in the first column.
+     * <p>
+     * Setting a hierarchy column by calling this method also sets the column to
+     * be visible and not hidable.
+     * 
+     * @see Column#setId(String)
+     * 
+     * @param id
+     *            id of the column to use for displaying hierarchy
+     */
     public void setHierarchyColumn(String id) {
         Objects.requireNonNull(id, "id may not be null");
         if (getColumn(id) == null) {
-            throw new RuntimeException("No column found for given id");
+            throw new IllegalArgumentException("No column found for given id");
         }
+        getColumn(id).setHidden(false);
+        getColumn(id).setHidable(false);
         getState().hierarchyColumnId = getInternalIdForColumn(getColumn(id));
     }
 
@@ -120,7 +141,7 @@ public class TreeGrid<T> extends Grid<T> {
      * @param item
      *            the item to toggle expansion for
      */
-    public void toggleExpansion(T item) {
+    public void toggleCollapse(T item) {
         getDataProvider().setCollapsed(item,
                 !getDataProvider().isCollapsed(item));
         getDataCommunicator().reset();
@@ -133,7 +154,7 @@ public class TreeGrid<T> extends Grid<T> {
         // DataProvider is set, resulting in a class cast exception if we don't
         // check it here
         if (!(dataProvider instanceof HierarchicalDataProvider)) {
-            return null;
+            throw new IllegalStateException("No data provider has been set.");
         }
         return (HierarchicalDataProvider<T, ?>) dataProvider;
     }

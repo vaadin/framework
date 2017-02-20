@@ -24,6 +24,7 @@ import com.vaadin.shared.communication.ServerRpc;
  * @author Vaadin Ltd
  * @since 8.1
  */
+@FunctionalInterface
 public interface NodeCollapseRpc extends ServerRpc {
 
     void toggleCollapse(String rowKey);

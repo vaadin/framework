@@ -72,8 +72,10 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
                     .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
             leaf = rowDescription
                     .getBoolean(TreeGridCommunicationConstants.ROW_LEAF);
-            collapsed = rowDescription
-                    .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
+            if (!leaf) {
+                collapsed = rowDescription.getBoolean(
+                        TreeGridCommunicationConstants.ROW_COLLAPSED);
+            }
         }
 
         HierarchyItem cellWidget = (HierarchyItem) widget;
@@ -87,7 +89,9 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             cellWidget.setExpanderState(ExpanderState.EXPANDED);
         }
 
-        // inner cell
+        // Render the contents of the inner renderer. For non widget renderers
+        // the cell reference needs to be wrapped so that its getElement method
+        // returns the correct element we want to render.
         if (innerRenderer instanceof WidgetRenderer) {
             ((WidgetRenderer) innerRenderer).render(cell, data, ((HierarchyItem) widget).content);
         } else {
