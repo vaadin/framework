@@ -240,8 +240,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
         addDataGenerator((T data, JsonObject jsonObject) -> {
-            jsonObject.put(DataCommunicatorConstants.NAME,
-                    getItemCaptionGenerator().apply(data));
+            String caption = getItemCaptionGenerator().apply(data);
+            if (caption == null) {
+                caption = "";
+            }
+            jsonObject.put(DataCommunicatorConstants.NAME, caption);
             String style = itemStyleGenerator.apply(data);
             if (style != null) {
                 jsonObject.put(ComboBoxConstants.STYLE, style);
