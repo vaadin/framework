@@ -18,6 +18,7 @@ package com.vaadin.event.dnd;
 import java.util.Objects;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
@@ -41,9 +42,17 @@ public class DropTargetExtension<T extends AbstractComponent> extends
      *         Component to be extended.
      */
     public DropTargetExtension(T target) {
-        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
+        registerRpc((DropTargetRpc) (types, data, dropEffect, dataSourceId) -> {
+            DragSourceExtension dragSource = null;
+
+            ClientConnector connector = getUI().getConnectorTracker()
+                    .getConnector(dataSourceId);
+            if (connector != null && connector instanceof DragSourceExtension) {
+                dragSource = (DragSourceExtension) connector;
+            }
+
             DropEvent<T> event = new DropEvent<>(target, types, data,
-                    dropEffect);
+                    dropEffect, dragSource);
 
             fireEvent(event);
         });

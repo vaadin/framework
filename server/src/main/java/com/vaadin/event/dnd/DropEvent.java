@@ -18,8 +18,10 @@ package com.vaadin.event.dnd;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
@@ -29,9 +31,10 @@ import com.vaadin.ui.Component;
  *         Type of the drop target component.
  * @see DropTargetExtension#addDropListener(DropListener)
  */
-public class DropEvent<T extends Component> extends Component.Event {
+public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final Map<String, String> data;
     private final DropEffect dropEffect;
+    private final DragSourceExtension<T> dragSource;
 
     /**
      * Creates a server side drop event.
@@ -45,9 +48,12 @@ public class DropEvent<T extends Component> extends Component.Event {
      *         DataTransfer} object.
      * @param dropEffect
      *         Drop effect from {@code DataTransfer.dropEffect} object.
+     * @param dragSource
+     *         Drag source extension of the component that initiated the drop
+     *         event.
      */
     public DropEvent(T source, List<String> types, Map<String, String> data,
-            DropEffect dropEffect) {
+            DropEffect dropEffect, DragSourceExtension<T> dragSource) {
         super(source);
 
         // Create a linked map that preserves the order of types
@@ -55,6 +61,8 @@ public class DropEvent<T extends Component> extends Component.Event {
         types.forEach(type -> this.data.put(type, data.get(type)));
 
         this.dropEffect = dropEffect;
+
+        this.dragSource = dragSource;
     }
 
     /**
@@ -76,6 +84,26 @@ public class DropEvent<T extends Component> extends Component.Event {
      */
     public DropEffect getDropEffect() {
         return dropEffect;
+    }
+
+    /**
+     * Get the drag source component that has just been dropped if the drag
+     * source and drop target are in the same UI.
+     *
+     * @return Dropped drag source component.
+     */
+    public Optional<T> getDragSourceComponent() {
+        return getDragSourceExtension().map(DragSourceExtension::getParent);
+    }
+
+    /**
+     * Get the drag source extension of the component that has just been dropped
+     * if the drag source and drop target are in the same UI.
+     *
+     * @return Drag source extension of the dropped component.
+     */
+    public Optional<DragSourceExtension<T>> getDragSourceExtension() {
+        return Optional.ofNullable(dragSource);
     }
 
     /**

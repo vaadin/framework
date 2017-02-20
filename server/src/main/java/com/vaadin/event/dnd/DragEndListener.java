@@ -18,7 +18,7 @@ package com.vaadin.event.dnd;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.AbstractComponent;
 
 /**
  * Interface to be implemented when creating a dragend listener on a drag
@@ -29,7 +29,7 @@ import com.vaadin.ui.Component;
  * @see DragSourceExtension#addDragEndListener(DragEndListener)
  */
 @FunctionalInterface
-public interface DragEndListener<T extends Component> extends
+public interface DragEndListener<T extends AbstractComponent> extends
         ConnectorEventListener {
     static final Method DRAGEND_METHOD = DragEndListener.class
             .getDeclaredMethods()[0];

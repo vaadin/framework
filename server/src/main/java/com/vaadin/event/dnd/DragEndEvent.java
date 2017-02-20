@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
@@ -29,7 +30,7 @@ import com.vaadin.ui.Component;
  *         Type of the component that was dragged.
  * @see DragSourceExtension#addDragEndListener(DragEndListener)
  */
-public class DragEndEvent<T extends Component> extends Component.Event {
+public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
     private final Map<String, String> data;
     private final EffectAllowed effectAllowed;
 

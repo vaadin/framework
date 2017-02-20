@@ -18,7 +18,7 @@ package com.vaadin.event.dnd;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.AbstractComponent;
 
 /**
  * Interface to be implemented when creating a drop listener on a drop target
@@ -29,7 +29,7 @@ import com.vaadin.ui.Component;
  * @see DropTargetExtension#addDropListener(DropListener)
  */
 @FunctionalInterface
-public interface DropListener<T extends Component> extends
+public interface DropListener<T extends AbstractComponent> extends
         ConnectorEventListener {
     static final Method DROP_METHOD = DropListener.class
             .getDeclaredMethods()[0];
