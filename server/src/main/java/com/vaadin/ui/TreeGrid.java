@@ -152,7 +152,10 @@ public class TreeGrid<T> extends Grid<T> {
         DataProvider<T, ?> dataProvider = super.getDataProvider();
         // FIXME DataCommunicator by default has a CallbackDataProvider if no
         // DataProvider is set, resulting in a class cast exception if we don't
-        // check it here
+        // check it here.
+
+        // Once fixed, remove this method from the exclude list in
+        // StateGetDoesNotMarkDirtyTest
         if (!(dataProvider instanceof HierarchicalDataProvider)) {
             throw new IllegalStateException("No data provider has been set.");
         }
