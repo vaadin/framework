@@ -1110,14 +1110,16 @@ public class Binder<BEAN> implements Serializable {
             @Override
             public Stream<PropertyDefinition<BEAN, ?>> getProperties() {
                 throw new IllegalStateException(
-                        "A Binder created with the default constructor doesn't support listing properties.");
+                        "This Binder instance was created using the default constructor. "
+                                + "To be able to use property names and bind to instance fields, create the binder using the Binder(Class<BEAN> beanType) constructor instead.");
             }
 
             @Override
             public Optional<PropertyDefinition<BEAN, ?>> getProperty(
                     String name) {
                 throw new IllegalStateException(
-                        "A Binder created with the default constructor doesn't support finding properties by name.");
+                        "This Binder instance was created using the default constructor. "
+                                + "To be able to use property names and bind to instance fields, create the binder using the Binder(Class<BEAN> beanType) constructor instead.");
             }
         });
     }
