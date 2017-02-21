@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.tests.util.MockUI;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 
 public class GridNullValueSortTest {
