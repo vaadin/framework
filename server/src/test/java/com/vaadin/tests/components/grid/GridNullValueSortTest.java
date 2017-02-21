@@ -3,6 +3,7 @@ package com.vaadin.tests.components.grid;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
