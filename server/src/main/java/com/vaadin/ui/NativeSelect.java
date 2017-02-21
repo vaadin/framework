@@ -52,9 +52,13 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
      */
     public NativeSelect() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
-        addDataGenerator(
-                (item, json) -> json.put(DataCommunicatorConstants.DATA,
-                        getItemCaptionGenerator().apply(item)));
+        addDataGenerator((item, json) -> {
+            String caption = getItemCaptionGenerator().apply(item);
+            if (caption == null) {
+                caption = "";
+            }
+            json.put(DataCommunicatorConstants.DATA, caption);
+        });
 
         setItemCaptionGenerator(String::valueOf);
     }
