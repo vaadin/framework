@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.textarea]]
-= [classname]#TextArea#
+= TextArea
 
 ifdef::web[]
 [.sampler]
