@@ -21,6 +21,7 @@ import java.util.Map;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DragSourceExtension;
@@ -45,8 +46,15 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     private final EventListener dragStartListener = this::onDragStart;
     private final EventListener dragEndListener = this::onDragEnd;
 
+    /**
+     * Widget of the drag source component.
+     */
+    private Widget dragSourceWidget;
+
     @Override
     protected void extend(ServerConnector target) {
+        dragSourceWidget = ((ComponentConnector) target).getWidget();
+
         Element dragSourceElement = getDraggableElement();
 
         dragSourceElement.setDraggable(Element.DRAGGABLE_TRUE);
@@ -124,7 +132,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @return the draggable element in the parent widget.
      */
     protected Element getDraggableElement() {
-        return ((ComponentConnector) getParent()).getWidget().getElement();
+        return dragSourceWidget.getElement();
     }
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
