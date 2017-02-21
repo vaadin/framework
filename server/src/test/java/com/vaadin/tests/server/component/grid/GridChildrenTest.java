@@ -21,10 +21,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterCell;
+import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Label;
 
 public class GridChildrenTest {
@@ -71,6 +76,93 @@ public class GridChildrenTest {
         Assert.assertEquals(grid, label.getParent());
         grid.removeHeaderRow(0);
         Assert.assertNull(label.getParent());
+    }
+
+    @Test
+    public void removeHeaderFooterComponentWhenColumnIsRemoved() {
+        HeaderRow h1 = grid.prependHeaderRow();
+        FooterRow f1 = grid.addFooterRowAt(0);
+        Button headerButton = new Button("This one will be an orthan");
+        Button footerButton = new Button("This one will be an orthan");
+        h1.getCell("foo").setComponent(headerButton);
+        f1.getCell("foo").setComponent(footerButton);
+
+        Assert.assertEquals(grid, headerButton.getParent());
+        Assert.assertEquals(grid, footerButton.getParent());
+        grid.removeColumn("foo");
+        Assert.assertNull(headerButton.getParent());
+        Assert.assertNull(footerButton.getParent());
+    }
+
+    @Test
+    public void joinedHeaderComponentDetachedWhenLastColumnIsRemoved() {
+        HeaderRow h1 = grid.prependHeaderRow();
+        FooterRow f1 = grid.addFooterRowAt(0);
+        Button headerButton = new Button("This one will be an orthan");
+        Button footerButton = new Button("This one will be an orthan");
+
+        HeaderCell mergedHeader = h1.join("foo", "bar", "baz");
+        FooterCell mergedFooter = f1.join("foo", "bar", "baz");
+
+        mergedHeader.setComponent(headerButton);
+        mergedFooter.setComponent(footerButton);
+
+        Assert.assertEquals(grid, headerButton.getParent());
+        Assert.assertEquals(grid, footerButton.getParent());
+        grid.removeColumn("foo");
+        Assert.assertEquals(grid, headerButton.getParent());
+        Assert.assertEquals(grid, footerButton.getParent());
+        Assert.assertEquals(headerButton, mergedHeader.getComponent());
+        Assert.assertEquals(footerButton, mergedFooter.getComponent());
+
+        grid.removeColumn("bar");
+        // Component is not moved from merged cell to the last remaining cell
+        Assert.assertNull(headerButton.getParent());
+        Assert.assertNull(footerButton.getParent());
+    }
+
+    @Test
+    public void joinedHeaderComponentDetachedWhenLastColumnIsRemovedReverseOrder() {
+        HeaderRow h1 = grid.prependHeaderRow();
+        FooterRow f1 = grid.addFooterRowAt(0);
+        Button headerButton = new Button("This one will be an orthan");
+        Button footerButton = new Button("This one will be an orthan");
+
+        HeaderCell mergedHeader = h1.join("foo", "bar", "baz");
+        FooterCell mergedFooter = f1.join("foo", "bar", "baz");
+
+        mergedHeader.setComponent(headerButton);
+        mergedFooter.setComponent(footerButton);
+
+        Assert.assertEquals(grid, headerButton.getParent());
+        Assert.assertEquals(grid, footerButton.getParent());
+        grid.removeColumn("baz");
+        Assert.assertEquals(grid, headerButton.getParent());
+        Assert.assertEquals(grid, footerButton.getParent());
+        Assert.assertEquals(headerButton, mergedHeader.getComponent());
+        Assert.assertEquals(footerButton, mergedFooter.getComponent());
+
+        grid.removeColumn("bar");
+        // Component is not moved from merged cell to the last remaining cell
+        Assert.assertNull(headerButton.getParent());
+        Assert.assertNull(footerButton.getParent());
+    }
+
+    @Test
+    public void removeHeaderComponentWhenColumnIsRemovedFromDataSource() {
+        Indexed i = new IndexedContainer();
+        i.addContainerProperty("c1", String.class, "does not matter 1");
+        i.addContainerProperty("c2", String.class, "does not matter 2");
+        Grid grid = new Grid();
+        grid.setContainerDataSource(i);
+
+        HeaderRow h1 = grid.prependHeaderRow();
+        Button button = new Button("This one will be an orthan");
+        h1.getCell("c1").setComponent(button);
+
+        Assert.assertEquals(grid, button.getParent());
+        i.removeContainerProperty("c1");
+        Assert.assertNull(button.getParent());
     }
 
     @Test
