@@ -9,6 +9,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -485,6 +486,12 @@ public class GridTest {
     @Test
     public void defaultSorting_differentComparables() {
         testValueProviderSorting(10.1, 200, 3000.1, 4000);
+    }
+
+    @Test
+    public void defaultSorting_mutuallyComparableTypes() {
+        testValueProviderSorting(new Date(10), new java.sql.Date(1000000),
+                new Date(100000000));
     }
 
     private static void testValueProviderSorting(Object... expectedOrder) {
