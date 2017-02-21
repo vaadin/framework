@@ -887,7 +887,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
             } else {
-                return compareComparables(Objects.toString(a, null), Objects.toString(b, null));
+                return compareComparables(Objects.toString(a, ""), Objects.toString(b, ""));
             }
         }
 
