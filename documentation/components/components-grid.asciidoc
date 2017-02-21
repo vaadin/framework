@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.grid]]
-= [classname]#Grid#
+= Grid
 
 ifdef::web[]
 [.sampler]
