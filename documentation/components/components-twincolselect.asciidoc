@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.twincolselect]]
-= [classname]#TwinColSelect#
+= TwinColSelect
 
 ifdef::web[]
 [.sampler]

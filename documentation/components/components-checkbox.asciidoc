@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.checkbox]]
-= [classname]#CheckBox#
+= CheckBox
 
 ifdef::web[]
 [.sampler]

@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.link]]
-= [classname]#Link#
+= Link
 
 ifdef::web[]
 [.sampler]
