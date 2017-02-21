@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.slider]]
-= [classname]#Slider#
+= Slider
 
 ifdef::web[]
 [.sampler]

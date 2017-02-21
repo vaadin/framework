@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.popupview]]
-= [classname]#PopupView#
+= PopupView
 
 ifdef::web[]
 [.sampler]

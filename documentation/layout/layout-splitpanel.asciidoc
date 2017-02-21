@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[layout.splitpanel]]
-= [classname]#HorizontalSplitPanel# and [classname]#VerticalSplitPanel#
+= HorizontalSplitPanel and VerticalSplitPanel
 
 ifdef::web[]
 [.sampler]
