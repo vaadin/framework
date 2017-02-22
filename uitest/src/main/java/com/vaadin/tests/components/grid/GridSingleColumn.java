@@ -33,10 +33,8 @@ public class GridSingleColumn extends AbstractReindeerTestUI {
 
         grid.setItems(IntStream.range(0, 100).mapToObj(indx -> "cell"));
 
-        Column<String, String> column = grid
-                .addColumn(ValueProvider.identity());
-
-        column.setCaption("Header");
+        Column<String, String> column = grid.addColumn(ValueProvider.identity())
+                .setCaption("Header");
 
         addComponent(grid);
         grid.scrollTo(50);
