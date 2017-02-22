@@ -64,6 +64,11 @@
         <async-supported>false</async-supported>
     </servlet>
     <servlet>
+        <servlet-name>VaadinRefresh</servlet-name>
+        <servlet-class>com.vaadin.tests.applicationservlet.VaadinRefreshServlet</servlet-class>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet>
         <servlet-name>VaadinApplicationRunner</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
         <!-- Non-default values for testing purposes -->
@@ -202,6 +207,10 @@
     <servlet-mapping>
         <servlet-name>ResourcesFromServlet</servlet-name>
         <url-pattern>/servlet-with-resources/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VaadinRefresh</servlet-name>
+        <url-pattern>/vaadinrefresh/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
