@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.util.List;
 
@@ -42,12 +42,12 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         Actions action = new Actions(getDriver());
 
-        // Check if column 'Gender' hidden
+        // Check if column 'Last Name' hidden
         List<GridCellElement> headerCells = grid.getHeaderCells(0);
         Assert.assertEquals("There should be two visible columns", 2,
                 headerCells.size());
-        Assert.assertFalse("Gender column should be hidden",
-                containsText("Gender", headerCells));
+        Assert.assertFalse("'Last Name' column should be hidden",
+                containsText("Last Name", headerCells));
 
         // Resize first column
         int dragOffset = -100;
@@ -63,30 +63,32 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
                 headerCellWidth + dragOffset,
                 headerCells.get(0).getSize().getWidth(), delta);
 
-        // Make column 'Gender' visible
+        // Make column 'Last Name' visible
         WebElement menuButton = grid.findElement(By.className("v-contextmenu"))
                 .findElement(By.tagName("button"));
         action.click(menuButton).perform(); // Click on menu button
 
         WebElement sidebarPopup = findElement(
                 By.className("v-grid-sidebar-popup"));
-        WebElement visibilityToggle = findElementByText("Gender",
+        WebElement visibilityToggle = findElementByText("Last Name",
                 sidebarPopup.findElements(By.className("gwt-MenuItem")));
-        action.click(visibilityToggle).perform(); // Click on 'Gender' menu item
+        action.click(visibilityToggle).perform(); // Click on "Last Name"
+                                                  // menu item
 
-        // Check if column 'Gender' is visible
+        // Check if column "Last Name" is visible
         headerCells = grid.getHeaderCells(0);
         Assert.assertEquals("There should be three visible columns", 3,
                 headerCells.size());
-        Assert.assertTrue("Gender column should be visible",
-                containsText("Gender", headerCells));
+        Assert.assertTrue("'Last Name' column should be visible",
+                containsText("Last Name", headerCells));
 
-        // Check if column 'Gender' has expanded width
+        // Check if column "Last Name" has expanded width
         int widthSum = 0;
         for (GridCellElement e : headerCells) {
             widthSum += e.getSize().getWidth();
         }
-        Assert.assertEquals("Gender column should take up the remaining space",
+        Assert.assertEquals(
+                "'Last Name' column should take up the remaining space",
                 grid.getHeader().getSize().getWidth(), widthSum, 1d);
     }
 

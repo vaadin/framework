@@ -15,9 +15,11 @@
  */
 package com.vaadin.tests.components.grid;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Grid;
 
+@Theme("valo")
 public class GridEditorFrozenColumnsUI extends GridEditorUI {
 
     @Override
