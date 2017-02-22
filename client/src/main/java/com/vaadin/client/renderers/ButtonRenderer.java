@@ -29,6 +29,8 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  */
 public class ButtonRenderer extends ClickableRenderer<String, Button> {
 
+    private boolean htmlContentAllowed = false;
+
     @Override
     public Button createWidget() {
         Button b = GWT.create(Button.class);
@@ -37,8 +39,20 @@ public class ButtonRenderer extends ClickableRenderer<String, Button> {
         return b;
     }
 
+    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+        this.htmlContentAllowed = htmlContentAllowed;
+    }
+
+    public boolean isHtmlContentAllowed() {
+        return htmlContentAllowed;
+    }
+
     @Override
     public void render(RendererCellReference cell, String text, Button button) {
-        button.setText(text);
+        if (htmlContentAllowed) {
+            button.setHTML(text);
+        } else {
+            button.setText(text);
+        }
     }
 }

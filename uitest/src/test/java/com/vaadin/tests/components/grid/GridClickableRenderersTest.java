@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -35,16 +37,26 @@ public class GridClickableRenderersTest extends MultiBrowserTest {
     @Test
     public void buttonRendererReturnsCorrectItem() {
         openTestURL();
-        WebElement firstRowButton = findElements(By.className("v-nativebutton"))
-                .get(0);
-        WebElement secondRowButton = findElements(
-                By.className("v-nativebutton")).get(2);
+        List<WebElement> findElements = findElements(
+                By.className("v-nativebutton"));
+        WebElement firstRowTextButton = findElements.get(0);
+        WebElement firstRowHtmlButton = findElements.get(1);
+        Assert.assertEquals("button 1 text", firstRowTextButton.getText());
+        // If it was rendered as text, getText() would return the markup also
+        Assert.assertEquals("button 1 html", firstRowHtmlButton.getText());
+
+        WebElement secondRowTextButton = findElements.get(3);
+        WebElement secondRowHtmlButton = findElements.get(4);
+        Assert.assertEquals("button 2 text", secondRowTextButton.getText());
+        // If it was rendered as text, getText() would return the markup also
+        Assert.assertEquals("button 2 html", secondRowHtmlButton.getText());
+
         LabelElement label = $(LabelElement.class).get(1);
 
-        firstRowButton.click();
+        firstRowTextButton.click();
         Assert.assertEquals("first row clicked", label.getText());
 
-        secondRowButton.click();
+        secondRowTextButton.click();
         Assert.assertEquals("second row clicked", label.getText());
     }
 
@@ -52,9 +64,9 @@ public class GridClickableRenderersTest extends MultiBrowserTest {
     public void checkBoxRendererClick() {
         openTestURL();
         WebElement firstRowButton = findElements(By.className("v-nativebutton"))
-                .get(1);
+                .get(2);
         WebElement secondRowButton = findElements(
-                By.className("v-nativebutton")).get(3);
+                By.className("v-nativebutton")).get(5);
         LabelElement label = $(LabelElement.class).get(2);
 
         firstRowButton.click();
