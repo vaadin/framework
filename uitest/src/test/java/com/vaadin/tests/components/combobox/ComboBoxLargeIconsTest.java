@@ -27,7 +27,7 @@ public class ComboBoxLargeIconsTest extends MultiBrowserTest {
         compareScreen("icons-16x16-page1");
         cb.openNextPage();
         compareScreen("icons-16x16-page2");
-        cb.findElement(By.vaadin("#popup/item0")).click();
+        clickElement(cb.findElement(By.vaadin("#popup/item0")));
         compareScreen("icons-16x16-selected-1-3-5-9");
 
         iconSelect.selectByText("32x32");
@@ -42,12 +42,12 @@ public class ComboBoxLargeIconsTest extends MultiBrowserTest {
         ComboBoxElement pageLength0cb = $(ComboBoxElement.class)
                 .caption("Pagelength 0").first();
         pageLength0cb.openPopup();
-        pageLength0cb.findElement(By.vaadin("#popup/item1")).click();
+        clickElement(pageLength0cb.findElement(By.vaadin("#popup/item1")));
 
         ComboBoxElement cb200px = $(ComboBoxElement.class)
                 .caption("200px wide select with 50 items").first();
         cb200px.openPopup();
-        cb200px.findElement(By.vaadin("#popup/item1")).click();
+        clickElement(cb200px.findElement(By.vaadin("#popup/item1")));
 
         ComboBoxElement cb150px = $(ComboBoxElement.class)
                 .caption("150px wide select with 5 items").first();

@@ -185,13 +185,6 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-uitest-common</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
         </dependency>
@@ -228,6 +221,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 
     <build>
@@ -311,6 +312,38 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.uitest.failsafe}</skip>
+                    <systemPropertyVariables>
+                        <!-- Static path for screenshots pointing to submodule -->
+                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
+
+                        <!-- Optional properties for the test build -->
+                        <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
+                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <browsers.include>${browsers.include}</browsers.include>
+                        <browsers.exclude>${browsers.exclude}</browsers.exclude>
+                        <categories.include>${categories.include}</categories.include>
+                        <categories.exclude>${categories.exclude}</categories.exclude>
+                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
+                        <!-- PhantomJS binary downloaded by phantomjs-maven-plugin -->
+<!--                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path> -->
+                    </systemPropertyVariables>
+                    <includes>
+                        <include>**/AllTB3Tests.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
                 <configuration>
@@ -322,27 +355,6 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.uitest.failsafe}</skip>
-                    <includes>
-                        <include>**/AllTB3Tests.java</include>
-                    </includes>
-                    <systemPropertyVariables>
-                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
-                        <com.vaadin.testbench.max.retries>2</com.vaadin.testbench.max.retries>
-                    </systemPropertyVariables>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -426,54 +438,14 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                         <configuration>
                             <groups>com.vaadin.testcategory.MeasurementTest</groups>
-                            <systemPropertyVariables>
-                                <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
-                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>validation</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <artifactId>maven-failsafe-plugin</artifactId>
-                            <configuration>
-                                <systemPropertyVariables>
-                                    <useLocalWebDriver>true</useLocalWebDriver>
-                                    <browsers.include>phantomjs1</browsers.include>
-                                    <categories.exclude>push,needs-ssh</categories.exclude>
-                                </systemPropertyVariables>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <goals>
-                                        <goal>integration-test</goal>
-                                        <goal>verify</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
+
     </profiles>
 
 </project>

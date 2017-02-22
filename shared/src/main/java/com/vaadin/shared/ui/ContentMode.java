@@ -18,7 +18,7 @@ package com.vaadin.shared.ui;
 /**
  * Content modes defining how the client should interpret a Label's value.
  *
- * @since 7.0
+ * @since 8.0
  */
 public enum ContentMode {
     /**

@@ -28,10 +28,13 @@ import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.BinderValidationStatus;
 import com.vaadin.data.BinderValidationStatusHandler;
 import com.vaadin.data.PropertySet;
+import com.vaadin.event.EventRouter;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
 import com.vaadin.shared.ui.grid.editor.EditorServerRpc;
 import com.vaadin.shared.ui.grid.editor.EditorState;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.Column;
 
@@ -42,6 +45,7 @@ import elemental.json.JsonObject;
  *
  * @param <T>
  *            the grid bean type
+ * @since 8.0
  */
 public class EditorImpl<T> extends AbstractGridExtension<T>
         implements Editor<T> {
@@ -92,6 +96,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     private T edited;
     private boolean saving = false;
     private EditorClientRpc rpc;
+    private EventRouter eventRouter = new EventRouter();
+
     private EditorErrorGenerator<T> errorGenerator = (fieldToColumn,
             status) -> {
         String message = status.getFieldValidationErrors().stream()
@@ -128,8 +134,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             }
 
             @Override
-            public void cancel() {
-                doClose();
+            public void cancel(boolean afterBeingSaved) {
+                doCancel(afterBeingSaved);
             }
 
             @Override
@@ -240,6 +246,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             binder.validate();
             if (binder.writeBeanIfValid(edited)) {
                 refresh(edited);
+                eventRouter.fireEvent(new EditorSaveEvent<>(this));
                 return true;
             }
         }
@@ -253,8 +260,15 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
 
     @Override
     public void cancel() {
-        doClose();
+        doCancel(false);
         rpc.cancel();
+    }
+
+    private void doCancel(boolean afterBeingSaved) {
+        doClose();
+        if (!afterBeingSaved) {
+            eventRouter.fireEvent(new EditorCancelEvent<>(this));
+        }
     }
 
     /**
@@ -316,5 +330,22 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     @Override
     public EditorErrorGenerator<T> getErrorGenerator() {
         return errorGenerator;
+    }
+
+    @Override
+    public Registration addSaveListener(EditorSaveListener<T> listener) {
+        return eventRouter.addListener(EditorSaveEvent.class, listener,
+                EditorSaveListener.class.getDeclaredMethods()[0]);
+    }
+
+    @Override
+    public Registration addCancelListener(EditorCancelListener<T> listener) {
+        return eventRouter.addListener(EditorCancelEvent.class, listener,
+                EditorCancelListener.class.getDeclaredMethods()[0]);
+    }
+
+    @Override
+    public Grid<T> getGrid() {
+        return getParent();
     }
 }

@@ -17,11 +17,17 @@ package com.vaadin.shared.ui.grid;
 
 import com.vaadin.shared.Connector;
 
+/**
+ * Shared state for a Grid column.
+ *
+ * @author Vaadin Ltd
+ * @since 8.0
+ */
 public class ColumnState extends AbstractGridExtensionState {
 
     public String caption;
     public String internalId;
-    public boolean sortable;
+    public boolean sortable = true;
     public boolean editable = false;
 
     /** The caption for the column hiding toggle. */

@@ -18,12 +18,14 @@ package com.vaadin.client.connectors.grid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -56,10 +58,12 @@ import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
 import com.vaadin.shared.ui.grid.SectionState.RowState;
@@ -75,6 +79,8 @@ import elemental.json.JsonObject;
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractListingConnector
         implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
+
+    private Set<Runnable> refreshDetailsCallbacks = new HashSet<>();
 
     private class ItemClickHandler
             implements BodyClickHandler, BodyDoubleClickHandler {
@@ -139,9 +145,93 @@ public class GridConnector extends AbstractListingConnector
         return (Grid<JsonObject>) super.getWidget();
     }
 
+    /**
+     * Method called for a row details refresh. Runs all callbacks if any
+     * details were shown and clears the callbacks.
+     * 
+     * @param detailsShown
+     *            True if any details were set visible
+     */
+    protected void detailsRefreshed(boolean detailsShown) {
+        if (detailsShown) {
+            refreshDetailsCallbacks.forEach(Runnable::run);
+        }
+        refreshDetailsCallbacks.clear();
+    }
+
+    /**
+     * Method target for when one single details has been updated and we might
+     * need to scroll it into view.
+     *
+     * @param rowIndex
+     *            index of updated row
+     */
+    protected void singleDetailsOpened(int rowIndex) {
+        addDetailsRefreshCallback(() -> {
+            if (rowHasDetails(rowIndex)) {
+                getWidget().scrollToRow(rowIndex);
+            }
+        });
+    }
+
+    /**
+     * Add a single use details runnable callback for when we get a call to
+     * {@link #detailsRefreshed(boolean)}.
+     * 
+     * @param refreshCallback
+     *            Details refreshed callback
+     */
+    private void addDetailsRefreshCallback(Runnable refreshCallback) {
+        refreshDetailsCallbacks.add(refreshCallback);
+    }
+
+    /**
+     * Check if we have details for given row.
+     * 
+     * @param rowIndex
+     * @return
+     */
+    private boolean rowHasDetails(int rowIndex) {
+        JsonObject row = getWidget().getDataSource().getRow(rowIndex);
+
+        return row != null && row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                && !row.getString(GridState.JSONKEY_DETAILS_VISIBLE).isEmpty();
+    }
+
     @Override
     protected void init() {
         super.init();
+
+        registerRpc(GridClientRpc.class, new GridClientRpc() {
+
+            @Override
+            public void scrollToRow(int row, ScrollDestination destination) {
+                Scheduler.get().scheduleFinally(
+                        () -> getWidget().scrollToRow(row, destination));
+                // Add details refresh listener and handle possible detail for
+                // scrolled row.
+                addDetailsRefreshCallback(() -> {
+                    if (rowHasDetails(row))
+                        getWidget().scrollToRow(row, destination);
+                });
+            }
+
+            @Override
+            public void scrollToStart() {
+                Scheduler.get()
+                        .scheduleFinally(() -> getWidget().scrollToStart());
+            }
+
+            @Override
+            public void scrollToEnd() {
+                Scheduler.get()
+                        .scheduleFinally(() -> getWidget().scrollToEnd());
+                addDetailsRefreshCallback(() -> {
+                    if (rowHasDetails(getWidget().getDataSource().size() - 1))
+                        getWidget().scrollToEnd();
+                });
+            }
+        });
 
         getWidget().addSortHandler(this::handleSortEvent);
         getWidget().setRowStyleGenerator(rowRef -> {
@@ -200,8 +290,10 @@ public class GridConnector extends AbstractListingConnector
     @SuppressWarnings("unchecked")
     @OnStateChange("columnOrder")
     void updateColumnOrder() {
-        getWidget().setColumnOrder(getState().columnOrder.stream()
-                .map(this::getColumn).toArray(size -> new Column[size]));
+        Scheduler.get()
+                .scheduleFinally(() -> getWidget().setColumnOrder(
+                        getState().columnOrder.stream().map(this::getColumn)
+                                .toArray(size -> new Column[size])));
     }
 
     @OnStateChange("columnResizeMode")
@@ -248,6 +340,7 @@ public class GridConnector extends AbstractListingConnector
             updateStaticCellFromState(row.join(columns),
                     cellGroupEntry.getKey());
         }
+        row.setStyleName(rowState.styleName);
     }
 
     private void updateStaticCellFromState(Grid.StaticSection.StaticCell cell,

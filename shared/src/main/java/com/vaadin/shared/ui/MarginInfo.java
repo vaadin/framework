@@ -151,7 +151,7 @@ public class MarginInfo implements Serializable {
     /**
      * Checks if this MarginInfo object has no margins enabled.
      *
-     * @since 8.0.0
+     * @since 8.0
      *
      * @return true if all edges have margins disabled
      */

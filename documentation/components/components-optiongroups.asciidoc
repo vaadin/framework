@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.optiongroups]]
-= [classname]#CheckBoxGroup# and [classname]#RadioButtonGroup#
+= CheckBoxGroup and RadioButtonGroup
 
 ifdef::web[]
 [.sampler]

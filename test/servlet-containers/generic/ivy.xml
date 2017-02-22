@@ -27,10 +27,6 @@
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
-        <dependency org="com.vaadin" name="vaadin-uitest-common"
-            rev="${vaadin.version}" conf="build->default">
-            <exclude type="pom" />
-        </dependency>
         <dependency org="com.vaadin" name="vaadin-server"
             rev="${vaadin.version}" conf="build->default">
             <exclude org="javax.servlet"></exclude>
@@ -66,10 +62,6 @@
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
             conf="build->default">
             <exclude org="javax.servlet"></exclude>
-            <exclude type="pom" />
-        </dependency>
-        <dependency org="com.vaadin" name="vaadin-icons" rev="3.0.0"
-            conf="build->default">
             <exclude type="pom" />
         </dependency>
 

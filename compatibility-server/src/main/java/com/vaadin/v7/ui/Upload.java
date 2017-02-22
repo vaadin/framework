@@ -73,6 +73,9 @@ import com.vaadin.v7.shared.ui.upload.UploadState;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.Upload} that is by
+ *             default in immediate mode.
  */
 @SuppressWarnings("serial")
 @Deprecated

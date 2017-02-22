@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,6 +50,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.PropertyDefinition;
 import com.vaadin.data.PropertySet;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
@@ -68,6 +70,7 @@ import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializableSupplier;
 import com.vaadin.server.Setter;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
@@ -77,12 +80,14 @@ import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
 import com.vaadin.shared.ui.grid.DetailsManagerState;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
@@ -131,6 +136,36 @@ import elemental.json.JsonValue;
  */
 public class Grid<T> extends AbstractListing<T> implements HasComponents,
         HasDataProvider<T>, SortNotifier<GridSortOrder<T>> {
+
+    /**
+     * A callback method for fetching items. The callback is provided with a
+     * list of sort orders, offset index and limit.
+     *
+     * @param <T>
+     *            the grid bean type
+     */
+    @FunctionalInterface
+    public interface FetchItemsCallback<T> extends Serializable {
+
+        /**
+         * Returns a stream of items ordered by given sort orders, limiting the
+         * results with given offset and limit.
+         * <p>
+         * This method is called after the size of the data set is asked from a
+         * related size callback. The offset and limit are promised to be within
+         * the size of the data set.
+         *
+         * @param sortOrder
+         *            a list of sort orders
+         * @param offset
+         *            the first index to fetch
+         * @param limit
+         *            the fetched item count
+         * @return stream of items
+         */
+        public Stream<T> fetchItems(List<QuerySortOrder> sortOrder, int offset,
+                int limit);
+    }
 
     @Deprecated
     private static final Method COLUMN_REORDER_METHOD = ReflectTools.findMethod(
@@ -363,7 +398,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         private final T item;
         private final int rowIndex;
-        private final Column<?, ?> column;
+        private final Column<T, ?> column;
         private final Section section;
 
         /**
@@ -384,7 +419,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public GridContextClickEvent(Grid<T> source,
                 MouseEventDetails mouseEventDetails, Section section,
-                int rowIndex, T item, Column<?, ?> column) {
+                int rowIndex, T item, Column<T, ?> column) {
             super(source, mouseEventDetails);
             this.item = item;
             this.section = section;
@@ -406,7 +441,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return the clicked column
          */
-        public Column<?, ?> getColumn() {
+        public Column<T, ?> getColumn() {
             return column;
         }
 
@@ -783,7 +818,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         private final SerializableFunction<T, ? extends V> valueProvider;
 
-        private SortOrderProvider sortOrderProvider;
+        private SortOrderProvider sortOrderProvider = direction -> {
+            String id = getId();
+            if (id == null) {
+                return Stream.empty();
+            } else {
+                return Stream.of(new QuerySortOrder(id, direction));
+            }
+        };
+
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
@@ -802,8 +845,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param renderer
          *            the type of value, not <code>null</code>
          */
-        protected Column(ValueProvider<T, ? extends V> valueProvider,
-                Renderer<V> renderer) {
+        protected Column(ValueProvider<T, V> valueProvider,
+                Renderer<? super V> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -814,19 +857,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             state.renderer = renderer;
 
             state.caption = "";
-            sortOrderProvider = d -> Stream.of();
 
             // Add the renderer as a child extension of this extension, thus
             // ensuring the renderer will be unregistered when this column is
             // removed
             addExtension(renderer);
 
-            Class<V> valueType = renderer.getPresentationType();
+            Class<? super V> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
                 comparator = (a, b) -> compareComparables(
                         valueProvider.apply(a), valueProvider.apply(b));
-                state.sortable = true;
             } else if (Number.class.isAssignableFrom(valueType)) {
                 /*
                  * Value type will be Number whenever using NumberRenderer.
@@ -836,10 +877,37 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 comparator = (a, b) -> compareNumbers(
                         (Number) valueProvider.apply(a),
                         (Number) valueProvider.apply(b));
-                state.sortable = true;
             } else {
-                state.sortable = false;
+                comparator = (a, b) -> compareMaybeComparables(
+                        valueProvider.apply(a), valueProvider.apply(b));
             }
+        }
+
+        private static int compareMaybeComparables(Object a, Object b) {
+            if (hasCommonComparableBaseType(a, b)) {
+                return compareComparables(a, b);
+            } else {
+                return compareComparables(a.toString(), b.toString());
+            }
+        }
+
+        private static boolean hasCommonComparableBaseType(Object a, Object b) {
+            if (a instanceof Comparable<?> && b instanceof Comparable<?>) {
+                Class<?> aClass = a.getClass();
+                Class<?> bClass = b.getClass();
+
+                if (aClass == bClass) {
+                    return true;
+                }
+
+                Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
+                        bClass);
+                if (Comparable.class.isAssignableFrom(baseType)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         @SuppressWarnings("unchecked")
@@ -979,9 +1047,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Sets the user-defined identifier to map this column. The identifier
          * can be used for example in {@link Grid#getColumn(String)}.
+         * <p>
+         * The id is also used as the {@link #setSortProperty(String...) backend
+         * sort property} for this column if no sort property or sort order
+         * provider has been set for this column.
+         *
+         * @see #setSortProperty(String...)
+         * @see #setSortOrderProvider(SortOrderProvider)
          *
          * @param id
          *            the identifier string
+         * @return this column
          */
         public Column<T, V> setId(String id) {
             Objects.requireNonNull(id, "Column identifier cannot be null");
@@ -991,6 +1067,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
             this.userId = id;
             getGrid().setColumnId(id, this);
+
             return this;
         }
 
@@ -1082,6 +1159,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Sets strings describing back end properties to be used when sorting
          * this column.
+         * <p>
+         * By default, the {@link #setId(String) column id} will be used as the
+         * sort property.
          *
          * @param properties
          *            the array of strings describing backend properties
@@ -1098,6 +1178,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sets the sort orders when sorting this column. The sort order
          * provider is a function which provides {@link QuerySortOrder} objects
          * to describe how to sort by this column.
+         * <p>
+         * By default, the {@link #setId(String) column id} will be used as the
+         * sort property.
          *
          * @param provider
          *            the function to use when generating sort orders with the
@@ -1114,6 +1197,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Gets the sort orders to use with back-end sorting for this column
          * when sorting in the given direction.
+         *
+         * @see #setSortProperty(String...)
+         * @see #setId(String)
+         * @see #setSortOrderProvider(SortOrderProvider)
          *
          * @param direction
          *            the sorting direction
@@ -2067,10 +2154,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Adds a new column with the given property name. The property name will be
-     * used as the {@link Column#getId() column id} and the
-     * {@link Column#getCaption() column caption} will be set based on the
-     * property definition.
+     * Adds a new column with the given property name. The column will use a
+     * {@link TextRenderer}. The value is converted to a String using
+     * {@link Object#toString()}. The property name will be used as the
+     * {@link Column#getId() column id} and the {@link Column#getCaption()
+     * column caption} will be set based on the property definition.
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
@@ -2080,7 +2168,28 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return the newly added column, not <code>null</code>
      */
     public Column<T, ?> addColumn(String propertyName) {
+        return addColumn(propertyName, new TextRenderer());
+    }
+
+    /**
+     * Adds a new column with the given property name and renderer. The property
+     * name will be used as the {@link Column#getId() column id} and the
+     * {@link Column#getCaption() column caption} will be set based on the
+     * property definition.
+     * <p>
+     * This method can only be used for a <code>Grid</code> created using
+     * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     *
+     * @param propertyName
+     *            the property name of the new column, not <code>null</code>
+     * @param renderer
+     *            the renderer to use, not <code>null</code>
+     * @return the newly added column, not <code>null</code>
+     */
+    public Column<T, ?> addColumn(String propertyName,
+            AbstractRenderer<? super T, ?> renderer) {
         Objects.requireNonNull(propertyName, "Property name cannot be null");
+        Objects.requireNonNull(renderer, "Renderer cannot be null");
 
         if (getColumn(propertyName) != null) {
             throw new IllegalStateException(
@@ -2093,24 +2202,36 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         "Could not resolve property name " + propertyName
                                 + " from " + propertySet));
 
-        return addColumn(definition.getGetter()).setId(definition.getName())
-                .setCaption(definition.getCaption());
+        if (!renderer.getPresentationType()
+                .isAssignableFrom(definition.getType())) {
+            throw new IllegalArgumentException(renderer.toString()
+                    + " cannot be used with a property of type "
+                    + definition.getType().getName());
+        }
+
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        Column<T, ?> column = addColumn(definition.getGetter(),
+                (AbstractRenderer) renderer).setId(definition.getName())
+                        .setCaption(definition.getCaption());
+
+        return column;
     }
 
     /**
      * Adds a new text column to this {@link Grid} with a value provider. The
      * column will use a {@link TextRenderer}. The value is converted to a
-     * String using {@link Object#toString()}. Sorting in memory is executed by
-     * comparing the String values.
+     * String using {@link Object#toString()}. In-memory sorting will use the
+     * natural ordering of elements if they are mutually comparable and
+     * otherwise fall back to comparing the string representations of the
+     * values.
      *
      * @param valueProvider
      *            the value provider
      *
      * @return the new column
      */
-    public Column<T, String> addColumn(ValueProvider<T, ?> valueProvider) {
-        return addColumn(t -> String.valueOf(valueProvider.apply(t)),
-                new TextRenderer());
+    public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider) {
+        return addColumn(valueProvider, new TextRenderer());
     }
 
     /**
@@ -2128,9 +2249,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see AbstractRenderer
      */
-    public <V> Column<T, V> addColumn(
-            ValueProvider<T, ? extends V> valueProvider,
-            AbstractRenderer<? super T, V> renderer) {
+    public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
+            AbstractRenderer<? super T, ? super V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
         Column<T, V> column = new Column<>(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
@@ -2150,6 +2270,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         getState().columnOrder.add(identifier);
         getHeader().addColumn(identifier);
+        getFooter().addColumn(identifier);
 
         if (getDefaultHeaderRow() != null) {
             getDefaultHeaderRow().getCell(column).setText(column.getCaption());
@@ -2172,6 +2293,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             getFooter().removeColumn(columnId);
             getState(true).columnOrder.remove(columnId);
         }
+    }
+
+    /**
+     * Removes the column with the given column id.
+     *
+     * @see #removeColumn(Column)
+     * @see Column#setId(String)
+     *
+     * @param columnId
+     *            the id of the column to remove, not <code>null</code>
+     */
+    public void removeColumn(String columnId) {
+        removeColumn(getColumnOrThrow(columnId));
     }
 
     /**
@@ -2233,6 +2367,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public Column<T, ?> getColumn(String columnId) {
         return columnIds.get(columnId);
+    }
+
+    private Column<T, ?> getColumnOrThrow(String columnId) {
+        Objects.requireNonNull(columnId, "Column id cannot be null");
+        Column<T, ?> column = getColumn(columnId);
+        if (column == null) {
+            throw new IllegalStateException(
+                    "There is no column with the id " + columnId);
+        }
+        return column;
     }
 
     @Override
@@ -2804,26 +2948,35 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Sets the columns and their order for the grid. Columns currently in this
-     * grid that are not present in columns are removed. Similarly, any new
-     * column in columns will be added to this grid.
+     * Sets the columns and their order based on their column ids. Columns
+     * currently in this grid that are not present in the list of column ids are
+     * removed. This includes any column that has no id. Similarly, any new
+     * column in columns will be added to this grid. New columns can only be
+     * added for a <code>Grid</code> created using {@link Grid#Grid(Class)} or
+     * {@link #withPropertySet(PropertySet)}.
      *
-     * @param columns
-     *            the columns to set
+     *
+     * @param columnIds
+     *            the column ids to set
+     *
+     * @see Column#setId(String)
      */
-    public void setColumns(Column<T, ?>... columns) {
-        List<Column<T, ?>> currentColumns = getColumns();
-        Set<Column<T, ?>> removeColumns = new HashSet<>(currentColumns);
-        Set<Column<T, ?>> addColumns = Arrays.stream(columns)
-                .collect(Collectors.toSet());
+    public void setColumns(String... columnIds) {
+        // Must extract to an explicitly typed variable because otherwise javac
+        // cannot determine which overload of setColumnOrder to use
+        Column<T, ?>[] newColumnOrder = Stream.of(columnIds)
+                .map((Function<String, Column<T, ?>>) id -> {
+                    Column<T, ?> column = getColumn(id);
+                    if (column == null) {
+                        column = addColumn(id);
+                    }
+                    return column;
+                }).toArray(Column[]::new);
+        setColumnOrder(newColumnOrder);
 
-        removeColumns.removeAll(addColumns);
-        removeColumns.stream().forEach(this::removeColumn);
-
-        addColumns.removeAll(currentColumns);
-        addColumns.stream().forEach(c -> addColumn(getIdentifier(c), c));
-
-        setColumnOrder(columns);
+        // The columns to remove are now at the end of the column list
+        getColumns().stream().skip(columnIds.length)
+                .forEach(this::removeColumn);
     }
 
     private String getIdentifier(Column<T, ?> column) {
@@ -2848,16 +3001,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the columns in the order they should be
      */
     public void setColumnOrder(Column<T, ?>... columns) {
+        setColumnOrder(Stream.of(columns));
+    }
+
+    private void setColumnOrder(Stream<Column<T, ?>> columns) {
         List<String> columnOrder = new ArrayList<>();
-        for (Column<T, ?> column : columns) {
+        columns.forEach(column -> {
             if (columnSet.contains(column)) {
                 columnOrder.add(column.getInternalId());
             } else {
-                throw new IllegalArgumentException(
+                throw new IllegalStateException(
                         "setColumnOrder should not be called "
                                 + "with columns that are not in the grid.");
             }
-        }
+
+        });
 
         List<String> stateColumnOrder = getState().columnOrder;
         if (stateColumnOrder.size() != columnOrder.size()) {
@@ -2867,6 +3025,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         getState().columnOrder = columnOrder;
         fireColumnReorderEvent(false);
+    }
+
+    /**
+     * Sets a new column order for the grid based on their column ids. All
+     * columns which are not ordered here will remain in the order they were
+     * before as the last columns of grid.
+     *
+     * @param columnIds
+     *            the column ids in the order they should be
+     *
+     * @see Column#setId(String)
+     */
+    public void setColumnOrder(String... columnIds) {
+        setColumnOrder(Stream.of(columnIds).map(this::getColumnOrThrow));
     }
 
     /**
@@ -2991,6 +3163,50 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     *
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public Set<T> getSelectedItems() {
+        return getSelectionModel().getSelectedItems();
+    }
+
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     *
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public void select(T item) {
+        getSelectionModel().select(item);
+    }
+
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     *
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public void deselect(T item) {
+        getSelectionModel().deselect(item);
+    }
+
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     *
+     * @see #getSelectionModel()
+     * @see GridSelectionModel
+     */
+    public void deselectAll() {
+        getSelectionModel().deselectAll();
+    }
+
+    /**
      * Adds a selection listener to the current selection model.
      * <p>
      * <em>NOTE:</em> If selection mode is switched with
@@ -3029,7 +3245,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Sort this Grid in user-specified {@link QuerySortOrder} by a column.
+     * Sort this Grid in user-specified direction by a column.
      *
      * @param column
      *            a column to sort against
@@ -3040,6 +3256,32 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public void sort(Column<T, ?> column, SortDirection direction) {
         setSortOrder(Collections
                 .singletonList(new GridSortOrder<>(column, direction)));
+    }
+
+    /**
+     * Sort this Grid in ascending order by a specified column defined by id.
+     *
+     * @param columnId
+     *            the id of the column to sort against
+     *
+     * @see Column#setId(String)
+     */
+    public void sort(String columnId) {
+        sort(columnId, SortDirection.ASCENDING);
+    }
+
+    /**
+     * Sort this Grid in a user-specified direction by a column defined by id.
+     *
+     * @param columnId
+     *            the id of the column to sort against
+     * @param direction
+     *            a sort order value (ascending/descending)
+     *
+     * @see Column#setId(String)
+     */
+    public void sort(String columnId, SortDirection direction) {
+        sort(getColumnOrThrow(columnId), direction);
     }
 
     /**
@@ -3099,6 +3341,59 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public List<GridSortOrder<T>> getSortOrder() {
         return Collections.unmodifiableList(sortOrder);
+    }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has visible details, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            id of item to scroll to.
+     * @throws IllegalArgumentException
+     *             if the provided id is not recognized by the data source.
+     */
+    public void scrollTo(int row) throws IllegalArgumentException {
+        scrollTo(row, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the row has visible details, its size will also be taken into account.
+     *
+     * @param row
+     *            id of item to scroll to.
+     * @param destination
+     *            value specifying desired position of scrolled-to row, not
+     *            {@code null}
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     */
+    public void scrollTo(int row, ScrollDestination destination) {
+        Objects.requireNonNull(destination,
+                "ScrollDestination can not be null");
+
+        if (row > getDataProvider().size(new Query())) {
+            throw new IllegalArgumentException("Row outside dataProvider size");
+        }
+
+        getRpcProxy(GridClientRpc.class).scrollToRow(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     */
+    public void scrollToStart() {
+        getRpcProxy(GridClientRpc.class).scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     */
+    public void scrollToEnd() {
+        getRpcProxy(GridClientRpc.class).scrollToEnd();
     }
 
     @Override
@@ -3181,6 +3476,30 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         internalSetDataProvider(dataProvider);
+    }
+
+    /**
+     * Sets a CallbackDataProvider using the given fetch items callback and a
+     * size callback.
+     * <p>
+     * This method is a shorthand for making a {@link CallbackDataProvider} that
+     * handles a partial {@link Query} object.
+     *
+     * @param fetchItems
+     *            a callback for fetching items
+     * @param sizeCallback
+     *            a callback for getting the count of items
+     *
+     * @see CallbackDataProvider
+     * @see #setDataProvider(DataProvider)
+     */
+    public void setDataProvider(FetchItemsCallback<T> fetchItems,
+            SerializableSupplier<Integer> sizeCallback) {
+        internalSetDataProvider(
+                new CallbackDataProvider<>(
+                        q -> fetchItems.fetchItems(q.getSortOrders(),
+                                q.getOffset(), q.getLimit()),
+                        q -> sizeCallback.get()));
     }
 
     @Override
@@ -3488,15 +3807,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @return the comparator based on column sorting information.
      */
-
     protected SerializableComparator<T> createSortingComparator() {
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) -> SerializableComparator
-                        .asInstance((Comparator<T> & Serializable) comparator1
-                                .thenComparing(comparator2));
+                comparator2) -> {
+            /*
+             * thenComparing is defined to return a serializable comparator as
+             * long as both original comparators are also serializable
+             */
+            return comparator1.thenComparing(comparator2)::compare;
+        };
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);
     }
-
 }

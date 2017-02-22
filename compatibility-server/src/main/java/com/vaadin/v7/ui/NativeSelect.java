@@ -31,6 +31,9 @@ import com.vaadin.v7.event.FieldEvents;
  * multiselect, new items, lazyloading, and other advanced features. Sometimes
  * "native" select without all the bells-and-whistles of the ComboBox is a
  * better choice.
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.NativeSelect} based on
+ *             the new data binding API
  */
 @SuppressWarnings("serial")
 @Deprecated

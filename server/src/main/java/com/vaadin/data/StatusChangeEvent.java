@@ -26,7 +26,7 @@ import com.vaadin.server.Setter;
  * <p>
  * The {@link Binder} status is changed whenever any of the following happens:
  * <ul>
- * <li>if it's bound and any of its bound field or select has been changed
+ * <li>if any of its bound fields or selects have been changed
  * <li>{@link Binder#writeBean(Object)} or
  * {@link Binder#writeBeanIfValid(Object)} is called
  * <li>{@link Binder#readBean(Object)} is called
@@ -41,19 +41,21 @@ import com.vaadin.server.Setter;
  *
  * @author Vaadin Ltd
  *
+ * @since 8.0
  */
 public class StatusChangeEvent extends EventObject {
 
     private final boolean hasValidationErrors;
 
     /**
-     * Create a new status change event for given {@code binder} using its
-     * current validation status.
+     * Create a new status change event for given {@code binder}, storing
+     * information of whether the change that triggered this event caused
+     * validation errors.
      *
      * @param binder
      *            the event source binder
      * @param hasValidationErrors
-     *            the binder validation status
+     *            the validation status associated with this event
      */
     public StatusChangeEvent(Binder<?> binder, boolean hasValidationErrors) {
         super(binder);
@@ -61,10 +63,10 @@ public class StatusChangeEvent extends EventObject {
     }
 
     /**
-     * Gets the binder validation status.
+     * Gets the associated validation status.
      *
-     * @return {@code true} if the binder has validation errors, {@code false}
-     *         otherwise
+     * @return {@code true} if the change that triggered this event caused
+     *         validation errors, {@code false} otherwise
      */
     public boolean hasValidationErrors() {
         return hasValidationErrors;

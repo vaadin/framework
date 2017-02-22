@@ -82,4 +82,52 @@ public interface FooterRow extends Serializable {
      * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
      */
     FooterCell join(FooterCell... cellsToMerge);
+
+    /**
+     * Merges cells corresponding to the given columns in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnsToMerge
+     *            the columns of the cells that should be merged. The cells
+     *            should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     */
+    FooterCell join(Grid.Column<?, ?>... columnsToMerge);
+
+    /**
+     * Merges cells corresponding to the given column ids in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnIdsToMerge
+     *            the ids of the columns of the cells that should be merged. The
+     *            cells should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     * @see Column#setId(String)
+     */
+    FooterCell join(String... columnIdsToMerge);
+
+    /**
+     * Returns the custom style name for this row.
+     *
+     * @return the style name or null if no style name has been set
+     */
+    public String getStyleName();
+
+    /**
+     * Sets a custom style name for this row.
+     *
+     * @param styleName
+     *            the style name to set or null to not use any style name
+     */
+    public void setStyleName(String styleName);
 }

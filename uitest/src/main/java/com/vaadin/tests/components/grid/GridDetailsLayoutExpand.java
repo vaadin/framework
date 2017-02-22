@@ -39,6 +39,7 @@ public class GridDetailsLayoutExpand extends SimpleGridUI {
 
         grid.setDetailsGenerator(item -> {
             final HorizontalLayout detailsLayout = new HorizontalLayout();
+            detailsLayout.setSpacing(false);
             detailsLayout.setSizeFull();
             detailsLayout.setHeightUndefined();
 
@@ -50,6 +51,7 @@ public class GridDetailsLayoutExpand extends SimpleGridUI {
             // layout2 second element of the detailsLayout, taking the rest
             // of the available space
             final HorizontalLayout layout2 = new HorizontalLayout();
+            layout2.setSpacing(false);
             layout2.setSizeFull();
             layout2.setHeightUndefined();
             detailsLayout.addComponent(layout2);

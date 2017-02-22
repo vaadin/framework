@@ -19,6 +19,8 @@ import com.vaadin.client.ComponentConnector;
 
 /**
  * Implemented by connectors supporting an error indicator.
+ * 
+ * @since 8.0
  */
 public interface HasErrorIndicator extends ComponentConnector {
 

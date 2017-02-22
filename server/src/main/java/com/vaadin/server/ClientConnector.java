@@ -98,11 +98,27 @@ public interface ClientConnector extends Connector {
         public void detach(DetachEvent event);
     }
 
+    /**
+     * Add a listener for connector attach events.
+     *
+     * @since 8.0
+     *
+     * @param listener
+     * @return Registration for unregistering the listener
+     */
     public Registration addAttachListener(AttachListener listener);
 
     @Deprecated
     public void removeAttachListener(AttachListener listener);
 
+    /**
+     * Add a listener for connector detach events.
+     *
+     * @since 8.0
+     *
+     * @param listener
+     * @return Registration for unregistering the listener
+     */
     public Registration addDetachListener(DetachListener listener);
 
     @Deprecated

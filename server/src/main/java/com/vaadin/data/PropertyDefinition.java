@@ -24,7 +24,7 @@ import com.vaadin.server.Setter;
  * A property from a {@link PropertySet}.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            the type of the property set

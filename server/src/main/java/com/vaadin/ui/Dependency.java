@@ -30,6 +30,7 @@ import com.vaadin.server.LegacyCommunicationManager;
  * Represents a stylesheet or JavaScript to include on the page.
  *
  * @author Vaadin Ltd
+ * @since 8.0
  */
 public class Dependency implements Serializable {
     /**

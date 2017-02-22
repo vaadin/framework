@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -1110,14 +1110,16 @@ public class Binder<BEAN> implements Serializable {
             @Override
             public Stream<PropertyDefinition<BEAN, ?>> getProperties() {
                 throw new IllegalStateException(
-                        "A Binder created with the default constructor doesn't support listing properties.");
+                        "This Binder instance was created using the default constructor. "
+                                + "To be able to use property names and bind to instance fields, create the binder using the Binder(Class<BEAN> beanType) constructor instead.");
             }
 
             @Override
             public Optional<PropertyDefinition<BEAN, ?>> getProperty(
                     String name) {
                 throw new IllegalStateException(
-                        "A Binder created with the default constructor doesn't support finding properties by name.");
+                        "This Binder instance was created using the default constructor. "
+                                + "To be able to use property names and bind to instance fields, create the binder using the Binder(Class<BEAN> beanType) constructor instead.");
             }
         });
     }
@@ -1324,13 +1326,14 @@ public class Binder<BEAN> implements Serializable {
      *
      * @param bean
      *            the bean to edit, or {@code null} to remove a currently bound
-     *            bean
+     *            bean and clear bound fields
      */
     public void setBean(BEAN bean) {
         checkBindingsCompleted("setBean");
         if (bean == null) {
             if (this.bean != null) {
                 doRemoveBean(true);
+                clearFields();
             }
         } else {
             doRemoveBean(false);
@@ -1345,8 +1348,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Removes the currently set bean, if any. If there is no bound bean, does
-     * nothing.
+     * Removes the currently set bean and clears bound fields. If there is no
+     * bound bean, does nothing.
      * <p>
      * This is a shorthand for {@link #setBean(Object)} with {@code null} bean.
      */
@@ -1367,17 +1370,20 @@ public class Binder<BEAN> implements Serializable {
      * @see #writeBean(Object)
      *
      * @param bean
-     *            the bean whose property values to read, not null
+     *            the bean whose property values to read or {@code null} to
+     *            clear bound fields
      */
     public void readBean(BEAN bean) {
-        Objects.requireNonNull(bean, "bean cannot be null");
         checkBindingsCompleted("readBean");
-        setHasChanges(false);
-        bindings.forEach(binding -> binding.initFieldValue(bean));
-
-        getValidationStatusHandler().statusChange(
-                BinderValidationStatus.createUnresolvedStatus(this));
-        fireStatusChangeEvent(false);
+        if (bean == null) {
+            clearFields();
+        } else {
+            setHasChanges(false);
+            bindings.forEach(binding -> binding.initFieldValue(bean));
+            getValidationStatusHandler().statusChange(
+                    BinderValidationStatus.createUnresolvedStatus(this));
+            fireStatusChangeEvent(false);
+        }
     }
 
     /**
@@ -1552,6 +1558,17 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * Clear all the bound fields for this binder.
+     */
+    private void clearFields() {
+        bindings.forEach(binding -> binding.getField().clear());
+        if (hasChanges()) {
+            fireStatusChangeEvent(false);
+        }
+        setHasChanges(false);
+    }
+
+    /**
      * Validates the values of all bound fields and returns the validation
      * status.
      * <p>
@@ -1578,6 +1595,34 @@ public class Binder<BEAN> implements Serializable {
         getValidationStatusHandler().statusChange(validationStatus);
         fireStatusChangeEvent(validationStatus.hasErrors());
         return validationStatus;
+    }
+
+    /**
+     * Runs all currently configured field level validators, as well as all bean
+     * level validators if a bean is currently set with
+     * {@link #setBean(Object)}, and returns whether any of the validators
+     * failed.
+     * 
+     * @return whether this binder is in a valid state
+     * @throws IllegalStateException
+     *             if bean level validators have been configured and no bean is
+     *             currently set
+     */
+    public boolean isValid() {
+        if (getBean() == null && !validators.isEmpty()) {
+            throw new IllegalStateException("Cannot validate binder: "
+                    + "bean level validators have been configured "
+                    + "but no bean is currently set");
+        }
+        if (validateBindings().stream().filter(BindingValidationStatus::isError)
+                .findAny().isPresent()) {
+            return false;
+        }
+        if (getBean() != null && validateBean(getBean()).stream()
+                .filter(ValidationResult::isError).findAny().isPresent()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -2075,13 +2120,23 @@ public class Binder<BEAN> implements Serializable {
     public void bindInstanceFields(Object objectWithMemberFields) {
         Class<?> objectClass = objectWithMemberFields.getClass();
 
-        getFieldsInDeclareOrder(objectClass).stream()
+        Integer numberOfBoundFields = getFieldsInDeclareOrder(objectClass)
+                .stream()
                 .filter(memberField -> HasValue.class
                         .isAssignableFrom(memberField.getType()))
-                .forEach(memberField -> handleProperty(memberField,
+                .map(memberField -> handleProperty(memberField,
                         objectWithMemberFields,
                         (property, type) -> bindProperty(objectWithMemberFields,
-                                memberField, property, type)));
+                                memberField, property, type)))
+                .reduce(0, this::accumulate, Integer::sum);
+        if (numberOfBoundFields == 0) {
+            throw new IllegalStateException("There are no instance fields "
+                    + "found for automatic binding");
+        }
+    }
+
+    private int accumulate(int count, boolean value) {
+        return value ? count + 1 : count;
     }
 
     @SuppressWarnings("unchecked")
@@ -2112,9 +2167,10 @@ public class Binder<BEAN> implements Serializable {
      *            property name to bind
      * @param propertyType
      *            type of the property
+     * @return {@code true} if property is successfully bound
      */
-    private void bindProperty(Object objectWithMemberFields, Field memberField,
-            String property, Class<?> propertyType) {
+    private boolean bindProperty(Object objectWithMemberFields,
+            Field memberField, String property, Class<?> propertyType) {
         Type valueType = GenericTypeReflector.getTypeParameter(
                 memberField.getGenericType(),
                 HasValue.class.getTypeParameters()[0]);
@@ -2134,7 +2190,7 @@ public class Binder<BEAN> implements Serializable {
             } catch (IllegalArgumentException | IllegalAccessException
                     | InvocationTargetException e) {
                 // If we cannot determine the value, just skip the field
-                return;
+                return false;
             }
             if (field == null) {
                 field = makeFieldInstance(
@@ -2142,6 +2198,7 @@ public class Binder<BEAN> implements Serializable {
                 initializeField(objectWithMemberFields, memberField, field);
             }
             forField(field).bind(property);
+            return true;
         } else {
             throw new IllegalStateException(String.format(
                     "Property type '%s' doesn't "
@@ -2214,29 +2271,31 @@ public class Binder<BEAN> implements Serializable {
         }
     }
 
-    private void handleProperty(Field field, Object objectWithMemberFields,
-            BiConsumer<String, Class<?>> propertyHandler) {
+    private boolean handleProperty(Field field, Object objectWithMemberFields,
+            BiFunction<String, Class<?>, Boolean> propertyHandler) {
         Optional<PropertyDefinition<BEAN, ?>> descriptor = getPropertyDescriptor(
                 field);
 
         if (!descriptor.isPresent()) {
-            return;
+            return false;
         }
 
         String propertyName = descriptor.get().getName();
         if (boundProperties.containsKey(propertyName)) {
-            return;
+            return false;
         }
 
         BindingBuilder<BEAN, ?> tentativeBinding = getIncompleteMemberFieldBinding(
                 field, objectWithMemberFields);
         if (tentativeBinding != null) {
             tentativeBinding.bind(propertyName);
-            return;
+            return false;
         }
 
-        propertyHandler.accept(propertyName, descriptor.get().getType());
+        Boolean isPropertyBound = propertyHandler.apply(propertyName,
+                descriptor.get().getType());
         assert boundProperties.containsKey(propertyName);
+        return isPropertyBound;
     }
 
     /**

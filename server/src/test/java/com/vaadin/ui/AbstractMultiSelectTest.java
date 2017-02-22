@@ -39,6 +39,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.ServerRpcManager;
@@ -268,6 +269,11 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
                 throw new UnsupportedOperationException(
                         "Not implemented for this test");
             }
+
+            @Override
+            public DataProvider<String, ?> getDataProvider() {
+                return null;
+            }
         };
 
         Assert.assertSame(set, select.getValue());
@@ -336,6 +342,11 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
             public void setItems(Collection<String> items) {
                 throw new UnsupportedOperationException(
                         "Not implemented for this test");
+            }
+
+            @Override
+            public DataProvider<String, ?> getDataProvider() {
+                return null;
             }
         };
 

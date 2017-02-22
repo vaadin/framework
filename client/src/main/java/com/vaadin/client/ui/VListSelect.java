@@ -22,8 +22,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -40,8 +38,8 @@ import elemental.json.JsonObject;
  *
  * @author Vaadin Ltd
  */
-public class VListSelect extends Composite implements ClickHandler, Field,
-        Focusable, HasEnabled, MultiSelectWidget {
+public class VListSelect extends Composite
+        implements Field, Focusable, HasEnabled, MultiSelectWidget {
 
     private List<BiConsumer<Set<String>, Set<String>>> selectionChangeListeners = new ArrayList<>();
 
@@ -63,7 +61,12 @@ public class VListSelect extends Composite implements ClickHandler, Field,
 
         select = new ListBox();
         select.setMultipleSelect(true);
-        select.addClickHandler(this);
+
+        // Add event handlers
+        select.addClickHandler(
+                clickEvent -> selectionEvent(clickEvent.getSource()));
+        select.addChangeHandler(
+                changeEvent -> selectionEvent(changeEvent.getSource()));
 
         container.add(select);
 
@@ -160,9 +163,8 @@ public class VListSelect extends Composite implements ClickHandler, Field,
         return selectedItemKeys;
     }
 
-    @Override
-    public void onClick(ClickEvent event) {
-        if (event.getSource() == select) {
+    private void selectionEvent(Object source){
+        if (source == select) {
             // selection can change by adding and at the same time removing
             // previous keys, or by just adding (e.g. when modifier keys are
             // pressed)

@@ -216,4 +216,37 @@ public class ReflectTools implements Serializable {
 
     private ReflectTools() {
     }
+
+    /**
+     * Finds the most specific class that both provided classes extend from.
+     *
+     * @param a
+     *            one class to get the base type for, not <code>null</code>
+     * @param b
+     *            another class to get the base type for, not <code>null</code>
+     * @return the most specific base class, not <code>null</code>
+     *
+     * @since 8.0
+     */
+    public static Class<?> findCommonBaseType(Class<?> a, Class<?> b) {
+        if (a.isInterface()) {
+            throw new IllegalArgumentException("a cannot be an interface");
+        }
+        if (b.isInterface()) {
+            throw new IllegalArgumentException("b cannot be an interface");
+        }
+
+        if (a.isAssignableFrom(b)) {
+            return a;
+        } else if (b.isAssignableFrom(a)) {
+            return b;
+        }
+
+        Class<?> currentClass = a;
+        while (!currentClass.isAssignableFrom(b)) {
+            currentClass = currentClass.getSuperclass();
+        }
+
+        return currentClass;
+    }
 }

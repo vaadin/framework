@@ -594,7 +594,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     /**
      * Register a listener to handle {@link SplitPositionChangeEvent}s.
      *
-     * @since 7.5.0
+     * @since 8.0
      * @param listener
      *            {@link SplitPositionChangeListener} to be registered.
      */

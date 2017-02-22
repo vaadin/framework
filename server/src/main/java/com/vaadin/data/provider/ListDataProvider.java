@@ -36,6 +36,7 @@ import com.vaadin.ui.UI;
  *
  * @param <T>
  *            data type
+ * @since 8.0
  */
 public class ListDataProvider<T>
         extends AbstractDataProvider<T, SerializablePredicate<T>> implements
@@ -70,6 +71,15 @@ public class ListDataProvider<T>
         Objects.requireNonNull(items, "items cannot be null");
         backend = items;
         sortOrder = null;
+    }
+
+    /**
+     * Returns the underlying data items.
+     *
+     * @return the underlying data items
+     */
+    public Collection<T> getItems() {
+        return backend;
     }
 
     @Override
@@ -125,12 +135,12 @@ public class ListDataProvider<T>
      * @see #setSortOrder(ValueProvider, SortDirection)
      * @see #addSortComparator(SerializableComparator)
      *
-     * @param sortOrder
+     * @param comparator
      *            a comparator to use, or <code>null</code> to clear any
      *            previously set sort order
      */
-    public void setSortComparator(SerializableComparator<T> sortOrder) {
-        this.sortOrder = sortOrder;
+    public void setSortComparator(SerializableComparator<T> comparator) {
+        this.sortOrder = comparator;
         refreshAll();
     }
 
@@ -171,20 +181,20 @@ public class ListDataProvider<T>
      * @see #setSortComparator(SerializableComparator)
      * @see #addSortOrder(ValueProvider, SortDirection)
      *
-     * @param sortOrder
+     * @param comparator
      *            a comparator to add, not <code>null</code>
      */
-    public void addSortComparator(SerializableComparator<T> sortOrder) {
-        Objects.requireNonNull(sortOrder, "Sort order to add cannot be null");
+    public void addSortComparator(SerializableComparator<T> comparator) {
+        Objects.requireNonNull(comparator, "Sort order to add cannot be null");
 
         SerializableComparator<T> originalComparator = this.sortOrder;
         if (originalComparator == null) {
-            setSortComparator(sortOrder);
+            setSortComparator(comparator);
         } else {
             setSortComparator((a, b) -> {
                 int result = originalComparator.compare(a, b);
                 if (result == 0) {
-                    result = sortOrder.compare(a, b);
+                    result = comparator.compare(a, b);
                 }
                 return result;
             });

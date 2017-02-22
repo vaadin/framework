@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[layout.accordion]]
-= [classname]#Accordion#
+= Accordion
 
 ifdef::web[]
 [.sampler]

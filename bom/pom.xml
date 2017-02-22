@@ -16,9 +16,10 @@
     <url>http://vaadin.com</url>
 
     <properties>
-        <vaadin.spring.version>2.0-SNAPSHOT</vaadin.spring.version>
-        <vaadin.testbench.version>5.0.0.alpha2</vaadin.testbench.version>
-        <vaadin.cdi.version>2.0-SNAPSHOT</vaadin.cdi.version>
+        <vaadin.spring.version>2.0.0</vaadin.spring.version>
+        <vaadin.testbench.version>5.0.0</vaadin.testbench.version>
+        <vaadin.cdi.version>2.0.0</vaadin.cdi.version>
+        <vaadin.context-menu.version>2.0.0</vaadin.context-menu.version>
     </properties>
 
     <repositories>
@@ -96,7 +97,7 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- AddOn Dependencies -->
+            <!-- Add-on Dependencies -->
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-spring-boot-starter</artifactId>
@@ -114,13 +115,18 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-testbench</artifactId>
+                <artifactId>vaadin-testbench-core</artifactId>
                 <version>${vaadin.testbench.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-cdi</artifactId>
                 <version>${vaadin.cdi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-context-menu</artifactId>
+                <version>${vaadin.context-menu.version}</version>
             </dependency>
 
         </dependencies>

@@ -66,20 +66,23 @@ public class GridEditorUI extends AbstractTestUI {
     protected Grid<Person> createGrid() {
         Grid<Person> grid = new Grid<>();
 
-        grid.addColumn(Person::getEmail).setCaption("Email");
+        grid.addColumn(Person::getEmail).setCaption("Email").setId("email");
         Column<Person, String> fistNameColumn = grid
-                .addColumn(Person::getFirstName).setCaption("First Name");
+                .addColumn(Person::getFirstName).setCaption("First Name")
+                .setId("firstName");
         Column<Person, String> lastNameColumn = grid
-                .addColumn(Person::getLastName).setCaption("Last Name");
+                .addColumn(Person::getLastName).setCaption("Last Name")
+                .setId("lastName");
 
         Column<Person, String> phoneColumn = grid
-                .addColumn(Person::getPhoneNumber).setCaption("Phone Number");
+                .addColumn(Person::getPhoneNumber).setCaption("Phone Number")
+                .setId("phone");
         grid.addColumn(person -> person.getAddress().getStreetAddress())
-                .setCaption("Street Address");
+                .setCaption("Street Address").setId("street");
         grid.addColumn(person -> person.getAddress().getPostalCode(),
-                new NumberRenderer()).setCaption("Postal Code");
+                new NumberRenderer()).setCaption("Postal Code").setId("zip");
         grid.addColumn(person -> person.getAddress().getCity())
-                .setCaption("City");
+                .setCaption("City").setId("city");
 
         grid.getEditor().setEnabled(true);
 

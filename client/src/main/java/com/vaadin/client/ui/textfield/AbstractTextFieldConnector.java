@@ -28,6 +28,8 @@ import com.vaadin.ui.AbstractTextField;
 
 /**
  * Connector class for AbstractTextField.
+ * 
+ * @since 8.0
  */
 public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
         implements ValueChangeHandler.Owner, DeferredWorker {
@@ -137,8 +139,8 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
 
     /**
      * {@inheritDoc}
-     * 
-     * @since 8.0.0
+     *
+     * @since 8.0
      */
     @Override
     public boolean isWorkPending() {
