@@ -71,6 +71,20 @@ public class ComboBoxDeclarativeTest
     }
 
     @Test
+    public void extendedComboBox() {
+        ExtendedComboBox combo = new ExtendedComboBox();
+        String design = "<html>" //
+                + "<head>" //
+                + "<meta name='package-mapping' content='com_vaadin_tests_server_component_combobox:com.vaadin.tests.server.component.combobox'>"
+                + "</meta>" + "</head>" + "<body>"
+                + "<com_vaadin_tests_server_component_combobox-extended-combo-box>"
+                + "</com_vaadin_tests_server_component_combobox-extended-combo-box>"
+                + "</body></html>";
+        testWrite(design, combo);
+        testRead(design, combo);
+    }
+
+    @Test
     public void optionStylesSerialization() throws InstantiationException,
             IllegalAccessException, InvocationTargetException {
         List<String> items = Arrays.asList("foo", "bar", "foobar");
