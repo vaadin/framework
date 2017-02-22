@@ -2556,6 +2556,9 @@ public class Grid extends AbstractComponent
                 for (CELLTYPE cell : cells.values()) {
                     cell.detach();
                 }
+                for (CELLTYPE cell : cellGroups.values()) {
+                    cell.detach();
+                }
             }
         }
 
