@@ -21,5 +21,5 @@ package com.vaadin.shared.ui.grid.renderers;
  * @since 8.0
  */
 public class ButtonRendererState extends ClickableRendererState {
-
+    public boolean htmlContentAllowed = false;
 }
