@@ -17,6 +17,12 @@ package com.vaadin.shared.ui.textarea;
 
 import com.vaadin.shared.communication.ServerRpc;
 
+/**
+ * Client to server RPC interface for TextArea.
+ *
+ * @author Vaadin Ltd
+ * @since 8.0
+ */
 public interface TextAreaServerRpc extends ServerRpc {
 
     public void setHeight(String height);

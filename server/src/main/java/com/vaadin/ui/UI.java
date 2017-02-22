@@ -968,6 +968,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * @param listener
      *            The listener to add, not null
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addClickListener(ClickListener listener) {
         return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
@@ -1794,7 +1795,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @param listener
      *            the WindowModeChangeListener to add.
-     * @since 8.0.0
+     * @since 8.0
      *
      * @return a registration object for removing the listener
      */
@@ -1815,7 +1816,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * @see Window.WindowOrderChangeEvent
      *
      * @author Vaadin Ltd
-     * @since 8.0.0
+     * @since 8.0
      *
      */
     public static class WindowOrderUpdateEvent extends Component.Event {
@@ -1842,7 +1843,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     /**
      * An interface used for listening to Windows order update events.
      *
-     * @since 8.0.0
+     * @since 8.0
      *
      * @see Window.WindowOrderChangeEvent
      */

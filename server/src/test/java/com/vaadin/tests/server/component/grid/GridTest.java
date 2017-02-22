@@ -5,11 +5,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -485,6 +488,12 @@ public class GridTest {
         testValueProviderSorting(10.1, 200, 3000.1, 4000);
     }
 
+    @Test
+    public void defaultSorting_mutuallyComparableTypes() {
+        testValueProviderSorting(new Date(10), new java.sql.Date(1000000),
+                new Date(100000000));
+    }
+
     private static void testValueProviderSorting(Object... expectedOrder) {
         SerializableComparator<Object> comparator = new Grid<>()
                 .addColumn(ValueProvider.identity())
@@ -504,7 +513,8 @@ public class GridTest {
         Grid<Person> grid = new Grid<>(Person.class);
 
         grid.removeColumn("born");
-        grid.addColumn("born", new NumberRenderer(new DecimalFormat("#,###")));
+        grid.addColumn("born", new NumberRenderer(new DecimalFormat("#,###",
+                DecimalFormatSymbols.getInstance(Locale.US))));
 
         Person person = new Person("Name", 2017);
 

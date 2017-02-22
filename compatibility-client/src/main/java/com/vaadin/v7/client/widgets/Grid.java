@@ -4128,6 +4128,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private GridSpacerUpdater gridSpacerUpdater = new GridSpacerUpdater();
     /** A set keeping track of the indices of all currently open details */
     private Set<Integer> visibleDetails = new HashSet<>();
+    /** A set of indices of details to reopen after detach and on attach */
+    private final Set<Integer> reattachVisibleDetails = new HashSet<>();
 
     private boolean columnReorderingAllowed;
 
@@ -6451,8 +6453,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         int columnIndex = columns.indexOf(column);
 
         // Remove from column configuration
-        escalator.getColumnConfiguration()
-                .removeColumns(getVisibleColumns().indexOf(column), 1);
+        int visibleColumnIndex = getVisibleColumns().indexOf(column);
+        if (visibleColumnIndex < 0) {
+            assert column.isHidden();
+            // Hidden columns are not included in Escalator
+        } else {
+            getEscalator().getColumnConfiguration()
+                    .removeColumns(visibleColumnIndex, 1);
+        }
 
         updateFrozenColumns();
 
@@ -6831,7 +6839,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return editor;
     }
 
-    protected Escalator getEscalator() {
+    /**
+     * Gets the {@link Escalator} used by this Grid instnace.
+     *
+     * @return the escalator instance, never <code>null</code>
+     */
+    public Escalator getEscalator() {
         return escalator;
     }
 
@@ -8766,6 +8779,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     @Override
     protected void onDetach() {
         Set<Integer> details = new HashSet<>(visibleDetails);
+        reattachVisibleDetails.clear();
+        reattachVisibleDetails.addAll(details);
         for (int row : details) {
             setDetailsVisible(row, false);
         }

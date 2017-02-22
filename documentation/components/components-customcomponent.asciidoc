@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.customcomponent]]
-= Composition with [classname]#CustomComponent#
+= Composition with CustomComponent
 
 The ease of making new user interface components is one of the core features of
 Vaadin. Typically, you simply combine existing built-in components to produce

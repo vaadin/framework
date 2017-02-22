@@ -338,7 +338,7 @@ public class Window extends Panel
      *
      * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
      *
-     * @since 8.0.0
+     * @since 8.0
      *
      * @return window order position.
      */
@@ -468,6 +468,7 @@ public class Window extends Panel
      *
      * @param listener
      *            the WindowModeChangeListener to add.
+     * @since 8.0
      */
     public Registration addWindowOrderChangeListener(
             WindowOrderChangeListener listener) {
@@ -528,6 +529,7 @@ public class Window extends Panel
      *
      * @param listener
      *            the CloseListener to add, not null
+     * @since 8.0
      */
     public Registration addCloseListener(CloseListener listener) {
         return addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
@@ -627,6 +629,7 @@ public class Window extends Panel
      *
      * @param listener
      *            the WindowModeChangeListener to add.
+     * @since 8.0
      */
     public Registration addWindowModeChangeListener(
             WindowModeChangeListener listener) {
@@ -710,6 +713,7 @@ public class Window extends Panel
      * @param listener
      *            the listener to add, not null
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addResizeListener(ResizeListener listener) {
         return addListener(ResizeEvent.class, listener, WINDOW_RESIZE_METHOD);

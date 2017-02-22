@@ -17,7 +17,6 @@ package com.vaadin.event.dnd;
 
 import java.util.Objects;
 
-import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -28,28 +27,27 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Extension to add drop target functionality to a widget for using HTML5 drag
  * and drop.
+ *
+ * @param <T>
+ *         Type of the component to be extended.
  */
-public class DropTargetExtension extends AbstractExtension {
+public class DropTargetExtension<T extends AbstractComponent> extends
+        AbstractExtension {
 
     /**
-     * Constructor for {@link DropTargetExtension}.
-     */
-    public DropTargetExtension() {
-        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
-            DropEvent event = new DropEvent((AbstractComponent) getParent(),
-                    types, data, dropEffect);
-
-            fireEvent(event);
-        });
-    }
-
-    /**
-     * Makes {@code target} component a drop target.
+     * Extends {@code target} component and makes it a drop target.
      *
      * @param target
      *         Component to be extended.
      */
-    public void extend(AbstractComponent target) {
+    public DropTargetExtension(T target) {
+        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
+            DropEvent<T> event = new DropEvent<>(target, types, data,
+                    dropEffect);
+
+            fireEvent(event);
+        });
+
         super.extend(target);
     }
 
@@ -85,6 +83,22 @@ public class DropTargetExtension extends AbstractExtension {
      * Sets criteria to allow dragover event on the current drop target. The
      * script executes when dragover event happens and stops the event in case
      * the script returns {@code false}.
+     * <p>
+     * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
+     * include untrusted sources such as user input. Always keep in mind that
+     * the script is executed on the client as is.
+     * <p>
+     * Example:
+     * <pre>
+     *     target.setDropCriteria(
+     *         // If dragged source contains a URL, allow it to be dragged over
+     *         "if (event.dataTransfer.types.includes('text/uri-list')) {" +
+     *         "    return true;" +
+     *         "}" +
+     *
+     *         // Otherwise cancel the event"
+     *         "return false;");
+     * </pre>
      *
      * @param criteriaScript
      *         JavaScript to be executed when dragover event happens or {@code
@@ -97,9 +111,35 @@ public class DropTargetExtension extends AbstractExtension {
     }
 
     /**
+     * Returns the criteria for allowing dragover event on the current drop
+     * target.
+     *
+     * @return JavaScript that executes when dragover event happens.
+     */
+    public String getDragOverCriteria() {
+        return getState(false).dragOverCriteria;
+    }
+
+    /**
      * Sets criteria to allow drop event on the current drop target. The script
      * executes when drop event happens and stops the event in case the script
      * returns {@code false}.
+     * <p>
+     * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
+     * include untrusted sources such as user input. Always keep in mind that
+     * the script is executed on the client as is.
+     * <p>
+     * Example:
+     * <pre>
+     *     target.setDropCriteria(
+     *         // If dragged source contains a URL, allow it to be dropped
+     *         "if (event.dataTransfer.types.includes('text/uri-list')) {" +
+     *         "    return true;" +
+     *         "}" +
+     *
+     *         // Otherwise cancel the event"
+     *         "return false;");
+     * </pre>
      *
      * @param criteriaScript
      *         JavaScript to be executed when drop event happens or {@code null}
@@ -129,7 +169,7 @@ public class DropTargetExtension extends AbstractExtension {
      *         Listener to handle drop event.
      * @return Handle to be used to remove this listener.
      */
-    public Registration addDropListener(DropListener listener) {
+    public Registration addDropListener(DropListener<T> listener) {
         return addListener(DropEvent.class, listener, DropListener.DROP_METHOD);
     }
 
@@ -141,5 +181,16 @@ public class DropTargetExtension extends AbstractExtension {
     @Override
     protected DropTargetState getState(boolean markAsDirty) {
         return (DropTargetState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Returns the component this extension is attached to.
+     *
+     * @return Extended component.
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public T getParent() {
+        return (T) super.getParent();
     }
 }

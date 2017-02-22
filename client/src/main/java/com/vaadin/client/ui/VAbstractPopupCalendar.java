@@ -61,6 +61,7 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  * then pass set it by calling the
  * <code>setCalendarPanel(VAbstractCalendarPanel panel)</code> method.
  *
+ * @since 8.0
  */
 public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>

@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.progressbar]]
-= [classname]#ProgressBar#
+= ProgressBar
 
 ifdef::web[]
 [.sampler]

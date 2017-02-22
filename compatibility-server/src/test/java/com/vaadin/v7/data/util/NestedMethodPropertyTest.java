@@ -348,4 +348,27 @@ public class NestedMethodPropertyTest {
         Assert.assertTrue(booleanProperty.isReadOnly());
     }
 
+    @Test
+    public void testChangeInstance() {
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
+
+        Address somewhere = new Address("The street", 1234);
+        Person someone = new Person("Someone", somewhere);
+        Team someteam = new Team("The team", someone);
+        streetProperty.setInstance(someteam);
+
+        Assert.assertEquals("The street", streetProperty.getValue());
+        Assert.assertEquals("Ruukinkatu 2-4", vaadin.getManager().getAddress()
+                .getStreet());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testChangeInstanceToIncompatible() {
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street");
+
+        streetProperty.setInstance("bar");
+    }
+
 }

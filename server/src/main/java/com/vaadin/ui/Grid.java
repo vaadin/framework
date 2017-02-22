@@ -902,8 +902,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
                 Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
                         bClass);
-                if (!baseType.isAssignableFrom(Comparable.class)) {
-                    return false;
+                if (Comparable.class.isAssignableFrom(baseType)) {
+                    return true;
                 }
             }
 

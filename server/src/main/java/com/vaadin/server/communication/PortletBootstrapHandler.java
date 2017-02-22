@@ -119,4 +119,10 @@ public class PortletBootstrapHandler extends BootstrapHandler {
 
         return parameters;
     }
+
+    @Override
+    protected String getContextRootPath(BootstrapContext context) {
+        // Not really supported in portlet environments
+        return ".";
+    }
 }

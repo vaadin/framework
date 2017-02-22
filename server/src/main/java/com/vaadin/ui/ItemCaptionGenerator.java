@@ -36,7 +36,8 @@ public interface ItemCaptionGenerator<T>
      *
      * @param item
      *            the item to get caption for
-     * @return the caption of the item; not {@code null}
+     * @return the caption of the item; {@code null} will be shown as an empty
+     *         string
      */
     @Override
     String apply(T item);

@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.menubar]]
-= [classname]#MenuBar#
+= MenuBar
 
 ifdef::web[]
 [.sampler]

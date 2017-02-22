@@ -31,7 +31,9 @@ import com.vaadin.ui.Component;
  *
  * @author Vaadin Ltd.
  * @since 5.3
- * @deprecated use com.vaadin.ui.VerticalLayout (with different defaults)
+ *
+ * @deprecated Replaced in 8.0 with {@link com.vaadin.ui.VerticalLayout} with
+ *             margin and spacing on by default
  */
 @Deprecated
 public class VerticalLayout extends com.vaadin.ui.VerticalLayout {

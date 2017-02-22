@@ -26,7 +26,7 @@ import com.vaadin.shared.communication.ServerRpc;
  * Notifies server when windows order is changed.
  *
  * @author Vaadin Ltd
- * @since 8.0.0
+ * @since 8.0
  *
  */
 public interface WindowOrderRpc extends ServerRpc {

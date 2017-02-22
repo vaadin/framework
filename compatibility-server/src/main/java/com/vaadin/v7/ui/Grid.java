@@ -192,6 +192,9 @@ import elemental.json.JsonValue;
  *
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.Grid} based on the new
+ *             data binding API
  */
 @Deprecated
 public class Grid extends AbstractComponent
@@ -2551,6 +2554,9 @@ public class Grid extends AbstractComponent
 
             void detach() {
                 for (CELLTYPE cell : cells.values()) {
+                    cell.detach();
+                }
+                for (CELLTYPE cell : cellGroups.values()) {
                     cell.detach();
                 }
             }

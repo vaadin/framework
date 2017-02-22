@@ -751,7 +751,7 @@ public abstract class AbstractClientConnector
      * @param method
      *            the activation method.
      * @return a registration object for removing the listener
-     * @since 6.2
+     * @since 8.0
      */
     protected Registration addListener(String eventIdentifier,
             Class<?> eventType, Object target, Method method) {
@@ -891,6 +891,7 @@ public abstract class AbstractClientConnector
      * @deprecated As of 7.0. This method should be avoided. Use
      *             {@link #addListener(Class, Object, Method)} or
      *             {@link #addListener(String, Class, Object, Method)} instead.
+     * @since 8.0
      */
     @Override
     @Deprecated

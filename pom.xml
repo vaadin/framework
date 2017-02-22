@@ -24,7 +24,6 @@
 
         <!-- Used version numbers for dependencies -->
         <liferay.portal-service.version>6.2.5</liferay.portal-service.version>
-        <jetty.version>9.3.9.v20160517</jetty.version>
 
         <vaadin.gwt.version>2.8.0</vaadin.gwt.version>
         <vaadin.plugin.version>8.0-SNAPSHOT</vaadin.plugin.version>
@@ -45,7 +44,9 @@
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
 
-        <jetty.version>9.3.7.v20160115</jetty.version>
+        <!-- Cannot use 9.3 or 9.4 because they sometimes reset the connection too early in case of errors -->
+        <!-- See e.g. https://issues.apache.org/jira/browse/SOLR-8453 -->
+        <jetty.version>9.2.9.v20150224</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
 
         <!-- Sonar properties -->
@@ -53,7 +54,9 @@
         <sonar.analysis.mode>preview</sonar.analysis.mode>
         <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
-        <vaadin.icons.version>3.0.0</vaadin.icons.version>
+
+        <vaadin.icons.version>3.0.1</vaadin.icons.version>
+        <vaadin.testbench.version>5.0.0.beta5</vaadin.testbench.version>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
@@ -234,7 +237,7 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-testbench</artifactId>
-                <version>5.0.0.alpha2</version>
+                <version>${vaadin.testbench.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -582,7 +585,6 @@
                 <module>client-compiler</module>
                 <module>client-compiled</module>
                 <module>themes</module>
-                <module>uitest-common</module>
                 <module>uitest</module>
                 <module>liferay</module>
                 <module>all</module>

@@ -93,6 +93,14 @@ public interface DataProvider<T, F> extends Serializable {
      * Refreshes the given item. This method should be used to inform all
      * {@link DataProviderListener DataProviderListeners} that an item has been
      * updated or replaced with a new instance.
+     * <p>
+     * For this to work properly, the item must either implement
+     * {@link #equals(Object)} and {@link #hashCode()} to consider both the old
+     * and the new item instances to be equal, or alternatively
+     * {@link #getId(Object)} should be implemented to return an appropriate
+     * identifier.
+     *
+     * @see #getId(Object)
      *
      * @param item
      *            the item to refresh

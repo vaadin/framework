@@ -66,6 +66,8 @@ import com.vaadin.v7.ui.Tree.ExpandListener;
  * standard Hierarchical implementations. Developer must however note that
  * {@link Collapsible} containers can not be shared among several users as they
  * share UI state in the container.
+ *
+ * @deprecated As of 8.0. Replacement planned for 8.1
  */
 @SuppressWarnings({ "serial" })
 @Deprecated

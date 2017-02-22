@@ -134,6 +134,7 @@ public abstract class AbstractTextField extends AbstractField<String>
      *
      * @param placeholder
      *            the placeholder text to set
+     * @since 8.0
      */
     public void setPlaceholder(String placeholder) {
         getState().placeholder = placeholder;

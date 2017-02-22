@@ -68,6 +68,7 @@ public class PasswordField extends TextField {
      *
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public PasswordField(ValueChangeListener<String> valueChangeListener) {
         super(valueChangeListener);
@@ -84,6 +85,7 @@ public class PasswordField extends TextField {
      *            the caption for the field
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public PasswordField(String caption,
             ValueChangeListener<String> valueChangeListener) {
@@ -96,13 +98,14 @@ public class PasswordField extends TextField {
      * <p>
      * The listener is called when the value of this {@code PasswordField} is
      * changed either by the user or programmatically.
-     * 
+     *
      * @param caption
      *            the caption for the field
      * @param value
      *            the value for the field, not {@code null}
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public PasswordField(String caption, String value,
             ValueChangeListener<String> valueChangeListener) {
