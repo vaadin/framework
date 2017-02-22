@@ -13,38 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
+import java.util.stream.IntStream;
+
+import com.vaadin.data.ValueProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.util.IndexedContainer;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.Column;
-import com.vaadin.v7.ui.Grid.SelectionMode;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.SelectionMode;
 
 public class GridSingleColumn extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-
-        IndexedContainer indexedContainer = new IndexedContainer();
-        indexedContainer.addContainerProperty("column1", String.class, "");
-
-        for (int i = 0; i < 100; i++) {
-            Item addItem = indexedContainer.addItem(i);
-            addItem.getItemProperty("column1").setValue("cell");
-        }
-
-        Grid grid = new Grid(indexedContainer);
+        Grid<String> grid = new Grid<>();
         grid.setSelectionMode(SelectionMode.NONE);
 
-        Column column = grid.getColumn("column1");
+        grid.setItems(IntStream.range(0, 100).mapToObj(indx -> "cell"));
 
-        column.setHeaderCaption("Header");
+        Column<String, String> column = grid.addColumn(ValueProvider.identity())
+                .setCaption("Header");
 
         addComponent(grid);
-        grid.scrollTo(grid.getContainerDataSource().getIdByIndex(50));
+        grid.scrollTo(50);
     }
 
     @Override

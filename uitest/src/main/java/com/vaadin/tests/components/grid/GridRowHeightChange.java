@@ -1,16 +1,16 @@
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.shared.ui.grid.HeightMode;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.NativeSelect;
 
 public class GridRowHeightChange extends AbstractReindeerTestUI {
 
@@ -19,13 +19,12 @@ public class GridRowHeightChange extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid grid = new Grid();
+        Grid<Integer> grid = new Grid<>();
 
         // create column and fill rows
-        grid.addColumn("Header");
-        for (int i = 1; i <= 10; i++) {
-            grid.addRow("row_" + i);
-        }
+        grid.addColumn(item -> "row_" + item).setCaption("Header");
+
+        grid.setItems(IntStream.range(1, 11).boxed());
 
         // set height mode and height
         grid.setHeightMode(HeightMode.ROW);
@@ -33,22 +32,21 @@ public class GridRowHeightChange extends AbstractReindeerTestUI {
 
         // create a tabsheet with one tab and place grid inside
         VerticalLayout tab = new VerticalLayout();
+        tab.setSpacing(false);
+        tab.setMargin(false);
         TabSheet tabSheet = new TabSheet();
         tabSheet.setWidthUndefined();
         tabSheet.addTab(tab, "Tab");
         tab.addComponent(grid);
 
         // Theme selector
-        NativeSelect themeSelector = new NativeSelect("Theme selector", themes);
-        themeSelector.select("reindeer");
-        themeSelector.setNullSelectionAllowed(false);
-        themeSelector
-                .addValueChangeListener(new Property.ValueChangeListener() {
-                    @Override
-                    public void valueChange(Property.ValueChangeEvent event) {
-                        setTheme((String) event.getProperty().getValue());
-                    }
-                });
+        NativeSelect<String> themeSelector = new NativeSelect<>(
+                "Theme selector", themes);
+        themeSelector.setSelectedItem("reindeer");
+        themeSelector.setEmptySelectionAllowed(false);
+        themeSelector.addValueChangeListener(event -> {
+            setTheme(event.getValue());
+        });
 
         VerticalLayout layout = new VerticalLayout();
         layout.setSpacing(true);

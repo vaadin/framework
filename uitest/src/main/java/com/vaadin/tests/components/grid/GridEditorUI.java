@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Random;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.ui.Grid;
@@ -29,7 +29,7 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.NumberRenderer;
 
-public class GridEditorUI extends AbstractTestUI {
+public class GridEditorUI extends AbstractReindeerTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
