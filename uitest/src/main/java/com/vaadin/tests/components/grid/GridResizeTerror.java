@@ -13,32 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
+
+import java.util.stream.IntStream;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.ResizeTerrorizer;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.Grid;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class GridResizeTerror extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        Grid grid = new Grid();
+        Grid<Integer> grid = new Grid<>();
 
         int cols = 10;
-        Object[] data = new Object[cols];
 
-        for (int i = 0; i < cols; i++) {
-            grid.addColumn("Col " + i);
-            data[i] = "Data " + i;
-        }
+        IntStream.range(0, 10).forEach(i -> grid.addColumn(item -> "Data" + i));
 
-        for (int i = 0; i < 500; i++) {
-            grid.addRow(data);
-        }
+        grid.setItems(IntStream.range(0, 500).boxed());
 
         ResizeTerrorizer terrorizer = new ResizeTerrorizer(grid);
         setContent(terrorizer);
