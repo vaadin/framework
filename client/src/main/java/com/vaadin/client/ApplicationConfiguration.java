@@ -241,6 +241,7 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     private String vaadinDirUrl;
     private String serviceUrl;
+    private String contextRootUrl;
     private int uiId;
     private boolean standalone;
     private ErrorMessage communicationError;
@@ -308,6 +309,15 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public String getServiceUrl() {
         return serviceUrl;
+    }
+
+    /**
+     * Gets the URL to the context root of the web application
+     *
+     * @return the URL to the server-side context root as a string
+     */
+    public String getContextRootUrl() {
+        return contextRootUrl;
     }
 
     /**
@@ -413,6 +423,8 @@ public class ApplicationConfiguration implements EntryPoint {
             serviceUrl += '/';
         }
 
+        contextRootUrl = jsoConfiguration
+                .getConfigString(ApplicationConstants.CONTEXT_ROOT_URL);
         vaadinDirUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
                 .getConfigString(ApplicationConstants.VAADIN_DIR_URL));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
@@ -897,4 +909,5 @@ public class ApplicationConfiguration implements EntryPoint {
     private static final Logger getLogger() {
         return Logger.getLogger(ApplicationConfiguration.class.getName());
     }
+
 }
