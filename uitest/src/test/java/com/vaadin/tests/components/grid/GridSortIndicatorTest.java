@@ -17,9 +17,9 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.gwt.editor.client.Editor.Ignore;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
