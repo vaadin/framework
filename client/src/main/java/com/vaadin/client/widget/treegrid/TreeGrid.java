@@ -16,7 +16,6 @@
 package com.vaadin.client.widget.treegrid;
 
 import com.google.gwt.dom.client.Element;
-import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 
 import elemental.json.JsonObject;
@@ -35,16 +34,6 @@ public class TreeGrid  extends Grid<JsonObject> {
     public native void focusCell(int rowIndex, int columnIndex)/*-{
         this.@com.vaadin.client.widgets.Grid::focusCell(II)(rowIndex, columnIndex);
     }-*/;
-
-    /**
-     * Expose {@link Grid#getEscalator()} method to current package
-     * 
-     * @return this grid's Escalator
-     */
-    @Override
-    public Escalator getEscalator() {
-        return super.getEscalator();
-    }
 
     /**
      * Method for accessing the private
