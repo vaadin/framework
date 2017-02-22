@@ -176,8 +176,9 @@ public class DesignAttributeHandler implements Serializable {
                 .getPropertyDescriptors()) {
             Method getter = descriptor.getReadMethod();
             Method setter = descriptor.getWriteMethod();
-            if (getter != null && setter != null && getFormatter()
-                    .canConvert(descriptor.getPropertyType())) {
+            Class<?> propertyType = descriptor.getPropertyType();
+            if (getter != null && setter != null && propertyType != null
+                    && getFormatter().canConvert(propertyType)) {
                 String attribute = toAttributeName(descriptor.getName());
                 entry.addAttribute(attribute, getter, setter);
             }
