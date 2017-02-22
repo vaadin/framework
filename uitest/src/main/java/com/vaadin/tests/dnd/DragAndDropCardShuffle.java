@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.dnd;
 
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.server.Page;
@@ -90,13 +89,17 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
 
         // Add listener
         dropTarget.addDropListener(event -> {
-            Label source = event.getDragSourceComponent().get();
+            event.getDragSourceExtension().ifPresent(dragSource -> {
+                if (dragSource.getParent() instanceof Label) {
+                    Label source = (Label) dragSource.getParent();
 
-            // Swap source and target components
-            desk.replaceComponent(target, source);
+                    // Swap source and target components
+                    desk.replaceComponent(target, source);
 
-            log(source.getValue() + " dropped onto " + (event.getComponent())
-                    .getValue());
+                    log(source.getValue() + " dropped onto " + event
+                            .getComponent().getValue());
+                }
+            });
         });
     }
 

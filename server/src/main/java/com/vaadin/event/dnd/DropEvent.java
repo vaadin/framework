@@ -34,13 +34,14 @@ import com.vaadin.ui.Component;
 public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final Map<String, String> data;
     private final DropEffect dropEffect;
-    private final DragSourceExtension<T> dragSource;
+    private final DragSourceExtension<AbstractComponent> dragSourceExtension;
+    private final AbstractComponent dragSource;
 
     /**
      * Creates a server side drop event.
      *
-     * @param source
-     *         Component that is dragged.
+     * @param target
+     *         Component that received the drop.
      * @param types
      *         List of data types from {@code DataTransfer.types} object.
      * @param data
@@ -48,13 +49,14 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      *         DataTransfer} object.
      * @param dropEffect
      *         Drop effect from {@code DataTransfer.dropEffect} object.
-     * @param dragSource
+     * @param dragSourceExtension
      *         Drag source extension of the component that initiated the drop
      *         event.
      */
-    public DropEvent(T source, List<String> types, Map<String, String> data,
-            DropEffect dropEffect, DragSourceExtension<T> dragSource) {
-        super(source);
+    public DropEvent(T target, List<String> types, Map<String, String> data,
+            DropEffect dropEffect,
+            DragSourceExtension<AbstractComponent> dragSourceExtension) {
+        super(target);
 
         // Create a linked map that preserves the order of types
         this.data = new LinkedHashMap<>();
@@ -62,7 +64,9 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
 
         this.dropEffect = dropEffect;
 
-        this.dragSource = dragSource;
+        this.dragSourceExtension = dragSourceExtension;
+        this.dragSource = Optional.ofNullable(dragSourceExtension)
+                .map(DragSourceExtension::getParent).orElse(null);
     }
 
     /**
@@ -87,23 +91,25 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Get the drag source component that has just been dropped if the drag
-     * source and drop target are in the same UI.
+     * Returns the drag source component if the drag originated from a
+     * component in the same UI as the drop target component, or an empty
+     * optional.
      *
-     * @return Dropped drag source component.
+     * @return Drag source component or an empty optional.
      */
-    public Optional<T> getDragSourceComponent() {
-        return getDragSourceExtension().map(DragSourceExtension::getParent);
+    public Optional<AbstractComponent> getDragSourceComponent() {
+        return Optional.ofNullable(dragSource);
     }
 
     /**
-     * Get the drag source extension of the component that has just been dropped
-     * if the drag source and drop target are in the same UI.
+     * Returns the extension of the drag source component if the drag
+     * originated from a component in the same UI as the drop target component,
+     * or an empty optional.
      *
-     * @return Drag source extension of the dropped component.
+     * @return Drag source extension or an empty optional
      */
-    public Optional<DragSourceExtension<T>> getDragSourceExtension() {
-        return Optional.ofNullable(dragSource);
+    public Optional<DragSourceExtension<AbstractComponent>> getDragSourceExtension() {
+        return Optional.ofNullable(dragSourceExtension);
     }
 
     /**
