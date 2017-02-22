@@ -28,10 +28,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -42,7 +40,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 @TestCategory("grid")
-@RunLocally(Browser.PHANTOMJS)
 public class GridHeightTest extends MultiBrowserTest {
 
     @Override
