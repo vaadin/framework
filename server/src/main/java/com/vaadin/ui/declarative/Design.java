@@ -36,6 +36,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import com.vaadin.annotations.DesignRoot;
+import com.vaadin.server.VaadinServiceClassLoaderUtil;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
@@ -192,7 +193,9 @@ public class Design implements Serializable {
         protected Class<? extends Component> resolveComponentClass(
                 String qualifiedClassName, DesignContext context) {
             try {
-                Class<?> componentClass = Class.forName(qualifiedClassName);
+                Class<?> componentClass = Class.forName(qualifiedClassName,
+                        true,
+                        VaadinServiceClassLoaderUtil.findDefaultClassLoader());
                 return componentClass.asSubclass(Component.class);
             } catch (ClassNotFoundException e) {
                 throw new DesignException("Unable to load component for design",
