@@ -74,6 +74,7 @@ public class ClassesSerializableTest {
             // interfaces
             "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
             "com\\.vaadin\\.buildhelpers.*", //
+            "com\\.vaadin\\.util\\.EncodeUtil.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //
@@ -235,6 +236,7 @@ public class ClassesSerializableTest {
         Assert.fail(
                 "Serializable not implemented by the following classes and interfaces: "
                         + nonSerializableString);
+
     }
 
     private static boolean isFunctionalType(Type type) {

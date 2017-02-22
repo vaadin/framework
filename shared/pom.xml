@@ -79,7 +79,7 @@
                     <execution>
                         <id>copy-sources</id>
                         <!-- here the phase you need -->
-                        <phase>prepare-package</phase>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
