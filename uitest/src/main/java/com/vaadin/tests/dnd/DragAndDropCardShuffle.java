@@ -15,22 +15,16 @@
  */
 package com.vaadin.tests.dnd;
 
-import java.util.Optional;
-
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.event.dnd.DropTargetExtension;
-import com.vaadin.server.Extension;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
 public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
-
-    // Data type for storing card position
-    private static final String DATA_INDEX = "index";
 
     // Create cards
     private final Label ace = new Label("A");
@@ -74,10 +68,6 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         DragSourceExtension<Label> dragSource = new DragSourceExtension<>(
                 source);
 
-        // Set component position as transfer data
-        dragSource.setTransferData(DATA_INDEX,
-                String.valueOf(desk.getComponentIndex(source)));
-
         // Add listeners
         dragSource.addDragStartListener(event -> {
             event.getComponent().addStyleName("dragged");
@@ -95,36 +85,21 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
                 target);
 
+        dropTarget.setDropEffect(DropEffect.MOVE);
+
         // Add listener
         dropTarget.addDropListener(event -> {
-            // Retrieve the source's position
-            int sourceIndex = Integer
-                    .valueOf(event.getTransferData(DATA_INDEX));
+            event.getDragSourceExtension().ifPresent(dragSource -> {
+                if (dragSource.getParent() instanceof Label) {
+                    Label source = (Label) dragSource.getParent();
 
-            // Find source component
-            Component source = desk.getComponent(sourceIndex);
+                    // Swap source and target components
+                    desk.replaceComponent(target, source);
 
-            // Swap source and target components
-            desk.replaceComponent(target, source);
-
-            // Get DragSource extension for target component and set position data
-            Optional<Extension> targetExt = target.getExtensions().stream()
-                    .filter(e -> e instanceof DragSourceExtension).findFirst();
-            targetExt.ifPresent(extension -> {
-                ((DragSourceExtension) extension).setTransferData(DATA_INDEX,
-                        String.valueOf(desk.getComponentIndex(target)));
+                    log(source.getValue() + " dropped onto " + event
+                            .getComponent().getValue());
+                }
             });
-
-            // Get DragSource extension for source component and set position data
-            Optional<Extension> sourceExt = source.getExtensions().stream()
-                    .filter(e -> e instanceof DragSourceExtension).findFirst();
-            sourceExt.ifPresent(extension -> {
-                ((DragSourceExtension) extension).setTransferData(DATA_INDEX,
-                        String.valueOf(desk.getComponentIndex(source)));
-            });
-
-            log(((Label) source).getValue() + " dropped onto " + (event
-                    .getComponent()).getValue());
         });
     }
 

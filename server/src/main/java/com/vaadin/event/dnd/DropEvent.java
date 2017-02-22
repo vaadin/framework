@@ -18,8 +18,10 @@ package com.vaadin.event.dnd;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
@@ -29,15 +31,17 @@ import com.vaadin.ui.Component;
  *         Type of the drop target component.
  * @see DropTargetExtension#addDropListener(DropListener)
  */
-public class DropEvent<T extends Component> extends Component.Event {
+public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final Map<String, String> data;
     private final DropEffect dropEffect;
+    private final DragSourceExtension<AbstractComponent> dragSourceExtension;
+    private final AbstractComponent dragSource;
 
     /**
      * Creates a server side drop event.
      *
-     * @param source
-     *         Component that is dragged.
+     * @param target
+     *         Component that received the drop.
      * @param types
      *         List of data types from {@code DataTransfer.types} object.
      * @param data
@@ -45,16 +49,24 @@ public class DropEvent<T extends Component> extends Component.Event {
      *         DataTransfer} object.
      * @param dropEffect
      *         Drop effect from {@code DataTransfer.dropEffect} object.
+     * @param dragSourceExtension
+     *         Drag source extension of the component that initiated the drop
+     *         event.
      */
-    public DropEvent(T source, List<String> types, Map<String, String> data,
-            DropEffect dropEffect) {
-        super(source);
+    public DropEvent(T target, List<String> types, Map<String, String> data,
+            DropEffect dropEffect,
+            DragSourceExtension<AbstractComponent> dragSourceExtension) {
+        super(target);
 
         // Create a linked map that preserves the order of types
         this.data = new LinkedHashMap<>();
         types.forEach(type -> this.data.put(type, data.get(type)));
 
         this.dropEffect = dropEffect;
+
+        this.dragSourceExtension = dragSourceExtension;
+        this.dragSource = Optional.ofNullable(dragSourceExtension)
+                .map(DragSourceExtension::getParent).orElse(null);
     }
 
     /**
@@ -76,6 +88,28 @@ public class DropEvent<T extends Component> extends Component.Event {
      */
     public DropEffect getDropEffect() {
         return dropEffect;
+    }
+
+    /**
+     * Returns the drag source component if the drag originated from a
+     * component in the same UI as the drop target component, or an empty
+     * optional.
+     *
+     * @return Drag source component or an empty optional.
+     */
+    public Optional<AbstractComponent> getDragSourceComponent() {
+        return Optional.ofNullable(dragSource);
+    }
+
+    /**
+     * Returns the extension of the drag source component if the drag
+     * originated from a component in the same UI as the drop target component,
+     * or an empty optional.
+     *
+     * @return Drag source extension or an empty optional
+     */
+    public Optional<DragSourceExtension<AbstractComponent>> getDragSourceExtension() {
+        return Optional.ofNullable(dragSourceExtension);
     }
 
     /**

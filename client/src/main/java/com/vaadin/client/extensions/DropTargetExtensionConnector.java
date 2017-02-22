@@ -193,7 +193,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             }
 
             getRpcProxy(DropTargetRpc.class)
-                    .drop(types, data, getState().dropEffect);
+                    .drop(types, data, getState().dropEffect, data.get(
+                            DragSourceExtensionConnector.DATA_TYPE_DRAG_SOURCE_ID));
         }
 
         removeTargetIndicator(getDropTargetElement());
