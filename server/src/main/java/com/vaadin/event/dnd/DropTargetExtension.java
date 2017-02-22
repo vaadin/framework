@@ -83,6 +83,22 @@ public class DropTargetExtension<T extends AbstractComponent> extends
      * Sets criteria to allow dragover event on the current drop target. The
      * script executes when dragover event happens and stops the event in case
      * the script returns {@code false}.
+     * <p>
+     * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
+     * include untrusted sources such as user input. Always keep in mind that
+     * the script is executed on the client as is.
+     * <p>
+     * Example:
+     * <pre>
+     *     target.setDropCriteria(
+     *         // If dragged source contains a URL, allow it to be dragged over
+     *         "if (event.dataTransfer.types.includes('text/uri-list')) {" +
+     *         "    return true;" +
+     *         "}" +
+     *
+     *         // Otherwise cancel the event"
+     *         "return false;");
+     * </pre>
      *
      * @param criteriaScript
      *         JavaScript to be executed when dragover event happens or {@code
@@ -95,9 +111,35 @@ public class DropTargetExtension<T extends AbstractComponent> extends
     }
 
     /**
+     * Returns the criteria for allowing dragover event on the current drop
+     * target.
+     *
+     * @return JavaScript that executes when dragover event happens.
+     */
+    public String getDragOverCriteria() {
+        return getState(false).dragOverCriteria;
+    }
+
+    /**
      * Sets criteria to allow drop event on the current drop target. The script
      * executes when drop event happens and stops the event in case the script
      * returns {@code false}.
+     * <p>
+     * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
+     * include untrusted sources such as user input. Always keep in mind that
+     * the script is executed on the client as is.
+     * <p>
+     * Example:
+     * <pre>
+     *     target.setDropCriteria(
+     *         // If dragged source contains a URL, allow it to be dropped
+     *         "if (event.dataTransfer.types.includes('text/uri-list')) {" +
+     *         "    return true;" +
+     *         "}" +
+     *
+     *         // Otherwise cancel the event"
+     *         "return false;");
+     * </pre>
      *
      * @param criteriaScript
      *         JavaScript to be executed when drop event happens or {@code null}
