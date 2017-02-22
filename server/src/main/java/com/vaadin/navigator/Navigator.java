@@ -364,14 +364,14 @@ public class Navigator implements Serializable {
         }
     }
 
-    private UI ui;
-    private NavigationStateManager stateManager;
-    private ViewDisplay display;
-    private View currentView = null;
-    private List<ViewChangeListener> listeners = new LinkedList<>();
-    private List<ViewProvider> providers = new LinkedList<>();
-    private String currentNavigationState = null;
-    private ViewProvider errorProvider;
+    protected UI ui;
+    protected NavigationStateManager stateManager;
+    protected ViewDisplay display;
+    protected View currentView = null;
+    protected List<ViewChangeListener> listeners = new LinkedList<>();
+    protected List<ViewProvider> providers = new LinkedList<>();
+    protected String currentNavigationState = null;
+    protected ViewProvider errorProvider;
 
     /**
      * Creates a navigator that is tracking the active view using URI fragments
@@ -997,7 +997,7 @@ public class Navigator implements Serializable {
      *            state string
      * @return suitable provider
      */
-    private ViewProvider getViewProvider(String state) {
+    protected ViewProvider getViewProvider(String state) {
         String longestViewName = null;
         ViewProvider longestViewNameProvider = null;
         for (ViewProvider provider : providers) {
