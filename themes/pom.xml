@@ -30,14 +30,16 @@
         </dependency>
 
         <dependency>
-            <groupId>com.vaadin</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>vaadin-sass-compiler</artifactId>
+            <version>${vaadin.sass.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.vaadin</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>vaadin-icons</artifactId>
+            <version>${vaadin.icons.version}</version>
             <scope>provided</scope>
         </dependency>
 
