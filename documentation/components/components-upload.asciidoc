@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.upload]]
-= [classname]#Upload#
+= Upload
 
 ifdef::web[]
 [.sampler]

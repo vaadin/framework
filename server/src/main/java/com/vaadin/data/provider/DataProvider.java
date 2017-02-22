@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.HasFilterableDataProvider;
+import com.vaadin.data.provider.CallbackDataProvider.CountCallback;
+import com.vaadin.data.provider.CallbackDataProvider.FetchCallback;
 import com.vaadin.server.SerializableBiFunction;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
@@ -91,6 +93,14 @@ public interface DataProvider<T, F> extends Serializable {
      * Refreshes the given item. This method should be used to inform all
      * {@link DataProviderListener DataProviderListeners} that an item has been
      * updated or replaced with a new instance.
+     * <p>
+     * For this to work properly, the item must either implement
+     * {@link #equals(Object)} and {@link #hashCode()} to consider both the old
+     * and the new item instances to be equal, or alternatively
+     * {@link #getId(Object)} should be implemented to return an appropriate
+     * identifier.
+     *
+     * @see #getId(Object)
      *
      * @param item
      *            the item to refresh
@@ -290,15 +300,15 @@ public interface DataProvider<T, F> extends Serializable {
      * @param fetchCallback
      *            function that returns a stream of items from the back end for
      *            a query
-     * @param sizeCallback
+     * @param countCallback
      *            function that returns the number of items in the back end for
      *            a query
      * @return a new callback data provider
      */
     public static <T, F> CallbackDataProvider<T, F> fromFilteringCallbacks(
-            SerializableFunction<Query<T, F>, Stream<T>> fetchCallback,
-            SerializableToIntFunction<Query<T, F>> sizeCallback) {
-        return new CallbackDataProvider<>(fetchCallback, sizeCallback);
+            FetchCallback<T, F> fetchCallback,
+            CountCallback<T, F> countCallback) {
+        return new CallbackDataProvider<>(fetchCallback, countCallback);
     }
 
     /**
@@ -311,14 +321,14 @@ public interface DataProvider<T, F> extends Serializable {
      * @param fetchCallback
      *            function that returns a stream of items from the back end for
      *            a query
-     * @param sizeCallback
+     * @param countCallback
      *            function that returns the number of items in the back end for
      *            a query
      * @return a new callback data provider
      */
     public static <T> CallbackDataProvider<T, Void> fromCallbacks(
-            SerializableFunction<Query<T, Void>, Stream<T>> fetchCallback,
-            SerializableToIntFunction<Query<T, Void>> sizeCallback) {
-        return fromFilteringCallbacks(fetchCallback, sizeCallback);
+            FetchCallback<T, Void> fetchCallback,
+            CountCallback<T, Void> countCallback) {
+        return fromFilteringCallbacks(fetchCallback, countCallback);
     }
 }

@@ -78,7 +78,7 @@ public class GridEditorUI extends AbstractReindeerTestUIWithLog {
                 .addColumn(Person::getPhoneNumber).setCaption("Phone Number")
                 .setId("phone");
         grid.addColumn(person -> person.getAddress().getStreetAddress())
-                .setCaption("Street Address");
+                .setCaption("Street Address").setId("street");
         grid.addColumn(person -> person.getAddress().getPostalCode(),
                 new NumberRenderer()).setCaption("Postal Code").setId("zip");
         grid.addColumn(person -> person.getAddress().getCity())

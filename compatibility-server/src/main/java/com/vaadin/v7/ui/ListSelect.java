@@ -25,6 +25,9 @@ import com.vaadin.v7.data.Container;
 /**
  * This is a simple list select without, for instance, support for new items,
  * lazyloading, and other advanced features.
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.ListSelect} based on
+ *             the new data binding API
  */
 @SuppressWarnings("serial")
 @Deprecated

@@ -4,12 +4,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,8 +30,10 @@ import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.GridSortOrder;
+import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
+import com.vaadin.server.SerializableComparator;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.util.MockUI;
@@ -41,8 +50,8 @@ public class GridTest {
 
     private Grid<String> grid;
     private Column<String, String> fooColumn;
-    private Column<String, Number> lengthColumn;
-    private Column<String, String> objectColumn;
+    private Column<String, Integer> lengthColumn;
+    private Column<String, Object> objectColumn;
     private Column<String, String> randomColumn;
 
     @Before
@@ -301,6 +310,9 @@ public class GridTest {
 
         Assert.assertEquals(new HashSet<>(Arrays.asList("Lorem", "2000")),
                 values);
+
+        assertSingleSortProperty(nameColumn, "name");
+        assertSingleSortProperty(bornColumn, "born");
     }
 
     @Test
@@ -451,6 +463,106 @@ public class GridTest {
     public void setColumnOrder_byString_removedColumn() {
         grid.removeColumn("randomColumnId");
         grid.setColumnOrder("randomColumnId", "length");
+    }
+
+    @Test
+    public void defaultSorting_comparableTypes() {
+        testValueProviderSorting(1, 2, 3);
+    }
+
+    @Test
+    public void defaultSorting_strings() {
+        testValueProviderSorting("a", "b", "c");
+    }
+
+    @Test
+    public void defaultSorting_notComparable() {
+        assert !Comparable.class.isAssignableFrom(AtomicInteger.class);
+
+        testValueProviderSorting(new AtomicInteger(10), new AtomicInteger(8),
+                new AtomicInteger(9));
+    }
+
+    @Test
+    public void defaultSorting_differentComparables() {
+        testValueProviderSorting(10.1, 200, 3000.1, 4000);
+    }
+
+    @Test
+    public void defaultSorting_mutuallyComparableTypes() {
+        testValueProviderSorting(new Date(10), new java.sql.Date(1000000),
+                new Date(100000000));
+    }
+
+    private static void testValueProviderSorting(Object... expectedOrder) {
+        SerializableComparator<Object> comparator = new Grid<>()
+                .addColumn(ValueProvider.identity())
+                .getComparator(SortDirection.ASCENDING);
+
+        Assert.assertNotNull(comparator);
+
+        List<Object> values = new ArrayList<>(Arrays.asList(expectedOrder));
+        Collections.shuffle(values, new Random(42));
+
+        Assert.assertArrayEquals(expectedOrder,
+                values.stream().sorted(comparator).toArray());
+    }
+
+    @Test
+    public void addBeanColumn_validRenderer() {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        grid.removeColumn("born");
+        grid.addColumn("born", new NumberRenderer(new DecimalFormat("#,###",
+                DecimalFormatSymbols.getInstance(Locale.US))));
+
+        Person person = new Person("Name", 2017);
+
+        JsonObject rowData = getRowData(grid, person);
+
+        String formattedValue = Stream.of(rowData.keys())
+                .map(rowData::getString).filter(value -> !value.equals("Name"))
+                .findFirst().orElse(null);
+        Assert.assertEquals(formattedValue, "2,017");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addBeanColumn_invalidRenderer() {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        grid.removeColumn("name");
+        grid.addColumn("name", new NumberRenderer());
+    }
+
+    @Test
+    public void columnId_sortProperty() {
+        assertSingleSortProperty(lengthColumn, "length");
+    }
+
+    @Test
+    public void columnId_sortProperty_noId() {
+        Assert.assertEquals(0,
+                objectColumn.getSortOrder(SortDirection.ASCENDING).count());
+    }
+
+    @Test
+    public void sortProperty_setId_doesntOverride() {
+        objectColumn.setSortProperty("foo");
+        objectColumn.setId("bar");
+
+        assertSingleSortProperty(objectColumn, "foo");
+    }
+
+    private static void assertSingleSortProperty(Column<?, ?> column,
+            String expectedProperty) {
+        QuerySortOrder[] sortOrders = column
+                .getSortOrder(SortDirection.ASCENDING)
+                .toArray(QuerySortOrder[]::new);
+
+        Assert.assertEquals(1, sortOrders.length);
+        Assert.assertEquals(SortDirection.ASCENDING,
+                sortOrders[0].getDirection());
+        Assert.assertEquals(expectedProperty, sortOrders[0].getSorted());
     }
 
     private static <T> JsonObject getRowData(Grid<T> grid, T row) {

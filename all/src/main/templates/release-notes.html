@@ -91,7 +91,9 @@
             <li>Vaadin Framework is now based on Java 8</li>
             <li>Vaadin Framework is using GWT 2.8, allowing client side code to use Java 8</li>
             <li>Other Framework dependencies including Atmosphere have been upgraded</li>
-            <li>Easier to integrate web components using HTML imports (<tt>@HtmlImport</tt>) and custom tag name support for <tt>AbstractJavaScriptComponent</tt></li>
+            <li>Easier to integrate web components using HTML imports (<tt>@HtmlImport</tt>), custom tag name support for <tt>AbstractJavaScriptComponent</tt> and more efficient transmission of shared state changes for JavaScript components</li>
+            <li>Context click events are now generated on iOS devices (<a href="https://github.com/vaadin/framework/issues/7387">#7387</a>)</li>
+            <li>Add-ons can use <tt>META-INF/services/com.vaadin.server.VaadinServiceInitListener</tt> to automatically hook into the initialization sequence of the framework</li>
         </ul>
 
         <p>
@@ -155,6 +157,7 @@
             <li><tt>SharedState</tt> and the getter methods for it have been added to each component, regardless of whether those are used for anything or not</li>
             <li>The old liferay theme (Liferay 6.0 look) has been removed</li>
             <li>FontAwesome icon constants have been deprecated, and will not be updated. It is replaced with <a href="https://vaadin.com/icons">Vaadin Icons</a> that are included in the Framework</li>
+            <li>It is no longer possible to configure a <tt>CurrentInstance</tt> to be automatically inherited into spawned threads.</li>
         </ul>
         <ul><h4>Component specific API changes</h4>
             <li><tt>setDescription(String)</tt> now renders tooltip as inner text by default, instead of HTML. HTML can be still used by using <tt>setDescription(String, ContentMode)</tt></li>
@@ -486,6 +489,7 @@
             <li>Wildfly 8-10</li>
             <li>Jetty 8-9</li>
             <li>Glassfish 4</li>
+            <li>Payara Server 164</li>
         </ul>
 
         <p>

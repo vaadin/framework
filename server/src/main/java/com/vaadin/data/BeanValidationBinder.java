@@ -15,6 +15,10 @@
  */
 package com.vaadin.data;
 
+import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
+
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
 
@@ -28,6 +32,8 @@ import com.vaadin.data.validator.BeanValidator;
 public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
 
     private final Class<BEAN> beanType;
+
+    private RequiredFieldConfigurator requiredConfigurator = RequiredFieldConfigurator.DEFAULT;
 
     /**
      * Creates a new binder that uses reflection based on the provided bean type
@@ -53,11 +59,63 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
         this.beanType = beanType;
     }
 
+    /**
+     * Sets a logic which allows to configure require indicator via
+     * {@link HasValue#setRequiredIndicatorVisible(boolean)} based on property
+     * descriptor.
+     * <p>
+     * Required indicator configuration will not be used at all if
+     * {@code configurator} is null.
+     * <p>
+     * By default the {@link RequiredFieldConfigurator#DEFAULT} configurator is
+     * used.
+     * 
+     * @param configurator
+     *            required indicator configurator, may be {@code null}
+     */
+    public void setRequiredConfigurator(
+            RequiredFieldConfigurator configurator) {
+        requiredConfigurator = configurator;
+    }
+
+    /**
+     * Gets field required indicator configuration logic.
+     * 
+     * @see #setRequiredConfigurator(RequiredFieldConfigurator)
+     * 
+     * @return required indicator configurator, may be {@code null}
+     */
+    public RequiredFieldConfigurator getRequiredConfigurator() {
+        return requiredConfigurator;
+    }
+
     @Override
     protected BindingBuilder<BEAN, ?> configureBinding(
             BindingBuilder<BEAN, ?> binding,
             PropertyDefinition<BEAN, ?> definition) {
-        return binding.withValidator(
-                new BeanValidator(beanType, definition.getName()));
+        BeanValidator validator = new BeanValidator(beanType,
+                definition.getName());
+        if (requiredConfigurator != null) {
+            configureRequired(binding, definition, validator);
+        }
+        return binding.withValidator(validator);
     }
+
+    private void configureRequired(BindingBuilder<BEAN, ?> binding,
+            PropertyDefinition<BEAN, ?> definition, BeanValidator validator) {
+        assert requiredConfigurator != null;
+        BeanDescriptor descriptor = validator.getJavaxBeanValidator()
+                .getConstraintsForClass(beanType);
+        PropertyDescriptor propertyDescriptor = descriptor
+                .getConstraintsForProperty(definition.getName());
+        if (propertyDescriptor == null) {
+            return;
+        }
+        if (propertyDescriptor.getConstraintDescriptors().stream()
+                .map(ConstraintDescriptor::getAnnotation)
+                .anyMatch(requiredConfigurator)) {
+            binding.getField().setRequiredIndicatorVisible(true);
+        }
+    }
+
 }

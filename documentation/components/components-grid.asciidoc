@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.grid]]
-= [classname]#Grid#
+= Grid
 
 ifdef::web[]
 [.sampler]
@@ -680,19 +680,15 @@ direction)#, which allows specifying the sort direction.
 grid.sort(nameColumn, SortDirection.DESCENDING);
 ----
 
-To sort on multiple columns, you need to use the fluid sort API with
-[methodname]#sort(Sort)#, which allows chaining sorting rules. Sorting rules are
-created with the static [methodname]#by()# method, which defines the primary
-sort column, and [methodname]#then()#, which can be used to specify any
-secondary sort columns. They default to ascending sort order, but the sort
-direction can be given with an optional parameter.
-
+To sort by multiple columns, you need to use the fluid sort builder API
+[classname]#GridSortOrderBuilder#, which allows you to easily construct sorting information to be passed to grid's [methodname]#setSortOrder()# method.
+A sort builder is created with the static methods [methodname]#asc()# and [methodname]#desc()#,
+and additional sorting information can by chained with [methodname]#thenAsc()# and [methodname]#thenDesc()#.
 
 [source, java]
 ----
-// Sort first by city and then by name
-grid.sort(Sort.by(cityColumn, SortDirection.ASCENDING)
-              .then(nameColumn, SortDirection.DESCENDING));
+// Sort first by city (ascending) and then by name (descending)
+grid.setSortOrder(GridSortOrder.asc(cityColumn).thenDesc(nameColumn))
 ----
 
 

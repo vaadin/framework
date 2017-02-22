@@ -82,6 +82,7 @@ public final class ComponentStateUtil implements Serializable {
      * @param eventListenerId
      *            The event identifier to add
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public static final Registration addRegisteredEventListener(
             SharedState state, String eventListenerId) {

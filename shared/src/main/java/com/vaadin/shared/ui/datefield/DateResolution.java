@@ -22,7 +22,7 @@ import java.util.List;
  * Resolutions for DateFields
  *
  * @author Vaadin Ltd.
- * @since 7.0
+ * @since 8.0
  */
 public enum DateResolution {
     DAY, MONTH, YEAR;

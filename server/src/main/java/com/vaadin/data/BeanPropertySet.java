@@ -40,7 +40,7 @@ import com.vaadin.util.ReflectTools;
  *
  * @author Vaadin Ltd
  *
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            the type of the bean

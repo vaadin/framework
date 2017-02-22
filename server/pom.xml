@@ -116,6 +116,49 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-font-icons</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <!-- VaadinIcons.java file -->
+                        <configuration>
+                            <includeGroupIds>com.vaadin</includeGroupIds>
+                            <includeArtifactIds>vaadin-icons</includeArtifactIds>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includes>com/vaadin/icons/VaadinIcons.java</includes>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${project.build.directory}/vaadin-icons</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/vaadin-icons</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <!-- Copy .java files to package -->
@@ -135,6 +178,10 @@
                                 </resource>
                                 <resource>
                                     <directory>src/main/java</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>${project.build.directory}/vaadin-icons</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
@@ -246,6 +293,46 @@
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
         </plugins>
+        
+        <pluginManagement>
+            <plugins>
+                <!-- Make Eclipse add the source folder -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>build-helper-maven-plugin</artifactId>
+                                        <versionRange>[1.0,)</versionRange>
+                                        <goals>
+                                            <goal>add-source</goal>
+<!--
+                                            <goal>add-test-source</goal>
+                                            <goal>add-resource</goal>
+                                            <goal>add-test-resource</goal>
+                                            <goal>maven-version</goal>
+                                            <goal>parse-version</goal>
+-->
+                                         </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnConfiguration>true</runOnConfiguration>
+                                            <!-- <runOnIncremental>true</runOnIncremental> -->
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
-
+    
 </project>

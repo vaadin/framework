@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.nativeselect]]
-= [classname]#NativeSelect#
+= NativeSelect
 
 ifdef::web[]
 [.sampler]

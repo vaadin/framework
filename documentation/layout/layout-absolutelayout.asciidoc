@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[layout.absolutelayout]]
-= [classname]#AbsoluteLayout#
+= AbsoluteLayout
 
 ifdef::web[]
 [.sampler]

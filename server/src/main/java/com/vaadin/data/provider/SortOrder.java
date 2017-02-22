@@ -25,6 +25,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @param <T>
  *            the type of the sorting information, usually a String (field id)
  *            or a {@link java.util.Comparator}.
+ * @since 8.0
  */
 public class SortOrder<T> implements Serializable {
 

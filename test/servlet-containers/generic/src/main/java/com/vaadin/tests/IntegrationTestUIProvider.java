@@ -1,14 +1,7 @@
 package com.vaadin.tests;
 
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
-
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.tests.integration.ServletIntegrationUI;
-import com.vaadin.tests.integration.ServletIntegrationWebsocketUI;
 import com.vaadin.tests.integration.push.BasicPush;
 import com.vaadin.ui.UI;
 
@@ -62,16 +55,4 @@ public class IntegrationTestUIProvider extends UIProvider {
         }
     }
 
-    @WebServlet(urlPatterns = "/*", name = "IntegrationTestUIProvider", asyncSupported = true, initParams = {
-            @WebInitParam(name = "UIProvider", value = "com.vaadin.tests.IntegrationTestUIProvider") })
-    @VaadinServletConfiguration(ui = ServletIntegrationUI.class, productionMode = false)
-    public static class MyServlet extends VaadinServlet {
-    }
-
-    @WebServlet(urlPatterns = "/run-jsr356/*", name = "IntegrationUIProvider-Jsr356", asyncSupported = false, initParams = {
-            @WebInitParam(name = "org.atmosphere.cpr.asyncSupport", value = "org.atmosphere.container.JSR356AsyncSupport") })
-    @VaadinServletConfiguration(ui = ServletIntegrationWebsocketUI.class, productionMode = false)
-    public static class JSR356Servlet extends VaadinServlet {
-
-    }
 }

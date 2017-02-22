@@ -29,6 +29,8 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.v7.data.Container;
@@ -38,8 +40,12 @@ import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 
 /**
  * Configures select to be used as an option group.
+ *
+ * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, use {@link RadioButtonGroup} for single select or
+ *             {@link CheckBoxGroup} for multiselect instead
  */
-@SuppressWarnings("serial")
 @Deprecated
 public class OptionGroup extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {

@@ -59,6 +59,7 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T>
      *            the caption to set, can be {@code null}
      * @param dataProvider
      *            the data provider, not {@code null}
+     * @since 8.0
      */
     public TwinColSelect(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);

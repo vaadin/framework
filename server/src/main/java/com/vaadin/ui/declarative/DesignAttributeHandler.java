@@ -197,6 +197,7 @@ public class DesignAttributeHandler implements Serializable {
      *            the attribute list where the attribute will be written
      * @param defaultInstance
      *            the default instance for comparing default values
+     * @since 8.0
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void writeAttribute(Object component, String attribute,
@@ -236,6 +237,7 @@ public class DesignAttributeHandler implements Serializable {
      *            the default attribute value
      * @param inputType
      *            the type of the input value
+     * @since 8.0
      */
     public static <T> void writeAttribute(String attribute,
             Attributes attributes, T value, T defaultValue, Class<T> inputType,

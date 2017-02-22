@@ -242,6 +242,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             }
             return encodedString;
         }
+
+        @Override
+        protected String getContextRootUrl() {
+            String root = context.getApplicationParameters()
+                    .getString(ApplicationConstants.CONTEXT_ROOT_URL);
+            assert root.endsWith("/");
+            return root;
+        }
     }
 
     @Override
@@ -691,6 +699,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             appConfig.put("sessExpMsg", sessExpMsg);
         }
 
+        appConfig.put(ApplicationConstants.CONTEXT_ROOT_URL,
+                getContextRootPath(context));
+
         // getStaticFileLocation documented to never end with a slash
         // vaadinDir should always end with a slash
         String vaadinDir = vaadinService.getStaticFileLocation(request)
@@ -721,6 +732,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         return appConfig;
     }
+
+    protected abstract String getContextRootPath(BootstrapContext context);
 
     protected abstract String getServiceUrl(BootstrapContext context);
 

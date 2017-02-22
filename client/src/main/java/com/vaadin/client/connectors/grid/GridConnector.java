@@ -30,7 +30,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
@@ -341,6 +340,7 @@ public class GridConnector extends AbstractListingConnector
             updateStaticCellFromState(row.join(columns),
                     cellGroupEntry.getKey());
         }
+        row.setStyleName(rowState.styleName);
     }
 
     private void updateStaticCellFromState(Grid.StaticSection.StaticCell cell,

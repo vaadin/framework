@@ -115,4 +115,19 @@ public interface HeaderRow extends Serializable {
      * @see Column#setId(String)
      */
     HeaderCell join(String... columnIdsToMerge);
+
+    /**
+     * Returns the custom style name for this row.
+     *
+     * @return the style name or null if no style name has been set
+     */
+    public String getStyleName();
+
+    /**
+     * Sets a custom style name for this row.
+     *
+     * @param styleName
+     *            the style name to set or null to not use any style name
+     */
+    public void setStyleName(String styleName);
 }

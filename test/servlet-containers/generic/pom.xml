@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
@@ -11,42 +11,38 @@
     <artifactId>vaadin-test-generic-integration</artifactId>
     <name>vaadin-test-generic-integration</name>
     <packaging>war</packaging>
+    <properties>
+        <osgi.bundle.version>8.0.0</osgi.bundle.version>
+        <jetty.skip>true</jetty.skip>
+    </properties>
 
     <dependencies>
 
-        <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-compatibility-server</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-compatibility-client-compiled</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-compatibility-themes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client-compiled</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-themes</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-push</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-uitest-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -55,11 +51,15 @@
     <build>
 
         <plugins>
-            <!--TODO run this on different servers-->
+            <!--TODO run this on different servers -->
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
                 <configuration>
-                    <skip>true</skip>
+                    <webApp>
+                        <contextPath>/demo</contextPath>
+                    </webApp>
                 </configuration>
             </plugin>
             <plugin>
@@ -75,26 +75,66 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- Currently tested using an Ant script. -->
                 <configuration>
                     <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
                 </configuration>
+                <!-- This execution builds an additional .war file with JBoss 
+                    6 specific descriptor -->
+                <executions>
+                    <execution>
+                        <id>jboss6-war</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>war</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>jboss6</classifier>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/jboss-6</directory>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.0.1</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <skip>true</skip>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.name}</Bundle-Name>
+                        <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
+                        <Import-Package>javax.servlet,javax.servlet.http,javax.websocket,javax.websocket.server,!com.vaadin.*,*</Import-Package>
+                        <Web-ContextPath>run</Web-ContextPath>
+                    </instructions>
+                    <supportedProjectTypes>
+                        <supportedProjectType>war</supportedProjectType>
+                    </supportedProjectTypes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>osgi-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>

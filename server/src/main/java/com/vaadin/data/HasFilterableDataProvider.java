@@ -38,13 +38,6 @@ import com.vaadin.server.SerializableFunction;
 public interface HasFilterableDataProvider<T, F> extends HasItems<T> {
 
     /**
-     * Returns the source of data items used by this listing.
-     *
-     * @return the data provider, not <code>null</code>
-     */
-    public DataProvider<T, ?> getDataProvider();
-
-    /**
      * Sets the data provider for this listing. The data provider is queried for
      * displayed items as needed.
      *

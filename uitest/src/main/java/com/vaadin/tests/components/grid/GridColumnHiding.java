@@ -18,7 +18,7 @@ public class GridColumnHiding extends AbstractReindeerTestUI {
         Grid<Person> grid = new Grid<>();
         Column<Person, String> nameColumn = grid.addColumn(Person::getFirstName)
                 .setHidable(true).setCaption("Name");
-        Column<Person, Number> ageColumn = grid
+        Column<Person, Integer> ageColumn = grid
                 .addColumn(Person::getAge, new NumberRenderer())
                 .setHidable(true)
                 .setHidingToggleCaption("custom age column caption")

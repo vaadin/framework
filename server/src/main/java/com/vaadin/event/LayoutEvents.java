@@ -79,6 +79,7 @@ public interface LayoutEvents {
          * @param listener
          *            The listener to add
          * @return a registration object for removing the listener
+         * @since 8.0
          */
         public Registration addLayoutClickListener(
                 LayoutClickListener listener);

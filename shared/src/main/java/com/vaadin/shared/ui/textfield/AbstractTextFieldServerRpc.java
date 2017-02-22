@@ -17,6 +17,11 @@ package com.vaadin.shared.ui.textfield;
 
 import com.vaadin.shared.communication.ServerRpc;
 
+/**
+ * Client to server RPC interface for AbstractTextField.
+ *
+ * @since 8.0
+ */
 public interface AbstractTextFieldServerRpc extends ServerRpc {
 
     void setText(String text, int cursorPosition);

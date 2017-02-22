@@ -44,11 +44,6 @@ public class MemoryIT extends SingleBrowserTest {
     protected void closeApplication() {
     }
 
-    @Override
-    protected String getScreenshotDirectory() {
-        return ".";
-    }
-
     private long getGridSize(String path, int itemsCount) {
         // Repeat until we get consecutive results within 0.1% of each other
         double lastResult = 0;
