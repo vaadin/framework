@@ -15,7 +15,6 @@
  */
 package com.vaadin.tools;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -26,6 +25,8 @@ import java.util.concurrent.FutureTask;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import org.apache.commons.io.IOUtils;
+
 import com.google.gwt.dev.shell.CheckForUpdates;
 import com.vaadin.shared.Version;
 
@@ -33,7 +34,7 @@ public class ReportUsage {
 
     public static final String ANONYMOUS_ID = loadFirstLaunch();
 
-    // TODO what should this say?
+    // for compatibility with old checks
     private static final String USER_AGENT_BASE = "GWT Freshness Checker";
 
     private static final String COMPILER = "Compiler"; //$NON-NLS-1$
@@ -105,6 +106,8 @@ public class ReportUsage {
         }
 
         doHttpGet(makeUserAgent(), url.toString());
+
+        prefs.put(LAST_PING, String.valueOf(currentTimeMillis));
     }
 
     private static void doHttpGet(String userAgent, String url) {
@@ -115,33 +118,20 @@ public class ReportUsage {
             URLConnection conn = urlToGet.openConnection();
             conn.setRequestProperty(USER_AGENT, userAgent);
             is = conn.getInputStream();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                baos.write(buffer, 0, bytesRead);
-            }
-            baos.toByteArray();
             // TODO use the results
+            IOUtils.toByteArray(is);
             return;
         } catch (MalformedURLException e) {
             caught = e;
         } catch (IOException e) {
             caught = e;
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                }
-            }
+            IOUtils.closeQuietly(is);
         }
 
         Logger.getLogger(ReportUsage.class.getName())
                 .fine("Caught an exception while executing HTTP query: "
                         + caught.getMessage());
-
-        return;
     }
 
     private static String makeUserAgent() {
