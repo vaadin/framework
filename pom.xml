@@ -685,6 +685,69 @@
             </build>
         </profile>
         <profile>
+            <!-- Snapshot build only builds artifacts that are deployed or 
+                needed by them -->
+            <id>snapshot</id>
+            <properties>
+                <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
+            </properties>
+            <modules>
+                <module>buildhelpers</module>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>compatibility-server</module>
+                <module>compatibility-client</module>
+                <module>compatibility-client-compiled</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <module>testbench-api</module>
+                <module>bom</module>
+            </modules>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Only include java files -->
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>generate-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <!-- This profile is disjoint with default profile. It allows 
                 to prevent running build for all available modules but restricts a number 
                 of modules to specified here only (which allows to avoid long time compilation 
