@@ -18,7 +18,7 @@ package com.vaadin.data.validator;
 import com.vaadin.data.Validator;
 
 /**
- * Abstract {@link com.vaadin.data.Validator Validator} implementation that
+ * Abstract {@link Validator} implementation that
  * provides a basic Validator implementation except the
  * {@link #isValidValue(Object)} method.
  * <p>

@@ -65,8 +65,7 @@ public class StringToDateConverter implements Converter<String, Date> {
      */
     @Override
     public Date convertToModel(String value, Class<? extends Date> targetType,
-            Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
+            Locale locale) throws ConversionException {
         if (targetType != getModelType()) {
             throw new ConversionException(
                     "Converter only supports " + getModelType().getName()
@@ -100,7 +99,7 @@ public class StringToDateConverter implements Converter<String, Date> {
     @Override
     public String convertToPresentation(Date value,
             Class<? extends String> targetType, Locale locale)
-            throws com.vaadin.data.util.converter.Converter.ConversionException {
+            throws ConversionException {
         if (value == null) {
             return null;
         }

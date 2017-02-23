@@ -624,7 +624,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     public void containerItemSetChange(
-            com.vaadin.data.Container.ItemSetChangeEvent event) {
+            Container.ItemSetChangeEvent event) {
         // Can't do partial repaints if items are added or removed during the
         // expand/collapse request
         toggledItemId = null;

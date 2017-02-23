@@ -28,7 +28,7 @@ import java.util.Collection;
  *
  * @author Vaadin Ltd.
  * @since 3.0
- * @see com.vaadin.data.Validator
+ * @see Validator
  */
 public interface Validatable extends Serializable {
 

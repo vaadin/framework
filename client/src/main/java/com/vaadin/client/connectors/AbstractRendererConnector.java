@@ -24,18 +24,18 @@ import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.communication.SharedState;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
 /**
  * An abstract base class for renderer connectors. A renderer connector is used
- * to link a client-side {@link Renderer} to a server-side
- * {@link com.vaadin.ui.components.grid.Renderer Renderer}. As a connector, it
- * can use the regular Vaadin RPC and shared state mechanism to pass additional
- * state and information between the client and the server. This base class
- * itself only uses the basic {@link com.vaadin.shared.communication.SharedState
- * SharedState} and no RPC interfaces.
+ * to link a client-side {@link Renderer} to a server-side <code>Renderer</code>
+ * . As a connector, it can use the regular Vaadin RPC and shared state
+ * mechanism to pass additional state and information between the client and the
+ * server. This base class itself only uses the basic {@link SharedState} and no
+ * RPC interfaces.
  *
  * @param <T>
  *            the presentation type of the renderer
@@ -64,9 +64,9 @@ public abstract class AbstractRendererConnector<T>
      * <p>
      * A subclass of AbstractRendererConnector should override this method as
      * shown below. The framework uses
-     * {@link com.google.gwt.core.client.GWT#create(Class) GWT.create(Class)} to
-     * create a renderer based on the return type of the overridden method, but
-     * only if {@link #createRenderer()} is not overridden as well:
+     * {@link com.google.gwt.core.client.GWT#create(Class)} to create a renderer
+     * based on the return type of the overridden method, but only if
+     * {@link #createRenderer()} is not overridden as well:
      *
      * <pre>
      * public MyRenderer getRenderer() {
@@ -88,8 +88,8 @@ public abstract class AbstractRendererConnector<T>
      * <p>
      * You should typically not override this method since the framework by
      * default generates an implementation that uses
-     * {@link com.google.gwt.core.client.GWT#create(Class)} to create a renderer
-     * of the same type as returned by the most specific override of
+     * {@link com.google.gwt.core.client.GWT#create(Class)} to create a renderer of
+     * the same type as returned by the most specific override of
      * {@link #getRenderer()}. If you do override the method, you can't call
      * <code>super.createRenderer()</code> since the metadata needed for that
      * implementation is not generated if there's an override of the method.

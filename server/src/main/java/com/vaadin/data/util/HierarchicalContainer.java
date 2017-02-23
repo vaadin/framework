@@ -40,7 +40,7 @@ import com.vaadin.data.Item;
 public class HierarchicalContainer extends IndexedContainer
         implements Container.Hierarchical {
 
-    /**
+    /** d
      * Set of IDs of those contained Items that can't have children.
      */
     private final HashSet<Object> noChildrenAllowed = new HashSet<Object>();
@@ -194,7 +194,7 @@ public class HierarchicalContainer extends IndexedContainer
      * this method fails and <code>false</code> is returned; the children must
      * be first explicitly removed with
      * {@link #setParent(Object itemId, Object newParentId)} or
-     * {@link com.vaadin.data.Container#removeItem(Object itemId)}.
+     * {@link Container#removeItem(Object itemId)}.
      * </p>
      *
      * @param itemId
@@ -401,11 +401,6 @@ public class HierarchicalContainer extends IndexedContainer
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#addItem()
-     */
     @Override
     public Object addItem() {
         disableContentsChangeEvents();
@@ -431,7 +426,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     @Override
     protected void fireItemSetChange(
-            com.vaadin.data.Container.ItemSetChangeEvent event) {
+            Container.ItemSetChangeEvent event) {
         if (contentsChangeEventsOn()) {
             super.fireItemSetChange(event);
         } else {
@@ -463,11 +458,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#addItem(java.lang.Object)
-     */
     @Override
     public Item addItem(Object itemId) {
         disableContentsChangeEvents();
@@ -490,11 +480,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#removeAllItems()
-     */
     @Override
     public boolean removeAllItems() {
         disableContentsChangeEvents();
@@ -522,11 +507,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#removeItem(java.lang.Object )
-     */
     @Override
     public boolean removeItem(Object itemId) {
         disableContentsChangeEvents();
@@ -647,11 +627,6 @@ public class HierarchicalContainer extends IndexedContainer
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#doSort()
-     */
     @Override
     protected void doSort() {
         super.doSort();
@@ -693,13 +668,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * Overridden to provide filtering for root & children items.
-     *
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#updateContainerFiltering()
-     */
     @Override
     protected boolean doFilterContainer(boolean hasFilters) {
         if (!hasFilters) {
@@ -839,12 +807,6 @@ public class HierarchicalContainer extends IndexedContainer
 
     private Set<Object> filterOverride = null;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.util.IndexedContainer#passesFilters(java.lang.Object)
-     */
     @Override
     protected boolean passesFilters(Object itemId) {
         if (filterOverride != null) {

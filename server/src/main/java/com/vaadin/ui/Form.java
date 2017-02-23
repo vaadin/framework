@@ -58,16 +58,16 @@ import com.vaadin.shared.ui.form.FormState;
  *
  * <p>
  * <code>Form</code> provides customizable editor for classes implementing
- * {@link com.vaadin.data.Item} interface. Also the form itself implements this
+ * {@link Item} interface. Also the form itself implements this
  * interface for easier connectivity to other items. To use the form as editor
  * for an item, just connect the item to form with
  * {@link Form#setItemDataSource(Item)}. If only a part of the item needs to be
  * edited, {@link Form#setItemDataSource(Item,Collection)} can be used instead.
  * After the item has been connected to the form, the automatically created
  * fields can be customized and new fields can be added. If you need to connect
- * a class that does not implement {@link com.vaadin.data.Item} interface, most
+ * a class that does not implement {@link Item} interface, most
  * properties of any class following bean pattern, can be accessed trough
- * {@link com.vaadin.data.util.BeanItem}.
+ * {@link BeanItem}.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -132,7 +132,7 @@ public class Form extends AbstractField<Object>
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
         @Override
         public void valueChange(
-                com.vaadin.data.Property.ValueChangeEvent event) {
+                Property.ValueChangeEvent event) {
             markAsDirty();
         }
     };
@@ -445,7 +445,7 @@ public class Form extends AbstractField<Object>
     /**
      * Adds a new property to form and create corresponding field.
      *
-     * @see com.vaadin.data.Item#addItemProperty(Object, Property)
+     * @see Item#addItemProperty(Object, Property)
      */
     @Override
     public boolean addItemProperty(Object id, Property property) {
@@ -576,7 +576,7 @@ public class Form extends AbstractField<Object>
      * source, the field is returned instead of the data source.
      * </p>
      *
-     * @see com.vaadin.data.Item#getItemProperty(Object)
+     * @see Item#getItemProperty(Object)
      */
     @Override
     public Property getItemProperty(Object id) {
@@ -613,7 +613,7 @@ public class Form extends AbstractField<Object>
     /**
      * Removes the property and corresponding field from the form.
      *
-     * @see com.vaadin.data.Item#removeItemProperty(Object)
+     * @see Item#removeItemProperty(Object)
      */
     @Override
     public boolean removeItemProperty(Object id) {
@@ -683,7 +683,7 @@ public class Form extends AbstractField<Object>
      * adds all the properties as fields to the form.
      * </p>
      *
-     * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
+     * @see Item.Viewer#setItemDataSource(Item)
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
@@ -701,7 +701,7 @@ public class Form extends AbstractField<Object>
      * order.
      * </p>
      *
-     * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
+     * @see Item.Viewer#setItemDataSource(Item)
      */
     public void setItemDataSource(Item newDataSource,
             Collection<?> propertyIds) {
@@ -951,7 +951,7 @@ public class Form extends AbstractField<Object>
     /**
      * Checks the validity of the Form and all of its fields.
      *
-     * @see com.vaadin.data.Validatable#validate()
+     * @see Validatable#validate()
      */
     @Override
     public void validate() throws InvalidValueException {
@@ -964,7 +964,7 @@ public class Form extends AbstractField<Object>
     /**
      * Checks the validabtable object accept invalid values.
      *
-     * @see com.vaadin.data.Validatable#isInvalidAllowed()
+     * @see Validatable#isInvalidAllowed()
      */
     @Override
     public boolean isInvalidAllowed() {
@@ -974,7 +974,7 @@ public class Form extends AbstractField<Object>
     /**
      * Should the validabtable object accept invalid values.
      *
-     * @see com.vaadin.data.Validatable#setInvalidAllowed(boolean)
+     * @see Validatable#setInvalidAllowed(boolean)
      */
     @Override
     public void setInvalidAllowed(boolean invalidValueAllowed)

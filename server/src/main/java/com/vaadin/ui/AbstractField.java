@@ -54,20 +54,20 @@ import com.vaadin.ui.declarative.DesignContext;
  * <p>
  * Abstract field component for implementing buffered property editors. The
  * field may hold an internal value, or it may be connected to any data source
- * that implements the {@link com.vaadin.data.Property}interface.
+ * that implements the {@link Property}interface.
  * <code>AbstractField</code> implements that interface itself, too, so
  * accessing the Property value represented by it is straightforward.
  * </p>
  *
  * <p>
- * AbstractField also provides the {@link com.vaadin.data.Buffered} interface
+ * AbstractField also provides the {@link Buffered} interface
  * for buffering the data source value. By default the Field is in write
  * through-mode and {@link #setWriteThrough(boolean)}should be called to enable
  * buffering.
  * </p>
  *
  * <p>
- * The class also supports {@link com.vaadin.data.Validator validators} to make
+ * The class also supports {@link Validator validators} to make
  * sure the value contained in the field is valid.
  * </p>
  *
@@ -203,7 +203,7 @@ public abstract class AbstractField<T> extends AbstractComponent
     @Override
     public boolean isReadOnly() {
         return super.isReadOnly()
-                || (dataSource != null && dataSource.isReadOnly());
+                || dataSource != null && dataSource.isReadOnly();
     }
 
     /**
@@ -220,7 +220,7 @@ public abstract class AbstractField<T> extends AbstractComponent
     /**
      * Tests if the invalid data is committed to datasource.
      *
-     * @see com.vaadin.data.BufferedValidatable#isInvalidCommitted()
+     * @see BufferedValidatable#isInvalidCommitted()
      */
     @Override
     public boolean isInvalidCommitted() {
@@ -230,7 +230,7 @@ public abstract class AbstractField<T> extends AbstractComponent
     /**
      * Sets if the invalid data should be committed to datasource.
      *
-     * @see com.vaadin.data.BufferedValidatable#setInvalidCommitted(boolean)
+     * @see BufferedValidatable#setInvalidCommitted(boolean)
      */
     @Override
     public void setInvalidCommitted(boolean isCommitted) {
@@ -609,8 +609,8 @@ public abstract class AbstractField<T> extends AbstractComponent
      *
      * <p>
      * If the data source implements
-     * {@link com.vaadin.data.Property.ValueChangeNotifier} and/or
-     * {@link com.vaadin.data.Property.ReadOnlyStatusChangeNotifier}, the field
+     * {@link Property.ValueChangeNotifier} and/or
+     * {@link Property.ReadOnlyStatusChangeNotifier}, the field
      * registers itself as a listener and updates itself according to the events
      * it receives. To avoid memory leaks caused by references to a field no
      * longer in use, the listener registrations are removed on
@@ -951,7 +951,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * is required and empty this method throws an EmptyValueException with the
      * error message set using {@link #setRequiredError(String)}.
      *
-     * @see com.vaadin.data.Validatable#validate()
+     * @see Validatable#validate()
      */
     @Override
     public void validate() throws Validator.InvalidValueException {
@@ -1023,7 +1023,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * because the field otherwise visually forget the user input immediately.
      *
      * @return true iff the invalid values are allowed.
-     * @see com.vaadin.data.Validatable#isInvalidAllowed()
+     * @see Validatable#isInvalidAllowed()
      */
     @Override
     public boolean isInvalidAllowed() {
@@ -1041,7 +1041,7 @@ public abstract class AbstractField<T> extends AbstractComponent
      * datasource is set.
      * </p>
      *
-     * @see com.vaadin.data.Validatable#setInvalidAllowed(boolean)
+     * @see Validatable#setInvalidAllowed(boolean)
      */
     @Override
     public void setInvalidAllowed(boolean invalidAllowed)
@@ -1124,7 +1124,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     *             {@link #addValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -1148,7 +1148,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -1248,7 +1248,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
+     *             {@link #addReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
      **/
     @Override
     @Deprecated
@@ -1270,7 +1270,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
+     *             {@link #removeReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
      **/
     @Override
     @Deprecated

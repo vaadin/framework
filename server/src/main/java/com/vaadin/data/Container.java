@@ -737,7 +737,7 @@ public interface Container extends Serializable {
          * <p>
          * The children must be first explicitly removed with
          * {@link #setParent(Object itemId, Object newParentId)}or
-         * {@link com.vaadin.data.Container#removeItem(Object itemId)}.
+         * {@link Container#removeItem(Object itemId)}.
          * </p>
          *
          * <p>
@@ -839,7 +839,7 @@ public interface Container extends Serializable {
      * Adding items (if supported) to a filtered {@link Ordered} or
      * {@link Indexed} container should insert them immediately after the
      * indicated visible item. The unfiltered position of items added at index
-     * 0, at index {@link com.vaadin.data.Container#size()} or at an undefined
+     * 0, at index {@link Container#size()} or at an undefined
      * position is up to the implementation.
      * </p>
      * <p>
@@ -974,7 +974,7 @@ public interface Container extends Serializable {
      * Adding items (if supported) to a filtered {@link Ordered} or
      * {@link Indexed} container should insert them immediately after the
      * indicated visible item. However, the unfiltered position of items added
-     * at index 0, at index {@link com.vaadin.data.Container#size()} or at an
+     * at index 0, at index {@link Container#size()} or at an
      * undefined position is up to the implementation.
      * </p>
      *

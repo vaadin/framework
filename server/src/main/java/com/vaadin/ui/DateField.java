@@ -53,11 +53,11 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  * <p>
  * Since <code>DateField</code> extends <code>AbstractField</code> it implements
- * the {@link com.vaadin.data.Buffered}interface.
+ * the {@link Buffered} interface.
  * </p>
  * <p>
  * A <code>DateField</code> is in write-through mode by default, so
- * {@link com.vaadin.ui.AbstractField#setWriteThrough(boolean)}must be called to
+ * {@link AbstractField#setWriteThrough(boolean)}must be called to
  * enable buffering.
  * </p>
  *
@@ -227,7 +227,7 @@ public class DateField extends AbstractField<Date> implements
      * Constructs a new <code>DateField</code> with the given caption and
      * initial text contents. The editor constructed this way will not be bound
      * to a Property unless
-     * {@link com.vaadin.data.Property.Viewer#setPropertyDataSource(Property)}
+     * {@link Property.Viewer#setPropertyDataSource(Property)}
      * is called to bind it.
      *
      * @param caption
@@ -693,11 +693,6 @@ public class DateField extends AbstractField<Date> implements
         return Date.class;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object, boolean)
-     */
     @Override
     protected void setValue(Date newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException {
@@ -865,7 +860,7 @@ public class DateField extends AbstractField<Date> implements
      * @param dateFormat
      *            the dateFormat to set
      *
-     * @see com.vaadin.ui.AbstractComponent#setLocale(Locale))
+     * @see AbstractComponent#setLocale(Locale))
      */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
@@ -999,7 +994,7 @@ public class DateField extends AbstractField<Date> implements
      * invalid if it contains text typed in by the user that couldn't be parsed
      * into a Date value.
      *
-     * @see com.vaadin.ui.AbstractField#validate()
+     * @see AbstractField#validate()
      */
     @Override
     public void validate() throws InvalidValueException {
