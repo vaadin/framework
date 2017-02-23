@@ -104,7 +104,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     private static class BeanPropertyDefinition<T, V>
-            implements PropertyDefinition<T, V>, Serializable {
+            implements PropertyDefinition<T, V> {
 
         private final PropertyDescriptor descriptor;
         private final BeanPropertySet<T> propertySet;
@@ -138,11 +138,11 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                 return Optional.empty();
             }
 
-            Setter<T, V> innerSetter = (bean, value) -> {
-                Method setter = descriptor.getWriteMethod();
-                invokeWrapExceptions(setter, bean, value);
+            Setter<T, V> setter = (bean, value) -> {
+                Method innerSetter = descriptor.getWriteMethod();
+                invokeWrapExceptions(innerSetter, bean, value);
             };
-            return Optional.of(innerSetter);
+            return Optional.of(setter);
         }
 
         @SuppressWarnings("unchecked")
