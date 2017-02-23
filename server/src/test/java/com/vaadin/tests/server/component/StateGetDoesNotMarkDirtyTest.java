@@ -31,6 +31,7 @@ public class StateGetDoesNotMarkDirtyTest {
         excludedMethods.add("getConnectorId");
         excludedMethods.add("getContent");
         excludedMethods.add("com.vaadin.ui.Grid:getSelectAllCheckBoxVisible");
+        excludedMethods.add("com.vaadin.ui.TreeGrid:getDataProvider");
     }
 
     @Test
