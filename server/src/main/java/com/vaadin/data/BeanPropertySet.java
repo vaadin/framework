@@ -139,6 +139,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             }
 
             Setter<T, V> setter = (bean, value) -> {
+                // Do not "optimize" this getter call,
+                // if its done outside the code block, that will produce
+                // NotSerializableException because of some lambda compilation magic
                 Method innerSetter = descriptor.getWriteMethod();
                 invokeWrapExceptions(innerSetter, bean, value);
             };
