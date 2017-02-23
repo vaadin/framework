@@ -3,6 +3,7 @@ package com.vaadin.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class BeanBinderTest
         private TextField number = new TextField();
     }
 
-    private class TestBean {
+    private static class TestBean implements Serializable{
         private Set<TestEnum> enums;
         private int number;
 
@@ -53,7 +54,7 @@ public class BeanBinderTest
         }
     }
 
-    public class RequiredConstraints {
+    public static class RequiredConstraints implements Serializable{
         @NotNull
         @Max(10)
         private String firstname;
@@ -107,6 +108,7 @@ public class BeanBinderTest
 
         // Should correctly bind the enum field without throwing
         otherBinder.bindInstanceFields(testClass);
+        testSerialization(otherBinder);
     }
 
     @Test
@@ -122,6 +124,7 @@ public class BeanBinderTest
         otherBinder.setBean(bean);
         testClass.number.setValue("50");
         assertEquals(50, bean.number);
+        testSerialization(otherBinder);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -304,6 +307,7 @@ public class BeanBinderTest
         binder.setBean(bean);
 
         Assert.assertTrue(field.isRequiredIndicatorVisible());
+        testSerialization(binder);
     }
 
     @Test
@@ -317,6 +321,7 @@ public class BeanBinderTest
         binder.setBean(bean);
 
         Assert.assertTrue(field.isRequiredIndicatorVisible());
+        testSerialization(binder);
     }
 
     @Test
@@ -330,6 +335,7 @@ public class BeanBinderTest
         binder.setBean(bean);
 
         Assert.assertTrue(field.isRequiredIndicatorVisible());
+        testSerialization(binder);
     }
 
     private void assertInvalid(HasValue<?> field, String message) {
