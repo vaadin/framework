@@ -27,16 +27,16 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.v7.client.ui.AbstractLegacyComponentConnector;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGridServerRpc;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGridState;
+import com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid;
 
 /**
  * A class that defines the default implementation for a color picker grid
- * connector. Connects the server side
- * {@link com.vaadin.ui.components.colorpicker.ColorPickerGrid} with the client
+ * connector. Connects the server side {@link ColorPickerGrid} with the client
  * side counterpart {@link VColorPickerGrid}
  *
  * @since 7.0.0
  */
-@Connect(value = com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid.class, loadStyle = LoadStyle.LAZY)
+@Connect(value = ColorPickerGrid.class, loadStyle = LoadStyle.LAZY)
 public class ColorPickerGridConnector extends AbstractLegacyComponentConnector
         implements ClickHandler {
 

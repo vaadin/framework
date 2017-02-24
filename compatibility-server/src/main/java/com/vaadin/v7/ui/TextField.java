@@ -21,6 +21,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.v7.data.Buffered;
 import com.vaadin.v7.data.Property;
 
 /**
@@ -32,10 +33,10 @@ import com.vaadin.v7.data.Property;
  *
  * <p>
  * Since <code>TextField</code> extends <code>LegacyAbstractField</code> it
- * implements the {@link com.vaadin.v7.data.Buffered} interface. A
- * <code>TextField</code> is in write-through mode by default, so
- * {@link com.vaadin.v7.ui.AbstractField#setWriteThrough(boolean)} must be
- * called to enable buffering.
+ * implements the {@link Buffered} interface. A <code>TextField</code> is in
+ * write-through mode by default, so
+ * {@link AbstractField#setWriteThrough(boolean)} must be called to enable
+ * buffering.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -95,8 +96,8 @@ public class TextField extends AbstractTextField {
      * Constructs a new <code>TextField</code> with the given caption and
      * initial text contents. The editor constructed this way will not be bound
      * to a Property unless
-     * {@link com.vaadin.v7.data.Property.Viewer#setPropertyDataSource(Property)}
-     * is called to bind it.
+     * {@link Property.Viewer#setPropertyDataSource(Property)} is called to bind
+     * it.
      *
      * @param caption
      *            the caption <code>String</code> for the editor.

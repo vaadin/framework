@@ -190,11 +190,6 @@ public class TableQuery extends AbstractTransactionalQuery
         fetchMetaData();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#getCount()
-     */
     @Override
     public int getCount() throws SQLException {
         getLogger().log(Level.FINE, "Fetching count...");
@@ -226,12 +221,6 @@ public class TableQuery extends AbstractTransactionalQuery
         return count;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#getResults(int,
-     * int)
-     */
     @Override
     public ResultSet getResults(int offset, int pagelength)
             throws SQLException {
@@ -254,24 +243,11 @@ public class TableQuery extends AbstractTransactionalQuery
         return executeQuery(sh);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#
-     * implementationRespectsPagingLimits()
-     */
     @Override
     public boolean implementationRespectsPagingLimits() {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.sqlcontainer.query.QueryDelegate#storeRow(com.vaadin
-     * .addon.sqlcontainer.RowItem)
-     */
     @Override
     public int storeRow(RowItem row)
             throws UnsupportedOperationException, SQLException {
@@ -352,13 +328,6 @@ public class TableQuery extends AbstractTransactionalQuery
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.sqlcontainer.query.QueryDelegate#setFilters(java.util
-     * .List)
-     */
     @Override
     public void setFilters(List<Filter> filters)
             throws UnsupportedOperationException {
@@ -369,13 +338,6 @@ public class TableQuery extends AbstractTransactionalQuery
         this.filters = Collections.unmodifiableList(filters);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.sqlcontainer.query.QueryDelegate#setOrderBy(java.util
-     * .List)
-     */
     @Override
     public void setOrderBy(List<OrderBy> orderBys)
             throws UnsupportedOperationException {
@@ -386,11 +348,6 @@ public class TableQuery extends AbstractTransactionalQuery
         this.orderBys = Collections.unmodifiableList(orderBys);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#beginTransaction()
-     */
     @Override
     public void beginTransaction()
             throws UnsupportedOperationException, SQLException {
@@ -398,11 +355,6 @@ public class TableQuery extends AbstractTransactionalQuery
         super.beginTransaction();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#commit()
-     */
     @Override
     public void commit() throws UnsupportedOperationException, SQLException {
         getLogger().log(Level.FINE, "DB -> commit");
@@ -421,23 +373,12 @@ public class TableQuery extends AbstractTransactionalQuery
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#rollback()
-     */
     @Override
     public void rollback() throws UnsupportedOperationException, SQLException {
         getLogger().log(Level.FINE, "DB -> rollback");
         super.rollback();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.sqlcontainer.query.QueryDelegate#getPrimaryKeyColumns()
-     */
     @Override
     public List<String> getPrimaryKeyColumns() {
         return Collections.unmodifiableList(primaryKeyColumns);
@@ -715,13 +656,6 @@ public class TableQuery extends AbstractTransactionalQuery
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.sqlcontainer.query.QueryDelegate#removeRow(com.vaadin
-     * .addon.sqlcontainer.RowItem)
-     */
     @Override
     public boolean removeRow(RowItem row)
             throws UnsupportedOperationException, SQLException {
@@ -741,13 +675,6 @@ public class TableQuery extends AbstractTransactionalQuery
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.sqlcontainer.query.QueryDelegate#containsRowWithKey(
-     * java.lang.Object[])
-     */
     @Override
     public boolean containsRowWithKey(Object... keys) throws SQLException {
         ArrayList<Filter> filtersAndKeys = new ArrayList<>();
@@ -837,7 +764,7 @@ public class TableQuery extends AbstractTransactionalQuery
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addRowIdChangeListener(com.vaadin.v7.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeListener)}
+     *             {@link #addRowIdChangeListener(QueryDelegate.RowIdChangeListener)}
      **/
     @Override
     @Deprecated
@@ -857,7 +784,7 @@ public class TableQuery extends AbstractTransactionalQuery
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeRowIdChangeListener(com.vaadin.v7.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeListener)}
+     *             {@link #removeRowIdChangeListener(QueryDelegate.RowIdChangeListener)}
      **/
     @Override
     @Deprecated

@@ -502,7 +502,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * For internal use only. May be removed or replaced in the future.
      *
-     * @see com.vaadin.v7.client.ui.VTextualDate#buildDate()
+     * @see VTextualDate#buildDate()
      */
     @Override
     public void buildDate() {

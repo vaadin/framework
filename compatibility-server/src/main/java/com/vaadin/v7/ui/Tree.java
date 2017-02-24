@@ -51,6 +51,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -503,12 +504,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /* Component API */
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractSelect#changeVariables(java.lang.Object,
-     * java.util.Map)
-     */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
@@ -624,7 +619,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Paints any needed component-specific things to the given UIDL stream.
      *
-     * @see com.vaadin.ui.AbstractComponent#paintContent(PaintTarget)
+     * @see AbstractComponent#paintContent(PaintTarget)
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -863,7 +858,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Tests if the Item with given ID can have any children.
      *
-     * @see com.vaadin.v7.data.Container.Hierarchical#areChildrenAllowed(Object)
+     * @see Container.Hierarchical#areChildrenAllowed(Object)
      */
     @Override
     public boolean areChildrenAllowed(Object itemId) {
@@ -873,7 +868,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Gets the IDs of all Items that are children of the specified Item.
      *
-     * @see com.vaadin.v7.data.Container.Hierarchical#getChildren(Object)
+     * @see Container.Hierarchical#getChildren(Object)
      */
     @Override
     public Collection<?> getChildren(Object itemId) {
@@ -883,7 +878,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Gets the ID of the parent Item of the specified Item.
      *
-     * @see com.vaadin.v7.data.Container.Hierarchical#getParent(Object)
+     * @see Container.Hierarchical#getParent(Object)
      */
     @Override
     public Object getParent(Object itemId) {
@@ -893,7 +888,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Tests if the Item specified with <code>itemId</code> has child Items.
      *
-     * @see com.vaadin.v7.data.Container.Hierarchical#hasChildren(Object)
+     * @see Container.Hierarchical#hasChildren(Object)
      */
     @Override
     public boolean hasChildren(Object itemId) {
@@ -903,7 +898,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Tests if the Item specified with <code>itemId</code> is a root Item.
      *
-     * @see com.vaadin.v7.data.Container.Hierarchical#isRoot(Object)
+     * @see Container.Hierarchical#isRoot(Object)
      */
     @Override
     public boolean isRoot(Object itemId) {
@@ -913,7 +908,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Gets the IDs of all Items in the container that don't have a parent.
      *
-     * @see com.vaadin.v7.data.Container.Hierarchical#rootItemIds()
+     * @see Container.Hierarchical#rootItemIds()
      */
     @Override
     public Collection<?> rootItemIds() {
@@ -923,8 +918,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Sets the given Item's capability to have children.
      *
-     * @see com.vaadin.v7.data.Container.Hierarchical#setChildrenAllowed(Object,
-     *      boolean)
+     * @see Container.Hierarchical#setChildrenAllowed(Object, boolean)
      */
     @Override
     public boolean setChildrenAllowed(Object itemId,
@@ -958,7 +952,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Sets the Container that serves as the data source of the viewer.
      *
-     * @see com.vaadin.v7.data.Container.Viewer#setContainerDataSource(Container)
+     * @see Container.Viewer#setContainerDataSource(Container)
      */
     @Override
     public void setContainerDataSource(Container newDataSource) {
@@ -993,8 +987,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     @Override
-    public void containerItemSetChange(
-            com.vaadin.v7.data.Container.ItemSetChangeEvent event) {
+    public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
         if (getContainerDataSource() instanceof Filterable) {
             boolean hasFilters = !((Filterable) getContainerDataSource())
@@ -1293,7 +1286,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Gets the visible item ids.
      *
-     * @see com.vaadin.v7.ui.Select#getVisibleItemIds()
+     * @see Select#getVisibleItemIds()
      */
     @Override
     public Collection<?> getVisibleItemIds() {
@@ -1337,7 +1330,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Tree does not support <code>setNullSelectionItemId</code>.
      *
-     * @see com.vaadin.v7.ui.AbstractSelect#setNullSelectionItemId(java.lang.Object)
+     * @see AbstractSelect#setNullSelectionItemId(java.lang.Object)
      */
     @Override
     public void setNullSelectionItemId(Object nullSelectionItemId)
@@ -1353,7 +1346,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *
      * @throws UnsupportedOperationException
      *             if set to true.
-     * @see com.vaadin.v7.ui.Select#setNewItemsAllowed(boolean)
+     * @see Select#setNewItemsAllowed(boolean)
      */
     @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
