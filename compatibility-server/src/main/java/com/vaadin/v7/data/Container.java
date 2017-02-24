@@ -744,7 +744,7 @@ public interface Container extends Serializable {
          * <p>
          * The children must be first explicitly removed with
          * {@link #setParent(Object itemId, Object newParentId)}or
-         * {@link com.vaadin.v7.data.Container#removeItem(Object itemId)}.
+         * {@link Container#removeItem(Object itemId)}.
          * </p>
          *
          * <p>
@@ -768,8 +768,9 @@ public interface Container extends Serializable {
         /**
          * Tests if the Item specified with <code>itemId</code> is a root Item.
          * The hierarchical container can have more than one root and must have
-         * at least one unless it is empty. The {@link #getParent(Object itemId)}
-         * method always returns <code>null</code> for root Items.
+         * at least one unless it is empty. The
+         * {@link #getParent(Object itemId)} method always returns
+         * <code>null</code> for root Items.
          *
          * @param itemId
          *            ID of the Item whose root status is to be tested
@@ -846,8 +847,8 @@ public interface Container extends Serializable {
      * Adding items (if supported) to a filtered {@link Ordered} or
      * {@link Indexed} container should insert them immediately after the
      * indicated visible item. The unfiltered position of items added at index
-     * 0, at index {@link com.vaadin.v7.data.Container#size()} or at an
-     * undefined position is up to the implementation.
+     * 0, at index {@link Container#size()} or at an undefined position is up to
+     * the implementation.
      * </p>
      * <p>
      * The functionality of SimpleFilterable can be implemented using the
@@ -983,8 +984,8 @@ public interface Container extends Serializable {
      * Adding items (if supported) to a filtered {@link Ordered} or
      * {@link Indexed} container should insert them immediately after the
      * indicated visible item. However, the unfiltered position of items added
-     * at index 0, at index {@link com.vaadin.v7.data.Container#size()} or at an
-     * undefined position is up to the implementation.
+     * at index 0, at index {@link Container#size()} or at an undefined position
+     * is up to the implementation.
      * </p>
      *
      * <p>
@@ -1267,6 +1268,7 @@ public interface Container extends Serializable {
          *             {@link #removePropertySetChangeListener(PropertySetChangeListener)}
          **/
         @Deprecated
-        public void removeListener(Container.PropertySetChangeListener listener);
+        public void removeListener(
+                Container.PropertySetChangeListener listener);
     }
 }

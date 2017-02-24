@@ -20,8 +20,7 @@ import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
 
 /**
  * String validator for a double precision floating point number. See
- * {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
- * information.
+ * {@link AbstractStringValidator} for more information.
  *
  * @author Vaadin Ltd.
  * @since 5.4

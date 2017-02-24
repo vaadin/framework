@@ -18,8 +18,8 @@ package com.vaadin.v7.client;
 /**
  * Legacy ComponentConnector with {@code isReadOnly}.
  *
- * @author teemusa
- *
+ * @since 8.0
+ * @author Vaadin Ltd
  */
 public interface ComponentConnector
         extends com.vaadin.client.ComponentConnector {

@@ -34,7 +34,7 @@ import com.vaadin.v7.data.Property.ValueChangeNotifier;
  * fired at the end of a successful transaction, whereas listeners attached to
  * the underlying property may receive multiple value change events.
  *
- * @see com.vaadin.v7.data.Property.Transactional
+ * @see Property.Transactional
  *
  * @author Vaadin Ltd
  * @since 7.0

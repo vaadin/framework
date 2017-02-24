@@ -28,7 +28,7 @@ import com.vaadin.v7.data.Property;
 
 /**
  * Class for handling a set of identified Properties. The elements contained in
- * a </code>MapItem</code> can be referenced using locally unique identifiers.
+ * a <code>MapItem</code> can be referenced using locally unique identifiers.
  * The class supports listeners who are interested in changes to the Property
  * set managed by the class.
  *
@@ -212,7 +212,7 @@ public class PropertysetItem
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.vaadin.v7.data.Item.PropertySetChangeListener)}
+     *             {@link #addPropertySetChangeListener(Item.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -236,7 +236,7 @@ public class PropertysetItem
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.v7.data.Item.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Item.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
