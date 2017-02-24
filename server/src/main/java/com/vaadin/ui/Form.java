@@ -985,7 +985,7 @@ public class Form extends AbstractField<Object>
     /**
      * Sets the component's to read-only mode to the specified state.
      *
-     * @see com.vaadin.ui.Component#setReadOnly(boolean)
+     * @see Component#setReadOnly(boolean)
      */
     @Override
     public void setReadOnly(boolean readOnly) {
@@ -1023,7 +1023,7 @@ public class Form extends AbstractField<Object>
     /**
      * Gets the field type.
      *
-     * @see com.vaadin.ui.AbstractField#getType()
+     * @see AbstractField#getType()
      */
     @Override
     public Class<?> getType() {
@@ -1038,7 +1038,7 @@ public class Form extends AbstractField<Object>
      *
      * This is relevant when the Form is used as Field.
      *
-     * @see com.vaadin.ui.AbstractField#setInternalValue(java.lang.Object)
+     * @see AbstractField#setInternalValue(java.lang.Object)
      */
     @Override
     protected void setInternalValue(Object newValue) {
@@ -1152,7 +1152,7 @@ public class Form extends AbstractField<Object>
     /**
      * Focuses the first field in the form.
      *
-     * @see com.vaadin.ui.Component.Focusable#focus()
+     * @see Component.Focusable#focus()
      */
     @Override
     public void focus() {
@@ -1165,7 +1165,7 @@ public class Form extends AbstractField<Object>
     /**
      * Sets the Tabulator index of this Focusable component.
      *
-     * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
+     * @see Component.Focusable#setTabIndex(int)
      */
     @Override
     public void setTabIndex(int tabIndex) {
@@ -1212,11 +1212,6 @@ public class Form extends AbstractField<Object>
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractField#clear()
-     */
     @Override
     public void clear() {
         for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {

@@ -2120,11 +2120,14 @@ public class Table extends AbstractSelect implements Action.Container,
         pageBufferFirstIndex = Math.max(
                 pageBufferFirstIndex + rowsFromBeginning, minPageBufferIndex);
         if (getLogger().isLoggable(Level.FINEST)) {
-            getLogger().log(Level.FINEST,
-                    "Page Buffer now contains {0} rows ({1}-{2})",
-                    new Object[] { pageBuffer[CELL_ITEMID].length,
-                            pageBufferFirstIndex, (pageBufferFirstIndex
-                                    + pageBuffer[CELL_ITEMID].length - 1) });
+            getLogger()
+                    .log(Level.FINEST,
+                            "Page Buffer now contains {0} rows ({1}-{2})",
+                            new Object[] { pageBuffer[CELL_ITEMID].length,
+                                    pageBufferFirstIndex,
+                                    (pageBufferFirstIndex
+                                            + pageBuffer[CELL_ITEMID].length
+                                            - 1) });
         }
         return cells;
     }
@@ -2940,8 +2943,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Invoked when the value of a variable has changed.
      *
-     * @see Select#changeVariables(java.lang.Object,
-     *      java.util.Map)
+     * @see Select#changeVariables(java.lang.Object, java.util.Map)
      */
 
     @Override
@@ -4362,8 +4364,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the class of the property.
      * @param defaultValue
      *            the default value given for all existing items.
-     * @see Container#addContainerProperty(Object, Class,
-     *      Object)
+     * @see Container#addContainerProperty(Object, Class, Object)
      */
 
     @Override
@@ -4407,8 +4408,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the Alignment of the column. Null implies align left.
      * @throws UnsupportedOperationException
      *             if the operation is not supported.
-     * @see Container#addContainerProperty(Object, Class,
-     *      Object)
+     * @see Container#addContainerProperty(Object, Class, Object)
      */
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue, String columnHeader, Resource columnIcon,
@@ -4737,8 +4737,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Adds new item after the given item.
      *
-     * @see Container.Ordered#addItemAfter(java.lang.Object,
-     *      java.lang.Object)
+     * @see Container.Ordered#addItemAfter(java.lang.Object, java.lang.Object)
      */
 
     @Override
@@ -4830,8 +4829,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @throws UnsupportedOperationException
      *             if the container data source does not implement
      *             Container.Sortable
-     * @see Container.Sortable#sort(java.lang.Object[],
-     *      boolean[])
+     * @see Container.Sortable#sort(java.lang.Object[], boolean[])
      *
      */
 

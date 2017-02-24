@@ -106,11 +106,8 @@ import com.vaadin.ui.declarative.DesignContext;
  *
  * <li>If date range is seven days or shorter, the weekly view is used.</li>
  *
- * <li>Calendar queries its events by using a
- * {@link com.vaadin.addon.calendar.event.CalendarEventProvider
- * CalendarEventProvider}. By default, a
- * {@link com.vaadin.addon.calendar.event.BasicEventProvider BasicEventProvider}
- * is used.</li>
+ * <li>Calendar queries its events by using a {@link CalendarEventProvider}. By
+ * default, a {@link BasicEventProvider} is used.</li>
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -421,7 +418,7 @@ public class Calendar extends AbstractComponent
     /**
      * Sets the locale to be used in the Calendar component.
      *
-     * @see com.vaadin.ui.AbstractComponent#setLocale(java.util.Locale)
+     * @see AbstractComponent#setLocale(java.util.Locale)
      */
     @Override
     public void setLocale(Locale newLocale) {
@@ -715,7 +712,8 @@ public class Calendar extends AbstractComponent
                 getTimeZone());
         Action[] actions = actionHandler.getActions(range, this);
         if (actions != null) {
-            Set<Action> actionSet = new LinkedHashSet<Action>(Arrays.asList(actions));
+            Set<Action> actionSet = new LinkedHashSet<Action>(
+                    Arrays.asList(actions));
             actionMap.put(range, actionSet);
         }
     }
@@ -1331,11 +1329,10 @@ public class Calendar extends AbstractComponent
     }
 
     /**
-     * Set the {@link com.vaadin.addon.calendar.event.CalendarEventProvider
-     * CalendarEventProvider} to be used with this calendar. The EventProvider
-     * is used to query for events to show, and must be non-null. By default a
-     * {@link com.vaadin.addon.calendar.event.BasicEventProvider
-     * BasicEventProvider} is used.
+     * Set the {@link CalendarEventProvider CalendarEventProvider} to be used
+     * with this calendar. The EventProvider is used to query for events to
+     * show, and must be non-null. By default a {@link BasicEventProvider} is
+     * used.
      *
      * @param calendarEventProvider
      *            the calendarEventProvider to set. Cannot be null.
@@ -1362,19 +1359,12 @@ public class Calendar extends AbstractComponent
     }
 
     /**
-     * @return the {@link com.vaadin.addon.calendar.event.CalendarEventProvider
-     *         CalendarEventProvider} currently used
+     * @return the {@link CalendarEventProvider} currently used
      */
     public CalendarEventProvider getEventProvider() {
         return calendarEventProvider;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.calendar.ui.CalendarEvents.EventChangeListener#
-     * eventChange (com.vaadin.addon.calendar.ui.CalendarEvents.EventChange)
-     */
     @Override
     public void eventSetChange(EventSetChangeEvent changeEvent) {
         // sanity check
@@ -1412,100 +1402,42 @@ public class Calendar extends AbstractComponent
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardHandler)
-     */
     @Override
     public void setHandler(ForwardHandler listener) {
         setHandler(ForwardEvent.EVENT_ID, ForwardEvent.class, listener,
                 ForwardHandler.forwardMethod);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.BackwardHandler)
-     */
     @Override
     public void setHandler(BackwardHandler listener) {
         setHandler(BackwardEvent.EVENT_ID, BackwardEvent.class, listener,
                 BackwardHandler.backwardMethod);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.DateClickHandler)
-     */
     @Override
     public void setHandler(DateClickHandler listener) {
         setHandler(DateClickEvent.EVENT_ID, DateClickEvent.class, listener,
                 DateClickHandler.dateClickMethod);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClickHandler)
-     */
     @Override
     public void setHandler(EventClickHandler listener) {
         setHandler(EventClick.EVENT_ID, EventClick.class, listener,
                 EventClickHandler.eventClickMethod);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.NavigationNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.WeekClickHandler)
-     */
     @Override
     public void setHandler(WeekClickHandler listener) {
         setHandler(WeekClick.EVENT_ID, WeekClick.class, listener,
                 WeekClickHandler.weekClickMethod);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResizeNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResizeHandler
-     * )
-     */
     @Override
     public void setHandler(EventResizeHandler listener) {
         setHandler(EventResize.EVENT_ID, EventResize.class, listener,
                 EventResizeHandler.eventResizeMethod);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.RangeSelectNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.RangeSelectHandler
-     * )
-     */
     @Override
     public void setHandler(RangeSelectHandler listener) {
         setHandler(RangeSelectEvent.EVENT_ID, RangeSelectEvent.class, listener,
@@ -1513,26 +1445,12 @@ public class Calendar extends AbstractComponent
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventMoveNotifier
-     * #addListener
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventMoveHandler)
-     */
     @Override
     public void setHandler(EventMoveHandler listener) {
         setHandler(MoveEvent.EVENT_ID, MoveEvent.class, listener,
                 EventMoveHandler.eventMoveMethod);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.calendar.ui.CalendarComponentEvents.
-     * CalendarEventNotifier #getHandler(java.lang.String)
-     */
     @Override
     public EventListener getHandler(String eventId) {
         return handlers.get(eventId);
@@ -1557,12 +1475,6 @@ public class Calendar extends AbstractComponent
         this.dropHandler = dropHandler;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
-     */
     @Override
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
@@ -1603,7 +1515,7 @@ public class Calendar extends AbstractComponent
      * Use this method if you are adding a container which uses the default
      * property ids like {@link BeanItemContainer} for instance. If you are
      * using custom properties instead use
-     * {@link Calendar#setContainerDataSource(com.vaadin.data.Container.Indexed, Object, Object, Object, Object, Object)}
+     * {@link Calendar#setContainerDataSource(Container.Indexed, Object, Object, Object, Object, Object)}
      *
      * Please note that the container must be sorted by date!
      *
@@ -1683,13 +1595,6 @@ public class Calendar extends AbstractComponent
         setEventProvider(provider);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
-     * util.Date, java.util.Date)
-     */
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
         List<CalendarEvent> events = getEventProvider().getEvents(startDate,
@@ -1698,13 +1603,6 @@ public class Calendar extends AbstractComponent
         return events;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
-     * (com.vaadin.addon.calendar.event.CalendarEvent)
-     */
     @Override
     public void addEvent(CalendarEvent event) {
         if (getEventProvider() instanceof CalendarEditableEventProvider) {
@@ -1717,13 +1615,6 @@ public class Calendar extends AbstractComponent
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
-     * (com.vaadin.addon.calendar.event.CalendarEvent)
-     */
     @Override
     public void removeEvent(CalendarEvent event) {
         if (getEventProvider() instanceof CalendarEditableEventProvider) {
@@ -1798,13 +1689,6 @@ public class Calendar extends AbstractComponent
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.event.Action.Container#removeActionHandler(com.vaadin.event
-     * .Action.Handler)
-     */
     @Override
     public void removeActionHandler(Handler actionHandler) {
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
@@ -1985,12 +1869,6 @@ public class Calendar extends AbstractComponent
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.server.VariableOwner#changeVariables(java.lang.Object,
-     * java.util.Map)
-     */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         /*
@@ -1999,12 +1877,6 @@ public class Calendar extends AbstractComponent
          */
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.ui.LegacyComponent#paintContent(com.vaadin.server.PaintTarget)
-     */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (dropHandler != null) {
