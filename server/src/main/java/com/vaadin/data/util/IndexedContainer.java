@@ -645,8 +645,8 @@ public class IndexedContainer
     /* Internal Item and Property implementations */
 
     /**
-     * A class implementing the {@link Item} interface to be contained
-     * in the list.
+     * A class implementing the {@link Item} interface to be contained in the
+     * list.
      *
      * @author Vaadin Ltd.
      *
