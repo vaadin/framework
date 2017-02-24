@@ -243,12 +243,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.v7.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -1473,7 +1473,7 @@ public class VFilterSelect extends Composite
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<>();
+    public final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
@@ -1957,7 +1957,7 @@ public class VFilterSelect extends Composite
                 Unit.PX);
     }
 
-    private static Set<Integer> navigationKeyCodes = new HashSet<>();
+    private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();
     static {
         navigationKeyCodes.add(KeyCodes.KEY_DOWN);
         navigationKeyCodes.add(KeyCodes.KEY_UP);

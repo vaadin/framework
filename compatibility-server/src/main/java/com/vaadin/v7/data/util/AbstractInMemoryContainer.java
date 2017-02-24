@@ -120,7 +120,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Filters that are applied to the container to limit the items visible in
      * it
      */
-    private Set<Filter> filters = new HashSet<>();
+    private Set<Filter> filters = new HashSet<Filter>();
 
     /**
      * The item sorter which is used for sorting the container.
@@ -671,7 +671,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return Collections.emptyList();
         }
-        List<Filter> removedFilters = new LinkedList<>();
+        List<Filter> removedFilters = new LinkedList<Filter>();
         for (Iterator<Filter> iterator = getFilters().iterator(); iterator
                 .hasNext();) {
             Filter f = iterator.next();
@@ -760,7 +760,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * to implement {@link Sortable#getSortableContainerPropertyIds()}.
      */
     protected Collection<?> getSortablePropertyIds() {
-        LinkedList<Object> sortables = new LinkedList<>();
+        LinkedList<Object> sortables = new LinkedList<Object>();
         for (Object propertyId : getContainerPropertyIds()) {
             Class<?> propertyType = getType(propertyId);
             if (Comparable.class.isAssignableFrom(propertyType)

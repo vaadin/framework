@@ -73,7 +73,7 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
             registerRpc(DataProviderRpc.class, new DataProviderRpc() {
                 @Override
                 public void setRowData(int firstRow, JsonArray rowArray) {
-                    ArrayList<JsonObject> rows = new ArrayList<>(
+                    ArrayList<JsonObject> rows = new ArrayList<JsonObject>(
                             rowArray.length());
                     for (int i = 0; i < rowArray.length(); i++) {
                         JsonObject rowObject = rowArray.getObject(i);

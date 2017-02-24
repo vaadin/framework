@@ -389,57 +389,57 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Keymapper for column ids.
      */
-    private final KeyMapper<Object> columnIdMap = new KeyMapper<>();
+    private final KeyMapper<Object> columnIdMap = new KeyMapper<Object>();
 
     /**
      * Holds visible column propertyIds - in order.
      */
-    private LinkedList<Object> visibleColumns = new LinkedList<>();
+    private LinkedList<Object> visibleColumns = new LinkedList<Object>();
 
     /**
      * Holds noncollapsible columns.
      */
-    private HashSet<Object> noncollapsibleColumns = new HashSet<>();
+    private HashSet<Object> noncollapsibleColumns = new HashSet<Object>();
 
     /**
      * Holds propertyIds of currently collapsed columns.
      */
-    private final HashSet<Object> collapsedColumns = new HashSet<>();
+    private final HashSet<Object> collapsedColumns = new HashSet<Object>();
 
     /**
      * Holds headers for visible columns (by propertyId).
      */
-    private final HashMap<Object, String> columnHeaders = new HashMap<>();
+    private final HashMap<Object, String> columnHeaders = new HashMap<Object, String>();
 
     /**
      * Holds footers for visible columns (by propertyId).
      */
-    private final HashMap<Object, String> columnFooters = new HashMap<>();
+    private final HashMap<Object, String> columnFooters = new HashMap<Object, String>();
 
     /**
      * Holds icons for visible columns (by propertyId).
      */
-    private final HashMap<Object, Resource> columnIcons = new HashMap<>();
+    private final HashMap<Object, Resource> columnIcons = new HashMap<Object, Resource>();
 
     /**
      * Holds alignments for visible columns (by propertyId).
      */
-    private HashMap<Object, Align> columnAlignments = new HashMap<>();
+    private HashMap<Object, Align> columnAlignments = new HashMap<Object, Align>();
 
     /**
      * Holds column widths in pixels for visible columns (by propertyId).
      */
-    private final HashMap<Object, Integer> columnWidths = new HashMap<>();
+    private final HashMap<Object, Integer> columnWidths = new HashMap<Object, Integer>();
 
     /**
      * Holds column expand rations for visible columns (by propertyId).
      */
-    private final HashMap<Object, Float> columnExpandRatios = new HashMap<>();
+    private final HashMap<Object, Float> columnExpandRatios = new HashMap<Object, Float>();
 
     /**
      * Holds column generators
      */
-    private final HashMap<Object, ColumnGenerator> columnGenerators = new LinkedHashMap<>();
+    private final HashMap<Object, ColumnGenerator> columnGenerators = new LinkedHashMap<Object, ColumnGenerator>();
 
     /**
      * Holds value of property pageLength. 0 disables paging.
@@ -592,11 +592,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private RowGenerator rowGenerator = null;
 
-    private final Map<Field<?>, Property<?>> associatedProperties = new HashMap<>();
+    private final Map<Field<?>, Property<?>> associatedProperties = new HashMap<Field<?>, Property<?>>();
 
     private boolean painted = false;
 
-    private HashMap<Object, Converter<String, Object>> propertyValueConverters = new HashMap<>();
+    private HashMap<Object, Converter<String, Object>> propertyValueConverters = new HashMap<Object, Converter<String, Object>>();
 
     /**
      * Set to true if the client-side should be informed that the key mapper has
@@ -605,7 +605,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private boolean keyMapperReset;
 
-    private List<Throwable> exceptionsDuringCachePopulation = new ArrayList<>();
+    private List<Throwable> exceptionsDuringCachePopulation = new ArrayList<Throwable>();
 
     private boolean isBeingPainted;
 
@@ -689,7 +689,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     "Can not set visible columns to null value");
         }
 
-        final LinkedList<Object> newVC = new LinkedList<>();
+        final LinkedList<Object> newVC = new LinkedList<Object>();
 
         // Checks that the new visible columns contains no nulls, properties
         // exist and that there are no duplicates before adding them to newVC.
@@ -894,7 +894,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Resets the alignments
-        final HashMap<Object, Align> newCA = new HashMap<>();
+        final HashMap<Object, Align> newCA = new HashMap<Object, Align>();
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
                 && i < columnAlignments.length; i++) {
@@ -1471,7 +1471,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (columnOrder == null || !isColumnReorderingAllowed()) {
             return;
         }
-        final LinkedList<Object> newOrder = new LinkedList<>();
+        final LinkedList<Object> newOrder = new LinkedList<Object>();
         for (int i = 0; i < columnOrder.length; i++) {
             if (columnOrder[i] != null
                     && visibleColumns.contains(columnOrder[i])) {
@@ -2202,8 +2202,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (replaceListeners) {
             // initialize the listener collections, this should only be done if
             // the entire cache is refreshed (through refreshRenderedCells)
-            listenedProperties = new HashSet<>();
-            visibleComponents = new HashSet<>();
+            listenedProperties = new HashSet<Property<?>>();
+            visibleComponents = new HashSet<Component>();
         }
 
         Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
@@ -2644,7 +2644,7 @@ public class Table extends AbstractSelect implements Action.Container,
             throws UnsupportedOperationException {
 
         // remove generated columns from the list of columns being assigned
-        final LinkedList<Object> availableCols = new LinkedList<>();
+        final LinkedList<Object> availableCols = new LinkedList<Object>();
         for (Iterator<Object> it = visibleColumns.iterator(); it.hasNext();) {
             Object id = it.next();
             if (!columnGenerators.containsKey(id)) {
@@ -2735,7 +2735,7 @@ public class Table extends AbstractSelect implements Action.Container,
         } else {
             generated = Collections.emptyList();
         }
-        List<Object> visibleIds = new ArrayList<>();
+        List<Object> visibleIds = new ArrayList<Object>();
         if (generated.isEmpty()) {
             visibleIds.addAll(newDataSource.getContainerPropertyIds());
         } else {
@@ -2777,7 +2777,7 @@ public class Table extends AbstractSelect implements Action.Container,
             newDataSource = new IndexedContainer();
         }
         if (visibleIds == null) {
-            visibleIds = new ArrayList<>();
+            visibleIds = new ArrayList<Object>();
         }
 
         // Retain propertyValueConverters if their corresponding ids are
@@ -2786,7 +2786,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (propertyValueConverters != null) {
             Collection<?> newPropertyIds = newDataSource
                     .getContainerPropertyIds();
-            LinkedList<Object> retainableValueConverters = new LinkedList<>();
+            LinkedList<Object> retainableValueConverters = new LinkedList<Object>();
             for (Object propertyId : newPropertyIds) {
                 Converter<String, ?> converter = getConverter(propertyId);
                 if (converter != null) {
@@ -2819,7 +2819,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // don't add the same id twice
-        Collection<Object> col = new LinkedList<>();
+        Collection<Object> col = new LinkedList<Object>();
         for (Iterator<?> it = visibleIds.iterator(); it.hasNext();) {
             Object id = it.next();
             if (!col.contains(id)) {
@@ -2860,7 +2860,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private LinkedHashSet<Object> getItemIdsInRange(Object itemId,
             final int length) {
-        LinkedHashSet<Object> ids = new LinkedHashSet<>();
+        LinkedHashSet<Object> ids = new LinkedHashSet<Object>();
         for (int i = 0; i < length; i++) {
             assert itemId != null; // should not be null unless client-server
                                    // are out of sync
@@ -2883,7 +2883,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Set<Object> renderedButNotSelectedItemIds = getCurrentlyRenderedItemIds();
 
         @SuppressWarnings("unchecked")
-        HashSet<Object> newValue = new LinkedHashSet<>(
+        HashSet<Object> newValue = new LinkedHashSet<Object>(
                 (Collection<Object>) getValue());
 
         if (variables.containsKey("clearSelections")) {
@@ -2938,7 +2938,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     private Set<Object> getCurrentlyRenderedItemIds() {
-        HashSet<Object> ids = new HashSet<>();
+        HashSet<Object> ids = new HashSet<Object>();
         if (pageBuffer != null) {
             for (int i = 0; i < pageBuffer[CELL_ITEMID].length; i++) {
                 ids.add(pageBuffer[CELL_ITEMID][i]);
@@ -2971,7 +2971,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (!isSelectable() && variables.containsKey("selected")) {
             // Not-selectable is a special case, AbstractSelect does not support
             // TODO could be optimized.
-            variables = new HashMap<>(variables);
+            variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         }
 
@@ -2983,7 +2983,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 && variables.containsKey("selected")
                 && multiSelectMode == MultiSelectMode.DEFAULT) {
             handleSelectedItems(variables);
-            variables = new HashMap<>(variables);
+            variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         }
 
@@ -3082,7 +3082,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 try {
                     final Object[] ids = (Object[]) variables
                             .get("collapsedcolumns");
-                    Set<Object> idSet = new HashSet<>();
+                    Set<Object> idSet = new HashSet<Object>();
                     for (Object id : ids) {
                         idSet.add(columnIdMap.get(id.toString()));
                     }
@@ -3648,7 +3648,7 @@ public class Table extends AbstractSelect implements Action.Container,
     private void paintAvailableColumns(PaintTarget target)
             throws PaintException {
         if (columnCollapsingAllowed) {
-            final HashSet<Object> collapsedCols = new HashSet<>();
+            final HashSet<Object> collapsedCols = new HashSet<Object>();
             for (Object colId : visibleColumns) {
                 if (isColumnCollapsed(colId)) {
                     collapsedCols.add(colId);
@@ -3772,7 +3772,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private void paintVisibleColumnOrder(PaintTarget target) {
         // Visible column order
-        final ArrayList<String> visibleColOrder = new ArrayList<>();
+        final ArrayList<String> visibleColOrder = new ArrayList<String>();
         for (Object columnId : visibleColumns) {
             if (!isColumnCollapsed(columnId)) {
                 visibleColOrder.add(columnIdMap.key(columnId));
@@ -3782,9 +3782,9 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     private Set<Action> findAndPaintBodyActions(PaintTarget target) {
-        Set<Action> actionSet = new LinkedHashSet<>();
+        Set<Action> actionSet = new LinkedHashSet<Action>();
         if (actionHandlers != null) {
-            final ArrayList<String> keys = new ArrayList<>();
+            final ArrayList<String> keys = new ArrayList<String>();
             for (Handler ah : actionHandlers) {
                 // Getting actions for the null item, which in this case means
                 // the body item
@@ -3846,7 +3846,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     private String[] findSelectedKeys() {
-        LinkedList<String> selectedKeys = new LinkedList<>();
+        LinkedList<String> selectedKeys = new LinkedList<String>();
         if (isMultiSelect()) {
             HashSet<?> sel = new HashSet<Object>((Set<?>) getValue());
             Collection<?> vids = getVisibleItemIds();
@@ -4002,7 +4002,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Actions
         if (actionHandlers != null) {
-            final ArrayList<String> keys = new ArrayList<>();
+            final ArrayList<String> keys = new ArrayList<String>();
             for (Handler ah : actionHandlers) {
                 final Action[] aa = ah.getActions(itemId, this);
                 if (aa != null) {
@@ -4197,8 +4197,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (actionHandler != null) {
 
             if (actionHandlers == null) {
-                actionHandlers = new LinkedList<>();
-                actionMapper = new KeyMapper<>();
+                actionHandlers = new LinkedList<Handler>();
+                actionMapper = new KeyMapper<Action>();
             }
 
             if (!actionHandlers.contains(actionHandler)) {
@@ -4534,7 +4534,7 @@ public class Table extends AbstractSelect implements Action.Container,
     @Override
     public Collection<?> getVisibleItemIds() {
 
-        final LinkedList<Object> visible = new LinkedList<>();
+        final LinkedList<Object> visible = new LinkedList<Object>();
 
         final Object[][] cells = getVisibleCells();
         // may be null if the table has not been rendered yet (e.g. not attached
@@ -4616,7 +4616,8 @@ public class Table extends AbstractSelect implements Action.Container,
         Collection<?> containerPropertyIds = getContainerDataSource()
                 .getContainerPropertyIds();
 
-        LinkedList<Object> newVisibleColumns = new LinkedList<>(visibleColumns);
+        LinkedList<Object> newVisibleColumns = new LinkedList<Object>(
+                visibleColumns);
         for (Iterator<Object> iterator = newVisibleColumns.iterator(); iterator
                 .hasNext();) {
             Object id = iterator.next();
@@ -6179,7 +6180,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (colgroup != null) {
             int i = 0;
-            List<Object> pIds = new ArrayList<>();
+            List<Object> pIds = new ArrayList<Object>();
             for (Element col : colgroup.children()) {
                 if (!col.tagName().equals("col")) {
                     throw new DesignException("invalid column");
@@ -6281,7 +6282,7 @@ public class Table extends AbstractSelect implements Action.Container,
             return;
         }
 
-        Set<String> selected = new HashSet<>();
+        Set<String> selected = new HashSet<String>();
         for (Element tr : tbody.children()) {
             readItem(tr, selected, context);
         }

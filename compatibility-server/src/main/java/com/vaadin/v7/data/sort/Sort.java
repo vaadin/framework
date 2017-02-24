@@ -141,7 +141,7 @@ public class Sort implements Serializable {
             ++count;
         }
 
-        List<SortOrder> order = new ArrayList<>(count);
+        List<SortOrder> order = new ArrayList<SortOrder>(count);
 
         s = this;
         do {

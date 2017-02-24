@@ -61,9 +61,9 @@ public class FieldGroup implements Serializable {
     private boolean enabled = true;
     private boolean readOnly = false;
 
-    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<>();
-    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<>();
-    private List<CommitHandler> commitHandlers = new ArrayList<>();
+    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
+    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
+    private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
 
     /**
      * The field factory used by builder methods.
@@ -104,7 +104,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Binds all fields to the properties in the item in use.
-     * 
+     *
      * @since 7.7.5
      */
     protected void bindFields() {
@@ -303,7 +303,7 @@ public class FieldGroup implements Serializable {
      */
     protected <T> Property.Transactional<T> wrapInTransactionalProperty(
             Property<T> itemProperty) {
-        return new TransactionalPropertyWrapper<>(itemProperty);
+        return new TransactionalPropertyWrapper<T>(itemProperty);
     }
 
     private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
@@ -462,9 +462,9 @@ public class FieldGroup implements Serializable {
      */
     public Collection<Object> getUnboundPropertyIds() {
         if (getItemDataSource() == null) {
-            return new ArrayList<>();
+            return new ArrayList<Object>();
         }
-        List<Object> unboundPropertyIds = new ArrayList<>();
+        List<Object> unboundPropertyIds = new ArrayList<Object>();
         unboundPropertyIds.addAll(getItemDataSource().getItemPropertyIds());
         unboundPropertyIds.removeAll(propertyIdToField.keySet());
         return unboundPropertyIds;
@@ -517,7 +517,7 @@ public class FieldGroup implements Serializable {
      *         commits succeeded
      */
     private Map<Field<?>, InvalidValueException> commitFields() {
-        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<>();
+        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<Field<?>, InvalidValueException>();
 
         for (Field<?> f : fieldToPropertyId.keySet()) {
             try {
@@ -1112,7 +1112,7 @@ public class FieldGroup implements Serializable {
                 return ((FieldGroupInvalidValueException) getCause())
                         .getInvalidFields();
             }
-            return new HashMap<>();
+            return new HashMap<Field<?>, InvalidValueException>();
         }
 
         /**
@@ -1254,7 +1254,7 @@ public class FieldGroup implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFieldsInDeclareOrder(
             Class searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<>();
+        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<java.lang.reflect.Field>();
 
         while (searchClass != null) {
             for (java.lang.reflect.Field memberField : searchClass
