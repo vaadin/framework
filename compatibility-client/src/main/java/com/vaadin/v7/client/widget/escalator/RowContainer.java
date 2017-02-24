@@ -23,26 +23,25 @@ import com.vaadin.v7.client.widgets.Escalator;
 
 /**
  * A representation of the rows in each of the sections (header, body and
- * footer) in an {@link com.vaadin.v7.client.widgets.Escalator}.
+ * footer) in an {@link Escalator}.
  *
  * @since 7.4
  * @author Vaadin Ltd
- * @see com.vaadin.v7.client.widgets.Escalator#getHeader()
- * @see com.vaadin.v7.client.widgets.Escalator#getBody()
- * @see com.vaadin.v7.client.widgets.Escalator#getFooter()
+ * @see Escalator#getHeader()
+ * @see Escalator#getBody()
+ * @see Escalator#getFooter()
  * @see SpacerContainer
  */
 public interface RowContainer {
 
     /**
-     * The row container for the body section in an
-     * {@link com.vaadin.v7.client.widgets.Escalator}.
+     * The row container for the body section in an {@link Escalator}.
      * <p>
      * The body section can contain both rows and spacers.
      *
      * @since 7.5.0
      * @author Vaadin Ltd
-     * @see com.vaadin.v7.client.widgets.Escalator#getBody()
+     * @see Escalator#getBody()
      */
     public interface BodyRowContainer extends RowContainer {
 

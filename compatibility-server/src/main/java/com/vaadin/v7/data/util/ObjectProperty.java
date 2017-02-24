@@ -20,8 +20,7 @@ import com.vaadin.v7.data.Property;
 
 /**
  * A simple data object containing one typed value. This class is a
- * straightforward implementation of the the {@link com.vaadin.v7.data.Property}
- * interface.
+ * straightforward implementation of the the {@link Property} interface.
  *
  * @author Vaadin Ltd.
  * @since 3.0

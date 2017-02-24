@@ -195,7 +195,7 @@ public class HierarchicalContainer extends IndexedContainer
      * this method fails and <code>false</code> is returned; the children must
      * be first explicitly removed with
      * {@link #setParent(Object itemId, Object newParentId)} or
-     * {@link com.vaadin.v7.data.Container#removeItem(Object itemId)}.
+     * {@link Container#removeItem(Object itemId)}.
      * </p>
      *
      * @param itemId
@@ -431,8 +431,7 @@ public class HierarchicalContainer extends IndexedContainer
     }
 
     @Override
-    protected void fireItemSetChange(
-            com.vaadin.v7.data.Container.ItemSetChangeEvent event) {
+    protected void fireItemSetChange(Container.ItemSetChangeEvent event) {
         if (contentsChangeEventsOn()) {
             super.fireItemSetChange(event);
         } else {

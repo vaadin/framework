@@ -741,7 +741,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support adding new properties.
          *
-         * @see com.vaadin.v7.data.Item#addItemProperty(Object, Property)
+         * @see Item#addItemProperty(Object, Property)
          */
         @Override
         public boolean addItemProperty(Object id, Property property)
@@ -753,7 +753,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support removing properties.
          *
-         * @see com.vaadin.v7.data.Item#removeItemProperty(Object)
+         * @see Item#removeItemProperty(Object)
          */
         @Override
         public boolean removeItemProperty(Object id)
