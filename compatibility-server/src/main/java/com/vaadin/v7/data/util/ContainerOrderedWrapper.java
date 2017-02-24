@@ -30,7 +30,7 @@ import com.vaadin.v7.data.Property;
 /**
  * <p>
  * A wrapper class for adding external ordering to containers not implementing
- * the {@link com.vaadin.v7.data.Container.Ordered} interface.
+ * the {@link Container.Ordered} interface.
  * </p>
  *
  * <p>
@@ -548,7 +548,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addItemSetChangeListener(com.vaadin.v7.data.Container.ItemSetChangeListener)}
+     *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -573,7 +573,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeItemSetChangeListener(com.vaadin.v7.data.Container.ItemSetChangeListener)}
+     *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -598,7 +598,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -623,7 +623,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -631,12 +631,6 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         removePropertySetChangeListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
-     * java.lang.Object)
-     */
     @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
@@ -657,11 +651,6 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         return item;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
-     */
     @Override
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {

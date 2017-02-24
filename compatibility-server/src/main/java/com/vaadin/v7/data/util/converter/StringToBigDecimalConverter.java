@@ -50,7 +50,7 @@ public class StringToBigDecimalConverter
     @Override
     public BigDecimal convertToModel(String value,
             Class<? extends BigDecimal> targetType, Locale locale)
-            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+            throws ConversionException {
         return (BigDecimal) convertToNumber(value, BigDecimal.class, locale);
     }
 

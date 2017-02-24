@@ -31,7 +31,7 @@ import com.vaadin.v7.data.Property;
  * <p>
  * There are also some static helper methods available for custom built field
  * factories.
- * 
+ *
  * @deprecated Removed feature in 8.0
  */
 @Deprecated
@@ -106,7 +106,7 @@ public class DefaultFieldFactory
         }
 
         // Item field
-        if (com.vaadin.v7.data.Item.class.isAssignableFrom(type)) {
+        if (Item.class.isAssignableFrom(type)) {
             return new Form();
         }
 
