@@ -527,7 +527,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * added at the very end of the unfiltered container and not after the last
      * visible item if filtering is used.
      *
-     * @see com.com.vaadin.v7.data.Container#addItem(Object)
+     * @see Container#addItem(Object)
      */
     protected BeanItem<BEANTYPE> addItem(IDTYPE itemId, BEANTYPE bean) {
         if (!validateBean(bean)) {
@@ -539,8 +539,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds the bean after the given bean.
      *
-     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object,
-     *      Object)
+     * @see Container.Ordered#addItemAfter(Object, Object)
      */
     protected BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,
             IDTYPE newItemId, BEANTYPE bean) {
@@ -799,7 +798,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Deprecated
     @Override
