@@ -8718,17 +8718,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     @Override
     protected void onAttach() {
         super.onAttach();
+        Scheduler.get().scheduleFinally(() -> {
+            if (getEscalator().getBody().getRowCount() == 0
+                    && dataSource != null) {
+                setEscalatorSizeFromDataSource();
+            }
 
-        if (getEscalator().getBody().getRowCount() == 0 && dataSource != null) {
-            setEscalatorSizeFromDataSource();
-        }
-
-        // Grid was just attached to DOM. Column widths should be calculated.
-        recalculateColumnWidths();
-        for (int row : reattachVisibleDetails) {
-            setDetailsVisible(row, true);
-        }
-        reattachVisibleDetails.clear();
+            // Grid was just attached to DOM. Column widths should be
+            // calculated.
+            recalculateColumnWidths();
+            for (int row : reattachVisibleDetails) {
+                setDetailsVisible(row, true);
+            }
+            reattachVisibleDetails.clear();
+        });
     }
 
     @Override
