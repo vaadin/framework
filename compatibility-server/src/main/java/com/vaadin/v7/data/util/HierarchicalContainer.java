@@ -44,12 +44,12 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * Set of IDs of those contained Items that can't have children.
      */
-    private final HashSet<Object> noChildrenAllowed = new HashSet<>();
+    private final HashSet<Object> noChildrenAllowed = new HashSet<Object>();
 
     /**
      * Mapping from Item ID to parent Item ID.
      */
-    private final HashMap<Object, Object> parent = new HashMap<>();
+    private final HashMap<Object, Object> parent = new HashMap<Object, Object>();
 
     /**
      * Mapping from Item ID to parent Item ID for items included in the filtered
@@ -60,7 +60,7 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * Mapping from Item ID to a list of child IDs.
      */
-    private final HashMap<Object, LinkedList<Object>> children = new HashMap<>();
+    private final HashMap<Object, LinkedList<Object>> children = new HashMap<Object, LinkedList<Object>>();
 
     /**
      * Mapping from Item ID to a list of child IDs when filtered
@@ -70,7 +70,7 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * List that contains all root elements of the container.
      */
-    private final LinkedList<Object> roots = new LinkedList<>();
+    private final LinkedList<Object> roots = new LinkedList<Object>();
 
     /**
      * List that contains all filtered root elements of the container.
@@ -325,7 +325,7 @@ public class HierarchicalContainer extends IndexedContainer
         if (pcl == null) {
             // Create an empty list for holding children if one were not
             // previously created
-            pcl = new LinkedList<>();
+            pcl = new LinkedList<Object>();
             children.put(newParentId, pcl);
         }
         pcl.add(itemId);
@@ -712,14 +712,14 @@ public class HierarchicalContainer extends IndexedContainer
         }
 
         // Reset data structures
-        filteredRoots = new LinkedList<>();
-        filteredChildren = new HashMap<>();
-        filteredParent = new HashMap<>();
+        filteredRoots = new LinkedList<Object>();
+        filteredChildren = new HashMap<Object, LinkedList<Object>>();
+        filteredParent = new HashMap<Object, Object>();
 
         if (includeParentsWhenFiltering) {
             // Filter so that parents for items that match the filter are also
             // included
-            HashSet<Object> includedItems = new HashSet<>();
+            HashSet<Object> includedItems = new HashSet<Object>();
             for (Object rootId : roots) {
                 if (filterIncludingParents(rootId, includedItems)) {
                     filteredRoots.add(rootId);
@@ -741,7 +741,7 @@ public class HierarchicalContainer extends IndexedContainer
             // match
             super.doFilterContainer(hasFilters);
 
-            LinkedHashSet<Object> filteredItemIds = new LinkedHashSet<>(
+            LinkedHashSet<Object> filteredItemIds = new LinkedHashSet<Object>(
                     getItemIds());
 
             for (Object itemId : filteredItemIds) {
@@ -773,7 +773,7 @@ public class HierarchicalContainer extends IndexedContainer
         LinkedList<Object> parentToChildrenList = filteredChildren
                 .get(parentItemId);
         if (parentToChildrenList == null) {
-            parentToChildrenList = new LinkedList<>();
+            parentToChildrenList = new LinkedList<Object>();
             filteredChildren.put(parentItemId, parentToChildrenList);
         }
         filteredParent.put(childItemId, parentItemId);

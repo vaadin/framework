@@ -84,7 +84,7 @@ public class ContainerHelpers implements Serializable {
             endIndex = container.size();
         }
 
-        ArrayList<Object> rangeOfIds = new ArrayList<>();
+        ArrayList<Object> rangeOfIds = new ArrayList<Object>();
         for (int i = startIndex; i < endIndex; i++) {
             Object idByIndex = container.getIdByIndex(i);
             if (idByIndex == null) {

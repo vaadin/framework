@@ -216,12 +216,12 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             if (next == null || first == null || last == null || prev == null) {
                 first = null;
                 last = null;
-                next = new Hashtable<>();
-                prev = new Hashtable<>();
+                next = new Hashtable<Object, Object>();
+                prev = new Hashtable<Object, Object>();
             }
 
             // Filter out all the missing items
-            final LinkedList<?> l = new LinkedList<>(next.keySet());
+            final LinkedList<?> l = new LinkedList<Object>(next.keySet());
             for (final Iterator<?> i = l.iterator(); i.hasNext();) {
                 final Object id = i.next();
                 if (!container.containsId(id)) {
@@ -470,9 +470,9 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         if (ordered) {
             return ((Container.Ordered) container).getItemIds();
         } else if (first == null) {
-            return new ArrayList<>();
+            return new ArrayList<Object>();
         } else {
-            List<Object> itemIds = new ArrayList<>();
+            List<Object> itemIds = new ArrayList<Object>();
             itemIds.add(first);
             Object current = first;
             while (next.containsKey(current)) {

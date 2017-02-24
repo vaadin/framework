@@ -26,7 +26,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 @Deprecated
 public class QueryBuilder implements Serializable {
 
-    private static ArrayList<FilterTranslator> filterTranslators = new ArrayList<>();
+    private static ArrayList<FilterTranslator> filterTranslators = new ArrayList<FilterTranslator>();
     private static StringDecorator stringDecorator = new StringDecorator("\"",
             "\"");
 

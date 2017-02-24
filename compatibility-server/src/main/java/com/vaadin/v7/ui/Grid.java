@@ -341,19 +341,19 @@ public class Grid extends AbstractComponent
          * client. Details components get destroyed once they scroll out of
          * view.
          */
-        private final Map<Object, Component> itemIdToDetailsComponent = new HashMap<>();
+        private final Map<Object, Component> itemIdToDetailsComponent = new HashMap<Object, Component>();
 
         /**
          * Set of item ids that got <code>null</code> from DetailsGenerator when
          * {@link DetailsGenerator#getDetails(RowReference)} was called.
          */
-        private final Set<Object> emptyDetails = new HashSet<>();
+        private final Set<Object> emptyDetails = new HashSet<Object>();
 
         /**
          * Set of item IDs for all open details rows. Contains even the ones
          * that are not currently visible on the client.
          */
-        private final Set<Object> openDetails = new HashSet<>();
+        private final Set<Object> openDetails = new HashSet<Object>();
 
         public DetailComponentManager(Grid grid) {
             this(grid, DetailsGenerator.NULL);
@@ -438,7 +438,7 @@ public class Grid extends AbstractComponent
          * Recreates all visible details components.
          */
         public void refreshDetails() {
-            Set<Object> visibleItemIds = new HashSet<>(
+            Set<Object> visibleItemIds = new HashSet<Object>(
                     itemIdToDetailsComponent.keySet());
             for (Object itemId : visibleItemIds) {
                 destroyDetails(itemId);
@@ -572,7 +572,7 @@ public class Grid extends AbstractComponent
 
         @Override
         protected void bindFields() {
-            List<Field<?>> fields = new ArrayList<>(getFields());
+            List<Field<?>> fields = new ArrayList<Field<?>>(getFields());
             Item itemDataSource = getItemDataSource();
 
             if (itemDataSource == null) {
@@ -746,7 +746,7 @@ public class Grid extends AbstractComponent
 
         private CommitException cause;
 
-        private Set<Column> errorColumns = new HashSet<>();
+        private Set<Column> errorColumns = new HashSet<Column>();
 
         private String userErrorMessage;
 
@@ -1408,7 +1408,7 @@ public class Grid extends AbstractComponent
     @Deprecated
     public static abstract class AbstractSelectionModel extends
             AbstractGridExtension implements SelectionModel, DataGenerator {
-        protected final LinkedHashSet<Object> selection = new LinkedHashSet<>();
+        protected final LinkedHashSet<Object> selection = new LinkedHashSet<Object>();
 
         @Override
         public boolean isSelected(final Object itemId) {
@@ -1417,7 +1417,7 @@ public class Grid extends AbstractComponent
 
         @Override
         public Collection<Object> getSelectedRows() {
-            return new ArrayList<>(selection);
+            return new ArrayList<Object>(selection);
         }
 
         @Override
@@ -1657,7 +1657,7 @@ public class Grid extends AbstractComponent
 
                 @Override
                 public void select(List<String> rowKeys) {
-                    List<Object> items = new ArrayList<>();
+                    List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
                     }
@@ -1666,7 +1666,7 @@ public class Grid extends AbstractComponent
 
                 @Override
                 public void deselect(List<String> rowKeys) {
-                    List<Object> items = new ArrayList<>();
+                    List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
                     }
@@ -1720,7 +1720,8 @@ public class Grid extends AbstractComponent
             final boolean selectionWillChange = !selection.containsAll(itemIds)
                     && selection.size() < selectionLimit;
             if (selectionWillChange) {
-                final HashSet<Object> oldSelection = new HashSet<>(selection);
+                final HashSet<Object> oldSelection = new HashSet<Object>(
+                        selection);
                 if (selection.size() + itemIds.size() >= selectionLimit) {
                     // Add one at a time if there's a risk of overflow
                     Iterator<?> iterator = itemIds.iterator();
@@ -1807,7 +1808,8 @@ public class Grid extends AbstractComponent
             final boolean hasCommonElements = !Collections.disjoint(itemIds,
                     selection);
             if (hasCommonElements) {
-                final HashSet<Object> oldSelection = new HashSet<>(selection);
+                final HashSet<Object> oldSelection = new HashSet<Object>(
+                        selection);
                 selection.removeAll(itemIds);
                 fireSelectionEvent(oldSelection, selection);
             }
@@ -1890,7 +1892,7 @@ public class Grid extends AbstractComponent
             checkItemIdsExist(itemIds);
 
             boolean changed = false;
-            Set<Object> selectedRows = new HashSet<>(itemIds);
+            Set<Object> selectedRows = new HashSet<Object>(itemIds);
             final Collection<Object> oldSelection = getSelectedRows();
             Set<Object> added = getDifference(selectedRows, selection);
             if (!added.isEmpty()) {
@@ -1931,7 +1933,7 @@ public class Grid extends AbstractComponent
          */
         private static Set<Object> getDifference(Set<Object> set1,
                 Set<Object> set2) {
-            Set<Object> diff = new HashSet<>(set1);
+            Set<Object> diff = new HashSet<Object>(set1);
             diff.removeAll(set2);
             return diff;
         }
@@ -2311,8 +2313,8 @@ public class Grid extends AbstractComponent
 
             private RowState rowState = new RowState();
             protected StaticSection<?> section;
-            private Map<Object, CELLTYPE> cells = new LinkedHashMap<>();
-            private Map<Set<CELLTYPE>, CELLTYPE> cellGroups = new HashMap<>();
+            private Map<Object, CELLTYPE> cells = new LinkedHashMap<Object, CELLTYPE>();
+            private Map<Set<CELLTYPE>, CELLTYPE> cellGroups = new HashMap<Set<CELLTYPE>, CELLTYPE>();
 
             protected StaticRow(StaticSection<?> section) {
                 this.section = section;
@@ -2397,7 +2399,7 @@ public class Grid extends AbstractComponent
             public CELLTYPE join(Object... propertyIds) {
                 assert propertyIds.length > 1 : "You need to merge at least 2 properties";
 
-                Set<CELLTYPE> cells = new HashSet<>();
+                Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
                 for (int i = 0; i < propertyIds.length; ++i) {
                     cells.add(getCell(propertyIds[i]));
                 }
@@ -2415,7 +2417,7 @@ public class Grid extends AbstractComponent
             public CELLTYPE join(CELLTYPE... cells) {
                 assert cells.length > 1 : "You need to merge at least 2 cells";
 
-                return join(new HashSet<>(Arrays.asList(cells)));
+                return join(new HashSet<CELLTYPE>(Arrays.asList(cells)));
             }
 
             protected CELLTYPE join(Set<CELLTYPE> cells) {
@@ -2432,7 +2434,7 @@ public class Grid extends AbstractComponent
                 // Create new cell data for the group
                 CELLTYPE newCell = createCell();
 
-                Set<String> columnGroup = new HashSet<>();
+                Set<String> columnGroup = new HashSet<String>();
                 for (CELLTYPE cell : cells) {
                     columnGroup.add(cell.getColumnId());
                 }
@@ -2481,7 +2483,7 @@ public class Grid extends AbstractComponent
              */
             protected void writeDesign(Element trElement,
                     DesignContext designContext) {
-                Set<CELLTYPE> visited = new HashSet<>();
+                Set<CELLTYPE> visited = new HashSet<CELLTYPE>();
                 for (Grid.Column column : section.grid.getColumns()) {
                     CELLTYPE cell = getCell(column.getPropertyId());
                     if (visited.contains(cell)) {
@@ -2533,7 +2535,7 @@ public class Grid extends AbstractComponent
                     int colspan = DesignAttributeHandler.readAttribute(
                             "colspan", element.attributes(), 1, int.class);
 
-                    Set<CELLTYPE> cells = new HashSet<>();
+                    Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
                     for (int c = 0; c < colspan; ++c) {
                         cells.add(getCell(section.grid.getColumns()
                                 .get(columnIndex + c).getPropertyId()));
@@ -2774,7 +2776,7 @@ public class Grid extends AbstractComponent
         }
 
         protected Grid grid;
-        protected List<ROWTYPE> rows = new ArrayList<>();
+        protected List<ROWTYPE> rows = new ArrayList<ROWTYPE>();
 
         /**
          * Sets the visibility of the whole section.
@@ -4517,17 +4519,17 @@ public class Grid extends AbstractComponent
     /**
      * Property id to column instance mapping
      */
-    private final Map<Object, Column> columns = new HashMap<>();
+    private final Map<Object, Column> columns = new HashMap<Object, Column>();
 
     /**
      * Key generator for column server-to-client communication
      */
-    private final KeyMapper<Object> columnKeys = new KeyMapper<>();
+    private final KeyMapper<Object> columnKeys = new KeyMapper<Object>();
 
     /**
      * The current sort order
      */
-    private final List<SortOrder> sortOrder = new ArrayList<>();
+    private final List<SortOrder> sortOrder = new ArrayList<SortOrder>();
 
     /**
      * Property listener for listening to changes in data source properties.
@@ -4540,7 +4542,7 @@ public class Grid extends AbstractComponent
                     event.getContainer().getContainerPropertyIds());
 
             // Find columns that need to be removed.
-            List<Column> removedColumns = new LinkedList<>();
+            List<Column> removedColumns = new LinkedList<Column>();
             for (Object propertyId : columns.keySet()) {
                 if (!properties.contains(propertyId)) {
                     removedColumns.add(getColumn(propertyId));
@@ -4556,7 +4558,7 @@ public class Grid extends AbstractComponent
             datasourceExtension.columnsRemoved(removedColumns);
 
             // Add new columns
-            List<Column> addedColumns = new LinkedList<>();
+            List<Column> addedColumns = new LinkedList<Column>();
             for (Object propertyId : properties) {
                 if (!columns.containsKey(propertyId)) {
                     addedColumns.add(appendColumn(propertyId));
@@ -4621,7 +4623,7 @@ public class Grid extends AbstractComponent
      * Poperty ID to Field mapping that stores editor fields set by
      * {@link #setEditorField(Object, Field)}.
      */
-    private Map<Object, Field<?>> editorFields = new HashMap<>();
+    private Map<Object, Field<?>> editorFields = new HashMap<Object, Field<?>>();
 
     private CellStyleGenerator cellStyleGenerator;
     private RowStyleGenerator rowStyleGenerator;
@@ -4643,7 +4645,7 @@ public class Grid extends AbstractComponent
 
     private DetailComponentManager detailComponentManager = null;
 
-    private Set<Component> extensionComponents = new HashSet<>();
+    private Set<Component> extensionComponents = new HashSet<Component>();
 
     private static final Method SELECTION_CHANGE_METHOD = ReflectTools
             .findMethod(SelectionListener.class, "select",
@@ -4726,7 +4728,8 @@ public class Grid extends AbstractComponent
                     boolean userOriginated) {
                 assert columnIds.length == directions.length;
 
-                List<SortOrder> order = new ArrayList<>(columnIds.length);
+                List<SortOrder> order = new ArrayList<SortOrder>(
+                        columnIds.length);
                 for (int i = 0; i < columnIds.length; i++) {
                     Object propertyId = getPropertyIdByColumnId(columnIds[i]);
                     order.add(new SortOrder(propertyId, directions[i]));
@@ -4922,7 +4925,7 @@ public class Grid extends AbstractComponent
 
                         errorMessage = event.getUserErrorMessage();
 
-                        errorColumnIds = new ArrayList<>();
+                        errorColumnIds = new ArrayList<String>();
                         for (Column column : event.getErrorColumns()) {
                             errorColumnIds.add(column.state.id);
                         }
@@ -5147,7 +5150,7 @@ public class Grid extends AbstractComponent
      * @return unmodifiable copy of current columns in visual order
      */
     public List<Column> getColumns() {
-        List<Column> columns = new ArrayList<>();
+        List<Column> columns = new ArrayList<Column>();
         for (String columnId : getState(false).columnOrder) {
             columns.add(getColumnByColumnId(columnId));
         }
@@ -5190,7 +5193,7 @@ public class Grid extends AbstractComponent
 
         // Inform the data provider of this new column.
         Column column = getColumn(propertyId);
-        List<Column> addedColumns = new ArrayList<>();
+        List<Column> addedColumns = new ArrayList<Column>();
         addedColumns.add(column);
         datasourceExtension.columnsAdded(addedColumns);
 
@@ -5255,8 +5258,8 @@ public class Grid extends AbstractComponent
      * Removes all columns from this Grid.
      */
     public void removeAllColumns() {
-        List<Column> removed = new ArrayList<>(columns.values());
-        Set<Object> properties = new HashSet<>(columns.keySet());
+        List<Column> removed = new ArrayList<Column>(columns.values());
+        Set<Object> properties = new HashSet<Object>(columns.keySet());
         for (Object propertyId : properties) {
             removeColumn(propertyId);
         }
@@ -5402,7 +5405,7 @@ public class Grid extends AbstractComponent
                     "There is no column for given property id " + propertyId);
         }
 
-        List<Column> removed = new ArrayList<>();
+        List<Column> removed = new ArrayList<Column>();
         removed.add(getColumn(propertyId));
         internalRemoveColumn(propertyId);
         datasourceExtension.columnsRemoved(removed);
@@ -5435,12 +5438,12 @@ public class Grid extends AbstractComponent
                     "The propertyIds array contains duplicates: "
                             + SharedUtil.getDuplicates(propertyIds));
         }
-        Set<?> removePids = new HashSet<>(columns.keySet());
+        Set<?> removePids = new HashSet<Object>(columns.keySet());
         removePids.removeAll(Arrays.asList(propertyIds));
         for (Object removePid : removePids) {
             removeColumn(removePid);
         }
-        Set<?> addPids = new HashSet<>(Arrays.asList(propertyIds));
+        Set<?> addPids = new HashSet<Object>(Arrays.asList(propertyIds));
         addPids.removeAll(columns.keySet());
         for (Object propertyId : addPids) {
             addColumn(propertyId);
@@ -5462,7 +5465,7 @@ public class Grid extends AbstractComponent
                     "The propertyIds array contains duplicates: "
                             + SharedUtil.getDuplicates(propertyIds));
         }
-        List<String> columnOrder = new ArrayList<>();
+        List<String> columnOrder = new ArrayList<String>();
         for (Object propertyId : propertyIds) {
             if (columns.containsKey(propertyId)) {
                 columnOrder.add(columnKeys.key(propertyId));
@@ -6238,7 +6241,7 @@ public class Grid extends AbstractComponent
                 getState().sortColumns = new String[] {};
                 getState(false).sortDirs = new SortDirection[] {};
             }
-            fireEvent(new SortEvent(this, new ArrayList<>(sortOrder),
+            fireEvent(new SortEvent(this, new ArrayList<SortOrder>(sortOrder),
                     userOriginated));
         } else {
             throw new IllegalStateException(
@@ -6579,7 +6582,7 @@ public class Grid extends AbstractComponent
     public Iterator<Component> iterator() {
         // This is a hash set to avoid adding header/footer components inside
         // merged cells multiple times
-        LinkedHashSet<Component> componentList = new LinkedHashSet<>();
+        LinkedHashSet<Component> componentList = new LinkedHashSet<Component>();
 
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {

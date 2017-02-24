@@ -40,22 +40,22 @@ public class ListSet<E> extends ArrayList<E> {
      * Contains a map from an element to the number of duplicates it has. Used
      * to temporarily allow duplicates in the list.
      */
-    private HashMap<E, Integer> duplicates = new HashMap<>();
+    private HashMap<E, Integer> duplicates = new HashMap<E, Integer>();
 
     public ListSet() {
         super();
-        itemSet = new HashSet<>();
+        itemSet = new HashSet<E>();
     }
 
     public ListSet(Collection<? extends E> c) {
         super(c);
-        itemSet = new HashSet<>(c.size());
+        itemSet = new HashSet<E>(c.size());
         itemSet.addAll(c);
     }
 
     public ListSet(int initialCapacity) {
         super(initialCapacity);
-        itemSet = new HashSet<>(initialCapacity);
+        itemSet = new HashSet<E>(initialCapacity);
     }
 
     // Delegate contains operations to the set
@@ -185,7 +185,7 @@ public class ListSet<E> extends ArrayList<E> {
 
     @Override
     protected void removeRange(int fromIndex, int toIndex) {
-        HashSet<E> toRemove = new HashSet<>();
+        HashSet<E> toRemove = new HashSet<E>();
         for (int idx = fromIndex; idx < toIndex; idx++) {
             toRemove.add(get(idx));
         }
@@ -270,7 +270,7 @@ public class ListSet<E> extends ArrayList<E> {
     @Override
     public Object clone() {
         ListSet<E> v = (ListSet<E>) super.clone();
-        v.itemSet = new HashSet<>(itemSet);
+        v.itemSet = new HashSet<E>(itemSet);
         return v;
     }
 

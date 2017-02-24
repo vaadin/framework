@@ -199,7 +199,7 @@ public class TreeTable extends Table implements Hierarchical {
      */
     private class HierarchicalStrategy extends AbstractStrategy {
 
-        private final HashSet<Object> openItems = new HashSet<>();
+        private final HashSet<Object> openItems = new HashSet<Object>();
 
         @Override
         public boolean isNodeOpen(Object itemId) {
@@ -286,7 +286,7 @@ public class TreeTable extends Table implements Hierarchical {
          */
         private List<Object> getPreOrder() {
             if (preOrder == null) {
-                preOrder = new ArrayList<>();
+                preOrder = new ArrayList<Object>();
                 Collection<?> rootItemIds = getContainerDataSource()
                         .rootItemIds();
                 for (Object id : rootItemIds) {
@@ -896,7 +896,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     protected List<Object> getItemIds(int firstIndex, int rows) {
-        List<Object> itemIds = new ArrayList<>();
+        List<Object> itemIds = new ArrayList<Object>();
         for (int i = firstIndex; i < firstIndex + rows; i++) {
             itemIds.add(getIdByIndex(i));
         }
@@ -910,8 +910,8 @@ public class TreeTable extends Table implements Hierarchical {
             return;
         }
 
-        Set<String> selected = new HashSet<>();
-        Stack<Object> parents = new Stack<>();
+        Set<String> selected = new HashSet<String>();
+        Stack<Object> parents = new Stack<Object>();
         int lastDepth = -1;
 
         for (Element tr : tbody.children()) {

@@ -328,7 +328,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateColumnToValueMap(RowItem item) {
-        Map<String, Object> columnToValueMap = new HashMap<>();
+        Map<String, Object> columnToValueMap = new HashMap<String, Object>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
@@ -345,7 +345,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateRowIdentifiers(RowItem item) {
-        Map<String, Object> rowIdentifiers = new HashMap<>();
+        Map<String, Object> rowIdentifiers = new HashMap<String, Object>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */

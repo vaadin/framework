@@ -122,12 +122,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Item icons alt texts.
      */
-    private final HashMap<Object, String> itemIconAlts = new HashMap<>();
+    private final HashMap<Object, String> itemIconAlts = new HashMap<Object, String>();
 
     /**
      * Set of expanded nodes.
      */
-    private HashSet<Object> expanded = new HashSet<>();
+    private HashSet<Object> expanded = new HashSet<Object>();
 
     /**
      * List of action handlers.
@@ -375,7 +375,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         boolean result = true;
 
         // Initial stack
-        final Stack<Object> todo = new Stack<>();
+        final Stack<Object> todo = new Stack<Object>();
         todo.add(startItemId);
 
         // Expands recursively
@@ -428,7 +428,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         boolean result = true;
 
         // Initial stack
-        final Stack<Object> todo = new Stack<>();
+        final Stack<Object> todo = new Stack<Object>();
         todo.add(startItemId);
 
         // Collapse recursively
@@ -522,7 +522,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (!isSelectable() && variables.containsKey("selected")) {
             // Not-selectable is a special case, AbstractSelect does not support
             // TODO could be optimized.
-            variables = new HashMap<>(variables);
+            variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         }
 
@@ -561,7 +561,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (variables.containsKey("selected") && isMultiSelect()
                 && multiSelectMode == MultiSelectMode.DEFAULT) {
             handleSelectedItems(variables);
-            variables = new HashMap<>(variables);
+            variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         }
 
@@ -595,7 +595,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         final String[] ka = (String[]) variables.get("selected");
 
         // Converts the key-array to id-set
-        final LinkedList<Object> s = new LinkedList<>();
+        final LinkedList<Object> s = new LinkedList<Object>();
         for (int i = 0; i < ka.length; i++) {
             final Object id = itemIdMapper.get(ka[i]);
             if (!isNullSelectionAllowed()
@@ -666,15 +666,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         // Initialize variables
-        final Set<Action> actionSet = new LinkedHashSet<>();
+        final Set<Action> actionSet = new LinkedHashSet<Action>();
 
         // rendered selectedKeys
-        LinkedList<String> selectedKeys = new LinkedList<>();
+        LinkedList<String> selectedKeys = new LinkedList<String>();
 
-        final LinkedList<String> expandedKeys = new LinkedList<>();
+        final LinkedList<String> expandedKeys = new LinkedList<String>();
 
         // Iterates through hierarchical tree using a stack of iterators
-        final Stack<Iterator<?>> iteratorStack = new Stack<>();
+        final Stack<Iterator<?>> iteratorStack = new Stack<Iterator<?>>();
         Collection<?> ids;
         if (partialUpdate) {
             ids = getChildren(expandedItemId);
@@ -691,7 +691,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * by right clicking on the Tree body
          */
         if (actionHandlers != null) {
-            final ArrayList<String> keys = new ArrayList<>();
+            final ArrayList<String> keys = new ArrayList<String>();
             for (Handler ah : actionHandlers) {
 
                 // Getting action for the null item, which in this case
@@ -780,7 +780,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
                 // Actions
                 if (actionHandlers != null) {
-                    final ArrayList<String> keys = new ArrayList<>();
+                    final ArrayList<String> keys = new ArrayList<String>();
                     final Iterator<Action.Handler> ahi = actionHandlers
                             .iterator();
                     while (ahi.hasNext()) {
@@ -1242,8 +1242,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (actionHandler != null) {
 
             if (actionHandlers == null) {
-                actionHandlers = new LinkedList<>();
-                actionMapper = new KeyMapper<>();
+                actionHandlers = new LinkedList<Handler>();
+                actionMapper = new KeyMapper<Action>();
             }
 
             if (!actionHandlers.contains(actionHandler)) {
@@ -1291,10 +1291,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     @Override
     public Collection<?> getVisibleItemIds() {
 
-        final LinkedList<Object> visible = new LinkedList<>();
+        final LinkedList<Object> visible = new LinkedList<Object>();
 
         // Iterates trough hierarchical tree using a stack of iterators
-        final Stack<Iterator<?>> iteratorStack = new Stack<>();
+        final Stack<Iterator<?>> iteratorStack = new Stack<Iterator<?>>();
         final Collection<?> ids = rootItemIds();
         if (ids != null) {
             iteratorStack.push(ids.iterator());
@@ -1844,7 +1844,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     private void cleanupExpandedItems() {
-        Set<Object> removedItemIds = new HashSet<>();
+        Set<Object> removedItemIds = new HashSet<Object>();
         for (Object expandedItemId : expanded) {
             if (getItem(expandedItemId) == null) {
                 removedItemIds.add(expandedItemId);

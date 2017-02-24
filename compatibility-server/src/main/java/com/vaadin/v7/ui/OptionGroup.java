@@ -50,7 +50,7 @@ import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 public class OptionGroup extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    private Set<Object> disabledItemIds = new HashSet<>();
+    private Set<Object> disabledItemIds = new HashSet<Object>();
 
     public OptionGroup() {
         super();

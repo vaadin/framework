@@ -45,12 +45,12 @@ public class PropertysetItem
     /**
      * Mapping from property id to property.
      */
-    private HashMap<Object, Property<?>> map = new HashMap<>();
+    private HashMap<Object, Property<?>> map = new HashMap<Object, Property<?>>();
 
     /**
      * List of all property ids to maintain the order.
      */
-    private LinkedList<Object> list = new LinkedList<>();
+    private LinkedList<Object> list = new LinkedList<Object>();
 
     /**
      * List of property set modification listeners.
@@ -205,7 +205,7 @@ public class PropertysetItem
     public void addPropertySetChangeListener(
             Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
-            propertySetChangeListeners = new LinkedList<>();
+            propertySetChangeListeners = new LinkedList<Item.PropertySetChangeListener>();
         }
         propertySetChangeListeners.add(listener);
     }
