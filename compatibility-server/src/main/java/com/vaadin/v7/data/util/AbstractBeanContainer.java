@@ -144,7 +144,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * Maps all item ids in the container (including filtered) to their
      * corresponding BeanItem.
      */
-    private final Map<IDTYPE, BeanItem<BEANTYPE>> itemIdToItem = new HashMap<>();
+    private final Map<IDTYPE, BeanItem<BEANTYPE>> itemIdToItem = new HashMap<IDTYPE, BeanItem<BEANTYPE>>();
 
     /**
      * The type of the beans in the container.
@@ -196,7 +196,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * @return created {@link BeanItem} or null if bean is null
      */
     protected BeanItem<BEANTYPE> createBeanItem(BEANTYPE bean) {
-        return bean == null ? null : new BeanItem<>(bean, model);
+        return bean == null ? null : new BeanItem<BEANTYPE>(bean, model);
     }
 
     /**
@@ -891,7 +891,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
                 .getPropertyDescriptors((Class<Object>) propertyType);
         for (String subPropertyId : pds.keySet()) {
             String qualifiedPropertyId = propertyId + "." + subPropertyId;
-            NestedPropertyDescriptor<BEANTYPE> pd = new NestedPropertyDescriptor<>(
+            NestedPropertyDescriptor<BEANTYPE> pd = new NestedPropertyDescriptor<BEANTYPE>(
                     qualifiedPropertyId, (Class<BEANTYPE>) type);
             model.put(qualifiedPropertyId, pd);
             model.remove(propertyId);

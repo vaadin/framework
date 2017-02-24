@@ -66,20 +66,20 @@ public class SQLContainer implements Container, Container.Filterable,
     private int cacheOverlap = pageLength;
 
     /** Item and index caches */
-    private final Map<Integer, RowId> itemIndexes = new HashMap<>();
-    private final CacheMap<RowId, RowItem> cachedItems = new CacheMap<>();
+    private final Map<Integer, RowId> itemIndexes = new HashMap<Integer, RowId>();
+    private final CacheMap<RowId, RowItem> cachedItems = new CacheMap<RowId, RowItem>();
 
     /** Container properties = column names, data types and statuses */
-    private final List<String> propertyIds = new ArrayList<>();
-    private final Map<String, Class<?>> propertyTypes = new HashMap<>();
-    private final Map<String, Boolean> propertyReadOnly = new HashMap<>();
-    private final Map<String, Boolean> propertyPersistable = new HashMap<>();
-    private final Map<String, Boolean> propertyNullable = new HashMap<>();
-    private final Map<String, Boolean> propertyPrimaryKey = new HashMap<>();
+    private final List<String> propertyIds = new ArrayList<String>();
+    private final Map<String, Class<?>> propertyTypes = new HashMap<String, Class<?>>();
+    private final Map<String, Boolean> propertyReadOnly = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> propertyPersistable = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> propertyNullable = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> propertyPrimaryKey = new HashMap<String, Boolean>();
 
     /** Filters (WHERE) and sorters (ORDER BY) */
-    private final List<Filter> filters = new ArrayList<>();
-    private final List<OrderBy> sorters = new ArrayList<>();
+    private final List<Filter> filters = new ArrayList<Filter>();
+    private final List<OrderBy> sorters = new ArrayList<OrderBy>();
 
     /**
      * Total number of items available in the data source using the current
@@ -104,12 +104,12 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * Temporary storage for modified items and items to be removed and added
      */
-    private final Map<RowId, RowItem> removedItems = new HashMap<>();
-    private final List<RowItem> addedItems = new ArrayList<>();
-    private final List<RowItem> modifiedItems = new ArrayList<>();
+    private final Map<RowId, RowItem> removedItems = new HashMap<RowId, RowItem>();
+    private final List<RowItem> addedItems = new ArrayList<RowItem>();
+    private final List<RowItem> modifiedItems = new ArrayList<RowItem>();
 
     /** List of references to other SQLContainers */
-    private final Map<SQLContainer, Reference> references = new HashMap<>();
+    private final Map<SQLContainer, Reference> references = new HashMap<SQLContainer, Reference>();
 
     /** Cache flush notification system enabled. Disabled by default. */
     private boolean notificationsEnabled;
@@ -157,7 +157,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 .size()];
         RowId itemId = new TemporaryRowId(emptyKey);
         // Create new empty column properties for the row item.
-        List<ColumnProperty> itemProperties = new ArrayList<>();
+        List<ColumnProperty> itemProperties = new ArrayList<ColumnProperty>();
         for (String propertyId : propertyIds) {
             /* Default settings for new item properties. */
             ColumnProperty cp = new ColumnProperty(propertyId,
@@ -307,7 +307,7 @@ public class SQLContainer implements Container, Container.Filterable,
     @Override
     public Collection<?> getItemIds() {
         updateCount();
-        ArrayList<RowId> ids = new ArrayList<>();
+        ArrayList<RowId> ids = new ArrayList<RowId>();
         ResultSet rs = null;
         try {
             // Load ALL rows :(
@@ -536,7 +536,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * {@inheritDoc}
      */
     public void removeContainerFilters(Object propertyId) {
-        ArrayList<Filter> toRemove = new ArrayList<>();
+        ArrayList<Filter> toRemove = new ArrayList<Filter>();
         for (Filter f : filters) {
             if (f.appliesToProperty(propertyId)) {
                 toRemove.add(f);
@@ -1200,7 +1200,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 setPageLengthInternal(size);
             }
             while (rs.next()) {
-                List<ColumnProperty> itemProperties = new ArrayList<>();
+                List<ColumnProperty> itemProperties = new ArrayList<ColumnProperty>();
                 /* Generate row itemId based on primary key(s) */
                 Object[] itemId = new Object[pKeys.size()];
                 for (int i = 0; i < pKeys.size(); i++) {
@@ -1212,7 +1212,8 @@ public class SQLContainer implements Container, Container.Filterable,
                 } else {
                     id = new RowId(itemId);
                 }
-                List<String> propertiesToAdd = new ArrayList<>(propertyIds);
+                List<String> propertiesToAdd = new ArrayList<String>(
+                        propertyIds);
                 if (!removedItems.containsKey(id)) {
                     for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                         if (!isColumnIdentifierValid(rsmd.getColumnLabel(i))) {
@@ -1315,7 +1316,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     private List<RowItem> getFilteredAddedItems() {
-        ArrayList<RowItem> filtered = new ArrayList<>(addedItems);
+        ArrayList<RowItem> filtered = new ArrayList<RowItem>(addedItems);
         if (filters != null && !filters.isEmpty()) {
             for (RowItem item : addedItems) {
                 if (!itemPassesFilters(item)) {
@@ -1418,7 +1419,7 @@ public class SQLContainer implements Container, Container.Filterable,
     public void addItemSetChangeListener(
             Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
-            itemSetChangeListeners = new LinkedList<>();
+            itemSetChangeListeners = new LinkedList<ItemSetChangeListener>();
         }
         itemSetChangeListeners.add(listener);
     }

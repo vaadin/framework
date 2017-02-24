@@ -839,7 +839,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     @Override
     public void addValidator(Validator validator) {
         if (validators == null) {
-            validators = new LinkedList<>();
+            validators = new LinkedList<Validator>();
         }
         validators.add(validator);
         markAsDirty();
@@ -962,7 +962,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             }
         }
 
-        List<InvalidValueException> validationExceptions = new ArrayList<>();
+        List<InvalidValueException> validationExceptions = new ArrayList<InvalidValueException>();
         if (validators != null) {
             // Gets all the validation errors
             for (Validator v : validators) {

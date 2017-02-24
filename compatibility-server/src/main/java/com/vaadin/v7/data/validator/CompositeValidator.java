@@ -74,7 +74,7 @@ public class CompositeValidator implements Validator {
     /**
      * List of contained validators.
      */
-    private final List<Validator> validators = new LinkedList<>();
+    private final List<Validator> validators = new LinkedList<Validator>();
 
     /**
      * Construct a composite validator in <code>AND</code> mode without error
@@ -240,7 +240,7 @@ public class CompositeValidator implements Validator {
             return null;
         }
 
-        final HashSet<Validator> found = new HashSet<>();
+        final HashSet<Validator> found = new HashSet<Validator>();
         for (Validator v : validators) {
             if (validatorType.isAssignableFrom(v.getClass())) {
                 found.add(v);

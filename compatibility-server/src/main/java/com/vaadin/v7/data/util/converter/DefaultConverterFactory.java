@@ -58,7 +58,7 @@ public class DefaultConverterFactory implements ConverterFactory {
         if (reverseConverter != null) {
             log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
-            return new ReverseConverter<>(reverseConverter);
+            return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
         log.finest(getClass().getName() + " could not find a converter for "

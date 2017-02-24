@@ -425,7 +425,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                     getLogger().log(Level.INFO,
                             "Vaadin cleanup deleting {0} expired Vaadin sessions.",
                             entities.size());
-                    List<Key> keys = new ArrayList<>();
+                    List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
                     }
@@ -445,7 +445,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                     getLogger().log(Level.INFO,
                             "Vaadin cleanup deleting {0} expired appengine sessions.",
                             entities.size());
-                    List<Key> keys = new ArrayList<>();
+                    List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
                     }

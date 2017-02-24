@@ -672,7 +672,7 @@ public class ComboBox extends AbstractSelect
     protected List<?> getFilteredOptions() {
         if (!isFilteringNeeded()) {
             prevfilterstring = null;
-            filteredOptions = new LinkedList<>(getItemIds());
+            filteredOptions = new LinkedList<Object>(getItemIds());
             return filteredOptions;
         }
 
@@ -689,7 +689,7 @@ public class ComboBox extends AbstractSelect
         }
         prevfilterstring = filterstring;
 
-        filteredOptions = new LinkedList<>();
+        filteredOptions = new LinkedList<Object>();
         for (final Iterator<?> it = items.iterator(); it.hasNext();) {
             final Object itemId = it.next();
             String caption = getItemCaption(itemId);

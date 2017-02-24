@@ -160,7 +160,7 @@ public class DateField extends AbstractField<Date> implements
 
     private TimeZone timeZone = null;
 
-    private static Map<Resolution, String> variableNameForResolution = new HashMap<>();
+    private static Map<Resolution, String> variableNameForResolution = new HashMap<Resolution, String>();
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
@@ -502,7 +502,7 @@ public class DateField extends AbstractField<Date> implements
 
             // Gets the new date in parts
             boolean hasChanges = false;
-            Map<Resolution, Integer> calendarFieldChanges = new HashMap<>();
+            Map<Resolution, Integer> calendarFieldChanges = new HashMap<Resolution, Integer>();
 
             for (Resolution r : Resolution
                     .getResolutionsHigherOrEqualTo(resolution)) {

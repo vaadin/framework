@@ -802,7 +802,7 @@ public class Upload extends AbstractLegacyComponent
      */
     public void addProgressListener(ProgressListener listener) {
         if (progressListeners == null) {
-            progressListeners = new LinkedHashSet<>();
+            progressListeners = new LinkedHashSet<ProgressListener>();
         }
         progressListeners.add(listener);
     }

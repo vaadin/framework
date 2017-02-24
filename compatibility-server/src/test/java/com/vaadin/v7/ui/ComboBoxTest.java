@@ -64,7 +64,7 @@ public class ComboBoxTest {
 
     private static void setFilterAndCurrentPage(ComboBox comboBox,
             String filterString, int currentPage) {
-        Map<String, Object> variables = new HashMap<>();
+        Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("filter", filterString);
         variables.put("page", currentPage);
         comboBox.changeVariables(null, variables);

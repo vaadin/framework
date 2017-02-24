@@ -187,7 +187,7 @@ public class BeanItem<BT> extends PropertysetItem {
      */
     static <BT> LinkedHashMap<String, VaadinPropertyDescriptor<BT>> getPropertyDescriptors(
             final Class<BT> beanClass) {
-        final LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pdMap = new LinkedHashMap<>();
+        final LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pdMap = new LinkedHashMap<String, VaadinPropertyDescriptor<BT>>();
 
         // Try to introspect, if it fails, we just have an empty Item
         try {
@@ -200,7 +200,7 @@ public class BeanItem<BT> extends PropertysetItem {
                 final Method getMethod = pd.getReadMethod();
                 if ((getMethod != null)
                         && getMethod.getDeclaringClass() != Object.class) {
-                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<>(
+                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<BT>(
                             pd.getName(), pd.getPropertyType(),
                             pd.getReadMethod(), pd.getWriteMethod());
                     pdMap.put(pd.getName(), vaadinPropertyDescriptor);
@@ -224,7 +224,7 @@ public class BeanItem<BT> extends PropertysetItem {
      *            not specified
      */
     public void expandProperty(String propertyId, String... subPropertyIds) {
-        Set<String> subPropertySet = new HashSet<>(
+        Set<String> subPropertySet = new HashSet<String>(
                 Arrays.asList(subPropertyIds));
 
         if (0 == subPropertyIds.length) {
@@ -253,7 +253,7 @@ public class BeanItem<BT> extends PropertysetItem {
      */
     public void addNestedProperty(String nestedPropertyId) {
         addItemProperty(nestedPropertyId,
-                new NestedMethodProperty<>(getBean(), nestedPropertyId));
+                new NestedMethodProperty<BT>(getBean(), nestedPropertyId));
     }
 
     /**
@@ -275,7 +275,7 @@ public class BeanItem<BT> extends PropertysetItem {
      * <p>
      * Changing the bean will fire value change events for all properties of
      * type {@link MethodProperty} or {@link NestedMethodProperty}.
-     * 
+     *
      * @param bean
      *            The new bean to use for this item, not <code>null</code>
      */
