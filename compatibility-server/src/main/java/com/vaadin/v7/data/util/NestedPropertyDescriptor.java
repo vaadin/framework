@@ -50,7 +50,7 @@ public class NestedPropertyDescriptor<BT>
     public NestedPropertyDescriptor(String name, Class<BT> beanType)
             throws IllegalArgumentException {
         this.name = name;
-        NestedMethodProperty<?> property = new NestedMethodProperty<>(
+        NestedMethodProperty<?> property = new NestedMethodProperty<BT>(
                 beanType, name);
         this.propertyType = property.getType();
     }
@@ -67,7 +67,7 @@ public class NestedPropertyDescriptor<BT>
 
     @Override
     public Property<?> createProperty(BT bean) {
-        return new NestedMethodProperty<>(bean, name);
+        return new NestedMethodProperty<BT>(bean, name);
     }
 
 }

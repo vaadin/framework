@@ -81,7 +81,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     static {
 
-        FILE_PROPERTIES = new ArrayList<>();
+        FILE_PROPERTIES = new ArrayList<String>();
         FILE_PROPERTIES.add(PROPERTY_NAME);
         FILE_PROPERTIES.add(PROPERTY_ICON);
         FILE_PROPERTIES.add(PROPERTY_SIZE);
@@ -441,7 +441,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     public Collection<File> getItemIds() {
 
         if (recursive) {
-            final Collection<File> col = new ArrayList<>();
+            final Collection<File> col = new ArrayList<File>();
             for (int i = 0; i < roots.length; i++) {
                 addItemIds(col, roots[i]);
             }

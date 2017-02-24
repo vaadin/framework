@@ -125,7 +125,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private void initialize(Class<?> beanClass, String propertyName)
             throws IllegalArgumentException {
 
-        List<Method> getMethods = new ArrayList<>();
+        List<Method> getMethods = new ArrayList<Method>();
 
         String lastSimplePropertyName = propertyName;
         Class<?> lastClass = beanClass;
@@ -270,7 +270,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
 
     /**
      * The instance used by this property
-     * 
+     *
      * @return the instance used for fetching the property value
      */
     public Object getInstance() {
@@ -284,7 +284,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * <p>
      * To be consistent with {@link #setValue(Object)}, this method will fire a
      * value change event even if the value stays the same
-     * 
+     *
      * @param instance
      *            the instance to use
      */

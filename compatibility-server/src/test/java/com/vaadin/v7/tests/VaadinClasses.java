@@ -17,7 +17,7 @@ import com.vaadin.v7.ui.Field;
 @SuppressWarnings("deprecation")
 public class VaadinClasses {
 
-    private static final Set<String> WHITE_LIST_FQNS = new HashSet<>();
+    private static final Set<String> WHITE_LIST_FQNS = new HashSet<String>();
 
     public static List<Class<? extends Field>> getFields() {
         return getServerClasses(Field.class::isAssignableFrom)

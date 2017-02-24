@@ -368,15 +368,15 @@ public class VCalendar extends Composite implements VHasDropHandler {
     	e.onselectstart = function() {
     		return false;
     	}
-    
+
     	e.ondragstart = function() {
     		return false;
     	}
     }-*/;
 
     private void updateEventsToWeekGrid(CalendarEvent[] events) {
-        List<CalendarEvent> allDayLong = new ArrayList<>();
-        List<CalendarEvent> belowDayLong = new ArrayList<>();
+        List<CalendarEvent> allDayLong = new ArrayList<CalendarEvent>();
+        List<CalendarEvent> belowDayLong = new ArrayList<CalendarEvent>();
 
         for (CalendarEvent e : events) {
             if (e.isAllDay()) {
@@ -421,8 +421,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
         boolean eventAdded = false;
         boolean inProgress = false; // Event adding has started
         boolean eventMoving = false;
-        List<SimpleDayCell> dayCells = new ArrayList<>();
-        List<SimpleDayCell> timeCells = new ArrayList<>();
+        List<SimpleDayCell> dayCells = new ArrayList<SimpleDayCell>();
+        List<SimpleDayCell> timeCells = new ArrayList<SimpleDayCell>();
         for (int row = 0; row < monthGrid.getRowCount(); row++) {
             if (eventAdded) {
                 break;
@@ -570,7 +570,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Sort the events by current sort order
-     * 
+     *
      * @param events
      *            The events to sort
      * @return An array where the events has been sorted
@@ -599,7 +599,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Sort the event by how long they are
-     * 
+     *
      * @param events
      *            The events to sort
      * @return An array where the events has been sorted
@@ -968,11 +968,11 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Returns the default comparator which can compare calendar events by
      * duration.
-     * 
+     *
      * @deprecated this returns just one default comparator, but there are
      *             number of comparators that are used to sort events depending
      *             on order.
-     * 
+     *
      * @return
      */
     @Deprecated
@@ -1611,7 +1611,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Set sort strategy for events.
-     * 
+     *
      * @param order
      *            sort order
      */
@@ -1625,7 +1625,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Return currently active sort order.
-     * 
+     *
      * @return current sort order
      */
     public EventSortOrder getSortOrder() {

@@ -37,7 +37,6 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent.EventChangeListener;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
-import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSetChangeNotifier;
 
 /**
@@ -85,14 +84,14 @@ public class ContainerEventProvider
     /**
      * Listeners attached to the container
      */
-    private final List<EventSetChangeListener> eventSetChangeListeners = new LinkedList<>();
-    private final List<EventChangeListener> eventChangeListeners = new LinkedList<>();
+    private final List<EventSetChangeListener> eventSetChangeListeners = new LinkedList<EventSetChangeListener>();
+    private final List<EventChangeListener> eventChangeListeners = new LinkedList<EventChangeListener>();
 
     /**
      * The event cache contains the events previously created by
      * {@link #getEvents(Date, Date)}
      */
-    private final List<CalendarEvent> eventCache = new LinkedList<>();
+    private final List<CalendarEvent> eventCache = new LinkedList<CalendarEvent>();
 
     /**
      * The container used as datasource

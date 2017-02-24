@@ -42,8 +42,8 @@ public class StatementHelper implements Serializable {
 
     private String queryString;
 
-    private List<Object> parameters = new ArrayList<>();
-    private Map<Integer, Class<?>> dataTypes = new HashMap<>();
+    private List<Object> parameters = new ArrayList<Object>();
+    private Map<Integer, Class<?>> dataTypes = new HashMap<Integer, Class<?>>();
 
     public StatementHelper() {
     }

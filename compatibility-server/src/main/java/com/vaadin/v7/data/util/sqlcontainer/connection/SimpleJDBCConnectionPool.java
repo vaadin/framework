@@ -86,8 +86,8 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
     }
 
     private void initializeConnections() throws SQLException {
-        availableConnections = new HashSet<>(initialConnections);
-        reservedConnections = new HashSet<>(initialConnections);
+        availableConnections = new HashSet<Connection>(initialConnections);
+        reservedConnections = new HashSet<Connection>(initialConnections);
         for (int i = 0; i < initialConnections; i++) {
             availableConnections.add(createConnection());
         }

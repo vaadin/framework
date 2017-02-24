@@ -303,7 +303,7 @@ public class Calendar extends AbstractLegacyComponent
     public Calendar(String caption, CalendarEventProvider eventProvider) {
         registerRpc(rpc);
         setCaption(caption);
-        handlers = new HashMap<>();
+        handlers = new HashMap<String, EventListener>();
         setDefaultHandlers();
         currentCalendar.setTime(new Date());
         setEventProvider(eventProvider);
@@ -467,7 +467,7 @@ public class Calendar extends AbstractLegacyComponent
         events = getEventProvider().getEvents(firstDateToShow, lastDateToShow);
         cacheMinMaxTimeOfDay(events);
 
-        List<CalendarState.Event> calendarStateEvents = new ArrayList<>();
+        List<CalendarState.Event> calendarStateEvents = new ArrayList<CalendarState.Event>();
         if (events != null) {
             for (int i = 0; i < events.size(); i++) {
                 CalendarEvent e = events.get(i);
@@ -617,9 +617,9 @@ public class Calendar extends AbstractLegacyComponent
         DateFormat weeklyCaptionFormatter = getWeeklyCaptionFormatter();
         weeklyCaptionFormatter.setTimeZone(currentCalendar.getTimeZone());
 
-        Map<CalendarDateRange, Set<Action>> actionMap = new HashMap<>();
+        Map<CalendarDateRange, Set<Action>> actionMap = new HashMap<CalendarDateRange, Set<Action>>();
 
-        List<CalendarState.Day> days = new ArrayList<>();
+        List<CalendarState.Day> days = new ArrayList<CalendarState.Day>();
 
         // Send all dates to client from server. This
         // approach was taken because gwt doesn't
@@ -706,7 +706,7 @@ public class Calendar extends AbstractLegacyComponent
                     getTimeZone());
             Action[] actions = actionHandler.getActions(range, this);
             if (actions != null) {
-                Set<Action> actionSet = new LinkedHashSet<>(
+                Set<Action> actionSet = new LinkedHashSet<Action>(
                         Arrays.asList(actions));
                 actionMap.put(range, actionSet);
             }
@@ -719,7 +719,8 @@ public class Calendar extends AbstractLegacyComponent
                 getTimeZone());
         Action[] actions = actionHandler.getActions(range, this);
         if (actions != null) {
-            Set<Action> actionSet = new LinkedHashSet<>(Arrays.asList(actions));
+            Set<Action> actionSet = new LinkedHashSet<Action>(
+                    Arrays.asList(actions));
             actionMap.put(range, actionSet);
         }
     }
@@ -730,7 +731,7 @@ public class Calendar extends AbstractLegacyComponent
             return null;
         }
 
-        List<CalendarState.Action> calendarActions = new ArrayList<>();
+        List<CalendarState.Action> calendarActions = new ArrayList<CalendarState.Action>();
 
         SimpleDateFormat formatter = new SimpleDateFormat(
                 DateConstants.ACTION_DATE_FORMAT_PATTERN);
@@ -1519,7 +1520,7 @@ public class Calendar extends AbstractLegacyComponent
     @Override
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        Map<String, Object> serverVariables = new HashMap<>();
+        Map<String, Object> serverVariables = new HashMap<String, Object>();
 
         if (clientVariables.containsKey("dropSlotIndex")) {
             int slotIndex = (Integer) clientVariables.get("dropSlotIndex");
@@ -1704,8 +1705,8 @@ public class Calendar extends AbstractLegacyComponent
     public void addActionHandler(Handler actionHandler) {
         if (actionHandler != null) {
             if (actionHandlers == null) {
-                actionHandlers = new LinkedList<>();
-                actionMapper = new KeyMapper<>();
+                actionHandlers = new LinkedList<Handler>();
+                actionMapper = new KeyMapper<Action>();
             }
             if (!actionHandlers.contains(actionHandler)) {
                 actionHandlers.add(actionHandler);

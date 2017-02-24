@@ -69,7 +69,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
             JDBCConnectionPool connectionPool) {
         super(connectionPool);
         if (primaryKeyColumns == null) {
-            primaryKeyColumns = new ArrayList<>();
+            primaryKeyColumns = new ArrayList<String>();
         }
         if (primaryKeyColumns.contains("")) {
             throw new IllegalArgumentException(

@@ -36,7 +36,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
-        this.defaultValidators = new HashMap<>();
+        this.defaultValidators = new HashMap<Field<?>, BeanValidator>();
     }
 
     @Override
@@ -117,7 +117,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
         if (bean == null) {
             setItemDataSource((Item) null);
         } else {
-            setItemDataSource(new BeanItem<>(bean, beanType));
+            setItemDataSource(new BeanItem<T>(bean, beanType));
         }
     }
 
@@ -260,7 +260,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     private static <T> BeanFieldGroup<T> createAndBindFields(T bean,
             Object objectWithMemberFields, boolean buffered) {
         @SuppressWarnings("unchecked")
-        BeanFieldGroup<T> beanFieldGroup = new BeanFieldGroup<>(
+        BeanFieldGroup<T> beanFieldGroup = new BeanFieldGroup<T>(
                 (Class<T>) bean.getClass());
         beanFieldGroup.setItemDataSource(bean);
         beanFieldGroup.setBuffered(buffered);

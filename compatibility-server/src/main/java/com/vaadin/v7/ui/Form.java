@@ -98,7 +98,7 @@ public class Form extends AbstractField<Object>
     /**
      * Ordered list of property ids in this editor.
      */
-    private final LinkedList<Object> propertyIds = new LinkedList<>();
+    private final LinkedList<Object> propertyIds = new LinkedList<Object>();
 
     /**
      * Current buffered source exception.
@@ -113,12 +113,12 @@ public class Form extends AbstractField<Object>
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap<Object, Field<?>> fields = new HashMap<>();
+    private final HashMap<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
 
     /**
      * Form may act as an Item, its own properties are stored here.
      */
-    private final HashMap<Object, Property<?>> ownProperties = new HashMap<>();
+    private final HashMap<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
 
     /**
      * Field factory for this form.
@@ -345,7 +345,7 @@ public class Form extends AbstractField<Object>
                 }
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList<>();
+                    problems = new LinkedList<SourceException>();
                 }
                 problems.add(e);
             }
@@ -389,7 +389,7 @@ public class Form extends AbstractField<Object>
                 fields.get(i.next()).discard();
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList<>();
+                    problems = new LinkedList<SourceException>();
                 }
                 problems.add(e);
             }
@@ -1105,7 +1105,7 @@ public class Form extends AbstractField<Object>
         if (data instanceof Item) {
             item = (Item) data;
         } else if (data != null) {
-            item = new BeanItem<>(data);
+            item = new BeanItem<Object>(data);
         }
 
         // Sets the datasource to form
@@ -1149,7 +1149,7 @@ public class Form extends AbstractField<Object>
      *            the visibleProperties to set.
      */
     public void setVisibleItemProperties(Object... visibleProperties) {
-        LinkedList<Object> v = new LinkedList<>();
+        LinkedList<Object> v = new LinkedList<Object>();
         for (int i = 0; i < visibleProperties.length; i++) {
             v.add(visibleProperties[i]);
         }

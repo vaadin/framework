@@ -166,8 +166,8 @@ public class DefaultItemSorter implements ItemSorter {
         this.container = container;
 
         // Removes any non-sortable property ids
-        final List<Object> ids = new ArrayList<>();
-        final List<Boolean> orders = new ArrayList<>();
+        final List<Object> ids = new ArrayList<Object>();
+        final List<Boolean> orders = new ArrayList<Boolean>();
         final Collection<?> sortable = container
                 .getSortableContainerPropertyIds();
         for (int i = 0; i < propertyId.length; i++) {

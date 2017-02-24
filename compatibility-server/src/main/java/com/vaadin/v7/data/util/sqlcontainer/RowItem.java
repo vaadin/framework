@@ -75,7 +75,7 @@ public final class RowItem implements Item {
 
     @Override
     public Collection<?> getItemPropertyIds() {
-        Collection<String> ids = new ArrayList<>(properties.size());
+        Collection<String> ids = new ArrayList<String>(properties.size());
         for (ColumnProperty cp : properties) {
             ids.add(cp.getPropertyId());
         }

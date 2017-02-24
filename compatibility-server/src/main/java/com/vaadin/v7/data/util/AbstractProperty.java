@@ -113,7 +113,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     public void addReadOnlyStatusChangeListener(
             Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList<>();
+            readOnlyStatusChangeListeners = new LinkedList<ReadOnlyStatusChangeListener>();
         }
         readOnlyStatusChangeListeners.add(listener);
     }
@@ -199,7 +199,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     @Override
     public void addValueChangeListener(ValueChangeListener listener) {
         if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList<>();
+            valueChangeListeners = new LinkedList<ValueChangeListener>();
         }
         valueChangeListeners.add(listener);
 
