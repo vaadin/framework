@@ -87,9 +87,6 @@ The following preferences need to be set to keep the project consistent. You nee
 
 ## Running a Development Server in a debug mode
 
-1. Repeat steps 1..3 from above 
-1. Click green ***+*** sign at top left corner, select *Maven* from popup 
-1. In the run configuration page, set any name for the configuration, select *vaadin-uitest* project folder as *Working directory*
 1. Type <code>exec:exec@debug-development-server</code> into *Command line* and save the configuration
 1. In the same dialog, create new "Remote" debug configuration, using *localhost* and *Port 5005* 
 1. Start both configurations and open URL *http://localhost:8888/run/&lt;testUI&gt;*
