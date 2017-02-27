@@ -348,14 +348,12 @@ Macs). The extracted method call looks like this:
 ----
 
 If you try the application now, you'll see an empty Grid with no columns. To add columns, configure
-the Grid using the _addColumn_ method to show the "firstName", "lastName" and
+the Grid using the _setColumns_ method to show the "firstName", "lastName" and
 "email" properties.
 
 [source,java]
 ----
-    grid.addColumn(Customer::getFirstName).setCaption("First Name");
-    grid.addColumn(Customer::getLastName).setCaption("Last Name");
-    grid.addColumn(Customer::getEmail).setCaption("Email");
+    grid.setColumns("firstName", "lastName", "email");
 ----
 
 At this point the body of the MyUI class should look like this (servlet declaration
@@ -370,9 +368,8 @@ private Grid grid = new Grid();
 protected void init(VaadinRequest vaadinRequest) {
     final VerticalLayout layout = new VerticalLayout();
 
-    grid.addColumn(Customer::getFirstName).setCaption("First Name");
-    grid.addColumn(Customer::getLastName).setCaption("Last Name");
-    grid.addColumn(Customer::getEmail).setCaption("Email");
+    grid.setColumns("firstName", "lastName", "email");
+
     // add Grid to the layout
     layout.addComponent(grid);
 
@@ -634,22 +631,22 @@ save.setClickShortcut(KeyCode.ENTER);
 To finish our form, we need to create a public API that we will use in the next
 part from MyUI, to pass in a Customer object that the form should edit. We
 will also add some logic to actually save the changes. We'll start by adding a
-_BeanBinder_ as a field to the _CustomerForm_ class:
+_Binder_ as a field to the _CustomerForm_ class:
 
 [source,java]
 ----
-private BeanBinder<Customer> beanBinder = new BeanBinder<>(Customer.class);
+private Binder<Customer> binder = new Binder<>(Customer.class);
 ----
 
 In the constructor of the CustomerForm class add the following line to configure
-the BeanBinder:
+the Binder:
 
 [source,java]
 ----
-beanBinder.bindInstanceFields(this);
+binder.bindInstanceFields(this);
 ----
 
-This configures the BeanBinder to use all the similary named editor fields in
+This configures the Binder to use all the similary named editor fields in
 this form to bind their values with their counterpart in the Customer class.
 For example, the _CustomerForm.firstName_ TextField will be bound to the
 Customer.firstName property.
@@ -662,7 +659,7 @@ stub for you. Complete it with the following implementation:
 ----
 public void setCustomer(Customer customer) {
     this.customer = customer;
-    beanBinder.setBean(customer);
+    binder.setBean(customer);
 
     // Show delete button for only customers already in the database
     delete.setVisible(customer.isPersisted());
@@ -672,7 +669,7 @@ public void setCustomer(Customer customer) {
 ----
 
 In addition to saving the reference of the currently edited Customer object, we are
-calling the _BeanBinder.setBean_ method. This will initialise all
+calling the _Binder.setBean_ method. This will initialise all
 fields in the form and automatically update the values in the domain objects as
 the corresponding field value changes in the user interface.
 
@@ -830,22 +827,22 @@ save.setClickShortcut(KeyCode.ENTER);
 To finish our form, we need to create a public API that we will use in the next
 part from the MyUI, to pass in a Customer object that the form should edit. We
 will also add some logic to actually save the changes. We'll start by adding a
-_BeanBinder_ as a field to the _CustomerForm_ class:
+_Binder_ as a field to the _CustomerForm_ class:
 
 [source,java]
 ----
-private BeanBinder<Customer> beanBinder = new BeanBinder<>(Customer.class);
+private Binder<Customer> binder = new Binder<>(Customer.class);
 ----
 
 In the constructor of the CustomerForm class add the following line to configure
-the BeanBinder:
+the Binder:
 
 [source,java]
 ----
-beanBinder.bindInstanceFields(this);
+binder.bindInstanceFields(this);
 ----
 
-This configures the BeanBinder to use all the similary named editor fields in
+This configures the Binder to use all the similary named editor fields in
 this form to bind their values with their counterpart in the Customer class.
 For example, the _CustomerForm.firstName_ TextField will be bound to the
 Customer.firstName property.
@@ -858,7 +855,7 @@ stub for you. Complete it with the following implementation:
 ----
 public void setCustomer(Customer customer) {
     this.customer = customer;
-    beanBinder.setBean(customer);
+    binder.setBean(customer);
 
     // Show delete button for only customers already in the database
     delete.setVisible(customer.isPersisted());
@@ -868,7 +865,7 @@ public void setCustomer(Customer customer) {
 ----
 
 In addition to saving the reference of the currently edited Customer object, we are
-calling the _BeanBinder.setBean_ method. This will initialise all
+calling the _Binder.setBean_ method. This will initialise all
 fields in the form and automatically update the values in the domain objects as
 the corresponding field value changes in the user interface.
 
