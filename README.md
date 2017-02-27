@@ -79,10 +79,18 @@ The following preferences need to be set to keep the project consistent. You nee
 
 ## Running a Development Server
 
-1. Open *Maven Settings* dialog by clicking a button in *Maven Projects* window 
-1. Expand *Maven* in left-hand settings tree
-1. Select *Runner* and set *VM options* to <code>-ea</code>
-1. Click *OK*
-1. In *Maven Projects* window select and run *vaadin-uitest* -> *Plugins* -> *exec* -> *exec:java* target
-1. Open URL *http://localhost:8888/run/&lt;testUI&gt;*
+1. Open *Run* menu  and click *Edit Configurations*
+1. Click green ***+*** sign at top left corner, select *Maven* from popup 
+1. In the run configuration page, set any name for the configuration, select *vaadin-uitest* project folder as *Working directory*
+1. Type <code>exec:exec@run-development-server</code> into *Command line* and save the configuration
+1. Run the configuration and open URL *http://localhost:8888/run/&lt;testUI&gt;*
+
+## Running a Development Server in a debug mode
+
+1. Repeat steps 1..3 from above 
+1. Click green ***+*** sign at top left corner, select *Maven* from popup 
+1. In the run configuration page, set any name for the configuration, select *vaadin-uitest* project folder as *Working directory*
+1. Type <code>exec:exec@debug-development-server</code> into *Command line* and save the configuration
+1. In the same dialog, create new "Remote" debug configuration, using *localhost* and *Port 5005* 
+1. Start both configurations and open URL *http://localhost:8888/run/&lt;testUI&gt;*
 

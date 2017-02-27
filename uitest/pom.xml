@@ -364,14 +364,37 @@
                     <execution>
                         <id>run-development-server</id>
                         <goals>
-                            <goal>java</goal>
+                            <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>debug-development-server</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <mainClass>com.vaadin.launcher.DevelopmentServerLauncher</mainClass>
-                    <classpathScope>test</classpathScope>
-                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
