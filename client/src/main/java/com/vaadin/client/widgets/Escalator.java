@@ -4009,6 +4009,7 @@ public class Escalator extends Widget
             spacerContainer.scrollToSpacer(spacerIndex, destination, padding);
         }
 
+        @Override
         public void setNewEscalatorRowCallback(
                 Consumer<List<TableRowElement>> callback) {
             this.newEscalatorRowCallback = callback;

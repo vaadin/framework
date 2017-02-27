@@ -19,6 +19,9 @@ import com.vaadin.shared.ui.dnd.DragSourceState;
 
 /**
  * State class containing parameters for GridDragSourceExtension.
+ *
+ * @author Vaadin Ltd
+ * @since
  */
 public class GridDragSourceExtensionState extends DragSourceState {
 

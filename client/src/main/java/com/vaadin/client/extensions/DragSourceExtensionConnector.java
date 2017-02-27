@@ -87,7 +87,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Adds drag event listeners to the given DOM element.
+     * Adds dragstart and dragend event listeners to the given DOM element.
      *
      * @param element
      *         DOM element to attach event listeners to.
@@ -100,7 +100,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Removes drag event listeners from the given DOM element.
+     * Removes dragstart and dragend event listeners from the given DOM element.
      *
      * @param element
      *         DOM element to remove event listeners from.

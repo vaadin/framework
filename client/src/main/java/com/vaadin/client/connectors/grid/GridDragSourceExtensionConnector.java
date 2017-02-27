@@ -33,6 +33,9 @@ import elemental.json.JsonObject;
  * Adds HTML5 drag and drop functionality to a {@link com.vaadin.client.widgets.Grid
  * Grid}'s rows. This is the client side counterpart of {@link
  * GridDragSourceExtension}.
+ *
+ * @author Vaadin Ltd
+ * @since
  */
 @Connect(GridDragSourceExtension.class)
 public class GridDragSourceExtensionConnector extends
@@ -81,6 +84,9 @@ public class GridDragSourceExtensionConnector extends
 
         // Remove drag listeners from body element
         removeDragListeners(getGridBody().getElement());
+
+        // Remove callback for newly added rows
+        getGridBody().setNewEscalatorRowCallback(null);
     }
 
     private Escalator getEscalator() {

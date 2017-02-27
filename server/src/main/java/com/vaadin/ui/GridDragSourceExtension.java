@@ -19,13 +19,18 @@ import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 
 /**
- * Adds HTML5 drag and drop functionality to a {@link Grid}'s rows.
+ * Makes a Grid's rows draggable for HTML5 drag and drop functionality.
+ *
+ * @author Vaadin Ltd.
+ * @since
  */
 public class GridDragSourceExtension extends DragSourceExtension<Grid> {
 
     /**
      * Extends a Grid and makes it's rows draggable.
-     * @param target Grid to be extended.
+     *
+     * @param target
+     *         Grid to be extended.
      */
     public GridDragSourceExtension(Grid target) {
         super(target);
