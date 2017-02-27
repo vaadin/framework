@@ -29,6 +29,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 
+import elemental.json.Json;
+import elemental.json.JsonObject;
+
 public class GridDragAndDrop extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
@@ -39,8 +42,13 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
         dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
 
-        GridDragSourceExtension dragSource = new GridDragSourceExtension(
+        GridDragSourceExtension<Bean> dragSource = new GridDragSourceExtension<>(
                 dragSourceComponent);
+        dragSource.setDragDataGeneratorCallback(bean -> {
+            JsonObject ret = Json.createObject();
+            ret.put("val", bean.getValue());
+            return ret;
+        });
 
         Label dropTargetComponent = new Label("Drop here");
         DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
@@ -48,7 +56,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
         dropTarget.addDropListener(event -> {
             log(event.getTransferData(
-                    GridDragSourceExtensionState.DATA_TYPE_ROW_DATA));
+                    GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA));
         });
 
         Layout layout = new HorizontalLayout();
