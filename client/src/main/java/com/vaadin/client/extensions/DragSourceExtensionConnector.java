@@ -36,6 +36,9 @@ import elemental.events.EventTarget;
 /**
  * Extension to add drag source functionality to a widget for using HTML5 drag
  * and drop. Client side counterpart of {@link DragSourceExtension}.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 @Connect(DragSourceExtension.class)
 public class DragSourceExtensionConnector extends AbstractExtensionConnector {

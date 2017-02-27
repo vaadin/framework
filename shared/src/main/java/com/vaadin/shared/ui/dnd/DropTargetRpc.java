@@ -23,6 +23,9 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * RPC for firing server side drop event when client side drop event happens on
  * drop target.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public interface DropTargetRpc extends ServerRpc {
 

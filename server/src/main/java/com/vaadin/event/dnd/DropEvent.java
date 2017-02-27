@@ -29,7 +29,9 @@ import com.vaadin.ui.Component;
  *
  * @param <T>
  *         Type of the drop target component.
+ * @author Vaadin Ltd
  * @see DropTargetExtension#addDropListener(DropListener)
+ * @since 8.1
  */
 public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final Map<String, String> data;

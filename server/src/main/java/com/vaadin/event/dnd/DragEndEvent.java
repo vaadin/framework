@@ -28,7 +28,9 @@ import com.vaadin.ui.Component;
  *
  * @param <T>
  *         Type of the component that was dragged.
+ * @author Vaadin Ltd
  * @see DragSourceExtension#addDragEndListener(DragEndListener)
+ * @since 8.1
  */
 public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
     private final Map<String, String> data;

@@ -24,6 +24,9 @@ import com.vaadin.shared.communication.SharedState;
 
 /**
  * State class containing parameters for DragSourceExtension.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public class DragSourceState extends SharedState {
 

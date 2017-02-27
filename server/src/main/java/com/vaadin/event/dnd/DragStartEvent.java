@@ -29,9 +29,12 @@ import com.vaadin.ui.Component;
  *
  * @param <T>
  *         Type of the component that is dragged.
+ * @author Vaadin Ltd
  * @see DragSourceExtension#addDragStartListener(DragStartListener)
+ * @since 8.1
  */
-public class DragStartEvent<T extends AbstractComponent> extends Component.Event {
+public class DragStartEvent<T extends AbstractComponent> extends
+        Component.Event {
     private final Map<String, String> data;
     private final EffectAllowed effectAllowed;
 
