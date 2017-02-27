@@ -348,14 +348,12 @@ Macs). The extracted method call looks like this:
 ----
 
 If you try the application now, you'll see an empty Grid with no columns. To add columns, configure
-the Grid using the _addColumn_ method to show the "firstName", "lastName" and
+the Grid using the _setColumns_ method to show the "firstName", "lastName" and
 "email" properties.
 
 [source,java]
 ----
-    grid.addColumn(Customer::getFirstName).setCaption("First Name");
-    grid.addColumn(Customer::getLastName).setCaption("Last Name");
-    grid.addColumn(Customer::getEmail).setCaption("Email");
+    grid.setColumns("firstName", "lastName", "email");
 ----
 
 At this point the body of the MyUI class should look like this (servlet declaration
@@ -370,9 +368,8 @@ private Grid grid = new Grid();
 protected void init(VaadinRequest vaadinRequest) {
     final VerticalLayout layout = new VerticalLayout();
 
-    grid.addColumn(Customer::getFirstName).setCaption("First Name");
-    grid.addColumn(Customer::getLastName).setCaption("Last Name");
-    grid.addColumn(Customer::getEmail).setCaption("Email");
+    grid.setColumns("firstName", "lastName", "email");
+
     // add Grid to the layout
     layout.addComponent(grid);
 
