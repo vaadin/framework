@@ -364,9 +364,22 @@ public class Navigator implements Serializable {
         }
     }
 
-    private UI ui;
-    private NavigationStateManager stateManager;
-    private ViewDisplay display;
+    /**
+     * The {@link UI} bound with the Navigator.
+     */
+    protected UI ui;
+    
+    /**
+     * The {@link NavigationStateManager} that is used to get, listen to
+     * and manipulate the navigation state used by the Navigator.
+     */
+    protected NavigationStateManager stateManager;
+    
+    /**
+     *  The {@link ViewDisplay} used by the Navigator.
+     */
+    protected ViewDisplay display;
+    
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<>();
     private List<ViewProvider> providers = new LinkedList<>();
@@ -997,7 +1010,7 @@ public class Navigator implements Serializable {
      *            state string
      * @return suitable provider
      */
-    private ViewProvider getViewProvider(String state) {
+    protected ViewProvider getViewProvider(String state) {
         String longestViewName = null;
         ViewProvider longestViewNameProvider = null;
         for (ViewProvider provider : providers) {
