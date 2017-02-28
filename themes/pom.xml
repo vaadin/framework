@@ -17,27 +17,27 @@
     <dependencies>
         <!-- Maven plugin scans for vaadin-server... -->
         <dependency>
-            <groupId>com.vaadin</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>vaadin-server</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.vaadin</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>vaadin-buildhelpers</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-sass-compiler</artifactId>
             <version>${vaadin.sass.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.vaadin</groupId>
             <artifactId>vaadin-icons</artifactId>
             <version>${vaadin.icons.version}</version>
             <scope>provided</scope>
