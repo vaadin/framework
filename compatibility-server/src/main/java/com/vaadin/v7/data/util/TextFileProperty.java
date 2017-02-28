@@ -36,6 +36,7 @@ import java.nio.charset.Charset;
  * setValue(Object) is explicitly called. {@link ReadOnlyStatusChangeListener}s
  * are supported but only fire when setReadOnly(boolean) is explicitly called.
  *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 @SuppressWarnings("serial")

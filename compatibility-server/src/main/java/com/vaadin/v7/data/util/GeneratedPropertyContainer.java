@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
@@ -58,6 +59,8 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 public class GeneratedPropertyContainer extends AbstractContainer

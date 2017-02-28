@@ -46,6 +46,9 @@ import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.MSSQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.OracleGenerator;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public class SQLContainer implements Container, Container.Filterable,
         Container.Indexed, Container.Sortable, Container.ItemSetChangeNotifier {

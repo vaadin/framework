@@ -15,6 +15,9 @@
  */
 package com.vaadin.v7.shared.ui.datefield;
 
+import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ import java.util.List;
  *
  * @author Vaadin Ltd.
  * @since 7.0
+ * @see DateResolution
+ * @see DateTimeResolution
  */
 public enum Resolution {
     // Values from Calendar.SECOND etc. Set as ints to avoid Calendar dependency

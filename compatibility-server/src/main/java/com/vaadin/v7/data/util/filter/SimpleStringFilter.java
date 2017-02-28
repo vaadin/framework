@@ -34,6 +34,8 @@ import com.vaadin.v7.data.Property;
  * TODO this might still change
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public final class SimpleStringFilter implements Filter {

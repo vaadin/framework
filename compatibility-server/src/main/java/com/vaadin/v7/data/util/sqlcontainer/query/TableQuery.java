@@ -46,6 +46,9 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.MSSQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.SQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @SuppressWarnings("serial")
 @Deprecated
 public class TableQuery extends AbstractTransactionalQuery

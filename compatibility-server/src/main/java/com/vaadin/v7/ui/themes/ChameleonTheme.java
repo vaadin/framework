@@ -15,6 +15,9 @@
  */
 package com.vaadin.v7.ui.themes;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+*/
 @Deprecated
 public class ChameleonTheme extends BaseTheme {
 

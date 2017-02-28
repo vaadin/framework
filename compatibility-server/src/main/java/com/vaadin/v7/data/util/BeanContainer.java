@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.data.util;
 
+import com.vaadin.data.provider.DataProvider;
+
 import java.util.Collection;
 
 import com.vaadin.v7.data.Container;
@@ -69,6 +71,8 @@ import com.vaadin.v7.data.Container;
  * @see BeanItemContainer
  *
  * @since 6.5
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 public class BeanContainer<IDTYPE, BEANTYPE>

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.ui.AbstractListing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Transferable;
@@ -77,6 +78,7 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
  *
  * @author Vaadin Ltd.
  * @since 5.0
+ * @deprecated As of 8.0, replaced by {@link AbstractListing}
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -238,17 +240,17 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Keymapper used to map key values.
      */
-    protected KeyMapper<Object> itemIdMapper = new KeyMapper<Object>();
+    protected KeyMapper<Object> itemIdMapper = new KeyMapper<>();
 
     /**
      * Item icons.
      */
-    private final HashMap<Object, Resource> itemIcons = new HashMap<Object, Resource>();
+    private final HashMap<Object, Resource> itemIcons = new HashMap<>();
 
     /**
      * Item captions.
      */
-    private final HashMap<Object, String> itemCaptions = new HashMap<Object, String>();
+    private final HashMap<Object, String> itemCaptions = new HashMap<>();
 
     /**
      * Item caption mode.
@@ -479,7 +481,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 // TODO Optimize by adding repaintNotNeeded when applicable
 
                 // Converts the key-array to id-set
-                final LinkedList<Object> acceptedSelections = new LinkedList<Object>();
+                final LinkedList<Object> acceptedSelections = new LinkedList<>();
                 for (int i = 0; i < clientSideSelectedKeys.length; i++) {
                     final Object id = itemIdMapper
                             .get(clientSideSelectedKeys[i]);
@@ -511,9 +513,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                     @SuppressWarnings("unchecked")
                     Set<Object> newsel = (Set<Object>) getValue();
                     if (newsel == null) {
-                        newsel = new LinkedHashSet<Object>();
+                        newsel = new LinkedHashSet<>();
                     } else {
-                        newsel = new LinkedHashSet<Object>(newsel);
+                        newsel = new LinkedHashSet<>(newsel);
                     }
                     newsel.removeAll(visibleNotSelected);
                     newsel.addAll(acceptedSelections);
@@ -665,14 +667,14 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
             // If the return value is not a set
             if (retValue == null) {
-                return new HashSet<Object>();
+                return new HashSet<>();
             }
             if (retValue instanceof Set) {
                 return Collections.unmodifiableSet((Set<?>) retValue);
             } else if (retValue instanceof Collection) {
                 return new HashSet<Object>((Collection<?>) retValue);
             } else {
-                final Set<Object> s = new HashSet<Object>();
+                final Set<Object> s = new HashSet<>();
                 if (items.containsId(retValue)) {
                     s.add(retValue);
                 }
@@ -982,7 +984,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         if (isMultiSelect()) {
             Collection<Object> valueAsCollection = (Collection<Object>) value;
-            List<Object> newSelection = new ArrayList<Object>(
+            List<Object> newSelection = new ArrayList<>(
                     valueAsCollection.size());
             for (Object subValue : valueAsCollection) {
                 if (containsId(subValue)) {
@@ -1133,7 +1135,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
             // Convert the value type
             if (multiSelect) {
-                final Set<Object> s = new HashSet<Object>();
+                final Set<Object> s = new HashSet<>();
                 if (oldValue != null) {
                     s.add(oldValue);
                 }
@@ -1538,7 +1540,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             setValue(itemId);
         } else if (!isSelected(itemId) && itemId != null
                 && items.containsId(itemId)) {
-            final Set<Object> s = new HashSet<Object>((Set<?>) getValue());
+            final Set<Object> s = new HashSet<>((Set<?>) getValue());
             s.add(itemId);
             setValue(s);
         }
@@ -1556,7 +1558,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void unselect(Object itemId) {
         if (isSelected(itemId)) {
             if (isMultiSelect()) {
-                final Set<Object> s = new HashSet<Object>((Set<?>) getValue());
+                final Set<Object> s = new HashSet<>((Set<?>) getValue());
                 s.remove(itemId);
                 setValue(s);
             } else {
@@ -1922,7 +1924,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         // TODO clean this up - type is either Item.PropertySetChangeNotifier or
         // Property.ValueChangeNotifier
-        HashSet<Object> captionChangeNotifiers = new HashSet<Object>();
+        HashSet<Object> captionChangeNotifiers = new HashSet<>();
 
         public void addNotifierForItem(Object itemId) {
             switch (getItemCaptionMode()) {
@@ -2046,7 +2048,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      */
     private static abstract class AbstractItemSetCriterion
             extends ClientSideCriterion {
-        protected final Collection<Object> itemIds = new HashSet<Object>();
+        protected final Collection<Object> itemIds = new HashSet<>();
         protected AbstractSelect select;
 
         public AbstractItemSetCriterion(AbstractSelect select,
@@ -2221,7 +2223,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     protected void readItems(Element design, DesignContext context) {
-        Set<String> selected = new HashSet<String>();
+        Set<String> selected = new HashSet<>();
         for (Element child : design.children()) {
             readItem(child, selected, context);
         }

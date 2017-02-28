@@ -81,6 +81,8 @@ import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 import com.vaadin.v7.shared.ui.table.TableServerRpc;
 import com.vaadin.v7.shared.ui.table.TableState;
 
+import com.vaadin.ui.Grid;
+
 /**
  * <p>
  * <code>Table</code> is used for representing data or components in a pageable
@@ -102,7 +104,7 @@ import com.vaadin.v7.shared.ui.table.TableState;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, use Grid instead
+ * @deprecated As of 8.0, use {@link Grid} instead
  */
 @Deprecated
 @SuppressWarnings({ "deprecation" })
