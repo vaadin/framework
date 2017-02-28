@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -2406,6 +2408,12 @@ public class Escalator extends Widget
         @Deprecated
         private int topRowLogicalIndex = 0;
 
+        /**
+         * A callback function to be executed after new rows are added to the
+         * escalator.
+         */
+        private Consumer<List<TableRowElement>> newEscalatorRowCallback;
+
         private void setTopRowLogicalIndex(int topRowLogicalIndex) {
             if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
                 Logger.getLogger("Escalator.BodyRowContainer")
@@ -2996,6 +3004,10 @@ public class Escalator extends Widget
                     y += getDefaultRowHeight();
                     y += spacerContainer.getSpacerHeight(i);
                 }
+
+                // Execute the registered callback function for newly created rows
+                Optional.ofNullable(newEscalatorRowCallback)
+                        .ifPresent(callback -> callback.accept(addedRows));
 
                 return addedRows;
             } else {
@@ -4004,6 +4016,12 @@ public class Escalator extends Widget
         void scrollToSpacer(int spacerIndex, ScrollDestination destination,
                 int padding) {
             spacerContainer.scrollToSpacer(spacerIndex, destination, padding);
+        }
+
+        @Override
+        public void setNewEscalatorRowCallback(
+                Consumer<List<TableRowElement>> callback) {
+            this.newEscalatorRowCallback = callback;
         }
     }
 
