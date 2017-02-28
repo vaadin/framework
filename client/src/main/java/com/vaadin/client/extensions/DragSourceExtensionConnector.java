@@ -60,29 +60,66 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dragSourceWidget = ((ComponentConnector) target).getWidget();
 
-        Element dragSourceElement = getDraggableElement();
+        setDraggable(getDraggableElement());
+        addDragListeners(getDraggableElement());
+    }
 
-        dragSourceElement.setDraggable(Element.DRAGGABLE_TRUE);
-        dragSourceElement.addClassName(CLASS_DRAGGABLE);
+    /**
+     * Sets the given element draggable and adds class name.
+     *
+     * @param element
+     *         Element to be set draggable.
+     */
+    protected void setDraggable(Element element) {
+        element.setDraggable(Element.DRAGGABLE_TRUE);
+        element.addClassName(CLASS_DRAGGABLE);
+    }
 
-        EventTarget dragSource = dragSourceElement.cast();
+    /**
+     * Removes draggable and class name from the given element.
+     *
+     * @param element
+     *         Element to remove draggable from.
+     */
+    protected void removeDraggable(Element element) {
+        element.setDraggable(Element.DRAGGABLE_FALSE);
+        element.removeClassName(CLASS_DRAGGABLE);
+    }
 
-        // dragstart
-        dragSource.addEventListener(Event.DRAGSTART, dragStartListener);
+    /**
+     * Adds dragstart and dragend event listeners to the given DOM element.
+     *
+     * @param element
+     *         DOM element to attach event listeners to.
+     */
+    protected void addDragListeners(Element element) {
+        EventTarget target = element.cast();
 
-        // dragend
-        dragSource.addEventListener(Event.DRAGEND, dragEndListener);
+        target.addEventListener(Event.DRAGSTART, dragStartListener);
+        target.addEventListener(Event.DRAGEND, dragEndListener);
+    }
+
+    /**
+     * Removes dragstart and dragend event listeners from the given DOM element.
+     *
+     * @param element
+     *         DOM element to remove event listeners from.
+     */
+    protected void removeDragListeners(Element element) {
+        EventTarget target = element.cast();
+
+        target.removeEventListener(Event.DRAGSTART, dragStartListener);
+        target.removeEventListener(Event.DRAGEND, dragEndListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        EventTarget dragSource = (EventTarget) getDraggableElement();
+        Element dragSource = getDraggableElement();
 
-        // Remove listeners
-        dragSource.removeEventListener(Event.DRAGSTART, dragStartListener);
-        dragSource.removeEventListener(Event.DRAGEND, dragEndListener);
+        removeDraggable(dragSource);
+        removeDragListeners(dragSource);
     }
 
     /**
