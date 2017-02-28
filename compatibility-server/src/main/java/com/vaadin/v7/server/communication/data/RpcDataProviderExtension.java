@@ -54,13 +54,15 @@ import elemental.json.JsonObject;
 
 /**
  * Provides Vaadin server-side container data source to a
- * {@link com.vaadin.client.ui.grid.GridConnector}. This is currently
+ * {@link com.vaadin.v7.client.connectors.GridConnector}. This is currently
  * implemented as an Extension hardcoded to support a specific connector type.
  * This will be changed once framework support for something more flexible has
  * been implemented.
  *
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class RpcDataProviderExtension extends AbstractExtension {

@@ -25,6 +25,8 @@ import com.vaadin.v7.data.Container.Sortable;
  * An item comparator which is compatible with the {@link Sortable} interface.
  * The <code>ItemSorter</code> interface can be used in <code>Sortable</code>
  * implementations to provide a custom sorting method.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface ItemSorter

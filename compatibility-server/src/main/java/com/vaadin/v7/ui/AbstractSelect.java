@@ -78,8 +78,7 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
  *
  * @author Vaadin Ltd.
  * @since 5.0
- *
- * @deprecated As of 8.0, no replacement available. See {@link AbstractListing}
+ * @deprecated As of 8.0, replaced by {@link AbstractListing}
  */
 @SuppressWarnings("serial")
 @Deprecated

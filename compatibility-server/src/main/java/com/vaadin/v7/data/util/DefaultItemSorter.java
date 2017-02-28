@@ -37,6 +37,8 @@ import com.vaadin.v7.data.Property;
  * values. The comparator can be set using the constructor. If no comparator is
  * provided a default comparator is used.
  *
+ *
+ * @deprecated As of 8.0, no replacement available, see {@see AbstractBackEndDataProvider}
  */
 @Deprecated
 public class DefaultItemSorter implements ItemSorter {

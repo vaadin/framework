@@ -29,6 +29,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.TableQuery;
  * @see TableQuery#setVersionColumn(String)
  *
  * @author Jonatan Kronqvist / Vaadin Ltd
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class OptimisticLockException extends RuntimeException {

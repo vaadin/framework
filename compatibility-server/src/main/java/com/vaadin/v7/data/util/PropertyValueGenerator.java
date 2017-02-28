@@ -30,6 +30,8 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *            Property data type
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public abstract class PropertyValueGenerator<T> implements Serializable {
