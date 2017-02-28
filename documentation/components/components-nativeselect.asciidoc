@@ -26,9 +26,6 @@ NativeSelect<String> select =
 select.setItems("Mercury", "Venus", ...);
 ----
 
-The [methodname]#setColumns()# allows setting the width of the list as
-"columns", which is a measure that depends on the browser.
-
 [[figure.components.nativeselect.basic]]
 .The [classname]#NativeSelect# Component
 image::img/nativeselect-basic.png[width=20%, scaledwidth=35%]
