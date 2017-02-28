@@ -42,6 +42,7 @@ import com.vaadin.v7.ui.TextField;
  * instance.
  *
  * @author Vaadin Ltd
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {

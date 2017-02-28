@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -42,6 +43,8 @@ import com.vaadin.v7.data.Property;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 @SuppressWarnings("serial")

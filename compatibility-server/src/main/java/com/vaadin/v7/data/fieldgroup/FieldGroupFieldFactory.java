@@ -25,6 +25,7 @@ import com.vaadin.v7.ui.Field;
  *
  * @author Vaadin Ltd.
  * @since 7.0
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface FieldGroupFieldFactory extends Serializable {

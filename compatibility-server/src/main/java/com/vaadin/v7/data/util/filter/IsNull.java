@@ -25,6 +25,8 @@ import com.vaadin.v7.data.Property;
  * This filter also directly supports in-memory filtering.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public final class IsNull implements Filter {

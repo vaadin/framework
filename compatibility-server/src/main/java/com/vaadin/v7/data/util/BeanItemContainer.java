@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.data.util;
 
+import com.vaadin.data.provider.ListDataProvider;
+
 import java.util.Collection;
 
 /**
@@ -50,6 +52,7 @@ import java.util.Collection;
  *            The type of the Bean
  *
  * @since 5.4
+ * @deprecated As of 8.0, replaced by {@link ListDataProvider}
  */
 @Deprecated
 @SuppressWarnings("serial")

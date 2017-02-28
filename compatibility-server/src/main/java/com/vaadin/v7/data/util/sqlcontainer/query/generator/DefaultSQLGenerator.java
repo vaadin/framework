@@ -32,6 +32,8 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.StringDecorat
  * Generates generic SQL that is supported by HSQLDB, MySQL and PostgreSQL.
  *
  * @author Jonatan Kronqvist / Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated

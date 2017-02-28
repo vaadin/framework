@@ -32,7 +32,7 @@ package com.vaadin.v7.ui.themes;
  * name as a string constant <code>THEME_NAME</code>.
  *
  * @since 6.3.0
- *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class BaseTheme {

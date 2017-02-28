@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container.Indexed;
 
 /**
@@ -27,6 +28,8 @@ import com.vaadin.v7.data.Container.Indexed;
  * of containers in Vaadin.
  *
  * @since 7.0
+ *
+ * @deprecated As of 8.0, no replacement available, see {@link DataProvider}
  */
 @Deprecated
 public class ContainerHelpers implements Serializable {

@@ -25,6 +25,9 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.util.SerializerHelper;
@@ -58,6 +61,8 @@ import com.vaadin.v7.util.SerializerHelper;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
  */
 @Deprecated
 @SuppressWarnings("serial")

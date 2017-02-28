@@ -28,6 +28,8 @@ import com.vaadin.v7.data.Container.Filter;
  * implementing {@link Filter} for in-memory filters.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public abstract class AbstractJunctionFilter implements Filter {

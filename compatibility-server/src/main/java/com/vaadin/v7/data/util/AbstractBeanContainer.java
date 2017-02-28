@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Filterable;
 import com.vaadin.v7.data.Container.PropertySetChangeNotifier;
@@ -59,6 +60,9 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *            The type of the Bean
  *
  * @since 6.5
+ *
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>

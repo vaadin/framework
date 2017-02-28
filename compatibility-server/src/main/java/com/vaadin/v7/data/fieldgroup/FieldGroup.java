@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.annotations.PropertyId;
+import com.vaadin.data.Binder;
 import com.vaadin.util.ReflectTools;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -51,6 +52,7 @@ import com.vaadin.v7.ui.Field;
  *
  * @author Vaadin Ltd
  * @since 7.0
+ * @deprecated As of 8.0, replaced by {@link Binder}
  */
 @Deprecated
 public class FieldGroup implements Serializable {

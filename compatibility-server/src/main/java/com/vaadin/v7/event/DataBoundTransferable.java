@@ -35,6 +35,8 @@ import com.vaadin.v7.data.Container;
  * instead of its concrete subclasses.
  *
  * @since 6.3
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public abstract class DataBoundTransferable extends TransferableImpl {

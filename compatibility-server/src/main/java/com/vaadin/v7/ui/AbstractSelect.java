@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.ui.AbstractListing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Transferable;
@@ -65,8 +66,8 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 /**
  * <p>
  * A class representing a selection of items the user has selected in a UI. The
- * set of choices is presented as a set of {@link com.com.vaadin.v7.data.Item}s
- * in a {@link com.com.vaadin.v7.data.Container}.
+ * set of choices is presented as a set of {@link com.vaadin.v7.data.Item}s
+ * in a {@link com.vaadin.v7.data.Container}.
  * </p>
  *
  * <p>
@@ -77,6 +78,7 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
  *
  * @author Vaadin Ltd.
  * @since 5.0
+ * @deprecated As of 8.0, replaced by {@link AbstractListing}
  */
 @SuppressWarnings("serial")
 @Deprecated

@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.v7.data.Property;
 
@@ -34,6 +36,8 @@ import com.vaadin.v7.data.Property;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ *  @deprecated As of 8.0, no replacement available, see {@link Binder}, {@link DataProvider}
  */
 @SuppressWarnings("serial")
 @Deprecated

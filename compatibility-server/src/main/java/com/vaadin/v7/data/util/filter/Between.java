@@ -21,6 +21,9 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public class Between implements Filter {
 

@@ -23,6 +23,9 @@ import java.util.List;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.RowItem;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public interface FreeformQueryDelegate extends Serializable {
     /**

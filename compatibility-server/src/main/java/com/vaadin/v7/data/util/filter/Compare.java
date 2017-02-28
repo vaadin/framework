@@ -32,6 +32,8 @@ import com.vaadin.v7.data.Property;
  * reference value.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public abstract class Compare implements Filter {
@@ -55,6 +57,8 @@ public abstract class Compare implements Filter {
      * use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, no replacement available.
      */
     @Deprecated
     public static final class Equal extends Compare {
@@ -88,6 +92,8 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, no replacement available.
      */
     @Deprecated
     public static final class Greater extends Compare {
@@ -122,6 +128,8 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, no replacement available.
      */
     @Deprecated
     public static final class Less extends Compare {
@@ -156,6 +164,8 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, no replacement available.
      */
     @Deprecated
     public static final class GreaterOrEqual extends Compare {
@@ -190,6 +200,8 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, no replacement available.
      */
     @Deprecated
     public static final class LessOrEqual extends Compare {

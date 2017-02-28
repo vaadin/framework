@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Resource;
 import com.vaadin.util.FileTypeResolver;
 import com.vaadin.v7.data.Container;
@@ -41,6 +42,8 @@ import com.vaadin.v7.data.Property;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 @SuppressWarnings("serial")
