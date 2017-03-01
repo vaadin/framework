@@ -40,9 +40,9 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
     private DataGenerator<T> dragDataGenerator;
 
     /**
-     * Drag data generator callback that is executed for each row.
+     * Drag data generator function that is executed for each row.
      */
-    private SerializableFunction<T, JsonObject> generatorCallback;
+    private SerializableFunction<T, JsonObject> generatorFunction;
 
     /**
      * Extends a Grid and makes it's rows draggable.
@@ -62,7 +62,7 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
 
     /**
      * Drag data generator. Appends drag data to row data json if generator
-     * callback is set by the user of this extension.
+     * function is set by the user of this extension.
      *
      * @param item
      *         Row item for data generation.
@@ -70,31 +70,31 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
      *         Row data in json format.
      */
     private void generateDragData(T item, JsonObject jsonObject) {
-        Optional.ofNullable(generatorCallback).ifPresent(callback -> jsonObject
+        Optional.ofNullable(generatorFunction).ifPresent(generator -> jsonObject
                 .put(GridDragSourceExtensionState.JSONKEY_DRAG_DATA,
-                        callback.apply(item)));
+                        generator.apply(item)));
     }
 
     /**
-     * Sets a callback function for customizing drag data. The function is
-     * executed for each items in the Grid during data generation. Return a
+     * Sets a generator function for customizing drag data. The function is
+     * executed for each item in the Grid during data generation. Return a
      * {@link JsonObject} to be appended to the row data.
      * <p>
      * Example:
      * <pre>
-     *     dragSourceExtension.setDragDataGeneratorCallback(item -> {
+     *     dragSourceExtension.setDragDataGenerator(item -> {
      *         JsonObject dragData = Json.createObject();
      *         dragData.put("someKey", item.getValue());
      *         return dragData;
      *     });
      * </pre>
      *
-     * @param callback
+     * @param generator
      *         Function to be executed on row data generation.
      */
-    public void setDragDataGeneratorCallback(
-            SerializableFunction<T, JsonObject> callback) {
-        generatorCallback = callback;
+    public void setDragDataGenerator(
+            SerializableFunction<T, JsonObject> generator) {
+        generatorFunction = generator;
     }
 
 

@@ -44,7 +44,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
         GridDragSourceExtension<Bean> dragSource = new GridDragSourceExtension<>(
                 dragSourceComponent);
-        dragSource.setDragDataGeneratorCallback(bean -> {
+        dragSource.setDragDataGenerator(bean -> {
             JsonObject ret = Json.createObject();
             ret.put("val", bean.getValue());
             return ret;
