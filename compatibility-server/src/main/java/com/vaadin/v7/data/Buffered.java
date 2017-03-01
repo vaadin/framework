@@ -180,6 +180,7 @@ public interface Buffered extends Serializable {
             return source;
         }
 
+        // Intentional change in compatibility package
         @Override
         public ErrorMessage getErrorMessage() {
             // no message, only the causes to be painted

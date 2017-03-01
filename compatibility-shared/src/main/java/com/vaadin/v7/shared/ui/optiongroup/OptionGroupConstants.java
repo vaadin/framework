@@ -18,6 +18,7 @@ package com.vaadin.v7.shared.ui.optiongroup;
 import java.io.Serializable;
 
 public class OptionGroupConstants implements Serializable {
+    // Vaadin 8 option group uses state for HTML content
     public static final String ATTRIBUTE_OPTION_DISABLED = "disabled";
 
 }

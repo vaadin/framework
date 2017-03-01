@@ -153,7 +153,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     }
 
     /**
-     * Custom implementation of the custom grid column using a JSONObject to
+     * Custom implementation of the custom grid column using a JSONObject to
      * represent the cell value and String as a column type.
      */
     private class CustomGridColumn extends Grid.Column<Object, JsonObject> {

@@ -65,6 +65,8 @@ public class TwinColSelect extends AbstractSelect {
         setMultiSelect(true);
     }
 
+    // Columns are no longer used for width.
+
     public int getRows() {
         return rows;
     }
@@ -104,7 +106,7 @@ public class TwinColSelect extends AbstractSelect {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        // Adds the number of columns
+        // Width is no longer based on columns
         // Adds the number of rows
         if (rows != 0) {
             target.addAttribute("rows", rows);

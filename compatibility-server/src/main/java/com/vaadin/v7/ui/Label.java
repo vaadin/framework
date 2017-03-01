@@ -549,6 +549,8 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
         markAsDirty();
     }
 
+    // LegacyPropertyHelper has been removed in Vaadin 8
+
     /*
      * (non-Javadoc)
      *

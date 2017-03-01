@@ -70,6 +70,8 @@ public abstract class AbstractProperty<T> implements Property<T>,
         }
     }
 
+    // LegacyPropertyHelper has been removed in Vaadin 8
+
     /* Events */
 
     /**

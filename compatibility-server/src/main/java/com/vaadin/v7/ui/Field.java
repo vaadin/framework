@@ -22,14 +22,14 @@ import com.vaadin.v7.data.BufferedValidatable;
 import com.vaadin.v7.data.Property;
 
 /**
- * LegacyField interface is implemented by all legacy field components that have
- * a value that the user can change through the user interface.
+ * Field interface is implemented by all classes (field components) that have a
+ * value that the user can change through the user interface.
  *
- * LegacyField components are built upon the framework defined in the
- * LegacyField interface and the {@link AbstractField} base class.
+ * Field components are built upon the framework defined in the Field interface
+ * and the {@link AbstractField} base class.
  *
- * The LegacyField interface inherits the {@link Component} superinterface and
- * also the {@link Property} interface to have a value for the field.
+ * The Field interface inherits the {@link Component} superinterface and also
+ * the {@link Property} interface to have a value for the field.
  *
  * @author Vaadin Ltd.
  *
@@ -85,8 +85,8 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
     public String getRequiredError();
 
     /**
-     * An <code>Event</code> object specifying the LegacyField whose value has
-     * been changed.
+     * An <code>Event</code> object specifying the Field whose value has been
+     * changed.
      *
      * @author Vaadin Ltd.
      * @since 3.0

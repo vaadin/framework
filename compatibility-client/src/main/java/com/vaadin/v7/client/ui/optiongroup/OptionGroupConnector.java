@@ -34,6 +34,7 @@ public class OptionGroupConnector extends OptionGroupBaseConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // HTML Content has been moved to state.
         super.updateFromUIDL(uidl, client);
 
         getWidget().sendFocusEvents = client.hasEventListeners(this,

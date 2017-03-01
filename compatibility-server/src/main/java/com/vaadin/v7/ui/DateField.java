@@ -56,8 +56,8 @@ import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
  * compatible with <code>java.util.Date</code>.
  * </p>
  * <p>
- * Since <code>DateField</code> extends <code>LegacyAbstractField</code> it
- * implements the {@link Buffered}interface.
+ * Since <code>DateField</code> extends <code>AbstractField</code> it implements
+ * the {@link Buffered}interface.
  * </p>
  * <p>
  * A <code>DateField</code> is in write-through mode by default, so
@@ -717,6 +717,21 @@ public class DateField extends AbstractField<Date> implements
              * and flags about invalid input.
              */
             setInternalValue(null);
+
+            /*
+             * Due to DateField's special implementation of isValid(),
+             * datefields validity may change although the logical value does
+             * not change. This is an issue for Form which expects that validity
+             * of Fields cannot change unless actual value changes.
+             *
+             * So we check if this field is inside a form and the form has
+             * registered this as a field. In this case we repaint the form.
+             * Without this hacky solution the form might not be able to clean
+             * validation errors etc. We could avoid this by firing an extra
+             * value change event, but feels like at least as bad solution as
+             * this.
+             */
+            notifyFormOfValidityChange();
             markAsDirty();
             return;
         }

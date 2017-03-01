@@ -88,7 +88,7 @@ public class WriteLegacyDesignTest {
 
     private void checkNode(Node node) {
         if (node instanceof Element) {
-            assertTrue("Expected " + node.nodeName() + " to start with v-",
+            assertTrue("Wrong design element prefix",
                     node.nodeName().startsWith("v-"));
             for (Node child : node.childNodes()) {
                 checkNode(child);

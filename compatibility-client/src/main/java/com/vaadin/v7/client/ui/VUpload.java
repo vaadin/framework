@@ -161,6 +161,7 @@ public class VUpload extends SimplePanel {
     private static native void setEncoding(Element form, String encoding)
     /*-{
       form.enctype = encoding;
+      // IE8 not supported in Vaadin 8
     }-*/;
 
     /** For internal use only. May be removed or replaced in the future. */

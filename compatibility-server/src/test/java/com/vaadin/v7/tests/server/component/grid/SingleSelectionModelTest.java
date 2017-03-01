@@ -20,10 +20,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.ui.ComponentTest;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.event.SelectionEvent;
 import com.vaadin.v7.event.SelectionEvent.SelectionListener;
+import com.vaadin.v7.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 import com.vaadin.v7.ui.Grid.SingleSelectionModel;
@@ -149,5 +151,14 @@ public class SingleSelectionModelTest {
                 expectingEvent = false;
             }
         });
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void refuseSelectionWhenUserSelectionDisallowed() {
+        ((HasUserSelectionAllowed) grid.getSelectionModel())
+                .setUserSelectionAllowed(false);
+        SingleSelectionModelServerRpc serverRpc = ComponentTest.getRpcProxy(
+                grid.getSelectionModel(), SingleSelectionModelServerRpc.class);
+        serverRpc.select("a");
     }
 }

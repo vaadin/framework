@@ -3665,6 +3665,7 @@ public class VScrollTable extends FlowPanel
                     }
                 } else {
                     c.setText(caption);
+                    // IE10 is no longer supported
                 }
 
                 c.setSorted(false);
