@@ -84,7 +84,7 @@ public abstract class AbstractTextField extends AbstractField<String>
     /**
      * Sets the value of this text field. If the new value is not equal to
      * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
-     * {@code NullPointerException} if the value is not null.
+     * {@code NullPointerException} if the value is null.
      *
      * @param value
      *            the new value, not {@code null}
@@ -268,14 +268,6 @@ public abstract class AbstractTextField extends AbstractField<String>
     @Override
     protected void doSetValue(String value) {
         getState().text = value;
-    }
-
-    /**
-     * Clears the value of this field.
-     */
-    @Override
-    public void clear() {
-        setValue("");
     }
 
     @Override
