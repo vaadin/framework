@@ -33,6 +33,8 @@ import com.vaadin.ui.AbstractComponent;
  *
  * @param <T>
  *         Type of the component to be extended.
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public class DragSourceExtension<T extends AbstractComponent> extends
         AbstractExtension {

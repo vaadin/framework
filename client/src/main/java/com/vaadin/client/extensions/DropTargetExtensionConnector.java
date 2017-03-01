@@ -40,6 +40,9 @@ import elemental.events.EventTarget;
 /**
  * Extension to add drop target functionality to a widget for using HTML5 drag
  * and drop. Client side counterpart of {@link DropTargetExtension}.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 @Connect(DropTargetExtension.class)
 public class DropTargetExtensionConnector extends AbstractExtensionConnector {

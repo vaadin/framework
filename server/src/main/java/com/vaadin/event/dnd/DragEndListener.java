@@ -26,7 +26,9 @@ import com.vaadin.ui.AbstractComponent;
  *
  * @param <T>
  *         Type of draggable component.
+ * @author Vaadin Ltd
  * @see DragSourceExtension#addDragEndListener(DragEndListener)
+ * @since 8.1
  */
 @FunctionalInterface
 public interface DragEndListener<T extends AbstractComponent> extends
