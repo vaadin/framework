@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.ContainerHelpers;
 import com.vaadin.v7.data.Item;
@@ -47,7 +48,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.MSSQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.OracleGenerator;
 
 /**
- * @deprecated As of 8.0, no replacement available.
+ * @deprecated As of 8.0, no replacement available, see {@link DataProvider}.
  */
 @Deprecated
 public class SQLContainer implements Container, Container.Filterable,

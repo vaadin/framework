@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.data.Binder;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.v7.data.Item;
@@ -29,7 +30,7 @@ import com.vaadin.v7.ui.Field;
 
 /**
  *
- * @deprecated As of 8.0, replaced by {@link Binder}
+ * @deprecated As of 8.0, replaced by {@link Binder} and {@link BeanValidationBinder}
  */
 @Deprecated
 public class BeanFieldGroup<T> extends FieldGroup {

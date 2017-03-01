@@ -663,6 +663,8 @@ public interface Container extends Serializable {
      * <li>The Items in the hierarchy can be declared explicitly to be able or
      * unable to have children.
      * </ul>
+     *
+     * @deprecated As of 8.0, no replacement available.
      */
     @Deprecated
     public interface Hierarchical extends Container {
