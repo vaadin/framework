@@ -911,8 +911,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Sets the given Item's capability to have children.
      *
-     * @see Container.Hierarchical#setChildrenAllowed(Object,
-     *      boolean)
+     * @see Container.Hierarchical#setChildrenAllowed(Object, boolean)
      */
     @Override
     public boolean setChildrenAllowed(Object itemId,
@@ -975,8 +974,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     @Override
-    public void containerItemSetChange(
-            Container.ItemSetChangeEvent event) {
+    public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
         if (getContainerDataSource() instanceof Filterable) {
             boolean hasFilters = !((Filterable) getContainerDataSource())
@@ -1567,7 +1565,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Concrete implementation of {@link DataBoundTransferable} for data
      * transferred from a tree.
      *
-     * @see {@link DataBoundTransferable}.
+     * @see DataBoundTransferable
      *
      * @since 6.3
      */

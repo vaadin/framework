@@ -54,21 +54,20 @@ import com.vaadin.ui.declarative.DesignContext;
  * <p>
  * Abstract field component for implementing buffered property editors. The
  * field may hold an internal value, or it may be connected to any data source
- * that implements the {@link Property}interface.
- * <code>AbstractField</code> implements that interface itself, too, so
- * accessing the Property value represented by it is straightforward.
+ * that implements the {@link Property}interface. <code>AbstractField</code>
+ * implements that interface itself, too, so accessing the Property value
+ * represented by it is straightforward.
  * </p>
  *
  * <p>
- * AbstractField also provides the {@link Buffered} interface
- * for buffering the data source value. By default the Field is in write
- * through-mode and {@link #setWriteThrough(boolean)}should be called to enable
- * buffering.
+ * AbstractField also provides the {@link Buffered} interface for buffering the
+ * data source value. By default the Field is in write through-mode and
+ * {@link #setWriteThrough(boolean)}should be called to enable buffering.
  * </p>
  *
  * <p>
- * The class also supports {@link Validator validators} to make
- * sure the value contained in the field is valid.
+ * The class also supports {@link Validator validators} to make sure the value
+ * contained in the field is valid.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -245,7 +244,7 @@ public abstract class AbstractField<T> extends AbstractComponent
     public void commit()
             throws Buffered.SourceException, InvalidValueException {
         if (dataSource != null && !dataSource.isReadOnly()) {
-            if ((isInvalidCommitted() || isValid())) {
+            if (isInvalidCommitted() || isValid()) {
                 try {
 
                     // Commits the value to datasource.
@@ -608,14 +607,12 @@ public abstract class AbstractField<T> extends AbstractComponent
      * </p>
      *
      * <p>
-     * If the data source implements
-     * {@link Property.ValueChangeNotifier} and/or
-     * {@link Property.ReadOnlyStatusChangeNotifier}, the field
-     * registers itself as a listener and updates itself according to the events
-     * it receives. To avoid memory leaks caused by references to a field no
-     * longer in use, the listener registrations are removed on
-     * {@link AbstractField#detach() detach} and re-added on
-     * {@link AbstractField#attach() attach}.
+     * If the data source implements {@link Property.ValueChangeNotifier} and/or
+     * {@link Property.ReadOnlyStatusChangeNotifier}, the field registers itself
+     * as a listener and updates itself according to the events it receives. To
+     * avoid memory leaks caused by references to a field no longer in use, the
+     * listener registrations are removed on {@link AbstractField#detach()
+     * detach} and re-added on {@link AbstractField#attach() attach}.
      * </p>
      *
      * <p>
@@ -687,8 +684,8 @@ public abstract class AbstractField<T> extends AbstractComponent
 
         // Fires value change if the value has changed
         T value = getInternalValue();
-        if ((value != oldValue) && ((value != null && !value.equals(oldValue))
-                || value == null)) {
+        if (value != oldValue && (value != null && !value.equals(oldValue))
+                || value == null) {
             fireValueChange(false);
         }
     }
@@ -1545,7 +1542,7 @@ public abstract class AbstractField<T> extends AbstractComponent
 
     @Override
     public boolean isEmpty() {
-        return (getFieldValue() == null);
+        return getFieldValue() == null;
     }
 
     @Override

@@ -43,7 +43,7 @@ public class GridEditorMissingPropertyTest {
     private final File file = new File(FILE_NAME_BEFORE, FILE_SIZE_BEFORE);
 
     @Before
-    public void setup() throws SecurityException, NoSuchMethodException  {
+    public void setup() throws SecurityException, NoSuchMethodException {
         final BeanItem<Entry> folderItem = new BeanItem<Entry>(folder);
         final BeanItem<Entry> childItem = new BeanItem<Entry>(file);
 
@@ -64,8 +64,8 @@ public class GridEditorMissingPropertyTest {
         // Item with incomplete property set
         fieldGroup.setItemDataSource(
                 grid.getContainerDataSource().getItem(folder));
-        grid.getColumn(PROPERTY_NAME)
-                .getEditorField(); // called in grid.doEditItem
+        grid.getColumn(PROPERTY_NAME).getEditorField(); // called in
+                                                        // grid.doEditItem
         assertTrue("Properties in item should be bound",
                 fieldGroup.getBoundPropertyIds().contains(PROPERTY_NAME));
         assertFalse("Properties not present in item should not be bound",
@@ -158,7 +158,8 @@ public class GridEditorMissingPropertyTest {
         testCancel(file, PROPERTY_SIZE, FILE_SIZE_BEFORE, FILE_SIZE_AFTER);
 
         // Row with missing property
-        testCancel(folder, PROPERTY_NAME, FOLDER_NAME_BEFORE, FOLDER_NAME_AFTER);
+        testCancel(folder, PROPERTY_NAME, FOLDER_NAME_BEFORE,
+                FOLDER_NAME_AFTER);
     }
 
     private void testCancel(Object itemId, String propertyId,
@@ -223,8 +224,8 @@ public class GridEditorMissingPropertyTest {
         grid.doEditItem();
     }
 
-    private class TestContainer extends
-            AbstractInMemoryContainer<Object, String, BeanItem> {
+    private class TestContainer
+            extends AbstractInMemoryContainer<Object, String, BeanItem> {
 
         private final List<BeanItem<Entry>> items;
         private final List<String> pids;

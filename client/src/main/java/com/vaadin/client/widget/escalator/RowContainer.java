@@ -35,8 +35,7 @@ import com.vaadin.client.widgets.Escalator;
 public interface RowContainer {
 
     /**
-     * The row container for the body section in an
-     * {@link Escalator}.
+     * The row container for the body section in an {@link Escalator}.
      * <p>
      * The body section can contain both rows and spacers.
      *

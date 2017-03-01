@@ -63,8 +63,7 @@ import com.vaadin.ui.declarative.DesignFormatter;
 /**
  * <p>
  * A class representing a selection of items the user has selected in a UI. The
- * set of choices is presented as a set of {@link Item}s in a
- * {@link Container}.
+ * set of choices is presented as a set of {@link Item}s in a {@link Container}.
  * </p>
  *
  * <p>
@@ -450,8 +449,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Invoked when the value of a variable has changed.
      *
-     * @see AbstractComponent#changeVariables(java.lang.Object,
-     *      java.util.Map)
+     * @see AbstractComponent#changeVariables(java.lang.Object, java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
@@ -716,13 +714,11 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
      *            True if read-only check should be omitted.
-     * @see AbstractField#setValue(java.lang.Object,
-     *      java.lang.Boolean)
+     * @see AbstractField#setValue(java.lang.Object, java.lang.Boolean)
      */
     @Override
     protected void setValue(Object newFieldValue, boolean repaintIsNotNeeded,
-            boolean ignoreReadOnly)
-            throws Property.ReadOnlyException,
+            boolean ignoreReadOnly) throws Property.ReadOnlyException,
             ConversionException, InvalidValueException {
         if (isMultiSelect()) {
             if (newFieldValue == null) {
@@ -787,7 +783,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         return items.getType(propertyId);
     }
 
-    /*
+    /**
      * Gets the number of items in the container.
      *
      * @return the Number of items in the container.
@@ -835,8 +831,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * returns false.
      *
      * @return True if the operation succeeded.
-     * @see Container#addContainerProperty(java.lang.Object,
-     *      java.lang.Class, java.lang.Object)
+     * @see Container#addContainerProperty(java.lang.Object, java.lang.Class,
+     *      java.lang.Object)
      */
     @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
@@ -949,11 +945,6 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         addItems(itemIds.toArray());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see Container#removeItem(java.lang.Object)
-     */
     @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
@@ -1586,7 +1577,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void addPropertySetChangeListener(
             Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners == null) {
-            propertySetEventListeners = new LinkedHashSet<Container.PropertySetChangeListener>();
+            propertySetEventListeners = new LinkedHashSet<PropertySetChangeListener>();
         }
         propertySetEventListeners.add(listener);
     }
@@ -1992,14 +1983,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
 
         @Override
-        public void valueChange(
-                Property.ValueChangeEvent event) {
+        public void valueChange(Property.ValueChangeEvent event) {
             markAsDirty();
         }
 
         @Override
-        public void itemPropertySetChange(
-                Item.PropertySetChangeEvent event) {
+        public void itemPropertySetChange(Item.PropertySetChangeEvent event) {
             markAsDirty();
         }
 

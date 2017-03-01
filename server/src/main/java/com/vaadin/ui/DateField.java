@@ -57,8 +57,8 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  * <p>
  * A <code>DateField</code> is in write-through mode by default, so
- * {@link AbstractField#setWriteThrough(boolean)}must be called to
- * enable buffering.
+ * {@link AbstractField#setWriteThrough(boolean)}must be called to enable
+ * buffering.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -227,8 +227,8 @@ public class DateField extends AbstractField<Date> implements
      * Constructs a new <code>DateField</code> with the given caption and
      * initial text contents. The editor constructed this way will not be bound
      * to a Property unless
-     * {@link Property.Viewer#setPropertyDataSource(Property)}
-     * is called to bind it.
+     * {@link Property.Viewer#setPropertyDataSource(Property)} is called to bind
+     * it.
      *
      * @param caption
      *            the caption <code>String</code> for the editor.

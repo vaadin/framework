@@ -58,16 +58,15 @@ import com.vaadin.shared.ui.form.FormState;
  *
  * <p>
  * <code>Form</code> provides customizable editor for classes implementing
- * {@link Item} interface. Also the form itself implements this
- * interface for easier connectivity to other items. To use the form as editor
- * for an item, just connect the item to form with
- * {@link Form#setItemDataSource(Item)}. If only a part of the item needs to be
- * edited, {@link Form#setItemDataSource(Item,Collection)} can be used instead.
- * After the item has been connected to the form, the automatically created
- * fields can be customized and new fields can be added. If you need to connect
- * a class that does not implement {@link Item} interface, most
- * properties of any class following bean pattern, can be accessed trough
- * {@link BeanItem}.
+ * {@link Item} interface. Also the form itself implements this interface for
+ * easier connectivity to other items. To use the form as editor for an item,
+ * just connect the item to form with {@link Form#setItemDataSource(Item)}. If
+ * only a part of the item needs to be edited,
+ * {@link Form#setItemDataSource(Item,Collection)} can be used instead. After
+ * the item has been connected to the form, the automatically created fields can
+ * be customized and new fields can be added. If you need to connect a class
+ * that does not implement {@link Item} interface, most properties of any class
+ * following bean pattern, can be accessed trough {@link BeanItem}.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -131,8 +130,7 @@ public class Form extends AbstractField<Object>
      */
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
         @Override
-        public void valueChange(
-                Property.ValueChangeEvent event) {
+        public void valueChange(Property.ValueChangeEvent event) {
             markAsDirty();
         }
     };
@@ -331,7 +329,7 @@ public class Form extends AbstractField<Object>
         // Try to commit all
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                final Field<?> f = (fields.get(i.next()));
+                final Field<?> f = fields.get(i.next());
                 // Commit only non-readonly fields.
                 if (!f.isReadOnly()) {
                     f.commit();
@@ -379,7 +377,7 @@ public class Form extends AbstractField<Object>
         // Try to discard all changes
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             try {
-                (fields.get(i.next())).discard();
+                fields.get(i.next()).discard();
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
                     problems = new LinkedList<SourceException>();
@@ -437,7 +435,7 @@ public class Form extends AbstractField<Object>
             this.buffered = buffered;
             for (final Iterator<Object> i = propertyIds.iterator(); i
                     .hasNext();) {
-                (fields.get(i.next())).setBuffered(buffered);
+                fields.get(i.next()).setBuffered(buffered);
             }
         }
     }
@@ -763,7 +761,7 @@ public class Form extends AbstractField<Object>
         // expect developer has e.g. PropertyFormatter that he wishes to use and
         // assign the property to the Viewer instead.
         boolean hasFilterProperty = field.getPropertyDataSource() != null
-                && (field.getPropertyDataSource() instanceof Property.Viewer);
+                && field.getPropertyDataSource() instanceof Property.Viewer;
         if (hasFilterProperty) {
             ((Property.Viewer) field.getPropertyDataSource())
                     .setPropertyDataSource(property);
@@ -875,7 +873,7 @@ public class Form extends AbstractField<Object>
         boolean isMultiselect = false;
         for (int i = 0; i < values.length && !found; i++) {
             if (values[i] == value
-                    || (value != null && value.equals(values[i]))) {
+                    || value != null && value.equals(values[i])) {
                 found = true;
             }
         }
@@ -887,7 +885,7 @@ public class Form extends AbstractField<Object>
                     found = false;
                     for (int i = 0; i < values.length && !found; i++) {
                         if (values[i] == val
-                                || (val != null && val.equals(values[i]))) {
+                                || val != null && val.equals(values[i])) {
                             found = true;
                         }
                     }
@@ -957,7 +955,7 @@ public class Form extends AbstractField<Object>
     public void validate() throws InvalidValueException {
         super.validate();
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            (fields.get(i.next())).validate();
+            fields.get(i.next()).validate();
         }
     }
 
@@ -991,7 +989,7 @@ public class Form extends AbstractField<Object>
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
-            (fields.get(i.next())).setReadOnly(readOnly);
+            fields.get(i.next()).setReadOnly(readOnly);
         }
     }
 
@@ -1172,7 +1170,7 @@ public class Form extends AbstractField<Object>
         super.setTabIndex(tabIndex);
         for (final Iterator<?> i = getItemPropertyIds().iterator(); i
                 .hasNext();) {
-            (getField(i.next())).setTabIndex(tabIndex);
+            getField(i.next()).setTabIndex(tabIndex);
         }
     }
 

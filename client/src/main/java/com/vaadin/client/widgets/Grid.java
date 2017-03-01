@@ -81,11 +81,14 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.renderers.ComplexRenderer;
+import com.vaadin.client.renderers.ProgressBarRenderer;
 import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.ui.SubPartAware;
@@ -123,6 +126,7 @@ import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
+import com.vaadin.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -200,12 +204,10 @@ import com.vaadin.shared.util.SharedUtil;
  * <p>
  * Each column also has a Renderer. Its function is to take the value that is
  * given by the {@code GridColumn} and display it to the user. A simple column
- * might have a {@link com.vaadin.client.renderers.TextRenderer TextRenderer}
- * that simply takes in a {@code String} and displays it as the cell's content.
- * A more complex renderer might be
- * {@link com.vaadin.client.renderers.ProgressBarRenderer ProgressBarRenderer}
- * that takes in a floating point number, and displays a progress bar instead,
- * based on the given number.
+ * might have a {@link TextRenderer} that simply takes in a {@code String} and
+ * displays it as the cell's content. A more complex renderer might be
+ * {@link ProgressBarRenderer} that takes in a floating point number, and
+ * displays a progress bar instead, based on the given number.
  * <p>
  * <em>See:</em> {@link #addColumn(Column)}, {@link #addColumn(Column, int)} and
  * {@link #addColumns(Column...)}. <em>Also</em>
@@ -215,10 +217,8 @@ import com.vaadin.shared.util.SharedUtil;
  * <p>
  * Grid gets its data from a {@link DataSource}, providing row objects to Grid
  * from a user-defined endpoint. It can be either a local in-memory data source
- * (e.g. {@link com.vaadin.client.widget.grid.datasources.ListDataSource
- * ListDataSource}) or even a remote one, retrieving data from e.g. a REST API
- * (see {@link com.vaadin.client.data.AbstractRemoteDataSource
- * AbstractRemoteDataSource}).
+ * (e.g. {@link ListDataSource}) or even a remote one, retrieving data from e.g.
+ * a REST API (see {@link AbstractRemoteDataSource}).
  *
  *
  * @param <T>
@@ -2883,6 +2883,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
     }
 
+    private final List<GridEventHandler<T>> browserEventHandlers = new ArrayList<GridEventHandler<T>>();
+
+    private CellStyleGenerator<T> cellStyleGenerator;
+    private RowStyleGenerator<T> rowStyleGenerator;
+    private RowReference<T> rowReference = new RowReference<T>(this);
+    private CellReference<T> cellReference = new CellReference<T>(rowReference);
+    private RendererCellReference rendererCellReference = new RendererCellReference(
+            (RowReference<Object>) rowReference);
+
     public final class SelectionColumn extends Column<Boolean, T>
             implements GridEnabledHandler {
 
@@ -4189,6 +4198,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     private AutoScroller autoScroller = new AutoScroller(this);
 
+    private ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
+
     private DragAndDropHandler.DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
 
         private final AutoScrollerCallback autoScrollerCallback = new AutoScrollerCallback() {
@@ -4642,15 +4653,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
     };
-
-    private final List<GridEventHandler<T>> browserEventHandlers = new ArrayList<GridEventHandler<T>>();
-
-    private CellStyleGenerator<T> cellStyleGenerator;
-    private RowStyleGenerator<T> rowStyleGenerator;
-    private RowReference<T> rowReference = new RowReference<T>(this);
-    private CellReference<T> cellReference = new CellReference<T>(rowReference);
-    private RendererCellReference rendererCellReference = new RendererCellReference(
-            (RowReference<Object>) rowReference);
 
     /**
      * Enumeration for easy setting of selection mode.
@@ -6208,8 +6210,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         fireEvent(new GridEnabledEvent(enabled));
     }
-
-    private ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
 
     /**
      * Sets the column resize mode to use. The default mode is
@@ -7910,7 +7910,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param mode
      *            a selection mode value
-     * @see {@link SelectionMode}.
+     * @see SelectionMode
      */
     public void setSelectionMode(SelectionMode mode) {
         SelectionModel<T> model = mode.createModel();
@@ -7982,8 +7982,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Deselect all rows using the current selection model.
      *
-     * @param row
-     *            a row object
      * @return <code>true</code> iff the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of

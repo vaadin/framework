@@ -5373,7 +5373,7 @@ public class VScrollTable extends FlowPanel
          * </br>
          * Returns the maximum indent of the hierarcyColumn, if applicable.
          *
-         * @see {@link VScrollTable#getHierarchyColumnIndex()}
+         * @see VScrollTable#getHierarchyColumnIndex()
          *
          * @return maximum indent in pixels
          */

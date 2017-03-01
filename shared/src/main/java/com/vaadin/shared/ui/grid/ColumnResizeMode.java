@@ -23,15 +23,15 @@ package com.vaadin.shared.ui.grid;
 public enum ColumnResizeMode {
 
     /**
-     * When column resize mode is set to Animated, columns
-     * are resized as they are dragged.
+     * When column resize mode is set to Animated, columns are resized as they
+     * are dragged.
      */
     ANIMATED,
 
     /**
-     * When column resize mode is set to Simple, dragging to resize
-     * a column will show a marker, and the column will resize only
-     * after the mouse button or touch is released.
+     * When column resize mode is set to Simple, dragging to resize a column
+     * will show a marker, and the column will resize only after the mouse
+     * button or touch is released.
      */
     SIMPLE
 

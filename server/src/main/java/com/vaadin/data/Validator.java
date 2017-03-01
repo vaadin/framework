@@ -24,9 +24,8 @@ import com.vaadin.server.VaadinServlet;
  * Interface that implements a method for validating if an {@link Object} is
  * valid or not.
  * <p>
- * Implementors of this class can be added to any
- * {@link Validatable} implementor to verify its
- * value.
+ * Implementors of this class can be added to any {@link Validatable}
+ * implementor to verify its value.
  * </p>
  * <p>
  * {@link #validate(Object)} can be used to check if a value is valid. An

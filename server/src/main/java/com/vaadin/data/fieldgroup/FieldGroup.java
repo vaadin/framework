@@ -78,7 +78,6 @@ public class FieldGroup implements Serializable {
      *
      */
     public FieldGroup() {
-
     }
 
     /**
@@ -106,7 +105,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Binds all fields to the properties in the item in use.
-     * 
+     *
      * @since 7.7.5
      */
     protected void bindFields() {
@@ -280,8 +279,8 @@ public class FieldGroup implements Serializable {
      * Clears field and any possible existing binding.
      *
      * @param field
-     *         The field to be cleared
-     *         
+     *            The field to be cleared
+     *
      * @since 7.7.5
      */
     protected void clearField(Field<?> field) {
@@ -837,11 +836,11 @@ public class FieldGroup implements Serializable {
      * public class MyForm extends VerticalLayout {
      * private TextField firstName = new TextField("First name");
      * &#64;PropertyId("last")
-     * private TextField lastName = new TextField("Last name"); 
+     * private TextField lastName = new TextField("Last name");
      * private TextField age = new TextField("Age"); ... }
      *
-     * MyForm myForm = new MyForm(); 
-     * ... 
+     * MyForm myForm = new MyForm();
+     * ...
      * fieldGroup.bindMemberFields(myForm);
      * </pre>
      *
@@ -879,11 +878,11 @@ public class FieldGroup implements Serializable {
      * public class MyForm extends VerticalLayout {
      * private TextField firstName = new TextField("First name");
      * &#64;PropertyId("last")
-     * private TextField lastName = new TextField("Last name"); 
+     * private TextField lastName = new TextField("Last name");
      * private TextField age;
      *
-     * MyForm myForm = new MyForm(); 
-     * ... 
+     * MyForm myForm = new MyForm();
+     * ...
      * fieldGroup.buildAndBindMemberFields(myForm);
      * </pre>
      *

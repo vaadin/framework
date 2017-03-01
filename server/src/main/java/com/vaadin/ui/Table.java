@@ -2120,14 +2120,11 @@ public class Table extends AbstractSelect implements Action.Container,
         pageBufferFirstIndex = Math.max(
                 pageBufferFirstIndex + rowsFromBeginning, minPageBufferIndex);
         if (getLogger().isLoggable(Level.FINEST)) {
-            getLogger()
-                    .log(Level.FINEST,
-                            "Page Buffer now contains {0} rows ({1}-{2})",
-                            new Object[] { pageBuffer[CELL_ITEMID].length,
-                                    pageBufferFirstIndex,
-                                    (pageBufferFirstIndex
-                                            + pageBuffer[CELL_ITEMID].length
-                                            - 1) });
+            getLogger().log(Level.FINEST,
+                    "Page Buffer now contains {0} rows ({1}-{2})",
+                    new Object[] { pageBuffer[CELL_ITEMID].length,
+                            pageBufferFirstIndex, (pageBufferFirstIndex
+                                    + pageBuffer[CELL_ITEMID].length - 1) });
         }
         return cells;
     }

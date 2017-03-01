@@ -362,12 +362,6 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.google.gwt.user.client.ui.UIObject#setStyleName(java.lang.String)
-     */
     @Override
     public void setStyleName(String style) {
         super.setStyleName(style);
@@ -415,13 +409,6 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
-     * .dom.client.ClickEvent)
-     */
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
@@ -434,13 +421,6 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google.gwt
-     * .event.logical.shared.CloseEvent)
-     */
     @Override
     public void onClose(CloseEvent<PopupPanel> event) {
         if (event.getSource() == popup) {

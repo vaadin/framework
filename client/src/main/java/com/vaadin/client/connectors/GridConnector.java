@@ -389,7 +389,7 @@ public class GridConnector extends AbstractHasComponentsConnector
             } else {
                 Collection<Column<?, JsonObject>> errorColumns;
                 if (errorColumnsIds != null) {
-                    errorColumns = new ArrayList<Grid.Column<?, JsonObject>>();
+                    errorColumns = new ArrayList<Column<?, JsonObject>>();
                     for (String colId : errorColumnsIds) {
                         errorColumns.add(columnIdToColumn.get(colId));
                     }

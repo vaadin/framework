@@ -755,7 +755,7 @@ public class TableQuery extends AbstractTransactionalQuery
     @Override
     public void addRowIdChangeListener(RowIdChangeListener listener) {
         if (rowIdChangeListeners == null) {
-            rowIdChangeListeners = new LinkedList<QueryDelegate.RowIdChangeListener>();
+            rowIdChangeListeners = new LinkedList<RowIdChangeListener>();
         }
         rowIdChangeListeners.add(listener);
     }

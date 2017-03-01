@@ -40,8 +40,8 @@ import com.vaadin.data.Item;
 public class HierarchicalContainer extends IndexedContainer
         implements Container.Hierarchical {
 
-    /** d
-     * Set of IDs of those contained Items that can't have children.
+    /**
+     * d Set of IDs of those contained Items that can't have children.
      */
     private final HashSet<Object> noChildrenAllowed = new HashSet<Object>();
 
@@ -425,8 +425,7 @@ public class HierarchicalContainer extends IndexedContainer
     }
 
     @Override
-    protected void fireItemSetChange(
-            Container.ItemSetChangeEvent event) {
+    protected void fireItemSetChange(Container.ItemSetChangeEvent event) {
         if (contentsChangeEventsOn()) {
             super.fireItemSetChange(event);
         } else {

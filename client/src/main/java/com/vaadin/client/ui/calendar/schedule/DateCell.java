@@ -56,7 +56,7 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
     private boolean disabled = false;
     private int height;
     private final Element[] slotElements;
-    private final List<DateCellSlot> slots = new ArrayList<DateCell.DateCellSlot>();
+    private final List<DateCellSlot> slots = new ArrayList<DateCellSlot>();
     private int[] slotElementHeights;
     private int startingSlotHeight;
     private Date today;

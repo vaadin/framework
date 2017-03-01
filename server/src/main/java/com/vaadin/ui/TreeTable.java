@@ -623,8 +623,7 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     @Override
-    public void containerItemSetChange(
-            Container.ItemSetChangeEvent event) {
+    public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         // Can't do partial repaints if items are added or removed during the
         // expand/collapse request
         toggledItemId = null;

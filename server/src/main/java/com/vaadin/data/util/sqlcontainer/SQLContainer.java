@@ -363,13 +363,11 @@ public class SQLContainer implements Container, Container.Filterable,
         return propertyTypes.get(propertyId);
     }
 
-
     @Override
     public int size() {
         updateCount();
         return size + sizeOfAddedItems() - removedItems.size();
     }
-
 
     @Override
     public boolean removeItem(Object itemId)
@@ -433,7 +431,6 @@ public class SQLContainer implements Container, Container.Filterable,
             return true;
         }
     }
-
 
     @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
@@ -575,7 +572,6 @@ public class SQLContainer implements Container, Container.Filterable,
     /**********************************************/
     /** Methods from interface Container.Indexed **/
     /**********************************************/
-
 
     @Override
     public int indexOfId(Object itemId) {
@@ -732,7 +728,7 @@ public class SQLContainer implements Container, Container.Filterable,
     public boolean isFirstId(Object itemId) {
         return firstItemId().equals(itemId);
     }
-    
+
     @Override
     public boolean isLastId(Object itemId) {
         return lastItemId().equals(itemId);
@@ -741,7 +737,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /***********************************************/
     /** Methods from interface Container.Sortable **/
     /***********************************************/
-    
+
     @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         sorters.clear();
@@ -1390,7 +1386,7 @@ public class SQLContainer implements Container, Container.Filterable,
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
-    
+
     @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {

@@ -1329,10 +1329,9 @@ public class Calendar extends AbstractComponent
     }
 
     /**
-     * Set the {@link CalendarEventProvider CalendarEventProvider} to be used
-     * with this calendar. The EventProvider is used to query for events to
-     * show, and must be non-null. By default a {@link BasicEventProvider} is
-     * used.
+     * Set the {@link CalendarEventProvider} to be used with this calendar. The
+     * EventProvider is used to query for events to show, and must be non-null.
+     * By default a {@link BasicEventProvider} is used.
      *
      * @param calendarEventProvider
      *            the calendarEventProvider to set. Cannot be null.
