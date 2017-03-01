@@ -52,6 +52,7 @@ public class ConverterUtil implements Serializable {
         }
 
         if (session != null) {
+            // Intentional change in compatibility package
             ConverterFactory factory = (ConverterFactory) session
                     .getConverterFactory();
             if (factory == null) {

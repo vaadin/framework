@@ -27,5 +27,5 @@ public class MultiSelectionModelState extends SharedState {
 
     /* Select All -checkbox status */
     public boolean allSelected;
-
+    public boolean userSelectionAllowed = true;
 }

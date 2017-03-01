@@ -43,6 +43,7 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         getWidget().selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
         getWidget().setReadonly(isReadOnly());
+        // Intentional change to use state over UIDL in compatibility package
         getWidget().multiselect = getState().multiSelect;
         getWidget().immediate = getState().immediate;
         getWidget().nullSelectionAllowed = uidl
@@ -50,11 +51,15 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         getWidget().nullSelectionItemAvailable = uidl
                 .getBooleanAttribute("nullselectitem");
 
+        // Support for cols has been dropped.
+
         if (uidl.hasAttribute("rows")) {
             getWidget().rows = uidl.getIntAttribute("rows");
         }
 
         final UIDL ops = uidl.getChildUIDL(0);
+
+        // Method getColumns has been removed
 
         getWidget().buildOptions(ops);
 

@@ -160,7 +160,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      * @since 7.4
      * @param fieldType
      *            the type of the field
-     * @return true if any LegacyAbstractField can be assigned to the field
+     * @return true if any AbstractField can be assigned to the field
      */
     protected boolean anyField(Class<?> fieldType) {
         return fieldType == Field.class || fieldType == AbstractField.class;

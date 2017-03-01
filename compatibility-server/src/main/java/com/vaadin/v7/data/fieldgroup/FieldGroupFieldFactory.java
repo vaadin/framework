@@ -20,8 +20,8 @@ import java.io.Serializable;
 import com.vaadin.v7.ui.Field;
 
 /**
- * Factory interface for creating new LegacyField-instances based on the data
- * type that should be edited.
+ * Factory interface for creating new Field-instances based on the data type
+ * that should be edited.
  *
  * @author Vaadin Ltd.
  * @since 7.0

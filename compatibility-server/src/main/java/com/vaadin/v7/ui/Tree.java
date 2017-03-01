@@ -1242,7 +1242,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (actionHandler != null) {
 
             if (actionHandlers == null) {
-                actionHandlers = new LinkedList<Handler>();
+                actionHandlers = new LinkedList<Action.Handler>();
                 actionMapper = new KeyMapper<Action>();
             }
 

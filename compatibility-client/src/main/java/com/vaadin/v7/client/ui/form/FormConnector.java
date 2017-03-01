@@ -180,6 +180,7 @@ public class FormConnector extends AbstractComponentContainerConnector
 
     @Override
     public boolean isReadOnly() {
+        // Class hierarchy has changed for FormConnector
         return getState().readOnly || getState().propertyReadOnly;
     }
 

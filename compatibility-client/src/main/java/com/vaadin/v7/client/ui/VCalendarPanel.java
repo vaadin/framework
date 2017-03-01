@@ -1677,7 +1677,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         private ListBox createListBox() {
             ListBox lb = new ListBox();
-            lb.setStyleName("v-select");
+            lb.setStyleName(VNativeSelect.CLASSNAME);
             lb.addChangeHandler(this);
             lb.addBlurHandler(VCalendarPanel.this);
             lb.addFocusHandler(VCalendarPanel.this);

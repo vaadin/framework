@@ -49,6 +49,7 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Validatable;
 import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.shared.form.FormState;
@@ -190,7 +191,7 @@ public class Form extends AbstractField<Object>
      * @param formLayout
      *            the layout of the form.
      * @param fieldFactory
-     *            the TableFieldFactory of the form.
+     *            the FieldFactory of the form.
      */
     public Form(Layout formLayout, FormFieldFactory fieldFactory) {
         super();
@@ -317,7 +318,7 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public void commit()
-            throws Buffered.SourceException, Validator.InvalidValueException {
+            throws Buffered.SourceException, InvalidValueException {
 
         LinkedList<SourceException> problems = null;
 
@@ -961,7 +962,7 @@ public class Form extends AbstractField<Object>
      * @see Validatable#validate()
      */
     @Override
-    public void validate() throws Validator.InvalidValueException {
+    public void validate() throws InvalidValueException {
         super.validate();
         for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
             fields.get(i.next()).validate();

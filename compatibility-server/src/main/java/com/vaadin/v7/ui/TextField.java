@@ -32,11 +32,10 @@ import com.vaadin.v7.data.Property;
  * </p>
  *
  * <p>
- * Since <code>TextField</code> extends <code>LegacyAbstractField</code> it
- * implements the {@link Buffered} interface. A <code>TextField</code> is in
- * write-through mode by default, so
- * {@link AbstractField#setWriteThrough(boolean)} must be called to enable
- * buffering.
+ * Since <code>TextField</code> extends <code>AbstractField</code> it implements
+ * the {@link Buffered} interface. A <code>TextField</code> is in write-through
+ * mode by default, so {@link AbstractField#setWriteThrough(boolean)} must be
+ * called to enable buffering.
  * </p>
  *
  * @author Vaadin Ltd.
