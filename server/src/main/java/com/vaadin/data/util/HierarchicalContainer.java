@@ -41,7 +41,7 @@ public class HierarchicalContainer extends IndexedContainer
         implements Container.Hierarchical {
 
     /**
-     * d Set of IDs of those contained Items that can't have children.
+     * Set of IDs of those contained Items that can't have children.
      */
     private final HashSet<Object> noChildrenAllowed = new HashSet<Object>();
 

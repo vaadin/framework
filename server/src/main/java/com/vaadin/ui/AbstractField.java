@@ -684,8 +684,8 @@ public abstract class AbstractField<T> extends AbstractComponent
 
         // Fires value change if the value has changed
         T value = getInternalValue();
-        if (value != oldValue && (value != null && !value.equals(oldValue))
-                || value == null) {
+        if (value != oldValue && (value != null && !value.equals(oldValue)
+                || value == null)) {
             fireValueChange(false);
         }
     }
