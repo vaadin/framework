@@ -15,8 +15,10 @@
  */
 package com.vaadin.v7.ui.themes;
 
+import com.vaadin.ui.themes.ValoTheme;
+
 /**
- * @deprecated As of 8.0, no replacement available.
+ * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is supported.
  */
 @Deprecated
 public class Runo extends BaseTheme {

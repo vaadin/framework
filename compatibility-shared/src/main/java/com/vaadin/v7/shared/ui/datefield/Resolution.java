@@ -26,8 +26,9 @@ import java.util.List;
  *
  * @author Vaadin Ltd.
  * @since 7.0
- * @see DateResolution
- * @see DateTimeResolution
+ *
+ * @deprecated As of 8.0, replaced by {@link DateResolution} and {@link DateTimeResolution},
+ * used by new {@code com.vaadin.ui.DateField} and {@code com.vaadin.ui.DateTimeField}
  */
 public enum Resolution {
     // Values from Calendar.SECOND etc. Set as ints to avoid Calendar dependency
