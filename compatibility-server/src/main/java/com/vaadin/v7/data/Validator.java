@@ -19,11 +19,13 @@ package com.vaadin.v7.data;
 import java.io.Serializable;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ErrorMessageProducer;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinServlet;
 
@@ -53,7 +55,10 @@ import com.vaadin.server.VaadinServlet;
  *
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated As of 8.0, replaced by {@link Binder}
+ * @deprecated As of 8.0, replaced by {@link Binder} and {@link com.vaadin.data.Validator}, the validation is performed
+ * outside components, see {@link Binder#withValidator(SerializablePredicate, ErrorMessageProvider)},
+ * {@link Binder#withValidator(com.vaadin.data.Validator)},
+ * {@link Binder#withValidator(SerializablePredicate, String)}
  */
 @Deprecated
 public interface Validator extends Serializable {
