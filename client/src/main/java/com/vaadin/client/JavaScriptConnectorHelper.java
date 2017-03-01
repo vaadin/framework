@@ -396,12 +396,6 @@ public class JavaScriptConnectorHelper {
             JavaScriptObject input)
     /*-{
         // Copy all fields to existing state object
-        for(var key in state) {
-            if (state.hasOwnProperty(key)) {
-                delete state[key];
-            }
-        }
-    
         for(var key in input) {
             if (input.hasOwnProperty(key)) {
                 state[key] = input[key];
