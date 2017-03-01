@@ -144,9 +144,9 @@ public class ProgressBar extends AbstractField<Float>
     }
 
     /*
-     * Overridden to keep the shared state in sync with the LegacyAbstractField
-     * internal value. Should be removed once LegacyAbstractField is refactored
-     * to use shared state.
+     * Overridden to keep the shared state in sync with the AbstractField
+     * internal value. Should be removed once AbstractField is refactored to use
+     * shared state.
      *
      * See tickets #10921 and #11064.
      */

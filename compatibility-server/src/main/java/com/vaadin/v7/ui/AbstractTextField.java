@@ -460,8 +460,8 @@ public abstract class AbstractTextField extends AbstractField<String> implements
          * Make sure w reset lastKnownTextContent field on value change. The
          * clearing must happen here as well because TextChangeListener can
          * revert the original value. Client must respect the value in this
-         * case. LegacyAbstractField optimizes value change if the existing
-         * value is reset. Also we need to force repaint if the flag is on.
+         * case. AbstractField optimizes value change if the existing value is
+         * reset. Also we need to force repaint if the flag is on.
          */
         if (lastKnownTextContent != null) {
             lastKnownTextContent = null;

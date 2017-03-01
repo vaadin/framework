@@ -344,7 +344,13 @@ public class GAEVaadinServlet extends VaadinServlet {
                 VaadinSession vaadinSession = (VaadinSession) ois.readObject();
                 getService().storeSession(vaadinSession,
                         new WrappedHttpSession(session));
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
+                getLogger().log(Level.WARNING,
+                        "Could not de-serialize ApplicationContext for "
+                                + session.getId()
+                                + " A new one will be created. ",
+                        e);
+            } catch (ClassNotFoundException e) {
                 getLogger().log(Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()

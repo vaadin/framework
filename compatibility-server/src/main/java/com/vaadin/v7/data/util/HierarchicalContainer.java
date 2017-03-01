@@ -402,11 +402,6 @@ public class HierarchicalContainer extends IndexedContainer
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#addItem()
-     */
     @Override
     public Object addItem() {
         disableContentsChangeEvents();
@@ -463,11 +458,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#addItem(java.lang.Object)
-     */
     @Override
     public Item addItem(Object itemId) {
         disableContentsChangeEvents();
@@ -490,11 +480,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#removeAllItems()
-     */
     @Override
     public boolean removeAllItems() {
         disableContentsChangeEvents();
@@ -522,11 +507,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#removeItem(java.lang.Object )
-     */
     @Override
     public boolean removeItem(Object itemId) {
         disableContentsChangeEvents();
@@ -647,11 +627,6 @@ public class HierarchicalContainer extends IndexedContainer
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#doSort()
-     */
     @Override
     protected void doSort() {
         super.doSort();
@@ -693,13 +668,6 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    /*
-     * Overridden to provide filtering for root & children items.
-     *
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.IndexedContainer#updateContainerFiltering()
-     */
     @Override
     protected boolean doFilterContainer(boolean hasFilters) {
         if (!hasFilters) {
@@ -839,12 +807,6 @@ public class HierarchicalContainer extends IndexedContainer
 
     private Set<Object> filterOverride = null;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.util.IndexedContainer#passesFilters(java.lang.Object)
-     */
     @Override
     protected boolean passesFilters(Object itemId) {
         if (filterOverride != null) {

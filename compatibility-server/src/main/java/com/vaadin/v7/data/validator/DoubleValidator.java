@@ -28,8 +28,8 @@ import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
  *             field instead or bind the field to a {@link Property} of type
  *             {@link Double}.
  */
-@SuppressWarnings("serial")
 @Deprecated
+@SuppressWarnings("serial")
 public class DoubleValidator extends AbstractStringValidator {
 
     /**

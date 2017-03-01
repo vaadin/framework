@@ -44,6 +44,10 @@ public class SpaceSelectHandler<T> {
 
         @Override
         public void onKeyDown(GridKeyDownEvent event) {
+            if (!grid.isUserSelectionAllowed()) {
+                return;
+            }
+
             if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || spaceDown) {
                 return;
             }

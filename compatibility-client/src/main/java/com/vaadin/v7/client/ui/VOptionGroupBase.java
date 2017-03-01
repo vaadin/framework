@@ -60,6 +60,8 @@ public abstract class VOptionGroupBase extends Composite implements Field,
 
     private boolean readonly;
 
+    // Intentional removal of cols in compatibility package
+
     /** For internal use only. May be removed or replaced in the future. */
     public int rows = 0;
 
@@ -133,6 +135,8 @@ public abstract class VOptionGroupBase extends Composite implements Field,
     protected boolean isNullSelectionItemAvailable() {
         return nullSelectionItemAvailable;
     }
+
+    // Intentional removal of getColumns in compatibility package
 
     /**
      * For internal use only. May be removed or replaced in the future.

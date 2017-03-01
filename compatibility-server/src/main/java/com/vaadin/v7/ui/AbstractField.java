@@ -55,16 +55,15 @@ import com.vaadin.v7.shared.AbstractFieldState;
  * <p>
  * Abstract field component for implementing buffered property editors. The
  * field may hold an internal value, or it may be connected to any data source
- * that implements the {@link Property}interface.
- * <code>LegacyAbstractField</code> implements that interface itself, too, so
- * accessing the Property value represented by it is straightforward.
+ * that implements the {@link Property} interface. <code>AbstractField</code>
+ * implements that interface itself, too, so accessing the Property value
+ * represented by it is straightforward.
  * </p>
  *
  * <p>
- * LegacyAbstractField also provides the {@link Buffered} interface for
- * buffering the data source value. By default the LegacyField is in write
- * through-mode and {@link #setWriteThrough(boolean)}should be called to enable
- * buffering.
+ * AbstractField also provides the {@link Buffered} interface for buffering the
+ * data source value. By default the Field is in write through-mode and
+ * {@link #setWriteThrough(boolean)}should be called to enable buffering.
  * </p>
  *
  * <p>
@@ -193,13 +192,13 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Returns the type of the LegacyField. The methods <code>getValue</code>
-     * and <code>setValue</code> must be compatible with this type: one must be
-     * able to safely cast the value returned from <code>getValue</code> to the
-     * given type and pass any variable assignable to this type as an argument
-     * to <code>setValue</code>.
+     * Returns the type of the Field. The methods <code>getValue</code> and
+     * <code>setValue</code> must be compatible with this type: one must be able
+     * to safely cast the value returned from <code>getValue</code> to the given
+     * type and pass any variable assignable to this type as an argument to
+     * <code>setValue</code>.
      *
-     * @return the type of the LegacyField
+     * @return the type of the Field
      */
     @Override
     public abstract Class<? extends T> getType();
@@ -348,7 +347,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the buffered mode of this LegacyField.
+     * Sets the buffered mode of this Field.
      * <p>
      * When the field is in buffered mode, changes will not be committed to the
      * property data source until {@link #commit()} is called.
@@ -376,7 +375,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Checks the buffered mode of this LegacyField.
+     * Checks the buffered mode of this Field.
      *
      * @return true if buffered mode is on, false otherwise
      */
@@ -384,6 +383,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     public boolean isBuffered() {
         return buffered;
     }
+
+    // LegacyPropertyHelper has been removed in Vaadin 8
 
     /* Property interface implementation */
 
@@ -913,7 +914,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Checks the validity of the LegacyField.
+     * Checks the validity of the Field.
      *
      * A field is invalid if it is set as required (using
      * {@link #setRequired(boolean)} and is empty, if one or several of the
@@ -1079,7 +1080,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
-                    "Internal error finding methods in LegacyAbstractField");
+                    "Internal error finding methods in AbstractField");
         }
     }
 
@@ -1152,7 +1153,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException(
-                    "Internal error finding methods in LegacyAbstractField");
+                    "Internal error finding methods in AbstractField");
         }
     }
 
@@ -1348,10 +1349,10 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the internal field value. This is purely used by LegacyAbstractField
-     * to change the internal LegacyField value. It does not trigger valuechange
-     * events. It can be overridden by the inheriting classes to update all
-     * dependent variables.
+     * Sets the internal field value. This is purely used by AbstractField to
+     * change the internal Field value. It does not trigger valuechange events.
+     * It can be overridden by the inheriting classes to update all dependent
+     * variables.
      *
      * Subclasses can also override {@link #getInternalValue()} if necessary.
      *

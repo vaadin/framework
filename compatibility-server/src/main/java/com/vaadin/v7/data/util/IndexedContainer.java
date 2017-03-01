@@ -869,6 +869,8 @@ public class IndexedContainer
             firePropertyValueChange(this);
         }
 
+        // LegacyPropertyHelper has been removed in Vaadin 8
+
         /**
          * Calculates a integer hash-code for the Property that's unique inside
          * the Item containing the Property. Two different Properties inside the
@@ -982,13 +984,13 @@ public class IndexedContainer
                 ? (ListSet<Object>) ((ListSet<Object>) getAllItemIds()).clone()
                 : null);
         nc.setItemSetChangeListeners(getItemSetChangeListeners() != null
-                ? new LinkedList<ItemSetChangeListener>(
+                ? new LinkedList<Container.ItemSetChangeListener>(
                         getItemSetChangeListeners())
                 : null);
         nc.propertyIds = propertyIds != null
                 ? (ArrayList<Object>) propertyIds.clone() : null;
         nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null
-                ? new LinkedList<PropertySetChangeListener>(
+                ? new LinkedList<Container.PropertySetChangeListener>(
                         getPropertySetChangeListeners())
                 : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null

@@ -167,6 +167,7 @@ public interface Validator extends Serializable {
             return causes;
         }
 
+        // Intentional change in compatibility package
         @Override
         public ErrorMessage getErrorMessage() {
             UserError error = new UserError(getHtmlMessage(), ContentMode.HTML,
