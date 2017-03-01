@@ -48,8 +48,6 @@ import com.vaadin.client.debug.internal.TestBenchSection;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.debug.internal.theme.DebugWindowStyles;
 import com.vaadin.client.event.PointerEventSupport;
-import com.vaadin.client.metadata.BundleLoadCallback;
-import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
@@ -662,22 +660,6 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (dependenciesLoading == 0 && !ConnectorBundleLoader.get()
-                .isBundleLoaded(ConnectorBundleLoader.DEFERRED_BUNDLE_NAME)) {
-            ConnectorBundleLoader.get().loadBundle(
-                    ConnectorBundleLoader.DEFERRED_BUNDLE_NAME,
-                    new BundleLoadCallback() {
-                        @Override
-                        public void loaded() {
-                            // Nothing to do
-                        }
-
-                        @Override
-                        public void failed(Throwable reason) {
-                            getLogger().log(Level.SEVERE,
-                                    "Error loading deferred bundle", reason);
-                        }
-                    });
         }
     }
 
