@@ -25,6 +25,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd.
  * @since 7.0
  *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface ConverterFactory extends Serializable {

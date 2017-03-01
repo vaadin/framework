@@ -37,6 +37,8 @@ import java.util.Locale;
  * @since 7.5.0
  *
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class StringToCollectionConverter

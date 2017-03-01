@@ -17,10 +17,14 @@ package com.vaadin.v7.data.util.filter;
 
 import java.util.Arrays;
 
+import com.vaadin.data.provider.Query;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 
+/**
+ * @deprecated As of 8.0, no replacement available. See {@link Query#getFilter()}
+ */
 @Deprecated
 public class Between implements Filter {
 

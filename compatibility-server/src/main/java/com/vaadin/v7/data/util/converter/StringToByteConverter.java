@@ -29,6 +29,8 @@ import java.util.Locale;
  *
  * @author Vaadin Ltd
  * @since 7.4
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class StringToByteConverter
