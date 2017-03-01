@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.ui.AbstractListing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Transferable;
@@ -77,6 +78,8 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
  *
  * @author Vaadin Ltd.
  * @since 5.0
+ *
+ * @deprecated As of 8.0, no replacement available. See {@link AbstractListing}
  */
 @SuppressWarnings("serial")
 @Deprecated
