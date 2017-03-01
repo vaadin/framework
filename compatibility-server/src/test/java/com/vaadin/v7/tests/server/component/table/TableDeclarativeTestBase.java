@@ -36,6 +36,7 @@ public abstract class TableDeclarativeTestBase
     }
 
     protected String getTag() {
+        // Compatibility classes have a different prefix
         return "vaadin7-table";
     }
 

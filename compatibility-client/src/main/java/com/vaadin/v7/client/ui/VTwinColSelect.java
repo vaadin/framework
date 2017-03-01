@@ -367,6 +367,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public void clearInternalWidths() {
+        // Intentional removal of cols in compatibility package
         int cols = DEFAULT_COLUMN_COUNT;
 
         if (cols >= 0) {

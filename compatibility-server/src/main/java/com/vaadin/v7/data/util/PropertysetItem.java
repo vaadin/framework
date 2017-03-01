@@ -205,7 +205,7 @@ public class PropertysetItem
     public void addPropertySetChangeListener(
             Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
-            propertySetChangeListeners = new LinkedList<Item.PropertySetChangeListener>();
+            propertySetChangeListeners = new LinkedList<PropertySetChangeListener>();
         }
         propertySetChangeListeners.add(listener);
     }

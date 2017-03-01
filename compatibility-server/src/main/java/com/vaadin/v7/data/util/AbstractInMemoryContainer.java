@@ -595,11 +595,6 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         return !getContainerFilters().isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Filterable#getContainerFilters()
-     */
     protected Collection<Filter> getContainerFilters() {
         return Collections.unmodifiableCollection(filters);
     }

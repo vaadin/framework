@@ -123,6 +123,7 @@ import com.vaadin.v7.shared.ui.grid.selection.MultiSelectionModelServerRpc;
 import com.vaadin.v7.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.v7.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.v7.shared.ui.grid.selection.SingleSelectionModelState;
+import com.vaadin.v7.ui.Grid.SelectionModel.HasUserSelectionAllowed;
 import com.vaadin.v7.ui.renderers.HtmlRenderer;
 import com.vaadin.v7.ui.renderers.Renderer;
 import com.vaadin.v7.ui.renderers.TextRenderer;
@@ -1141,6 +1142,35 @@ public class Grid extends AbstractComponent
      */
     @Deprecated
     public interface SelectionModel extends Serializable, Extension {
+
+        /**
+         * Interface implemented by selection models which support disabling
+         * client side selection while still allowing programmatic selection on
+         * the server.
+         *
+         * @since 7.7.7
+         */
+        public interface HasUserSelectionAllowed extends SelectionModel {
+
+            /**
+             * Checks if the user is allowed to change the selection.
+             *
+             * @return <code>true</code> if the user is allowed to change the
+             *         selection, <code>false</code> otherwise
+             */
+            public boolean isUserSelectionAllowed();
+
+            /**
+             * Sets whether the user is allowed to change the selection.
+             *
+             * @param userSelectionAllowed
+             *            <code>true</code> if the user is allowed to change the
+             *            selection, <code>false</code> otherwise
+             */
+            public void setUserSelectionAllowed(boolean userSelectionAllowed);
+
+        }
+
         /**
          * Checks whether an item is selected or not.
          *
@@ -1505,7 +1535,7 @@ public class Grid extends AbstractComponent
      */
     @Deprecated
     public static class SingleSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Single {
+            implements SelectionModel.Single, HasUserSelectionAllowed {
 
         @Override
         protected void extend(AbstractClientConnector target) {
@@ -1514,6 +1544,11 @@ public class Grid extends AbstractComponent
 
                 @Override
                 public void select(String rowKey) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select '" + rowKey
+                                        + "' although user selection is disallowed");
+                    }
                     SingleSelectionModel.this.select(getItemId(rowKey), false);
                 }
             });
@@ -1604,6 +1639,21 @@ public class Grid extends AbstractComponent
         protected SingleSelectionModelState getState() {
             return (SingleSelectionModelState) super.getState();
         }
+
+        @Override
+        protected SingleSelectionModelState getState(boolean markAsDirty) {
+            return (SingleSelectionModelState) super.getState(markAsDirty);
+        }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return getState(false).userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            getState().userSelectionAllowed = userSelectionAllowed;
+        }
     }
 
     /**
@@ -1639,7 +1689,8 @@ public class Grid extends AbstractComponent
      */
     @Deprecated
     public static class MultiSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Multi {
+            implements SelectionModel.Multi,
+            SelectionModel.HasUserSelectionAllowed {
 
         /**
          * The default selection size limit.
@@ -1657,6 +1708,12 @@ public class Grid extends AbstractComponent
 
                 @Override
                 public void select(List<String> rowKeys) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select '" + rowKeys
+                                        + "' although user selection is disallowed");
+                    }
+
                     List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
@@ -1666,6 +1723,12 @@ public class Grid extends AbstractComponent
 
                 @Override
                 public void deselect(List<String> rowKeys) {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to deselect '" + rowKeys
+                                        + "' although user selection is disallowed");
+                    }
+
                     List<Object> items = new ArrayList<Object>();
                     for (String rowKey : rowKeys) {
                         items.add(getItemId(rowKey));
@@ -1675,11 +1738,21 @@ public class Grid extends AbstractComponent
 
                 @Override
                 public void selectAll() {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to select all although user selection is disallowed");
+                    }
+
                     MultiSelectionModel.this.selectAll(false);
                 }
 
                 @Override
                 public void deselectAll() {
+                    if (!isUserSelectionAllowed()) {
+                        throw new IllegalStateException(
+                                "Client tried to deselect all although user selection is disallowed");
+                    }
+
                     MultiSelectionModel.this.deselectAll(false);
                 }
             });
@@ -1962,6 +2035,21 @@ public class Grid extends AbstractComponent
         @Override
         protected MultiSelectionModelState getState() {
             return (MultiSelectionModelState) super.getState();
+        }
+
+        @Override
+        protected MultiSelectionModelState getState(boolean markAsDirty) {
+            return (MultiSelectionModelState) super.getState(markAsDirty);
+        }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return getState(false).userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            getState().userSelectionAllowed = userSelectionAllowed;
         }
     }
 
@@ -2390,14 +2478,17 @@ public class Grid extends AbstractComponent
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param propertyIds
              *            The property ids of columns to merge
              * @return The remaining visible cell after the merge
              */
             public CELLTYPE join(Object... propertyIds) {
-                assert propertyIds.length > 1 : "You need to merge at least 2 properties";
+                if (propertyIds.length < 2) {
+                    throw new IllegalArgumentException(
+                            "You need to merge at least 2 properties");
+                }
 
                 Set<CELLTYPE> cells = new HashSet<CELLTYPE>();
                 for (int i = 0; i < propertyIds.length; ++i) {
@@ -2408,14 +2499,17 @@ public class Grid extends AbstractComponent
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param cells
              *            The cells to merge. Must be from the same row.
              * @return The remaining visible cell after the merge
              */
             public CELLTYPE join(CELLTYPE... cells) {
-                assert cells.length > 1 : "You need to merge at least 2 cells";
+                if (cells.length < 2) {
+                    throw new IllegalArgumentException(
+                            "You need to merge at least 2 cells");
+                }
 
                 return join(new HashSet<CELLTYPE>(Arrays.asList(cells)));
             }
@@ -4637,7 +4731,7 @@ public class Grid extends AbstractComponent
      * own Container.
      *
      * @see #setContainerDataSource(Indexed)
-     * @see #LegacyGrid()
+     * @see #Grid()
      */
     private boolean defaultContainer = true;
 
@@ -5150,7 +5244,7 @@ public class Grid extends AbstractComponent
      * @return unmodifiable copy of current columns in visual order
      */
     public List<Column> getColumns() {
-        List<Column> columns = new ArrayList<Column>();
+        List<Column> columns = new ArrayList<Grid.Column>();
         for (String columnId : getState(false).columnOrder) {
             columns.add(getColumnByColumnId(columnId));
         }
@@ -6828,6 +6922,15 @@ public class Grid extends AbstractComponent
         for (Object itemId : itemIds) {
             datasourceExtension.updateRowData(itemId);
         }
+    }
+
+    /**
+     * Refreshes, i.e. causes the client side to re-render all rows.
+     *
+     * @since 7.7.7
+     */
+    public void refreshAllRows() {
+        datasourceExtension.refreshCache();
     }
 
     private static Logger getLogger() {

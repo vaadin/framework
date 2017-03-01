@@ -230,6 +230,7 @@ public class VTextArea extends VTextField implements DragImageModifier {
         if (info.isSafari()) {
             return true;
         }
+        // Vaadin 8 no longer supports IE10
         if (info.isIE11() || info.isEdge()) {
             return true;
         }

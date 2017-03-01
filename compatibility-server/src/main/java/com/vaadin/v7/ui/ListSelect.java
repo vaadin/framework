@@ -51,6 +51,8 @@ public class ListSelect extends AbstractSelect {
         super(caption);
     }
 
+    // Columns are no longer used for width.
+
     public int getRows() {
         return rows;
     }
@@ -75,6 +77,7 @@ public class ListSelect extends AbstractSelect {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        // Width is no longer based on columns
         // Adds the number of rows
         if (rows != 0) {
             target.addAttribute("rows", rows);

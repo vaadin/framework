@@ -1419,7 +1419,7 @@ public class SQLContainer implements Container, Container.Filterable,
     public void addItemSetChangeListener(
             Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
-            itemSetChangeListeners = new LinkedList<ItemSetChangeListener>();
+            itemSetChangeListeners = new LinkedList<Container.ItemSetChangeListener>();
         }
         itemSetChangeListeners.add(listener);
     }

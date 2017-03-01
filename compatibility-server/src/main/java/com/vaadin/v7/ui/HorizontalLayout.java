@@ -35,6 +35,7 @@ import com.vaadin.ui.Component;
  *             spacing on by default
  */
 @Deprecated
+@SuppressWarnings("serial")
 public class HorizontalLayout extends com.vaadin.ui.HorizontalLayout {
     /**
      * Constructs an empty HorizontalLayout.

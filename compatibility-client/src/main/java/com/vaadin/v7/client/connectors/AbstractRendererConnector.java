@@ -124,5 +124,4 @@ public abstract class AbstractRendererConnector<T>
     protected void extend(ServerConnector target) {
         // NOOP
     }
-
 }

@@ -942,16 +942,13 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * <p>
      * This method restricts the hours that are shown per day. This affects the
      * weekly view. The general contract is that <b>firstHour < lastHour</b>.
-     * </p>
-     *
      * <p>
      * Note that this only affects the rendering process. Events are still
      * requested by the dates set by {@link #setStartDate(Date)} and
      * {@link #setEndDate(Date)}.
-     * </p>
+     * <p>
      * You can use {@link #autoScaleVisibleHoursOfDay()} for automatic scaling
      * of the visible hours based on current events.
      *
