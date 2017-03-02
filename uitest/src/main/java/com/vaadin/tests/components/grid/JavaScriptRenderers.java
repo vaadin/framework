@@ -18,10 +18,14 @@ package com.vaadin.tests.components.grid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Label;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class JavaScriptRenderers extends AbstractReindeerTestUI {
 
     public static class ItemBean {
@@ -81,6 +85,8 @@ public class JavaScriptRenderers extends AbstractReindeerTestUI {
         }
     }
 
+    private Grid<ItemBean> grid;
+
     @Override
     protected void setup(VaadinRequest request) {
         List<ItemBean> items = new ArrayList<>(1000);
@@ -92,6 +98,20 @@ public class JavaScriptRenderers extends AbstractReindeerTestUI {
             items.add(bean);
         }
 
+        Label clientLog = new Label();
+        clientLog.setId("clientLog");
+        addComponent(clientLog);
+        grid = createGrid(items);
+        addComponent(grid);
+
+        addComponent(new Button("Recreate grid", e -> {
+            Grid<ItemBean> newGrid = createGrid(items);
+            replaceComponent(grid, newGrid);
+            grid = newGrid;
+        }));
+    }
+
+    private Grid<ItemBean> createGrid(List<ItemBean> items) {
         Grid<ItemBean> grid = new Grid<>();
 
         grid.addColumn(item -> item.getId().toString()).setCaption("Id");
@@ -99,10 +119,13 @@ public class JavaScriptRenderers extends AbstractReindeerTestUI {
                 .setCaption("Bean");
         grid.addColumn(ItemBean::getString, new JavaScriptStringRenderer())
                 .setCaption("String");
+        grid.addColumn(ItemBean::getString,
+                new JavaScriptStringRendererWithDestoryMethod())
+                .setCaption("String2");
 
         grid.setItems(items);
 
-        addComponent(grid);
+        return grid;
     }
 
 }
