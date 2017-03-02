@@ -645,8 +645,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         .hasKey(diffStateKey) : "Field name has changed";
                 Type type = null;
                 try {
-                    type = getState(false).getClass()
-                            .getDeclaredField(diffStateKey).getGenericType();
+                    type = getState(false).getClass().getField(diffStateKey)
+                            .getGenericType();
                 } catch (NoSuchFieldException | SecurityException e) {
                     e.printStackTrace();
                 }
@@ -887,7 +887,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
             } else {
-                return compareComparables(Objects.toString(a, ""), Objects.toString(b, ""));
+                return compareComparables(Objects.toString(a, ""),
+                        Objects.toString(b, ""));
             }
         }
 
@@ -907,7 +908,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 }
             }
             if ((a == null && b instanceof Comparable<?>)
-                || (b == null && a instanceof Comparable<?>)) {
+                    || (b == null && a instanceof Comparable<?>)) {
                 return true;
             }
 
@@ -1073,6 +1074,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             getGrid().setColumnId(id, this);
 
             return this;
+        }
+
+        /**
+         * Gets the function used to produce the value for data in this column
+         * based on the row item.
+         *
+         * @return the value provider function
+         */
+        public SerializableFunction<T, ? extends V> getValueProvider() {
+            return valueProvider;
         }
 
         /**
