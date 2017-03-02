@@ -1150,6 +1150,7 @@ public class Grid extends AbstractComponent
          *
          * @since 7.7.7
          */
+        @Deprecated
         public interface HasUserSelectionAllowed extends SelectionModel {
 
             /**
