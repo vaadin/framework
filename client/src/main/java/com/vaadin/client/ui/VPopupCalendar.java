@@ -59,9 +59,8 @@ import com.vaadin.shared.ui.datefield.Resolution;
  * selector.
  *
  * <b>Note:</b> To change the keyboard assignments used in the popup dialog you
- * should extend <code>com.vaadin.client.ui.VCalendarPanel</code> and then pass
- * set it by calling the <code>setCalendarPanel(VCalendarPanel panel)</code>
- * method.
+ * should extend <code>VCalendarPanel</code> and then pass set it by calling the
+ * <code>setCalendarPanel(VCalendarPanel panel)</code> method.
  *
  */
 public class VPopupCalendar extends VTextualDate
@@ -363,12 +362,6 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.google.gwt.user.client.ui.UIObject#setStyleName(java.lang.String)
-     */
     @Override
     public void setStyleName(String style) {
         super.setStyleName(style);
@@ -416,13 +409,6 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
-     * .dom.client.ClickEvent)
-     */
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
@@ -435,13 +421,6 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google.gwt
-     * .event.logical.shared.CloseEvent)
-     */
     @Override
     public void onClose(CloseEvent<PopupPanel> event) {
         if (event.getSource() == popup) {
@@ -499,7 +478,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * For internal use only. May be removed or replaced in the future.
      *
-     * @see com.vaadin.client.ui.VTextualDate#buildDate()
+     * @see VTextualDate#buildDate()
      */
     @Override
     public void buildDate() {
@@ -528,12 +507,6 @@ public class VPopupCalendar extends VTextualDate
         buildDate();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.client.ui.VDateField#onBrowserEvent(com.google
-     * .gwt.user.client.Event)
-     */
     @Override
     public void onBrowserEvent(com.google.gwt.user.client.Event event) {
         super.onBrowserEvent(event);
