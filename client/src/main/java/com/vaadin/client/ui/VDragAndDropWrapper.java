@@ -392,6 +392,7 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     public boolean html5DragDrop(VHtml5DragEvent event) {
         if (dropHandler == null || !currentlyValid) {
+            VDragAndDropManager.get().interruptDrag();
             return true;
         }
         try {
@@ -466,11 +467,11 @@ public class VDragAndDropWrapper extends VCustomComponent
 
         public final native void postFile(VHtml5File file)
         /*-{
-        
+
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             // Seems like IE10 will loose the file if we don't keep a reference to it...
             this.fileBeingUploaded = file;
-        
+
             this.send(file);
         }-*/;
 
@@ -626,19 +627,19 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
-    
+
             el.addEventListener("dragenter",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragleave",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragover",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("drop",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
