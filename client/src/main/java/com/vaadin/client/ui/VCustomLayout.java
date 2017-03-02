@@ -305,10 +305,12 @@ public class VCustomLayout extends ComplexPanel {
      */
     public void updateCaption(ComponentConnector childConnector) {
         Widget widget = childConnector.getWidget();
-        if (widget.getParent() != this) {
+
+        if (!widget.isAttached()) {
             // Widget has not been added because the location was not found
             return;
         }
+
         VCaptionWrapper wrapper = childWidgetToCaptionWrapper.get(widget);
         if (VCaption.isNeeded(childConnector)) {
             if (wrapper == null) {

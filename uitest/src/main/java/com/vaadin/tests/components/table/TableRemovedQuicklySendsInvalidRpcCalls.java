@@ -27,11 +27,7 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ConnectorTracker;
-<<<<<<< HEAD
 import com.vaadin.v7.ui.Table;
-=======
-import com.vaadin.ui.Table;
->>>>>>> 62c0d73... Remove tracking of unregistered connectors (#8153)
 
 import elemental.json.JsonObject;
 

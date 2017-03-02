@@ -34,6 +34,11 @@ public class GridSelectionTest extends GridBasicsTest {
         assertTrue("row should become selected", getRow(0).isSelected());
         toggleFirstRowSelection();
         assertFalse("row shouldn't remain selected", getRow(0).isSelected());
+
+        toggleFirstRowSelection();
+        assertTrue("row should become selected", getRow(0).isSelected());
+        getGridElement().getCell(0, 0).click();
+        assertFalse("row shouldn't remain selected", getRow(0).isSelected());
     }
 
     @Test
@@ -106,6 +111,11 @@ public class GridSelectionTest extends GridBasicsTest {
         assertTrue("First row was not selected.", getRow(0).isSelected());
         assertTrue("Selection event was not correct", logContainsText(
                 "SingleSelectionEvent: Selected: DataObject[0]"));
+        grid.getCell(0, 0).click();
+        assertFalse("First row was not deselected.", getRow(0).isSelected());
+        assertTrue("Deselection event was not correct",
+                logContainsText("SingleSelectionEvent: Selected: none"));
+
         grid.getCell(5, 0).click();
         assertTrue("Fifth row was not selected.", getRow(5).isSelected());
         assertFalse("First row was still selected.", getRow(0).isSelected());

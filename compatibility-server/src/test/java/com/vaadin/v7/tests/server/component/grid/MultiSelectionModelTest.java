@@ -17,6 +17,7 @@ package com.vaadin.v7.tests.server.component.grid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
@@ -32,6 +33,7 @@ import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.shared.ui.grid.selection.MultiSelectionModelServerRpc;
 import com.vaadin.v7.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.SelectionModel.HasUserSelectionAllowed;
 
 public class MultiSelectionModelTest {
 

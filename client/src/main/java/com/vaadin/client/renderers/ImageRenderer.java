@@ -29,7 +29,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  */
 public class ImageRenderer extends ClickableRenderer<String, Image> {
 
-    public static final String TRANSPARENT_GIF_1PX = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
+    public static final String TRANSPARENT_GIF_1PX = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     @Override
     public Image createWidget() {

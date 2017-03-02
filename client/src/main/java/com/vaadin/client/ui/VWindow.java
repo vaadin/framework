@@ -691,6 +691,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public void hide() {
         if (vaadinModality) {
             hideModalityCurtain();
+            hideDraggingCurtain();
+            hideResizingCurtain();
         }
         super.hide();
 
