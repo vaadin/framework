@@ -645,8 +645,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         .hasKey(diffStateKey) : "Field name has changed";
                 Type type = null;
                 try {
-                    type = getState(false).getClass()
-                            .getDeclaredField(diffStateKey).getGenericType();
+                    type = getState(false).getClass().getField(diffStateKey)
+                            .getGenericType();
                 } catch (NoSuchFieldException | SecurityException e) {
                     e.printStackTrace();
                 }
