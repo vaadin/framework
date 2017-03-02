@@ -1,9 +1,10 @@
 package com.vaadin.tests.data.bean;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Person {
+public class Person implements Serializable {
     private String firstName;
     private String lastName;
     private String email;

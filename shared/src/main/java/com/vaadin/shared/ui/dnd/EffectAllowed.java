@@ -17,6 +17,9 @@ package com.vaadin.shared.ui.dnd;
 
 /**
  * Used to specify the effect that is allowed for a drag operation.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public enum EffectAllowed {
     /**

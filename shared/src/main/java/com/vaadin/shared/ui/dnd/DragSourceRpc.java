@@ -20,6 +20,9 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * RPC for firing server side event when client side dragstart event happens on
  * drag source.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public interface DragSourceRpc extends ServerRpc {
 

@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
@@ -675,11 +675,132 @@
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- Pre-release build only builds artifacts that are deployed or 
+                needed by them -->
+            <id>prerelease</id>
+            <properties>
+                <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
+            </properties>
+            <modules>
+                <module>buildhelpers</module>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>compatibility-server</module>
+                <module>compatibility-client</module>
+                <module>compatibility-client-compiled</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <!-- Nexus staging bug needs the last module to be deployed. -->
+                <module>testbench-api</module>
+                <!-- BOM is built and released separately -->
+            </modules>
+
+            <build>
+                <plugins>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
-                        <extensions>true</extensions>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Only include java files -->
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>generate-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- Snapshot build only builds artifacts that are deployed or 
+                needed by them -->
+            <id>snapshot</id>
+            <properties>
+                <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
+            </properties>
+            <modules>
+                <module>buildhelpers</module>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>compatibility-server</module>
+                <module>compatibility-client</module>
+                <module>compatibility-client-compiled</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <module>testbench-api</module>
+                <module>bom</module>
+            </modules>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Only include java files -->
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>generate-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
