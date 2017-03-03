@@ -50,11 +50,10 @@ image::img/shortcut-defaultbutton.png[]
 [[advanced.shortcuts.focus]]
 == Field Focus Shortcuts
 
-You can define a shortcut key that sets the focus to a field component (any
-component that inherits [classname]#AbstractField#) by adding a
-[classname]#FocusShortcut# as a shortcut listener to the field.
+You can define a shortcut key that sets the focus to any focusable component (implements [interface]#Focusable#), usually field components, by adding a
+[interface]#FocusShortcut# as a shortcut listener to the component.
 
-The constructor of the [classname]#FocusShortcut# takes the field component as
+The constructor of the [classname]#FocusShortcut# takes the focusable component as
 its first parameter, followed by the key code, and an optional list of modifier
 keys, as listed in <<advanced.shortcuts.keycodes>>.
 
@@ -64,7 +63,7 @@ keys, as listed in <<advanced.shortcuts.keycodes>>.
 // A field with Alt+N bound to it
 TextField name = new TextField("Name (Alt+N)");
 name.addShortcutListener(
-        new AbstractField.FocusShortcut(name, KeyCode.N,
+        new FocusShortcut(name, KeyCode.N,
                                         ModifierKey.ALT));
 layout.addComponent(name);
 ----
@@ -78,7 +77,7 @@ key is indicated with an ampersand ( [literal]#++&++#).
 // A field with Alt+A bound to it, using shorthand notation
 TextField address = new TextField("Address (Alt+A)");
 address.addShortcutListener(
-        new AbstractField.FocusShortcut(address, "&Address"));
+        new FocusShortcut(address, "&Address"));
 ----
 
 This is especially useful for internationalization, so that you can determine
@@ -269,7 +268,7 @@ following defines a kbd:[Ctrl+Shift+N] key combination for a shortcut.
 ----
 TextField name = new TextField("Name (Ctrl+Shift+N)");
 name.addShortcutListener(
-        new AbstractField.FocusShortcut(name, KeyCode.N,
+        new FocusShortcut(name, KeyCode.N,
                                         ModifierKey.CTRL,
                                         ModifierKey.SHIFT));
 ----
