@@ -42,6 +42,8 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
         dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
 
+        dragSourceComponent.setSelectionMode(Grid.SelectionMode.MULTI);
+
         GridDragSourceExtension<Bean> dragSource = new GridDragSourceExtension<>(
                 dragSourceComponent);
         dragSource.setDragDataGenerator(bean -> {
