@@ -72,6 +72,7 @@ import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableSupplier;
 import com.vaadin.server.Setter;
+import com.vaadin.server.VaadinServiceClassLoaderUtil;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -85,7 +86,6 @@ import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
@@ -101,7 +101,6 @@ import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
-import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
@@ -135,6 +134,8 @@ import elemental.json.JsonValue;
  */
 public class Grid<T> extends AbstractListing<T> implements HasComponents,
         HasDataProvider<T>, SortNotifier<GridSortOrder<T>> {
+
+    private static final String DECLARATIVE_DATA_ITEM_TYPE = "data-item-type";
 
     /**
      * A callback method for fetching items. The callback is provided with a
@@ -2001,7 +2002,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     private Editor<T> editor;
 
-    private final PropertySet<T> propertySet;
+    private PropertySet<T> propertySet;
+
+    private Class<T> beanType = null;
 
     /**
      * Creates a new grid without support for creating columns based on property
@@ -2042,6 +2045,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public Grid(Class<T> beanType) {
         this(BeanPropertySet.get(beanType));
+        this.beanType = beanType;
     }
 
     /**
@@ -2056,23 +2060,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the property set implementation to use, not <code>null</code>.
      */
     protected Grid(PropertySet<T> propertySet) {
-        Objects.requireNonNull(propertySet, "propertySet cannot be null");
-        this.propertySet = propertySet;
-
         registerRpc(new GridServerRpcImpl());
-
         setDefaultHeaderRow(appendHeaderRow());
-
         setSelectionModel(new SingleSelectionModelImpl<>());
 
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
         addDataGenerator(detailsManager);
-
-        editor = createEditor();
-        if (editor instanceof Extension) {
-            addExtension((Extension) editor);
-        }
 
         addDataGenerator((item, json) -> {
             String styleName = styleGenerator.apply(item);
@@ -2087,9 +2081,35 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
         });
 
+        setPropertySet(propertySet);
+
         // Automatically add columns for all available properties
         propertySet.getProperties().map(PropertyDefinition::getName)
                 .forEach(this::addColumn);
+    }
+
+    /**
+     * Sets the property set to use for this grid. Does not create or update
+     * columns in any way but will delete and re-create the editor.
+     * <p>
+     * This is only meant to be called from constructors and readDesign, at a
+     * stage where it does not matter if you throw away the editor.
+     *
+     * @param propertySet
+     *            the property set to use
+     */
+    protected void setPropertySet(PropertySet<T> propertySet) {
+        Objects.requireNonNull(propertySet, "propertySet cannot be null");
+        this.propertySet = propertySet;
+
+        if (editor instanceof Extension) {
+            removeExtension((Extension) editor);
+        }
+        editor = createEditor();
+        if (editor instanceof Extension) {
+            addExtension((Extension) editor);
+        }
+
     }
 
     /**
@@ -2162,6 +2182,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public Grid(String caption, Collection<T> items) {
         this(caption, DataProvider.ofCollection(items));
+    }
+
+    /**
+     * Gets the bean type used by this grid.
+     * <p>
+     * The bean type is used to automatically set up a column added using a
+     * property name.
+     *
+     * @return the used bean type or <code>null</code> if no bean type has been
+     *         defined
+     */
+    public Class<T> getBeanType() {
+        return beanType;
     }
 
     public <V> void fireColumnVisibilityChangeEvent(Column<T, V> column,
@@ -3526,6 +3559,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     @Override
     protected void doReadDesign(Element design, DesignContext context) {
         Attributes attrs = design.attributes();
+        if (design.hasAttr(DECLARATIVE_DATA_ITEM_TYPE)) {
+            String itemType = design.attr(DECLARATIVE_DATA_ITEM_TYPE);
+            setBeanType(itemType);
+        }
+
         if (attrs.hasKey("selection-mode")) {
             setSelectionMode(DesignAttributeHandler.readAttribute(
                     "selection-mode", attrs, SelectionMode.class));
@@ -3550,9 +3588,59 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
+    /**
+     * Sets the bean type to use for property mapping.
+     * <p>
+     * This method is responsible also for setting or updating the property set
+     * so that it matches the given bean type.
+     * <p>
+     * Protected mostly for Designer needs, typically should not be overridden
+     * or even called.
+     *
+     * @param beanTypeClassName
+     *            the fully qualified class name of the bean type
+     */
+    @SuppressWarnings("unchecked")
+    protected void setBeanType(String beanTypeClassName) {
+        setBeanType((Class<T>) resolveClass(beanTypeClassName));
+    }
+
+    /**
+     * Sets the bean type to use for property mapping.
+     * <p>
+     * This method is responsible also for setting or updating the property set
+     * so that it matches the given bean type.
+     * <p>
+     * Protected mostly for Designer needs, typically should not be overridden
+     * or even called.
+     *
+     * @param beanType
+     *            the bean type class
+     */
+    protected void setBeanType(Class<T> beanType) {
+        this.beanType = beanType;
+        setPropertySet(BeanPropertySet.get(beanType));
+    }
+
+    private Class<?> resolveClass(String qualifiedClassName) {
+        try {
+            Class<?> resolvedClass = Class.forName(qualifiedClassName, true,
+                    VaadinServiceClassLoaderUtil.findDefaultClassLoader());
+            return resolvedClass;
+        } catch (ClassNotFoundException | SecurityException e) {
+            throw new IllegalArgumentException(
+                    "Unable to find class " + qualifiedClassName, e);
+        }
+
+    }
+
     @Override
     protected void doWriteDesign(Element design, DesignContext designContext) {
         Attributes attr = design.attributes();
+        if (this.beanType != null) {
+            design.attr(DECLARATIVE_DATA_ITEM_TYPE,
+                    this.beanType.getCanonicalName());
+        }
         DesignAttributeHandler.writeAttribute("selection-allowed", attr,
                 isReadOnly(), false, Boolean.class, designContext);
 
@@ -3631,14 +3719,24 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         for (Element col : colgroups.get(0).getElementsByTag("col")) {
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
-            DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-            Column<T, String> column = new Column<>(provider,
-                    new HtmlRenderer());
-            addColumn(getGeneratedIdentifier(), column);
-            if (id != null) {
-                column.setId(id);
+
+            // If there is a property with a matching name available,
+            // map to that
+            Optional<PropertyDefinition<T, ?>> property = propertySet
+                    .getProperties().filter(p -> p.getName().equals(id))
+                    .findFirst();
+            Column<T, ?> column;
+            if (property.isPresent()) {
+                column = addColumn(id);
+            } else {
+                DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
+                column = new Column<>(provider, new HtmlRenderer());
+                addColumn(getGeneratedIdentifier(), column);
+                if (id != null) {
+                    column.setId(id);
+                }
+                providers.add(provider);
             }
-            providers.add(provider);
             column.readDesign(col, context);
         }
 
