@@ -43,7 +43,7 @@ import elemental.events.EventTarget;
 @Connect(DropTargetExtension.class)
 public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
-    private static final String CLASS_DRAG_OVER = "v-drag-over";
+    protected static final String CLASS_DRAG_OVER = "v-drag-over";
 
     // Create event listeners
     private final EventListener dragEnterListener = this::onDragEnter;
@@ -119,7 +119,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragEnter(Event event) {
-        addTargetIndicator(getDropTargetElement());
+        addTargetIndicator(event);
     }
 
     /**
@@ -147,7 +147,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                     .setDropEffect(DataTransfer.DropEffect.NONE);
 
             // Remove drop target indicator
-            removeTargetIndicator(getDropTargetElement());
+            removeTargetIndicator(event);
         }
     }
 
@@ -176,7 +176,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragLeave(Event event) {
-        removeTargetIndicator(getDropTargetElement());
+        removeTargetIndicator(event);
     }
 
     /**
@@ -207,7 +207,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                             DragSourceExtensionConnector.DATA_TYPE_DRAG_SOURCE_ID));
         }
 
-        removeTargetIndicator(getDropTargetElement());
+        removeTargetIndicator(event);
     }
 
     private boolean dropAllowed(NativeEvent event) {
@@ -219,12 +219,20 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         return true;
     }
 
-    private void addTargetIndicator(Element element) {
-        element.addClassName(CLASS_DRAG_OVER);
+    /**
+     *
+     * @param element
+     */
+    protected void addTargetIndicator(Event event) {
+        getDropTargetElement().addClassName(CLASS_DRAG_OVER);
     }
 
-    private void removeTargetIndicator(Element element) {
-        element.removeClassName(CLASS_DRAG_OVER);
+    /**
+     *
+     * @param element
+     */
+    protected void removeTargetIndicator(Event event) {
+        getDropTargetElement().removeClassName(CLASS_DRAG_OVER);
     }
 
     private native boolean executeScript(NativeEvent event, String script)/*-{
