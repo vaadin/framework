@@ -15,9 +15,20 @@
  */
 package com.vaadin.client.connectors.grid;
 
+import java.util.Objects;
+import java.util.Optional;
+
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.TableRowElement;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
+import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 import com.vaadin.ui.GridDropTargetExtension;
+
+import elemental.events.Event;
 
 /**
  * Makes Grid an HTML5 drop target. This is the client side counterpart of
@@ -29,4 +40,53 @@ import com.vaadin.ui.GridDropTargetExtension;
 @Connect(GridDropTargetExtension.class)
 public class GridDropTargetExtensionConnector extends
         DropTargetExtensionConnector {
+
+    private GridConnector gridConnector;
+
+    @Override
+    protected void extend(ServerConnector target) {
+        gridConnector = (GridConnector) target;
+
+        super.extend(target);
+    }
+
+    @Override
+    protected void addTargetIndicator(Event event) {
+        getTargetRow(((Element) event.getTarget()))
+                .ifPresent(e -> e.addClassName(CLASS_DRAG_OVER));
+    }
+
+    @Override
+    protected void removeTargetIndicator(Event event) {
+        getTargetRow(((Element) event.getTarget()))
+                .ifPresent(e -> e.removeClassName(CLASS_DRAG_OVER));
+    }
+
+    private Optional<TableRowElement> getTargetRow(Element source) {
+        while (!Objects.equals(source, getGridBody().getElement())) {
+            if (TableRowElement.is(source)) {
+                return Optional.of(source.cast());
+            }
+            source = source.getParentElement();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    protected Element getDropTargetElement() {
+        return getGridBody().getElement();
+    }
+
+    private Escalator getEscalator() {
+        return gridConnector.getWidget().getEscalator();
+    }
+
+    private RowContainer.BodyRowContainer getGridBody() {
+        return getEscalator().getBody();
+    }
+
+    @Override
+    public GridDropTargetExtensionState getState() {
+        return (GridDropTargetExtensionState) super.getState();
+    }
 }

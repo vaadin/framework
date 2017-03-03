@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridDragSourceExtension;
+import com.vaadin.ui.GridDropTargetExtension;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -59,10 +61,21 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                     GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA));
         });
 
+        Grid<Bean> dropTargetGrid = new Grid<>();
+        dropTargetGrid.setItems(createItems(5));
+        dropTargetGrid.addColumn(Bean::getId).setCaption("ID");
+        dropTargetGrid.addColumn(Bean::getValue).setCaption("Value");
+        GridDropTargetExtension dropTargetExt = new GridDropTargetExtension(dropTargetGrid);
+
         Layout layout = new HorizontalLayout();
-        layout.addComponents(dragSourceComponent, dropTargetComponent);
+        layout.addComponents(dragSourceComponent, dropTargetComponent, dropTargetGrid);
 
         addComponent(layout);
+
+        Page.getCurrent().getStyles().add(
+                ".v-drag-over {"
+                + "color: red;"
+                + "}");
     }
 
     private List<Bean> createItems(int num) {
