@@ -45,7 +45,7 @@ import com.vaadin.v7.data.Validator;
  * @author Petri Hakala
  * @author Henri Sara
  *
- * @deprecated, see {@link BeanValidationBinder}
+ * @deprecated See {@link BeanValidationBinder} and {@link com.vaadin.data.validator.BeanValidator}
  */
 @Deprecated
 public class BeanValidator implements Validator {

@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.data.util.converter;
 
+import com.vaadin.data.Binder;
+
 import java.util.EnumSet;
 import java.util.Locale;
 
@@ -36,7 +38,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  *
- * @deprecated As of 8.0, no replacement available.
+ * @deprecated As of 8.0, a lightweight lambda-based converter might be build with
+ *  {@link Binder}{@code .forField(...).withConverter(...)} methods.
  */
 @Deprecated
 public class StringToEnumConverter implements Converter<String, Enum> {
