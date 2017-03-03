@@ -54,10 +54,8 @@ import com.vaadin.server.VaadinServlet;
  *
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated As of 8.0, replaced by {@link Binder} and {@link com.vaadin.data.Validator}, the validation is performed
- * outside components, see {@link Binder#withValidator(SerializablePredicate, ErrorMessageProvider)},
- * {@link Binder#withValidator(com.vaadin.data.Validator)},
- * {@link Binder#withValidator(SerializablePredicate, String)}
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The validation is performed
+ * outside components, see new {@link Binder} and its methods of name {@code withValidator(...)}
  */
 @Deprecated
 public interface Validator extends Serializable {
