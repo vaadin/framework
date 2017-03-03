@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -61,35 +60,46 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dropTargetWidget = ((ComponentConnector) target).getWidget();
 
-        EventTarget dropTarget = getDropTargetElement().cast();
+        addDropListeners(getDropTargetElement());
+    }
 
-        // dragenter event
-        dropTarget.addEventListener(BrowserEvents.DRAGENTER, dragEnterListener);
+    /**
+     * Adds dragenter, dragover, dragleave and drop event listeners to the given
+     * DOM element.
+     *
+     * @param element
+     *         DOM element to attach event listeners to.
+     */
+    protected void addDropListeners(Element element) {
+        EventTarget target = element.cast();
 
-        // dragover event
-        dropTarget.addEventListener(BrowserEvents.DRAGOVER, dragOverListener);
+        target.addEventListener(Event.DRAGENTER, dragEnterListener);
+        target.addEventListener(Event.DRAGOVER, dragOverListener);
+        target.addEventListener(Event.DRAGLEAVE, dragLeaveListener);
+        target.addEventListener(Event.DROP, dropListener);
+    }
 
-        // dragleave event
-        dropTarget.addEventListener(BrowserEvents.DRAGLEAVE, dragLeaveListener);
+    /**
+     * Removes dragenter, dragover, dragleave and drop event listeners from the
+     * given DOM element.
+     *
+     * @param element
+     *         DOM element to remove event listeners from.
+     */
+    protected void removeDropListeners(Element element) {
+        EventTarget target = element.cast();
 
-        // drop event
-        dropTarget.addEventListener(BrowserEvents.DROP, dropListener);
+        target.removeEventListener(Event.DRAGENTER, dragEnterListener);
+        target.removeEventListener(Event.DRAGOVER, dragOverListener);
+        target.removeEventListener(Event.DRAGLEAVE, dragLeaveListener);
+        target.removeEventListener(Event.DROP, dropListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        EventTarget dropTarget = getDropTargetElement().cast();
-
-        // Remove listeners
-        dropTarget.removeEventListener(BrowserEvents.DRAGENTER,
-                dragEnterListener);
-        dropTarget.removeEventListener(BrowserEvents.DRAGOVER,
-                dragOverListener);
-        dropTarget.removeEventListener(BrowserEvents.DRAGLEAVE,
-                dragLeaveListener);
-        dropTarget.removeEventListener(BrowserEvents.DROP, dropListener);
+        removeDropListeners(getDropTargetElement());
     }
 
     /**
