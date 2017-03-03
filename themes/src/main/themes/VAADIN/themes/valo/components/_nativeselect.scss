@@ -13,6 +13,9 @@
   .#{$primary-stylename}-select {
     display: block;
 
+    width:100%;
+    height: 100%;
+
     + .v-textfield {
       width: auto !important;
       margin-top: round($v-unit-size/4);

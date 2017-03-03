@@ -79,16 +79,4 @@ public class VNativeSelect extends FocusableFlowPanelComposite
     public ListBox getListBox() {
         return listBox;
     }
-
-    @Override
-    public void setWidth(String width) {
-        super.setWidth(width);
-        listBox.setWidth(width);
-    }
-
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        listBox.setHeight(height);
-    }
 }
