@@ -97,6 +97,14 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
         generatorFunction = generator;
     }
 
+    /**
+     * Returns the generator function for customizing drag data.
+     *
+     * @return Drag data generator function.
+     */
+    public SerializableFunction<T, JsonObject> getDragDataGenerator() {
+        return generatorFunction;
+    }
 
     @Override
     public void remove() {
