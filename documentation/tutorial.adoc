@@ -292,7 +292,7 @@ Also, let us get a reference to the [classname]#CustomerService#.
 public class MyUI extends UI {
     // Add the next two lines:
     private CustomerService service = CustomerService.getInstance();
-    private Grid<Customer> grid = new Grid<>();
+    private Grid<Customer> grid = new Grid<>(Customer.class);
 
     // The rest is already there...
     @Override
@@ -362,7 +362,7 @@ omitted):
 [source,java]
 ----
 private CustomerService service = CustomerService.getInstance();
-private Grid grid = new Grid();
+private Grid<Customer> grid = new Grid<>(Customer.class);
 
 @Override
 protected void init(VaadinRequest vaadinRequest) {
