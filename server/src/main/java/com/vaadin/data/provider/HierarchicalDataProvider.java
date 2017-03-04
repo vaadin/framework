@@ -15,25 +15,40 @@
  */
 package com.vaadin.data.provider;
 
+import java.util.stream.Stream;
+
 /**
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
- * 
+ *
  * @param <T>
  * @param <F>
  */
 public interface HierarchicalDataProvider<T, F> extends DataProvider<T, F> {
 
-    public int getDepth(T item);
+    @Override
+    public default int size(Query<T, F> query) {
+        if (query instanceof HierarchicalQuery<?, ?>) {
+            return getChildCount((HierarchicalQuery<T, F>) query);
+        }
+        throw new IllegalArgumentException(
+                "Hierarchical data provider doesn't support non-hierarchical queries");
+    }
 
-    public boolean isRoot(T item);
+    @Override
+    public default Stream<T> fetch(Query<T, F> query) {
+        if (query instanceof HierarchicalQuery<?, ?>) {
+            return fetchChildren((HierarchicalQuery<T, F>) query);
+        }
+        throw new IllegalArgumentException(
+                "Hierarchical data provider doesn't support non-hierarchical queries");
+    }
 
-    public T getParent(T item);
+    public int getChildCount(HierarchicalQuery<T, F> query);
 
-    public boolean isCollapsed(T item);
+    public Stream<T> fetchChildren(HierarchicalQuery<T, F> query);
 
     public boolean hasChildren(T item);
 
-    public void setCollapsed(T item, boolean b);
 }

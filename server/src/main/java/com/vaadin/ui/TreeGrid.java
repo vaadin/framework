@@ -20,57 +20,34 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
-
-import elemental.json.Json;
-import elemental.json.JsonObject;
 
 /**
  * A grid component for displaying hierarchical tabular data.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
- * 
+ *
  * @param <T>
  *            the grid bean type
  */
 public class TreeGrid<T> extends Grid<T> {
 
     public TreeGrid() {
-        super();
-
-        // Attaches hierarchy data to the row
-        addDataGenerator((item, rowData) -> {
-
-            JsonObject hierarchyData = Json.createObject();
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_DEPTH,
-                    getDataProvider().getDepth(item));
-
-            boolean isLeaf = !getDataProvider().hasChildren(item);
-            if (isLeaf) {
-                hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
-                        true);
-            } else {
-                hierarchyData.put(TreeGridCommunicationConstants.ROW_COLLAPSED,
-                        getDataProvider().isCollapsed(item));
-                hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
-                        false);
-            }
-
-            // add hierarchy information to row as metadata
-            rowData.put(
-                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION,
-                    hierarchyData);
-        });
+        super(new HierarchicalDataCommunicator<>());
 
         registerRpc(new NodeCollapseRpc() {
             @Override
-            public void toggleCollapse(String rowKey) {
-                T item = getDataCommunicator().getKeyMapper().get(rowKey);
-                TreeGrid.this.toggleCollapse(item);
+            public void toggleCollapse(String rowKey, int rowIndex,
+                    boolean collapse) {
+                if (collapse) {
+                    getDataCommunicator().doCollapse(rowKey, rowIndex);
+                } else {
+                    getDataCommunicator().doExpand(rowKey, rowIndex);
+                }
             }
         });
     }
@@ -106,9 +83,9 @@ public class TreeGrid<T> extends Grid<T> {
      * <p>
      * Setting a hierarchy column by calling this method also sets the column to
      * be visible and not hidable.
-     * 
+     *
      * @see Column#setId(String)
-     * 
+     *
      * @param id
      *            id of the column to use for displaying hierarchy
      */
@@ -132,19 +109,9 @@ public class TreeGrid<T> extends Grid<T> {
         return (TreeGridState) super.getState(markAsDirty);
     }
 
-    /**
-     * Toggle the expansion of an item in this grid. If the item is already
-     * expanded, it will be collapsed.
-     * <p>
-     * Toggling expansion on a leaf item in the hierarchy will have no effect.
-     * 
-     * @param item
-     *            the item to toggle expansion for
-     */
-    public void toggleCollapse(T item) {
-        getDataProvider().setCollapsed(item,
-                !getDataProvider().isCollapsed(item));
-        getDataCommunicator().reset();
+    @Override
+    public HierarchicalDataCommunicator<T> getDataCommunicator() {
+        return (HierarchicalDataCommunicator<T>) super.getDataCommunicator();
     }
 
     @Override
