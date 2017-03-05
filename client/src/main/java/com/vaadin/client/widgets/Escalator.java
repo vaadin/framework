@@ -2999,7 +2999,7 @@ public class Escalator extends Widget
         private List<TableRowElement> fillAndPopulateEscalatorRowsIfNeeded(
                 final int index, final int numberOfRows) {
 
-            final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
+            final int escalatorRowsStillFit = getMaxVisibleRowCount()
                     - getDomRowCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
                     escalatorRowsStillFit);
@@ -3032,16 +3032,16 @@ public class Escalator extends Widget
             }
         }
 
-        private int getMaxEscalatorRowCapacity() {
-            final int maxEscalatorRowCapacity = (int) Math
+        private int getMaxVisibleRowCount() {
+            final int maxVisibleRowCount = (int) Math
                     .ceil(getHeightOfSection() / getDefaultRowHeight()) + 1;
 
             /*
-             * maxEscalatorRowCapacity can become negative if the headers and
-             * footers start to overlap. This is a crazy situation, but Vaadin
-             * blinks the components a lot, so it's feasible.
+             * maxVisibleRowCount can become negative if the headers and footers
+             * start to overlap. This is a crazy situation, but Vaadin blinks
+             * the components a lot, so it's feasible.
              */
-            return Math.max(0, maxEscalatorRowCapacity);
+            return Math.max(0, maxVisibleRowCount);
         }
 
         @Override
@@ -3524,12 +3524,12 @@ public class Escalator extends Widget
              * TODO [[spacer]]: these assumptions will be totally broken with
              * spacers.
              */
-            final int maxEscalatorRows = getMaxEscalatorRowCapacity();
+            final int maxVisibleRowCount = getMaxVisibleRowCount();
             final int currentTopRowIndex = getLogicalRowIndex(
                     visualRowOrder.getFirst());
 
             final Range[] partitions = logicalRange.partitionWith(
-                    Range.withLength(currentTopRowIndex, maxEscalatorRows));
+                    Range.withLength(currentTopRowIndex, maxVisibleRowCount));
             final Range insideRange = partitions[1];
             return insideRange.offsetBy(-currentTopRowIndex);
         }
@@ -3641,8 +3641,8 @@ public class Escalator extends Widget
                 return;
             }
 
-            final int maxEscalatorRows = getMaxEscalatorRowCapacity();
-            final int neededEscalatorRows = Math.min(maxEscalatorRows,
+            final int maxVisibleRowCount = getMaxVisibleRowCount();
+            final int neededEscalatorRows = Math.min(maxVisibleRowCount,
                     body.getRowCount());
             final int neededEscalatorRowsDiff = neededEscalatorRows
                     - visualRowOrder.size();
@@ -6687,7 +6687,7 @@ public class Escalator extends Widget
      * @return the maximum capacity
      */
     public int getMaxVisibleRowCount() {
-        return body.getMaxEscalatorRowCapacity();
+        return body.getMaxVisibleRowCount();
     }
 
     /**
