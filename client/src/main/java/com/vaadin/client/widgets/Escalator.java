@@ -3033,8 +3033,14 @@ public class Escalator extends Widget
         }
 
         private int getMaxVisibleRowCount() {
+            double heightOfSection = getHeightOfSection();
+            // By including the possibly shown scrollbar height, we get a
+            // consistent count and do not add/remove rows whenever a scrollbar
+            // is shown
+            heightOfSection += horizontalScrollbarDeco.getOffsetHeight();
+            double defaultRowHeight = getDefaultRowHeight();
             final int maxVisibleRowCount = (int) Math
-                    .ceil(getHeightOfSection() / getDefaultRowHeight()) + 1;
+                    .ceil(heightOfSection / defaultRowHeight) + 1;
 
             /*
              * maxVisibleRowCount can become negative if the headers and footers
