@@ -23,6 +23,8 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.event.FieldEvents;
 
@@ -58,6 +60,13 @@ public class NativeSelect extends AbstractSelect
     public NativeSelect(String caption) {
         super(caption);
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
+    }
+
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        target.addAttribute("type", "native");
+
+        super.paintContent(target);
     }
 
     @Override
