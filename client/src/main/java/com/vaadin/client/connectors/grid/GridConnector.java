@@ -148,7 +148,7 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Method called for a row details refresh. Runs all callbacks if any
      * details were shown and clears the callbacks.
-     * 
+     *
      * @param detailsShown
      *            True if any details were set visible
      */
@@ -177,7 +177,7 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Add a single use details runnable callback for when we get a call to
      * {@link #detailsRefreshed(boolean)}.
-     * 
+     *
      * @param refreshCallback
      *            Details refreshed callback
      */
@@ -187,7 +187,7 @@ public class GridConnector extends AbstractListingConnector
 
     /**
      * Check if we have details for given row.
-     * 
+     *
      * @param rowIndex
      * @return
      */
@@ -211,8 +211,9 @@ public class GridConnector extends AbstractListingConnector
                 // Add details refresh listener and handle possible detail for
                 // scrolled row.
                 addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(row))
+                    if (rowHasDetails(row)) {
                         getWidget().scrollToRow(row, destination);
+                    }
                 });
             }
 
@@ -227,8 +228,9 @@ public class GridConnector extends AbstractListingConnector
                 Scheduler.get()
                         .scheduleFinally(() -> getWidget().scrollToEnd());
                 addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(getWidget().getDataSource().size() - 1))
+                    if (rowHasDetails(getWidget().getDataSource().size() - 1)) {
                         getWidget().scrollToEnd();
+                    }
                 });
             }
         });
@@ -429,8 +431,6 @@ public class GridConnector extends AbstractListingConnector
     @Override
     public void onUnregister() {
         super.onUnregister();
-
-        columnToIdMap.clear();
     }
 
     @Override
