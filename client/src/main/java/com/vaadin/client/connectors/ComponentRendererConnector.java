@@ -23,6 +23,7 @@ import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.renderers.ComponentRendererState;
 import com.vaadin.ui.renderers.ComponentRenderer;
 
 /**
@@ -53,5 +54,10 @@ public class ComponentRendererConnector
                 widget.setWidget(connector.getWidget());
             }
         };
+    }
+
+    @Override
+    public ComponentRendererState getState() {
+        return (ComponentRendererState) super.getState();
     }
 }

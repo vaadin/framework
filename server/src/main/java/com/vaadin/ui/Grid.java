@@ -967,8 +967,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             // Make Grid track components.
             if (renderer instanceof ComponentRenderer
                     && providerValue instanceof Component) {
-                activeComponents.put(data, (Component) providerValue);
-                addComponentToGrid((Component) providerValue);
+                addComponent(data, (Component) providerValue);
             }
             JsonValue rendererValue = renderer.encode(providerValue);
 
@@ -990,8 +989,24 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
         }
 
+        private void addComponent(T data, Component component) {
+            if (activeComponents.containsKey(data)) {
+                if (activeComponents.get(data).equals(component)) {
+                    // Reusing old component
+                    return;
+                }
+                removeComponent(data);
+            }
+            activeComponents.put(data, component);
+            addComponentToGrid(component);
+        }
+
         @Override
         public void destroyData(T item) {
+            removeComponent(item);
+        }
+
+        private void removeComponent(T item) {
             Component component = activeComponents.remove(item);
             if (component != null) {
                 removeComponentFromGrid(component);

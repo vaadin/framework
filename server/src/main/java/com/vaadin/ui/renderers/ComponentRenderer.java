@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.renderers;
 
+import com.vaadin.shared.ui.grid.renderers.ComponentRendererState;
 import com.vaadin.ui.Component;
 
 import elemental.json.Json;
@@ -28,6 +29,11 @@ import elemental.json.JsonValue;
  * This means that a number of components is always generated and sent to the
  * client. Using complex structures of many nested components might be heavy to
  * generate and store, which will lead to performance problems.
+ * <p>
+ * <strong>Note:</strong> Components will occasionally be generated again during
+ * runtime eg. when selection changes. If your component has an internal state
+ * that is not stored into the object, you should reuse the same component
+ * instances.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -44,5 +50,15 @@ public class ComponentRenderer extends AbstractRenderer<Object, Component> {
     @Override
     public JsonValue encode(Component value) {
         return Json.create(value.getConnectorId());
+    }
+
+    @Override
+    protected ComponentRendererState getState(boolean markAsDirty) {
+        return (ComponentRendererState) super.getState(markAsDirty);
+    }
+
+    @Override
+    protected ComponentRendererState getState() {
+        return (ComponentRendererState) super.getState();
     }
 }

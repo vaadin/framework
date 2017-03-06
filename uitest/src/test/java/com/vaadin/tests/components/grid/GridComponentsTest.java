@@ -2,6 +2,7 @@ package com.vaadin.tests.components.grid;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
@@ -10,6 +11,47 @@ import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridComponentsTest extends MultiBrowserTest {
+
+    @Test
+    public void testReuseTextFieldOnScroll() {
+        openTestURL();
+        GridElement grid = $(GridElement.class).first();
+        editTextFieldInCell(grid, 0, 1);
+        // Scroll out of view port
+        grid.getRow(900);
+        // Scroll back
+        grid.getRow(0);
+
+        WebElement textField = grid.getCell(0, 1)
+                .findElement(By.tagName("input"));
+        Assert.assertEquals("TextField value was reset", "Foo",
+                textField.getAttribute("value"));
+        Assert.assertTrue("No mention in the log",
+                logContainsText("1. Reusing old text field for: Row 0"));
+    }
+
+    @Test
+    public void testReuseTextFieldOnSelect() {
+        openTestURL();
+        GridElement grid = $(GridElement.class).first();
+        editTextFieldInCell(grid, 1, 1);
+        // Select row
+        grid.getCell(1, 1).click(1, 1);
+
+        WebElement textField = grid.getCell(1, 1)
+                .findElement(By.tagName("input"));
+        Assert.assertEquals("TextField value was reset", "Foo",
+                textField.getAttribute("value"));
+        Assert.assertTrue("No mention in the log",
+                logContainsText("1. Reusing old text field for: Row 1"));
+    }
+
+    private void editTextFieldInCell(GridElement grid, int row, int col) {
+        WebElement textField = grid.getCell(row, col)
+                .findElement(By.tagName("input"));
+        textField.clear();
+        textField.sendKeys("Foo");
+    }
 
     @Test
     public void testRow5() {
