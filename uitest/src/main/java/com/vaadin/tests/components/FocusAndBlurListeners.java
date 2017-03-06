@@ -1,11 +1,13 @@
 package com.vaadin.tests.components;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -48,7 +50,7 @@ public class FocusAndBlurListeners extends TestBase {
         TextField tf = new TextField("TextField");
         l.addComponent(tf);
 
-        AbstractDateField df = new TestDateField("DateField");
+        AbstractDateField<?, ?> df = new TestDateField("DateField");
         l.addComponent(df);
 
         ComboBox cb = new ComboBox("ComboBox");

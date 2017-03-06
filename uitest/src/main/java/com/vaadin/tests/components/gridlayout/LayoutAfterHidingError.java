@@ -16,8 +16,11 @@
 
 package com.vaadin.tests.components.gridlayout;
 
+import java.time.LocalDate;
+
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
@@ -39,7 +42,7 @@ public class LayoutAfterHidingError extends AbstractReindeerTestUI {
         gl.setWidth("100%");
         panel.setContent(gl);
 
-        final AbstractDateField df = new TestDateField();
+        final AbstractDateField<?, ?> df = new TestDateField();
         df.setWidth("100%");
         gl.addComponent(df);
 

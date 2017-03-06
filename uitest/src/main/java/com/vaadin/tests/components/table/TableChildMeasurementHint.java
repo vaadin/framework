@@ -1,6 +1,9 @@
 package com.vaadin.tests.components.table;
 
+import java.time.LocalDate;
+
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
@@ -152,7 +155,7 @@ public class TableChildMeasurementHint extends AbstractReindeerTestUI {
         table.addGeneratedColumn("First_Name" + 4, new Table.ColumnGenerator() {
             @Override
             public Object generateCell(Table components, Object o, Object o2) {
-                AbstractDateField b = new TestDateField("DateField");
+                AbstractDateField<?, ?> b = new TestDateField("DateField");
                 b.setWidthUndefined();
                 return b;
             }
