@@ -138,6 +138,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                                 .valueOf(getState().dropEffect.name()));
             }
 
+            // Add drop target indicator in case the element doesn't have one
+            addTargetIndicator(event);
+
             // Prevent default to allow drop
             nativeEvent.preventDefault();
             nativeEvent.stopPropagation();
@@ -223,7 +226,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * Add class that indicates that the component is a target.
      *
      * @param event
-     *         The drag enter event that triggered the indication.
+     *         The drag enter or dragover event that triggered the indication.
      */
     protected void addTargetIndicator(Event event) {
         getDropTargetElement().addClassName(CLASS_DRAG_OVER);
