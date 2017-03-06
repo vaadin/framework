@@ -18,8 +18,8 @@ package com.vaadin.shared.ui.grid.renderers;
 /**
  * Shared state for ComponentRenderer.
  *
- * @author Vaadin Ltd
- *
+ * @author Vaadin
+ * @since 8.1
  */
 public class ComponentRendererState extends AbstractRendererState {
 
