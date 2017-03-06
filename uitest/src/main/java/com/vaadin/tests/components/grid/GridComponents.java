@@ -18,7 +18,8 @@ import com.vaadin.ui.renderers.ComponentRenderer;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridComponents extends AbstractTestUIWithLog {
 
-    Map<String, TextField> textFields = new HashMap<>();
+    private Map<String, TextField> textFields = new HashMap<>();
+    private int counter = 0;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -46,10 +47,18 @@ public class GridComponents extends AbstractTestUIWithLog {
             return button;
         }, new ComponentRenderer());
 
-        c.setItems(IntStream.range(0, 1000).boxed().map(i -> "Row " + i));
-
         addComponent(c);
         c.setSizeFull();
+
+        Button resetData = new Button("Reset data", e -> {
+            c.setItems(IntStream.range(0, 1000).boxed()
+                    .map(i -> "Row " + (i + (counter * 1000))));
+            textFields.clear();
+            ++counter;
+        });
+        resetData.click();
+        addComponent(resetData);
+
     }
 
 }

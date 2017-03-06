@@ -1015,7 +1015,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         @Override
         public void destroyAllData() {
-            activeComponents.keySet().forEach(this::destroyData);
+            // Make a defensive copy of keys, as the map gets cleared when
+            // removing components.
+            new HashSet<>(activeComponents.keySet())
+                    .forEach(this::removeComponent);
         }
 
         /**

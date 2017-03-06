@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.NotificationElement;
@@ -46,6 +47,14 @@ public class GridComponentsTest extends MultiBrowserTest {
                 logContainsText("1. Reusing old text field for: Row 1"));
     }
 
+    @Test
+    public void testReplaceData() {
+        openTestURL();
+        assertRowExists(5, "Row 5");
+        $(ButtonElement.class).caption("Reset data").first().click();
+        assertRowExists(5, "Row 1005");
+    }
+
     private void editTextFieldInCell(GridElement grid, int row, int col) {
         WebElement textField = grid.getCell(row, col)
                 .findElement(By.tagName("input"));
@@ -77,7 +86,7 @@ public class GridComponentsTest extends MultiBrowserTest {
                 row.getCell(0).getText());
         row.findElement(By.id(string.replace(' ', '_').toLowerCase())).click();
         // IE 11 is slow, need to wait for the notification.
-        waitForElementPresent(By.vaadin("//Notification"));
+        waitUntil(driver -> isElementPresent(NotificationElement.class), 10);
         Assert.assertTrue("Notification should contain given text",
                 $(NotificationElement.class).first().getText()
                         .contains(string));
