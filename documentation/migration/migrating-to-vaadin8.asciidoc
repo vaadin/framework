@@ -67,11 +67,11 @@ Applications still using any of these themes must include this package.
 
 For migration of projects using Vaadin Pro Tools check the following sections:
 
-* <<dummy/../../../charts/java-api/charts-migration-vaadin8, "Charts 3 to Charts 4 Migration Guide">> 
+* <<dummy/../../../charts/java-api/charts-migration-vaadin8.asciidoc#charts4.migration, "Charts 3 to Charts 4 Migration Guide">> 
 
-* <<dummy/../../../testbench/testbench-migration.asciidoc, "TestBench 4 to TestBench 5 Migration Guide">> 
+* <<dummy/../../../testbench/testbench-migration.asciidoc#testbench.migration, "TestBench 4 to TestBench 5 Migration Guide">> 
 
-* <<dummy/../../../spreadsheet/spreadsheet-migration-vaaadin8.asciidoc, "Spreadsheet 1 to Spreadsheet 2 Migration Guide">> 
+* <<dummy/../../../spreadsheet/spreadsheet-migration-vaaadin8.asciidoc#spreadsheet.migration, "Spreadsheet 1 to Spreadsheet 2 Migration Guide">> 
 
 ==== Add-ons
 
