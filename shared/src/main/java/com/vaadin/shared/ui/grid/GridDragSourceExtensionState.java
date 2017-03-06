@@ -26,8 +26,13 @@ import com.vaadin.shared.ui.dnd.DragSourceState;
 public class GridDragSourceExtensionState extends DragSourceState {
 
     /**
-     * Data type for storing the dragged row's data
+     * Data type for storing the dragged row's data.
      */
-    public static final String DATA_TYPE_ROW_DATA = "grid-row-data";
+    public static final String DATA_TYPE_DRAG_DATA = "grid-drag-data";
+
+    /**
+     * Json key for storing data for a dragged row.
+     */
+    public static final String JSONKEY_DRAG_DATA = "drag-data";
 
 }

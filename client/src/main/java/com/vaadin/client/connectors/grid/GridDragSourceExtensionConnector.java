@@ -66,10 +66,25 @@ public class GridDragSourceExtensionConnector extends
 
             JsonObject rowData = gridConnector.getDataSource().getRow(rowIndex);
 
+            // Set drag data in DataTransfer object
             ((NativeEvent) event).getDataTransfer()
-                    .setData(GridDragSourceExtensionState.DATA_TYPE_ROW_DATA,
-                            rowData.toJson());
+                    .setData(GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA,
+                            getDragData(rowData).toJson());
         }
+    }
+
+    /**
+     * Gets drag data from the row data if exists or returns complete row data
+     * otherwise.
+     *
+     * @param row
+     *         Row data.
+     * @return Drag data if present or row data otherwise.
+     */
+    private JsonObject getDragData(JsonObject row) {
+        return row.hasKey(GridDragSourceExtensionState.JSONKEY_DRAG_DATA)
+                ? row.getObject(GridDragSourceExtensionState.JSONKEY_DRAG_DATA)
+                : row;
     }
 
     @Override
