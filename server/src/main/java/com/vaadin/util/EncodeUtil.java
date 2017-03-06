@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
  * Utilities related to various encoding schemes.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 7.7.7
  */
 public final class EncodeUtil {
     private static final Charset UTF8 = Charset.forName("UTF-8");
