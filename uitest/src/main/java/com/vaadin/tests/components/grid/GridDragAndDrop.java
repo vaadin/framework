@@ -37,9 +37,8 @@ import elemental.json.JsonObject;
 public class GridDragAndDrop extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
-        // Drag source
+        // Drag source Grid
         Grid<Bean> dragSourceComponent = new Grid<>();
-
         dragSourceComponent.setItems(createItems(50));
         dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
         dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
@@ -52,21 +51,22 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
             return ret;
         });
 
-        // Drop target
-        Grid<Bean> dropTargetGrid = new Grid<>();
-        dropTargetGrid.setItems(createItems(5));
-        dropTargetGrid.addColumn(Bean::getId).setCaption("ID");
-        dropTargetGrid.addColumn(Bean::getValue).setCaption("Value");
-        GridDropTargetExtension dropTargetExt = new GridDropTargetExtension(
-                dropTargetGrid);
-        dropTargetExt.addDropListener(event -> {
+        // Drop target Grid
+        Grid<Bean> dropTargetComponent = new Grid<>();
+        dropTargetComponent.setItems(createItems(5));
+        dropTargetComponent.addColumn(Bean::getId).setCaption("ID");
+        dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
+
+        GridDropTargetExtension dropTarget = new GridDropTargetExtension(
+                dropTargetComponent);
+        dropTarget.addDropListener(event -> {
             log(event.getTransferData(
                     GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA));
         });
 
         // Layout grids
         Layout layout = new HorizontalLayout();
-        layout.addComponents(dragSourceComponent, dropTargetGrid);
+        layout.addComponents(dragSourceComponent, dropTargetComponent);
 
         // Selection mode combo box
         ComboBox<Grid.SelectionMode> selectionModeSwitch = new ComboBox<>(
