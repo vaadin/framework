@@ -63,6 +63,16 @@ The full list of compatibility packages available for Framework 8 are the follow
 IMPORTANT: The themes Reindeer, Runo, Chameleon and Base have been deprecated in Vaadin Framework 8 and they now reside in the compatibility-themes package.
 Applications still using any of these themes must include this package.
 
+==== Pro Tools
+
+For migration of projects using Vaadin Pro Tools check the following sections:
+
+* <<dummy/../../../charts/java-api/charts-migration-vaadin8, "Charts 3 to Charts 4 Migration Guide">> 
+
+* <<dummy/../../../testbench/testbench-migration.asciidoc, "TestBench 4 to TestBench 5 Migration Guide">> 
+
+* <<dummy/../../../spreadsheet/spreadsheet-migration-vaaadin8.asciidoc, "Spreadsheet 1 to Spreadsheet 2 Migration Guide">> 
+
 ==== Add-ons
 
 As with projects themselves, some addons built for Framework 7 will not be directly compatible with Framework 8, thus any add-on dependencies must also be updated to versions that are compatible with Framework 8.
