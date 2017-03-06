@@ -87,7 +87,8 @@ public class VOptionGroup extends VOptionGroupBase
      */
     private boolean blurOccured = false;
 
-    private boolean htmlContentAllowed = false;
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean htmlContentAllowed = false;
 
     private boolean wasHtmlContentAllowed = false;
     private boolean wasMultiselect = false;
@@ -137,7 +138,7 @@ public class VOptionGroup extends VOptionGroupBase
             final UIDL opUidl = (UIDL) it.next();
 
             String itemHtml = opUidl.getStringAttribute("caption");
-            if (!isHtmlContentAllowed()) {
+            if (!htmlContentAllowed) {
                 itemHtml = WidgetUtil.escapeHTML(itemHtml);
             }
 
@@ -152,8 +153,7 @@ public class VOptionGroup extends VOptionGroupBase
 
             // Need to recreate object if isMultiselect is changed (#10451)
             // OR if htmlContentAllowed changed due to Safari 5 issue
-            if ((op == null)
-                    || (isHtmlContentAllowed() != wasHtmlContentAllowed)
+            if ((op == null) || (htmlContentAllowed != wasHtmlContentAllowed)
                     || (isMultiselect() != wasMultiselect)) {
                 // Create a new element
                 if (isMultiselect()) {
@@ -195,7 +195,7 @@ public class VOptionGroup extends VOptionGroupBase
             }
         }
 
-        wasHtmlContentAllowed = isHtmlContentAllowed();
+        wasHtmlContentAllowed = htmlContentAllowed;
         wasMultiselect = isMultiselect();
     }
 
@@ -310,13 +310,5 @@ public class VOptionGroup extends VOptionGroupBase
                 }
             });
         }
-    }
-
-    public boolean isHtmlContentAllowed() {
-        return htmlContentAllowed;
-    }
-
-    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        this.htmlContentAllowed = htmlContentAllowed;
     }
 }
