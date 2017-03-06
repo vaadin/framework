@@ -26,6 +26,7 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.util.PortableRandom;
 import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.renderers.NumberRenderer;
 
 public class GridInitiallyHiddenColumns extends AbstractTestUIWithLog {
@@ -36,8 +37,11 @@ public class GridInitiallyHiddenColumns extends AbstractTestUIWithLog {
 
         grid.addColumn(Person::getFirstName).setHidden(true).setHidable(true)
                 .setCaption("First Name");
-        grid.addColumn(Person::getLastName).setHidable(true)
-                .setCaption("Last Name");
+        Column<Person, String> col2 = grid.addColumn(Person::getLastName)
+                .setHidable(true).setCaption("Last Name");
+        if (request.getParameter("allHidden") != null) {
+            col2.setHidden(true);
+        }
         grid.addColumn(Person::getAge, new NumberRenderer()).setHidden(true)
                 .setHidable(true).setCaption("Age");
 
