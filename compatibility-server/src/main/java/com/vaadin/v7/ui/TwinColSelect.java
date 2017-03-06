@@ -106,6 +106,7 @@ public class TwinColSelect extends AbstractSelect {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        target.addAttribute("type", "twincol");
         // Width is no longer based on columns
         // Adds the number of rows
         if (rows != 0) {
