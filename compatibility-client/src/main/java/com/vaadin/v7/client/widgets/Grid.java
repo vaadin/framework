@@ -1316,23 +1316,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private static final String ERROR_CLASS_NAME = "error";
         private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
 
-        ScheduledCommand fieldFocusCommand = new ScheduledCommand() {
-            private int count = 0;
-
-            @Override
-            public void execute() {
-                Element focusedElement = WidgetUtil.getFocusedElement();
-                if (focusedElement == grid.getElement()
-                        || focusedElement == Document.get().getBody()
-                        || count > 2) {
-                    focusColumn(focusedColumnIndexDOM);
-                } else {
-                    ++count;
-                    Scheduler.get().scheduleDeferred(this);
-                }
-            }
-        };
-
         /**
          * A handler for events related to the Grid editor. Responsible for
          * opening, moving or closing the editor based on the received event.
