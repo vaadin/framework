@@ -34,7 +34,7 @@ import com.vaadin.data.Property;
 /**
  * <p>
  * A wrapper class for adding external hierarchy to containers not implementing
- * the {@link com.vaadin.data.Container.Hierarchical} interface.
+ * the {@link Container.Hierarchical} interface.
  * </p>
  *
  * <p>
@@ -356,7 +356,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * this method fails and <code>false</code> is returned; the children must
      * be first explicitly removed with
      * {@link #setParent(Object itemId, Object newParentId)} or
-     * {@link com.vaadin.data.Container#removeItem(Object itemId)}.
+     * {@link Container#removeItem(Object itemId)}.
      * </p>
      *
      * @param itemId
@@ -736,7 +736,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -761,7 +761,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -786,7 +786,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -811,7 +811,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated

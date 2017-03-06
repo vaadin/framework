@@ -30,11 +30,6 @@ import com.vaadin.shared.AbstractComponentState;
  */
 public interface ComponentConnector extends ServerConnector {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.client.VPaintable#getState()
-     */
     @Override
     public AbstractComponentState getState();
 

@@ -27,7 +27,7 @@ public class MethodPropertyTest {
 
     @Before
     public void setup() {
-        testObject = new NestedMethodPropertyTest.Address("some street", 123);
+        testObject = new Address("some street", 123);
     }
 
     @Test

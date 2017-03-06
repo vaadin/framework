@@ -49,7 +49,7 @@ public interface FormFieldFactory extends Serializable {
      *            is {@link Form}. uiContext will not necessary be the parent
      *            component of the field, but the one that is responsible for
      *            creating it.
-     * @return Field the field suitable for editing the specified data.
+     * @return the field suitable for editing the specified data.
      */
     Field<?> createField(Item item, Object propertyId, Component uiContext);
 }

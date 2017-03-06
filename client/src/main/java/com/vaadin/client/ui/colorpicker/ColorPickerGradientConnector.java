@@ -30,8 +30,7 @@ import com.vaadin.ui.components.colorpicker.ColorPickerGradient;
 
 /**
  * A class that defines the default implementation for a color picker gradient
- * connector. Connects the server side
- * {@link com.vaadin.ui.components.colorpicker.ColorPickerGradient} with the
+ * connector. Connects the server side {@link ColorPickerGradient} with the
  * client side counterpart {@link VColorPickerGradient}
  *
  * @since 7.0.0

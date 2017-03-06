@@ -25,20 +25,16 @@ import com.vaadin.ui.Component.Focusable;
  * value that the user can change through the user interface.
  *
  * Field components are built upon the framework defined in the Field interface
- * and the {@link com.vaadin.AbstractField} base class.
+ * and the {@link AbstractField} base class.
  *
- * The Field interface inherits the {@link com.vaadin.ui.Component}
- * superinterface and also the {@link com.vaadin.ui.Property} interface to have
- * a value for the field.
- *
+ * The Field interface inherits the {@link Component} superinterface and also
+ * the {@link Property} interface to have a value for the field.
  *
  * @author Vaadin Ltd.
  *
- * @param T
+ * @param <T>
  *            the type of values in the field, which might not be the same type
  *            as that of the data source if converters are used
- *
- * @author IT Mill Ltd.
  */
 public interface Field<T> extends Component, BufferedValidatable, Property<T>,
         Property.ValueChangeNotifier, Property.ValueChangeListener,

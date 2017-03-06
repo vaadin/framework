@@ -257,7 +257,7 @@ public class GAEVaadinServlet extends VaadinServlet {
 
             String id = AC_BASE + session.getId();
             Date expire = new Date(
-                    started + (getMaxInactiveIntervalSeconds(session) * 1000));
+                    started + getMaxInactiveIntervalSeconds(session) * 1000);
             Expiration expires = Expiration.onDate(expire);
 
             memcache.put(id, bytes, expires);

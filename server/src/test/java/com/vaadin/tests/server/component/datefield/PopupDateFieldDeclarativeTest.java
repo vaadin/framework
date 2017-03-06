@@ -21,11 +21,10 @@ import org.junit.Test;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.design.DeclarativeTestBase;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.PopupDateField;
 
 /**
- * Tests the declarative support for implementations of {@link DateField}.
+ * Tests the declarative support for implementations of {@link PopupDateField}.
  *
  * @since 7.4
  * @author Vaadin Ltd
