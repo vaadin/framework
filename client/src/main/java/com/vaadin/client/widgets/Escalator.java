@@ -3644,19 +3644,36 @@ public class Escalator extends Widget
             final int maxEscalatorRows = getMaxEscalatorRowCapacity();
             final int neededEscalatorRows = Math.min(maxEscalatorRows,
                     body.getRowCount());
+            int currentRowCount = visualRowOrder.size();
             final int neededEscalatorRowsDiff = neededEscalatorRows
-                    - visualRowOrder.size();
+                    - currentRowCount;
+
+            if (neededEscalatorRowsDiff == 0) {
+                // Exact match, nothing to do
+                return;
+            } else if (neededEscalatorRowsDiff < 0
+                    && currentRowCount < body.getRowCount()) {
+                // There are more rows than strictly needed but still no more
+                // than data rows. Nothing has to be done.
+                return;
+            }
 
             if (neededEscalatorRowsDiff > 0) {
-                // needs more
-
+                // Add some more rows so that we do not end up in the situation
+                // that removing a scrollbar requires us to add rows.
+                int toAdd = Math.min(neededEscalatorRows + 5,
+                        body.getRowCount()) - currentRowCount;
+                getLogger().info("Adjusting escalator row count from "
+                        + currentRowCount + " to " + (currentRowCount + toAdd)
+                        + " (requested " + neededEscalatorRowsDiff
+                        + " more rows)");
                 /*
                  * This is a workaround for the issue where we might be scrolled
                  * to the bottom, and the widget expands beyond the content
                  * range
                  */
 
-                final int index = visualRowOrder.size();
+                final int index = currentRowCount;
                 final int nextLastLogicalIndex;
                 if (!visualRowOrder.isEmpty()) {
                     nextLastLogicalIndex = getLogicalRowIndex(
@@ -3666,10 +3683,10 @@ public class Escalator extends Widget
                 }
 
                 final boolean contentWillFit = nextLastLogicalIndex < getRowCount()
-                        - neededEscalatorRowsDiff;
+                        - toAdd;
                 if (contentWillFit) {
                     final List<TableRowElement> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
-                            index, neededEscalatorRowsDiff);
+                            index, toAdd);
 
                     /*
                      * Since fillAndPopulateEscalatorRowsIfNeeded operates on
@@ -3710,8 +3727,7 @@ public class Escalator extends Widget
                     final double oldScrollTop = getScrollTop();
                     setScrollTop(0);
                     scroller.onScroll();
-                    fillAndPopulateEscalatorRowsIfNeeded(index,
-                            neededEscalatorRowsDiff);
+                    fillAndPopulateEscalatorRowsIfNeeded(index, toAdd);
                     setScrollTop(oldScrollTop);
                     scroller.onScroll();
                 }
@@ -3719,6 +3735,8 @@ public class Escalator extends Widget
 
             else if (neededEscalatorRowsDiff < 0) {
                 // needs less
+                getLogger().info("Adjusting escalator row count from "
+                        + currentRowCount + " to " + neededEscalatorRows);
 
                 final ListIterator<TableRowElement> iter = visualRowOrder
                         .listIterator(visualRowOrder.size());
@@ -3755,9 +3773,7 @@ public class Escalator extends Widget
                 }
             }
 
-            if (neededEscalatorRowsDiff != 0) {
-                fireRowVisibilityChangeEvent();
-            }
+            fireRowVisibilityChangeEvent();
 
             Profiler.leave("Escalator.BodyRowContainer.verifyEscalatorCount");
         }
@@ -4171,7 +4187,9 @@ public class Escalator extends Widget
             }
 
             scroller.recalculateScrollbarsForVirtualViewport();
-            body.verifyEscalatorCount();
+            // Changing columns used to recalculate needed rows here but this
+            // must not be done. If grid is in the process of hiding a column,
+            // it will not return correct data for renderers etc at this point.
 
             if (getColumnConfiguration().getColumnCount() > 0) {
                 reapplyRowWidths(header);
