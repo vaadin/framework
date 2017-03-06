@@ -116,6 +116,7 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
+import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -832,6 +833,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private DescriptionGenerator<T> descriptionGenerator;
 
         private Binding<T, ?> editorBinding;
+        private Map<T, Component> activeComponents = new HashMap<>();
 
         private String userId;
 
@@ -962,6 +964,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             V providerValue = valueProvider.apply(data);
 
+            // Make Grid track components.
+            if (renderer instanceof ComponentRenderer
+                    && providerValue instanceof Component) {
+                activeComponents.put(data, (Component) providerValue);
+                addComponentToGrid((Component) providerValue);
+            }
             JsonValue rendererValue = renderer.encode(providerValue);
 
             obj.put(communicationId, rendererValue);
@@ -980,6 +988,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     descriptionObj.put(communicationId, description);
                 }
             }
+        }
+
+        @Override
+        public void destroyData(T item) {
+            Component component = activeComponents.remove(item);
+            if (component != null) {
+                removeComponentFromGrid(component);
+            }
+        }
+
+        @Override
+        public void destroyAllData() {
+            activeComponents.keySet().forEach(this::destroyData);
         }
 
         /**
