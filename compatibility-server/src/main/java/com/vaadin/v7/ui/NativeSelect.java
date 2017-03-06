@@ -42,6 +42,9 @@ import com.vaadin.v7.event.FieldEvents;
 public class NativeSelect extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
+    // width in characters, mimics TextField
+    private int columns = 0;
+
     public NativeSelect() {
         super();
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
@@ -62,9 +65,53 @@ public class NativeSelect extends AbstractSelect
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
     }
 
+    /**
+     * Sets the width of the component so that it can display approximately the
+     * given number of letters.
+     * <p>
+     * Calling {@code setColumns(10);} is equivalent to calling
+     * {@code setWidth("10em");}
+     * </p>
+     *
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
+     * @param columns
+     *            the number of columns to set.
+     */
+    @Deprecated
+    public void setColumns(int columns) {
+        if (columns < 0) {
+            columns = 0;
+        }
+        if (this.columns != columns) {
+            this.columns = columns;
+            markAsDirty();
+        }
+    }
+
+    /**
+     * Gets the number of columns for the component.
+     *
+     * @see #setColumns(int)
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
+     */
+    @Deprecated
+    public int getColumns() {
+        return columns;
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "native");
+        // Adds the number of columns
+        if (columns != 0) {
+            target.addAttribute("cols", columns);
+        }
 
         super.paintContent(target);
     }
