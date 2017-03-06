@@ -13,9 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid;
+package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertTrue;
+
+import java.util.logging.Level;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,6 +39,18 @@ public class InitialFrozenColumnsTest extends MultiBrowserTest {
                 isElementPresent(NotificationElement.class));
 
         WebElement cell = $(GridElement.class).first().getCell(0, 0);
+        assertTrue(cell.getAttribute("class").contains("frozen"));
+    }
+
+    @Test
+    public void testInitialAllColumnsFrozen() {
+        setDebug(true);
+        openTestURL("frozen=3");
+
+        Assert.assertFalse("Notification was present",
+                isElementPresent(NotificationElement.class));
+        assertNoDebugMessage(Level.SEVERE);
+        WebElement cell = $(GridElement.class).first().getCell(0, 2);
         assertTrue(cell.getAttribute("class").contains("frozen"));
     }
 }
