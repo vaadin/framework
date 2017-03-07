@@ -58,6 +58,7 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -560,6 +561,8 @@ public class MessageHandler {
 
                 endRequestIfResponse(json);
                 resumeResponseHandling(lock);
+
+                ConnectorBundleLoader.get().ensureDeferredBundleLoaded();
 
                 if (Profiler.isEnabled()) {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
