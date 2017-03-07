@@ -290,12 +290,12 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
 
         /*
-         * we check for row -2 instead of -1, because escalator has the one row
+         * we check for row -3 instead of -1, because escalator has two rows
          * buffered underneath the footer
          */
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_75);
         Thread.sleep(500);
-        assertEquals("Row 75: 0,75", getBodyCell(-2, 0).getText());
+        assertEquals("Row 75: 0,75", getBodyCell(-3, 0).getText());
 
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_25);
         Thread.sleep(500);
