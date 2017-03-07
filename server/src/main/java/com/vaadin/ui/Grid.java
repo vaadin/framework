@@ -3708,6 +3708,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 getFooter().readDesign(child, context);
             }
         }
+
+        // Sync default header captions to column captions
+        if (getDefaultHeaderRow() != null) {
+            for (Column<T, ?> c : getColumns()) {
+                HeaderCell headerCell = getDefaultHeaderRow().getCell(c);
+                if (headerCell.getCellType() == GridStaticCellType.TEXT) {
+                    c.setCaption(headerCell.getText());
+                }
+            }
+        }
     }
 
     private void readData(Element body,
