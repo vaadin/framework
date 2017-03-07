@@ -7,13 +7,16 @@ layout: page
 [[advanced.urifu]]
 = Managing URI Fragments
 
+NOTE: This chapter contains instructions how to manage URI fragments. As browser support for HTML5 History API has improved, developers should in most cases developers instead use real URIs with _pushState_ method. Read more from 
+<<dummy/../../../framework/advanced/advanced-navigator#advanced.pushstate,"Manipulating Browser History">>.
+
 A major issue in AJAX applications is that as they run in a single web page,
 bookmarking the application URL (or more generally the __URI__) can only
 bookmark the application, not an application state. This is a problem for many
 applications, such as product catalogs and discussion forums, in which it would
 be good to provide links to specific products or messages. Consequently, as
 browsers remember the browsing history by URI, the history and the
-[guibutton]#Back# button do not normally work. The solution is to use the
+[guibutton]#Back# button do not normally work. The solution before HTML5 API was available was to use the
 __fragment identifier__ part of the URI, which is separated from the primary
 part (address + path + optional query parameters) of the URI with the hash (#)
 character. For example:
@@ -31,7 +34,7 @@ the slash and the question mark.
 Vaadin offers two ways to enable the use of URI fragments: the high-level
 [classname]#Navigator# utility described in
 <<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
-in an Application">> and the low-level API described here.
+in an Application">> (if the legacy [classname]#UriFragmentManager# is configured for the Navigator) and the low-level API described here.
 
 [[advanced.urifu.setting]]
 == Setting the URI Fragment

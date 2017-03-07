@@ -168,4 +168,11 @@ public class ApplicationConstants implements Serializable {
      */
     public static final String WIDGETSET_VERSION_ID = "wsver";
 
+    /**
+     * A request attribute name to store the part of pathInfo that was used to
+     * select the UI. Will be used by default Navigator to separate view
+     * identifiers from UI.
+     **/
+    public static final String UI_ROOT_PATH = "com.vaadin.server.UI_ROOT_PATH";
+
 }

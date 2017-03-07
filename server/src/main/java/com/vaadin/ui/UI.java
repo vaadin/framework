@@ -62,6 +62,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSession.State;
 import com.vaadin.server.communication.PushConnection;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -657,6 +658,10 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     private String embedId;
 
+    private String uiPathInfo;
+
+    private String uiRootPath;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -734,6 +739,25 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         getPage().init(request);
 
+        String uiPathInfo = (String) request
+                .getAttribute(ApplicationConstants.UI_ROOT_PATH);
+        if (uiPathInfo != null) {
+            setUiPathInfo(uiPathInfo);
+        }
+
+        if (getSession().getConfiguration().isSendUrlsAsParameters()) {
+            String uiRootPath = getPage().getLocation().getPath();
+            if (getUiPathInfo() != null) {
+                uiRootPath = uiRootPath.substring(0,
+                        uiRootPath.indexOf(uiPathInfo) + uiPathInfo.length());
+            }
+            // TODO here is probably a bug with std view provider and when
+            // navigating to UI with special path parameters or view identifier.
+            // Should be somewhow handled. Should probably compare actual Page
+            // location with request path & servlet mapping or something.
+            setUiRootPath(uiRootPath);
+        }
+
         // Call the init overridden by the application developer
         init(request);
 
@@ -742,6 +766,40 @@ public abstract class UI extends AbstractSingleComponentContainer
             // Kickstart navigation if a navigator was attached in init()
             navigator.navigateTo(navigator.getState());
         }
+    }
+
+    private void setUiRootPath(String uiRootPath) {
+        this.uiRootPath = uiRootPath;
+    }
+
+    /**
+     * Gets the part of path (from browser's URL) that is points to this UI.
+     * Basically the same as the path from current {@link Page#getLocation()},
+     * but without possible view identifiers or path parameters.
+     *
+     * @return the part of path (from browser's URL) that points to this UI,
+     *         without possible view identifiers or path parameters
+     */
+    public String getUiRootPath() {
+        return uiRootPath;
+    }
+
+    private void setUiPathInfo(String uiPathInfo) {
+        this.uiPathInfo = uiPathInfo;
+    }
+
+    /**
+     * Gets the part of requests path info part that is used detect the UI or
+     * null if not declared. This is defined during UI init by certain
+     * UiProviders that map different UIs to different URIs, like Vaadin Spring.
+     * The detail is relevant for {@link Navigator} that uses HTML 5 pushState
+     * to deep link to different views.
+     *
+     * @return the part of requests path info, which is used to detect the UI or
+     *         null if not declared.
+     */
+    public String getUiPathInfo() {
+        return uiPathInfo;
     }
 
     /**
