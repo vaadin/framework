@@ -87,6 +87,7 @@ import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
@@ -102,6 +103,7 @@ import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
+import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
@@ -3874,6 +3876,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 readData(child, providers);
             } else if (child.tagName().equals("tfoot")) {
                 getFooter().readDesign(child, context);
+            }
+        }
+
+        // Sync default header captions to column captions
+        if (getDefaultHeaderRow() != null) {
+            for (Column<T, ?> c : getColumns()) {
+                HeaderCell headerCell = getDefaultHeaderRow().getCell(c);
+                if (headerCell.getCellType() == GridStaticCellType.TEXT) {
+                    c.setCaption(headerCell.getText());
+                }
             }
         }
     }
