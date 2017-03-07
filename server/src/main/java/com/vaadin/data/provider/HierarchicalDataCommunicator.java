@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.HierarchyMapper.TreeLevelQuery;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.shared.Range;
@@ -59,6 +60,12 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * The captured client side cache size.
      */
     private int latestCacheSize = INITIAL_FETCH_SIZE;
+
+    public HierarchicalDataCommunicator() {
+        super();
+        dataProvider = new InMemoryHierarchicalDataProvider<T>(
+                new HierarchyData<>());
+    }
 
     @Override
     protected HierarchicalDataCommunicatorState getState() {

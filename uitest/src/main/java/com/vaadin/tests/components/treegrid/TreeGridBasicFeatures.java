@@ -1,9 +1,13 @@
 package com.vaadin.tests.components.treegrid;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.HierarchyData;
+import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.TreeGrid;
 
@@ -12,7 +16,7 @@ import com.vaadin.ui.TreeGrid;
 public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
     private TreeGrid<HierarchicalTestBean> grid;
-    private InMemoryHierarchicalDataProvider inMemoryDataProvider = new InMemoryHierarchicalDataProvider();
+    private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
 
     @Override
     public TreeGrid getComponent() {
@@ -26,6 +30,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
     @Override
     protected void initializeComponents() {
+        initializeInMemoryDataProvider();
         grid = new TreeGrid<>();
         grid.setSizeFull();
         grid.addColumn(HierarchicalTestBean::toString).setCaption("String")
@@ -47,6 +52,25 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         super.createActions();
 
         createHierarchyColumnSelect();
+    }
+
+    private void initializeInMemoryDataProvider() {
+        HierarchyData<HierarchicalTestBean> data = new HierarchyData<>();
+
+        List<Integer> ints = Arrays.asList(1, 2, 3);
+
+        ints.stream().forEach(index -> {
+            HierarchicalTestBean parentBean = new HierarchicalTestBean(null, 0,
+                    index);
+            data.addItem(null, parentBean);
+            ints.stream()
+                    .forEach(childIndex -> data.addItem(
+                            parentBean,
+                            new HierarchicalTestBean(parentBean.getId(), 1,
+                                    childIndex)));
+        });
+
+        inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
     }
 
     private void createHierarchyColumnSelect() {

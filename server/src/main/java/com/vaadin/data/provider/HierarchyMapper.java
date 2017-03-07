@@ -37,7 +37,7 @@ public class HierarchyMapper implements Serializable {
     private static final Logger LOGGER = Logger
             .getLogger(HierarchyMapper.class.getName());
 
-    public static class TreeLevelQuery {
+    public static class TreeLevelQuery implements Serializable {
         final TreeNode node;
         final int startIndex;
         final int size;

@@ -15,15 +15,28 @@
  */
 package com.vaadin.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
+import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -52,20 +65,22 @@ public class TreeGrid<T> extends Grid<T> {
         });
     }
 
-    // TODO: construct a "flat" in memory hierarchical data provider?
     @Override
     public void setItems(Collection<T> items) {
-        throw new UnsupportedOperationException("Not implemented");
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(
+                new HierarchyData<T>().addItems(null, items)));
     }
 
     @Override
     public void setItems(Stream<T> items) {
-        throw new UnsupportedOperationException("Not implemented");
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(
+                new HierarchyData<T>().addItems(null, items)));
     }
 
     @Override
     public void setItems(T... items) {
-        throw new UnsupportedOperationException("Not implemented");
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(
+                new HierarchyData<T>().addItems(null, items)));
     }
 
     @Override
@@ -116,16 +131,89 @@ public class TreeGrid<T> extends Grid<T> {
 
     @Override
     public HierarchicalDataProvider<T, ?> getDataProvider() {
-        DataProvider<T, ?> dataProvider = super.getDataProvider();
-        // FIXME DataCommunicator by default has a CallbackDataProvider if no
-        // DataProvider is set, resulting in a class cast exception if we don't
-        // check it here.
-
-        // Once fixed, remove this method from the exclude list in
-        // StateGetDoesNotMarkDirtyTest
-        if (!(dataProvider instanceof HierarchicalDataProvider)) {
-            throw new IllegalStateException("No data provider has been set.");
+        if (!(super.getDataProvider() instanceof HierarchicalDataProvider)) {
+            return null;
         }
-        return (HierarchicalDataProvider<T, ?>) dataProvider;
+        return (HierarchicalDataProvider<T, ?>) super.getDataProvider();
+    }
+
+    @Override
+    protected void doReadDesign(Element design, DesignContext context) {
+        super.doReadDesign(design, context);
+        Attributes attrs = design.attributes();
+        if (attrs.hasKey("hierarchy-column")) {
+            setHierarchyColumn(DesignAttributeHandler
+                    .readAttribute("hierarchy-column", attrs, String.class));
+        }
+    }
+
+    @Override
+    protected void readData(Element body,
+            List<DeclarativeValueProvider<T>> providers) {
+        getSelectionModel().deselectAll();
+        List<T> selectedItems = new ArrayList<>();
+        HierarchyData<T> data = new HierarchyData<T>();
+
+        for (Element row : body.children()) {
+            T item = deserializeDeclarativeRepresentation(row.attr("item"));
+            T parent = null;
+            if (row.hasAttr("parent")) {
+                parent = deserializeDeclarativeRepresentation(
+                        row.attr("parent"));
+            }
+            data.addItem(parent, item);
+            if (row.hasAttr("selected")) {
+                selectedItems.add(item);
+            }
+            Elements cells = row.children();
+            int i = 0;
+            for (Element cell : cells) {
+                providers.get(i).addValue(item, cell.html());
+                i++;
+            }
+        }
+
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+        selectedItems.forEach(getSelectionModel()::select);
+    }
+
+    @Override
+    protected void doWriteDesign(Element design, DesignContext designContext) {
+        super.doWriteDesign(design, designContext);
+        if (getColumnByInternalId(getState(false).hierarchyColumnId) != null) {
+            String hierarchyColumn = getColumnByInternalId(
+                    getState(false).hierarchyColumnId).getId();
+            DesignAttributeHandler.writeAttribute("hierarchy-column",
+                    design.attributes(), hierarchyColumn, null, String.class,
+                    designContext);
+        }
+    }
+
+    @Override
+    protected void writeData(Element body, DesignContext designContext) {
+        getDataProvider().fetch(new HierarchicalQuery<>(null, null))
+                .forEach(item -> writeRow(body, item, null, designContext));
+    }
+
+    private void writeRow(Element container, T item, T parent,
+            DesignContext context) {
+        Element tableRow = container.appendElement("tr");
+        tableRow.attr("item", serializeDeclarativeRepresentation(item));
+        if (parent != null) {
+            tableRow.attr("parent", serializeDeclarativeRepresentation(parent));
+        }
+        if (getSelectionModel().isSelected(item)) {
+            tableRow.attr("selected", "");
+        }
+        for (Column<T, ?> column : getColumns()) {
+            Object value = column.getValueProvider().apply(item);
+            tableRow.appendElement("td")
+                    .append(Optional.ofNullable(value).map(Object::toString)
+                            .map(DesignFormatter::encodeForTextNode)
+                            .orElse(""));
+        }
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item))
+                .forEach(childItem -> writeRow(container, childItem, item,
+                        context));
     }
 }

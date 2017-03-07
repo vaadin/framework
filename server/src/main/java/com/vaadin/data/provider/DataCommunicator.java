@@ -188,7 +188,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
     /** Empty default data provider */
-    private DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
+    protected DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
             q -> Stream.empty(), q -> 0);
     private final DataKeyMapper<T> keyMapper;
 
