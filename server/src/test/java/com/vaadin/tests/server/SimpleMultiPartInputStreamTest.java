@@ -22,22 +22,23 @@ public class SimpleMultiPartInputStreamTest {
     protected void checkBoundaryDetection(byte[] input, String boundary,
             byte[] expected) throws Exception {
         ByteArrayInputStream bais = new ByteArrayInputStream(input);
-        SimpleMultiPartInputStream smpis = new SimpleMultiPartInputStream(bais,
-                boundary);
-        ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
-        int outbyte;
-        try {
-            while ((outbyte = smpis.read()) != -1) {
-                resultStream.write(outbyte);
+        try (SimpleMultiPartInputStream smpis = new SimpleMultiPartInputStream(bais,
+                boundary)) {
+            ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
+            int outbyte;
+            try {
+                while ((outbyte = smpis.read()) != -1) {
+                    resultStream.write(outbyte);
+                }
+            } catch (IOException e) {
+                throw new IOException(
+                        e.getMessage() + "; expected " + new String(expected)
+                        + " but got " + resultStream.toString());
             }
-        } catch (IOException e) {
-            throw new IOException(
-                    e.getMessage() + "; expected " + new String(expected)
-                            + " but got " + resultStream.toString());
-        }
-        if (!Arrays.equals(expected, resultStream.toByteArray())) {
-            throw new Exception("Mismatch: expected " + new String(expected)
-                    + " but got " + resultStream.toString());
+            if (!Arrays.equals(expected, resultStream.toByteArray())) {
+                throw new Exception("Mismatch: expected " + new String(expected)
+                        + " but got " + resultStream.toString());
+            }
         }
     }
 

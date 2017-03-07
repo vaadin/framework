@@ -942,16 +942,17 @@ public abstract class AbstractTB3Test extends ParallelTest {
             String hostName = ce.getAddressOfRemoteServer().getHost();
             int port = ce.getAddressOfRemoteServer().getPort();
             HttpHost host = new HttpHost(hostName, port);
-            DefaultHttpClient client = new DefaultHttpClient();
-            URL sessionURL = new URL("http://" + hostName + ":" + port
-                    + "/grid/api/testsession?session=" + d.getSessionId());
-            BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(
-                    "POST", sessionURL.toExternalForm());
-            HttpResponse response = client.execute(host, r);
-            JsonObject object = extractObject(response);
-            URL myURL = new URL(object.getString("proxyId"));
-            if ((myURL.getHost() != null) && (myURL.getPort() != -1)) {
-                return myURL.getHost();
+            try (DefaultHttpClient client = new DefaultHttpClient()) {
+                URL sessionURL = new URL("http://" + hostName + ":" + port
+                        + "/grid/api/testsession?session=" + d.getSessionId());
+                BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(
+                        "POST", sessionURL.toExternalForm());
+                HttpResponse response = client.execute(host, r);
+                JsonObject object = extractObject(response);
+                URL myURL = new URL(object.getString("proxyId"));
+                if ((myURL.getHost() != null) && (myURL.getPort() != -1)) {
+                    return myURL.getHost();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

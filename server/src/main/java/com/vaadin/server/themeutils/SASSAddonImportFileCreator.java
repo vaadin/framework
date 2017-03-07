@@ -85,9 +85,8 @@ public class SASSAddonImportFileCreator {
         LocationInfo info = ClassPathExplorer
                 .getAvailableWidgetSetsAndStylesheets();
 
-        try {
-            PrintStream printStream = new PrintStream(
-                    new FileOutputStream(addonImports));
+        try (PrintStream printStream = new PrintStream(
+                    new FileOutputStream(addonImports))) {
 
             printStream.println("/* " + ADDON_IMPORTS_FILE_TEXT + " */");
 
