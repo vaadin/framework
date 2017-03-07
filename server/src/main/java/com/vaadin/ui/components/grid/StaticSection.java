@@ -17,6 +17,7 @@ package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -405,6 +406,21 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         void addMergedCell(CELL newCell, Set<String> columnGroup) {
             rowState.cellGroups.put(newCell.getCellState(), columnGroup);
         }
+
+        public Collection<? extends Component> getComponents() {
+            List<Component> components = new ArrayList<>();
+            cells.forEach((id, cell) -> {
+                if (cell.getCellType() == GridStaticCellType.WIDGET) {
+                    components.add(cell.getComponent());
+                }
+            });
+            rowState.cellGroups.forEach((cellState, columnIds) -> {
+                if (cellState.connector != null) {
+                    components.add((Component) cellState.connector);
+                }
+            });
+            return components;
+        }
     }
 
     /**
@@ -534,7 +550,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         public GridStaticCellType getCellType() {
             return cellState.type;
         }
-        
+
         /**
          * Returns the custom style name for this cell.
          *
@@ -548,8 +564,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * Sets a custom style name for this cell.
          *
          * @param styleName
-         *            the style name to set or null to not use any style
-         *            name
+         *            the style name to set or null to not use any style name
          */
         public void setStyleName(String styleName) {
             cellState.styleName = styleName;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.server.component.grid;
+package com.vaadin.tests.server.component.grid;
 
 import java.util.Iterator;
 
@@ -21,22 +21,23 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.Grid.FooterCell;
-import com.vaadin.v7.ui.Grid.HeaderCell;
+import com.vaadin.ui.components.grid.FooterCell;
+import com.vaadin.ui.components.grid.HeaderCell;
 
 public class GridChildrenTest {
 
-    private Grid grid;
+    private Grid<Person> grid;
 
     @Before
     public void createGrid() {
-        grid = new Grid();
-        grid.addColumn("foo");
-        grid.addColumn("bar");
-        grid.addColumn("baz");
+        grid = new Grid<>();
+        grid.addColumn(Person::getFirstName).setId("foo");
+        grid.addColumn(Person::getLastName).setId("bar");
+        grid.addColumn(Person::getEmail).setId("baz");
 
     }
 
@@ -63,33 +64,12 @@ public class GridChildrenTest {
     }
 
     @Test
-    public void removeHeaderWithComponentInMergedHeaderCell() {
-        HeaderCell merged = grid.getDefaultHeaderRow().join("foo", "bar",
-                "baz");
-        Label label = new Label();
-        merged.setComponent(label);
-        Assert.assertEquals(grid, label.getParent());
-        grid.removeHeaderRow(0);
-        Assert.assertNull(label.getParent());
-    }
-
-    @Test
     public void removeComponentInMergedFooterCell() {
         FooterCell merged = grid.addFooterRowAt(0).join("foo", "bar", "baz");
         Label label = new Label();
         merged.setComponent(label);
         Assert.assertEquals(grid, label.getParent());
         merged.setText("foo");
-        Assert.assertNull(label.getParent());
-    }
-
-    @Test
-    public void removeFooterWithComponentInMergedFooterCell() {
-        FooterCell merged = grid.addFooterRowAt(0).join("foo", "bar", "baz");
-        Label label = new Label();
-        merged.setComponent(label);
-        Assert.assertEquals(grid, label.getParent());
-        grid.removeFooterRow(0);
         Assert.assertNull(label.getParent());
     }
 
