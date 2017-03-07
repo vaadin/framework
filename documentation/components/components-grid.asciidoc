@@ -504,9 +504,7 @@ must be between 0.0 and 1.0.
 
 [classname]#ComponentRenderer#:: Renders a Vaadin [classname]#Component# in a column. Since components
 are quite complex, the [classname]#ComponentRenderer# comes with possible performance issues.
-To use it efficiently you should use as few nested components as possible. The components displayed 
-are re-generated when data or selection changes. If you have a state in your component and not in the 
-data object, you need to handle storing it yourself.
+To use it efficiently you should use as few nested components as possible.
 
 +
 Use [classname]#Button# in [classname]#Grid#:
@@ -516,8 +514,32 @@ grid.addColumn(person -> {
       Button button = new Button("Click me!");
       button.addClickListener(click -> 
             Notification.show("Clicked: " + person.toString()));
-      return button
+      return button;
 }, new ComponentRenderer());
+----
+
+Components will occasionally be generated again during runtime. If you have a state in your 
+component and not in the data object, you need to handle storing it yourself. Below is a simple
+example on how to achieve this.
+
++
+Store a [classname]#TextField# with changed value.
++
+----
+Map<Person, TextField> textFields = new HashMap<>();
+grid.addColumn(person -> {
+      // Check for existing text field
+      if (textFields.containsKey(person)) {
+            return textFields.get(person);
+      }
+      // Create a new one
+      TextField textField = new TextField();
+      textField.setValue(person.getLastname());
+      // Store the text field when user updates the value
+      textField.addValueChangeListener(change -> 
+            textFields.put(person, textField));
+      return textField;
+      }, new ComponentRenderer());
 ----
 
 [[components.grid.renderer.custom]]

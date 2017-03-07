@@ -23,35 +23,35 @@ public class GridComponents extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid<String> c = new Grid<String>();
-        c.addColumn(t -> new Label(t), new ComponentRenderer());
-        c.addColumn(t -> {
-            if (textFields.containsKey(t)) {
-                log("Reusing old text field for: " + t);
-                return textFields.get(t);
+        Grid<String> grid = new Grid<String>();
+        grid.addColumn(string -> new Label(string), new ComponentRenderer());
+        grid.addColumn(string -> {
+            if (textFields.containsKey(string)) {
+                log("Reusing old text field for: " + string);
+                return textFields.get(string);
             }
 
             TextField textField = new TextField();
-            textField.setValue(t);
+            textField.setValue(string);
             textField.addValueChangeListener(e -> {
                 // Value of text field edited by user, store
-                textFields.put(t, textField);
+                textFields.put(string, textField);
             });
             return textField;
         }, new ComponentRenderer());
-        c.addColumn(t -> {
+        grid.addColumn(string -> {
             Button button = new Button("Click Me!",
-                    e -> Notification.show("Clicked button on row for: " + t,
+                    e -> Notification.show("Clicked button on row for: " + string,
                             Type.WARNING_MESSAGE));
-            button.setId(t.replace(' ', '_').toLowerCase());
+            button.setId(string.replace(' ', '_').toLowerCase());
             return button;
         }, new ComponentRenderer());
 
-        addComponent(c);
-        c.setSizeFull();
+        addComponent(grid);
+        grid.setSizeFull();
 
         Button resetData = new Button("Reset data", e -> {
-            c.setItems(IntStream.range(0, 1000).boxed()
+            grid.setItems(IntStream.range(0, 1000).boxed()
                     .map(i -> "Row " + (i + (counter * 1000))));
             textFields.clear();
             ++counter;

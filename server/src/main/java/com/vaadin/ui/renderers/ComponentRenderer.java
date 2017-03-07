@@ -31,7 +31,7 @@ import elemental.json.JsonValue;
  * generate and store, which will lead to performance problems.
  * <p>
  * <strong>Note:</strong> Components will occasionally be generated again during
- * runtime eg. when selection changes. If your component has an internal state
+ * runtime e.g. when selection changes. If your component has an internal state
  * that is not stored into the object, you should reuse the same component
  * instances.
  *
