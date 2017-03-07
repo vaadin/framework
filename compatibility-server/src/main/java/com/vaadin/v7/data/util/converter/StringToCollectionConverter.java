@@ -210,9 +210,9 @@ public class StringToCollectionConverter
         public Collection<?> createCollection(
                 Class<? extends Collection> type) {
             if (type.isAssignableFrom(ArrayList.class)) {
-                return new ArrayList();
+                return new ArrayList<Object>();
             } else if (type.isAssignableFrom(HashSet.class)) {
-                return new HashSet();
+                return new HashSet<Object>();
             } else if (!type.isInterface()
                     && !Modifier.isAbstract(type.getModifiers())) {
                 try {
@@ -221,7 +221,7 @@ public class StringToCollectionConverter
                 } catch (IllegalAccessException ignore) {
                 }
             }
-            return new ArrayList();
+            return new ArrayList<Object>();
         }
 
     }
