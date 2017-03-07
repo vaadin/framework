@@ -404,6 +404,20 @@ public class GridTest {
     }
 
     @Test
+    public void removeAllColumns() {
+        grid.removeAllColumns();
+
+        Assert.assertEquals(Collections.emptyList(), grid.getColumns());
+    }
+
+    @Test
+    public void removeAllColumnsInGridWithoutColumns() {
+        grid.removeAllColumns();
+        grid.removeAllColumns();
+        Assert.assertEquals(Collections.emptyList(), grid.getColumns());
+    }
+
+    @Test
     public void setColumns_reorder() {
         // Will remove other columns
         grid.setColumns("length", "foo");
