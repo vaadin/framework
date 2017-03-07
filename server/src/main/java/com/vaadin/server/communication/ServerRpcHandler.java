@@ -350,11 +350,9 @@ public class ServerRpcHandler implements Serializable {
                 final ClientConnector connector = connectorTracker
                         .getConnector(invocation.getConnectorId());
                 if (connector == null) {
-                    getLogger().log(Level.WARNING,
-                            "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
-                            new Object[] { invocation.getConnectorId(),
-                                    invocation.getInterfaceName(),
-                                    invocation.getMethodName() });
+                    logUnknownConnector(invocation.getConnectorId(),
+                            invocation.getInterfaceName(),
+                            invocation.getMethodName());
                     continue;
                 }
 
@@ -421,6 +419,13 @@ public class ServerRpcHandler implements Serializable {
                     + e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    private void logUnknownConnector(String connectorId, String interfaceName,
+            String methodName) {
+        getLogger().log(Level.FINE,
+                "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
+                new Object[] { connectorId, interfaceName, methodName });
     }
 
     /**
@@ -575,7 +580,10 @@ public class ServerRpcHandler implements Serializable {
             JsonArray parametersJson, ConnectorTracker connectorTracker)
             throws JsonException {
         ClientConnector connector = connectorTracker.getConnector(connectorId);
-
+        if (connector == null) {
+            logUnknownConnector(connectorId, interfaceName, methodName);
+            return null;
+        }
         ServerRpcManager<?> rpcManager = connector.getRpcManager(interfaceName);
         if (rpcManager == null) {
             /*
