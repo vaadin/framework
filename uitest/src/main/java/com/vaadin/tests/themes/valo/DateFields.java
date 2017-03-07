@@ -51,7 +51,7 @@ public class DateFields extends VerticalLayout implements View {
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         addComponent(row);
 
-        AbstractDateField date = new TestDateField("Default resolution");
+        AbstractDateField<LocalDate, DateResolution> date = new TestDateField("Default resolution");
         setDate(date);
         row.addComponent(date);
 
@@ -188,14 +188,14 @@ public class DateFields extends VerticalLayout implements View {
         row.addComponent(form);
     }
 
-    private void setDateRange(AbstractDateField date) {
+    private void setDateRange(AbstractDateField<LocalDate, DateResolution> date) {
         date.setRangeStart(getDefaultDate());
 
         LocalDate endDate = getDefaultDate();
         date.setRangeEnd(endDate.plusMonths(1));
     }
 
-    private void setDate(AbstractDateField date) {
+    private void setDate(AbstractDateField<LocalDate, DateResolution> date) {
         date.setValue(getDefaultDate());
     }
 

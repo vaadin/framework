@@ -120,7 +120,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(layout, button);
         button.addListener(this);
 
-        final AbstractDateField df = new TestDateField("DateField " + count++);
+        final AbstractDateField<?, ?> df = new TestDateField("DateField " + count++);
         test(layout, df);
 
         final CheckBox cb = new CheckBox("Checkbox " + count++);

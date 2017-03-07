@@ -34,7 +34,7 @@ public class TestDateField extends CustomComponent {
 
     VerticalLayout main = new VerticalLayout();
 
-    AbstractDateField df;
+    AbstractDateField<?, ?> df;
 
     public TestDateField() {
         setCompositionRoot(main);
@@ -57,22 +57,22 @@ public class TestDateField extends CustomComponent {
         df.addStyleName("thisShouldBeHarmless");
 
         // Another test: locale
-        final AbstractDateField df1 = new com.vaadin.tests.components.TestDateField(
+        final AbstractDateField<?, ?> df1 = new com.vaadin.tests.components.TestDateField(
                 "US locale");
         main.addComponent(df1);
         df1.setLocale(new Locale("en", "US"));
 
-        final AbstractDateField df2 = new com.vaadin.tests.components.TestDateField(
+        final AbstractDateField<?, ?> df2 = new com.vaadin.tests.components.TestDateField(
                 "DE locale");
         main.addComponent(df2);
         df2.setLocale(new Locale("de", "DE"));
 
-        final AbstractDateField df3 = new com.vaadin.tests.components.TestDateField(
+        final AbstractDateField<?, ?> df3 = new com.vaadin.tests.components.TestDateField(
                 "RU locale");
         main.addComponent(df3);
         df3.setLocale(new Locale("ru", "RU"));
 
-        final AbstractDateField df4 = new com.vaadin.tests.components.TestDateField(
+        final AbstractDateField<?, ?> df4 = new com.vaadin.tests.components.TestDateField(
                 "FI locale");
         main.addComponent(df4);
         df4.setLocale(new Locale("fi", "FI"));

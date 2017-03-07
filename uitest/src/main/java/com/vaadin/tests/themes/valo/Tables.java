@@ -199,7 +199,7 @@ public class Tables extends VerticalLayout implements View {
                 @Override
                 public Object generateCell(Table source, Object itemId,
                         Object columnId) {
-                    AbstractDateField tf = new TestDateField();
+                    AbstractDateField<?, ?> tf = new TestDateField();
                     tf.addStyleName(ValoTheme.TABLE_COMPACT);
                     if ((Integer) itemId % 2 == 0) {
                         tf.addStyleName(ValoTheme.DATEFIELD_BORDERLESS);
