@@ -64,12 +64,33 @@ public class GridChildrenTest {
     }
 
     @Test
+    public void removeHeaderWithComponentInMergedHeaderCell() {
+        HeaderCell merged = grid.getDefaultHeaderRow().join("foo", "bar",
+                "baz");
+        Label label = new Label();
+        merged.setComponent(label);
+        Assert.assertEquals(grid, label.getParent());
+        grid.removeHeaderRow(0);
+        Assert.assertNull(label.getParent());
+    }
+
+    @Test
     public void removeComponentInMergedFooterCell() {
         FooterCell merged = grid.addFooterRowAt(0).join("foo", "bar", "baz");
         Label label = new Label();
         merged.setComponent(label);
         Assert.assertEquals(grid, label.getParent());
         merged.setText("foo");
+        Assert.assertNull(label.getParent());
+    }
+
+    @Test
+    public void removeFooterWithComponentInMergedFooterCell() {
+        FooterCell merged = grid.addFooterRowAt(0).join("foo", "bar", "baz");
+        Label label = new Label();
+        merged.setComponent(label);
+        Assert.assertEquals(grid, label.getParent());
+        grid.removeFooterRow(0);
         Assert.assertNull(label.getParent());
     }
 
