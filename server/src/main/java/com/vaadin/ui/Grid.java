@@ -2324,6 +2324,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Removes all columns from this Grid.
+     */
+    public void removeAllColumns() {
+        for (Column<T, ?> column : getColumns()) {
+            removeColumn(column);
+        }
+    }
+
+    /**
      * Sets the details component generator.
      *
      * @param generator
