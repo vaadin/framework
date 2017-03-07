@@ -45,15 +45,14 @@ public class EditableTableLeak extends TestBase {
         }
 
         public static long getSize(Object object) {
-            ByteCountNullOutputStream os = new ByteCountNullOutputStream();
-            ObjectOutputStream oos;
-            try {
-                oos = new ObjectOutputStream(os);
+            try (ByteCountNullOutputStream os = new ByteCountNullOutputStream()) {
+                ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(object);
+                return os.getBytes();
             } catch (IOException e) {
                 e.printStackTrace();
+                return 0;
             }
-            return os.getBytes();
         }
     }
 
