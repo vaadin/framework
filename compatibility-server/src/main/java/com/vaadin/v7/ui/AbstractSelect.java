@@ -221,6 +221,11 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
+     * Is the select in multiselect mode?
+     */
+    private boolean multiSelect = false;
+
+    /**
      * Select options.
      */
     protected Container items;
@@ -354,6 +359,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Paints select attributes
+        if (isMultiSelect()) {
+            target.addAttribute("selectmode", "multi");
+        }
         if (isNewItemsAllowed()) {
             target.addAttribute("allownewitem", true);
         }
@@ -1097,7 +1105,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @return the Value of property multiSelect.
      */
     public boolean isMultiSelect() {
-        return getState(false).multiSelect;
+        return multiSelect;
     }
 
     /**
@@ -1116,12 +1124,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             throw new IllegalStateException(
                     "Multiselect and NullSelectionItemId can not be set at the same time.");
         }
-        if (multiSelect != getState(false).multiSelect) {
+        if (multiSelect != this.multiSelect) {
 
             // Selection before mode change
             final Object oldValue = getValue();
 
-            getState().multiSelect = multiSelect;
+            this.multiSelect = multiSelect;
 
             // Convert the value type
             if (multiSelect) {
@@ -1789,7 +1797,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      */
     @Override
     public boolean isEmpty() {
-        if (!isMultiSelect()) {
+        if (!multiSelect) {
             return super.isEmpty();
         } else {
             Object value = getValue();
