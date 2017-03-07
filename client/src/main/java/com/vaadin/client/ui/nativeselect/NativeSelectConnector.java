@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.client.ui.nativeselect;
 
 import com.google.gwt.event.shared.HandlerRegistration;

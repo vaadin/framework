@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.client.connectors.grid;
 
 import com.vaadin.client.ServerConnector;

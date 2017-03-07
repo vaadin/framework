@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.tests.widgetset.client.minitutorials.v7b1;
 
 import com.vaadin.shared.annotations.Delayed;

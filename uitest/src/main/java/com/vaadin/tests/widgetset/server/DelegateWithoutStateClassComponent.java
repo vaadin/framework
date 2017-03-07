@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.tests.widgetset.server;
 
 import com.vaadin.v7.ui.TextArea;
