@@ -53,6 +53,17 @@ public abstract class Header extends StaticSection<Header.Row> {
             protected Cell() {
                 super(Row.this);
             }
+
+            @Override
+            public void setText(String text) {
+                super.setText(text);
+                if (isDefault()) {
+                    Column<?, ?> col = getColumnByInternalId(getColumnId());
+                    if (col != null) {
+                        col.setCaption(text);
+                    }
+                }
+            }
         }
 
         /**
