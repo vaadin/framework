@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -33,6 +34,8 @@ public class GridComponents extends AbstractTestUIWithLog {
 
             TextField textField = new TextField();
             textField.setValue(string);
+            // Make sure all changes are sent immediately
+            textField.setValueChangeMode(ValueChangeMode.EAGER);
             textField.addValueChangeListener(e -> {
                 // Value of text field edited by user, store
                 textFields.put(string, textField);
@@ -41,7 +44,8 @@ public class GridComponents extends AbstractTestUIWithLog {
         }, new ComponentRenderer());
         grid.addColumn(string -> {
             Button button = new Button("Click Me!",
-                    e -> Notification.show("Clicked button on row for: " + string,
+                    e -> Notification.show(
+                            "Clicked button on row for: " + string,
                             Type.WARNING_MESSAGE));
             button.setId(string.replace(' ', '_').toLowerCase());
             return button;
