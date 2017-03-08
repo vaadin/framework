@@ -750,11 +750,13 @@ public abstract class UI extends AbstractSingleComponentContainer
             if (getUiPathInfo() != null) {
                 uiRootPath = uiRootPath.substring(0,
                         uiRootPath.indexOf(uiPathInfo) + uiPathInfo.length());
+            } else {
+                String pathInfo = request.getPathInfo();
+                if (uiRootPath.endsWith(pathInfo)) {
+                    uiRootPath = uiRootPath.substring(0,
+                            uiRootPath.length() - pathInfo.length());
+                }
             }
-            // TODO here is probably a bug with std view provider and when
-            // navigating to UI with special path parameters or view identifier.
-            // Should be somewhow handled. Should probably compare actual Page
-            // location with request path & servlet mapping or something.
             setUiRootPath(uiRootPath);
         }
 

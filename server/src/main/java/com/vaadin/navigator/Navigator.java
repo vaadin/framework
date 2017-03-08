@@ -140,6 +140,9 @@ public class Navigator implements Serializable {
             if (ui.getUiPathInfo() != null) {
                 path = path.substring(path.indexOf(ui.getUiPathInfo())
                         + ui.getUiPathInfo().length());
+            } else {
+                String uiRootPath = ui.getUiRootPath();
+                path = path.substring(uiRootPath.length());
             }
             if (path.startsWith("/")) {
                 path = path.substring(1);
