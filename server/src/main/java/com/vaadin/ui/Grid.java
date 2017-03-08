@@ -97,7 +97,6 @@ import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
-import com.vaadin.ui.components.grid.FooterCell;
 import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
@@ -2406,28 +2405,23 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return column;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Note that the order of the returned components it not specified.
+     */
     @Override
     public Iterator<Component> iterator() {
         Set<Component> componentSet = new LinkedHashSet<>(extensionComponents);
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
             HeaderRow row = header.getRow(i);
-            getColumns().forEach(column -> {
-                HeaderCell cell = row.getCell(column);
-                if (cell.getCellType() == GridStaticCellType.WIDGET) {
-                    componentSet.add(cell.getComponent());
-                }
-            });
+            componentSet.addAll(row.getComponents());
         }
         Footer footer = getFooter();
         for (int i = 0; i < footer.getRowCount(); ++i) {
             FooterRow row = footer.getRow(i);
-            getColumns().forEach(column -> {
-                FooterCell cell = row.getCell(column);
-                if (cell.getCellType() == GridStaticCellType.WIDGET) {
-                    componentSet.add(cell.getComponent());
-                }
-            });
+            componentSet.addAll(row.getComponents());
         }
         return Collections.unmodifiableSet(componentSet).iterator();
     }
