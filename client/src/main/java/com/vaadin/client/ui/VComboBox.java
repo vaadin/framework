@@ -243,12 +243,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.ui.VComboBox.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -410,10 +410,13 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             // Add TT anchor point
             getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
 
-            final int x = VComboBox.this.getAbsoluteLeft();
+            final int x = toInt32(WidgetUtil
+                    .getBoundingClientRect(VComboBox.this.getElement())
+                    .getLeft());
 
-            topPosition = tb.getAbsoluteTop();
-            topPosition += tb.getOffsetHeight();
+            topPosition = toInt32(WidgetUtil
+                    .getBoundingClientRect(tb.getElement()).getBottom())
+                    + Window.getScrollTop();
 
             setPopupPosition(x, topPosition);
 
@@ -448,6 +451,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             setPopupPositionAndShow(popup);
         }
+
+        private native int toInt32(double val)
+        /*-{
+            return val | 0;
+        }-*/;
 
         /**
          * Should the next page button be visible to the user?
