@@ -1119,6 +1119,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setCaption(String caption) {
             Objects.requireNonNull(caption, "Header caption can't be null");
+            if (caption.equals(getState(false).caption)) {
+                return this;
+            }
             getState().caption = caption;
 
             HeaderRow row = getGrid().getDefaultHeaderRow();
