@@ -3428,6 +3428,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @return the size of grids data
      * @see DataProvider#size(Query)
+     * @since
      */
     public int size() {
         return getDataProvider().size(new Query<>());
