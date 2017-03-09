@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.StreamResource;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
@@ -307,7 +308,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
         StreamResource resource = new StreamResource(new LoginStreamSource(),
                 LoginFormConstants.LOGIN_RESOURCE_NAME);
-        resource.setMIMEType("text/html; charset=utf-8");
+        resource.setMIMEType(ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         resource.setCacheTime(-1);
         setResource(LoginFormConstants.LOGIN_RESOURCE_NAME, resource);
 
