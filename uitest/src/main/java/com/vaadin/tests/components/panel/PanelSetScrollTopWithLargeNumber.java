@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.panel;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -46,7 +45,7 @@ public class PanelSetScrollTopWithLargeNumber extends AbstractTestUI {
         for (int i = 0; i < 10000; i++) {
             s += i + "<br />";
         }
-        Label label = new Label(s, ContentMode.HTML);
+        Label label = new Label(s, com.vaadin.shared.ui.ContentMode.HTML);
         layout.addComponent(label);
         panel.setContent(layout);
         panel.setScrollTop(Integer.MAX_VALUE);
