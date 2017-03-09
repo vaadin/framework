@@ -23,7 +23,7 @@ public class UploadIFrameOnloadStrategy {
             VUpload upload)
     /*-{
         iframe.onload = $entry(function() {
-            upload.@com.vaadin.client.ui.VUpload::onSubmitComplete()();
+            upload.@com.vaadin.v7.client.ui.VUpload::onSubmitComplete()();
         });
     }-*/;
 
