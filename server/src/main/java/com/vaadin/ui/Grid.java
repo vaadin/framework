@@ -816,7 +816,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public static class Column<T, V> extends AbstractGridExtension<T> {
 
-        private final SerializableFunction<T, ? extends V> valueProvider;
+        private final SerializableFunction<T, V> valueProvider;
+        private final SerializableFunction<V, ?> presentationProvider;
 
         private SortOrderProvider sortOrderProvider = direction -> {
             String id = getId();
@@ -844,19 +845,42 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            the function to get values from items, not
          *            <code>null</code>
          * @param renderer
-         *            the type of value, not <code>null</code>
+         *            the value renderer, not <code>null</code>
          */
         protected Column(ValueProvider<T, V> valueProvider,
                 Renderer<? super V> renderer) {
+            this(valueProvider, ValueProvider.identity(), renderer);
+        }
+
+        /**
+         * Constructs a new Column configuration with given renderer and value
+         * provider.
+         *
+         * @param valueProvider
+         *            the function to get values from items, not
+         *            <code>null</code>
+         * @param presentationProvider
+         *            the function to get presentations for this column
+         *            values, not <code>null</code>
+         * @param renderer
+         *            the presentation renderer, not <code>null</code>
+         * @param <P> the presentation type
+         */
+        protected <P> Column(ValueProvider<T, V> valueProvider,
+                ValueProvider<V, P> presentationProvider,
+                Renderer<? super P> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
+            Objects.requireNonNull(presentationProvider,
+                    "Presentation provider can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
 
             ColumnState state = getState();
 
             this.valueProvider = valueProvider;
-            state.renderer = renderer;
+            this.presentationProvider = presentationProvider;
 
+            state.renderer = renderer;
             state.caption = "";
 
             // Add the renderer as a child extension of this extension, thus
@@ -864,7 +888,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             // removed
             addExtension(renderer);
 
-            Class<? super V> valueType = renderer.getPresentationType();
+            Class<? super P> valueType = renderer.getPresentationType();
 
             if (Comparable.class.isAssignableFrom(valueType)) {
                 comparator = (a, b) -> compareComparables(
@@ -948,6 +972,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         @Override
         public void generateData(T data, JsonObject jsonObject) {
+            generatePresentationData(data, jsonObject, presentationProvider);
+        }
+
+        private <P> void generatePresentationData(T data, JsonObject jsonObject,
+                SerializableFunction<V, P> presentationProvider) {
             ColumnState state = getState(false);
 
             String communicationId = getConnectorId();
@@ -956,19 +985,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     + state.caption;
 
             @SuppressWarnings("unchecked")
-            Renderer<V> renderer = (Renderer<V>) state.renderer;
+            Renderer<P> renderer = (Renderer<P>) state.renderer;
 
             JsonObject obj = getDataObject(jsonObject,
                     DataCommunicatorConstants.DATA);
 
-            V providerValue = valueProvider.apply(data);
+            P presentationValue = presentationProvider.apply(valueProvider.apply(data));
 
             // Make Grid track components.
             if (renderer instanceof ComponentRenderer
-                    && providerValue instanceof Component) {
-                addComponent(data, (Component) providerValue);
+                    && presentationValue instanceof Component) {
+                addComponent(data, (Component) presentationValue);
             }
-            JsonValue rendererValue = renderer.encode(providerValue);
+            JsonValue rendererValue = renderer.encode(presentationValue);
 
             obj.put(communicationId, rendererValue);
 
@@ -2297,7 +2326,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param valueProvider
      *            the value provider
      * @param renderer
-     *            the column value class
+     *            the column value renderer
      * @param <V>
      *            the column value type
      *
@@ -2307,8 +2336,53 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
             AbstractRenderer<? super T, ? super V> renderer) {
+        return addColumn(valueProvider, ValueProvider.identity(), renderer);
+    }
+
+    /**
+     * Adds a new column to this {@link Grid} with value provider and
+     * presentation provider.
+     *
+     * @param valueProvider
+     *            the value provider
+     * @param presentationProvider
+     *            the value presentation provider
+     * @param <V>
+     *            the column value type
+     * @param <P>
+     *            the column presentation type
+     *
+     * @return the new column
+     */
+    public <V, P> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
+            ValueProvider<V, P> presentationProvider) {
+        return addColumn(valueProvider, presentationProvider, new TextRenderer());
+    }
+
+    /**
+     * Adds a new column to this {@link Grid} with value provider,
+     * presentation provider and typed renderer.
+     *
+     * @param valueProvider
+     *            the value provider
+     * @param presentationProvider
+     *            the value presentation provider
+     * @param renderer
+     *            the column value renderer
+     * @param <V>
+     *            the column value type
+     * @param <P>
+     *            the column presentation type
+     *
+     * @return the new column
+     *
+     * @see AbstractRenderer
+     */
+    public <V, P> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
+            ValueProvider<V, P> presentationProvider,
+            AbstractRenderer<? super T, ? super P> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
-        Column<T, V> column = new Column<>(valueProvider, renderer);
+        Column<T, V> column = new Column<>(valueProvider, presentationProvider, renderer);
         addColumn(generatedIdentifier, column);
         return column;
     }
