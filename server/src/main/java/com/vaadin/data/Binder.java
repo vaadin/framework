@@ -321,6 +321,37 @@ public class Binder<BEAN> implements Serializable {
                 Converter<TARGET, NEWTARGET> converter);
 
         /**
+         * Maps the binding to another data type using the given
+         * {@link Converter}.
+         * <p>
+         * A converter is capable of converting between a presentation type,
+         * which must match the current target data type of the binding, and a
+         * model type, which can be any data type and becomes the new target
+         * type of the binding. When invoking
+         * {@link #bind(ValueProvider, Setter)}, the target type of the binding
+         * must match the getter/setter types.
+         * <p>
+         * For instance, a {@code TextField} can be bound to an integer-typed
+         * property using an appropriate converter such as a
+         * {@link StringToIntegerConverter}.
+         * 
+         * The ValueContextProvider may be used to provide a
+         * {@link ValueContext} object that can describe a meta information
+         * related doing conversion for this specific mapping.
+         *
+         * @param <NEWTARGET>
+         *            the type to convert to
+         * @param converter
+         *            the converter to use, not null
+         * @return a new binding with the appropriate type
+         * @throws IllegalStateException
+         *             if {@code bind} has already been called
+         */
+        public <NEWTARGET> BindingBuilder<BEAN, NEWTARGET> withConverter(
+                Converter<TARGET, NEWTARGET> converter,
+                ValueContextProvider valueContextProvider);
+
+        /**
          * Maps the binding to another data type using the mapping functions and
          * a possible exception as the error message.
          * <p>
@@ -555,6 +586,8 @@ public class Binder<BEAN> implements Serializable {
          */
         private Converter<FIELDVALUE, TARGET> converterValidatorChain;
 
+        private ValueContextProvider valueContextProvider;
+
         /**
          * Creates a new binding builder associated with the given field.
          * Initializes the builder with the given converter chain and status
@@ -572,10 +605,12 @@ public class Binder<BEAN> implements Serializable {
         protected BindingBuilderImpl(Binder<BEAN> binder,
                 HasValue<FIELDVALUE> field,
                 Converter<FIELDVALUE, TARGET> converterValidatorChain,
+                ValueContextProvider valueContextProvider,
                 BindingValidationStatusHandler statusHandler) {
             this.field = field;
             this.binder = binder;
             this.converterValidatorChain = converterValidatorChain;
+            this.valueContextProvider = valueContextProvider;
             this.statusHandler = statusHandler;
         }
 
@@ -620,7 +655,8 @@ public class Binder<BEAN> implements Serializable {
                     });
 
             BindingBuilder<BEAN, ?> finalBinding = withConverter(
-                    createConverter(definition.getType()), false);
+                    createConverter(definition.getType()), valueContextProvider,
+                    false);
 
             finalBinding = getBinder().configureBinding(finalBinding,
                     definition);
@@ -657,7 +693,13 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public <NEWTARGET> BindingBuilder<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter) {
-            return withConverter(converter, true);
+            return withConverter(converter, (field, locale) -> {
+                if (field instanceof Component) {
+                    return new ValueContext((Component) field);
+                } else {
+                    return new ValueContext(locale);
+                }
+            }, true);
         }
 
         @Override
@@ -707,6 +749,7 @@ public class Binder<BEAN> implements Serializable {
          */
         protected <NEWTARGET> BindingBuilder<BEAN, NEWTARGET> withConverter(
                 Converter<TARGET, NEWTARGET> converter,
+                ValueContextProvider valueContextProvider,
                 boolean resetNullRepresentation) {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
@@ -716,7 +759,8 @@ public class Binder<BEAN> implements Serializable {
             }
 
             return getBinder().createBinding(field,
-                    converterValidatorChain.chain(converter), statusHandler);
+                    converterValidatorChain.chain(converter),
+                    valueContextProvider, statusHandler);
         }
 
         /**
@@ -746,6 +790,13 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public HasValue<FIELDVALUE> getField() {
             return field;
+        }
+
+        @Override
+        public <NEWTARGET> BindingBuilder<BEAN, NEWTARGET> withConverter(
+                Converter<TARGET, NEWTARGET> converter,
+                ValueContextProvider valueContextProvider) {
+            return withConverter(converter, valueContextProvider, true);
         }
     }
 
@@ -780,11 +831,14 @@ public class Binder<BEAN> implements Serializable {
          */
         private final Converter<FIELDVALUE, TARGET> converterValidatorChain;
 
+        private ValueContextProvider valueContextProvider;
+
         public BindingImpl(BindingBuilderImpl<BEAN, FIELDVALUE, TARGET> builder,
                 SerializableFunction<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter) {
             this.binder = builder.getBinder();
             this.field = builder.field;
+            this.valueContextProvider = builder.valueContextProvider;
             this.statusHandler = builder.statusHandler;
             converterValidatorChain = builder.converterValidatorChain;
 
@@ -868,10 +922,8 @@ public class Binder<BEAN> implements Serializable {
          * @return the value context
          */
         protected ValueContext createValueContext() {
-            if (field instanceof Component) {
-                return new ValueContext((Component) field);
-            }
-            return new ValueContext(findLocale());
+            return valueContextProvider.provideValueContext(field,
+                    findLocale());
         }
 
         /**
@@ -1187,7 +1239,14 @@ public class Binder<BEAN> implements Serializable {
         getStatusLabel().ifPresent(label -> label.setValue(""));
 
         return createBinding(field, createNullRepresentationAdapter(field),
-                this::handleValidationStatus);
+                (f, locale) -> {
+                    if (f instanceof Component) {
+                        return new ValueContext((Component) f);
+                    } else {
+                        return new ValueContext(locale);
+                    }
+                }, this::handleValidationStatus);
+
     }
 
     /**
@@ -1602,7 +1661,7 @@ public class Binder<BEAN> implements Serializable {
      * level validators if a bean is currently set with
      * {@link #setBean(Object)}, and returns whether any of the validators
      * failed.
-     * 
+     *
      * @return whether this binder is in a valid state
      * @throws IllegalStateException
      *             if bean level validators have been configured and no bean is
@@ -1789,7 +1848,7 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * The listener is added to all fields regardless of whether the method is
      * invoked before or after field is bound.
-     * 
+     *
      * @see ValueChangeEvent
      * @see ValueChangeListener
      *
@@ -1821,9 +1880,10 @@ public class Binder<BEAN> implements Serializable {
      */
     protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> createBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
+            ValueContextProvider valueContextProvider,
             BindingValidationStatusHandler handler) {
         BindingBuilder<BEAN, TARGET> newBinding = doCreateBinding(field,
-                converter, handler);
+                converter, valueContextProvider, handler);
         if (incompleteMemberFieldBindings.containsKey(field)) {
             incompleteMemberFieldBindings.put(field, newBinding);
         }
@@ -1833,8 +1893,10 @@ public class Binder<BEAN> implements Serializable {
 
     protected <FIELDVALUE, TARGET> BindingBuilder<BEAN, TARGET> doCreateBinding(
             HasValue<FIELDVALUE> field, Converter<FIELDVALUE, TARGET> converter,
+            ValueContextProvider valueContextProvider,
             BindingValidationStatusHandler handler) {
-        return new BindingBuilderImpl<>(this, field, converter, handler);
+        return new BindingBuilderImpl<>(this, field, converter,
+                valueContextProvider, handler);
     }
 
     /**
