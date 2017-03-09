@@ -1024,10 +1024,10 @@ public class Escalator extends Widget
          * class.
          */
         /*-{
-            element.addEventListener("pointerdown", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
-            element.addEventListener("pointermove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
-            element.addEventListener("pointerup", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
-            element.addEventListener("pointercancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+            element.addEventListener("pointerdown", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchStartFunction);
+            element.addEventListener("pointermove", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.addEventListener("pointerup", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
+            element.addEventListener("pointercancel", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
         }-*/;
 
         /**
@@ -1046,10 +1046,10 @@ public class Escalator extends Widget
          * class.
          */
         /*-{
-            element.removeEventListener("pointerdown", this.@com.vaadin.client.widgets.JsniWorkaround::touchStartFunction);
-            element.removeEventListener("pointermove", this.@com.vaadin.client.widgets.JsniWorkaround::touchMoveFunction);
-            element.removeEventListener("pointerup", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
-            element.removeEventListener("pointercancel", this.@com.vaadin.client.widgets.JsniWorkaround::touchEndFunction);
+            element.removeEventListener("pointerdown", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchStartFunction);
+            element.removeEventListener("pointermove", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.removeEventListener("pointerup", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
+            element.removeEventListener("pointercancel", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
          }-*/;
 
         public void scrollToColumn(final int columnIndex,
