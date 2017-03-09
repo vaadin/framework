@@ -388,6 +388,13 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
             for (CELL cell : cells.values()) {
                 cell.detach();
             }
+            for (CellState cellState : rowState.cellGroups.keySet()) {
+                if (cellState.type == GridStaticCellType.WIDGET
+                        && cellState.connector != null) {
+                    ((Component) cellState.connector).setParent(null);
+                    cellState.connector = null;
+                }
+            }
         }
 
         void checkIfAlreadyMerged(String columnId) {
