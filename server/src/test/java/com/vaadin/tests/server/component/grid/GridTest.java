@@ -418,6 +418,41 @@ public class GridTest {
     }
 
     @Test
+    public void removeFrozenColumn() {
+        grid.setFrozenColumnCount(3);
+        grid.removeColumn(fooColumn);
+        assertEquals(2, grid.getFrozenColumnCount());
+    }
+
+    @Test
+    public void removeHiddenFrozenColumn() {
+        lengthColumn.setHidden(true);
+        grid.setFrozenColumnCount(3);
+        grid.removeColumn(lengthColumn);
+        assertEquals(2, grid.getFrozenColumnCount());
+    }
+
+    @Test
+    public void removeNonFrozenColumn() {
+        grid.setFrozenColumnCount(3);
+        grid.removeColumn(randomColumn);
+        assertEquals(3, grid.getFrozenColumnCount());
+    }
+
+    @Test
+    public void testFrozenColumnRemoveColumn() {
+        assertEquals("Grid should not start with a frozen column", 0,
+                grid.getFrozenColumnCount());
+
+        int containerSize = grid.getColumns().size();
+        grid.setFrozenColumnCount(containerSize);
+
+        grid.removeColumn(grid.getColumns().get(0));
+        assertEquals("Frozen column count should update when removing last row",
+                containerSize - 1, grid.getFrozenColumnCount());
+    }
+
+    @Test
     public void setColumns_reorder() {
         // Will remove other columns
         grid.setColumns("length", "foo");
