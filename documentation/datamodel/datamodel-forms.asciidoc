@@ -228,7 +228,7 @@ binder.forField(salaryLevelField)
 
 Multiple validators and converters can be used for building one binding.
 Each validator or converter is used in the order they were defined for a value provided by the user.
-The value is passed along until a final converted value is stored in the business objet, or until the first validation error or impossible conversion is encountered.
+The value is passed along until a final converted value is stored in the business object, or until the first validation error or impossible conversion is encountered.
 When updating the UI components, values from the business object are passed through each converter in the reverse order without doing any validation.
 
 [NOTE]
