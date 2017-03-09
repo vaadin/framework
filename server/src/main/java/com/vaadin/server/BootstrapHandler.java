@@ -363,7 +363,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     private void writeBootstrapPage(VaadinResponse response, String html)
             throws IOException {
-        response.setContentType("text/html");
+        response.setContentType(
+                ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(response.getOutputStream(), "UTF-8"))) {
             writer.append(html);
@@ -383,8 +384,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         document.child(0).before(doctype);
 
         Element head = document.head();
-        head.appendElement("meta").attr("http-equiv", "Content-Type")
-                .attr("content", "text/html; charset=utf-8");
+        head.appendElement("meta").attr("http-equiv", "Content-Type").attr(
+                "content", ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
 
         /*
          * Enable Chrome Frame in all versions of IE if installed.
