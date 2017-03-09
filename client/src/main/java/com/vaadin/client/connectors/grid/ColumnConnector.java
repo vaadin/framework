@@ -140,8 +140,12 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @Override
     public void onUnregister() {
         super.onUnregister();
-
-        parent.removeColumn(column);
+        if (parent.getParent() != null) {
+            // If the grid itself was unregistered there is no point in spending
+            // time to remove columns (and have problems with frozen columns)
+            // before throwing everything away
+            parent.removeColumn(column);
+        }
         column = null;
     }
 
