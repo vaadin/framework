@@ -2370,6 +2370,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Set<CELLTYPE> cellGroupForCell = getCellGroupForCell(cell);
                     if (cellGroupForCell != null) {
                         removeCellFromGroup(cell, cellGroupForCell);
+                    } else {
+                        cell.detach();
                     }
                     rowState.cells.remove(cell.getCellState());
                 }
@@ -2385,11 +2387,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                             CELLTYPE mergedCell = cellGroups.remove(cellGroup);
                             cellGroup.remove(cell);
                             cellGroups.put(cellGroup, mergedCell);
-
                             group.remove(columnId);
                         } else {
+                            // Only one cell remaining in the group, disband it
+                            // The contents of the group if removed
                             rowState.cellGroups.remove(group);
-                            cellGroups.remove(cellGroup);
+                            CELLTYPE mergedCell = cellGroups.remove(cellGroup);
+                            mergedCell.detach();
                         }
                         return;
                     }
