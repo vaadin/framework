@@ -28,6 +28,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * Mapper for hierarchical data.
+ * <p>
+ * Keeps track of the expanded nodes, and size of of the subtrees for each
+ * expanded node.
+ * <p>
+ * This class is considered framework internal implementation details, and can
+ * be changed / moved at any point. This means that you should not directly use
+ * this for anything.
  *
  * @author Vaadin Ltd
  * @since
@@ -37,16 +45,28 @@ public class HierarchyMapper implements Serializable {
     private static final Logger LOGGER = Logger
             .getLogger(HierarchyMapper.class.getName());
 
-    public static class TreeLevelQuery implements Serializable {
+    /**
+     * A POJO that represents a query data for a certain tree level.
+     */
+    protected static class TreeLevelQuery {
+        /**
+         * The tree node that the query is for. Only used for fetching parent
+         * key.
+         */
         final TreeNode node;
+        /** The start index of the query, from 0 to level's size - 1. */
         final int startIndex;
+        /** The number of rows to fetch. s */
         final int size;
+        /** The depth of this node. */
         final int depth;
+        /** The first row index in grid, including all the nodes. */
         final int firstRowIndex;
+        /** The direct subtrees for the node that effect the indexing. */
         final List<TreeNode> subTrees;
 
-        public TreeLevelQuery(TreeNode node, int startIndex, int size,
-                int depth, int firstRowIndex, List<TreeNode> subTrees) {
+        TreeLevelQuery(TreeNode node, int startIndex, int size, int depth,
+                int firstRowIndex, List<TreeNode> subTrees) {
             this.node = node;
             this.startIndex = startIndex;
             this.size = size;
@@ -56,43 +76,51 @@ public class HierarchyMapper implements Serializable {
         }
     }
 
-    public static class TreeNode implements Serializable, Comparable<TreeNode> {
+    /**
+     * A level in the tree, either the root level or an expanded subtree level.
+     * <p>
+     * Comparable based on the {@link #startIndex}, which is flat from 0 to data
+     * size - 1.
+     */
+    protected static class TreeNode
+            implements Serializable, Comparable<TreeNode> {
 
+        /** The key for the expanded item that this is a subtree of. */
         private final String parentKey;
+        /** The first index on this level. */
         private int startIndex;
-        private int size;
+        /** The last index on this level, INCLUDING subtrees. */
         private int endIndex;
 
-        public TreeNode(String parentKey, int startIndex, int size) {
+        TreeNode(String parentKey, int startIndex, int size) {
             this.parentKey = parentKey;
             this.startIndex = startIndex;
             endIndex = startIndex + size - 1;
-            this.size = size;
         }
 
-        public TreeNode(int startIndex) {
+        TreeNode(int startIndex) {
             parentKey = "INVALID";
             this.startIndex = startIndex;
         }
 
-        public int getStartIndex() {
+        int getStartIndex() {
             return startIndex;
         }
 
-        public int getEndIndex() {
+        int getEndIndex() {
             return endIndex;
         }
 
-        public String getParentKey() {
+        String getParentKey() {
             return parentKey;
         }
 
-        public void push(int offset) {
+        private void push(int offset) {
             startIndex += offset;
             endIndex += offset;
         }
 
-        public void pushEnd(int offset) {
+        private void pushEnd(int offset) {
             endIndex += offset;
         }
 
@@ -104,29 +132,59 @@ public class HierarchyMapper implements Serializable {
         @Override
         public String toString() {
             return "TreeNode [parent=" + parentKey + ", start=" + startIndex
-                    + ", end=" + getEndIndex() + ", size=" + size + "]";
+                    + ", end=" + getEndIndex() + "]";
         }
 
     }
 
+    /** The expanded nodes in the tree. */
     private final TreeSet<TreeNode> nodes = new TreeSet<>();
 
-    public void reset(int rootDepthSize) {
+    /**
+     * Resets the tree, sets given the root level size.
+     *
+     * @param rootLevelSize
+     *            the number of items in the root level
+     */
+    public void reset(int rootLevelSize) {
         nodes.clear();
-        nodes.add(new TreeNode(null, 0, rootDepthSize));
+        nodes.add(new TreeNode(null, 0, rootLevelSize));
     }
 
+    /**
+     * Returns the complete size of the tree, including all expanded subtrees.
+     *
+     * @return the size of the tree
+     */
     public int getTreeSize() {
-        AtomicInteger count = new AtomicInteger(0);
-        nodes.forEach(node -> count.getAndAdd(node.size));
-        return count.get();
+        TreeNode rootNode = getNodeForKey(null)
+                .orElse(new TreeNode(null, 0, 0));
+        return rootNode.endIndex + 1;
     }
 
+    /**
+     * Returns whether the node with the given is collapsed or not.
+     *
+     * @param itemKey
+     *            the key of node to check
+     * @return {@code true} if collapsed, {@code false} if expanded
+     */
     public boolean isCollapsed(String itemKey) {
         return !getNodeForKey(itemKey).isPresent();
     }
 
-    public int getDepth(String expandedNodeKey) {
+    /**
+     * Return the depth of expanded node's subtree.
+     * <p>
+     * The root node depth is 0.
+     *
+     * @param expandedNodeKey
+     *            the item key of the expanded node
+     * @return the depth of the expanded node
+     * @throws IllegalArgumentException
+     *             if the node was not expanded
+     */
+    protected int getDepth(String expandedNodeKey) {
         Optional<TreeNode> node = getNodeForKey(expandedNodeKey);
         if (!node.isPresent()) {
             throw new IllegalArgumentException("No node with given key "
@@ -147,14 +205,40 @@ public class HierarchyMapper implements Serializable {
         return depth.get();
     }
 
+    /**
+     * Returns the tree node for the given expanded item key, or an empty
+     * optional if the item was not expanded.
+     *
+     * @param expandedNodeKey
+     *            the key of the item
+     * @return the tree node for the expanded item, or an empty optional if not
+     *         expanded
+     */
     protected Optional<TreeNode> getNodeForKey(String expandedNodeKey) {
         return nodes.stream()
                 .filter(node -> Objects.equals(node.parentKey, expandedNodeKey))
                 .findAny();
     }
 
-    public void expand(String expanedRowKey, int expandedRowIndex,
+    /**
+     * Expands the node in the given index and with the given key.
+     *
+     * @param expanedRowKey
+     *            the key of the expanded item
+     * @param expandedRowIndex
+     *            the index of the expanded item
+     * @param expandedNodeSize
+     *            the size of the subtree of the expanded node
+     * @throws IllegalStateException
+     *             if the node was expanded already
+     */
+    protected void expand(String expanedRowKey, int expandedRowIndex,
             int expandedNodeSize) {
+        if (expandedNodeSize < 1) {
+            throw new IllegalArgumentException(
+                    "The expanded node's size cannot be less than 1, was "
+                            + expandedNodeSize);
+        }
         TreeNode newNode = new TreeNode(expanedRowKey, expandedRowIndex + 1,
                 expandedNodeSize);
 
@@ -170,9 +254,6 @@ public class HierarchyMapper implements Serializable {
                 .collect(Collectors.toList());
         nodes.removeAll(updated);
         updated.stream().forEach(node -> node.pushEnd(expandedNodeSize));
-        System.out.println("PUSHED END INDEXES " + expandedNodeSize + " FOR "
-                + updated.stream().map(TreeNode::toString)
-                        .collect(Collectors.joining(",")));
         nodes.addAll(updated);
 
         // push start and end indexes for later nodes
@@ -180,20 +261,35 @@ public class HierarchyMapper implements Serializable {
                 .collect(Collectors.toList());
         nodes.removeAll(updated);
         updated.stream().forEach(node -> node.push(expandedNodeSize));
-        System.out.println("PUSHED BOTH INDEXES " + expandedNodeSize + " FOR "
-                + updated.stream().map(TreeNode::toString)
-                        .collect(Collectors.joining(",")));
         nodes.addAll(updated);
     }
 
-    public int collapse(int collapsedRowIndex) {
+    /**
+     * Collapses the node in the given index.
+     *
+     * @param key
+     *            the key of the collapsed item
+     * @param collapsedRowIndex
+     *            the index of the collapsed item
+     * @return the size of the complete subtree that was collapsed
+     * @throws IllegalStateException
+     *             if the node was not collapsed, or if the given key is not the
+     *             same as it was when the node has been expanded
+     */
+    protected int collapse(String key, int collapsedRowIndex) {
+        Objects.requireNonNull(key,
+                "The key for the item to collapse cannot be null.");
         TreeNode collapsedNode = nodes
                 .ceiling(new TreeNode(collapsedRowIndex + 1));
         if (collapsedNode == null
                 || collapsedNode.startIndex != collapsedRowIndex + 1) {
-            throw new IllegalArgumentException(
+            throw new IllegalStateException(
                     "Could not find expanded node for index "
                             + collapsedRowIndex + ", node was not collapsed");
+        }
+        if (!Objects.equals(key, collapsedNode.parentKey)) {
+            throw new IllegalStateException("The expected parent key " + key
+                    + " is different for the collapsed node " + collapsedNode);
         }
 
         // remove complete subtree
@@ -209,9 +305,6 @@ public class HierarchyMapper implements Serializable {
                 .collect(Collectors.toList());
         nodes.removeAll(updated);
         updated.stream().forEach(node -> node.pushEnd(offset));
-        System.out.println("PUSHED END INDEXES " + removedSubTreeSize.get()
-                + " FOR " + updated.stream().map(TreeNode::toString)
-                        .collect(Collectors.joining(",")));
         nodes.addAll(updated);
 
         // adjust start and end indexes for latter nodes
@@ -219,9 +312,6 @@ public class HierarchyMapper implements Serializable {
                 .collect(Collectors.toList());
         nodes.removeAll(updated);
         updated.stream().forEach(node -> node.push(offset));
-        System.out.println("PUSHED BOTH INDEXES " + removedSubTreeSize.get()
-                + " FOR " + updated.stream().map(TreeNode::toString)
-                        .collect(Collectors.joining(",")));
         nodes.addAll(updated);
 
         nodes.remove(collapsedNode);
@@ -229,8 +319,19 @@ public class HierarchyMapper implements Serializable {
         return removedSubTreeSize.get();
     }
 
-    public Stream<TreeLevelQuery> splitRangeToLevelQueries(final int firstRow,
-            final int lastRow) {
+    /**
+     * Splits the given range into queries per tree level.
+     *
+     * @param firstRow
+     *            the first row to fetch
+     * @param lastRow
+     *            the last row to fetch
+     * @return a stream of query data per level
+     * @see #reorderLevelQueryResultsToFlatOrdering(BiConsumer, TreeLevelQuery,
+     *      List)
+     */
+    protected Stream<TreeLevelQuery> splitRangeToLevelQueries(
+            final int firstRow, final int lastRow) {
         return nodes.stream()
                 // filter to parts intersecting with the range
                 .filter(node -> node.startIndex <= lastRow
@@ -258,8 +359,6 @@ public class HierarchyMapper implements Serializable {
                     int end = Math.min(node.getEndIndex(), lastRow);
                     AtomicInteger size;
                     List<TreeNode> intersectingSubTrees = new ArrayList<>();
-                    System.out.println("requested: " + firstRow + "-" + lastRow
-                            + ", for " + node);
                     start = new AtomicInteger(
                             firstIntersectingRowIndex.get() - node.startIndex);
 
@@ -297,9 +396,6 @@ public class HierarchyMapper implements Serializable {
                                         - subtree.startIndex + 1));
                                 intersectingSubTrees.add(subtree);
                             });
-                    System.out.println("FINAL for node:" + node.startIndex + "-"
-                            + end + ", start: " + start.get() + " size:"
-                            + size.get());
                     return new TreeLevelQuery(node, start.get(), size.get(),
                             depth, firstIntersectingRowIndex.get(),
                             intersectingSubTrees);
@@ -308,7 +404,19 @@ public class HierarchyMapper implements Serializable {
 
     }
 
-    public <T> void mergeLevelQueryResultIntoRange(
+    /**
+     * Merges the tree level query results into flat grid ordering.
+     *
+     * @param rangePositionCallback
+     *            the callback to place the results into
+     * @param query
+     *            the query data for the results
+     * @param results
+     *            the results to reorder
+     * @param <T>
+     *            the type of the results
+     */
+    protected <T> void reorderLevelQueryResultsToFlatOrdering(
             BiConsumer<T, Integer> rangePositionCallback, TreeLevelQuery query,
             List<T> results) {
         AtomicInteger nextPossibleIndex = new AtomicInteger(

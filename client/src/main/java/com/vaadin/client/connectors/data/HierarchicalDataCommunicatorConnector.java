@@ -24,7 +24,7 @@ import elemental.json.JsonObject;
 /**
  * A connector for HierarchicalDataCommunicator class.
  *
- * @since 8.0
+ * @since
  */
 @Connect(HierarchicalDataCommunicator.class)
 public class HierarchicalDataCommunicatorConnector

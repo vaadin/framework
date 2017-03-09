@@ -94,8 +94,6 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             JsonArray dataArray = Json.createArray();
             int i = 0;
             for (T data : getUpdatedData()) {
-                // TODO fetch depth separately for each updated item could be
-                // optimized
                 dataArray.set(i++, createDataObject(data, -1));
             }
             getClientRpc().updateData(dataArray);
@@ -157,12 +155,10 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
                 List<JsonObject> rowData = results.stream()
                         .map(item -> createDataObject(item, query.depth))
                         .collect(Collectors.toList());
-                mapper.mergeLevelQueryResultIntoRange(rowDataMapper, query,
-                        rowData);
+                mapper.reorderLevelQueryResultsToFlatOrdering(rowDataMapper,
+                        query, rowData);
             });
 
-            System.out.println(Stream.of(dataObjects).map(JsonObject::toJson)
-                    .collect(Collectors.joining("\n")));
             sendData(requestedRows.getStart(), Arrays.asList(dataObjects));
             getActiveDataHandler().addActiveData(fetchedItems.stream());
             getActiveDataHandler().cleanUp(fetchedItems.stream());
@@ -236,15 +232,11 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             int firstCachedRowIndex, int cacheSize) {
         super.onRequestRows(firstRowIndex, numberOfRows, firstCachedRowIndex,
                 cacheSize);
-        LOGGER.info(
-                "REQUEST ROWS: " + Range.withLength(firstRowIndex, numberOfRows)
-                        + ", ci:" + firstCachedRowIndex + " cs:" + cacheSize);
     }
 
     @Override
     protected void onDropRows(JsonArray keys) {
         super.onDropRows(keys);
-        LOGGER.info("DROP ROWS: " + keys.length());
     }
 
     @Override
@@ -297,9 +289,15 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
                         + " and subtypes supported.");
     }
 
+    /**
+     * Collapses given row, removing all its subtrees.
+     *
+     * @param collapsedRowKey
+     *            the key of the row, not {@code null}
+     * @param collapsedRowIndex
+     *            the index of row to collapse
+     */
     public void doCollapse(String collapsedRowKey, int collapsedRowIndex) {
-        LOGGER.info("COLLAPSE ROW: " + collapsedRowIndex + ", key: "
-                + collapsedRowKey);
         if (collapsedRowIndex < 0 | collapsedRowIndex >= mapper.getTreeSize()) {
             throw new IllegalArgumentException("Invalid row index "
                     + collapsedRowIndex + " when tree grid size of "
@@ -310,10 +308,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         Objects.requireNonNull(collapsedItem,
                 "Cannot find item for given key " + collapsedItem);
 
-        int collapsedSubTreeSize = mapper.collapse(collapsedRowIndex);
+        int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
+                collapsedRowIndex);
 
-        LOGGER.info("REMOVE ROWS: " + (collapsedRowIndex + 1) + " size "
-                + collapsedSubTreeSize);
         getClientRpc().removeRowData(collapsedRowIndex + 1,
                 collapsedSubTreeSize);
         // FIXME seems like a slight overkill to do this just for refreshing
@@ -321,9 +318,15 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         refresh(collapsedItem);
     }
 
+    /**
+     * Expands the given row.
+     *
+     * @param expandedRowKey
+     *            the key of the row, not {@code null}
+     * @param expandedRowIndex
+     *            the index of the row to expand
+     */
     public void doExpand(String expandedRowKey, final int expandedRowIndex) {
-        LOGGER.info(
-                "EXPAND ROW: " + expandedRowIndex + ", key: " + expandedRowKey);
         if (expandedRowIndex < 0 | expandedRowIndex >= mapper.getTreeSize()) {
             throw new IllegalArgumentException("Invalid row index "
                     + expandedRowIndex + " when tree grid size of "
