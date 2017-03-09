@@ -26,17 +26,18 @@
   <p>This is a static web page that contains an embedded Vaadin
      application. It's here:</p>
  
-  <!-- So here comes the div element in which the Vaadin -->
-  <!-- application is embedded.                          -->
-  <div style="width: 300px; border: 2px solid green;"
-      id="embeddedcombobox" class="v-app">
+  <div style="width: 200px; overflow: auto; border: 2px solid green;">
+    <!-- So here comes the div element in which the Vaadin -->
+    <!-- application is embedded.                          -->
+    <div style="width: 300px;" id="embeddedcombobox" class="v-app">
  
-    <!-- Optional placeholder for the loading indicator -->
-    <div class=" v-app-loading"></div>
+      <!-- Optional placeholder for the loading indicator -->
+      <div class=" v-app-loading"></div>
  
-    <!-- Alternative fallback text -->
-    <noscript>You have to enable javascript in your browser to
-              use an application built with Vaadin.</noscript>
+      <!-- Alternative fallback text -->
+      <noscript>You have to enable javascript in your browser to
+                use an application built with Vaadin.</noscript>
+    </div>
   </div>
  
   <script type="text/javascript">//<![CDATA[

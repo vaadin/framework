@@ -18,6 +18,7 @@ package com.vaadin.tests.components.combobox;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ComboBoxElement;
@@ -33,16 +34,19 @@ public class ComboBoxPopupPositionEmbeddedInDivTest extends MultiBrowserTest {
         // Chrome requires document.scrollTop (<body>)
         // Firefox + IE wants document.documentElement.scrollTop (<html>)
         executeScript(
-                "document.body.scrollTop=200;document.documentElement.scrollTop=200;");
+                "document.body.scrollTop=200;document.documentElement.scrollTop=200;document.body.scrollLeft=50;document.documentElement.scrollLeft=50;");
 
         ComboBoxElement combobox = $(ComboBoxElement.class).first();
         combobox.openPopup();
         WebElement popup = $(ComboBoxElement.class).first()
                 .getSuggestionPopup();
 
-        int comboboxTop = combobox.getLocation().getY();
-        int popupTop = popup.getLocation().getY();
+        Point comboboxLocation = combobox.getLocation();
+        Point popupLocation = popup.getLocation();
         Assert.assertTrue("Popup should be below combobox",
-                popupTop > comboboxTop);
+                popupLocation.getY() > comboboxLocation.getY());
+
+        Assert.assertTrue("Popup should be left aligned with the combobox",
+                popupLocation.getX() == comboboxLocation.getX());
     }
 }
