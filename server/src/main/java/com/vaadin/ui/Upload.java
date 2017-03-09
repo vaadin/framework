@@ -627,7 +627,7 @@ public class Upload extends AbstractComponent
      * Adds the upload started event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
     public void addStartedListener(StartedListener listener) {
         addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
@@ -665,7 +665,7 @@ public class Upload extends AbstractComponent
      * Adds the upload received event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
     public void addFinishedListener(FinishedListener listener) {
         addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
@@ -703,7 +703,7 @@ public class Upload extends AbstractComponent
      * Adds the upload interrupted event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
     public void addFailedListener(FailedListener listener) {
         addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
@@ -741,7 +741,7 @@ public class Upload extends AbstractComponent
      * Adds the upload success event listener.
      *
      * @param listener
-     *            the Listener to be added.
+     *            the Listener to be added, not null
      */
     public void addSucceededListener(SucceededListener listener) {
         addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
@@ -813,7 +813,7 @@ public class Upload extends AbstractComponent
      * Adds a filename change event listener
      *
      * @param listener
-     *            the Listener to add
+     *            the Listener to add, not null
      */
     public void addChangeListener(ChangeListener listener) {
         super.addListener(EventId.CHANGE, ChangeEvent.class, listener,
@@ -1114,8 +1114,8 @@ public class Upload extends AbstractComponent
 
                 @Override
                 public boolean listenProgress() {
-                    return (progressListeners != null
-                            && !progressListeners.isEmpty());
+                    return progressListeners != null
+                            && !progressListeners.isEmpty();
                 }
 
                 @Override

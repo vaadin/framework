@@ -273,7 +273,7 @@ public class BeanItem<BT> extends PropertysetItem {
      * <p>
      * Changing the bean will fire value change events for all properties of
      * type {@link MethodProperty} or {@link NestedMethodProperty}.
-     * 
+     *
      * @param bean
      *            The new bean to use for this item, not <code>null</code>
      * @since 7.7.7

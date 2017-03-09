@@ -418,7 +418,7 @@ public class MultiSelectionModelConnector extends
         @Override
         public void setUserSelectionAllowed(boolean userSelectionAllowed) {
             this.userSelectionAllowed = userSelectionAllowed;
-            for (Column<?, ?> c : getGrid().getColumns()) {
+            for (Column<?, JsonObject> c : getGrid().getColumns()) {
                 if (c instanceof SelectionColumn) {
                     ((SelectionColumn) c)
                             .setUserSelectionAllowed(userSelectionAllowed);

@@ -739,7 +739,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support adding new properties.
          *
-         * @see com.vaadin.data.Item#addItemProperty(Object, Property)
+         * @see Item#addItemProperty(Object, Property)
          */
         @Override
         public boolean addItemProperty(Object id, Property property)
@@ -751,7 +751,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support removing properties.
          *
-         * @see com.vaadin.data.Item#removeItemProperty(Object)
+         * @see Item#removeItemProperty(Object)
          */
         @Override
         public boolean removeItemProperty(Object id)
@@ -852,12 +852,6 @@ public class FilesystemContainer implements Container.Hierarchical {
         this.recursive = recursive;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
-     * java.lang.Class, java.lang.Object)
-     */
     @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
@@ -865,44 +859,24 @@ public class FilesystemContainer implements Container.Hierarchical {
                 "File system container does not support this operation");
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#addItem()
-     */
     @Override
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "File system container does not support this operation");
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#addItem(java.lang.Object)
-     */
     @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "File system container does not support this operation");
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeAllItems()
-     */
     @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "File system container does not support this operation");
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeItem(java.lang.Object)
-     */
     @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
@@ -910,11 +884,6 @@ public class FilesystemContainer implements Container.Hierarchical {
                 "File system container does not support this operation");
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object )
-     */
     @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {

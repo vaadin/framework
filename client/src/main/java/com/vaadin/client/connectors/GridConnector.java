@@ -101,7 +101,7 @@ import elemental.json.JsonValue;
 
 /**
  * Connects the client side {@link Grid} widget with the server side
- * {@link com.vaadin.ui.components.grid.Grid} component.
+ * <code>Grid</code> component.
  * <p>
  * The Grid is typed to JSONObject. The structure of the JSONObject is described
  * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
@@ -389,7 +389,7 @@ public class GridConnector extends AbstractHasComponentsConnector
             } else {
                 Collection<Column<?, JsonObject>> errorColumns;
                 if (errorColumnsIds != null) {
-                    errorColumns = new ArrayList<Grid.Column<?, JsonObject>>();
+                    errorColumns = new ArrayList<Column<?, JsonObject>>();
                     for (String colId : errorColumnsIds) {
                         errorColumns.add(columnIdToColumn.get(colId));
                     }

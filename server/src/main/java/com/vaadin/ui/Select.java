@@ -19,12 +19,12 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.Item;
 
 /**
  * <p>
  * A class representing a selection of items the user has selected in a UI. The
- * set of choices is presented as a set of {@link com.vaadin.data.Item}s in a
- * {@link com.vaadin.data.Container}.
+ * set of choices is presented as a set of {@link Item}s in a {@link Container}.
  * </p>
  *
  * <p>

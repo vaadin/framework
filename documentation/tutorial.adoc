@@ -272,7 +272,7 @@ The actual implementation of these classes is not relevant for this tutorial, bu
 [[framework.tutorial.grid]]
 == Listing entities in a Grid
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step3.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step3.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
 
 Often when you start building a UI for a data-centric application, the first
 thing you want to do is to list your data from your back-end.
@@ -389,7 +389,7 @@ You can do this at any point during the rest of the tutorial as well.
 [[framework.tutorial.filtering]]
 == Creating live filtering for entities
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step4.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step4.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 A search functionality is expected in every modern application and it is
 also a nice Vaadin development exercise. Let's add a filtering functionality to
@@ -500,7 +500,7 @@ that. Pick either of them.
 [[framework.tutorial.form.designer]]
 === Creating a form using Vaadin Designer
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step5.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step5.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 The form to edit Customer objects can be built using several methods of which
 the visual composition by drag 'n' drop is the most intuitive. Vaadin
@@ -878,7 +878,7 @@ simplicity.
 [[framework.tutorial.form-connection]]
 == Connecting the form to the application
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step6.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step6.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 In this part, we'll use the CustomerForm class, which we created in the
 previous step, from the MyUI class. We will use it for both editing the existing
