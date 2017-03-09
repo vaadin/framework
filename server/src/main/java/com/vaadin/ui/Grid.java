@@ -115,6 +115,7 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
+import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -831,6 +832,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private DescriptionGenerator<T> descriptionGenerator;
 
         private Binding<T, ?> editorBinding;
+        private Map<T, Component> activeComponents = new HashMap<>();
 
         private String userId;
 
@@ -961,6 +963,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             V providerValue = valueProvider.apply(data);
 
+            // Make Grid track components.
+            if (renderer instanceof ComponentRenderer
+                    && providerValue instanceof Component) {
+                addComponent(data, (Component) providerValue);
+            }
             JsonValue rendererValue = renderer.encode(providerValue);
 
             obj.put(communicationId, rendererValue);
@@ -979,6 +986,38 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     descriptionObj.put(communicationId, description);
                 }
             }
+        }
+
+        private void addComponent(T data, Component component) {
+            if (activeComponents.containsKey(data)) {
+                if (activeComponents.get(data).equals(component)) {
+                    // Reusing old component
+                    return;
+                }
+                removeComponent(data);
+            }
+            activeComponents.put(data, component);
+            addComponentToGrid(component);
+        }
+
+        @Override
+        public void destroyData(T item) {
+            removeComponent(item);
+        }
+
+        private void removeComponent(T item) {
+            Component component = activeComponents.remove(item);
+            if (component != null) {
+                removeComponentFromGrid(component);
+            }
+        }
+
+        @Override
+        public void destroyAllData() {
+            // Make a defensive copy of keys, as the map gets cleared when
+            // removing components.
+            new HashSet<>(activeComponents.keySet())
+                    .forEach(this::removeComponent);
         }
 
         /**
