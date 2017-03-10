@@ -351,16 +351,19 @@ public class HierarchyMapper implements Serializable {
                             .filter(subTree -> getDepth(
                                     subTree.parentKey) == (depth + 1))
                             .collect(Collectors.toList());
-                    // index in flat order
+                    // first intersecting index in flat order
                     AtomicInteger firstIntersectingRowIndex = new AtomicInteger(
                             Math.max(node.startIndex, firstRow));
-                    // index for this node
-                    AtomicInteger start;
-                    int end = Math.min(node.getEndIndex(), lastRow);
-                    AtomicInteger size;
-                    List<TreeNode> intersectingSubTrees = new ArrayList<>();
-                    start = new AtomicInteger(
+                    // last intersecting index in flat order
+                    final int lastIntersectingRowIndex = Math
+                            .min(node.getEndIndex(), lastRow);
+                    // start index for this level
+                    AtomicInteger start = new AtomicInteger(
                             firstIntersectingRowIndex.get() - node.startIndex);
+                    // how many nodes should be fetched for this level
+                    AtomicInteger size = new AtomicInteger(
+                            lastIntersectingRowIndex
+                                    - firstIntersectingRowIndex.get() + 1);
 
                     // reduce subtrees before requested index
                     directSubTrees.stream().filter(subtree -> subtree
@@ -369,10 +372,9 @@ public class HierarchyMapper implements Serializable {
                                 start.addAndGet(-1 * (subtree.getEndIndex()
                                         - subtree.startIndex + 1));
                             });
-                    size = new AtomicInteger(
-                            end - firstIntersectingRowIndex.get() + 1);
                     // if requested start index is in the middle of a
                     // subtree, start is after that
+                    List<TreeNode> intersectingSubTrees = new ArrayList<>();
                     directSubTrees.stream()
                             .filter(subtree -> subtree.startIndex <= firstIntersectingRowIndex
                                     .get() && firstIntersectingRowIndex
@@ -386,14 +388,19 @@ public class HierarchyMapper implements Serializable {
                                 size.addAndGet(delta);
                                 intersectingSubTrees.add(subtree);
                             });
-
+                    // reduce size of subtrees after first row that intersect
+                    // with requested range
                     directSubTrees.stream()
                             .filter(subtree -> firstIntersectingRowIndex
-                                    .get() < subtree.startIndex)
+                                    .get() < subtree.startIndex
+                                    && subtree.endIndex <= lastIntersectingRowIndex)
                             .forEachOrdered(subtree -> {
-                                // reduce subtree size from size
-                                size.addAndGet(-1 * (subtree.getEndIndex()
-                                        - subtree.startIndex + 1));
+                                // reduce subtree size that is part of the
+                                // requested range from query size
+                                size.addAndGet(
+                                        -1 * (Math.min(subtree.getEndIndex(),
+                                                lastIntersectingRowIndex)
+                                                - subtree.startIndex + 1));
                                 intersectingSubTrees.add(subtree);
                             });
                     return new TreeLevelQuery(node, start.get(), size.get(),

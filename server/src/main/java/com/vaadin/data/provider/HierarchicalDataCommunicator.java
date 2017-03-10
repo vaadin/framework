@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -135,8 +136,6 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     private void loadRequestedRows() {
         final Range requestedRows = getPushRows();
         if (!requestedRows.isEmpty()) {
-            List<T> fetchedItems = new ArrayList<>();
-
             Stream<TreeLevelQuery> levelQueries = mapper
                     .splitRangeToLevelQueries(requestedRows.getStart(),
                             requestedRows.getEnd() - 1);
@@ -145,8 +144,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             BiConsumer<JsonObject, Integer> rowDataMapper = (object,
                     index) -> dataObjects[index
                             - requestedRows.getStart()] = object;
+            List<T> fetchedItems = new ArrayList<>(dataObjects.length);
 
-            levelQueries.filter(query -> query.size > 0).forEach(query -> {
+            levelQueries.forEach(query -> {
                 List<T> results = doFetchQuery(query.startIndex, query.size,
                         getKeyMapper().get(query.node.getParentKey()))
                                 .collect(Collectors.toList());
@@ -158,6 +158,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
                 mapper.reorderLevelQueryResultsToFlatOrdering(rowDataMapper,
                         query, rowData);
             });
+            verifyNoNullItems(dataObjects, requestedRows);
 
             sendData(requestedRows.getStart(), Arrays.asList(dataObjects));
             getActiveDataHandler().addActiveData(fetchedItems.stream());
@@ -165,6 +166,28 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
 
         setPushRows(Range.withLength(0, 0));
+    }
+
+    /*
+     * Verify that there are no null objects in the array, to fail eagerly and
+     * not just on the client side.
+     */
+    private void verifyNoNullItems(JsonObject[] dataObjects,
+            Range requestedRange) {
+        List<Integer> nullItems = new ArrayList<>(0);
+        AtomicInteger indexCounter = new AtomicInteger();
+        Stream.of(dataObjects).forEach(object -> {
+            int index = indexCounter.getAndIncrement();
+            if (object == null) {
+                nullItems.add(index);
+            }
+        });
+        if (!nullItems.isEmpty()) {
+            throw new IllegalStateException("For requested rows "
+                    + requestedRange + ", there was null items for indexes "
+                    + nullItems.stream().map(Object::toString)
+                            .collect(Collectors.joining(", ")));
+        }
     }
 
     private JsonObject createDataObject(T item, int depth) {
