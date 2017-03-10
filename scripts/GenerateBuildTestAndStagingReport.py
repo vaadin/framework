@@ -12,9 +12,7 @@ parser.add_argument("teamcityUrl", type=str, help="Address to the teamcity serve
 parser.add_argument("buildTypeId", type=str, help="The ID of this build step")
 parser.add_argument("buildId", type=str, help="ID of the build to generate this report for")
 
-parser.add_argument("frameworkRepoUrl", type=str, help="URL to the framework staging repository")
-parser.add_argument("archetypeRepoUrl", type=str, help="URL to the archetype staging repository")
-parser.add_argument("pluginRepoUrl", type=str, help="URL to the plugin staging repository")
+parser.add_argument("stagingRepoUrl", type=str, help="URL to the staging repository")
 args = parser.parse_args()
 
 buildResultUrl = "http://{}/viewLog.html?buildId={}&tab=buildResultsDiv&buildTypeId={}".format(args.teamcityUrl, args.buildId, args.buildTypeId)
@@ -110,11 +108,11 @@ def checkStagingContents(url, allowedArtifacts):
     allowedDirs = getAllowedArtifactPaths(allowedArtifacts)
     return set(dirs) == set(allowedDirs)
 
-def getStagingContentsHtml(repoUrl, allowedArtifacts, name):
+def getStagingContentsHtml(repoUrl, allowedArtifacts):
     if checkStagingContents(repoUrl, allowedArtifacts):
-        return createTableRow(traffic_light.format(color="green"), "Expected artifacts found in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
+        return createTableRow(traffic_light.format(color="green"), "Expected artifacts found in the staging repository. <a href=\"{}\">Link to the repository.</a>".format(repoUrl))
     else:
-        return createTableRow(traffic_light.format(color="red"), "Extraneous or missing artifacts in the {} staging repository. <a href=\"{}\">Link to the repository.</a>".format(name, repoUrl))
+        return createTableRow(traffic_light.format(color="red"), "Extraneous or missing artifacts in the staging repository. <a href=\"{}\">Link to the repository.</a>".format(repoUrl))
 
 def completeArtifactName(artifactId, version):
     return 'com/vaadin/' + artifactId + '/' + version
@@ -123,9 +121,7 @@ def completeArtifactNames(artifactIds, version):
     return list(map(lambda x: completeArtifactName(x, version), artifactIds))
 
 
-allowedPluginArtifacts = completeArtifactNames([ 'vaadin-maven-plugin' ], args.version)
-allowedArchetypeArtifacts = completeArtifactNames([ 'vaadin-archetypes', 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet' ], args.version)
-allowedFrameworkArtifacts = completeArtifactNames([ 'vaadin-root', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes', 'vaadin-testbench-api' ], args.version)
+allowedArtifacts = completeArtifactNames([ 'vaadin-maven-plugin', 'vaadin-archetypes', 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet', 'vaadin-root', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes', 'vaadin-testbench-api' ], args.version)
 
 content = "<html><head></head><body><table>"
 traffic_light = "<svg width=\"20px\" height=\"20px\" style=\"padding-right:5px\"><circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"{color}\"/></svg>"
@@ -150,9 +146,7 @@ except subprocess.CalledProcessError as e:
         raise e
 
 # check staging repositories don't contain extra artifacts
-content += getStagingContentsHtml(args.frameworkRepoUrl, allowedFrameworkArtifacts, "framework")
-content += getStagingContentsHtml(args.archetypeRepoUrl, allowedArchetypeArtifacts, "archetype")
-content += getStagingContentsHtml(args.pluginRepoUrl, allowedPluginArtifacts, "plugin")
+content += getStagingContentsHtml(args.stagingRepoUrl, allowedArtifacts)
 
 content += createTableRow("", "<h2>Manual checks before publishing</h2>")
 # try demos
@@ -167,8 +161,6 @@ content += createTableRow("", getApiDiffHtml())
 content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/issues?q=is%3Aclosed+sort%3Aupdated-desc\">Check that closed GitHub issues have correct milestone</a>")
 
 content += createTableRow("", "<h2>Preparations before publishing</h2>")
-# close GitHub milestone
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a>")
 # link to build dependencies tab to initiate publish step
 content += createTableRow("", "<a href=\"http://{}/viewLog.html?buildId={}&buildTypeId={}&tab=dependencies\"><h2>Start Publish Release from dependencies tab</h2></a>".format(args.teamcityUrl, args.buildId, args.buildTypeId))
 
