@@ -29,7 +29,7 @@ import com.vaadin.ui.declarative.Design;
  * the load the design without further configuration. By default, the design
  * is loaded from the same package as the annotated class and the design
  * filename is derived from the class name. You can override the default
- * behaviour by using the {@link #value()} parameter in order to load the 
+ * behaviour by using the {@link #value()} parameter in order to load the
  * design from a different package or with a non-default filename.
  *
  * @since 7.4
