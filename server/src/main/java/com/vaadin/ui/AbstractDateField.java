@@ -684,7 +684,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         } else {
             RangeValidator<T> validator = getRangeValidator();
             ValidationResult result = validator.apply(value,
-                    new ValueContext(this));
+                    new ValueContext(this,this));
             if (result.isError()) {
                 setComponentError(new UserError(getDateOutOfRangeMessage()));
             }
