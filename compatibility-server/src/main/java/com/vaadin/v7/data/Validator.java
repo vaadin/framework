@@ -19,13 +19,11 @@ package com.vaadin.v7.data;
 import java.io.Serializable;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ErrorMessageProducer;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinServlet;
 
