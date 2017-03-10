@@ -41,7 +41,7 @@ import elemental.json.JsonObject;
  *
  * @param <T>
  *            the bean type
- *
+ * @author Vaadin Ltd
  * @since
  */
 public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
@@ -63,7 +63,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     public HierarchicalDataCommunicator() {
         super();
-        dataProvider = new InMemoryHierarchicalDataProvider<T>(
+        dataProvider = new InMemoryHierarchicalDataProvider<>(
                 new HierarchyData<>());
     }
 
@@ -236,7 +236,14 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     @Override
     protected void onDropRows(JsonArray keys) {
-        super.onDropRows(keys);
+        for (int i = 0; i < keys.length(); i++) {
+            // cannot drop expanded rows since the parent item is needed always
+            // when fetching more rows
+            String itemKey = keys.getString(i);
+            if (mapper.isCollapsed(itemKey)) {
+                getActiveDataHandler().dropActiveData(itemKey);
+            }
+        }
     }
 
     @Override

@@ -48,7 +48,7 @@ public class HierarchyMapper implements Serializable {
     /**
      * A POJO that represents a query data for a certain tree level.
      */
-    protected static class TreeLevelQuery {
+    protected static class TreeLevelQuery { // not serializable since not stored
         /**
          * The tree node that the query is for. Only used for fetching parent
          * key.
