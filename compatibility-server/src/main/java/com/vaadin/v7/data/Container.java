@@ -664,7 +664,7 @@ public interface Container extends Serializable {
      * unable to have children.
      * </ul>
      *
-     * @deprecated As of 8.0, no replacement available.
+     * @deprecated As of 8.0, no replacement available, planned to be replaced in 8.1.
      */
     @Deprecated
     public interface Hierarchical extends Container {

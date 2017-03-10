@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -48,7 +47,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no replacement available.
+ * @deprecated As of 8.0, no replacement available, planned to be replaced in Vaadin 8.1.
  */
 @Deprecated
 @SuppressWarnings("serial")
