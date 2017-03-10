@@ -72,12 +72,22 @@ public class HierarchicalQuery<T, F> extends Query<T, F> {
         this.parent = parent;
     }
 
+    /**
+     * Get the hierarchical parent object, can be <code>null</code>.
+     * 
+     * @return the hierarchical parent object, can be <code>null</code>
+     */
     public T getParent() {
         return parent;
     }
 
+    /**
+     * Get an Optional of the hierarchical parent object.
+     * 
+     * @see #getParent()
+     * @return the result of {@link #getParent()} wrapped by an Optional
+     */
     public Optional<T> getParentOptional() {
         return Optional.ofNullable(parent);
     }
-
 }

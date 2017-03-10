@@ -25,12 +25,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * 
+ * Class for representing hierarchical data.
  * 
  * @author Vaadin Ltd
  * @since 8.1
  *
  * @param <T>
+ *            data type
  */
 public class HierarchyData<T> implements Serializable {
 
@@ -80,11 +81,31 @@ public class HierarchyData<T> implements Serializable {
 
     private final Map<T, HierarchyWrapper<T>> itemToWrapperMap;
 
+    /**
+     * Creates an initially empty hierarchical data representation to which
+     * items can be added or removed.
+     */
     public HierarchyData() {
         itemToWrapperMap = new LinkedHashMap<>();
         itemToWrapperMap.put(null, new HierarchyWrapper<>(null, null));
     }
 
+    /**
+     * Adds a data item as a child of {@code parent}. Call with {@code null} as
+     * parent to add a root level item. The given parent item must already exist
+     * in this structure, and an item can only be added to this structure once.
+     * 
+     * @param parent
+     *            the parent item for which the items are added as children
+     * @param item
+     *            the item to add
+     * @return this
+     * 
+     * @throws IllegalArgumentException
+     *             if parent is not null and not already added to this structure
+     * @throws IllegalArgumentException
+     *             if the item has already been added to this structure
+     */
     public HierarchyData<T> addItem(T parent, T item) {
         if (parent != null && !contains(parent)) {
             throw new IllegalArgumentException(
@@ -99,35 +120,107 @@ public class HierarchyData<T> implements Serializable {
         return this;
     }
 
+    /**
+     * Adds a list of data items as children of {@code parent}. Call with
+     * {@code null} as parent to add root level items. The given parent item
+     * must already exist in this structure, and an item can only be added to
+     * this structure once.
+     * 
+     * @param parent
+     *            the parent item for which the items are added as children
+     * @param items
+     *            the list of items to add
+     * @return this
+     * 
+     * @throws IllegalArgumentException
+     *             if parent is not null and not already added to this structure
+     * @throws IllegalArgumentException
+     *             if any of the given items have already been added to this
+     *             structure
+     */
     public HierarchyData<T> addItems(T parent,
             @SuppressWarnings("unchecked") T... items) {
         Arrays.asList(items).stream().forEach(item -> addItem(parent, item));
         return this;
     }
 
+    /**
+     * Adds a list of data items as children of {@code parent}. Call with
+     * {@code null} as parent to add root level items. The given parent item
+     * must already exist in this structure, and an item can only be added to
+     * this structure once.
+     * 
+     * @param parent
+     *            the parent item for which the items are added as children
+     * @param items
+     *            the collection of items to add
+     * @return this
+     * 
+     * @throws IllegalArgumentException
+     *             if parent is not null and not already added to this structure
+     * @throws IllegalArgumentException
+     *             if any of the given items have already been added to this
+     *             structure
+     */
     public HierarchyData<T> addItems(T parent, Collection<T> items) {
         items.stream().forEach(item -> addItem(parent, item));
         return this;
     }
 
+    /**
+     * Adds data items contained in a stream as children of {@code parent}. Call
+     * with {@code null} as parent to add root level items. The given parent
+     * item must already exist in this structure, and an item can only be added
+     * to this structure once.
+     * 
+     * @param parent
+     *            the parent item for which the items are added as children
+     * @param items
+     *            stream of items to add
+     * @return this
+     * 
+     * @throws IllegalArgumentException
+     *             if parent is not null and not already added to this structure
+     * @throws IllegalArgumentException
+     *             if any of the given items have already been added to this
+     *             structure
+     */
     public HierarchyData<T> addItems(T parent, Stream<T> items) {
         items.forEach(item -> addItem(parent, item));
         return this;
     }
 
-    public HierarchyData<T> addItems(
-            Map<T, Collection<T>> parentToChildrenMap) {
-        parentToChildrenMap.entrySet().stream()
-                .forEach(entry -> entry.getValue().stream()
-                        .forEach(item -> addItem(entry.getKey(), item)));
-        return this;
-    }
-
+    /**
+     * Remove a given item from this structure. Additionally, this will
+     * recursively remove any descendants of the item.
+     * 
+     * @param item
+     *            the item to remove
+     * @return this
+     * 
+     * @throws IllegalArgumentException
+     *             if the item does not exist in this structure
+     */
     public HierarchyData<T> removeItem(T item) {
-        // TODO
+        if (!contains(item)) {
+            throw new IllegalArgumentException(
+                    "Item '" + item + "' not in the hierarchy");
+        }
+        getChildren(item).forEach(child -> removeItem(child));
+        itemToWrapperMap.get(itemToWrapperMap.get(item).getParent())
+                .removeChild(item);
         return this;
     }
 
+    /**
+     * 
+     * @param item
+     *            the item for which to retrieve child items for
+     * @return a list of child items for the given item
+     * 
+     * @throws IllegalArgumentException
+     *             if the item does not exist in this structure
+     */
     public List<T> getChildren(T item) {
         if (!contains(item)) {
             throw new IllegalArgumentException(

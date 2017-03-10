@@ -57,7 +57,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     private void initializeInMemoryDataProvider() {
         HierarchyData<HierarchicalTestBean> data = new HierarchyData<>();
 
-        List<Integer> ints = Arrays.asList(1, 2, 3);
+        List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
 
         ints.stream().forEach(index -> {
             HierarchicalTestBean parentBean = new HierarchicalTestBean(null, 0,
