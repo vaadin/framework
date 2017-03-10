@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid.basicfeatures.escalator;
+package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,7 +37,7 @@ import com.vaadin.shared.Range;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
-import com.vaadin.v7.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 @SuppressWarnings("boxing")
 public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
@@ -102,7 +102,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     @Before
     public void before() {
         setDebug(true);
-        openTestURL();
+        openTestURL("theme=reindeer");
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, "Set 20px default height");
         populate();
     }

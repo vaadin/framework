@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,6 +27,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.components.grid.basics.EscalatorBasicClientFeatures;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
