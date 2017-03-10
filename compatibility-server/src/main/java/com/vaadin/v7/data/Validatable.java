@@ -33,7 +33,7 @@ import java.util.Collection;
  * @author Vaadin Ltd.
  * @since 3.0
  * @see Validator
- * @deprecated As of 8.0, no replacement available, see {@link Binder}
+ * @deprecated As of 8.0, no direct replacement available. See {@link Binder}, {@link com.vaadin.data.Validator}.
  */
 @Deprecated
 public interface Validatable extends Serializable {

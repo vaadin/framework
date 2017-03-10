@@ -37,7 +37,7 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- *  @deprecated As of 8.0, no replacement available, see {@link Binder}, {@link DataProvider}
+ *  @deprecated As of 8.0, no direct replacement available, see {@link Binder}, {@link DataProvider}
  */
 @SuppressWarnings("serial")
 @Deprecated

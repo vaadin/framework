@@ -29,7 +29,7 @@ import com.vaadin.v7.data.Container.Indexed;
  *
  * @since 7.0
  *
- * @deprecated As of 8.0, no replacement available, see {@link DataProvider}
+ * @deprecated As of 8.0, no direct replacement available, see {@link DataProvider}
  */
 @Deprecated
 public class ContainerHelpers implements Serializable {

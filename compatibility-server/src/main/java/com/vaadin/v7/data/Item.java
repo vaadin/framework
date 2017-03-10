@@ -31,7 +31,7 @@ import java.util.Collection;
  *
  * @author Vaadin Ltd
  * @since 3.0
- * @deprecated As of 8.0, no replacement available, see {@link Binder}, {@link DataProvider}
+ * @deprecated As of 8.0, no direct replacement available, see {@link Binder}, {@link DataProvider}
  */
 @Deprecated
 public interface Item extends Serializable {
