@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd.
  * @since 7.0
  *
- * @deprecated As of 8.0, no replacement available.
+ * @deprecated As of 8.0, no replacement available - provide explicit converters for Binder.
  */
 @Deprecated
 public interface ConverterFactory extends Serializable {

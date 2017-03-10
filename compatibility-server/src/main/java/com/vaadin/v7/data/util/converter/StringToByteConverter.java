@@ -32,7 +32,7 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  *
- * @deprecated As of 8.0, a lightweight lambda-based converter might be build with
+ * @deprecated As of 8.0, a lightweight lambda-based converter could be build with
  *  {@link Binder}{@code .forField(...).withConverter(...)} methods.
  */
 @Deprecated
