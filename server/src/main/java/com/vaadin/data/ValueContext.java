@@ -33,6 +33,7 @@ import com.vaadin.ui.UI;
 public class ValueContext implements Serializable {
 
     private final Component component;
+    private final HasValue<?> hasValue;
     private final Locale locale;
 
     /**
@@ -40,6 +41,7 @@ public class ValueContext implements Serializable {
      */
     public ValueContext() {
         component = null;
+        hasValue = null;
         locale = findLocale();
     }
 
@@ -52,6 +54,7 @@ public class ValueContext implements Serializable {
     public ValueContext(Locale locale) {
         component = null;
         this.locale = locale;
+        hasValue = null;
     }
 
     /**
@@ -60,11 +63,47 @@ public class ValueContext implements Serializable {
      * @param component
      *            The component related to current value. Can be null.
      */
+    @SuppressWarnings("unchecked")
     public ValueContext(Component component) {
         Objects.requireNonNull(component,
                 "Component can't be null in ValueContext construction");
         this.component = component;
+        if(component instanceof HasValue) {
+            hasValue = (HasValue<?>) component;
+        } else {
+            hasValue = null;
+        }
         locale = findLocale();
+    }
+
+    /**
+     * Constructor for {@code ValueContext}.
+     *
+     * @param component
+     *            The component related to current value. Can be null.
+     * @param hasValue
+     *            The value source related to current value. Can be null.
+     */
+    public ValueContext(Component component, HasValue<?> hasValue) {
+        Objects.requireNonNull(component,
+                "Component can't be null in ValueContext construction");
+        this.component = component;
+        this.hasValue = hasValue;
+        locale = findLocale();
+    }
+
+    /**
+     * Constructor for {@code ValueContext}.
+     *
+     * @param locale
+     *            The locale used with conversion. Can be null.
+     * @param hasValue
+     *            The value source related to current value. Can be null.
+     */
+    public ValueContext(HasValue<?> hasValue, Locale locale) {
+        this.component = null;
+        this.hasValue = hasValue;
+        this.locale = locale;
     }
 
     private Locale findLocale() {
@@ -99,5 +138,16 @@ public class ValueContext implements Serializable {
      */
     public Optional<Locale> getLocale() {
         return Optional.ofNullable(locale);
+    }
+
+    /**
+     * Returns an {@code Optional} for the {@code HasValue} used in the value
+     * conversion.
+     *
+     * @return the optional of {@code HasValue}
+     */
+    @SuppressWarnings("unused")
+    public Optional<HasValue<?>> getHasValue() {
+        return Optional.ofNullable(hasValue);
     }
 }
