@@ -33,14 +33,19 @@ import com.vaadin.ui.Grid;
  */
 public class EditorSaveEvent<T> extends EventObject {
 
+    private T bean;
+
     /**
      * Constructor for a editor save event.
      * 
      * @param editor
      *            the source of the event
+     * @param bean
+     *            the bean being edited
      */
-    public EditorSaveEvent(Editor<T> editor) {
+    public EditorSaveEvent(Editor<T> editor, T bean) {
         super(editor);
+        this.bean = bean;
     }
 
     @SuppressWarnings("unchecked")
@@ -56,5 +61,14 @@ public class EditorSaveEvent<T> extends EventObject {
      */
     public Grid<T> getGrid() {
         return getSource().getGrid();
+    }
+
+    /**
+     * Gets the bean being edited.
+     *
+     * @return the bean being edited
+     */
+    public T getBean() {
+        return bean;
     }
 }
