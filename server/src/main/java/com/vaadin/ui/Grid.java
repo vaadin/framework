@@ -85,7 +85,6 @@ import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
@@ -101,7 +100,6 @@ import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
-import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
@@ -2303,12 +2301,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
             String columnId = column.getInternalId();
+            int displayIndex = getState(false).columnOrder.indexOf(columnId);
+            assert displayIndex != -1 : "Tried to remove a column which is not included in columnOrder. This should not be possible as all columns should be in columnOrder.";
             columnKeys.remove(columnId);
             columnIds.remove(column.getId());
             column.remove();
             getHeader().removeColumn(columnId);
             getFooter().removeColumn(columnId);
             getState(true).columnOrder.remove(columnId);
+
+            if (displayIndex < getFrozenColumnCount()) {
+                setFrozenColumnCount(getFrozenColumnCount() - 1);
+            }
         }
     }
 
@@ -2433,6 +2437,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * means that no data columns will be frozen, but the built-in selection
      * checkbox column will still be frozen if it's in use. Setting the count to
      * -1 will also disable the selection column.
+     * <p>
+     * <em>NOTE:</em> this count includes {@link Column#isHidden() hidden
+     * columns} in the count.
      * <p>
      * The default value is 0.
      *
