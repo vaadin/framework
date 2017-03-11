@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.tests.widgetset.client;
 
 import com.google.gwt.user.client.ui.SimplePanel;

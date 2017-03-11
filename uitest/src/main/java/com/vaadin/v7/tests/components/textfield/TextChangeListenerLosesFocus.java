@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.v7.tests.components.textfield;
 
 import com.vaadin.tests.components.TestBase;
