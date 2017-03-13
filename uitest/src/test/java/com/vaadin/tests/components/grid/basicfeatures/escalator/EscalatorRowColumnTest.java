@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid.basicfeatures.escalator;
+package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -21,10 +21,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.v7.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
@@ -34,9 +35,13 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
      */
     private static final int BOTTOM_SCROLL_POSITION = 1857;
 
+    @Before
+    public void open() {
+        openTestURL("theme=reindeer");
+    }
+
     @Test
     public void testInit() {
-        openTestURL();
         assertNotNull(getEscalator());
         assertNull(getHeaderRow(0));
         assertNull(getBodyRow(0));
@@ -50,8 +55,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAColumn() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, ADD_ONE_COLUMN_TO_BEGINNING);
         assertNull(getHeaderRow(0));
         assertNull(getBodyRow(0));
@@ -61,8 +64,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAHeaderRow() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, HEADER_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         assertNull(getHeaderCell(0, 0));
         assertNull(getBodyCell(0, 0));
@@ -72,8 +73,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertABodyRow() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         assertNull(getHeaderCell(0, 0));
         assertNull(getBodyCell(0, 0));
@@ -83,8 +82,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAFooterRow() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, FOOTER_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         assertNull(getHeaderCell(0, 0));
         assertNull(getBodyCell(0, 0));
@@ -94,8 +91,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAColumnAndAHeaderRow() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, ADD_ONE_COLUMN_TO_BEGINNING);
         selectMenuPath(COLUMNS_AND_ROWS, HEADER_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         assertNotNull(getHeaderCell(0, 0));
@@ -107,8 +102,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAColumnAndABodyRow() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, ADD_ONE_COLUMN_TO_BEGINNING);
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         assertNull(getHeaderCell(0, 0));
@@ -120,8 +113,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAColumnAndAFooterRow() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, ADD_ONE_COLUMN_TO_BEGINNING);
         selectMenuPath(COLUMNS_AND_ROWS, FOOTER_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         assertNull(getHeaderCell(0, 0));
@@ -133,8 +124,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAHeaderRowAndAColumn() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, HEADER_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, ADD_ONE_COLUMN_TO_BEGINNING);
         assertNotNull(getHeaderCell(0, 0));
@@ -146,8 +135,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertABodyRowAndAColumn() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, ADD_ONE_COLUMN_TO_BEGINNING);
         assertNull(getHeaderCell(0, 0));
@@ -159,8 +146,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testInsertAFooterRowAndAColumn() {
-        openTestURL();
-
         selectMenuPath(COLUMNS_AND_ROWS, FOOTER_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, ADD_ONE_COLUMN_TO_BEGINNING);
         assertNull(getHeaderCell(0, 0));
@@ -172,8 +157,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testFillColRow() {
-        openTestURL();
-
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
         scrollVerticallyTo(2000); // more like 1857, but this should be enough.
 
@@ -184,8 +167,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testFillRowCol() {
-        openTestURL();
-
         selectMenuPath(GENERAL, POPULATE_ROW_COLUMN);
         scrollVerticallyTo(2000); // more like 1857, but this should be enough.
 
@@ -196,7 +177,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testClearColRow() {
-        openTestURL();
 
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
         selectMenuPath(GENERAL, CLEAR_COLUMN_ROW);
@@ -206,7 +186,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testClearRowCol() {
-        openTestURL();
 
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
         selectMenuPath(GENERAL, CLEAR_ROW_COLUMN);
@@ -216,7 +195,7 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
 
     @Test
     public void testResizeColToFit() {
-        openTestURL();
+
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
         selectMenuPath(COLUMNS_AND_ROWS, COLUMNS, RESIZE_FIRST_COLUMN_TO_100PX);
@@ -234,7 +213,7 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
     @Test
     public void testRemoveMoreThanPagefulAtBottomWhileScrolledToBottom()
             throws Exception {
-        openTestURL();
+
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
         scrollVerticallyTo(BOTTOM_SCROLL_POSITION);
@@ -253,7 +232,7 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
     @Test
     public void testRemoveMoreThanPagefulAtBottomWhileScrolledAlmostToBottom()
             throws Exception {
-        openTestURL();
+
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
         // bottom minus 15 rows.
@@ -273,7 +252,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
     @Test
     public void testRemoveMoreThanPagefulNearBottomWhileScrolledToBottom()
             throws Exception {
-        openTestURL();
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
         scrollVerticallyTo(BOTTOM_SCROLL_POSITION);
@@ -293,7 +271,6 @@ public class EscalatorRowColumnTest extends EscalatorBasicClientFeaturesTest {
     @Test
     public void testRemoveMoreThanPagefulNearBottomWhileScrolledAlmostToBottom()
             throws Exception {
-        openTestURL();
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
         // bottom minus 15 rows.
