@@ -13,21 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
-import com.vaadin.tests.widgetset.client.v7.grid.EscalatorBasicClientFeaturesWidget.LogWidget;
-import com.vaadin.v7.client.widget.escalator.Cell;
-import com.vaadin.v7.client.widget.escalator.ColumnConfiguration;
-import com.vaadin.v7.client.widget.escalator.EscalatorUpdater;
-import com.vaadin.v7.client.widget.escalator.RowContainer;
-import com.vaadin.v7.client.widget.escalator.RowContainer.BodyRowContainer;
-import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
-import com.vaadin.v7.client.widgets.Escalator;
+import com.vaadin.client.widget.escalator.Cell;
+import com.vaadin.client.widget.escalator.ColumnConfiguration;
+import com.vaadin.client.widget.escalator.EscalatorUpdater;
+import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
+import com.vaadin.client.widgets.Escalator;
+import com.vaadin.tests.widgetset.client.grid.EscalatorBasicClientFeaturesWidget.LogWidget;
 
 public class EscalatorProxy extends Escalator {
     private class ColumnConfigurationProxy implements ColumnConfiguration {

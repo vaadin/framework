@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid.basicfeatures.escalator;
+package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import org.junit.Test;
 
-import com.vaadin.v7.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
-import com.vaadin.v7.tests.components.grid.basicfeatures.EscalatorUpdaterUi;
+import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
+import com.vaadin.tests.components.grid.basics.EscalatorUpdaterUi;
 
 public class EscalatorUpdaterUiTest extends EscalatorBasicClientFeaturesTest {
     @Override

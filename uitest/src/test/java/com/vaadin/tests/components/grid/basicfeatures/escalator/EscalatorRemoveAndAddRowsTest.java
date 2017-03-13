@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid.basicfeatures.escalator;
+package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.v7.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
+import com.vaadin.tests.components.grid.basicfeatures.EscalatorBasicClientFeaturesTest;
 
 /**
  * Test class to test the escalator level issue for ticket #16832
@@ -30,9 +31,13 @@ import com.vaadin.v7.tests.components.grid.basicfeatures.EscalatorBasicClientFea
 public class EscalatorRemoveAndAddRowsTest
         extends EscalatorBasicClientFeaturesTest {
 
+    @Before
+    public void open() {
+        openTestURL("theme=reindeer");
+    }
+
     @Test
     public void testRemoveAllRowsAndAddThirtyThenScroll() throws IOException {
-        openTestURL();
 
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
