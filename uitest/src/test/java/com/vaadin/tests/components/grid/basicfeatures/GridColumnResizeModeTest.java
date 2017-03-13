@@ -39,16 +39,19 @@ public class GridColumnResizeModeTest extends GridBasicFeaturesTest {
 
         CustomGridElement grid = getGridElement();
 
+        selectMenuPath("Component", "Columns", "Simple resize mode");
+        sleep(250);
+
         List<WebElement> handles = grid.findElements(By.className("v-grid-column-resize-handle"));
         WebElement handle = handles.get(1);
 
-        Actions drag1 = new Actions(getDriver()).moveToElement(handle).clickAndHold();
+        // add 1px because of a glitch on IE9 and IE10 in our testing
+        // environment
+        Actions drag1 = new Actions(getDriver()).moveToElement(handle)
+                .moveByOffset(1, 0).clickAndHold();
         Actions drag2 = new Actions(getDriver()).moveByOffset(-50, 0);
         Actions drag3 = new Actions(getDriver()).moveByOffset(100, 0);
         Actions dragEndAction = new Actions(getDriver()).release().moveToElement(grid);
-
-        selectMenuPath("Component", "Columns", "Simple resize mode");
-        sleep(250);
 
         drag1.perform();
         sleep(500);
