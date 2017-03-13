@@ -49,6 +49,7 @@ import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.PropertyDefinition;
 import com.vaadin.data.PropertySet;
+import com.vaadin.data.ValueConverter;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
@@ -817,7 +818,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public static class Column<T, V> extends AbstractGridExtension<T> {
 
         private final SerializableFunction<T, V> valueProvider;
-        private final SerializableFunction<V, ?> presentationProvider;
+        private final SerializableFunction<V, ?> valueConverter;
 
         private SortOrderProvider sortOrderProvider = direction -> {
             String id = getId();
@@ -849,7 +850,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         protected Column(ValueProvider<T, V> valueProvider,
                 Renderer<? super V> renderer) {
-            this(valueProvider, ValueProvider.identity(), renderer);
+            this(valueProvider, ValueConverter.identity(), renderer);
         }
 
         /**
@@ -859,26 +860,26 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param valueProvider
          *            the function to get values from items, not
          *            <code>null</code>
-         * @param presentationProvider
-         *            the function to get presentations for this column
-         *            values, not <code>null</code>
+         * @param valueConverter
+         *            the function to convert values for this column, not
+         *            <code>null</code>
          * @param renderer
-         *            the presentation renderer, not <code>null</code>
-         * @param <P> the presentation type
+         *            the converted value renderer, not <code>null</code>
+         * @param <P> the conversion type
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
-                ValueProvider<V, P> presentationProvider,
+                ValueConverter<V, P> valueConverter,
                 Renderer<? super P> renderer) {
             Objects.requireNonNull(valueProvider,
                     "Value provider can't be null");
-            Objects.requireNonNull(presentationProvider,
-                    "Presentation provider can't be null");
+            Objects.requireNonNull(valueConverter,
+                    "Value converter can't be null");
             Objects.requireNonNull(renderer, "Renderer can't be null");
 
             ColumnState state = getState();
 
             this.valueProvider = valueProvider;
-            this.presentationProvider = presentationProvider;
+            this.valueConverter = valueConverter;
 
             state.renderer = renderer;
             state.caption = "";
@@ -972,11 +973,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         @Override
         public void generateData(T data, JsonObject jsonObject) {
-            generatePresentationData(data, jsonObject, presentationProvider);
+            generatePresentationData(data, jsonObject, valueConverter);
         }
 
         private <P> void generatePresentationData(T data, JsonObject jsonObject,
-                SerializableFunction<V, P> presentationProvider) {
+                SerializableFunction<V, P> valueConverter) {
             ColumnState state = getState(false);
 
             String communicationId = getConnectorId();
@@ -990,7 +991,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             JsonObject obj = getDataObject(jsonObject,
                     DataCommunicatorConstants.DATA);
 
-            P presentationValue = presentationProvider.apply(valueProvider.apply(data));
+            P presentationValue = valueConverter.apply(valueProvider.apply(data));
 
             // Make Grid track components.
             if (renderer instanceof ComponentRenderer
@@ -2312,6 +2313,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param valueProvider
      *            the value provider
+     * @param <V>
+     *            the column value type
      *
      * @return the new column
      */
@@ -2336,53 +2339,51 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
             AbstractRenderer<? super T, ? super V> renderer) {
-        return addColumn(valueProvider, ValueProvider.identity(), renderer);
+        return addColumn(valueProvider, ValueConverter.identity(), renderer);
     }
 
     /**
-     * Adds a new column to this {@link Grid} with value provider and
-     * presentation provider.
+     * Adds a new column to this {@link Grid} with value provider and value
+     * converter.
      *
      * @param valueProvider
      *            the value provider
-     * @param presentationProvider
-     *            the value presentation provider
+     * @param valueConverter
+     *            the value converter
      * @param <V>
      *            the column value type
-     * @param <P>
-     *            the column presentation type
      *
      * @return the new column
      */
-    public <V, P> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
-            ValueProvider<V, P> presentationProvider) {
-        return addColumn(valueProvider, presentationProvider, new TextRenderer());
+    public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
+            ValueConverter<V, ?> valueConverter) {
+        return addColumn(valueProvider, valueConverter, new TextRenderer());
     }
 
     /**
-     * Adds a new column to this {@link Grid} with value provider,
-     * presentation provider and typed renderer.
+     * Adds a new column to this {@link Grid} with value provider, value
+     * converter and typed renderer.
      *
      * @param valueProvider
      *            the value provider
-     * @param presentationProvider
+     * @param valueConverter
      *            the value presentation provider
      * @param renderer
      *            the column value renderer
      * @param <V>
      *            the column value type
      * @param <P>
-     *            the column presentation type
+     *            the column conversion type
      *
      * @return the new column
      *
      * @see AbstractRenderer
      */
     public <V, P> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
-            ValueProvider<V, P> presentationProvider,
+            ValueConverter<V, P> valueConverter,
             AbstractRenderer<? super T, ? super P> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
-        Column<T, V> column = new Column<>(valueProvider, presentationProvider, renderer);
+        Column<T, V> column = new Column<>(valueProvider, valueConverter, renderer);
         addColumn(generatedIdentifier, column);
         return column;
     }
