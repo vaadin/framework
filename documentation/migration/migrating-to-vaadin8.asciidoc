@@ -138,7 +138,7 @@ The new data model can be roughly split into three main topics, namely binding d
 The revised <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Binding Components to Data">> chapter is the recommended resource to get started with learning these new concepts.
 For migration from Framework 7 the key references are the following sections:
 
-* <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Editing Values in Fields">> and <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc, "Binding Data to Forms">>, which cover the new data binding concepts that replace `Property` and `FieldGroup`.
+* <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Editing Values in Fields">> and <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms, "Binding Data to Forms">>, which cover the new data binding concepts that replace `Property` and `FieldGroup`.
 
 * <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers, "Showing Many Items in a Listing">>, which covers the new `Container` and `Item` replacement, the `DataProvider`, as well as the associated sorting and filtering APIs.
 
