@@ -1276,7 +1276,7 @@ public class FieldGroup implements Serializable {
     public void clear() {
         for (Field<?> f : getFields()) {
             if (f instanceof AbstractField) {
-                ((AbstractField) f).clear();
+                ((AbstractField<?>) f).clear();
             }
         }
 

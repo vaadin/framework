@@ -61,9 +61,9 @@ public abstract class ElementComponentGetCaptionBase extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Component[] comps = { new ComboBox(), new Button(), createGrid(),
-                new CheckBoxGroup(), new RadioButtonGroup(),
-                new TwinColSelect(), new ListSelect(), new ColorPicker(),
+        Component[] comps = { new ComboBox<Object>(), new Button(), createGrid(),
+                new CheckBoxGroup<Object>(), new RadioButtonGroup<Object>(),
+                new TwinColSelect<Object>(), new ListSelect<Object>(), new ColorPicker(),
                 new Accordion(), new Image(), new Flash(), new BrowserFrame(),
                 new CheckBox(), new TextField(), new TextArea(),
                 new DateField(), new VerticalLayout(), new HorizontalLayout(),

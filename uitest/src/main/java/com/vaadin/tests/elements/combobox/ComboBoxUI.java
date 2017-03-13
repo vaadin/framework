@@ -37,10 +37,10 @@ public class ComboBoxUI extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox comboBox = new ComboBox("NullAllowedComboBox", currencies);
+        ComboBox<String> comboBox = new ComboBox<>("NullAllowedComboBox", currencies);
         addComponent(comboBox);
 
-        comboBox = new ComboBox("NullForbiddenComboBox", currencies);
+        comboBox = new ComboBox<>("NullForbiddenComboBox", currencies);
         comboBox.setEmptySelectionAllowed(false);
         addComponent(comboBox);
     }

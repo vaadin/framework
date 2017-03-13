@@ -30,7 +30,7 @@ public class InsertComponentInHorizontalLayout extends AbstractReindeerTestUI {
     int added = 1;
 
     private Component getTestLayout() {
-        ComboBox a = new ComboBox("initial");
+        ComboBox<?> a = new ComboBox<>("initial");
         Button b = new Button("x", new Button.ClickListener() {
 
             @Override
@@ -45,8 +45,8 @@ public class InsertComponentInHorizontalLayout extends AbstractReindeerTestUI {
         add.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                hl.addComponent(new ComboBox("Added " + added++), 1);
-                hl.addComponent(new ComboBox("Added " + added++), 2);
+                hl.addComponent(new ComboBox<Object>("Added " + added++), 1);
+                hl.addComponent(new ComboBox<Object>("Added " + added++), 2);
             }
         });
         layout = new VerticalLayout(hl, add);

@@ -152,8 +152,8 @@ public class StringToCollectionConverter
 
         int index = value.indexOf(delimiter);
         int previous = 0;
-        Collection result = factory.createCollection(targetType);
-        Converter converter = tokenConverter;
+        Collection<?> result = factory.createCollection(targetType);
+        Converter<String, ?> converter = tokenConverter;
         while (index != -1) {
             collectToken(value.substring(previous, index), result, converter,
                     locale);

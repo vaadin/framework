@@ -60,18 +60,18 @@ public class TableTest {
 
         Assert.assertTrue(table.isEmpty());
         Assert.assertArrayEquals(new Object[] {},
-                ((Collection) table.getValue()).toArray());
+                ((Collection<?>) table.getValue()).toArray());
 
         Object first = table.getContainerDataSource().getItemIds().iterator()
                 .next();
         table.select(first);
         Assert.assertArrayEquals(new Object[] { first },
-                ((Collection) table.getValue()).toArray());
+                ((Collection<?>) table.getValue()).toArray());
         Assert.assertFalse(table.isEmpty());
 
         table.clear();
         Assert.assertArrayEquals(new Object[] {},
-                ((Collection) table.getValue()).toArray());
+                ((Collection<?>) table.getValue()).toArray());
         Assert.assertTrue(table.isEmpty());
     }
 

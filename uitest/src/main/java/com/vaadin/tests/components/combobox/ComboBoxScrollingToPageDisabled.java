@@ -8,13 +8,13 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 
 public class ComboBoxScrollingToPageDisabled
-        extends ComponentTestCase<ComboBox> {
+        extends ComponentTestCase<ComboBox<String>> {
 
     private static final Object CAPTION = "caption";
 
     @Override
-    protected Class<ComboBox> getTestClass() {
-        return ComboBox.class;
+    protected Class<ComboBox<String>> getTestClass() {
+        return (Class) ComboBox.class;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ComboBoxScrollingToPageDisabled
         addTestComponent(s);
     }
 
-    private void populate(ComboBox s, int nr) {
+    private void populate(ComboBox<String> s, int nr) {
         List<String> items = new ArrayList<>();
         for (int i = 0; i < nr; i++) {
             items.add("Item " + i);

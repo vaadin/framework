@@ -15,7 +15,7 @@ public class AbsFieldValidatorsTest {
 
     AbstractField<Object> field = new AbstractField<Object>() {
         @Override
-        public Class getType() {
+        public Class<?> getType() {
             return Object.class;
         }
     };

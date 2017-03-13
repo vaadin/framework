@@ -85,12 +85,12 @@ public class JsonEncoder {
         } else if (value instanceof Enum) {
             return encodeEnum((Enum<?>) value, connection);
         } else if (value instanceof Map) {
-            return encodeMap((Map) value, type, connection);
+            return encodeMap((Map<Object, Object>) value, type, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return Json.create(connector.getConnectorId());
         } else if (value instanceof Collection) {
-            return encodeCollection((Collection) value, type, connection);
+            return encodeCollection((Collection<?>) value, type, connection);
         } else if (value instanceof UidlValue) {
             return encodeVariableChange((UidlValue) value, connection);
         } else {
@@ -270,7 +270,7 @@ public class JsonEncoder {
         return jsonArray;
     }
 
-    private static JsonArray encodeCollection(Collection collection, Type type,
+    private static JsonArray encodeCollection(Collection<?> collection, Type type,
             ApplicationConnection connection) {
         JsonArray jsonArray = Json.createArray();
         int idx = 0;

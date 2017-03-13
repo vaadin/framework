@@ -11,19 +11,19 @@ import com.vaadin.ui.HorizontalLayout;
 public class ComboboxPopupScrolling extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox combobox = new ComboBox("100px wide combobox");
+        ComboBox<String> combobox = new ComboBox<>("100px wide combobox");
         combobox.setWidth("100px");
         combobox.setItems("AMERICAN SAMOA", "ANTIGUA AND BARBUDA");
 
-        ComboBox combobox2 = new ComboBox("250px wide combobox");
+        ComboBox<String> combobox2 = new ComboBox<>("250px wide combobox");
         combobox2.setWidth("250px");
         combobox2.setItems("AMERICAN SAMOA", "ANTIGUA AND BARBUDA");
 
-        ComboBox combobox3 = new ComboBox("Undefined wide combobox");
+        ComboBox<String> combobox3 = new ComboBox<>("Undefined wide combobox");
         combobox3.setWidth(null);
         combobox3.setItems("AMERICAN SAMOA", "ANTIGUA AND BARBUDA");
 
-        ComboBox combobox4 = new ComboBox("Another 100px wide combobox");
+        ComboBox<String> combobox4 = new ComboBox<>("Another 100px wide combobox");
         combobox4.setWidth("100px");
         List<String> items = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

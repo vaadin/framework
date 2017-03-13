@@ -99,7 +99,7 @@ public class StringToCollectionConverterTest {
             @Override
             public Collection<?> createCollection(
                     Class<? extends Collection> type) {
-                return new Vector();
+                return new Vector<Object>();
             }
         };
         StringToCollectionConverter converter = new StringToCollectionConverter(

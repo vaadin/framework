@@ -16,7 +16,7 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
 
     private Button discardButton;
     private Button showBeanButton;
-    private BeanFieldGroup fieldBinder;
+    private BeanFieldGroup<?> fieldBinder;
 
     @Override
     protected void setup() {
