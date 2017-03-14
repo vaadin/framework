@@ -265,9 +265,10 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     }
 
     private void doCancel(boolean afterBeingSaved) {
+        T editedBean = edited;
         doClose();
         if (!afterBeingSaved) {
-            eventRouter.fireEvent(new EditorCancelEvent<>(this, edited));
+            eventRouter.fireEvent(new EditorCancelEvent<>(this, editedBean));
         }
     }
 
