@@ -3130,14 +3130,8 @@ public class Escalator extends Widget
                         y += spacerContainer.getSpacerHeight(i);
                     }
 
-                    /*
-                     * this is how many rows appeared into the viewport from
-                     * below
-                     */
-                    final int rowsToUpdateDataOn = numberOfRows
-                            - escalatorRowsToRemove;
-                    final int start = Math.max(0,
-                            escalatorRowCount - rowsToUpdateDataOn);
+                    // #8825 update data starting from the first moved row
+                    final int start = dirtyRowsStart;
                     final int end = escalatorRowCount;
                     for (int i = start; i < end; i++) {
                         final TableRowElement tr = visualRowOrder.get(i);
