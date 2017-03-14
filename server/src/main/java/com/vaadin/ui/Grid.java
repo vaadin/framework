@@ -73,6 +73,7 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableSupplier;
 import com.vaadin.server.Setter;
 import com.vaadin.server.VaadinServiceClassLoaderUtil;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -1811,6 +1812,34 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     .bind(editorComponent, propertyName);
 
             return setEditorBinding(binding);
+        }
+
+        /**
+         * Sets the Renderer for this Column. Setting the renderer will cause
+         * all currently available row data to be recreated and send to the
+         * client.
+         *
+         * @param renderer
+         *            the new renderer
+         * @return this column
+         */
+        public Column<T, V> setRenderer(Renderer<? super V> renderer) {
+            Objects.requireNonNull(renderer, "Renderer can't be null");
+
+            // Remove old renderer
+            Connector oldRenderer = getState().renderer;
+            if (oldRenderer != null && oldRenderer instanceof Extension) {
+                removeExtension((Extension) oldRenderer);
+            }
+
+            // Set new renderer
+            getState().renderer = renderer;
+            addExtension(renderer);
+
+            // Trigger redraw
+            getParent().getDataCommunicator().reset();
+
+            return this;
         }
 
         /**
