@@ -310,8 +310,8 @@ the [methodname]#removeColumn()#, as described later.
 === Hiding and Removing Columns
 
 Columns can be hidden by calling [methodname]#setHidden()# in [classname]#Column#.
-Furthermore, you can set the columns user hideable using method
-[methodname]#setHideable()#.
+Furthermore, you can set the columns user hidable using method
+[methodname]#setHidable()#.
 
 Columns can be removed with [methodname]#removeColumn()# and
 [methodname]#removeAllColumns()#. To restore a previously removed column,
