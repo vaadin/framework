@@ -33,4 +33,68 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
         assertNoErrorNotifications();
     }
 
+    @Test
+    public void testSwitchRendererReorderColumns() {
+        setDebug(true);
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+        Assert.assertEquals("Unexpected content in first grid cell", "Foo 0",
+                grid.getCell(0, 0).getAttribute("innerHTML"));
+        ButtonElement button = $(ButtonElement.class).caption("Switch").first();
+        button.click();
+        ButtonElement reverse = $(ButtonElement.class).caption("Reverse")
+                .first();
+        reverse.click();
+        Assert.assertEquals(
+                "Unexpected content in first grid cell after reorder", "Bar 0",
+                grid.getCell(0, 0).getAttribute("innerHTML"));
+
+        Assert.assertFalse("No button in cell after reversing order", grid
+                .getCell(0, 1).findElements(By.tagName("button")).isEmpty());
+        grid.getCell(0, 1).findElement(By.tagName("button")).click();
+        Assert.assertTrue("Notification not shown",
+                isElementPresent(NotificationElement.class));
+        reverse.click();
+        Assert.assertFalse("No button in cell after restoring original order",
+                grid.getCell(0, 0).findElements(By.tagName("button"))
+                        .isEmpty());
+
+        assertNoErrorNotifications();
+    }
+
+    @Test
+    public void testReorderColumnsSwitchRenderer() {
+        setDebug(true);
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+        Assert.assertEquals("Unexpected content in first grid cell", "Foo 0",
+                grid.getCell(0, 0).getAttribute("innerHTML"));
+        ButtonElement reverse = $(ButtonElement.class).caption("Reverse")
+                .first();
+
+        reverse.click();
+        Assert.assertEquals(
+                "Unexpected content in first grid cell after reorder", "Bar 0",
+                grid.getCell(0, 0).getAttribute("innerHTML"));
+
+        ButtonElement button = $(ButtonElement.class).caption("Switch").first();
+        button.click();
+
+        Assert.assertFalse(
+                "No button in cell after reversing order and changing renderer",
+                grid.getCell(0, 1).findElements(By.tagName("button"))
+                        .isEmpty());
+        grid.getCell(0, 1).findElement(By.tagName("button")).click();
+        Assert.assertTrue("Notification not shown",
+                isElementPresent(NotificationElement.class));
+
+        button.click();
+        Assert.assertEquals("Cell should be back to text content.", "Foo 0",
+                grid.getCell(0, 1).getAttribute("innerHTML"));
+
+        assertNoErrorNotifications();
+    }
+
 }

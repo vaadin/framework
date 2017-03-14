@@ -16,17 +16,20 @@ import com.vaadin.ui.renderers.TextRenderer;
 public class GridRendererSwitch extends AbstractTestUI {
 
     private boolean textRenderer = true;
+    private boolean reverse = false;
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid<String> grid = new Grid<>();
-        Column<String, String> column = grid.addColumn(Object::toString)
-                .setCaption("To String");
+        Grid<Integer> grid = new Grid<>();
+        Column<Integer, String> column = grid.addColumn(i -> "Foo " + i)
+                .setCaption("Foo");
+        Column<Integer, String> secondColumn = grid.addColumn(i -> "Bar " + i)
+                .setCaption("Bar");
 
         addComponent(grid);
-        addComponent(new Button("Switch renderer", e -> {
+        addComponent(new Button("Switch", e -> {
             if (textRenderer) {
-                ButtonRenderer<String> renderer = new ButtonRenderer<>();
+                ButtonRenderer<Integer> renderer = new ButtonRenderer<>();
                 renderer.addClickListener(event -> Notification
                         .show("Click on row: " + event.getItem()));
                 column.setRenderer(renderer);
@@ -35,8 +38,16 @@ public class GridRendererSwitch extends AbstractTestUI {
             }
             textRenderer = !textRenderer;
         }));
+        addComponent(new Button("Reverse", e -> {
+            if (reverse) {
+                grid.setColumnOrder(column, secondColumn);
+            } else {
+                grid.setColumnOrder(secondColumn, column);
+            }
+            reverse = !reverse;
+        }));
 
-        grid.setItems(IntStream.range(0, 10).boxed().map(i -> "Foo " + i));
+        grid.setItems(IntStream.range(0, 10).boxed());
     }
 
 }
