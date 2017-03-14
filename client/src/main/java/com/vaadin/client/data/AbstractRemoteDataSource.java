@@ -580,7 +580,15 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             Range remainsBefore = partitions[0];
             Range transposedRemainsAfter = partitions[2]
                     .offsetBy(-removedRange.length());
-            cached = remainsBefore.combineWith(transposedRemainsAfter);
+            // #8840 either can be empty if the removed range was over the
+            // cached range
+            if (remainsBefore.isEmpty()) {
+                cached = transposedRemainsAfter;
+            } else if (transposedRemainsAfter.isEmpty()) {
+                cached = remainsBefore;
+            } else {
+                cached = remainsBefore.combineWith(transposedRemainsAfter);
+            }
         } else if (removedRange.getEnd() <= cached.getStart()) {
             // Removal was before the cache. offset the cache.
             cached = cached.offsetBy(-removedRange.length());
