@@ -7,7 +7,7 @@ import java.util.List;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.InMemoryHierarchicalDataProviderTest;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.TreeGrid;
 
@@ -16,7 +16,7 @@ import com.vaadin.ui.TreeGrid;
 public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
     private TreeGrid<HierarchicalTestBean> grid;
-    private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
+    private InMemoryHierarchicalDataProviderTest<HierarchicalTestBean> inMemoryDataProvider;
 
     @Override
     public TreeGrid getComponent() {
@@ -70,7 +70,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                                     childIndex)));
         });
 
-        inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
+        inMemoryDataProvider = new InMemoryHierarchicalDataProviderTest<>(data);
     }
 
     private void createHierarchyColumnSelect() {

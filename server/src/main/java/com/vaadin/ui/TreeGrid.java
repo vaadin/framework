@@ -78,7 +78,7 @@ public class TreeGrid<T> extends Grid<T> {
     }
 
     @Override
-    public void setItems(T... items) {
+    public void setItems(@SuppressWarnings("unchecked") T... items) {
         setDataProvider(new InMemoryHierarchicalDataProvider<>(
                 new HierarchyData<T>().addItems(null, items)));
     }

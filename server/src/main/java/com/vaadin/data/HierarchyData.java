@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -105,8 +106,11 @@ public class HierarchyData<T> implements Serializable {
      *             if parent is not null and not already added to this structure
      * @throws IllegalArgumentException
      *             if the item has already been added to this structure
+     * @throws NullPointerException
+     *             if item is null
      */
     public HierarchyData<T> addItem(T parent, T item) {
+        Objects.requireNonNull(item, "Item cannot be null");
         if (parent != null && !contains(parent)) {
             throw new IllegalArgumentException(
                     "Parent needs to be added before children. "
@@ -137,6 +141,8 @@ public class HierarchyData<T> implements Serializable {
      * @throws IllegalArgumentException
      *             if any of the given items have already been added to this
      *             structure
+     * @throws NullPointerException
+     *             if any of the items are null
      */
     public HierarchyData<T> addItems(T parent,
             @SuppressWarnings("unchecked") T... items) {
@@ -161,6 +167,8 @@ public class HierarchyData<T> implements Serializable {
      * @throws IllegalArgumentException
      *             if any of the given items have already been added to this
      *             structure
+     * @throws NullPointerException
+     *             if any of the items are null
      */
     public HierarchyData<T> addItems(T parent, Collection<T> items) {
         items.stream().forEach(item -> addItem(parent, item));
@@ -184,6 +192,8 @@ public class HierarchyData<T> implements Serializable {
      * @throws IllegalArgumentException
      *             if any of the given items have already been added to this
      *             structure
+     * @throws NullPointerException
+     *             if any of the items are null
      */
     public HierarchyData<T> addItems(T parent, Stream<T> items) {
         items.forEach(item -> addItem(parent, item));
@@ -213,6 +223,7 @@ public class HierarchyData<T> implements Serializable {
     }
 
     /**
+     * Get the immediate child items for the given item.
      * 
      * @param item
      *            the item for which to retrieve child items for

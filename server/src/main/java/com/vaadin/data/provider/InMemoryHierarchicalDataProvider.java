@@ -15,12 +15,17 @@
  */
 package com.vaadin.data.provider;
 
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.data.HierarchyData;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.server.SerializableComparator;
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * A {@link DataProvider} for in-memory hierarchical data.
@@ -39,7 +44,9 @@ public class InMemoryHierarchicalDataProvider<T> extends
 
     private final HierarchyData<T> hierarchyData;
 
-    private SerializablePredicate<T> filter;
+    private SerializablePredicate<T> filter = null;
+
+    private SerializableComparator<T> sortOrder = null;
 
     public InMemoryHierarchicalDataProvider() {
         hierarchyData = new HierarchyData<>();
@@ -62,16 +69,26 @@ public class InMemoryHierarchicalDataProvider<T> extends
     @Override
     public int getChildCount(
             HierarchicalQuery<T, SerializablePredicate<T>> query) {
-        return hierarchyData.getChildren(query.getParent()).size();
+        return (int) fetchChildren(query).count();
     }
 
     @Override
     public Stream<T> fetchChildren(
             HierarchicalQuery<T, SerializablePredicate<T>> query) {
         Stream<T> childStream = getFilteredStream(
-                hierarchyData.getChildren(query.getParent()).stream());
-        return query.getFilter().map(childStream::filter).orElse(childStream)
-                .skip(query.getOffset()).limit(query.getLimit());
+                hierarchyData.getChildren(query.getParent()).stream(),
+                query.getFilter());
+
+        Optional<Comparator<T>> comparing = Stream
+                .of(query.getInMemorySorting(), sortOrder)
+                .filter(c -> c != null)
+                .reduce((c1, c2) -> c1.thenComparing(c2));
+
+        if (comparing.isPresent()) {
+            childStream = childStream.sorted(comparing.get());
+        }
+
+        return childStream;
     }
 
     @Override
@@ -102,10 +119,103 @@ public class InMemoryHierarchicalDataProvider<T> extends
         }
     }
 
-    private Stream<T> getFilteredStream(Stream<T> stream) {
-        if (filter == null) {
-            return stream;
+    /**
+     * Sets the comparator to use as the default sorting for this data provider.
+     * This overrides the sorting set by any other method that manipulates the
+     * default sorting of this data provider.
+     * <p>
+     * The default sorting is used if the query defines no sorting. The default
+     * sorting is also used to determine the ordering of items that are
+     * considered equal by the sorting defined in the query.
+     *
+     * @see #setSortOrder(ValueProvider, SortDirection)
+     * @see #addSortComparator(SerializableComparator)
+     *
+     * @param comparator
+     *            a comparator to use, or <code>null</code> to clear any
+     *            previously set sort order
+     */
+    public void setSortComparator(SerializableComparator<T> comparator) {
+        sortOrder = comparator;
+        refreshAll();
+    }
+
+    /**
+     * Adds a comparator to the default sorting for this data provider. If no
+     * default sorting has been defined, then the provided comparator will be
+     * used as the default sorting. If a default sorting has been defined, then
+     * the provided comparator will be used to determine the ordering of items
+     * that are considered equal by the previously defined default sorting.
+     * <p>
+     * The default sorting is used if the query defines no sorting. The default
+     * sorting is also used to determine the ordering of items that are
+     * considered equal by the sorting defined in the query.
+     *
+     * @see #setSortComparator(SerializableComparator)
+     * @see #addSortOrder(ValueProvider, SortDirection)
+     *
+     * @param comparator
+     *            a comparator to add, not <code>null</code>
+     */
+    public void addSortComparator(SerializableComparator<T> comparator) {
+        Objects.requireNonNull(comparator, "Sort order to add cannot be null");
+        SerializableComparator<T> originalComparator = sortOrder;
+        if (originalComparator == null) {
+            setSortComparator(comparator);
+        } else {
+            setSortComparator((a, b) -> {
+                int result = originalComparator.compare(a, b);
+                if (result == 0) {
+                    result = comparator.compare(a, b);
+                }
+                return result;
+            });
         }
-        return stream.filter(filter);
+    }
+
+    @Override
+    public <C> DataProvider<T, C> withConvertedFilter(
+            SerializableFunction<C, SerializablePredicate<T>> filterConverter) {
+        Objects.requireNonNull(filterConverter,
+                "Filter converter can't be null");
+        return new DataProviderWrapper<T, C, SerializablePredicate<T>>(this) {
+
+            @Override
+            protected SerializablePredicate<T> getFilter(Query<T, C> query) {
+                return query.getFilter().map(filterConverter).orElse(null);
+            }
+
+            @Override
+            public int size(Query<T, C> t) {
+                if (t instanceof HierarchicalQuery<?, ?>) {
+                    return dataProvider.size(new HierarchicalQuery<>(
+                            t.getOffset(), t.getLimit(), t.getSortOrders(),
+                            t.getInMemorySorting(), getFilter(t),
+                            ((HierarchicalQuery<T, C>) t).getParent()));
+                }
+                throw new IllegalArgumentException(
+                        "Hierarchical data provider doesn't support non-hierarchical queries");
+            }
+
+            @Override
+            public Stream<T> fetch(Query<T, C> t) {
+                if (t instanceof HierarchicalQuery<?, ?>) {
+                    return dataProvider.fetch(new HierarchicalQuery<>(
+                            t.getOffset(), t.getLimit(), t.getSortOrders(),
+                            t.getInMemorySorting(), getFilter(t),
+                            ((HierarchicalQuery<T, C>) t).getParent()));
+                }
+                throw new IllegalArgumentException(
+                        "Hierarchical data provider doesn't support non-hierarchical queries");
+            }
+        };
+    }
+
+    private Stream<T> getFilteredStream(Stream<T> stream,
+            Optional<SerializablePredicate<T>> queryFilter) {
+        if (filter != null) {
+            stream = stream.filter(filter);
+        }
+        return queryFilter.map(stream::filter).orElse(stream);
     }
 }
