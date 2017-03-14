@@ -13,9 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.vaadin.client.ui.menubar;
-
 /*
  * Copyright 2007 Google Inc.
  *
@@ -31,6 +28,7 @@ package com.vaadin.client.ui.menubar;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.client.ui.menubar;
 
 // COPIED HERE DUE package privates in GWT
 import java.util.ArrayList;
