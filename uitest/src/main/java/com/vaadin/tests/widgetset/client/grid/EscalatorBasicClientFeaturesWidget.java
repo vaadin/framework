@@ -540,6 +540,12 @@ public class EscalatorBasicClientFeaturesWidget
                 insertRows(escalator.getBody(), 0, 5);
             }
         }, menupath);
+        addMenuCommand("Add 22 rows to top", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                insertRows(escalator.getBody(), 0, 22);
+            }
+        }, menupath);
         addMenuCommand("Add 50 rows to top", new ScheduledCommand() {
             @Override
             public void execute() {
@@ -558,6 +564,12 @@ public class EscalatorBasicClientFeaturesWidget
             public void execute() {
                 removeRows(escalator.getBody(),
                         escalator.getBody().getRowCount() - 50, 50);
+            }
+        }, menupath);
+        addMenuCommand("Remove 15 rows from middle", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                removeRows(escalator.getBody(), 3, 15);
             }
         }, menupath);
         addMenuCommand("Remove 50 rows from almost bottom",
