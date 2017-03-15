@@ -56,8 +56,7 @@ import com.vaadin.ui.declarative.DesignException;
  * @author Vaadin Ltd
  *
  */
-public abstract class GridDeclarativeTest
-        extends AbstractListingDeclarativeTest<Grid> {
+public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
     @Test
     public void gridAttributes() {
