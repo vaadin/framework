@@ -9,7 +9,7 @@ public class TreeGridColumnTest {
 
     private TreeGrid<String> treeGrid = new TreeGrid<>();
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalStateException.class)
     public void testChangeRendererOfHierarchyColumn() {
         treeGrid.addColumn(Object::toString).setId("foo");
         treeGrid.setHierarchyColumn("foo");

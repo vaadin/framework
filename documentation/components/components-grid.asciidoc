@@ -403,9 +403,22 @@ You set the column renderer in the [classname]#Grid.Column# object as follows:
 [source, java]
 ----
 // the type of birthYear is a number
-Column<Integer> bornColumn = grid.addColumn(Person:getBirthYear,
+Column<Person, Integer> bornColumn = grid.addColumn(Person:getBirthYear,
       new NumberRenderer("born in %d AD"));
 ----
+
+Changing the renderer during runtime is also possible, but for type safety
+you should store the column reference with data types for doing this.
+
+[source, java]
+----
+Column<Person, Integer> ageColumn = grid.addColumn(Person::getBirthYear);
+// The default renderer is TextRenderer
+addComponent(new Button("Change renderer", 
+	clickEvent -> ageColumn.setRenderer(new NumberRenderer())
+));
+----
+
 The following renderers are available, as defined in the server-side
 [package]#com.vaadin.ui.renderers# package:
 

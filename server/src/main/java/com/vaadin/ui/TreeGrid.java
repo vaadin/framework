@@ -109,6 +109,9 @@ public class TreeGrid<T> extends Grid<T> {
      * <p>
      * Setting a hierarchy column by calling this method also sets the column to
      * be visible and not hidable.
+     * <p>
+     * <strong>Note:</strong> Changing the Renderer of the hierarchy column is
+     * not supported.
      *
      * @see Column#setId(String)
      *
@@ -176,7 +179,7 @@ public class TreeGrid<T> extends Grid<T> {
                 // Disallow changing renderer for the hierarchy column
                 if (getInternalIdForColumn(this).equals(
                         TreeGrid.this.getState(false).hierarchyColumnId)) {
-                    throw new RuntimeException(
+                    throw new IllegalStateException(
                             "Changing the renderer of the hierarchy column is not allowed.");
                 }
 
