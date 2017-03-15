@@ -25,6 +25,7 @@ import org.junit.Test;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 
 public class GridDefaultHeaderTest {
@@ -83,5 +84,30 @@ public class GridDefaultHeaderTest {
         column1.setCaption("1st");
 
         assertEquals("First", grid.getHeaderRow(0).getCell(column1).getText());
+    }
+
+    @Test
+    public void updateDefaultRow_columnCaptionUpdated() {
+        grid.getDefaultHeaderRow().getCell(column1).setText("new");
+        assertEquals("new", column1.getCaption());
+        assertEquals("Second", column2.getCaption());
+    }
+
+    @Test
+    public void updateDefaultRowWithMergedCell_columnCaptionNotUpdated() {
+        HeaderCell merged = grid.getDefaultHeaderRow().join(column1, column2);
+        merged.setText("new");
+        assertEquals("First", column1.getCaption());
+        assertEquals("Second", column2.getCaption());
+    }
+
+    @Test
+    public void updateColumnCaption_defaultRowWithMergedCellNotUpdated() {
+        HeaderCell merged = grid.getDefaultHeaderRow().join(column1, column2);
+        merged.setText("new");
+        column1.setCaption("foo");
+        column2.setCaption("bar");
+
+        assertEquals("new", merged.getText());
     }
 }

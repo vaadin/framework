@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
@@ -664,13 +664,15 @@ public class GridMultiSelectionModelTest {
                 model.getSelectAllCheckBoxVisibility());
 
         grid.setDataProvider(
-                new BackEndDataProvider<String, String>(
-                        q -> IntStream
-                                .range(q.getOffset(),
-                                        Math.max(q.getOffset() + q.getLimit()
-                                                + 1, 1000))
-                                .mapToObj(i -> "Item " + i),
-                        q -> 1000));
+                DataProvider
+                        .fromCallbacks(
+                                query -> IntStream
+                                        .range(query.getOffset(),
+                                                Math.max(query.getOffset()
+                                                        + query.getLimit() + 1,
+                                                        1000))
+                                        .mapToObj(i -> "Item " + i),
+                                query -> 1000));
 
         // not in-memory -> checkbox is hidden
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());

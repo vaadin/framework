@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+
+<project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant" name="Vaadin Integration Tests" basedir="." default="integration-test-all">
+
+    <!-- Import common targets -->
+    <import file="common.xml" />
+    <dirname file="${ant.file.Vaadin Integration Tests}" property="integration_test.dir" />
+
+    <!-- Target deploying demo.war -->
+    <fail unless="test.integration.server" message="test.integration.server must be set for integration tests to run" />
+
+    <fail unless="test.integration.user" message="test.integration.user must be set for integration tests to run" />
+    <fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run" />
+
+    <!-- Test with these browsers -->
+    <property name="test_browsers" value="winxp-firefox17-esr" />
+
+    <!-- Path to key file. Default value -->
+    <property name="sshkey.file" value="id_dsa" />
+
+    <!-- path and name for demo.war to be deployed -->
+    <property name="demo.war" value="demo.war" />
+
+    <!-- Host running Testbench RC or Testbench Hub. Default value -->
+    <property name="com.vaadin.testbench.tester.host" value="127.0.0.1" />
+
+    <!-- Base url where the testable application is deployed -->
+    <property name="deployment.url" value="http://${test.integration.server}:8080" />
+
+    <!-- TestBench license parameter -->
+    <property name="vaadin.testbench.developer.license" value="" />
+
+    <property name="report.dir" location="${vaadin.basedir}/result/reports-integration" />
+
+    <!-- ssh host values -->
+    <property name="ant.hub" value="${test.integration.antfile}" />
+    <property name="user" value="${test.integration.user}" />
+    <property name="passphrase" value="" />
+
+    <ivy:resolve file="ivy.xml" conf="build, build-provided" />
+    <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
+    <path id="classpath.tb3">
+        <path location="target/test-classes" />
+        <path refid="classpath.tb3.lib" />
+        <path location="target/classes" />
+    </path>
+
+    <!-- Upload war to deploy to ssh host -->
+    <target name="integration-test-upload-demo">
+        <scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
+    </target>
+
+    <target name="run-tb3-servlet-test">
+        <antcall target="run-tb3-test" inheritall="true">
+            <param name="junit.test.suite" value="com.vaadin.tests.integration.ServletIntegrationTests" />
+        </antcall>
+    </target>
+    <target name="run-tb3-test">
+        <fail unless="server-name" message="Server name must be defined in server-name" />
+        <fail unless="deployment.url" message="Deplyoment url must be defined in deployment.url" />
+        <fail unless="com.vaadin.testbench.screenshot.directory" message="Screenshot directory must be defined in com.vaadin.testbench.screenshot.directory" />
+	<property name="server.report.dir" location="${report.dir}/integration-test-tb3/${server-name}" />
+         <!-- The junit task does not create the report dir... -->
+        <mkdir dir="${server.report.dir}" />
+
+        <junit showoutput="no" printsummary="no" fork="yes">
+            <formatter type="xml" />
+            <classpath refid="classpath.tb3" />
+
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
+            <jvmarg value="-Ddeployment.url=${deployment.url}" />
+            <jvmarg value="-Dserver-name=${server-name}" />
+            <jvmarg value="-Djava.awt.headless=true" />
+            <jvmarg value="-Ddemo.war=${demo.war}" />
+            <jvmarg value="-Dvaadin.testbench.developer.license=${vaadin.testbench.developer.license}" />
+            <test name="${junit.test.suite}" todir="${server.report.dir}" />
+        </junit>
+    </target>
+
+    <target name="integration-test-tomcat7">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="tomcat7" />
+        </antcall>
+    </target>
+    <target name="integration-test-tomcat7apacheproxy">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="tomcat7apacheproxy" />
+        </antcall>
+    </target>
+    <target name="integration-test-tomcat8">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="tomcat8" />
+        </antcall>
+    </target>
+
+    <target name="integration-test-osgi">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="karaf4" />
+        </antcall>
+    </target>
+
+    <target name="integration-test-jetty8">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="90" />
+            <param name="target-server" value="jetty8" />
+        </antcall>
+    </target>
+
+    <target name="integration-test-jetty9">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="90" />
+            <param name="target-server" value="jetty9" />
+        </antcall>
+    </target>
+
+    <target name="integration-test-jboss-eap6">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="jbosseap6" />
+            <param name="demo.war" value="${demo.jboss6.war}"/>
+        </antcall>
+    </target>
+    <target name="integration-test-wildfly8">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="wildfly8" />
+        </antcall>
+    </target>
+    <target name="integration-test-wildfly9">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="wildfly9" />
+        </antcall>
+    </target>
+    <target name="integration-test-wildfly10">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="wildfly10" />
+        </antcall>
+    </target>
+    <target name="integration-test-wildfly9-nginx">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="wildfly9-nginx" />
+            <param name="target-port" value="80" />
+        </antcall>
+    </target>
+    <target name="integration-test-glassfish4">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="glassfish4" />
+        </antcall>
+    </target>
+    <target name="integration-test-payara">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="payara" />
+        </antcall>
+    </target>
+
+
+    <target name="integration-test-weblogic12">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="60" />
+            <param name="target-port" value="7001" />
+            <param name="target-server" value="weblogic12" />
+        </antcall>
+    </target>
+
+
+    <!-- Upload demo, clean error screenshots and test deployment on all
+        servers -->
+    <target name="integration-test-all" unless="tests.integration.skip">
+        <property name="passphrase" value="${passphrase}" />
+        <fail unless="sshkey.file" message="You must define an ssh.keyfile parameter" />
+        <fail unless="com.vaadin.testbench.screenshot.directory" message="You must define a com.vaadin.testbench.screenshot.directory parameter" />
+        <delete dir="${report.dir}" />
+        <mkdir dir="${report.dir}" />
+
+        <parallel>
+            <antcall target="integration-test-weblogic12" />
+            <antcall target="integration-test-glassfish4" />
+            <antcall target="integration-test-payara" />
+            <antcall target="integration-test-jboss-eap6" />
+            <antcall target="integration-test-wildfly8" />
+            <antcall target="integration-test-wildfly9" />
+            <antcall target="integration-test-wildfly10" />
+            <antcall target="integration-test-jetty8" />
+            <antcall target="integration-test-jetty9" />
+            <antcall target="integration-test-tomcat7" />
+            <antcall target="integration-test-tomcat8" />
+            <antcall target="integration-test-osgi" />
+            <antcall target="integration-test-tomcat7apacheproxy" />
+        </parallel>
+
+    </target>
+
+    <target name="do-run-generic-test">
+        <property name="target-host" value="${target-server}.devnet.vaadin.com" />
+        <property name="target-port" value="8080" />
+        <antcontrib:if>
+            <isset property="startDelay" />
+            <then>
+                <echo>Delaying startup of ${target-server} with ${startDelay} seconds</echo>
+                <sleep seconds="${startDelay}" />
+            </then>
+        </antcontrib:if>
+
+        <scp todir="${user}@${target-host}:." keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}">
+            <fileset dir="integration_base_files">
+                <include name="*" />
+            </fileset>
+        </scp>
+
+        <!-- trycatch probably not needed any more as it just fails with
+            the original message and doesn't do anything in the finally block -->
+        <antcontrib:trycatch property="error_message">
+            <try>
+                <!-- timeout in one hour (remote end should timeout in 55
+                    minutes) -->
+                <sshexec host="${target-host}" outputproperty="lock-output" timeout="3600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
+                <antcall target="echo-prefix">
+                    <param name="prefix" value="${target-server}: " />
+                    <param name="message" value="${lock-output}" />
+                </antcall>
+
+                <scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
+
+                <!-- timeout in 15 minutes -->
+                <sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" failonerror="false" />
+                <antcall target="echo-prefix">
+                    <param name="prefix" value="${target-server}: " />
+                    <param name="message" value="${start-output}" />
+                </antcall>
+
+                <fail message="${start-output}">
+                    <condition>
+                        <not>
+                            <contains string="${start-output}" substring="Demo deployed successfully" />
+                        </not>
+                    </condition>
+                </fail>
+
+                <echo>Starting TB3 test for ${target-server}</echo>
+                <antcall target="run-tb3-servlet-test">
+                    <param name="server-name" value="${target-server}" />
+                    <param name="deployment.url" value="http://${target-host}:${target-port}" />
+                </antcall>
+
+                <!-- timeout in five minutes -->
+                <sshexec host="${target-host}" outputproperty="stop-output" timeout="600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />
+                <antcall target="echo-prefix">
+                    <param name="prefix" value="${target-server}: " />
+                    <param name="message" value="${stop-output}" />
+                </antcall>
+            </try>
+            <catch>
+                <fail message="${error_message}" />
+            </catch>
+        </antcontrib:trycatch>
+    </target>
+
+    <target name="echo-prefix">
+        <antcontrib:propertyregex property="message-prefixed" input="${prefix}${message}" regexp="\n" replace="\0${prefix}" global="true" defaultValue="${prefix}${message}" />
+        <echo message="${message-prefixed}" />
+    </target>
+
+    <target name="run-generic-integration-test">
+        <concat>##teamcity[testStarted name='${target-server}' flowId='${target-server}']</concat>
+        <antcontrib:trycatch property="tried">
+            <try>
+                <antcall target="do-run-generic-test" />
+            </try>
+            <catch>
+                <antcontrib:antcallback target="teamcity-escape" return="tried-escaped">
+                    <param name="returnTo" value="tried-escaped" />
+                    <param name="message" value="${tried}" />
+                </antcontrib:antcallback>
+                <concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']</concat>
+            </catch>
+        </antcontrib:trycatch>
+        <concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
+    </target>
+
+    <target name="teamcity-escape">
+        <property name="returnTo" value="return" />
+
+        <!-- Should also perform other escaping (\u0085, \u2028 and \u2029)
+            - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
+        <!-- Immutable properties -> needs to create a new one every time -->
+        <antcontrib:propertyregex property="details-escaped1" input="${message}" regexp="['|\[\]]" replace="|\0" global="true" defaultValue="${message}" />
+        <antcontrib:propertyregex property="details-escaped2" input="${details-escaped1}" regexp="\n" replace="|n" global="true" defaultValue="${details-escaped1}" />
+        <antcontrib:propertyregex property="details-escaped3" input="${details-escaped2}" regexp="\r" replace="|r" global="true" defaultValue="${details-escaped2}" />
+
+        <property name="${returnTo}" value="${details-escaped3}" />
+    </target>
+
+    <target name="run-integration-test">
+        <concat>##teamcity[testStarted name='${target-server}' flowId='${target-server}']</concat>
+        <antcontrib:trycatch property="tried">
+            <try>
+                <antcall target="integration-test-${target-server}" />
+            </try>
+            <catch>
+                <antcallback target="teamcity-escape" return="tried-escaped">
+                    <param name="returnTo" value="tried-escaped" />
+                    <param name="message" value="${tried}" />
+                </antcallback>
+                <concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']"</concat>
+            </catch>
+        </antcontrib:trycatch>
+        <concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
+    </target>
+
+    <target name="integration-test-get-lock">
+        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} get-lock" />
+    </target>
+
+    <target name="integration-test-release-lock">
+        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} release-lock" />
+    </target>
+
+    <!-- Remove demo.war -->
+    <target name="integration-test-clean">
+        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
+    </target>
+</project>

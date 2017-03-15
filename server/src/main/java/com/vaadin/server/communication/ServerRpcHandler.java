@@ -275,9 +275,6 @@ public class ServerRpcHandler implements Serializable {
                     rpcRequest.getRpcInvocationsData());
         }
 
-        ui.getConnectorTracker()
-                .cleanConcurrentlyRemovedConnectorIds(rpcRequest.getSyncId());
-
         if (rpcRequest.isResynchronize()) {
             ui.getSession().getCommunicationManager().repaintAll(ui);
         }
@@ -457,7 +454,7 @@ public class ServerRpcHandler implements Serializable {
      *            the UI containing the connector
      * @param connector
      *            the connector the RPC is targeted to
-     * @param invocation
+     * @param legacyInvocation
      *            information about the rpc to invoke
      */
     protected void handleInvocation(UI ui, ClientConnector connector,
@@ -528,22 +525,6 @@ public class ServerRpcHandler implements Serializable {
         String connectorId = invocationJson.getString(0);
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
-
-        if (connectorTracker.getConnector(connectorId) == null && !connectorId
-                .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
-
-            if (!connectorTracker.connectorWasPresentAsRequestWasSent(
-                    connectorId, lastSyncIdSeenByClient)) {
-                getLogger().log(Level.WARNING, "RPC call to " + interfaceName
-                        + "." + methodName + " received for connector "
-                        + connectorId
-                        + " but no such connector could be found. Resynchronizing client.");
-                // This is likely an out of sync issue (client tries to update a
-                // connector which is not present). Force resync.
-                connectorTracker.markAllConnectorsDirty();
-            }
-            return null;
-        }
 
         JsonArray parametersJson = invocationJson.getArray(3);
 

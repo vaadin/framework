@@ -55,9 +55,9 @@ public interface EditorHandler<T> {
         public int getRowIndex();
 
         /**
-         * Returns the index of the column being focused.
+         * Returns the DOM index of the column being focused.
          *
-         * @return the column index
+         * @return the column index (excluding hidden columns)
          */
         public int getColumnIndex();
 
@@ -156,10 +156,13 @@ public interface EditorHandler<T> {
      *
      * @param request
      *            the cancel request
+     * @param afterBeingSaved
+     *            if {@code true} then this method is called to close editor
+     *            after save action, otherwise it represents a cancel action
      *
      * @see Grid#cancelEditor()
      */
-    public void cancel(EditorRequest<T> request);
+    public void cancel(EditorRequest<T> request, boolean afterBeingSaved);
 
     /**
      * Commits changes in the currently active edit to the data source. Called

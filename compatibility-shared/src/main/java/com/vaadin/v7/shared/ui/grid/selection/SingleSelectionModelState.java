@@ -27,4 +27,5 @@ public class SingleSelectionModelState extends SharedState {
 
     /* Allow deselecting rows */
     public boolean deselectAllowed = true;
+    public boolean userSelectionAllowed = true;
 }

@@ -81,7 +81,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     static {
 
-        FILE_PROPERTIES = new ArrayList<>();
+        FILE_PROPERTIES = new ArrayList<String>();
         FILE_PROPERTIES.add(PROPERTY_NAME);
         FILE_PROPERTIES.add(PROPERTY_ICON);
         FILE_PROPERTIES.add(PROPERTY_SIZE);
@@ -441,7 +441,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     public Collection<File> getItemIds() {
 
         if (recursive) {
-            final Collection<File> col = new ArrayList<>();
+            final Collection<File> col = new ArrayList<File>();
             for (int i = 0; i < roots.length; i++) {
                 addItemIds(col, roots[i]);
             }
@@ -741,7 +741,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support adding new properties.
          *
-         * @see com.vaadin.v7.data.Item#addItemProperty(Object, Property)
+         * @see Item#addItemProperty(Object, Property)
          */
         @Override
         public boolean addItemProperty(Object id, Property property)
@@ -753,7 +753,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support removing properties.
          *
-         * @see com.vaadin.v7.data.Item#removeItemProperty(Object)
+         * @see Item#removeItemProperty(Object)
          */
         @Override
         public boolean removeItemProperty(Object id)

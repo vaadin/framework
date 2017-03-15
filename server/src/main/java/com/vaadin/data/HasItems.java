@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.data.provider.BackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.ui.Component;
 
 /**
@@ -29,12 +31,38 @@ import com.vaadin.ui.Component;
  *
  * @author Vaadin Ltd
  *
+ * @since 8.0
+ *
  * @param <T>
  *            the type of the displayed item
  */
 public interface HasItems<T> extends Component, Serializable {
+
+    /**
+     * Returns the source of data items used by this listing.
+     *
+     * @return the data provider, not null
+     */
+    public DataProvider<T, ?> getDataProvider();
+
     /**
      * Sets the data items of this component provided as a collection.
+     * <p>
+     * The provided items are wrapped into a {@link ListDataProvider} and this
+     * instance is used as a data provider for the
+     * {@link #setDataProvider(DataProvider)} method. It means that the items
+     * collection can be accessed later on via
+     * {@link ListDataProvider#getItems()}:
+     *
+     * <pre>
+     * <code>
+     * HasDataProvider<String> listing = new CheckBoxGroup<>();
+     * listing.setItems(Arrays.asList("a","b"));
+     * ...
+     *
+     * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();
+     * </code>
+     * </pre>
      * <p>
      * The provided collection instance may be used as-is. Subsequent
      * modification of the collection might cause inconsistent data to be shown
@@ -49,6 +77,25 @@ public interface HasItems<T> extends Component, Serializable {
 
     /**
      * Sets the data items of this listing.
+     * <p>
+     * The provided items are wrapped into a {@link ListDataProvider} and this
+     * instance is used as a data provider for the
+     * {@link #setDataProvider(DataProvider)} method. It means that the items
+     * collection can be accessed later on via
+     * {@link ListDataProvider#getItems()}:
+     *
+     * <pre>
+     * <code>
+     * HasDataProvider<String> listing = new CheckBoxGroup<>();
+     * listing.setItems(Arrays.asList("a","b"));
+     * ...
+     *
+     * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();
+     * </code>
+     * </pre>
+     * <p>
+     *
+     * @see #setItems(Collection)
      *
      * @param items
      *            the data items to display
@@ -60,12 +107,30 @@ public interface HasItems<T> extends Component, Serializable {
     /**
      * Sets the data items of this listing provided as a stream.
      * <p>
-     * This is just a shorthand for {@link #setItems(Collection)}, by
-     * <b>collecting all the items in the stream to a list</b>.
+     * This is just a shorthand for {@link #setItems(Collection)}, that
+     * <b>collects objects in the stream to a list</b>. Thus, using this method,
+     * instead of its array and Collection variations, doesn't save any memory.
+     * If you have a large data set to bind, using a lazy data provider is
+     * recommended. See {@link BackEndDataProvider} for more info.
      * <p>
-     * <strong>Using big streams is not recommended, you should instead use a
-     * lazy data provider.</strong> See {@link BackEndDataProvider} for more
-     * info.
+     * The provided items are wrapped into a {@link ListDataProvider} and this
+     * instance is used as a data provider for the
+     * {@link #setDataProvider(DataProvider)} method. It means that the items
+     * collection can be accessed later on via
+     * {@link ListDataProvider#getItems()}:
+     *
+     * <pre>
+     * <code>
+     * HasDataProvider<String> listing = new CheckBoxGroup<>();
+     * listing.setItems(Arrays.asList("a","b"));
+     * ...
+     *
+     * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();
+     * </code>
+     * </pre>
+     * <p>
+     *
+     * @see #setItems(Collection)
      *
      * @param streamOfItems
      *            the stream of data items to display, not {@code null}

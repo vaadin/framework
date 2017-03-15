@@ -20,7 +20,7 @@ import com.vaadin.server.ClassResource;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.UserError;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractDateField;
@@ -120,7 +120,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(layout, button);
         button.addListener(this);
 
-        final AbstractDateField df = new TestDateField("DateField " + count++);
+        final AbstractDateField<?, ?> df = new TestDateField("DateField " + count++);
         test(layout, df);
 
         final CheckBox cb = new CheckBox("Checkbox " + count++);

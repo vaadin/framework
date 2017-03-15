@@ -769,6 +769,39 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         super.fireValueChange();
     }
 
+    /**
+     * The instance used by this property
+     *
+     * @return the instance used for fetching the property value
+     * @since 7.7.7
+     */
+    public Object getInstance() {
+        return instance;
+    }
+
+    /**
+     * Sets the instance used by this property.
+     * <p>
+     * The new instance must be of the same type as the old instance
+     * <p>
+     * To be consistent with {@link #setValue(Object)}, this method will fire a
+     * value change event even if the value stays the same
+     *
+     * @param instance
+     *            the instance to use
+     * @since 7.7.7
+     */
+    public void setInstance(Object instance) {
+        if (this.instance.getClass() != instance.getClass()) {
+            throw new IllegalArgumentException("The new instance is of type "
+                    + instance.getClass().getName()
+                    + " which does not match the old instance type "
+                    + this.instance.getClass().getName());
+        }
+        this.instance = instance;
+        fireValueChange();
+    }
+
     private static final Logger getLogger() {
         return Logger.getLogger(MethodProperty.class.getName());
     }

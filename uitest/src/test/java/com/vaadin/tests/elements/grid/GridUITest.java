@@ -2,6 +2,7 @@ package com.vaadin.tests.elements.grid;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
@@ -39,6 +40,48 @@ public class GridUITest extends MultiBrowserTest {
         Assert.assertEquals(10, checkRows());
         openTestURL("rowCount=100&restartApplication");
         Assert.assertEquals(100, checkRows());
+    }
+
+    @Test
+    public void testGetHeadersByCaptionFirstRowFirstColumn() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        grid.getHeaderCellByCaption("foo");
+    }
+
+    @Test
+    public void testGetHeadersByCaptionFirstRowNotFirstColumn() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        grid.getHeaderCellByCaption("bar");
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testGetHeadersByCaptionNoHeader() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        grid.getHeaderCellByCaption("not existing caption");
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testGetHeadersByCaptionByIndexNoHeader() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        grid.getHeaderCellByCaption(0, "not existing caption");
+    }
+
+    @Test
+    public void testGetHeadersByCaptionNotFirstRow() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        grid.getHeaderCellByCaption("extra row");
+    }
+
+    @Test
+    public void testGetHeadersByCaptionByIndexNotFirstRow() {
+        openTestURL("rowCount=10&restartApplication");
+        GridElement grid = $(GridElement.class).first();
+        grid.getHeaderCellByCaption(1, "extra row");
     }
 
     private int checkRows() {

@@ -21,6 +21,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
@@ -42,6 +43,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.declarative.converters.DesignDateConverter;
 import com.vaadin.ui.declarative.converters.DesignEnumConverter;
 import com.vaadin.ui.declarative.converters.DesignLocalDateConverter;
+import com.vaadin.ui.declarative.converters.DesignLocalDateTimeConverter;
 import com.vaadin.ui.declarative.converters.DesignObjectConverter;
 import com.vaadin.ui.declarative.converters.DesignResourceConverter;
 import com.vaadin.ui.declarative.converters.DesignShortcutActionConverter;
@@ -178,6 +180,8 @@ public class DesignFormatter implements Serializable {
 
         converterMap.put(Date.class, new DesignDateConverter());
         converterMap.put(LocalDate.class, new DesignLocalDateConverter());
+        converterMap.put(LocalDateTime.class,
+                new DesignLocalDateTimeConverter());
         converterMap.put(ShortcutAction.class,
                 new DesignShortcutActionConverter());
         converterMap.put(Resource.class, new DesignResourceConverter());
@@ -191,6 +195,7 @@ public class DesignFormatter implements Serializable {
      *            Type to convert to/from.
      * @param converter
      *            Converter.
+     * @since 8.0
      */
     protected <T> void addConverter(Class<?> type,
             Converter<String, ?> converter) {
@@ -297,6 +302,7 @@ public class DesignFormatter implements Serializable {
      *            be returned.
      * @return A valid converter for a given type or its supertype, <b>null</b>
      *         if it was not found.
+     * @since 8.0
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected <T> Converter<String, T> findConverterFor(
@@ -332,6 +338,7 @@ public class DesignFormatter implements Serializable {
      *            Type to find a converter for.
      * @return A valid converter for a given type or its subtype, <b>null</b> if
      *         it was not found.
+     * @since 8.0
      */
     protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType) {

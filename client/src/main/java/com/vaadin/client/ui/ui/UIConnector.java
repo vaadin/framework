@@ -1164,16 +1164,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         return Logger.getLogger(UIConnector.class.getName());
     }
 
-    /**
-     * Send an acknowledgement RPC to the server. This allows the server to know
-     * which messages the client has received, even when the client is not
-     * sending any other traffic.
-     */
-    public void sendAck() {
-        getRpcProxy(UIServerRpc.class).acknowledge();
-
-    }
-
     private void setWindowOrderAndPosition() {
         if (windowOrderRegistration != null) {
             windowOrderRegistration.removeHandler();
@@ -1218,5 +1208,5 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             Collections.sort(result, this);
             return result;
         }
-    };
+    }
 }

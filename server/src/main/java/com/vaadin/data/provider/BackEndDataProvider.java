@@ -15,93 +15,78 @@
  */
 package com.vaadin.data.provider;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
-
-import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.SerializableToIntFunction;
-import com.vaadin.shared.Registration;
 
 /**
- * A {@link DataProvider} for any back end.
+ * A data provider that lazy loads items from a back end.
  *
  * @param <T>
  *            data provider data type
  * @param <F>
  *            data provider filter type
+ * @since 8.0
  */
-public class BackEndDataProvider<T, F> extends AbstractDataProvider<T, F> {
-
-    private final SerializableFunction<Query<T, F>, Stream<T>> request;
-    private final SerializableToIntFunction<Query<T, F>> sizeCallback;
+public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
 
     /**
-     * Constructs a new DataProvider to request data from an arbitrary back end
-     * request function.
+     * Sets a list of sort orders to use as the default sorting for this data
+     * provider. This overrides the sorting set by any other method that
+     * manipulates the default sorting of this data provider.
+     * <p>
+     * The default sorting is used if the query defines no sorting. The default
+     * sorting is also used to determine the ordering of items that are
+     * considered equal by the sorting defined in the query.
      *
-     * @param request
-     *            function that requests data from back end based on query
-     * @param sizeCallback
-     *            function that return the amount of data in back end for query
-     */
-    public BackEndDataProvider(
-            SerializableFunction<Query<T, F>, Stream<T>> request,
-            SerializableToIntFunction<Query<T, F>> sizeCallback) {
-        Objects.requireNonNull(request, "Request function can't be null");
-        Objects.requireNonNull(sizeCallback, "Size callback can't be null");
-        this.request = request;
-        this.sizeCallback = sizeCallback;
-    }
-
-    @Override
-    public Stream<T> fetch(Query<T, F> query) {
-        return request.apply(query);
-    }
-
-    @Override
-    public int size(Query<T, F> query) {
-        return sizeCallback.applyAsInt(query);
-    }
-
-    /**
-     * Sets a default sorting order to the data provider.
+     * @see #setSortOrder(QuerySortOrder)
      *
      * @param sortOrders
-     *            a list of sorting information containing field ids and
-     *            directions
-     * @return new data provider with modified sorting
+     *            a list of sort orders to set, not <code>null</code>
      */
-    @SuppressWarnings("serial")
-    public BackEndDataProvider<T, F> sortingBy(
-            List<SortOrder<String>> sortOrders) {
-        BackEndDataProvider<T, F> parent = this;
-        return new BackEndDataProvider<T, F>(query -> {
-            List<SortOrder<String>> queryOrder = new ArrayList<>(
-                    query.getSortOrders());
-            queryOrder.addAll(sortOrders);
-            return parent.fetch(new Query<>(query.getOffset(), query.getLimit(),
-                    queryOrder, query.getInMemorySorting(),
-                    query.getFilter().orElse(null)));
-        }, sizeCallback) {
+    void setSortOrders(List<QuerySortOrder> sortOrders);
 
-            @Override
-            public Registration addDataProviderListener(
-                    DataProviderListener listener) {
-                return parent.addDataProviderListener(listener);
-            }
+    /**
+     * Sets the sort order to use, given a {@link QuerySortOrderBuilder}.
+     * Shorthand for {@code setSortOrders(builder.build())}.
+     *
+     * @see QuerySortOrderBuilder
+     *
+     * @param builder
+     *            the sort builder to retrieve the sort order from
+     * @throws NullPointerException
+     *             if builder is null
+     */
+    default void setSortOrders(QuerySortOrderBuilder builder) {
+        Objects.requireNonNull("Sort builder cannot be null.");
+        setSortOrders(builder.build());
+    }
 
-            @Override
-            public void refreshAll() {
-                parent.refreshAll();
-            }
-        };
+    /**
+     * Sets a single sort order to use as the default sorting for this data
+     * provider. This overrides the sorting set by any other method that
+     * manipulates the default sorting of this data provider.
+     * <p>
+     * The default sorting is used if the query defines no sorting. The default
+     * sorting is also used to determine the ordering of items that are
+     * considered equal by the sorting defined in the query.
+     *
+     * @see #setSortOrders(List)
+     *
+     * @param sortOrder
+     *            a sort order to set, or <code>null</code> to clear any
+     *            previously set sort orders
+     */
+    default void setSortOrder(QuerySortOrder sortOrder) {
+        if (sortOrder == null) {
+            setSortOrders(Collections.emptyList());
+        } else {
+            setSortOrders(Collections.singletonList(sortOrder));
+        }
     }
 
     @Override
-    public boolean isInMemory() {
+    default boolean isInMemory() {
         return false;
     }
-
 }

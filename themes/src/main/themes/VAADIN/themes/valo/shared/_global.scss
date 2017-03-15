@@ -345,6 +345,8 @@ $valo-shared-pathPrefix: null;
 
   @include valo-drag-element;
 
+  @include valo-draggable;
+
   @include valo-tooltip;
 
   @include valo-contextmenu;

@@ -161,6 +161,7 @@ public class VUpload extends SimplePanel {
     private static native void setEncoding(Element form, String encoding)
     /*-{
       form.enctype = encoding;
+      // IE8 not supported in Vaadin 8
     }-*/;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -248,10 +249,12 @@ public class VUpload extends SimplePanel {
                             t.cancel();
                         }
                         VConsole.log("VUpload:Submit complete");
-                        ((UploadConnector) ConnectorMap.get(client)
-                                .getConnector(VUpload.this))
-                                        .getRpcProxy(UploadServerRpc.class)
-                                        .poll();
+                        if (isAttached()) {
+                            // no need to call poll() if component is already
+                            // detached #8728
+                            ((UploadConnector) ConnectorMap.get(client).getConnector(VUpload.this))
+                                    .getRpcProxy(UploadServerRpc.class).poll();
+                        }
                     }
 
                     rebuildPanel();

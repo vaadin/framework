@@ -20,7 +20,7 @@ import java.util.Collection;
 
 import org.jsoup.nodes.Element;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
@@ -61,6 +61,7 @@ public class Label extends AbstractComponent {
      *            the text to set
      * @param contentMode
      *            the content mode to use
+     * @since 8.0
      */
     public Label(String text, ContentMode contentMode) {
         setValue(text);
@@ -83,6 +84,7 @@ public class Label extends AbstractComponent {
      * @return the content mode of the label
      *
      * @see ContentMode
+     * @since 8.0
      */
     public ContentMode getContentMode() {
         return getState(false).contentMode;
@@ -95,6 +97,7 @@ public class Label extends AbstractComponent {
      *            the content mode to set
      *
      * @see ContentMode
+     * @since 8.0
      */
     public void setContentMode(ContentMode contentMode) {
         if (contentMode == null) {

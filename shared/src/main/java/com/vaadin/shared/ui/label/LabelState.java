@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.label;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ui.ContentMode;
 
 public class LabelState extends AbstractComponentState {
     {

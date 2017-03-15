@@ -73,16 +73,16 @@ public class ComponentTest {
     /**
      * Gets the server rpc handler registered for a component.
      *
-     * @param component
-     *            the component which listens to the RPC
+     * @param connector
+     *            the connector which listens to the RPC
      * @param serverRpcClass
      *            the server RPC class
      * @return the server RPC handler
      */
-    public static <T extends ServerRpc> T getRpcProxy(Component component,
+    public static <T extends ServerRpc> T getRpcProxy(ClientConnector connector,
             Class<T> serverRpcClass) {
         try {
-            ServerRpcManager<?> rpcManager = component
+            ServerRpcManager<?> rpcManager = connector
                     .getRpcManager(serverRpcClass.getName());
             Method method = ServerRpcManager.class
                     .getDeclaredMethod("getImplementation");

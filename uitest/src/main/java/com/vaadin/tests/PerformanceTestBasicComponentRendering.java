@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.vaadin.server.UserError;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;

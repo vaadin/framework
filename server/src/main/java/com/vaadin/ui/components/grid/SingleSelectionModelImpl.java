@@ -27,7 +27,6 @@ import com.vaadin.event.selection.SingleSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.grid.SingleSelectionModelState;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.SingleSelect;
 
 /**
@@ -146,7 +145,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     /**
      * Sets the selection based on a client request. Does nothing if the select
-     * component is {@linkplain Component#isReadOnly()} or if the selection
+     * component is {@linkplain SingleSelect#isReadOnly()} or if the selection
      * would not change. Otherwise updates the selection and fires a selection
      * change event with {@code isUserOriginated == true}.
      *
@@ -227,10 +226,6 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         return getState().deselectAllowed;
     }
 
-    private boolean isUserSelectionAllowed() {
-        return getState(false).selectionAllowed;
-    }
-
     /**
      * Gets a wrapper for using this grid as a single select in a binder.
      *
@@ -275,7 +270,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                getState().selectionAllowed = !readOnly;
+                setUserSelectionAllowed(!readOnly);
             }
 
             @Override
@@ -283,5 +278,19 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
                 return !isUserSelectionAllowed();
             }
         };
+    }
+
+    @Override
+    public void refreshData(T item) {
+        if (isSelected(item)) {
+            selectedItem = item;
+        }
+    }
+
+    @Override
+    public boolean isSelected(T item) {
+        return item != null && selectedItem != null
+                && getGrid().getDataProvider().getId(selectedItem)
+                        .equals(getGrid().getDataProvider().getId(item));
     }
 }

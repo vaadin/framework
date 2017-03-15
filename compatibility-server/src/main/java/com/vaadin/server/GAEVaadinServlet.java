@@ -344,7 +344,13 @@ public class GAEVaadinServlet extends VaadinServlet {
                 VaadinSession vaadinSession = (VaadinSession) ois.readObject();
                 getService().storeSession(vaadinSession,
                         new WrappedHttpSession(session));
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
+                getLogger().log(Level.WARNING,
+                        "Could not de-serialize ApplicationContext for "
+                                + session.getId()
+                                + " A new one will be created. ",
+                        e);
+            } catch (ClassNotFoundException e) {
                 getLogger().log(Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
@@ -425,7 +431,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                     getLogger().log(Level.INFO,
                             "Vaadin cleanup deleting {0} expired Vaadin sessions.",
                             entities.size());
-                    List<Key> keys = new ArrayList<>();
+                    List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
                     }
@@ -445,7 +451,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                     getLogger().log(Level.INFO,
                             "Vaadin cleanup deleting {0} expired appengine sessions.",
                             entities.size());
-                    List<Key> keys = new ArrayList<>();
+                    List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
                     }

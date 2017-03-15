@@ -41,8 +41,8 @@ public class SliderTest {
 
             slider.setValue(-1.0);
         } catch (Slider.ValueOutOfBoundsException e) {
-            assertThat(e.getMessage(),
-                    containsString("Value -1.0 is out of bounds: [0.0, 100.0]"));
+            assertThat(e.getMessage(), containsString(
+                    "Value -1.0 is out of bounds: [0.0, 100.0]"));
         }
     }
 

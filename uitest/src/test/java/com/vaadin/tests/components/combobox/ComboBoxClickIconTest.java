@@ -35,10 +35,11 @@ public class ComboBoxClickIconTest extends MultiBrowserTest {
 
         $(ComboBoxElement.class).first().openPopup();
 
-        getDriver().findElements(By.className("gwt-MenuItem")).get(1).click();
+        clickElement(
+                getDriver().findElements(By.className("gwt-MenuItem")).get(1));
 
-        getDriver().findElement(By.className("v-filterselect"))
-                .findElement(By.className("v-icon")).click();
+        clickElement(getDriver().findElement(By.className("v-filterselect"))
+                .findElement(By.className("v-icon")));
 
         Assert.assertTrue("Unable to find menu items in combobox popup",
                 isElementPresent(By.className("gwt-MenuItem")));

@@ -175,22 +175,8 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
         }
 
         @Override
-        public boolean connectorWasPresentAsRequestWasSent(String connectorId,
-                long lastSyncIdSeenByClient) {
-            return tracker.connectorWasPresentAsRequestWasSent(connectorId,
-                    lastSyncIdSeenByClient);
-        }
-
-        @Override
         public int getCurrentSyncId() {
             return tracker.getCurrentSyncId();
-        }
-
-        @Override
-        public void cleanConcurrentlyRemovedConnectorIds(
-                int lastSyncIdSeenByClient) {
-            tracker.cleanConcurrentlyRemovedConnectorIds(
-                    lastSyncIdSeenByClient);
         }
 
         @Override

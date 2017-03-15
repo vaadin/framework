@@ -26,6 +26,8 @@ import com.vaadin.server.SerializableFunction;
  *
  * @param <R>
  *            the result value type
+ * 
+ * @since 8.0
  */
 class SimpleResult<R> implements Result<R> {
 

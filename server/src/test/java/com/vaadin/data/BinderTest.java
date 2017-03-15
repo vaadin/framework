@@ -1,9 +1,11 @@
 package com.vaadin.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -38,6 +40,93 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setBean(null);
         assertNull(binder.getBean());
+    }
+
+    @Test
+    public void bindNullBean_FieldsAreCleared() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+        binder.setBean(item);
+        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No age field value", "32", ageField.getValue());
+
+        binder.setBean(null);
+        assertEquals("Name field not empty", "", nameField.getValue());
+        assertEquals("Age field not empty", "", ageField.getValue());
+    }
+
+    @Test
+    public void clearForReadBean_boundFieldsAreCleared() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+        binder.readBean(item);
+
+        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No age field value", "32", ageField.getValue());
+
+        binder.readBean(null);
+        assertEquals("Name field not empty", "", nameField.getValue());
+        assertEquals("Age field not empty", "", ageField.getValue());
+    }
+
+    @Test
+    public void clearReadOnlyField_shouldClearField() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        // Make name field read only
+        nameField.setReadOnly(true);
+
+        binder.setBean(item);
+        assertEquals("No name field value", "Johannes", nameField.getValue());
+
+        binder.setBean(null);
+
+        assertEquals("ReadOnly field not empty","", nameField.getValue());
+    }
+
+    @Test
+    public void clearBean_setsHasChangesToFalse() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+
+        // Make name field read only
+        nameField.setReadOnly(true);
+
+        binder.readBean(item);
+        assertEquals("No name field value", "Johannes", nameField.getValue());
+        nameField.setValue("James");
+
+        assertTrue("Binder did not have value changes", binder.hasChanges());
+
+        binder.readBean(null);
+
+        assertFalse("Binder has changes after clearing all fields",
+                binder.hasChanges());
+
+    }
+
+    @Test
+    public void clearReadOnlyBinder_shouldClearFields() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setReadOnly(true);
+
+        binder.setBean(item);
+
+        binder.setBean(null);
+        assertEquals("ReadOnly name field not empty", "", nameField.getValue());
+        assertEquals("ReadOnly age field not empty", "", ageField.getValue());
     }
 
     @Test(expected = NullPointerException.class)
@@ -234,18 +323,18 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.bind(nullTextField, Person::getFirstName, Person::setFirstName);
         binder.setBean(namelessPerson);
 
-        Assert.assertTrue(nullTextField.isEmpty());
+        assertTrue(nullTextField.isEmpty());
         Assert.assertEquals(null, namelessPerson.getFirstName());
 
         // Change value, see that textfield is not empty and bean is updated.
         nullTextField.setValue("");
-        Assert.assertFalse(nullTextField.isEmpty());
+        assertFalse(nullTextField.isEmpty());
         Assert.assertEquals("First name of person was not properly updated", "",
                 namelessPerson.getFirstName());
 
         // Verify that default null representation does not map back to null
         nullTextField.setValue("null");
-        Assert.assertTrue(nullTextField.isEmpty());
+        assertTrue(nullTextField.isEmpty());
         Assert.assertEquals("Default one-way null representation failed.",
                 "null", namelessPerson.getFirstName());
     }
@@ -257,7 +346,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.forField(nameField).withNullRepresentation(nullRepresentation)
                 .bind(Person::getFirstName, Person::setFirstName);
 
-        Assert.assertFalse("First name in item should not be null",
+        assertFalse("First name in item should not be null",
                 Objects.isNull(item.getFirstName()));
         binder.setBean(item);
 
@@ -329,13 +418,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void setRequired_withErrorMessage_fieldGetsRequiredIndicatorAndValidator() {
         TextField textField = new TextField();
-        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+        assertFalse(textField.isRequiredIndicatorVisible());
 
         BindingBuilder<Person, String> binding = binder.forField(textField);
-        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+        assertFalse(textField.isRequiredIndicatorVisible());
 
         binding.asRequired("foobar");
-        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        assertTrue(textField.isRequiredIndicatorVisible());
 
         binding.bind(Person::getFirstName, Person::setFirstName);
         binder.setBean(item);
@@ -348,17 +437,17 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         textField.setValue("value");
         Assert.assertNull(textField.getErrorMessage());
-        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        assertTrue(textField.isRequiredIndicatorVisible());
     }
 
     @Test
     public void setRequired_withErrorMessageProvider_fieldGetsRequiredIndicatorAndValidator() {
         TextField textField = new TextField();
         textField.setLocale(Locale.CANADA);
-        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+        assertFalse(textField.isRequiredIndicatorVisible());
 
         BindingBuilder<Person, String> binding = binder.forField(textField);
-        Assert.assertFalse(textField.isRequiredIndicatorVisible());
+        assertFalse(textField.isRequiredIndicatorVisible());
         AtomicInteger invokes = new AtomicInteger();
 
         binding.asRequired(context -> {
@@ -366,7 +455,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
             Assert.assertSame(Locale.CANADA, context.getLocale().get());
             return "foobar";
         });
-        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        assertTrue(textField.isRequiredIndicatorVisible());
 
         binding.bind(Person::getFirstName, Person::setFirstName);
         binder.setBean(item);
@@ -383,7 +472,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         textField.setValue("value");
         Assert.assertNull(textField.getErrorMessage());
-        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        assertTrue(textField.isRequiredIndicatorVisible());
     }
 
     @Test
@@ -441,13 +530,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setReadOnly(true);
 
-        Assert.assertTrue(nameField.isReadOnly());
-        Assert.assertFalse(ageField.isReadOnly());
+        assertTrue(nameField.isReadOnly());
+        assertFalse(ageField.isReadOnly());
 
         binder.setReadOnly(false);
 
-        Assert.assertFalse(nameField.isReadOnly());
-        Assert.assertFalse(ageField.isReadOnly());
+        assertFalse(nameField.isReadOnly());
+        assertFalse(ageField.isReadOnly());
     }
 
     @Test
@@ -463,13 +552,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setReadOnly(true);
 
-        Assert.assertTrue(nameField.isReadOnly());
-        Assert.assertTrue(ageField.isReadOnly());
+        assertTrue(nameField.isReadOnly());
+        assertTrue(ageField.isReadOnly());
 
         binder.setReadOnly(false);
 
-        Assert.assertFalse(nameField.isReadOnly());
-        Assert.assertFalse(ageField.isReadOnly());
+        assertFalse(nameField.isReadOnly());
+        assertFalse(ageField.isReadOnly());
     }
 
     @Test
@@ -485,13 +574,65 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setReadOnly(true);
 
-        Assert.assertTrue(nameField.isReadOnly());
-        Assert.assertTrue(ageField.isReadOnly());
+        assertTrue(nameField.isReadOnly());
+        assertTrue(ageField.isReadOnly());
 
         binder.setReadOnly(false);
 
-        Assert.assertFalse(nameField.isReadOnly());
-        Assert.assertFalse(ageField.isReadOnly());
+        assertFalse(nameField.isReadOnly());
+        assertFalse(ageField.isReadOnly());
     }
 
+    @Test
+    public void isValidTest_bound_binder() {
+        binder.forField(nameField)
+                .withValidator(
+                        Validator.from(
+                                name -> !name.equals("fail field validation"),
+                                ""))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        binder.withValidator(
+                Validator.from(person -> !person.getFirstName()
+                        .equals("fail bean validation"), ""));
+
+        binder.setBean(item);
+
+        Assert.assertTrue(binder.isValid());
+
+        nameField.setValue("fail field validation");
+        Assert.assertFalse(binder.isValid());
+
+        nameField.setValue("");
+        Assert.assertTrue(binder.isValid());
+
+        nameField.setValue("fail bean validation");
+        Assert.assertFalse(binder.isValid());
+    }
+
+    @Test
+    public void isValidTest_unbound_binder() {
+        binder.forField(nameField)
+                .withValidator(Validator.from(
+                        name -> !name.equals("fail field validation"), ""))
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        Assert.assertTrue(binder.isValid());
+
+        nameField.setValue("fail field validation");
+        Assert.assertFalse(binder.isValid());
+
+        nameField.setValue("");
+        Assert.assertTrue(binder.isValid());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isValidTest_unbound_binder_throws_with_bean_level_validation() {
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.withValidator(Validator.from(
+                person -> !person.getFirstName().equals("fail bean validation"),
+                ""));
+        binder.isValid();
+    }
 }

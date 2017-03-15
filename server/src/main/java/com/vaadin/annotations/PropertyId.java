@@ -53,7 +53,7 @@ import com.vaadin.data.HasValue;
    </pre>
  * </code>
  *
- * @since 7.0
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @Target({ ElementType.FIELD })

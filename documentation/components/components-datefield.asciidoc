@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.datefield]]
-= Date Input with [classname]#DateField#
+= Date Input with DateField
 
 ifdef::web[]
 [.sampler]

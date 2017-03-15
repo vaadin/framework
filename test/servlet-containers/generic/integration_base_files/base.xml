@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<project name="test" basedir=".">
+    <property file="deploy.properties" />
+    <property name="vaadin.major.7" value="1" />
+    <property name="lock" value="deploy/lock.file" />
+    <property name="deployDir" value="deploy/${server}" />
+    <property name="serverPort" value="8080" />
+    <property name="war" value="demo.war" />
+    <property name="startupSpawn" value="false" />
+    <property name="JAVA_HOME" value="/usr/lib/jvm/default-java" />
+    <property name="waitMinutes" value="3" />
+    <property name="waitUrl"
+        value="http://localhost:${serverPort}/demo/VAADIN/themes/valo/styles.css" />
+    <property name="shutdownWait" value="10" />
+
+
+    <target name="afterDeploy">
+        <!-- Empty default -->
+    </target>
+
+    <target name="beforeDeploy">
+        <!-- Empty default -->
+    </target>
+
+    <target name="deploy">
+        <antcall target="beforeDeploy" />
+        <echo
+            message="${server}: Deploying ${war} to ${deployDir}/${autodeployDir}" />
+        <copy file="${war}" todir="${deployDir}/${autodeployDir}" />
+        <antcall target="afterDeploy" />
+    </target>
+
+    <target name="deployStatic">
+        <unzip src="${war}" dest="${staticDeployDir}/tmp-unpack-jar/">
+            <patternset>
+                <include name="WEB-INF/lib/*.jar" />
+            </patternset>
+        </unzip>
+        <unzip dest="${staticDeployDir}">
+            <fileset dir="${staticDeployDir}/tmp-unpack-jar/WEB-INF/lib"
+                includes="*.jar" />
+
+            <patternset>
+                <include name="VAADIN/**" />
+            </patternset>
+        </unzip>
+        <delete dir="${staticDeployDir}/tmp-unpack-jar/" />
+
+        <unzip src="${war}" dest="${staticDeployDir}">
+            <patternset>
+                <include name="VAADIN/**" />
+            </patternset>
+        </unzip>
+    </target>
+
+    <target name="unpack-server">
+        <echo message="${server}: Unpacking ${server}.tar.gz" />
+        <delete dir="${server}" />
+        <exec executable="tar">
+            <arg value="-xf" />
+            <arg value="${server}.tar.gz" />
+        </exec>
+        <move file="${server}" tofile="${deployDir}" />
+        <echo message="Done." />
+    </target>
+
+    <target name="doStartup">
+        <exec executable="./run.sh" spawn="${startupSpawn}">
+            <env key="JAVA_HOME" value="${JAVA_HOME}" />
+        </exec>
+    </target>
+
+    <target name="startup">
+        <antcall target="doStartup" />
+        <echo message="${server}: Waiting for ${waitUrl} to become available." />
+        <waitfor maxwait="${waitMinutes}" maxwaitunit="minute"
+            checkevery="10000" timeoutproperty="timeout">
+            <http url="${waitUrl}" />
+        </waitfor>
+        <!-- Print load averages to get an indicator on whether the server 
+            still attempts to start up -->
+        <exec executable="uptime" />
+        <fail if="timeout" message="${server} failed to deploy" />
+
+        <echo message="${server}: Demo deployed successfully." />
+    </target>
+
+    <target name="shutdown">
+        <exec executable="./stop.sh">
+            <env key="JAVA_HOME" value="${JAVA_HOME}" />
+        </exec>
+        <sleep seconds="${shutdownWait}" />
+    </target>
+
+    <target name="force-shutdown">
+        <exec executable="./cleanup.sh" />
+    </target>
+
+    <target name="check-port">
+        <fail
+            message="${server}: Something is still listening on port ${serverPort}">
+            <condition>
+                <socket server="localhost" port="${serverPort}" />
+            </condition>
+        </fail>
+    </target>
+
+    <target name="check-lock">
+        <available file="${lock}" property="lockAvailable" />
+        <fail unless="lockAvailable" message="Instance is not locked!" />
+    </target>
+
+    <target name="get-lock">
+        <mkdir dir="deploy" />
+        <echo>${server}: Getting the lock</echo>
+        <exec executable="lockfile" failonerror="true">
+            <!-- Check every 10 seconds -->
+            <arg value="-10" />
+            <!-- Retry for 55 minutes (build server gives up after 60 minutes) -->
+            <arg value="-r330" />
+            <arg value="${lock}" />
+        </exec>
+        <echo>${server}: Got the lock</echo>
+    </target>
+
+    <target name="clean">
+        <delete dir="${deployDir}" failonerror="false" />
+    </target>
+
+    <target name="release-lock">
+        <!-- <exec executable="rm"> <arg value="-f" /> <arg value="${lock}" 
+            /> </exec> -->
+        <delete>
+            <fileset dir="." includes="${lock}" />
+        </delete>
+        <echo>${server}: Released the lock</echo>
+    </target>
+
+    <target name="startup-and-deploy"
+        depends="check-lock,check-port,unpack-server,deploy,startup" />
+
+    <target name="shutdown-and-cleanup" depends="shutdown,clean,release-lock,force-shutdown" />
+
+</project>

@@ -34,7 +34,7 @@ import com.vaadin.v7.data.Property;
 /**
  * <p>
  * A wrapper class for adding external hierarchy to containers not implementing
- * the {@link com.vaadin.v7.data.Container.Hierarchical} interface.
+ * the {@link Container.Hierarchical} interface.
  * </p>
  *
  * <p>
@@ -119,10 +119,10 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         // Create initial order if needed
         if (!hierarchical) {
-            noChildrenAllowed = new HashSet<>();
-            parent = new Hashtable<>();
-            children = new Hashtable<>();
-            roots = new LinkedHashSet<>(container.getItemIds());
+            noChildrenAllowed = new HashSet<Object>();
+            parent = new Hashtable<Object, Object>();
+            children = new Hashtable<Object, LinkedList<Object>>();
+            roots = new LinkedHashSet<Object>(container.getItemIds());
         }
 
         updateHierarchicalWrapper();
@@ -142,10 +142,10 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             // Recreate hierarchy and data structures if missing
             if (noChildrenAllowed == null || parent == null || children == null
                     || roots == null) {
-                noChildrenAllowed = new HashSet<>();
-                parent = new Hashtable<>();
-                children = new Hashtable<>();
-                roots = new LinkedHashSet<>(container.getItemIds());
+                noChildrenAllowed = new HashSet<Object>();
+                parent = new Hashtable<Object, Object>();
+                children = new Hashtable<Object, LinkedList<Object>>();
+                roots = new LinkedHashSet<Object>(container.getItemIds());
             }
 
             // Check that the hierarchy is up-to-date
@@ -158,7 +158,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                         itemIds);
 
                 // Calculate the set of all items in the hierarchy
-                final HashSet<Object> s = new HashSet<>();
+                final HashSet<Object> s = new HashSet<Object>();
                 s.addAll(parent.keySet());
                 s.addAll(children.keySet());
                 s.addAll(roots);
@@ -183,7 +183,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
                 Object[] array = roots.toArray();
                 Arrays.sort(array, basedOnOrderFromWrappedContainer);
-                roots = new LinkedHashSet<>();
+                roots = new LinkedHashSet<Object>();
                 for (int i = 0; i < array.length; i++) {
                     roots.add(array[i]);
                 }
@@ -357,7 +357,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * this method fails and <code>false</code> is returned; the children must
      * be first explicitly removed with
      * {@link #setParent(Object itemId, Object newParentId)} or
-     * {@link com.vaadin.v7.data.Container#removeItem(Object itemId)}.
+     * {@link Container#removeItem(Object itemId)}.
      * </p>
      *
      * @param itemId
@@ -476,7 +476,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         parent.put(itemId, newParentId);
         LinkedList<Object> pcl = children.get(newParentId);
         if (pcl == null) {
-            pcl = new LinkedList<>();
+            pcl = new LinkedList<Object>();
             children.put(newParentId, pcl);
         }
         pcl.add(itemId);
@@ -737,7 +737,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addItemSetChangeListener(com.vaadin.v7.data.Container.ItemSetChangeListener)}
+     *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -762,7 +762,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeItemSetChangeListener(com.vaadin.v7.data.Container.ItemSetChangeListener)}
+     *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -787,7 +787,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -812,7 +812,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated

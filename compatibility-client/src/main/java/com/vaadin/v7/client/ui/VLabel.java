@@ -57,4 +57,5 @@ public class VLabel extends HTML {
         }
     }
 
+    // Vaadin 8 does not support IE8, no override for setText
 }

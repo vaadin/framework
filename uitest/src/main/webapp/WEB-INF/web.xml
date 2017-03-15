@@ -64,6 +64,11 @@
         <async-supported>false</async-supported>
     </servlet>
     <servlet>
+        <servlet-name>VaadinRefresh</servlet-name>
+        <servlet-class>com.vaadin.tests.applicationservlet.VaadinRefreshServlet</servlet-class>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet>
         <servlet-name>VaadinApplicationRunner</servlet-name>
         <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
         <!-- Non-default values for testing purposes -->
@@ -86,16 +91,6 @@
         <async-supported>true</async-supported>
     </servlet>
 
-    <servlet>
-        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
-        <servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
-        <!-- Force web sockets to use JSR 356 standard -->
-        <init-param>
-            <param-name>org.atmosphere.cpr.asyncSupport</param-name>
-            <param-value>org.atmosphere.container.JSR356AsyncSupport</param-value>
-        </init-param>
-        <async-supported>true</async-supported>
-    </servlet>
     <servlet>
         <servlet-name>CommErrorEmulator</servlet-name>
         <servlet-class>com.vaadin.tests.application.CommErrorEmulatorServlet</servlet-class>
@@ -156,17 +151,6 @@
         <async-supported>true</async-supported>
     </servlet>
 
-    <!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
-    <servlet>
-        <servlet-name>IntegrationTest</servlet-name>
-        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
-        <init-param>
-            <param-name>UI</param-name>
-            <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
-        </init-param>
-        <async-supported>true</async-supported>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>Embed App 1</servlet-name>
         <url-pattern>/embed1/*</url-pattern>
@@ -206,16 +190,6 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>VaadinApplicationRunnerWithJSR356</servlet-name>
-        <url-pattern>/run-jsr356/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>IntegrationTest</servlet-name>
-        <url-pattern>/integration/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>CommErrorEmulator</servlet-name>
         <url-pattern>/commerror/*</url-pattern>
     </servlet-mapping>
@@ -233,6 +207,10 @@
     <servlet-mapping>
         <servlet-name>ResourcesFromServlet</servlet-name>
         <url-pattern>/servlet-with-resources/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VaadinRefresh</servlet-name>
+        <url-pattern>/vaadinrefresh/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

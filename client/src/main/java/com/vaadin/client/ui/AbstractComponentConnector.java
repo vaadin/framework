@@ -209,10 +209,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
                     @Override
                     public void run() {
-                        cancelParentTouchTimers(); // we're handling this event,
-                                                   // our parent components
-                                                   // don't need to bother with
-                                                   // it anymore.
+                        // we're handling this event, our parent components
+                        // don't need to bother with it anymore.
+                        cancelParentTouchTimers();
                         // The default context click
                         // implementation only provides the
                         // mouse coordinates relative to root
@@ -286,7 +285,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     protected boolean shouldHandleLongTap() {
-        return BrowserInfo.get().isTouchDevice() && !BrowserInfo.get().isIOS();
+        return BrowserInfo.get().isTouchDevice();
     }
 
     /**
@@ -761,7 +760,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
-        return new TooltipInfo(getState().description, getState().errorMessage);
+        return new TooltipInfo(getState().description,
+                getState().descriptionContentMode, getState().errorMessage);
     }
 
     @Override

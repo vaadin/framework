@@ -39,8 +39,10 @@ import com.vaadin.v7.ui.Field;
  * FieldGroup provides an easy way of binding fields to data and handling
  * commits of these fields.
  * <p>
- * The typical use case is to create a layout outside the FieldGroup and then
- * use FieldGroup to bind the fields to a data source.
+ * The functionality of FieldGroup is similar to {@link Form} but
+ * {@link FieldGroup} does not handle layouts in any way. The typical use case
+ * is to create a layout outside the FieldGroup and then use FieldGroup to bind
+ * the fields to a data source.
  * </p>
  * <p>
  * {@link FieldGroup} is not a UI component so it cannot be added to a layout.
@@ -61,9 +63,9 @@ public class FieldGroup implements Serializable {
     private boolean enabled = true;
     private boolean readOnly = false;
 
-    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<>();
-    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<>();
-    private List<CommitHandler> commitHandlers = new ArrayList<>();
+    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
+    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
+    private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
 
     /**
      * The field factory used by builder methods.
@@ -104,7 +106,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Binds all fields to the properties in the item in use.
-     * 
+     *
      * @since 7.7.5
      */
     protected void bindFields() {
@@ -303,7 +305,7 @@ public class FieldGroup implements Serializable {
      */
     protected <T> Property.Transactional<T> wrapInTransactionalProperty(
             Property<T> itemProperty) {
-        return new TransactionalPropertyWrapper<>(itemProperty);
+        return new TransactionalPropertyWrapper<T>(itemProperty);
     }
 
     private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
@@ -462,9 +464,9 @@ public class FieldGroup implements Serializable {
      */
     public Collection<Object> getUnboundPropertyIds() {
         if (getItemDataSource() == null) {
-            return new ArrayList<>();
+            return new ArrayList<Object>();
         }
-        List<Object> unboundPropertyIds = new ArrayList<>();
+        List<Object> unboundPropertyIds = new ArrayList<Object>();
         unboundPropertyIds.addAll(getItemDataSource().getItemPropertyIds());
         unboundPropertyIds.removeAll(propertyIdToField.keySet());
         return unboundPropertyIds;
@@ -517,7 +519,7 @@ public class FieldGroup implements Serializable {
      *         commits succeeded
      */
     private Map<Field<?>, InvalidValueException> commitFields() {
-        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<>();
+        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<Field<?>, InvalidValueException>();
 
         for (Field<?> f : fieldToPropertyId.keySet()) {
             try {
@@ -991,7 +993,7 @@ public class FieldGroup implements Serializable {
                             .createCaptionByPropertyId(propertyId);
                 }
 
-                // Create the component (LegacyField)
+                // Create the component (Field)
                 field = build(caption, propertyType, fieldType);
 
                 // Store it in the field
@@ -1112,7 +1114,7 @@ public class FieldGroup implements Serializable {
                 return ((FieldGroupInvalidValueException) getCause())
                         .getInvalidFields();
             }
-            return new HashMap<>();
+            return new HashMap<Field<?>, InvalidValueException>();
         }
 
         /**
@@ -1217,7 +1219,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * The data type is the type that we want to edit using the field. The field
      * type is the type of field we want to create, can be {@link Field} if any
-     * LegacyField is good.
+     * Field is good.
      * </p>
      *
      * @param caption
@@ -1226,7 +1228,7 @@ public class FieldGroup implements Serializable {
      *            The data model type that we want to edit using the field
      * @param fieldType
      *            The type of field that we want to create
-     * @return A LegacyField capable of editing the given type
+     * @return A Field capable of editing the given type
      * @throws BindException
      *             If the field could not be created
      */
@@ -1244,9 +1246,9 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns an array containing LegacyField objects reflecting all the fields
-     * of the class or interface represented by this Class object. The elements
-     * in the array returned are sorted in declare order from sub class to super
+     * Returns an array containing Field objects reflecting all the fields of
+     * the class or interface represented by this Class object. The elements in
+     * the array returned are sorted in declare order from sub class to super
      * class.
      *
      * @param searchClass
@@ -1254,7 +1256,7 @@ public class FieldGroup implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFieldsInDeclareOrder(
             Class searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<>();
+        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<java.lang.reflect.Field>();
 
         while (searchClass != null) {
             for (java.lang.reflect.Field memberField : searchClass

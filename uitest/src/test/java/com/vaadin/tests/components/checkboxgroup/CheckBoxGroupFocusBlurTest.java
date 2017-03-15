@@ -23,6 +23,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.CheckBoxGroupElement;
 import com.vaadin.testbench.elements.LabelElement;
@@ -84,5 +85,11 @@ public class CheckBoxGroupFocusBlurTest extends MultiBrowserTest {
         checkBoxes.get(4).sendKeys(Keys.SPACE);
         // no new events
         Assert.assertFalse(logContainsText("4."));
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Focus does not move when expected with Selenium/TB and Firefox 45
+        return getBrowsersExcludingFirefox();
     }
 }

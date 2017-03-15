@@ -20,19 +20,23 @@ import java.util.Date;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.VAbstractCalendarPanel;
 import com.vaadin.client.ui.VAbstractCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VAbstractDateFieldCalendar;
 import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 
 /**
  * Base class for inline data field connector.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @param <R>
  *            the resolution type which the field is based on (day, month, ...)
+ * @param <PANEL>
+ *            Subclass of VAbstractCalendarPanel specific for the implementation
+ * @since 8.0
  */
-public abstract class AbstractInlineDateFieldConnector<R extends Enum<R>>
+public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends AbstractDateFieldConnector<R> {
 
     @Override
@@ -107,8 +111,8 @@ public abstract class AbstractInlineDateFieldConnector<R extends Enum<R>>
     }
 
     @Override
-    public VAbstractDateFieldCalendar<R> getWidget() {
-        return (VAbstractDateFieldCalendar<R>) super.getWidget();
+    public VAbstractDateFieldCalendar<PANEL, R> getWidget() {
+        return (VAbstractDateFieldCalendar<PANEL, R>) super.getWidget();
     }
 
     @Override
@@ -119,7 +123,7 @@ public abstract class AbstractInlineDateFieldConnector<R extends Enum<R>>
     /**
      * Returns {@code true} is the current resolution of the widget is month or
      * less specific (e.g. month, year, quarter, etc).
-     * 
+     *
      * @return {@code true} if the current resolution is above month
      */
     protected abstract boolean isResolutionMonthOrHigher();

@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.label]]
-= [classname]#Label#
+= Label
 
 ifdef::web[]
 [.sampler]

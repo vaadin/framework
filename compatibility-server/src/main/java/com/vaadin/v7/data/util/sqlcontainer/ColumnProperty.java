@@ -254,6 +254,8 @@ final public class ColumnProperty implements Property {
         return propertyId;
     }
 
+    // LegacyPropertyHelper has been removed in Vaadin 8
+
     private static Logger getLogger() {
         return Logger.getLogger(ColumnProperty.class.getName());
     }

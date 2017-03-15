@@ -60,6 +60,58 @@ public class DateField extends AbstractLocalDateField {
     }
 
     /**
+     * Constructs a new {@code DateField} with a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code DateField} is
+     * changed either by the user or programmatically.
+     *
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public DateField(ValueChangeListener<LocalDate> valueChangeListener) {
+        super();
+        addValueChangeListener(valueChangeListener);
+    }
+
+    /**
+     * Constructs a new {@code DateField} with the given caption and a value
+     * change listener.
+     * <p>
+     * The listener is called when the value of this {@code DateField} is
+     * changed either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public DateField(String caption,
+            ValueChangeListener<LocalDate> valueChangeListener) {
+        this(valueChangeListener);
+        setCaption(caption);
+    }
+
+    /**
+     * Constructs a new {@code DateField} with the given caption, initial
+     * text contents and a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code DateField} is
+     * changed either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param value
+     *            the value for the field, not {@code null}
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     */
+    public DateField(String caption, LocalDate value,
+            ValueChangeListener<LocalDate> valueChangeListener) {
+        this(caption, value);
+        addValueChangeListener(valueChangeListener);
+    }
+
+    /**
      * Returns the current placeholder text.
      *
      * @see #setPlaceholder(String)
@@ -106,7 +158,7 @@ public class DateField extends AbstractLocalDateField {
      * Disabling it causes only the button for date selection to be active, thus
      * preventing the user from entering invalid dates.
      *
-     * See {@link http://dev.vaadin.com/ticket/6790}.
+     * See <a href="http://dev.vaadin.com/ticket/6790">issue 6790</a>.
      *
      * @param state
      *            <b>true</b> to enable text field, <b>false</b> to disable it.

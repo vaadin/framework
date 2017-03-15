@@ -32,6 +32,14 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-sass-compiler</artifactId>
+            <version>${vaadin.sass.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-icons</artifactId>
+            <version>${vaadin.icons.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -50,6 +58,28 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-font-icons</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <!-- Vaadin Icons font files and .scss to included with Valo -->
+                        <configuration>
+                            <includeGroupIds>com.vaadin</includeGroupIds>
+                            <includeArtifactIds>vaadin-icons</includeArtifactIds>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includes>VAADIN/addons/vaadin-icons/fonts/*</includes>
+                            <overWrite>true</overWrite>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
@@ -74,6 +104,25 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>**/valo/shared/_global.scss</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-font-files</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/VAADIN/themes/valo/fonts/vaadin-icons</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/dependency-unpack/VAADIN/addons/vaadin-icons/fonts/</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>Vaadin-Icons.*</include>
                                     </includes>
                                 </resource>
                             </resources>

@@ -99,4 +99,14 @@ public abstract class AbstractSelectionModel<T> extends AbstractGridExtension<T>
         super.remove();
     }
 
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return getState(false).selectionAllowed;
+    }
+
+    @Override
+    public void setUserSelectionAllowed(boolean allowed) {
+        getState().selectionAllowed = allowed;
+    }
+
 }

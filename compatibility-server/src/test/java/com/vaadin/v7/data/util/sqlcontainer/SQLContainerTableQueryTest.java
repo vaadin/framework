@@ -187,7 +187,7 @@ public class SQLContainerTableQueryTest {
         container.commit();
 
         Item item = getItem(container.lastItemId());
-        assertThat(item.getItemProperty(NAME).getValue(), is("foo"));
+        assertThat(item.getItemProperty(NAME).getValue().toString(), is("foo"));
     }
 
     @Test
@@ -196,8 +196,8 @@ public class SQLContainerTableQueryTest {
 
         container.refresh();
 
-        assertThat(getItem(existingItemId).getItemProperty(NAME).getValue(),
-                is("foo"));
+        assertThat(getItem(existingItemId).getItemProperty(NAME).getValue()
+                .toString(), is("foo"));
     }
 
     @Test

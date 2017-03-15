@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="vaadin-uitest" version="3.0"
+    xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <!-- THIS IS A DEVELOPMENT AND TESTING web.xml . -->
+
+    <display-name>Vaadin</display-name>
+    <description>Vaadin JSP Integration Test</description>
+
+    <context-param>
+        <param-name>productionMode</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>VaadinStaticFiles</servlet-name>
+        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+        <async-supported>false</async-supported>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PrimaryUIServlet</servlet-name>
+        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+        <init-param>
+            <param-name>UI</param-name>
+            <param-value>com.vaadin.tests.integration.TrivialUI</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SecondaryUIServlet</servlet-name>
+        <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+        <init-param>
+            <param-name>UI</param-name>
+            <param-value>com.vaadin.tests.integration.AnotherTrivialUI</param-value>
+        </init-param>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PrimaryUIServlet</servlet-name>
+        <url-pattern>/primaryui/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SecondaryUIServlet</servlet-name>
+        <url-pattern>/secondaryui/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>VaadinStaticFiles</servlet-name>
+        <url-pattern>/VAADIN/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>

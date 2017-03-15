@@ -63,11 +63,11 @@ public class CSSRule {
     /*-{
     if(!$doc.styleSheets)
     return null;
-
+    
     selector = selector.toLowerCase();
-
+    
     var allMatches = [];
-
+    
     // IE handles imported sheet differently
     if(deep && sheet.imports && sheet.imports.length > 0) {
     for(var i=0; i < sheet.imports.length; i++) {
@@ -76,13 +76,13 @@ public class CSSRule {
     allMatches.concat(imports);
     }
     }
-
+    
     var theRules = new Array();
     if (sheet.cssRules)
     theRules = sheet.cssRules
     else if (sheet.rules)
     theRules = sheet.rules
-
+    
     var j = theRules.length;
     for(var i=0; i<j; i++) {
     var r = theRules[i];
@@ -102,7 +102,7 @@ public class CSSRule {
     allMatches = allMatches.concat(imports);
     }
     }
-
+    
     return allMatches;
     }-*/;
 

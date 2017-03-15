@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
+    <!-- Default ivysettings.xml stuff -->
+    <include url="${ivy.default.settings.dir}/ivysettings-public.xml" />
+    <include url="${ivy.default.settings.dir}/ivysettings-shared.xml" />
+    <include url="${ivy.default.settings.dir}/ivysettings-local.xml" />
+    <include url="${ivy.default.settings.dir}/ivysettings-main-chain.xml" />
+    <include url="${ivy.default.settings.dir}/ivysettings-default-chain.xml" />
+
+    <!-- Customized stuff -->
+    <settings defaultResolver="public" />
+    <resolvers>
+        <ibiblio name="public" m2compatible="true" />
+        <ibiblio name="vaadin-addons" usepoms="true"
+            m2compatible="true" root="http://maven.vaadin.com/vaadin-addons" />
+        <filesystem name="local-maven" m2compatible="true">
+            <artifact
+                pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
+            <ivy
+                pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).pom" />
+        </filesystem>
+        <ibiblio name="vaadin-build" usepoms="true"
+            m2compatible="true" root="${vaadin.build.repository}" />
+        <chain name="vaadin-maven" returnFirst="true">
+            <resolver ref="local-maven" />
+            <resolver ref="vaadin-build" />
+        </chain>
+    </resolvers>
+    <modules>
+        <module organisation="com.vaadin" name="vaadin-testbench"
+            resolver="vaadin-addons" />
+        <module organisation="com.vaadin" name="vaadin-testbench-parent"
+            resolver="vaadin-addons" />
+        <module organisation="com.vaadin" name="vaadin-testbench-core"
+            resolver="vaadin-addons" />
+        <module organisation="com.vaadin" name="vaadin-testbench-api"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-buildhelpers"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-root"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-shared"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-shared"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-server"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-server"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-client"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-client"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-client-compiler"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-client-compiled"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-client-compiled"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-themes"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-compatibility-themes"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-push"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-widgets"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-bom"
+            resolver="vaadin-maven" />
+        <module organisation="com.vaadin" name="vaadin-liferay"
+            resolver="vaadin-maven" />
+    </modules>
+
+
+</ivysettings>

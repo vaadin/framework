@@ -24,7 +24,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
@@ -57,6 +57,11 @@ import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.Tree;
 import com.vaadin.v7.ui.TwinColSelect;
 
+/**
+ * This is a legacy test ui for using font icons (font awesome).
+ * <p>
+ * {@link VaadinIconSet} is the newer one for testing valo+vaadin icons.
+ */
 public class FontIcons extends AbstractReindeerTestUI {
 
     @Override

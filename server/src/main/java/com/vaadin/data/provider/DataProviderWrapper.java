@@ -15,9 +15,9 @@
  */
 package com.vaadin.data.provider;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 
 /**
@@ -39,37 +39,6 @@ public abstract class DataProviderWrapper<T, F, M>
         implements DataProvider<T, F> {
 
     /**
-     * Variant of data provider wrapper that supports chaining filters.
-     *
-     * @param <T>
-     *            the data provider data type
-     * @param <F>
-     *            the data provider filter type
-     */
-    protected abstract static class AppendableFilterDataProviderWrapper<T, F>
-            extends DataProviderWrapper<T, F, F>
-            implements AppendableFilterDataProvider<T, F> {
-
-        /**
-         * Constructs a filtering wrapper for a data provider with filter
-         * chaining.
-         *
-         * @param dataProvider
-         *            the wrapped data provider
-         */
-        protected AppendableFilterDataProviderWrapper(
-                AppendableFilterDataProvider<T, F> dataProvider) {
-            super(dataProvider);
-        }
-
-        @Override
-        public F combineFilters(F filter1, F filter2) {
-            return ((AppendableFilterDataProvider<T, F>) dataProvider)
-                    .combineFilters(filter1, filter2);
-        }
-    }
-
-    /**
      * The actual data provider behind this wrapper.
      */
     protected DataProvider<T, M> dataProvider;
@@ -78,10 +47,11 @@ public abstract class DataProviderWrapper<T, F, M>
      * Constructs a filtering wrapper for a data provider.
      *
      * @param dataProvider
-     *            the wrapped data provider
+     *            the wrapped data provider, not <code>null</code>
      */
     protected DataProviderWrapper(DataProvider<T, M> dataProvider) {
-        this.dataProvider = dataProvider;
+        this.dataProvider = Objects.requireNonNull(dataProvider,
+                "The wrapped data provider cannot be null.");
     }
 
     @Override
@@ -95,7 +65,18 @@ public abstract class DataProviderWrapper<T, F, M>
     }
 
     @Override
-    public Registration addDataProviderListener(DataProviderListener listener) {
+    public void refreshItem(T item) {
+        dataProvider.refreshItem(item);
+    }
+
+    @Override
+    public Object getId(T item) {
+        return dataProvider.getId(item);
+    }
+
+    @Override
+    public Registration addDataProviderListener(
+            DataProviderListener<T> listener) {
         return dataProvider.addDataProviderListener(listener);
     }
 
@@ -119,96 +100,4 @@ public abstract class DataProviderWrapper<T, F, M>
      * @return filter for the modified Query
      */
     protected abstract M getFilter(Query<T, F> query);
-
-    /**
-     * Creates a data provider wrapper with a static filter set to each Query.
-     * This {@code DataProvider} will deliberately ignore any possible filters
-     * from the Query.
-     *
-     * @see DataProvider#withFilter(Object)
-     *
-     * @param dataProvider
-     *            the underlying data provider
-     * @param filter
-     *            the static filter for each query
-     *
-     * @param <T>
-     *            data provider data type
-     * @param <F>
-     *            query filter type
-     *
-     * @return wrapped data provider with static filter
-     */
-    public static <T, F> DataProvider<T, Void> filter(
-            DataProvider<T, F> dataProvider, F filter) {
-        return new DataProviderWrapper<T, Void, F>(dataProvider) {
-
-            @Override
-            protected F getFilter(Query<T, Void> query) {
-                assert !query.getFilter()
-                        .isPresent() : "A filter is provided to a data provider that should be unfilterable";
-                return filter;
-            }
-        };
-    }
-
-    /**
-     * Creates a data provider wrapper with filter type mapping. The mapper
-     * function will be applied to a query filter if it is present.
-     *
-     * @see DataProvider#convertFilter(SerializableFunction)
-     *
-     * @param dataProvider
-     *            the underlying data provider
-     * @param mapper
-     *            the function to map from one filter type to another
-     *
-     * @param <T>
-     *            data provider data type
-     * @param <F>
-     *            wrapper query filter type
-     * @param <M>
-     *            underlying data provider filter type
-     *
-     * @return wrapped data provider with filter conversion
-     */
-    public static <T, F, M> DataProvider<T, F> convert(
-            DataProvider<T, M> dataProvider,
-            SerializableFunction<F, M> mapper) {
-        return new DataProviderWrapper<T, F, M>(dataProvider) {
-
-            @Override
-            protected M getFilter(Query<T, F> query) {
-                return query.getFilter().map(mapper).orElse(null);
-            }
-        };
-    }
-
-    /**
-     * Creates a data provider wrapper with a chained filter. The filter will be
-     * combined to existing filters using
-     * {@link AppendableFilterDataProvider#combineFilters(Object, Object)}.
-     *
-     * @param dataProvider
-     *            the underlying data provider
-     * @param filter
-     *            the chained filter
-     *
-     * @param <T>
-     *            data provider data type
-     * @param <F>
-     *            query filter type
-     * @return wrapped data provider with chained filter
-     */
-    public static <T, F> AppendableFilterDataProvider<T, F> chain(
-            AppendableFilterDataProvider<T, F> dataProvider, F filter) {
-        return new AppendableFilterDataProviderWrapper<T, F>(dataProvider) {
-
-            @Override
-            protected F getFilter(Query<T, F> query) {
-                return query.getFilter().map(f -> combineFilters(filter, f))
-                        .orElse(filter);
-            }
-        };
-    }
 }

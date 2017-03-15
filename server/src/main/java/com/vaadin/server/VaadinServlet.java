@@ -495,9 +495,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Check that cookie support is enabled in the browser. Only checks UIDL
      * requests.
      *
-     * @param requestType
-     *            Type of the request as returned by
-     *            {@link #getRequestType(HttpServletRequest)}
      * @param request
      *            The request from the browser
      * @param response
@@ -1140,6 +1137,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
             URL resourceUrl) {
+        String resourcePath = resourceUrl.getPath();
         if ("jar".equals(resourceUrl.getProtocol())) {
             // This branch is used for accessing resources directly from the
             // Vaadin JAR in development environments and in similar cases.
@@ -1149,8 +1147,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // However, performing a check in case some servers or class loaders
             // try to normalize the path by collapsing ".." before the class
             // loader sees it.
-
-            if (!resourceUrl.getPath().contains("!/VAADIN/")) {
+            if (!resourcePath.contains("!/VAADIN/")
+                    && !resourcePath.contains("!/META-INF/resources/VAADIN/")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access a JAR entry not starting with /VAADIN/: {0}",
                         resourceUrl);
@@ -1166,8 +1164,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             // Check that the URL is in a VAADIN directory and does not contain
             // "/../"
-            if (!resourceUrl.getPath().contains("/VAADIN/")
-                    || resourceUrl.getPath().contains("/../")) {
+            if (!resourcePath.contains("/VAADIN/")
+                    || resourcePath.contains("/../")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access file: {0}", resourceUrl);
                 return false;
@@ -1270,6 +1268,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return getStaticFilePath(request) != null;
     }
 
+    /**
+     * Returns the relative path at which static files are served for a request
+     * (if any).
+     * 
+     * @param request
+     *            HTTP request
+     * @return relative servlet path or null if the request path does not
+     *         contain "/VAADIN/" or the request has no path info
+     * @since 8.0
+     */
     protected String getStaticFilePath(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) {

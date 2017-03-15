@@ -17,10 +17,10 @@ package com.vaadin.shared.ui.datefield;
 
 /**
  * Shared state for the DateTimeField component.
- * 
- * @author Vaadin Ltd
  *
+ * @author Vaadin Ltd
+ * @since 8.0
  */
-public class LocalDateTimeFieldState extends AbstractTextualDateFieldState {
+public class LocalDateTimeFieldState extends TextualDateFieldState {
 
 }

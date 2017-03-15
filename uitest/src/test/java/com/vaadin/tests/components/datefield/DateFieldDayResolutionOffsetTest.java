@@ -21,7 +21,7 @@ public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
         select2ndOfSeptember();
 
         LabelElement dateValue = $(LabelElement.class).id("dateValue");
-        assertThat(dateValue.getText(), is("09/02/2014"));
+        assertThat(dateValue.getText(), is("09/02/2014 00:00:00"));
     }
 
     private void select2ndOfSeptember() {

@@ -27,7 +27,7 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
 
-@TestCategory("communication")
+@TestCategory("needs-ssh")
 public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
 
     @Test

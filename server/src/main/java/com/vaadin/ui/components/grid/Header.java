@@ -15,12 +15,15 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -49,6 +52,17 @@ public abstract class Header extends StaticSection<Header.Row> {
              */
             protected Cell() {
                 super(Row.this);
+            }
+
+            @Override
+            public void setText(String text) {
+                super.setText(text);
+                if (isDefault()) {
+                    Column<?, ?> col = getColumnByInternalId(getColumnId());
+                    if (col != null) {
+                        col.setCaption(text);
+                    }
+                }
             }
         }
 
@@ -137,9 +151,29 @@ public abstract class Header extends StaticSection<Header.Row> {
          */
         @Override
         public HeaderCell join(HeaderCell... cellsToMerge) {
-            Set<HeaderCell> headerCells = new HashSet<>(
-                    Arrays.asList(cellsToMerge));
-            return join(headerCells);
+            return join(Stream.of(cellsToMerge));
+        }
+
+        private HeaderCell join(Stream<HeaderCell> cellStream) {
+            return join(cellStream.collect(Collectors.toSet()));
+        }
+
+        @Override
+        public HeaderCell join(Column<?, ?>... columnsToMerge) {
+            return join(Stream.of(columnsToMerge).map(this::getCell));
+        }
+
+        @Override
+        public HeaderCell join(String... columnIdsToMerge) {
+            Grid<?> grid = getGrid();
+            return join(Stream.of(columnIdsToMerge).map(columnId -> {
+                Column<?, ?> column = grid.getColumn(columnId);
+                if (column == null) {
+                    throw new IllegalStateException(
+                            "There is no column with the id " + columnId);
+                }
+                return getCell(column);
+            }));
         }
 
         @Override

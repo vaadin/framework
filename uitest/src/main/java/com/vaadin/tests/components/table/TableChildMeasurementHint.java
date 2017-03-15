@@ -152,7 +152,7 @@ public class TableChildMeasurementHint extends AbstractReindeerTestUI {
         table.addGeneratedColumn("First_Name" + 4, new Table.ColumnGenerator() {
             @Override
             public Object generateCell(Table components, Object o, Object o2) {
-                AbstractDateField b = new TestDateField("DateField");
+                AbstractDateField<?, ?> b = new TestDateField("DateField");
                 b.setWidthUndefined();
                 return b;
             }

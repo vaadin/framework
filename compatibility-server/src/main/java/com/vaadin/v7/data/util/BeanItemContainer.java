@@ -187,8 +187,7 @@ public class BeanItemContainer<BEANTYPE>
      * @param newItemId
      *            the bean (of type BT) to add (not null)
      *
-     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object,
-     *      Object)
+     * @see Container.Ordered#addItemAfter(Object, Object)
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -221,7 +220,7 @@ public class BeanItemContainer<BEANTYPE>
      *
      * The bean is used both as the item contents and as the item identifier.
      *
-     * @see com.com.vaadin.v7.data.Container#addItem(Object)
+     * @see Container#addItem(Object)
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -234,7 +233,7 @@ public class BeanItemContainer<BEANTYPE>
      *
      * The bean is used both as the item contents and as the item identifier.
      *
-     * @see com.com.vaadin.v7.data.Container#addItem(Object)
+     * @see Container#addItem(Object)
      */
     @Override
     public BeanItem<BEANTYPE> addBean(BEANTYPE bean) {

@@ -17,6 +17,8 @@
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <contextmenu.version>2.0-SNAPSHOT</contextmenu.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
     </properties>
@@ -62,6 +64,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Project modules -->
@@ -91,6 +94,7 @@
     <modules>
         <module>widget-set-testutil</module>
         <module>default-widget-set</module>
+        <module>vaadin7-widget-set</module>
         <module>own-widget-set</module>
         <module>addon-using-own-widget-set</module>
         <module>addon-using-no-defined-widget-set</module>
@@ -98,7 +102,9 @@
         <module>space in directory</module>
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
+        <module>servlet-containers/generic</module>
         <module>cdi</module>
+        <module>servlet-containers/jsp-integration</module>
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>
     </modules>

@@ -21,9 +21,11 @@ import com.vaadin.v7.shared.ui.colorpicker.Color;
  * A class that defines area-like implementation for a color picker component.
  *
  * @since 7.0.0
- *
  * @see ColorPicker
+ * @author Vaadin Ltd
  *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.ColorPickerArea} based
+ *             on new data binding API
  */
 @Deprecated
 public class ColorPickerArea extends AbstractColorPicker {

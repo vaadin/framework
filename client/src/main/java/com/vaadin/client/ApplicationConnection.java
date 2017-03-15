@@ -26,7 +26,6 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventBus;
@@ -42,8 +41,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
-import com.vaadin.client.ResourceLoader.ResourceLoadListener;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.communication.ConnectionStateHandler;
 import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.MessageHandler;
@@ -331,6 +329,11 @@ public class ApplicationConnection implements HasHandlers {
         protected String encodeQueryStringParameterValue(String queryString) {
             return URL.encodeQueryString(queryString);
         }
+
+        @Override
+        protected String getContextRootUrl() {
+            return getConfiguration().getContextRootUrl();
+        }
     };
 
     public static class MultiStepDuration extends Duration {
@@ -387,6 +390,7 @@ public class ApplicationConnection implements HasHandlers {
         serverRpcQueue.setConnection(this);
         messageHandler.setConnection(this);
         messageSender.setConnection(this);
+        dependencyLoader.setConnection(this);
 
         ComponentLocator componentLocator = new ComponentLocator(this);
 
@@ -763,79 +767,6 @@ public class ApplicationConnection implements HasHandlers {
     @Deprecated
     public boolean isLoadingIndicatorVisible() {
         return getLoadingIndicator().isVisible();
-    }
-
-    public void loadStyleDependencies(JsArrayString dependencies) {
-        // Assuming no reason to interpret in a defined order
-        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
-            @Override
-            public void onLoad(ResourceLoadEvent event) {
-                ApplicationConfiguration.endDependencyLoading();
-            }
-
-            @Override
-            public void onError(ResourceLoadEvent event) {
-                getLogger().severe(event.getResourceUrl()
-                        + " could not be loaded, or the load detection failed because the stylesheet is empty.");
-                // The show must go on
-                onLoad(event);
-            }
-        };
-        ResourceLoader loader = ResourceLoader.get();
-        for (int i = 0; i < dependencies.length(); i++) {
-            String url = translateVaadinUri(dependencies.get(i));
-            ApplicationConfiguration.startDependencyLoading();
-            loader.loadStylesheet(url, resourceLoadListener);
-        }
-    }
-
-    public void loadScriptDependencies(final JsArrayString dependencies) {
-        if (dependencies.length() == 0) {
-            return;
-        }
-
-        // Listener that loads the next when one is completed
-        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
-            @Override
-            public void onLoad(ResourceLoadEvent event) {
-                if (dependencies.length() != 0) {
-                    String url = translateVaadinUri(dependencies.shift());
-                    ApplicationConfiguration.startDependencyLoading();
-                    // Load next in chain (hopefully already preloaded)
-                    event.getResourceLoader().loadScript(url, this);
-                }
-                // Call start for next before calling end for current
-                ApplicationConfiguration.endDependencyLoading();
-            }
-
-            @Override
-            public void onError(ResourceLoadEvent event) {
-                getLogger().severe(
-                        event.getResourceUrl() + " could not be loaded.");
-                // The show must go on
-                onLoad(event);
-            }
-        };
-
-        ResourceLoader loader = ResourceLoader.get();
-
-        // Start chain by loading first
-        String url = translateVaadinUri(dependencies.shift());
-        ApplicationConfiguration.startDependencyLoading();
-        loader.loadScript(url, resourceLoadListener);
-
-        if (ResourceLoader.supportsInOrderScriptExecution()) {
-            for (int i = 0; i < dependencies.length(); i++) {
-                String preloadUrl = translateVaadinUri(dependencies.get(i));
-                loader.loadScript(preloadUrl, null);
-            }
-        } else {
-            // Preload all remaining
-            for (int i = 0; i < dependencies.length(); i++) {
-                String preloadUrl = translateVaadinUri(dependencies.get(i));
-                loader.preloadResource(preloadUrl, null);
-            }
-        }
     }
 
     private void addVariableToQueue(String connectorId, String variableName,
@@ -1280,6 +1211,9 @@ public class ApplicationConnection implements HasHandlers {
 
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
 
+    private final DependencyLoader dependencyLoader = GWT
+            .create(DependencyLoader.class);
+
     /**
      * Use to notify that the given component's caption has changed; layouts may
      * have to be recalculated.
@@ -1634,6 +1568,15 @@ public class ApplicationConnection implements HasHandlers {
 
     public int getLastSeenServerSyncId() {
         return getMessageHandler().getLastSeenServerSyncId();
+    }
+
+    /**
+     * Gets the instance which handles loading of dependencies.
+     *
+     * @return the dependency loader for this connection
+     */
+    public DependencyLoader getDependencyLoader() {
+        return dependencyLoader;
     }
 
 }

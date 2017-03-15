@@ -48,8 +48,6 @@ import com.vaadin.client.debug.internal.TestBenchSection;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.debug.internal.theme.DebugWindowStyles;
 import com.vaadin.client.event.PointerEventSupport;
-import com.vaadin.client.metadata.BundleLoadCallback;
-import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
@@ -241,6 +239,7 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     private String vaadinDirUrl;
     private String serviceUrl;
+    private String contextRootUrl;
     private int uiId;
     private boolean standalone;
     private ErrorMessage communicationError;
@@ -308,6 +307,15 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public String getServiceUrl() {
         return serviceUrl;
+    }
+
+    /**
+     * Gets the URL to the context root of the web application
+     *
+     * @return the URL to the server-side context root as a string
+     */
+    public String getContextRootUrl() {
+        return contextRootUrl;
     }
 
     /**
@@ -413,6 +421,8 @@ public class ApplicationConfiguration implements EntryPoint {
             serviceUrl += '/';
         }
 
+        contextRootUrl = jsoConfiguration
+                .getConfigString(ApplicationConstants.CONTEXT_ROOT_URL);
         vaadinDirUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
                 .getConfigString(ApplicationConstants.VAADIN_DIR_URL));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
@@ -624,14 +634,18 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
+     * Runs the given command when all pending dependencies have been loaded, or
+     * immediately if no dependencies are being loaded.
+     *
      * @since 7.6
-     * @param c
+     * @param command
+     *            the command to run
      */
-    public static void runWhenDependenciesLoaded(Command c) {
+    public static void runWhenDependenciesLoaded(Command command) {
         if (dependenciesLoading == 0) {
-            c.execute();
+            command.execute();
         } else {
-            callbacks.add(c);
+            callbacks.add(command);
         }
     }
 
@@ -646,22 +660,6 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (dependenciesLoading == 0 && !ConnectorBundleLoader.get()
-                .isBundleLoaded(ConnectorBundleLoader.DEFERRED_BUNDLE_NAME)) {
-            ConnectorBundleLoader.get().loadBundle(
-                    ConnectorBundleLoader.DEFERRED_BUNDLE_NAME,
-                    new BundleLoadCallback() {
-                        @Override
-                        public void loaded() {
-                            // Nothing to do
-                        }
-
-                        @Override
-                        public void failed(Throwable reason) {
-                            getLogger().log(Level.SEVERE,
-                                    "Error loading deferred bundle", reason);
-                        }
-                    });
         }
     }
 
@@ -893,4 +891,5 @@ public class ApplicationConfiguration implements EntryPoint {
     private static final Logger getLogger() {
         return Logger.getLogger(ApplicationConfiguration.class.getName());
     }
+
 }

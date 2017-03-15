@@ -15,22 +15,6 @@
  */
 package com.vaadin.navigator;
 
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -364,9 +348,22 @@ public class Navigator implements Serializable {
         }
     }
 
-    private UI ui;
-    private NavigationStateManager stateManager;
-    private ViewDisplay display;
+    /**
+     * The {@link UI} bound with the Navigator.
+     */
+    protected UI ui;
+    
+    /**
+     * The {@link NavigationStateManager} that is used to get, listen to
+     * and manipulate the navigation state used by the Navigator.
+     */
+    protected NavigationStateManager stateManager;
+    
+    /**
+     *  The {@link ViewDisplay} used by the Navigator.
+     */
+    protected ViewDisplay display;
+    
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<>();
     private List<ViewProvider> providers = new LinkedList<>();
@@ -969,6 +966,7 @@ public class Navigator implements Serializable {
      *
      * @param listener
      *            Listener to invoke during a view change.
+     * @since 8.0
      */
     public Registration addViewChangeListener(ViewChangeListener listener) {
         listeners.add(listener);
@@ -996,7 +994,7 @@ public class Navigator implements Serializable {
      *            state string
      * @return suitable provider
      */
-    private ViewProvider getViewProvider(String state) {
+    protected ViewProvider getViewProvider(String state) {
         String longestViewName = null;
         ViewProvider longestViewNameProvider = null;
         for (ViewProvider provider : providers) {

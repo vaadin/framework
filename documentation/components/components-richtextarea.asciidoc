@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.richtextarea]]
-= [classname]#RichTextArea#
+= RichTextArea
 
 ifdef::web[]
 [.sampler]

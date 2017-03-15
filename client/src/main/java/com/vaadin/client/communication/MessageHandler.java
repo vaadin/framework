@@ -58,6 +58,7 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -382,14 +383,7 @@ public class MessageHandler {
         }
 
         getLogger().info("Handling resource dependencies");
-        if (json.containsKey("scriptDependencies")) {
-            connection.loadScriptDependencies(
-                    json.getJSStringArray("scriptDependencies"));
-        }
-        if (json.containsKey("styleDependencies")) {
-            connection.loadStyleDependencies(
-                    json.getJSStringArray("styleDependencies"));
-        }
+        connection.getDependencyLoader().loadDependencies(json);
 
         handleUIDLDuration.logDuration(
                 " * Handling type mappings from server completed", 10);
@@ -492,13 +486,9 @@ public class MessageHandler {
                             .handleServerResponse(json.getValueMap("dd"));
                 }
 
-                int removed = unregisterRemovedConnectors(
+                unregisterRemovedConnectors(
                         connectorHierarchyUpdateResult.detachedConnectorIds);
-                if (removed > 0 && !isResponse(json)) {
-                    // Must acknowledge the removal using an XHR or server
-                    // memory usage will keep growing
-                    getUIConnector().sendAck();
-                }
+
                 getLogger().info("handleUIDLMessage: "
                         + (Duration.currentTimeMillis() - processUidlStart)
                         + " ms");
@@ -571,6 +561,8 @@ public class MessageHandler {
 
                 endRequestIfResponse(json);
                 resumeResponseHandling(lock);
+
+                ConnectorBundleLoader.get().ensureDeferredBundleLoaded();
 
                 if (Profiler.isEnabled()) {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -806,15 +798,14 @@ public class MessageHandler {
                         "verifyConnectorHierarchy - this is only performed in debug mode");
             }
 
-            private int unregisterRemovedConnectors(
+            private void unregisterRemovedConnectors(
                     FastStringSet detachedConnectors) {
                 Profiler.enter("unregisterRemovedConnectors");
 
                 JsArrayString detachedArray = detachedConnectors.dump();
-                int nrDetached = detachedArray.length();
-                for (int i = 0; i < nrDetached; i++) {
-                    ServerConnector connector = getConnectorMap()
-                            .getConnector(detachedArray.get(i));
+                for (int i = 0; i < detachedArray.length(); i++) {
+                    ServerConnector connector = getConnectorMap().getConnector(
+                            detachedArray.get(i));
 
                     Profiler.enter(
                             "unregisterRemovedConnectors unregisterConnector");
@@ -829,10 +820,9 @@ public class MessageHandler {
                     verifyConnectorHierarchy();
                 }
 
-                getLogger()
-                        .info("* Unregistered " + nrDetached + " connectors");
+                getLogger().info("* Unregistered " + detachedArray.length()
+                        + " connectors");
                 Profiler.leave("unregisterRemovedConnectors");
-                return nrDetached;
             }
 
             private JsArrayString createConnectorsIfNeeded(ValueMap json) {

@@ -46,7 +46,7 @@ public class FormConnector extends AbstractComponentContainerConnector
     private final ElementResizeListener footerResizeListener = new ElementResizeListener() {
         @Override
         public void onElementResize(ElementResizeEvent e) {
-            com.vaadin.v7.client.ui.VForm form = getWidget();
+            VForm form = getWidget();
 
             LayoutManager lm = getLayoutManager();
             int footerHeight = 0;
@@ -180,6 +180,7 @@ public class FormConnector extends AbstractComponentContainerConnector
 
     @Override
     public boolean isReadOnly() {
+        // Class hierarchy has changed for FormConnector
         return getState().readOnly || getState().propertyReadOnly;
     }
 

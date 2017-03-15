@@ -15,8 +15,14 @@
  */
 package com.vaadin.data;
 
+import java.time.LocalDate;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.TextField;
 
 /**
  * @author Vaadin Ltd
@@ -41,5 +47,43 @@ public class HasValueTest {
         hasValue.clear();
 
         Mockito.verify(hasValue).setValue(value);
+    }
+
+    @Test
+    public void getOptionalValue_nullableHasValue() {
+        HasValue<LocalDate> nullable = new DateField();
+
+        // Not using Assert since we're only verifying that DateField is working
+        // in a way appropriate for this test
+        assert nullable.isEmpty();
+        assert nullable.getValue() == null;
+
+        Assert.assertFalse(nullable.getOptionalValue().isPresent());
+
+        nullable.setValue(LocalDate.now());
+
+        assert !nullable.isEmpty();
+
+        Assert.assertSame(nullable.getValue(),
+                nullable.getOptionalValue().get());
+    }
+
+    @Test
+    public void getOptionalValue_nonNullableHasValue() {
+        HasValue<String> nonNullable = new TextField();
+
+        // Not using Assert since we're only verifying that TextField is working
+        // in a way appropriate for this test
+        assert nonNullable.isEmpty();
+        assert nonNullable.getValue() != null;
+
+        Assert.assertFalse(nonNullable.getOptionalValue().isPresent());
+
+        nonNullable.setValue("foo");
+
+        assert !nonNullable.isEmpty();
+
+        Assert.assertSame(nonNullable.getValue(),
+                nonNullable.getOptionalValue().get());
     }
 }

@@ -21,15 +21,16 @@ import java.lang.reflect.Method;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 
 /**
  *
- * Click event fired by a {@link Component} implementing
- * {@link com.vaadin.v7.data.Container} interface. ItemClickEvents happens on an
- * {@link Item} rendered somehow on terminal. Event may also contain a specific
- * {@link Property} on which the click event happened.
+ * Click event fired by a {@link Component} implementing {@link Container}
+ * interface. ItemClickEvents happens on an {@link Item} rendered somehow on
+ * terminal. Event may also contain a specific {@link Property} on which the
+ * click event happened.
  *
  * @since 5.3
  *

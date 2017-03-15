@@ -53,6 +53,9 @@ import com.vaadin.v7.shared.ui.label.LabelState;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.ui.Label} that removes
+ *             data binding support
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -222,7 +225,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
     /**
      * Gets the type of the Property.
      *
-     * @see com.vaadin.v7.data.Property#getType()
+     * @see Property#getType()
      */
     @Override
     public Class<String> getType() {
@@ -233,7 +236,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      * Gets the viewing data-source property.
      *
      * @return the data source property.
-     * @see com.vaadin.v7.data.Property.Viewer#getPropertyDataSource()
+     * @see Property.Viewer#getPropertyDataSource()
      */
     @Override
     public Property getPropertyDataSource() {
@@ -246,7 +249,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      *
      * @param newDataSource
      *            the new data source Property
-     * @see com.vaadin.v7.data.Property.Viewer#setPropertyDataSource(com.vaadin.v7.data.Property)
+     * @see Property.Viewer#setPropertyDataSource(Property)
      */
     @Override
     public void setPropertyDataSource(Property newDataSource) {
@@ -348,7 +351,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
         /**
          * Gets the Property that has been modified.
          *
-         * @see com.vaadin.v7.data.Property.ValueChangeEvent#getProperty()
+         * @see Property.ValueChangeEvent#getProperty()
          */
         @Override
         public Property getProperty() {
@@ -361,7 +364,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      *
      * @param listener
      *            the Listener to be added.
-     * @see com.vaadin.v7.data.Property.ValueChangeNotifier#addListener(com.vaadin.v7.data.Property.ValueChangeListener)
+     * @see Property.ValueChangeNotifier#addListener(Property.ValueChangeListener)
      */
     @Override
     public void addValueChangeListener(Property.ValueChangeListener listener) {
@@ -371,7 +374,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+     *             {@link #addValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -384,7 +387,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      *
      * @param listener
      *            the Listener to be removed.
-     * @see com.vaadin.v7.data.Property.ValueChangeNotifier#removeListener(com.vaadin.v7.data.Property.ValueChangeListener)
+     * @see Property.ValueChangeNotifier#removeListener(Property.ValueChangeListener)
      */
     @Override
     public void removeValueChangeListener(
@@ -395,7 +398,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+     *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -414,7 +417,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
     /**
      * Listens the value change events from data source.
      *
-     * @see com.vaadin.v7.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+     * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
@@ -545,6 +548,8 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
         this.converter = (Converter<String, Object>) converter;
         markAsDirty();
     }
+
+    // LegacyPropertyHelper has been removed in Vaadin 8
 
     /*
      * (non-Javadoc)

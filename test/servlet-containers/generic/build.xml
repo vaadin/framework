@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-uitest" basedir="." default="test-server"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>
+        Provides a uitest WAR containing Vaadin UI tests
+    </description>
+    <include file="./common.xml" as="common" />
+
+    <!-- global properties -->
+    <property name="module.name" value="vaadin-test-generic-integration" />
+    <property name="uitest.dir" location="${common.basedir}" /><!-- todo rename-->
+    <property name="result.dir" value="result" />
+    <property name="result.war"
+        location="${uitest.dir}/target/${module.name}-${vaadin.version}.war" />
+    <!--todo automate version number -->
+    <property name="result.jboss6.war"
+        location="${uitest.dir}/target/${module.name}-8.0-SNAPSHOT-jboss6.war" />
+
+    <!-- Need to give a default value to keep Ivy happy -->
+    <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prereleases"/>
+
+    <target name="clean">
+        <fail unless="result.dir" message="No result.dir parameter given" />
+        <delete dir="${result.dir}" />
+    </target>
+
+    <target name="test-server" depends="clean-testbench-errors">
+        <mkdir dir="${vaadin.basedir}/result" />
+        <ant antfile="integration_tests.xml"
+            target="integration-test-all" inheritall="false"
+            inheritrefs="false">
+            <property name="demo.war" value="${result.war}" />
+            <property name="demo.jboss6.war" value="${result.jboss6.war}" />
+        </ant>
+    </target>
+
+
+    <target name="clean-testbench-errors"><!--todo remove when have got rid of screenshots-->
+        <fail unless="com.vaadin.testbench.screenshot.directory"
+            message="Define screenshot directory using -Dcom.vaadin.testbench.screenshot.directory" />
+        <mkdir dir="${com.vaadin.testbench.screenshot.directory}/errors" />
+        <delete>
+            <fileset
+                dir="${com.vaadin.testbench.screenshot.directory}/errors">
+                <include name="*" />
+            </fileset>
+        </delete>
+    </target>
+
+
+</project>
