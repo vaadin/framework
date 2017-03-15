@@ -29,6 +29,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
 
@@ -205,9 +206,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                         .getData(typesJsArray.get(i)));
             }
 
-            getRpcProxy(DropTargetRpc.class)
-                    .drop(types, data, getState().dropEffect, data.get(
-                            DragSourceExtensionConnector.DATA_TYPE_DRAG_SOURCE_ID));
+            startServerDrop(types, data, event);
         }
 
         removeTargetIndicator(event);
@@ -220,6 +219,13 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
         // Allow when criteria not set
         return true;
+    }
+
+    protected void startServerDrop(List<String> types, Map<String, String> data,
+            Event dropEvent) {
+        getRpcProxy(DropTargetRpc.class)
+                .drop(types, data, getState().dropEffect, data.get(
+                        DragSourceState.DATA_TYPE_DRAG_SOURCE_ID));
     }
 
     /**

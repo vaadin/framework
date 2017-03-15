@@ -38,6 +38,11 @@ public class DragSourceState extends SharedState {
     public static final String EVENT_DRAGSTART = "dragstart";
 
     /**
+     * Data type for storing drag source extension connector's ID
+     */
+    public static final String DATA_TYPE_DRAG_SOURCE_ID = "drag-source-id";
+
+    /**
      * {@code DataTransfer.effectAllowed} parameter for the drag event.
      */
     public EffectAllowed effectAllowed = EffectAllowed.UNINITIALIZED;
