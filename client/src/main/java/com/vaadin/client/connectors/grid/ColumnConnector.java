@@ -73,7 +73,6 @@ public class ColumnConnector extends AbstractExtensionConnector {
                 return null;
             }
         };
-        column.setRenderer(getRendererConnector().getRenderer());
         getParent().addColumn(column, getState().internalId);
     }
 
@@ -90,6 +89,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @OnStateChange("sortable")
     void updateSortable() {
         column.setSortable(getState().sortable);
+    }
+
+    @OnStateChange("renderer")
+    void updateRenderer() {
+        column.setRenderer(getRendererConnector().getRenderer());
     }
 
     @OnStateChange("hidingToggleCaption")
