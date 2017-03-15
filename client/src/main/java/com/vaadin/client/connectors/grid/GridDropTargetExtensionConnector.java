@@ -57,7 +57,7 @@ public class GridDropTargetExtensionConnector extends
     }
 
     @Override
-    protected void startServerDrop(List<String> types,
+    protected void sendDropEventToServer(List<String> types,
             Map<String, String> data, Event dropEvent) {
 
         String rowKey = null;
