@@ -15,6 +15,7 @@
  */
 package com.vaadin.v7.data.util.filter;
 
+import com.vaadin.data.provider.Query;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -34,6 +35,8 @@ import com.vaadin.v7.data.Property;
  * TODO this might still change
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available. See {@link Query#getFilter()}
  */
 @Deprecated
 public final class SimpleStringFilter implements Filter {

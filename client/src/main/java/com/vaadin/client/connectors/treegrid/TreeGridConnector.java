@@ -18,12 +18,13 @@ package com.vaadin.client.connectors.treegrid;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.grid.GridConnector;
 import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.renderers.HierarchyRenderer;
@@ -66,13 +67,18 @@ public class TreeGridConnector extends GridConnector {
         return (TreeGridState) super.getState();
     }
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-
-        if (stateChangeEvent.hasPropertyChanged("hierarchyColumnId")
-                || stateChangeEvent.hasPropertyChanged("columns")) {
-
+    /**
+     * This method has been scheduled finally to avoid possible race conditions
+     * between state change handling for the Grid and its columns. The renderer
+     * of the column is set in a state change handler, and might not be
+     * available when this method is executed.
+     * <p>
+     * TODO: This might need some clean up if we decide to allow setting a new
+     * renderer for hierarchy columns.
+     */
+    @OnStateChange("hierarchyColumnId")
+    void updateHierarchyColumn() {
+        Scheduler.get().scheduleFinally(() -> {
             // Id of old hierarchy column
             String oldHierarchyColumnId = hierarchyColumnId;
 
@@ -110,7 +116,7 @@ public class TreeGridConnector extends GridConnector {
                 Logger.getLogger(TreeGridConnector.class.getName()).warning(
                         "Couldn't find column: " + newHierarchyColumnId);
             }
-        }
+        });
     }
 
     private HierarchyRenderer getHierarchyRenderer() {
@@ -220,8 +226,8 @@ public class TreeGridConnector extends GridConnector {
 
         private native Collection<String> getNavigationEvents(Grid<?> grid)
         /*-{
-           return grid.@com.vaadin.client.widgets.Grid::cellFocusHandler
-           .@com.vaadin.client.widgets.Grid.CellFocusHandler::getNavigationEvents()();
+            return grid.@com.vaadin.client.widgets.Grid::cellFocusHandler
+            .@com.vaadin.client.widgets.Grid.CellFocusHandler::getNavigationEvents()();
         }-*/;
 
         private native void handleNavigationEvent(Grid<?> grid,

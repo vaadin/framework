@@ -27,6 +27,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.vaadin.data.HierarchyData;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
@@ -37,6 +38,9 @@ import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
+import com.vaadin.ui.renderers.AbstractRenderer;
+import com.vaadin.ui.renderers.Renderer;
+
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -191,6 +195,9 @@ public class TreeGrid<T> extends Grid<T> {
      * <p>
      * Setting a hierarchy column by calling this method also sets the column to
      * be visible and not hidable.
+     * <p>
+     * <strong>Note:</strong> Changing the Renderer of the hierarchy column is
+     * not supported.
      *
      * @see Column#setId(String)
      *
@@ -308,5 +315,25 @@ public class TreeGrid<T> extends Grid<T> {
         getDataProvider().fetch(new HierarchicalQuery<>(null, item))
                 .forEach(childItem -> writeRow(container, childItem, item,
                         context));
+    }
+
+    @Override
+    protected <V> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
+            AbstractRenderer<? super T, ? super V> renderer) {
+        return new Column<T, V>(valueProvider, renderer) {
+
+            @Override
+            public com.vaadin.ui.Grid.Column<T, V> setRenderer(
+                    Renderer<? super V> renderer) {
+                // Disallow changing renderer for the hierarchy column
+                if (getInternalIdForColumn(this).equals(
+                        TreeGrid.this.getState(false).hierarchyColumnId)) {
+                    throw new IllegalStateException(
+                            "Changing the renderer of the hierarchy column is not allowed.");
+                }
+
+                return super.setRenderer(renderer);
+            }
+        };
     }
 }

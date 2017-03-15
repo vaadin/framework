@@ -42,6 +42,8 @@ import com.vaadin.v7.data.Validator;
  *            The type
  * @author Vaadin Ltd.
  * @since 5.4
+ *
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.validator.AbstractValidator}
  */
 @Deprecated
 public abstract class AbstractValidator<T> implements Validator {

@@ -73,6 +73,7 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableSupplier;
 import com.vaadin.server.Setter;
 import com.vaadin.server.VaadinServiceClassLoaderUtil;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -1814,6 +1815,34 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Sets the Renderer for this Column. Setting the renderer will cause
+         * all currently available row data to be recreated and sent to the
+         * client.
+         *
+         * @param renderer
+         *            the new renderer
+         * @return this column
+         */
+        public Column<T, V> setRenderer(Renderer<? super V> renderer) {
+            Objects.requireNonNull(renderer, "Renderer can't be null");
+
+            // Remove old renderer
+            Connector oldRenderer = getState().renderer;
+            if (oldRenderer != null && oldRenderer instanceof Extension) {
+                removeExtension((Extension) oldRenderer);
+            }
+
+            // Set new renderer
+            getState().renderer = renderer;
+            addExtension(renderer);
+
+            // Trigger redraw
+            getParent().getDataCommunicator().reset();
+
+            return this;
+        }
+
+        /**
          * Gets the grid that this column belongs to.
          *
          * @return the grid that this column belongs to, or <code>null</code> if
@@ -2375,9 +2404,23 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
             AbstractRenderer<? super T, ? super V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
-        Column<T, V> column = new Column<>(valueProvider, renderer);
+        Column<T, V> column = createColumn(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
         return column;
+    }
+
+    /**
+     * Creates a column instance from a value provider and a renderer.
+     *
+     * @param valueProvider
+     *            the value provider
+     * @param renderer
+     *            the renderer
+     * @return a new column instance
+     */
+    protected <V> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
+            AbstractRenderer<? super T, ? super V> renderer) {
+        return new Column<>(valueProvider, renderer);
     }
 
     private void addColumn(String identifier, Column<T, ?> column) {
