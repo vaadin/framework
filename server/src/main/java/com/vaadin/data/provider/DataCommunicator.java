@@ -285,6 +285,16 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
+        sendDataToClient(initial);
+    }
+
+    /**
+     * Send the needed data and updates to the client side.
+     *
+     * @param initial
+     *            {@code true} if initial data load, {@code false} if not
+     */
+    protected void sendDataToClient(boolean initial) {
         if (getDataProvider() == null) {
             return;
         }

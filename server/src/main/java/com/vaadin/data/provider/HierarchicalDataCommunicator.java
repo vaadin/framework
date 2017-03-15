@@ -62,6 +62,10 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      */
     private int latestCacheSize = INITIAL_FETCH_SIZE;
 
+    /**
+     * Construct a new hierarchical data communicator backed by a
+     * {@link InMemoryHierarchicalDataProvider}.
+     */
     public HierarchicalDataCommunicator() {
         super();
         dataProvider = new InMemoryHierarchicalDataProvider<>(
@@ -79,7 +83,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     @Override
-    public void beforeClientResponse(boolean initial) {
+    protected void sendDataToClient(boolean initial) {
         // on purpose do not call super
         if (getDataProvider() == null) {
             return;
@@ -102,7 +106,6 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void loadInitialData() {
         int rootSize = doSizeQuery(null);
         mapper.reset(rootSize);
