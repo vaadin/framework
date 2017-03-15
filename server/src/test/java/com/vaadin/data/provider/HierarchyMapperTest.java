@@ -18,7 +18,7 @@ public class HierarchyMapperTest {
     }
 
     @Test
-    public void testCollapseExpandRootLevel() {
+    public void testExpandCollapse_rootLevel_indexesUpdated() {
         mapper.reset(3);
         verifyRootLevel(0, 2);
 
@@ -44,7 +44,7 @@ public class HierarchyMapperTest {
     }
 
     @Test
-    public void testCollapseExpandSecondLevelLastNode() {
+    public void testExpandCollapse_secondLevelLastNode_indexesUpdated() {
         mapper.reset(3);
         verifyRootLevel(0, 2);
 
@@ -86,7 +86,8 @@ public class HierarchyMapperTest {
     }
 
     @Test
-    public void testCollapseMultipleLevels() {
+    public void testCollapse_multipleLevels_wholeSubtreeDropped() {
+        // expand hierarchy up to 3 level
         mapper.reset(5);
         verifyRootLevel(0, 4);
 
@@ -110,6 +111,7 @@ public class HierarchyMapperTest {
         verifyNodeExists("3", 7, 8);
         verifyTreeTotalSize(11);
 
+        // collapse root level node
         mapper.collapse("1", 2);
         verifyRootLevel(0, 4);
         verifyNoNodeExists("1", "2", "3");

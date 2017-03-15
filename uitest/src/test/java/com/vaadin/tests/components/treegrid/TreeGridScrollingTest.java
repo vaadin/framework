@@ -10,6 +10,8 @@ public class TreeGridScrollingTest extends SingleBrowserTest {
 
     @Test
     public void testScrollingTree_expandCollapseFromBeginning_correctItemsShown() {
+        // TODO refactor this test to verify each row against a model, e.g. a
+        // InMemoryDataProvider, or the used lazy hierarchical data provider
         openTestURL();
 
         TreeGridElement grid = $(TreeGridElement.class).first();

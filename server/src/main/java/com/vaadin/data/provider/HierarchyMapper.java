@@ -33,14 +33,14 @@ import java.util.stream.Stream;
  * Keeps track of the expanded nodes, and size of of the subtrees for each
  * expanded node.
  * <p>
- * This class is considered framework internal implementation details, and can
- * be changed / moved at any point. This means that you should not directly use
- * this for anything.
+ * This class is framework internal implementation details, and can be changed /
+ * moved at any point. This means that you should not directly use this for
+ * anything.
  *
  * @author Vaadin Ltd
  * @since
  */
-public class HierarchyMapper implements Serializable {
+class HierarchyMapper implements Serializable {
 
     private static final Logger LOGGER = Logger
             .getLogger(HierarchyMapper.class.getName());
@@ -48,7 +48,7 @@ public class HierarchyMapper implements Serializable {
     /**
      * A POJO that represents a query data for a certain tree level.
      */
-    protected static class TreeLevelQuery { // not serializable since not stored
+    static class TreeLevelQuery { // not serializable since not stored
         /**
          * The tree node that the query is for. Only used for fetching parent
          * key.
@@ -82,8 +82,7 @@ public class HierarchyMapper implements Serializable {
      * Comparable based on the {@link #startIndex}, which is flat from 0 to data
      * size - 1.
      */
-    protected static class TreeNode
-            implements Serializable, Comparable<TreeNode> {
+    static class TreeNode implements Serializable, Comparable<TreeNode> {
 
         /** The key for the expanded item that this is a subtree of. */
         private final String parentKey;
