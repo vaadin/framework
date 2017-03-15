@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.connectors.grid;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,10 +27,14 @@ import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
+import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.ui.GridDropTargetExtension;
 
 import elemental.events.Event;
+import elemental.json.JsonObject;
 
 /**
  * Makes Grid an HTML5 drop target. This is the client side counterpart of
@@ -48,6 +54,28 @@ public class GridDropTargetExtensionConnector extends
         gridConnector = (GridConnector) target;
 
         super.extend(target);
+    }
+
+    @Override
+    protected void startServerDrop(List<String> types,
+            Map<String, String> data, Event dropEvent) {
+
+        String rowKey = null;
+        Optional<TableRowElement> targetRow = getTargetRow((Element) dropEvent.getTarget());
+        if (targetRow.isPresent()) {
+            rowKey = getRowData(targetRow.get()).getString(GridState.JSONKEY_ROWKEY);
+        }
+
+        getRpcProxy(GridDropTargetExtensionRpc.class)
+                .drop(types, data, getState().dropEffect,
+                        data.get(DragSourceState.DATA_TYPE_DRAG_SOURCE_ID),
+                        rowKey);
+    }
+
+    private JsonObject getRowData(TableRowElement row) {
+        int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
+                .getLogicalRowIndex(row);
+        return gridConnector.getDataSource().getRow(rowIndex);
     }
 
     @Override

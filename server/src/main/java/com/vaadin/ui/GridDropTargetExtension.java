@@ -15,7 +15,13 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.event.dnd.DragSourceExtension;
+import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.event.dnd.grid.GridDropEvent;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.shared.ui.dnd.DropTargetRpc;
+import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
 /**
@@ -25,9 +31,21 @@ import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
  * @author Vaadin Ltd
  * @since
  */
-public class GridDropTargetExtension extends DropTargetExtension<Grid> {
-    public GridDropTargetExtension(Grid target) {
+public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
+    public GridDropTargetExtension(Grid<T> target) {
         super(target);
+    }
+
+    @Override
+    protected void registerDropTargetRpc(Grid<T> target) {
+        registerRpc(
+                (GridDropTargetExtensionRpc) (types, data, dropEffect, dragSourceId, rowKey) -> {
+                    GridDropEvent<T> event = new GridDropEvent<>(target, types,
+                            data, dropEffect, getDragSource(dragSourceId),
+                            rowKey);
+
+                    fireEvent(event);
+                });
     }
 
     @Override
