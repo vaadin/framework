@@ -221,6 +221,16 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         return true;
     }
 
+    /**
+     * Initiates a server RPC for the drop event.
+     *
+     * @param types
+     *         List of data types from the {@code DataTransfer} object.
+     * @param data
+     *         Map of data from the {@code DataTransfer} object.
+     * @param dropEvent
+     *         Client side drop event.
+     */
     protected void startServerDrop(List<String> types, Map<String, String> data,
             Event dropEvent) {
         getRpcProxy(DropTargetRpc.class)
