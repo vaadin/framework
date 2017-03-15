@@ -77,7 +77,7 @@ public class GridDragSourceExtensionConnector extends
 
             // Generate drag data. Dragged row or all the selected rows
             JsonValue dragData = dragMultipleRows(rowData) ? toJsonArray(
-                    getSelectedRows().stream().map(this::getDragData)
+                    getSelectedVisibleRows().stream().map(this::getDragData)
                             .collect(Collectors.toList()))
                     : getDragData(rowData);
 
@@ -106,25 +106,32 @@ public class GridDragSourceExtensionConnector extends
     }
 
     /**
-     * Collects the data of all selected rows.
+     * Collects the data of all selected visible rows.
      *
-     * @return List of data of all selected rows.
+     * @return List of data of all selected visible rows.
      */
-    private List<JsonObject> getSelectedRows() {
-        List<JsonObject> rows = new ArrayList<>();
+    private List<JsonObject> getSelectedVisibleRows() {
+        return getSelectedRowsInRange(getEscalator().getVisibleRowRange());
+    }
 
-        SelectionModel<JsonObject> selectionModel = getGrid()
-                .getSelectionModel();
+    /**
+     * Get all selected rows from a subset of rows defined by {@code range}.
+     *
+     * @param range
+     *         Range of indexes.
+     * @return List of data of all selected rows in the given range.
+     */
+    private List<JsonObject> getSelectedRowsInRange(Range range) {
+        List<JsonObject> selectedRows = new ArrayList<>();
 
-        int size = gridConnector.getDataSource().size();
-        for (int i = 0; i < size; i++) {
+        for (int i = range.getStart(); i < range.getEnd(); i++) {
             JsonObject row = gridConnector.getDataSource().getRow(i);
-            if (selectionModel.isSelected(row)) {
-                rows.add(row);
+            if (SelectionModel.isItemSelected(row)) {
+                selectedRows.add(row);
             }
         }
 
-        return rows;
+        return selectedRows;
     }
 
     /**
