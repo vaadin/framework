@@ -409,6 +409,7 @@ Column<Person, Integer> bornColumn = grid.addColumn(Person:getBirthYear,
 
 Changing the renderer during runtime is also possible, but for type safety
 you should store the column reference with data types for doing this.
+When you change the renderer, the content of Grid is refreshed.
 
 [source, java]
 ----
