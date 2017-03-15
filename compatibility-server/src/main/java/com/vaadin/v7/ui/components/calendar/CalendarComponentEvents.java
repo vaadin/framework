@@ -30,6 +30,8 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
  *
  * @since 7.1.0
  * @author Vaadin Ltd.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface CalendarComponentEvents extends Serializable {

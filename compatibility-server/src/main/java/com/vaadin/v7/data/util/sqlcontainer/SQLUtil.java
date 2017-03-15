@@ -17,6 +17,9 @@ package com.vaadin.v7.data.util.sqlcontainer;
 
 import java.io.Serializable;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public class SQLUtil implements Serializable {
     /**

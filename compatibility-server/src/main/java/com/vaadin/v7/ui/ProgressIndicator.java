@@ -17,6 +17,7 @@
 package com.vaadin.v7.ui;
 
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.ui.PushConfiguration;
 import com.vaadin.ui.UI;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
@@ -27,13 +28,13 @@ import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorState;
  * <p>
  * Polling in this way is generally not recommended since there is no
  * centralized management of when messages are sent to the server. Furthermore,
- * polling might not be needed at all if {@link UI#setPushMode(PushMode)} or
+ * polling might not be needed at all if {@link PushConfiguration#setPushMode(PushMode)} or
  * {@link UI#setPollInterval(int)} is used.
  *
  * @author Vaadin Ltd.
  * @since 4
- * @deprecated as of 7.1, use {@link ProgressBar} combined with
- *             {@link UI#setPushMode(PushMode)} or
+ * @deprecated as of 7.1, use {@link com.vaadin.ui.ProgressBar} combined with
+ *             {@link PushConfiguration#setPushMode(PushMode)} or
  *             {@link UI#setPollInterval(int)} instead.
  */
 @Deprecated

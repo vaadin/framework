@@ -31,6 +31,8 @@ import java.util.Iterator;
  * works.
  *
  * This class is subject to change and should not be used outside Vaadin core.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class ListSet<E> extends ArrayList<E> {

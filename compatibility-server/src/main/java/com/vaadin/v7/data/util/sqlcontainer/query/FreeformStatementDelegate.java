@@ -26,6 +26,8 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
  * Due to the injection protection and other benefits of prepared statements, it
  * is advisable to implement this interface instead of the FreeformQueryDelegate
  * whenever possible.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface FreeformStatementDelegate extends FreeformQueryDelegate {

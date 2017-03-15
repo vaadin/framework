@@ -23,6 +23,8 @@ import java.io.Serializable;
  *
  * The sorting rule is simple and contains only the affected column's name and
  * the direction of the sort.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class OrderBy implements Serializable {
