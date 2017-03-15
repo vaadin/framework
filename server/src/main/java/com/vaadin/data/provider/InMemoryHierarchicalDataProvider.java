@@ -102,7 +102,7 @@ public class InMemoryHierarchicalDataProvider<T> extends
             childStream = childStream.sorted(comparing.get());
         }
 
-        return childStream;
+        return childStream.skip(query.getOffset()).limit(query.getLimit());
     }
 
     @Override

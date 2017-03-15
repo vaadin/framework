@@ -1,19 +1,37 @@
 package com.vaadin.tests.components.treegrid;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TreeGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.ParameterizedTB3Runner;
 
+@RunWith(ParameterizedTB3Runner.class)
 public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
 
     private TreeGridElement grid;
+
+    public void setDataProvider(String dataProviderString) {
+        selectMenuPath("Component", "Features", "Set data provider",
+                dataProviderString);
+    }
+
+    @Parameters
+    public static Collection<String> getDataProviders() {
+        return Arrays.asList("LazyHierarchicalDataProvider",
+                "InMemoryHierarchicalDataProvider");
+    }
 
     @Before
     public void before() {
