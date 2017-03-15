@@ -17,6 +17,8 @@ package com.vaadin.v7.data.fieldgroup;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 import com.vaadin.v7.ui.Field;
 
 /**
@@ -25,6 +27,8 @@ import com.vaadin.v7.ui.Field;
  *
  * @author Vaadin Ltd.
  * @since 7.0
+ * @deprecated As of 8.0, no direct replacement available. {@link Binder#forMemberField(HasValue)} and
+ * {@link Binder#bindInstanceFields(Object)} should be used instead.
  */
 @Deprecated
 public interface FieldGroupFieldFactory extends Serializable {

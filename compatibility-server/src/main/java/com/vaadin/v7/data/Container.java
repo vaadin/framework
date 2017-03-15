@@ -20,6 +20,11 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.data.provider.AbstractBackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
+import com.vaadin.server.SerializableComparator;
 import com.vaadin.v7.data.util.filter.SimpleStringFilter;
 import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 
@@ -79,6 +84,8 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *
  * @author Vaadin Ltd
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 public interface Container extends Serializable {
@@ -425,6 +432,10 @@ public interface Container extends Serializable {
      * Depending on the container type, sorting a container may permanently
      * change the internal order of items in the container.
      * </p>
+     *
+     * @deprecated  As of 8.0, sorting is integrated into {@link DataProvider} and {@link Query#getSortOrders()}.
+     * For in-memory case, you can use also {@link ListDataProvider#setSortComparator(SerializableComparator)}.
+     * For back-end DataProviders, see {@link AbstractBackEndDataProvider#setSortOrders(List)}.
      */
     @Deprecated
     public interface Sortable extends Ordered {
@@ -660,6 +671,9 @@ public interface Container extends Serializable {
      * <li>The Items in the hierarchy can be declared explicitly to be able or
      * unable to have children.
      * </ul>
+     *
+     * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
+     * version of Vaadin Framework 8.
      */
     @Deprecated
     public interface Hierarchical extends Container {
@@ -921,6 +935,10 @@ public interface Container extends Serializable {
      * @see Filterable
      *
      * @since 6.6
+     *
+     * @deprecated  As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+     * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+     * filters are specific to the implementation.
      */
     @Deprecated
     public interface Filter extends Serializable {

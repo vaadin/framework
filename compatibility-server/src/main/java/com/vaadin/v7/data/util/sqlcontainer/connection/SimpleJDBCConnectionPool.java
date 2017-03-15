@@ -27,6 +27,8 @@ import java.util.Set;
  * Simple implementation of the JDBCConnectionPool interface. Handles loading
  * the JDBC driver, setting up the connections and ensuring they are still
  * usable upon release.
+ *
+ *  @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated

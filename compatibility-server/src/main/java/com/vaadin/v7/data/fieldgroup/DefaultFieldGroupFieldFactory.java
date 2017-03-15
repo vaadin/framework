@@ -18,6 +18,8 @@ package com.vaadin.v7.data.fieldgroup;
 import java.util.Date;
 import java.util.EnumSet;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.BindException;
 import com.vaadin.v7.ui.AbstractField;
@@ -42,6 +44,8 @@ import com.vaadin.v7.ui.TextField;
  * instance.
  *
  * @author Vaadin Ltd
+ * @deprecated As of 8.0, no direct replacement available. {@link Binder#forMemberField(HasValue)} and
+ * {@link Binder#bindInstanceFields(Object)} should be used instead.
  */
 @Deprecated
 public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {

@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.v7.data.Property;
 
 /**
@@ -29,6 +32,8 @@ import com.vaadin.v7.data.Property;
  * {@link ReadOnlyStatusChangeListener}s.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
  */
 @Deprecated
 public abstract class AbstractProperty<T> implements Property<T>,
