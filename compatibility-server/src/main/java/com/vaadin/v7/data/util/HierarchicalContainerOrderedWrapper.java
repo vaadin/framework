@@ -27,7 +27,8 @@ import com.vaadin.v7.data.Container.Hierarchical;
  *
  * @see ContainerOrderedWrapper
  *
- * @deprecated As of 8.0, no replacement available.
+ * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
+ * version of Vaadin Framework 8.
  */
 @Deprecated
 @SuppressWarnings({ "serial" })

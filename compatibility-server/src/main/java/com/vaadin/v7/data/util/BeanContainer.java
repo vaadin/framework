@@ -19,6 +19,7 @@ import com.vaadin.data.provider.DataProvider;
 
 import java.util.Collection;
 
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container;
 
 /**
@@ -72,7 +73,7 @@ import com.vaadin.v7.data.Container;
  *
  * @since 6.5
  *
- * @deprecated As of 8.0, replaced by {@link DataProvider}
+ * @deprecated As of 8.0, replaced by {@link ListDataProvider}
  */
 @Deprecated
 public class BeanContainer<IDTYPE, BEANTYPE>

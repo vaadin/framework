@@ -34,7 +34,7 @@ import com.vaadin.v7.data.Property;
  *
  * @since 5.3
  *
- * @deprecated As of 8.0, no replacement available, see component-specific click events.
+ * @deprecated As of 8.0, see component-specific click events.
  */
 @SuppressWarnings("serial")
 @Deprecated

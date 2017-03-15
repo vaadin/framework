@@ -76,7 +76,7 @@ import com.vaadin.v7.shared.ui.tree.TreeState;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0. Replacement planned for 8.1
+ * @deprecated As of 8.0. New hierarchical components are planned in an upcoming version of Vaadin Framework 8.
  */
 @SuppressWarnings({ "serial", "deprecation" })
 @Deprecated
