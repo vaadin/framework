@@ -32,7 +32,7 @@ import com.vaadin.ui.Grid;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see DropTargetExtension#addDropListener(DropListener)
+ * @see com.vaadin.ui.GridDropTargetExtension#addDropListener(GridDropListener)
  * @since
  */
 public class GridDropEvent<T> extends DropEvent<Grid<T>> {

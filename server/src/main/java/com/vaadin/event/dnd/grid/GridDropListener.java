@@ -15,10 +15,11 @@
  */
 package com.vaadin.event.dnd.grid;
 
-import com.vaadin.event.dnd.DropEvent;
+import java.lang.reflect.Method;
+
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.dnd.DropListener;
 import com.vaadin.event.dnd.DropTargetExtension;
-import com.vaadin.ui.Grid;
 
 /**
  * Drop listener for HTML5 drop on a Grid row.
@@ -30,7 +31,10 @@ import com.vaadin.ui.Grid;
  * @since
  */
 @FunctionalInterface
-public interface GridDropListener<T> extends DropListener<Grid<T>> {
+public interface GridDropListener<T> extends ConnectorEventListener {
+
+    static final Method DROP_METHOD = GridDropListener.class
+            .getDeclaredMethods()[0];
 
     /**
      * Called when drop event is fired on a Grid row.
@@ -39,9 +43,4 @@ public interface GridDropListener<T> extends DropListener<Grid<T>> {
      *         Server side drop event.
      */
     void drop(GridDropEvent<T> event);
-
-    @Override
-    default void drop(DropEvent<Grid<T>> event) {
-        drop((GridDropEvent<T>) event);
-    }
 }

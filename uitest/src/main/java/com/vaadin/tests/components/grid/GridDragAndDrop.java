@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
@@ -55,11 +56,12 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dropTargetComponent.addColumn(Bean::getId).setCaption("ID");
         dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
 
-        GridDropTargetExtension dropTarget = new GridDropTargetExtension(
+        GridDropTargetExtension<Bean> dropTarget = new GridDropTargetExtension<>(
                 dropTargetComponent);
-        dropTarget.addDropListener(event -> {
+        dropTarget.addDropListener((GridDropListener<Bean>) event -> {
             log(event.getTransferData(
-                    GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA));
+                    GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA)
+                    + ", targetId=" + event.getDropTargetRow().getId());
         });
 
         Layout layout = new HorizontalLayout();
