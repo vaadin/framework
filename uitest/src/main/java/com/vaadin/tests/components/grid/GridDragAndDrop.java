@@ -16,13 +16,16 @@
 package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridDragSourceExtension;
 import com.vaadin.ui.HorizontalLayout;
@@ -32,6 +35,7 @@ import com.vaadin.ui.Layout;
 import elemental.json.Json;
 import elemental.json.JsonObject;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridDragAndDrop extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
@@ -41,8 +45,6 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dragSourceComponent.setItems(createItems(50));
         dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
         dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
-
-        dragSourceComponent.setSelectionMode(Grid.SelectionMode.MULTI);
 
         GridDragSourceExtension<Bean> dragSource = new GridDragSourceExtension<>(
                 dragSourceComponent);
@@ -64,7 +66,17 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         Layout layout = new HorizontalLayout();
         layout.addComponents(dragSourceComponent, dropTargetComponent);
 
-        addComponent(layout);
+        // Selection mode combo box
+        ComboBox<Grid.SelectionMode> selectionModeSwitch = new ComboBox<>(
+                "Change selection mode");
+        selectionModeSwitch.setItems(Arrays.asList(Grid.SelectionMode.SINGLE,
+                Grid.SelectionMode.MULTI));
+        selectionModeSwitch.setEmptySelectionAllowed(false);
+        selectionModeSwitch.addValueChangeListener(event -> dragSourceComponent
+                .setSelectionMode(event.getValue()));
+        selectionModeSwitch.setSelectedItem(Grid.SelectionMode.SINGLE);
+
+        addComponents(selectionModeSwitch, layout);
     }
 
     private List<Bean> createItems(int num) {
