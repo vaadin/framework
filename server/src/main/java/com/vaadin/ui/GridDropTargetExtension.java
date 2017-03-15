@@ -15,12 +15,8 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.event.dnd.grid.GridDropEvent;
-import com.vaadin.server.ClientConnector;
-import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
@@ -28,6 +24,8 @@ import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
  * Makes Grid an HTML5 drop target. This is the server side counterpart of
  * GridDropTargetExtensionConnector.
  *
+ * @param <T>
+ *         Type of the Grid bean.
  * @author Vaadin Ltd
  * @since
  */

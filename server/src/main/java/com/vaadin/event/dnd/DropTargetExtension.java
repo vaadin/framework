@@ -48,6 +48,12 @@ public class DropTargetExtension<T extends AbstractComponent> extends
         super.extend(target);
     }
 
+    /**
+     * Register server RPC.
+     *
+     * @param target
+     *         Extended component.
+     */
     protected void registerDropTargetRpc(T target) {
         registerRpc((DropTargetRpc) (types, data, dropEffect, dragSourceId) -> {
             DropEvent<T> event = new DropEvent<>(target, types, data,
@@ -57,7 +63,16 @@ public class DropTargetExtension<T extends AbstractComponent> extends
         });
     }
 
-    protected DragSourceExtension<AbstractComponent> getDragSource(String dragSourceId) {
+    /**
+     * Get drag source extension.
+     *
+     * @param dragSourceId
+     *         Connector id of the extension.
+     * @return Drag source extension if exists with the given connector id,
+     * otherwise {@literal null}.
+     */
+    protected DragSourceExtension<AbstractComponent> getDragSource(
+            String dragSourceId) {
         DragSourceExtension<AbstractComponent> dragSource = null;
 
         ClientConnector connector = getUI().getConnectorTracker()
