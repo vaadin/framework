@@ -59,7 +59,7 @@ The following preferences need to be set to keep the project consistent. You nee
 1. In a Project Explorer  right-click *vaadin-uitest*
 1. Open *Run As* -> *Maven build...*
 1. Type in <code>jetty:run-exploded</code> into *Goals* and click *Run*
-1. Open URL *http://localhost:8080/run/&lt;testUI&gt;*
+1. Open URL *http://localhost:8888/run/&lt;testUI&gt;*
 
 ## Setting up IntelliJ IDEA to Develop Vaadin 7
 
@@ -75,7 +75,7 @@ The following preferences need to be set to keep the project consistent. You nee
 
 1. Open *Maven Projects*
 1. Open *vaadin-uitest* -> *Plugins* -> *jetty* -> *jetty:run-exploded*
-1. Open URL *http://localhost:8080/run/&lt;testUI&gt;*
+1. Open URL *http://localhost:8888/run/&lt;testUI&gt;*
 
 ## Running a Development Server
 
