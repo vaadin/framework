@@ -26,6 +26,7 @@ import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.ConstraintDescriptor;
 
+import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.v7.data.Validator;
 
 /**
@@ -43,6 +44,8 @@ import com.vaadin.v7.data.Validator;
  *
  * @author Petri Hakala
  * @author Henri Sara
+ *
+ * @deprecated See {@link BeanValidationBinder} and {@link com.vaadin.data.validator.BeanValidator}
  */
 @Deprecated
 public class BeanValidator implements Validator {
