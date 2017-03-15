@@ -165,21 +165,23 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private native void replaceCellFocusEventHandler(Grid<?> grid,
-            GridEventHandler<?> eventHandler)/*-{
-                                             var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
+            GridEventHandler<?> eventHandler)
+    /*-{
+        var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
+    
+        // FocusEventHandler is initially 5th in the list of browser event handlers
+        browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
+    }-*/;
 
-                                             // FocusEventHandler is initially 5th in the list of browser event handlers
-                                             browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
-                                             }-*/;
+    private native void replaceClickEvent(Grid<?> grid, GridClickEvent event)
+    /*-{
+        grid.@com.vaadin.client.widgets.Grid::clickEvent = event;
+    }-*/;
 
-    private native void replaceClickEvent(Grid<?> grid,
-            GridClickEvent event)/*-{
-                                 grid.@com.vaadin.client.widgets.Grid::clickEvent = event;
-                                 }-*/;
-
-    private native EventCellReference<?> getEventCell(Grid<?> grid)/*-{
-                                                                   return grid.@com.vaadin.client.widgets.Grid::eventCell;
-                                                                   }-*/;
+    private native EventCellReference<?> getEventCell(Grid<?> grid)
+    /*-{
+        return grid.@com.vaadin.client.widgets.Grid::eventCell;
+    }-*/;
 
     private boolean isHierarchyColumn(EventCellReference<JsonObject> cell) {
         return cell.getColumn().getRenderer() instanceof HierarchyRenderer;
@@ -220,18 +222,20 @@ public class TreeGridConnector extends GridConnector {
             }
         }
 
-        private native Collection<String> getNavigationEvents(Grid<?> grid)/*-{
-                                                                           return grid.@com.vaadin.client.widgets.Grid::cellFocusHandler
-                                                                           .@com.vaadin.client.widgets.Grid.CellFocusHandler::getNavigationEvents()();
-                                                                           }-*/;
+        private native Collection<String> getNavigationEvents(Grid<?> grid)
+        /*-{
+            return grid.@com.vaadin.client.widgets.Grid::cellFocusHandler
+            .@com.vaadin.client.widgets.Grid.CellFocusHandler::getNavigationEvents()();
+        }-*/;
 
         private native void handleNavigationEvent(Grid<?> grid,
-                Grid.GridEvent<JsonObject> event)/*-{
-                                                 grid.@com.vaadin.client.widgets.Grid::cellFocusHandler
-                                                 .@com.vaadin.client.widgets.Grid.CellFocusHandler::handleNavigationEvent(*)(
-                                                 event.@com.vaadin.client.widgets.Grid.GridEvent::getDomEvent()(),
-                                                 event.@com.vaadin.client.widgets.Grid.GridEvent::getCell()())
-                                                 }-*/;
+                Grid.GridEvent<JsonObject> event)
+        /*-{
+            grid.@com.vaadin.client.widgets.Grid::cellFocusHandler
+            .@com.vaadin.client.widgets.Grid.CellFocusHandler::handleNavigationEvent(*)(
+            event.@com.vaadin.client.widgets.Grid.GridEvent::getDomEvent()(),
+            event.@com.vaadin.client.widgets.Grid.GridEvent::getCell()())
+        }-*/;
     }
 
     private class NavigationEventHandler
