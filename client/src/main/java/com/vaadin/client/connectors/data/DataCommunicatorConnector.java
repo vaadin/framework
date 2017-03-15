@@ -85,10 +85,8 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
                         }
 
                         @Override
-                        public void removeRows(int firstRowIndex,
-                                int count) {
-                            VaadinDataSource.this.removeRowData(firstRowIndex,
-                                    count);
+                        public void removeRows(int firstRowIndex, int count) {
+                            removeRowData(firstRowIndex, count);
                         }
                     });
         }
@@ -162,7 +160,7 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
      *            the new row data
      * @param oldRowData
      *            the previous row data
-     * 
+     *
      * @since 8.1
      */
     protected void onRowDataUpdate(JsonObject newRowData,

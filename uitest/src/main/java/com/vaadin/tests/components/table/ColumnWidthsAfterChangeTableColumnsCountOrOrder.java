@@ -102,7 +102,7 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder
 
         @Override
         public String toString() {
-            return "HierarchicalTestBean{" + "id=" + id + ", name='" + name + '\''
+            return "TestBean{" + "id=" + id + ", name='" + name + '\''
                     + ", descr='" + descr + '\'' + '}';
         }
     }
