@@ -220,11 +220,4 @@ public class RichTextArea extends AbstractField<String>
         return getState(false).valueChangeTimeout;
     }
 
-    /**
-     * Clears the value of this field.
-     */
-    @Override
-    public void clear() {
-        setValue("");
-    }
 }

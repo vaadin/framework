@@ -246,7 +246,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             binder.validate();
             if (binder.writeBeanIfValid(edited)) {
                 refresh(edited);
-                eventRouter.fireEvent(new EditorSaveEvent<>(this));
+                eventRouter.fireEvent(new EditorSaveEvent<>(this, edited));
                 return true;
             }
         }
@@ -265,9 +265,10 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     }
 
     private void doCancel(boolean afterBeingSaved) {
+        T editedBean = edited;
         doClose();
         if (!afterBeingSaved) {
-            eventRouter.fireEvent(new EditorCancelEvent<>(this));
+            eventRouter.fireEvent(new EditorCancelEvent<>(this, editedBean));
         }
     }
 

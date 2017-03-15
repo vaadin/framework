@@ -1,5 +1,3 @@
-import org.junit.Ignore;
-
 /*
  * Copyright 2000-2016 Vaadin Ltd.
  *
@@ -15,6 +13,8 @@ import org.junit.Ignore;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
+import org.junit.Ignore;
 
 /**
  *

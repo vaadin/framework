@@ -13,22 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.components.grid;
+package com.vaadin.tests.themes.valo;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.testbench.elements.VerticalLayoutElement;
+import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
-public class GridDetachTest extends SingleBrowserTest {
+public class LayoutComponentGroupTest extends SingleBrowserTestPhantomJS2 {
 
     @Test
-    public void gridDetachesWithoutErrors() {
-        openTestURL("debug");
-        $(ButtonElement.class).first().click();
-
-        assertElementNotPresent(By.className("v-grid"));
-        assertNoErrorNotifications();
+    public void renderedWithoutRoundedBordersInTheMiddle() throws Exception {
+        openTestURL();
+        compareScreen($(VerticalLayoutElement.class).id("container"),
+                "buttongroups");
     }
 }

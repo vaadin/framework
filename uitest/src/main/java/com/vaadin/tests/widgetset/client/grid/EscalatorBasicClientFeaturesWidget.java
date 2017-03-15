@@ -1,4 +1,4 @@
-package com.vaadin.tests.widgetset.client.v7.grid;
+package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +9,16 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.v7.client.widget.escalator.EscalatorUpdater;
-import com.vaadin.v7.client.widget.escalator.FlyweightCell;
-import com.vaadin.v7.client.widget.escalator.Row;
-import com.vaadin.v7.client.widget.escalator.RowContainer;
-import com.vaadin.v7.client.widget.escalator.RowContainer.BodyRowContainer;
-import com.vaadin.v7.client.widget.escalator.Spacer;
-import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
-import com.vaadin.v7.client.widgets.Escalator;
-import com.vaadin.v7.shared.ui.grid.ScrollDestination;
+import com.vaadin.client.widget.escalator.EscalatorUpdater;
+import com.vaadin.client.widget.escalator.FlyweightCell;
+import com.vaadin.client.widget.escalator.Row;
+import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.client.widget.escalator.Spacer;
+import com.vaadin.client.widget.escalator.SpacerUpdater;
+import com.vaadin.client.widgets.Escalator;
+import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.tests.widgetset.client.v7.grid.PureGWTTestApplication;
 
 public class EscalatorBasicClientFeaturesWidget
         extends PureGWTTestApplication<Escalator> {
@@ -539,6 +540,12 @@ public class EscalatorBasicClientFeaturesWidget
                 insertRows(escalator.getBody(), 0, 5);
             }
         }, menupath);
+        addMenuCommand("Add 22 rows to top", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                insertRows(escalator.getBody(), 0, 22);
+            }
+        }, menupath);
         addMenuCommand("Add 50 rows to top", new ScheduledCommand() {
             @Override
             public void execute() {
@@ -557,6 +564,12 @@ public class EscalatorBasicClientFeaturesWidget
             public void execute() {
                 removeRows(escalator.getBody(),
                         escalator.getBody().getRowCount() - 50, 50);
+            }
+        }, menupath);
+        addMenuCommand("Remove 15 rows from middle", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                removeRows(escalator.getBody(), 3, 15);
             }
         }, menupath);
         addMenuCommand("Remove 50 rows from almost bottom",

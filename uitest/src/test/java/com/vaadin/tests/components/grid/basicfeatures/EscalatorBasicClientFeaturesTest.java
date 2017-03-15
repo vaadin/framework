@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.v7.tests.components.grid.basicfeatures;
+package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,6 +27,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.parallel.TestCategory;
+import com.vaadin.tests.components.grid.basics.EscalatorBasicClientFeatures;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
@@ -58,6 +59,8 @@ public abstract class EscalatorBasicClientFeaturesTest
     protected static final String SCROLL_TO = "Scroll to...";
 
     protected static final String REMOVE_ALL_INSERT_SCROLL = "Remove all, insert 30 and scroll 40px";
+    protected static final String ADD_22_ROWS_TO_TOP = "Add 22 rows to top";
+    protected static final String REMOVE_15_ROWS_FROM_MIDDLE = "Remove 15 rows from middle";
 
     protected static final String GENERAL = "General";
     protected static final String DETACH_ESCALATOR = "Detach Escalator";
