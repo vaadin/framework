@@ -54,7 +54,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         registerRpc(new NodeCollapseRpc() {
             @Override
-            public void toggleCollapse(String rowKey, int rowIndex,
+            public void setNodeCollapsed(String rowKey, int rowIndex,
                     boolean collapse) {
                 if (collapse) {
                     getDataCommunicator().doCollapse(rowKey, rowIndex);
@@ -85,9 +85,12 @@ public class TreeGrid<T> extends Grid<T> {
      * </code>
      * </pre>
      * <p>
-     * The provided HierarchyData instance may be used as-is. Subsequent
-     * modification of the object might cause inconsistent data to be shown in
-     * the component unless it is explicitly instructed to read the data again.
+     * The returned HierarchyData instance may be used as-is to add, remove or
+     * modify items in the hierarchy. These modifications to the object are not
+     * automatically reflected back to the TreeGrid. Items modified should be
+     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
+     * when adding or removing items
+     * {@link HierarchicalDataProvider#refreshAll()} should be called.
      *
      * @param items
      *            the data items to display, not null
@@ -112,16 +115,19 @@ public class TreeGrid<T> extends Grid<T> {
      * <pre>
      * <code>
      * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems(Arrays.asList("a","b"));
+     * treeGrid.setItems(Stream.of("a","b"));
      * ...
      *
      * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
      * </code>
      * </pre>
      * <p>
-     * The provided HierarchyData instance may be used as-is. Subsequent
-     * modification of the object might cause inconsistent data to be shown in
-     * the component unless it is explicitly instructed to read the data again.
+     * The returned HierarchyData instance may be used as-is to add, remove or
+     * modify items in the hierarchy. These modifications to the object are not
+     * automatically reflected back to the TreeGrid. Items modified should be
+     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
+     * when adding or removing items
+     * {@link HierarchicalDataProvider#refreshAll()} should be called.
      *
      * @param items
      *            the data items to display, not null
@@ -146,16 +152,19 @@ public class TreeGrid<T> extends Grid<T> {
      * <pre>
      * <code>
      * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems(Arrays.asList("a","b"));
+     * treeGrid.setItems("a","b");
      * ...
      *
      * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
      * </code>
      * </pre>
      * <p>
-     * The provided HierarchyData instance may be used as-is. Subsequent
-     * modification of the object might cause inconsistent data to be shown in
-     * the component unless it is explicitly instructed to read the data again.
+     * The returned HierarchyData instance may be used as-is to add, remove or
+     * modify items in the hierarchy. These modifications to the object are not
+     * automatically reflected back to the TreeGrid. Items modified should be
+     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
+     * when adding or removing items
+     * {@link HierarchicalDataProvider#refreshAll()} should be called.
      *
      * @param items
      *            the data items to display, not null

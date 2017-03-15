@@ -28,7 +28,7 @@ import com.vaadin.shared.communication.ServerRpc;
 public interface NodeCollapseRpc extends ServerRpc {
 
     /**
-     * Toggles the collapse or expand of the given node.
+     * Sets the collapse state of a hierarchical row in TreeGrid.
      *
      * @param rowKey
      *            the row's key
@@ -37,5 +37,5 @@ public interface NodeCollapseRpc extends ServerRpc {
      * @param collapse
      *            {@code true} to collapse, {@code false} to expand
      */
-    void toggleCollapse(String rowKey, int rowIndex, boolean collapse);
+    void setNodeCollapsed(String rowKey, int rowIndex, boolean collapse);
 }

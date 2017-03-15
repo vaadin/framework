@@ -223,6 +223,14 @@ public class HierarchyData<T> implements Serializable {
     }
 
     /**
+     * Clear all items from this structure. Shorthand for calling
+     * {@link #removeItem(Object)} with null.
+     */
+    public void clear() {
+        removeItem(null);
+    }
+
+    /**
      * Get the immediate child items for the given item.
      * 
      * @param item

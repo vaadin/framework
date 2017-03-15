@@ -75,5 +75,5 @@ public interface DataCommunicatorClientRpc extends ClientRpc {
      *            the number of removed rows, starting from
      *            <code>firstRowIndex</code>
      */
-    void removeRowData(int firstRowIndex, int count);
+    void removeRows(int firstRowIndex, int count);
 }

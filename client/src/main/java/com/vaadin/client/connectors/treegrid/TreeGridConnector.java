@@ -183,7 +183,7 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private void toggleCollapse(String rowKey, int rowIndex, boolean collapse) {
-        getRpcProxy(NodeCollapseRpc.class).toggleCollapse(rowKey, rowIndex,
+        getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
                 collapse);
     }
 

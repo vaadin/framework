@@ -85,7 +85,7 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
                         }
 
                         @Override
-                        public void removeRowData(int firstRowIndex,
+                        public void removeRows(int firstRowIndex,
                                 int count) {
                             VaadinDataSource.this.removeRowData(firstRowIndex,
                                     count);

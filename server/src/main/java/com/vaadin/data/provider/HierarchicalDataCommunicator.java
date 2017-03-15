@@ -344,7 +344,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
                 collapsedRowIndex);
 
-        getClientRpc().removeRowData(collapsedRowIndex + 1,
+        getClientRpc().removeRows(collapsedRowIndex + 1,
                 collapsedSubTreeSize);
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status

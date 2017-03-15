@@ -239,10 +239,20 @@ public class DataCommunicator<T> extends AbstractExtension {
         return pushRows;
     }
 
+    /**
+     * Get the object used for filtering in this data communicator.
+     * 
+     * @return the filter object of this data communicator
+     */
     protected Object getFilter() {
         return filter;
     }
 
+    /**
+     * Get the client rpc interface for this data communicator.
+     * 
+     * @return the client rpc interface for this data communicator
+     */
     protected DataCommunicatorClientRpc getClientRpc() {
         return rpc;
     }
