@@ -249,11 +249,12 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Remove class that indicates that the component is a target.
+     * Remove the drag target indicator class name from the target element.
+     * <p>
+     * This is triggered on dragleave, drop and dragover events.
      *
      * @param event
-     *         The dragleave event, drop event or cancelled dragover event that
-     *         triggered the removal of the indicator.
+     *         the event that triggered the removal of the indicator
      */
     protected void removeTargetIndicator(Event event) {
         getDropTargetElement().removeClassName(CLASS_DRAG_OVER);
