@@ -35,8 +35,9 @@ import com.vaadin.v7.data.Validator;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no replacement available. See {@link Binder#forField(HasValue)},
- * {@link Binder.BindingBuilder#withNullRepresentation(Object)}
+ * @deprecated As of 8.0, no direct replacement available. See {@link Binder#forField(HasValue)} and various methods for
+ * validation and conversion chaining: {@code withValidator(...)}, {@code withConverter(...)},
+ * {@code withNullRepresentation(...)}
  */
 @SuppressWarnings("serial")
 @Deprecated
