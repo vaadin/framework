@@ -21,8 +21,8 @@ import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
 /**
- * Makes Grid an HTML5 drop target. This is the server side counterpart of
- * GridDropTargetExtensionConnector.
+ * Makes the rows of a Grid HTML5 drop targets. This is the server side
+ * counterpart of GridDropTargetExtensionConnector.
  *
  * @param <T>
  *         Type of the Grid bean.
