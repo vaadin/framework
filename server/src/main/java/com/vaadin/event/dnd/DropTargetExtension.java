@@ -70,7 +70,7 @@ public class DropTargetExtension<T extends AbstractComponent> extends
      * @param dragSourceId
      *         Connector id of the extension.
      * @return Drag source extension if exists with the given connector id,
-     * otherwise {@literal null}.
+     * otherwise an empty optional.
      */
     protected Optional<DragSourceExtension<AbstractComponent>> getDragSource(
             String dragSourceId) {

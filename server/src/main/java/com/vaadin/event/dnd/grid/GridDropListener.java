@@ -27,7 +27,7 @@ import com.vaadin.event.dnd.DropTargetExtension;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see DropTargetExtension#addDropListener(DropListener)
+ * @see com.vaadin.ui.GridDropTargetExtension#addDropListener(GridDropListener)
  * @since
  */
 @FunctionalInterface
