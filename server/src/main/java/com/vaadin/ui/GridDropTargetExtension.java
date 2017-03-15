@@ -17,6 +17,8 @@ package com.vaadin.ui;
 
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.event.dnd.grid.GridDropEvent;
+import com.vaadin.event.dnd.grid.GridDropListener;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
@@ -44,6 +46,20 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
 
                     fireEvent(event);
                 });
+    }
+
+    /**
+     * Attaches drop listener for the current drop target. {@link
+     * GridDropListener#drop(GridDropEvent)} is called when drop event happens
+     * on the client side.
+     *
+     * @param listener
+     *         Listener to handle drop event.
+     * @return Handle to be used to remove this listener.
+     */
+    public Registration addDropListener(GridDropListener<T> listener) {
+        return addListener(GridDropEvent.class, listener,
+                GridDropListener.DROP_METHOD);
     }
 
     @Override
