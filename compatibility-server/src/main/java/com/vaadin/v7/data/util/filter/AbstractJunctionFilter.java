@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.vaadin.data.provider.Query;
 import com.vaadin.v7.data.Container.Filter;
 
 /**
@@ -28,6 +29,8 @@ import com.vaadin.v7.data.Container.Filter;
  * implementing {@link Filter} for in-memory filters.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available. See {@link Query#getFilter()}
  */
 @Deprecated
 public abstract class AbstractJunctionFilter implements Filter {

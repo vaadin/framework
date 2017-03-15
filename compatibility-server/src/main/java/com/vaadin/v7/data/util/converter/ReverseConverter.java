@@ -29,6 +29,8 @@ import java.util.Locale;
  *
  * @author Vaadin Ltd
  * @since 7.0
+ *
+ * @deprecated As of 8.0, no direct replacement available.
  */
 @Deprecated
 public class ReverseConverter<PRESENTATION, MODEL>

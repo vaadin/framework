@@ -16,6 +16,8 @@
 
 package com.vaadin.v7.data.validator;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 import com.vaadin.v7.data.Validator;
 
 /**
@@ -24,6 +26,10 @@ import com.vaadin.v7.data.Validator;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, no direct replacement available. See {@link Binder#forField(HasValue)} and various methods for
+ * validation and conversion chaining: {@code withValidator(...)}, {@code withConverter(...)},
+ * {@code withNullRepresentation(...)}
  */
 @SuppressWarnings("serial")
 @Deprecated

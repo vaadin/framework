@@ -33,7 +33,7 @@ import com.vaadin.v7.data.Container;
  * @since 6.0
  * @see FormFieldFactory
  *
- * @deprecated As of 8.0, Table is replaced by Grid
+ * @deprecated As of 8.0, Table is replaced by {@link com.vaadin.ui.Grid}
  */
 @Deprecated
 public interface TableFieldFactory extends Serializable {
