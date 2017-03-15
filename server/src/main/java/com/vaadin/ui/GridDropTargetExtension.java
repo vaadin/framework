@@ -39,8 +39,8 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
         registerRpc(
                 (GridDropTargetExtensionRpc) (types, data, dropEffect, dragSourceId, rowKey) -> {
                     GridDropEvent<T> event = new GridDropEvent<>(target, types,
-                            data, dropEffect, getDragSource(dragSourceId),
-                            rowKey);
+                            data, dropEffect,
+                            getDragSource(dragSourceId).orElse(null), rowKey);
 
                     fireEvent(event);
                 });
