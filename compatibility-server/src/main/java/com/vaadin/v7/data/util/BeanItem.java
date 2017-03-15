@@ -39,7 +39,7 @@ import com.vaadin.v7.data.Property;
  *
  * @deprecated As of 8.0, no direct replacement available. You can use any bean directly as an item for {@link Binder}
  * or {@link DataProvider} and access the item properties with lambdas like {@code binder.forField(component).bind(...)} or
- * {@code new Grid<Bean>(dataProvider).addColumn(bean->map.getSomething())}.
+ * {@code new Grid<Bean>(dataProvider).addColumn(bean->bean.getSomething())}.
  */
 @SuppressWarnings("serial")
 @Deprecated
