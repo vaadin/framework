@@ -205,7 +205,7 @@ public class HierarchyData<T> implements Serializable {
      * recursively remove any descendants of the item.
      * 
      * @param item
-     *            the item to remove
+     *            the item to remove, or null to clear all data
      * @return this
      * 
      * @throws IllegalArgumentException
@@ -216,7 +216,7 @@ public class HierarchyData<T> implements Serializable {
             throw new IllegalArgumentException(
                     "Item '" + item + "' not in the hierarchy");
         }
-        getChildren(item).forEach(child -> removeItem(child));
+        new ArrayList<>(getChildren(item)).forEach(child -> removeItem(child));
         itemToWrapperMap.get(itemToWrapperMap.get(item).getParent())
                 .removeChild(item);
         return this;
@@ -226,7 +226,8 @@ public class HierarchyData<T> implements Serializable {
      * Get the immediate child items for the given item.
      * 
      * @param item
-     *            the item for which to retrieve child items for
+     *            the item for which to retrieve child items for, null to
+     *            retrieve all root items
      * @return a list of child items for the given item
      * 
      * @throws IllegalArgumentException

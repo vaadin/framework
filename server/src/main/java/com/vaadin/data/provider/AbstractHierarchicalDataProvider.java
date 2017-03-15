@@ -23,12 +23,16 @@ import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 
 /**
+ * Abstract hierarchical data provider implementation which takes care of item
+ * refreshes and associated events.
  *
  * @author Vaadin Ltd
  * @since 8.1
  *
  * @param <T>
+ *            data type
  * @param <F>
+ *            filter type
  */
 public abstract class AbstractHierarchicalDataProvider<T, F>
         implements HierarchicalDataProvider<T, F> {

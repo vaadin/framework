@@ -65,20 +65,104 @@ public class TreeGrid<T> extends Grid<T> {
         });
     }
 
+    /**
+     * Sets the data items of this component provided as a collection.
+     * <p>
+     * The provided items are wrapped into a
+     * {@link InMemoryHierarchicalDataProvider} backed by a flat
+     * {@link HierarchyData} structure. The data provider instance is used as a
+     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
+     * that the items collection can be accessed later on via
+     * {@link InMemoryHierarchicalDataProvider#getData()}:
+     *
+     * <pre>
+     * <code>
+     * TreeGrid<String> treeGrid = new TreeGrid<>();
+     * treeGrid.setItems(Arrays.asList("a","b"));
+     * ...
+     *
+     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
+     * </code>
+     * </pre>
+     * <p>
+     * The provided HierarchyData instance may be used as-is. Subsequent
+     * modification of the object might cause inconsistent data to be shown in
+     * the component unless it is explicitly instructed to read the data again.
+     *
+     * @param items
+     *            the data items to display, not null
+     */
     @Override
     public void setItems(Collection<T> items) {
+        Objects.requireNonNull(items, "Given collection may not be null");
         setDataProvider(new InMemoryHierarchicalDataProvider<>(
                 new HierarchyData<T>().addItems(null, items)));
     }
 
+    /**
+     * Sets the data items of this component provided as a stream.
+     * <p>
+     * The provided items are wrapped into a
+     * {@link InMemoryHierarchicalDataProvider} backed by a flat
+     * {@link HierarchyData} structure. The data provider instance is used as a
+     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
+     * that the items collection can be accessed later on via
+     * {@link InMemoryHierarchicalDataProvider#getData()}:
+     *
+     * <pre>
+     * <code>
+     * TreeGrid<String> treeGrid = new TreeGrid<>();
+     * treeGrid.setItems(Arrays.asList("a","b"));
+     * ...
+     *
+     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
+     * </code>
+     * </pre>
+     * <p>
+     * The provided HierarchyData instance may be used as-is. Subsequent
+     * modification of the object might cause inconsistent data to be shown in
+     * the component unless it is explicitly instructed to read the data again.
+     *
+     * @param items
+     *            the data items to display, not null
+     */
     @Override
     public void setItems(Stream<T> items) {
+        Objects.requireNonNull(items, "Given stream may not be null");
         setDataProvider(new InMemoryHierarchicalDataProvider<>(
                 new HierarchyData<T>().addItems(null, items)));
     }
 
+    /**
+     * Sets the data items of this listing.
+     * <p>
+     * The provided items are wrapped into a
+     * {@link InMemoryHierarchicalDataProvider} backed by a flat
+     * {@link HierarchyData} structure. The data provider instance is used as a
+     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
+     * that the items collection can be accessed later on via
+     * {@link InMemoryHierarchicalDataProvider#getData()}:
+     *
+     * <pre>
+     * <code>
+     * TreeGrid<String> treeGrid = new TreeGrid<>();
+     * treeGrid.setItems(Arrays.asList("a","b"));
+     * ...
+     *
+     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
+     * </code>
+     * </pre>
+     * <p>
+     * The provided HierarchyData instance may be used as-is. Subsequent
+     * modification of the object might cause inconsistent data to be shown in
+     * the component unless it is explicitly instructed to read the data again.
+     *
+     * @param items
+     *            the data items to display, not null
+     */
     @Override
     public void setItems(@SuppressWarnings("unchecked") T... items) {
+        Objects.requireNonNull(items, "Given items may not be null");
         setDataProvider(new InMemoryHierarchicalDataProvider<>(
                 new HierarchyData<T>().addItems(null, items)));
     }

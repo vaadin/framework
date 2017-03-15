@@ -2,6 +2,7 @@ package com.vaadin.tests.components.treegrid;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -21,56 +22,59 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
+    @Ignore // currently no implementation exists for toggling from the server
+            // side
     public void toggle_collapse_server_side() {
         Assert.assertEquals(3, grid.getRowCount());
-        assertCellTexts(0, 0, new String[] { "a", "b", "c" });
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        selectMenuPath("Component", "Features", "Toggle expand", "a");
+        selectMenuPath("Component", "Features", "Toggle expand", "0 | 0");
         Assert.assertEquals(6, grid.getRowCount());
-        assertCellTexts(1, 0, new String[] { "a/a", "a/b", "a/c" });
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
 
-        selectMenuPath("Component", "Features", "Toggle expand", "a");
+        selectMenuPath("Component", "Features", "Toggle expand", "0 | 0");
         Assert.assertEquals(3, grid.getRowCount());
-        assertCellTexts(0, 0, new String[] { "a", "b", "c" });
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
         // collapsing a leaf should have no effect
-        selectMenuPath("Component", "Features", "Toggle expand", "a/a");
+        selectMenuPath("Component", "Features", "Toggle expand", "1 | 0");
         Assert.assertEquals(3, grid.getRowCount());
     }
 
     @Test
     public void non_leaf_collapse_on_click() {
         Assert.assertEquals(3, grid.getRowCount());
-        assertCellTexts(0, 0, new String[] { "a", "b", "c" });
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        // click the expander corresponding to "a"
+        // Should expand "0 | 0"
         grid.getRow(0).getCell(0)
                 .findElement(By.className("v-tree-grid-expander")).click();
         Assert.assertEquals(6, grid.getRowCount());
-        assertCellTexts(1, 0, new String[] { "a/a", "a/b", "a/c" });
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
 
-        // click the expander corresponding to "a"
+        // Should collapse "0 | 0"
         grid.getRow(0).getCell(0)
                 .findElement(By.className("v-tree-grid-expander")).click();
         Assert.assertEquals(3, grid.getRowCount());
-        assertCellTexts(0, 0, new String[] { "a", "b", "c" });
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
     }
 
     @Test
+    @Ignore // FIXME: remove ignore annotation once #8758 is done
     public void keyboard_navigation() {
         grid.getRow(0).getCell(0).click();
 
-        // Should expand "a"
+        // Should expand "0 | 0"
         new Actions(getDriver()).keyDown(Keys.ALT).sendKeys(Keys.RIGHT)
                 .keyUp(Keys.ALT).perform();
         Assert.assertEquals(6, grid.getRowCount());
-        assertCellTexts(1, 0, new String[] { "a/a", "a/b", "a/c" });
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
 
-        // Should collapse "a"
+        // Should collapse "0 | 0"
         new Actions(getDriver()).keyDown(Keys.ALT).sendKeys(Keys.LEFT)
                 .keyUp(Keys.ALT).perform();
         Assert.assertEquals(3, grid.getRowCount());
-        assertCellTexts(0, 0, new String[] { "a", "b", "c" });
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
     }
 
     @Test
@@ -81,7 +85,7 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                 .isElementPresent(By.className("v-tree-grid-expander")));
 
         selectMenuPath("Component", "Features", "Set hierarchy column",
-                "Second column");
+                "depth");
 
         Assert.assertFalse(grid.getRow(0).getCell(0)
                 .isElementPresent(By.className("v-tree-grid-expander")));
@@ -89,7 +93,7 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                 .isElementPresent(By.className("v-tree-grid-expander")));
 
         selectMenuPath("Component", "Features", "Set hierarchy column",
-                "First column");
+                "string");
 
         Assert.assertTrue(grid.getRow(0).getCell(0)
                 .isElementPresent(By.className("v-tree-grid-expander")));

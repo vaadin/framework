@@ -40,7 +40,7 @@ public class HierarchicalDataCommunicatorConnector
                 TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
 
         /*
-         * Since server side can't know the index a random item, any
+         * Since server side can't know the index of a random item, any
          * refreshItem(..) cannot know the depth. Thus need to copy it from
          * previous item.
          */

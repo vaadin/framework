@@ -5,14 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.vaadin.data.provider.DataProviderListener;
-import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.AbstractHierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.shared.Registration;
 import com.vaadin.tests.components.treegrid.TreeGridBasicFeatures.HierarchicalTestBean;
 
 public class LazyHierarchicalDataProvider
-        implements HierarchicalDataProvider<HierarchicalTestBean, Void> {
+        extends AbstractHierarchicalDataProvider<HierarchicalTestBean, Void> {
 
     private final int nodesPerLevel;
     private final int depth;
@@ -20,28 +18,6 @@ public class LazyHierarchicalDataProvider
     public LazyHierarchicalDataProvider(int nodesPerLevel, int depth) {
         this.nodesPerLevel = nodesPerLevel;
         this.depth = depth;
-    }
-
-    @Override
-    public boolean isInMemory() {
-        return false;
-    }
-
-    @Override
-    public void refreshItem(HierarchicalTestBean item) {
-        // NO-OP
-    }
-
-    @Override
-    public void refreshAll() {
-        // NO-OP
-    }
-
-    @Override
-    public Registration addDataProviderListener(
-            DataProviderListener<HierarchicalTestBean> listener) {
-        return () -> {
-        };
     }
 
     @Override
@@ -78,7 +54,10 @@ public class LazyHierarchicalDataProvider
 
     private boolean internalHasChildren(HierarchicalTestBean node) {
         return node.getDepth() < depth;
-        // return node.getDepth() < depth && node.getIndex() % 2 == 1;
     }
 
+    @Override
+    public boolean isInMemory() {
+        return false;
+    }
 }

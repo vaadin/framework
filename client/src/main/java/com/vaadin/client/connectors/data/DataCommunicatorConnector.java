@@ -162,6 +162,8 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
      *            the new row data
      * @param oldRowData
      *            the previous row data
+     * 
+     * @since 8.1
      */
     protected void onRowDataUpdate(JsonObject newRowData,
             JsonObject oldRowData) {
