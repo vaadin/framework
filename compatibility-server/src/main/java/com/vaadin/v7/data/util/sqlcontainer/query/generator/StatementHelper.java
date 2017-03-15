@@ -36,6 +36,8 @@ import java.util.Map;
  *
  * This class will also fill the values with correct setters into the
  * PreparedStatement on request.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class StatementHelper implements Serializable {

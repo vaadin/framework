@@ -28,6 +28,8 @@ import com.vaadin.v7.data.util.sqlcontainer.query.OrderBy;
  * HSQLDB, MySQL, PostgreSQL, MSSQL and Oracle syntaxes.
  *
  * @author Jonatan Kronqvist / Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface SQLGenerator extends Serializable {

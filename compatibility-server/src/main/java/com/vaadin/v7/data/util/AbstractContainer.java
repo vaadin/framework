@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.LinkedList;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
 
 /**
@@ -36,6 +37,8 @@ import com.vaadin.v7.data.Container;
  * make them public.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 public abstract class AbstractContainer implements Container {

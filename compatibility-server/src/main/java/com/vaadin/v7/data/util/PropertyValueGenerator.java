@@ -16,7 +16,10 @@
 package com.vaadin.v7.data.util;
 
 import java.io.Serializable;
+import java.util.Map;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.sort.SortOrder;
 import com.vaadin.v7.data.Item;
@@ -30,6 +33,10 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *            Property data type
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no direct replacement available. You can use any bean directly as an item for {@link Binder}
+ * or {@link DataProvider} and access item properties with lambdas like {@code binder.forField(component).bind(...)} or
+ * {@code new Grid<Bean>(dataProvider).addColumn(bean->bean.getSomething())}.
  */
 @Deprecated
 public abstract class PropertyValueGenerator<T> implements Serializable {

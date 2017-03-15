@@ -32,6 +32,8 @@ import com.vaadin.v7.util.SerializerHelper;
  *            bean type
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class MethodPropertyDescriptor<BT>

@@ -18,6 +18,7 @@ package com.vaadin.v7.data;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
@@ -51,6 +52,8 @@ import com.vaadin.server.VaadinServlet;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The validation is performed
+ * outside components, see {@link Binder}.{@code withValidator(...)}
  */
 @Deprecated
 public interface Validator extends Serializable {
