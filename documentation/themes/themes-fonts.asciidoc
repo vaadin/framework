@@ -13,30 +13,24 @@ included in the Vaadin themes, you can use custom web fonts.
 [[themes.fonts.loading]]
 == Loading Local Fonts
 
-You can load locally served web fonts with the [literal]#++font++# mixin as
+You can load locally served web fonts with the [literal]#++font-face++# mixin as
 follows:
 
+----
+@include font-face('MyFontFamily',
+              '../../../../mytheme/fonts/myfontfamily', 400, normal);
+----
 
-----
-@include font(MyFontFamily,
-              '../../../../mytheme/fonts/myfontfamily');
-----
+The first argument is the name of the font family (e.g. 'Helvetica'). The second argument is the path to the font files in the theme folder (prefixed by four double-dots to escape the mixin path), excluding file extension. The third arguments is the font weight (normal, bold, 400, 600, etc). The fourth argument is the style (normal/italic).
 
 The statement must be given in the [filename]#styles.scss# file __outside__ the
-[literal]#++.mytheme {}++# block.
+[literal]#++.mytheme {}++# block, after [literal]#++@import "mytheme.scss"++# or in a separate stylesheet imported there.
 
-The first parameter is the name of the font family, which is used to identify
-the font. If the font family name contains spaces, you need to use single or
-double quotes around the name.
-
-The second parameter is the base name of the font files without an extension,
-including a relative path. Notice that the path is relative to the base theme,
-where the mixin is defined, not the used theme. We recommend placing custom font
-files under a [filename]#fonts# folder in a theme.
+We recommend placing custom font files under a [filename]#fonts# folder in a theme.
 
 Not all browsers support any single font file format, so the base name is
 appended with [filename]#.ttf#, [filename]#.eot#, [filename]#.woff#, or
-[filename]#.svg# suffix for the font file suitable for a user's browser.
+[filename]#.svg# suffix for the font file suitable for a user's browser. It is recommended to provide the font in all four formats to support all browsers.
 
 
 [[themes.fonts.webfonts]]
@@ -54,14 +48,6 @@ For example, to load the "Cabin Sketch" font from Google Fonts:
 public class MyUI extends UI {
     ...
 ----
-ifdef::web[]
-Note that such web fonts served from a domain different from the Vaadin
-application currently link:https://dev.vaadin.com/ticket/16249[do not work
-together with] responsive themes, as described in
-<<dummy/../../../framework/themes/themes-responsive#themes.responsive,"Responsive
-Themes">>. The problem occurs only in Firefox. A SecurityError is shown in the
-debug window.
-endif::web[]
 
 
 [[themes.fonts.using]]
@@ -77,7 +63,7 @@ CSS and otherwise.
 }
 ----
 
-Again, if the font family name contains spaces, you need to use single or double
+If the font family name contains spaces, you need to use single or double
 quotes around the name.
 
 
