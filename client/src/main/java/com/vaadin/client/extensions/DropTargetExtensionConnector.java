@@ -206,7 +206,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                         .getData(typesJsArray.get(i)));
             }
 
-            startServerDrop(types, data, event);
+            sendDropEventToServer(types, data, event);
         }
 
         removeTargetIndicator(event);
@@ -231,7 +231,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @param dropEvent
      *         Client side drop event.
      */
-    protected void startServerDrop(List<String> types, Map<String, String> data,
+    protected void sendDropEventToServer(List<String> types, Map<String, String> data,
             Event dropEvent) {
         getRpcProxy(DropTargetRpc.class)
                 .drop(types, data, getState().dropEffect, data.get(
