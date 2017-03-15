@@ -27,8 +27,8 @@ import elemental.json.JsonObject;
 /**
  * Makes a Grid's rows draggable for HTML5 drag and drop functionality.
  * <p>
- * When selection mode is {@link com.vaadin.ui.Grid.SelectionMode#MULTI}, the
- * currently visible rows are dragged.
+ * When dragging a selected row, all the visible selected rows are dragged. Note
+ * that ONLY visible rows are taken into account.
  *
  * @param <T>
  *         The Grid bean type.
