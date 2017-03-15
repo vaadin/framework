@@ -5002,7 +5002,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (this.sortable != sortable) {
                 this.sortable = sortable;
                 if (grid != null) {
-                    grid.refreshHeader();
+                    grid.getHeader().requestSectionRefresh();
                 }
             }
             return this;
@@ -5035,7 +5035,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (this.resizable != resizable) {
                 this.resizable = resizable;
                 if (grid != null) {
-                    grid.refreshHeader();
+                    grid.getHeader().requestSectionRefresh();
                 }
             }
             return this;
@@ -8720,16 +8720,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     protected void onAttach() {
         super.onAttach();
 
-        if (getEscalator().getBody().getRowCount() == 0 && dataSource != null) {
-            setEscalatorSizeFromDataSource();
-        }
+        Scheduler.get().scheduleFinally(() -> {
+            if (getEscalator().getBody().getRowCount() == 0
+                    && dataSource != null) {
+                setEscalatorSizeFromDataSource();
+            }
 
-        // Grid was just attached to DOM. Column widths should be calculated.
-        recalculateColumnWidths();
-        for (int row : reattachVisibleDetails) {
-            setDetailsVisible(row, true);
-        }
-        reattachVisibleDetails.clear();
+            // Grid was just attached to DOM. Column widths should be
+            // calculated.
+            recalculateColumnWidths();
+            for (int row : reattachVisibleDetails) {
+                setDetailsVisible(row, true);
+            }
+            reattachVisibleDetails.clear();
+        });
     }
 
     @Override
