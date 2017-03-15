@@ -36,7 +36,8 @@ import com.vaadin.v7.data.Container.Ordered;
  * collapsed subtrees don't exist.
  * <p>
  *
- * @deprecated No longer supported with Vaadin 8.0
+ * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
+ * version of Vaadin Framework 8.
  */
 @Deprecated
 public interface Collapsible extends Hierarchical, Ordered {

@@ -17,8 +17,6 @@
 package com.vaadin.v7.data;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.ErrorMessageProvider;
-import com.vaadin.server.SerializablePredicate;
 
 import java.io.Serializable;
 import java.util.Collection;
