@@ -1121,6 +1121,8 @@ public class Escalator extends Widget
 
         private double defaultRowHeight = INITIAL_DEFAULT_ROW_HEIGHT;
 
+        private boolean initialColumnSizesCalculated = false;
+
         public AbstractRowContainer(
                 final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
@@ -1324,21 +1326,28 @@ public class Escalator extends Widget
             if (isAttached()) {
                 paintInsertRows(index, numberOfRows);
 
+                /*
+                 * We are inserting the first rows in this container. We
+                 * potentially need to set the widths for the cells for the
+                 * first time.
+                 */
                 if (rows == numberOfRows) {
-                    /*
-                     * We are inserting the first rows in this container. We
-                     * potentially need to set the widths for the cells for the
-                     * first time.
-                     */
-                    Map<Integer, Double> colWidths = new HashMap<>();
-                    for (int i = 0; i < getColumnConfiguration()
-                            .getColumnCount(); i++) {
-                        Double width = Double.valueOf(
-                                getColumnConfiguration().getColumnWidth(i));
-                        Integer col = Integer.valueOf(i);
-                        colWidths.put(col, width);
-                    }
-                    getColumnConfiguration().setColumnWidths(colWidths);
+                    Scheduler.get().scheduleFinally(() -> {
+                        if (initialColumnSizesCalculated) {
+                            return;
+                        }
+                        initialColumnSizesCalculated = true;
+
+                        Map<Integer, Double> colWidths = new HashMap<>();
+                        for (int i = 0; i < getColumnConfiguration()
+                                .getColumnCount(); i++) {
+                            Double width = Double.valueOf(
+                                    getColumnConfiguration().getColumnWidth(i));
+                            Integer col = Integer.valueOf(i);
+                            colWidths.put(col, width);
+                        }
+                        getColumnConfiguration().setColumnWidths(colWidths);
+                    });
                 }
             }
         }
@@ -4001,6 +4010,9 @@ public class Escalator extends Widget
             private boolean measuringRequested = false;
 
             public void setWidth(double px) {
+                Profiler.enter(
+                        "Escalator.ColumnConfigurationImpl.Column.setWidth");
+
                 definedWidth = px;
 
                 if (px < 0) {
@@ -4016,6 +4028,9 @@ public class Escalator extends Widget
                 } else {
                     calculatedWidth = px;
                 }
+
+                Profiler.leave(
+                        "Escalator.ColumnConfigurationImpl.Column.setWidth");
             }
 
             public double getDefinedWidth() {
@@ -4389,24 +4404,32 @@ public class Escalator extends Widget
                 return;
             }
 
-            for (Entry<Integer, Double> entry : indexWidthMap.entrySet()) {
-                int index = entry.getKey().intValue();
-                double width = entry.getValue().doubleValue();
+            Profiler.enter("Escalator.ColumnConfigurationImpl.setColumnWidths");
+            try {
 
-                checkValidColumnIndex(index);
+                for (Entry<Integer, Double> entry : indexWidthMap.entrySet()) {
+                    int index = entry.getKey().intValue();
+                    double width = entry.getValue().doubleValue();
 
-                // Not all browsers will accept any fractional size..
-                width = WidgetUtil.roundSizeDown(width);
-                columns.get(index).setWidth(width);
+                    checkValidColumnIndex(index);
 
+                    // Not all browsers will accept any fractional size..
+                    width = WidgetUtil.roundSizeDown(width);
+                    columns.get(index).setWidth(width);
+
+                }
+
+                widthsArray = null;
+                header.reapplyColumnWidths();
+                body.reapplyColumnWidths();
+                footer.reapplyColumnWidths();
+
+                recalculateElementSizes();
+
+            } finally {
+                Profiler.leave(
+                        "Escalator.ColumnConfigurationImpl.setColumnWidths");
             }
-
-            widthsArray = null;
-            header.reapplyColumnWidths();
-            body.reapplyColumnWidths();
-            footer.reapplyColumnWidths();
-
-            recalculateElementSizes();
         }
 
         private void checkValidColumnIndex(int index)
