@@ -151,6 +151,8 @@ public abstract class VaadinUriResolver implements Serializable {
      * Gets the URL pointing to the context root.
      *
      * @return the context root URL
+     *
+     * @since 8.0.3
      */
     protected abstract String getContextRootUrl();
 
