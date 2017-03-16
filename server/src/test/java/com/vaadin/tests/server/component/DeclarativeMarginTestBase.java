@@ -21,11 +21,34 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.MarginHandler;
+import com.vaadin.ui.Layout.SpacingHandler;
 
-public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler>
+public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler & SpacingHandler>
         extends DeclarativeTestBase<L> {
 
-    protected void testMargins(String componentTag, boolean defaultMargin) {
+    protected void testSpacing(String componentTag, boolean defaultSpacing) {
+        // Spacing on
+        String design = "<" + componentTag;
+        if (!defaultSpacing) {
+            design += " spacing";
+        }
+        design += " />";
+        L layout = read(design);
+        Assert.assertTrue(layout.isSpacing());
+        testWrite(design, layout);
+
+        // Spacing off
+        design = "<" + componentTag;
+        if (defaultSpacing) {
+            design += " spacing='false'";
+        }
+        design += " />";
+        layout = read(design);
+        Assert.assertFalse(layout.isSpacing());
+        testWrite(design, layout);
+    }
+
+    protected void testMargins(String componentTag, MarginInfo defaultMargin) {
 
         for (int i = 0; i < 16; ++i) {
             boolean top = (i & 1) == 1;
@@ -33,44 +56,52 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
             boolean bottom = (i & 4) == 4;
             boolean left = (i & 8) == 8;
 
-            MarginInfo m = new MarginInfo(top, right, bottom, left);
+            MarginInfo marginToTest = new MarginInfo(top, right, bottom, left);
 
-            String design = getMarginTag(componentTag, defaultMargin, top,
-                    right, bottom, left);
+            String design = getMarginTag(componentTag, defaultMargin,
+                    marginToTest);
 
             // The assertEquals machinery in DeclarativeTestBase uses bean
             // introspection and MarginInfo is not a proper bean. It ends up
             // considering *all* MarginInfo objects equal... (#18229)
             L layout = read(design);
-            Assert.assertEquals("For tag: " + design, m, layout.getMargin());
+            Assert.assertEquals("For tag: " + design, marginToTest,
+                    layout.getMargin());
 
             testWrite(design, layout);
         }
     }
 
-    private String getMarginTag(String componentTag, boolean defaultMargin,
-            boolean top, boolean right, boolean bottom, boolean left) {
+    private String getMarginTag(String componentTag, MarginInfo defaultMargin,
+            MarginInfo marginToTest) {
         String s = "<" + componentTag + " ";
-        String suffix = defaultMargin ? "=false " : " ";
 
-        if (top == left && top == right && top == bottom) {
-            if (top != defaultMargin) {
-                s += "margin" + suffix;
+        if (marginToTest.hasAll()) {
+            if (!defaultMargin.hasAll()) {
+                s += "margin ";
+            }
+        } else if (marginToTest.hasNone()) {
+            if (!defaultMargin.hasNone()) {
+                s += "margin=false ";
             }
         } else {
-            if (left != defaultMargin) {
-                s += "margin-left" + suffix;
+            if (marginToTest.hasLeft() != defaultMargin.hasLeft()) {
+                s += marginValue("margin-left", defaultMargin.hasLeft());
             }
-            if (right != defaultMargin) {
-                s += "margin-right" + suffix;
+            if (marginToTest.hasRight() != defaultMargin.hasRight()) {
+                s += marginValue("margin-right", defaultMargin.hasRight());
             }
-            if (top != defaultMargin) {
-                s += "margin-top" + suffix;
+            if (marginToTest.hasTop() != defaultMargin.hasTop()) {
+                s += marginValue("margin-top", defaultMargin.hasTop());
             }
-            if (bottom != defaultMargin) {
-                s += "margin-bottom" + suffix;
+            if (marginToTest.hasBottom() != defaultMargin.hasBottom()) {
+                s += marginValue("margin-bottom", defaultMargin.hasBottom());
             }
         }
         return s + " />";
+    }
+
+    private String marginValue(String prefix, boolean defaultOn) {
+        return prefix + (defaultOn ? "=false " : " ");
     }
 }

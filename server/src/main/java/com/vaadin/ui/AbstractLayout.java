@@ -105,10 +105,16 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      */
     protected void writeMargin(Element design, MarginInfo margin,
             MarginInfo defMargin, DesignContext context) {
-        if (margin.hasAll() || margin.hasNone()) {
+        if (defMargin.getBitMask() == margin.getBitMask()) {
+            // Default, no need to write
+        } else if (margin.hasNone()) {
+            // Write "margin='false'"
             DesignAttributeHandler.writeAttribute("margin", design.attributes(),
-                    margin.hasAll(), defMargin.hasAll(), boolean.class,
-                    context);
+                    false, true, boolean.class, context);
+        } else if (margin.hasAll()) {
+            // Write "margin"
+            DesignAttributeHandler.writeAttribute("margin", design.attributes(),
+                    true, false, boolean.class, context);
         } else {
 
             DesignAttributeHandler.writeAttribute("margin-left",
