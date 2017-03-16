@@ -20,28 +20,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.vaadin.annotations.Widgetset;
-import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.event.dnd.grid.GridDropListener;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridDragSourceExtension;
+import com.vaadin.ui.GridDropTargetExtension;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
 
-@Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridDragAndDrop extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
-        // Drag source
+        // Drag source Grid
         Grid<Bean> dragSourceComponent = new Grid<>();
-
         dragSourceComponent.setItems(createItems(50));
         dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
         dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
@@ -54,15 +51,20 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
             return ret;
         });
 
-        Label dropTargetComponent = new Label("Drop here");
-        DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
-                dropTargetComponent);
+        // Drop target Grid
+        Grid<Bean> dropTargetComponent = new Grid<>();
+        dropTargetComponent.setItems(createItems(5));
+        dropTargetComponent.addColumn(Bean::getId).setCaption("ID");
+        dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
 
-        dropTarget.addDropListener(event -> {
-            log(event.getTransferData(
-                    GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA));
+        GridDropTargetExtension<Bean> dropTarget = new GridDropTargetExtension<>(
+                dropTargetComponent);
+        dropTarget.addDropListener((GridDropListener<Bean>) event -> {
+            log(event.getDataTransferText() + ", targetId=" + event
+                    .getDropTargetRow().getId());
         });
 
+        // Layout grids
         Layout layout = new HorizontalLayout();
         layout.addComponents(dragSourceComponent, dropTargetComponent);
 
@@ -77,6 +79,9 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         selectionModeSwitch.setSelectedItem(Grid.SelectionMode.SINGLE);
 
         addComponents(selectionModeSwitch, layout);
+
+        // Set dragover styling
+        Page.getCurrent().getStyles().add(".v-drag-over {color: red;}");
     }
 
     private List<Bean> createItems(int num) {

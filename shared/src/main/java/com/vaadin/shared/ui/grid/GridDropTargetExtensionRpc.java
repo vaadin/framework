@@ -15,19 +15,25 @@
  */
 package com.vaadin.shared.ui.grid;
 
-import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.communication.ServerRpc;
 
 /**
- * State class containing parameters for GridDragSourceExtension.
+ * RPC for firing server side drop event when client side drop event happens on
+ * drop target Grid.
  *
- * @author Vaadin Ltd
+ * @author Vaadin Ltd.
  * @since
  */
-public class GridDragSourceExtensionState extends DragSourceState {
+public interface GridDropTargetExtensionRpc extends ServerRpc {
 
     /**
-     * Json key for storing data for a dragged row.
+     * Called when drop event happens on client side.
+     *
+     * @param dataTransferText
+     *         Data of type {@code "text"} from the {@code DataTransfer}
+     *         object.
+     * @param rowKey
+     *         Key of the row on which the drop event occured.
      */
-    public static final String JSONKEY_DRAG_DATA = "drag-data";
-
+    public void drop(String dataTransferText, String rowKey);
 }
