@@ -62,7 +62,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
         @Override
         public String toString() {
-            return "TestBean [col1=" + col1 + ", col2=" + col2 + "]";
+            return "HierarchicalTestBean [col1=" + col1 + ", col2=" + col2 + "]";
         }
 
     }

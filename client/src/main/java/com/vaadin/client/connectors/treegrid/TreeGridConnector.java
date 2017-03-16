@@ -34,7 +34,6 @@ import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
@@ -81,7 +80,7 @@ public class TreeGridConnector extends GridConnector {
     void updateHierarchyColumn() {
         Scheduler.get().scheduleFinally(() -> {
             // Id of old hierarchy column
-            String oldHierarchyColumnId = this.hierarchyColumnId;
+            String oldHierarchyColumnId = hierarchyColumnId;
 
             // Id of new hierarchy column. Choose first when nothing explicitly
             // set
@@ -112,7 +111,7 @@ public class TreeGridConnector extends GridConnector {
                 // setRenderer() replaces DOM elements
                 getWidget().setFrozenColumnCount(getState().frozenColumnCount);
 
-                this.hierarchyColumnId = newHierarchyColumnId;
+                hierarchyColumnId = newHierarchyColumnId;
             } else {
                 Logger.getLogger(TreeGridConnector.class.getName()).warning(
                         "Couldn't find column: " + newHierarchyColumnId);
@@ -137,7 +136,9 @@ public class TreeGridConnector extends GridConnector {
                             @Override
                             public void onClick(
                                     ClickableRenderer.RendererClickEvent<JsonObject> event) {
-                                toggleCollapse(getRowKey(event.getRow()));
+                                toggleCollapse(getRowKey(event.getRow()),
+                                        event.getCell().getRowIndex(),
+                                        !isCollapsed(event.getRow()));
                                 event.stopPropagation();
                                 event.preventDefault();
                             }
@@ -187,8 +188,9 @@ public class TreeGridConnector extends GridConnector {
         return cell.getColumn().getRenderer() instanceof HierarchyRenderer;
     }
 
-    private void toggleCollapse(String rowKey) {
-        getRpcProxy(NodeCollapseRpc.class).toggleCollapse(rowKey);
+    private void toggleCollapse(String rowKey, int rowIndex, boolean collapse) {
+        getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
+                collapse);
     }
 
     /**
@@ -260,31 +262,26 @@ public class TreeGridConnector extends GridConnector {
 
                 // Hierarchy metadata
                 boolean collapsed, leaf;
-                if (event.getCell().getRow().hasKey(
+                JsonObject rowData = event.getCell().getRow();
+                if (rowData.hasKey(
                         TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
-                    JsonObject rowDescription = event.getCell().getRow()
-                            .getObject(
-                                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
-                    collapsed = rowDescription.getBoolean(
-                            TreeGridCommunicationConstants.ROW_COLLAPSED);
+                    collapsed = isCollapsed(rowData);
+                    JsonObject rowDescription = rowData.getObject(
+                            TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
                     leaf = rowDescription.getBoolean(
                             TreeGridCommunicationConstants.ROW_LEAF);
-
                     switch (domEvent.getKeyCode()) {
                     case KeyCodes.KEY_RIGHT:
-                        if (!leaf) {
-                            if (collapsed) {
-                                toggleCollapse(
-                                        event.getCell().getRow().getString(
-                                                DataCommunicatorConstants.KEY));
-                            }
+                        if (!leaf && collapsed) {
+                            toggleCollapse(getRowKey(rowData),
+                                    event.getCell().getRowIndex(), true);
                         }
                         break;
                     case KeyCodes.KEY_LEFT:
                         if (!collapsed) {
                             // collapse node
-                            toggleCollapse(event.getCell().getRow()
-                                    .getString(DataCommunicatorConstants.KEY));
+                            toggleCollapse(getRowKey(rowData),
+                                    event.getCell().getRowIndex(), false);
                         }
                         break;
                     }
@@ -293,5 +290,25 @@ public class TreeGridConnector extends GridConnector {
                 return;
             }
         }
+    }
+
+    private static boolean isCollapsed(JsonObject rowData) {
+        assert rowData
+                .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
+                        + rowData.asString();
+        return rowData
+                .getObject(
+                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)
+                .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
+    }
+
+    private static int getDepth(JsonObject rowData) {
+        assert rowData
+                .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
+                        + rowData.asString();
+        return (int) rowData
+                .getObject(
+                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)
+                .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
     }
 }

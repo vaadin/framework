@@ -78,6 +78,16 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
                                 updateRowData(data.getObject(i));
                             }
                         }
+
+                        @Override
+                        public void insertRows(int firstRowIndex, int count) {
+                            insertRowData(firstRowIndex, count);
+                        }
+
+                        @Override
+                        public void removeRows(int firstRowIndex, int count) {
+                            removeRowData(firstRowIndex, count);
+                        }
                     });
         }
 
@@ -85,7 +95,8 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
         protected void requestRows(int firstRowIndex, int numberOfRows,
                 RequestRowsCallback<JsonObject> callback) {
             getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
-                    numberOfRows, 0, 0);
+                    numberOfRows, getCachedRange().getStart(),
+                    getCachedRange().length());
 
             JsonArray dropped = Json.createArray();
             int i = 0;
@@ -112,13 +123,16 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
         /**
          * Updates row data based on row key.
          *
-         * @param row
+         * @param rowData
          *            new row object
          */
-        protected void updateRowData(JsonObject row) {
-            int index = indexOfKey(getRowKey(row));
+        protected void updateRowData(JsonObject rowData) {
+            int index = indexOfKey(getRowKey(rowData));
             if (index >= 0) {
-                setRowData(index, Collections.singletonList(row));
+                JsonObject oldRowData = getRow(index);
+                onRowDataUpdate(rowData, oldRowData);
+
+                setRowData(index, Collections.singletonList(rowData));
             }
         }
     }
@@ -133,6 +147,25 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
         } else {
             assert false : "Parent not implementing HasDataSource";
         }
+    }
+
+    /**
+     * Called row updates from server side.
+     * <p>
+     * This method exists for making it possible to copy data from the old
+     * object to the new one, if e.g. some data is not available in the server
+     * side when doing updates and would be missed otherwise.
+     *
+     * @param newRowData
+     *            the new row data
+     * @param oldRowData
+     *            the previous row data
+     *
+     * @since 8.1
+     */
+    protected void onRowDataUpdate(JsonObject newRowData,
+            JsonObject oldRowData) {
+        // NOOP, see overrides for concrete use cases
     }
 
     @Override

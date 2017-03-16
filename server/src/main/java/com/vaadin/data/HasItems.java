@@ -87,7 +87,7 @@ public interface HasItems<T> extends Component, Serializable {
      * <pre>
      * <code>
      * HasDataProvider<String> listing = new CheckBoxGroup<>();
-     * listing.setItems(Arrays.asList("a","b"));
+     * listing.setItems("a","b");
      * ...
      *
      * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();
@@ -122,7 +122,7 @@ public interface HasItems<T> extends Component, Serializable {
      * <pre>
      * <code>
      * HasDataProvider<String> listing = new CheckBoxGroup<>();
-     * listing.setItems(Arrays.asList("a","b"));
+     * listing.setItems(Stream.of("a","b"));
      * ...
      *
      * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();

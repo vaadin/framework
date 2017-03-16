@@ -2084,20 +2084,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @see #withPropertySet(PropertySet)
      */
     public Grid() {
-        this(new PropertySet<T>() {
-            @Override
-            public Stream<PropertyDefinition<T, ?>> getProperties() {
-                // No columns configured by default
-                return Stream.empty();
-            }
-
-            @Override
-            public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
-                throw new IllegalStateException(
-                        "A Grid created without a bean type class literal or a custom property set"
-                                + " doesn't support finding properties by name.");
-            }
-        });
+        this(new DataCommunicator<>());
     }
 
     /**
@@ -2117,6 +2104,32 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Creates a new grid with the given data communicator and without support
+     * for creating columns based on property names.
+     *
+     * @param dataCommunicator
+     *            the custom data communicator to set
+     * @see #Grid()
+     * @see #Grid(PropertySet, DataCommunicator)
+     */
+    protected Grid(DataCommunicator<T> dataCommunicator) {
+        this(new PropertySet<T>() {
+            @Override
+            public Stream<PropertyDefinition<T, ?>> getProperties() {
+                // No columns configured by default
+                return Stream.empty();
+            }
+
+            @Override
+            public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
+                throw new IllegalStateException(
+                        "A Grid created without a bean type class literal or a custom property set"
+                                + " doesn't support finding properties by name.");
+            }
+        }, dataCommunicator);
+    }
+
+    /**
      * Creates a grid using a custom {@link PropertySet} implementation for
      * configuring the initial columns and resolving property names for
      * {@link #addColumn(String)} and
@@ -2128,6 +2141,27 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the property set implementation to use, not <code>null</code>.
      */
     protected Grid(PropertySet<T> propertySet) {
+        this(propertySet, new DataCommunicator<>());
+    }
+
+    /**
+     * Creates a grid using a custom {@link PropertySet} implementation and
+     * custom data communicator.
+     * <p>
+     * Property set is used for configuring the initial columns and resolving
+     * property names for {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     *
+     * @see #withPropertySet(PropertySet)
+     *
+     * @param propertySet
+     *            the property set implementation to use, not <code>null</code>.
+     * @param dataCommunicator
+     *            the data communicator to use, not<code>null</code>
+     */
+    protected Grid(PropertySet<T> propertySet,
+            DataCommunicator<T> dataCommunicator) {
+        super(dataCommunicator);
         registerRpc(new GridServerRpcImpl());
         setDefaultHeaderRow(appendHeaderRow());
         setSelectionModel(new SingleSelectionModelImpl<>());
@@ -3844,7 +3878,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
-    private void readData(Element body,
+    protected void readData(Element body,
             List<DeclarativeValueProvider<T>> providers) {
         getSelectionModel().deselectAll();
         List<T> items = new ArrayList<>();
@@ -3883,14 +3917,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         if (designContext.shouldWriteData(this)) {
             Element bodyElement = tableElement.appendElement("tbody");
-            getDataProvider().fetch(new Query<>()).forEach(
-                    item -> writeRow(bodyElement, item, designContext));
+            writeData(bodyElement, designContext);
         }
 
         if (getFooter().getRowCount() > 0) {
             getFooter().writeDesign(tableElement.appendElement("tfoot"),
                     designContext);
         }
+    }
+
+    protected void writeData(Element body, DesignContext designContext) {
+        getDataProvider().fetch(new Query<>())
+                .forEach(item -> writeRow(body, item, designContext));
     }
 
     private void writeRow(Element container, T item, DesignContext context) {

@@ -15,21 +15,32 @@
  */
 package com.vaadin.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.vaadin.data.HierarchyData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
+import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
 
-import elemental.json.Json;
-import elemental.json.JsonObject;
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -43,55 +54,130 @@ import elemental.json.JsonObject;
 public class TreeGrid<T> extends Grid<T> {
 
     public TreeGrid() {
-        super();
-
-        // Attaches hierarchy data to the row
-        addDataGenerator((item, rowData) -> {
-
-            JsonObject hierarchyData = Json.createObject();
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_DEPTH,
-                    getDataProvider().getDepth(item));
-
-            boolean isLeaf = !getDataProvider().hasChildren(item);
-            if (isLeaf) {
-                hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
-                        true);
-            } else {
-                hierarchyData.put(TreeGridCommunicationConstants.ROW_COLLAPSED,
-                        getDataProvider().isCollapsed(item));
-                hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF,
-                        false);
-            }
-
-            // add hierarchy information to row as metadata
-            rowData.put(
-                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION,
-                    hierarchyData);
-        });
+        super(new HierarchicalDataCommunicator<>());
 
         registerRpc(new NodeCollapseRpc() {
             @Override
-            public void toggleCollapse(String rowKey) {
-                T item = getDataCommunicator().getKeyMapper().get(rowKey);
-                TreeGrid.this.toggleCollapse(item);
+            public void setNodeCollapsed(String rowKey, int rowIndex,
+                    boolean collapse) {
+                if (collapse) {
+                    getDataCommunicator().doCollapse(rowKey, rowIndex);
+                } else {
+                    getDataCommunicator().doExpand(rowKey, rowIndex);
+                }
             }
         });
     }
 
-    // TODO: construct a "flat" in memory hierarchical data provider?
+    /**
+     * Sets the data items of this component provided as a collection.
+     * <p>
+     * The provided items are wrapped into a
+     * {@link InMemoryHierarchicalDataProvider} backed by a flat
+     * {@link HierarchyData} structure. The data provider instance is used as a
+     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
+     * that the items collection can be accessed later on via
+     * {@link InMemoryHierarchicalDataProvider#getData()}:
+     *
+     * <pre>
+     * <code>
+     * TreeGrid<String> treeGrid = new TreeGrid<>();
+     * treeGrid.setItems(Arrays.asList("a","b"));
+     * ...
+     *
+     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
+     * </code>
+     * </pre>
+     * <p>
+     * The returned HierarchyData instance may be used as-is to add, remove or
+     * modify items in the hierarchy. These modifications to the object are not
+     * automatically reflected back to the TreeGrid. Items modified should be
+     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
+     * when adding or removing items
+     * {@link HierarchicalDataProvider#refreshAll()} should be called.
+     *
+     * @param items
+     *            the data items to display, not null
+     */
     @Override
     public void setItems(Collection<T> items) {
-        throw new UnsupportedOperationException("Not implemented");
+        Objects.requireNonNull(items, "Given collection may not be null");
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(
+                new HierarchyData<T>().addItems(null, items)));
     }
 
+    /**
+     * Sets the data items of this component provided as a stream.
+     * <p>
+     * The provided items are wrapped into a
+     * {@link InMemoryHierarchicalDataProvider} backed by a flat
+     * {@link HierarchyData} structure. The data provider instance is used as a
+     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
+     * that the items collection can be accessed later on via
+     * {@link InMemoryHierarchicalDataProvider#getData()}:
+     *
+     * <pre>
+     * <code>
+     * TreeGrid<String> treeGrid = new TreeGrid<>();
+     * treeGrid.setItems(Stream.of("a","b"));
+     * ...
+     *
+     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
+     * </code>
+     * </pre>
+     * <p>
+     * The returned HierarchyData instance may be used as-is to add, remove or
+     * modify items in the hierarchy. These modifications to the object are not
+     * automatically reflected back to the TreeGrid. Items modified should be
+     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
+     * when adding or removing items
+     * {@link HierarchicalDataProvider#refreshAll()} should be called.
+     *
+     * @param items
+     *            the data items to display, not null
+     */
     @Override
     public void setItems(Stream<T> items) {
-        throw new UnsupportedOperationException("Not implemented");
+        Objects.requireNonNull(items, "Given stream may not be null");
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(
+                new HierarchyData<T>().addItems(null, items)));
     }
 
+    /**
+     * Sets the data items of this listing.
+     * <p>
+     * The provided items are wrapped into a
+     * {@link InMemoryHierarchicalDataProvider} backed by a flat
+     * {@link HierarchyData} structure. The data provider instance is used as a
+     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
+     * that the items collection can be accessed later on via
+     * {@link InMemoryHierarchicalDataProvider#getData()}:
+     *
+     * <pre>
+     * <code>
+     * TreeGrid<String> treeGrid = new TreeGrid<>();
+     * treeGrid.setItems("a","b");
+     * ...
+     *
+     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
+     * </code>
+     * </pre>
+     * <p>
+     * The returned HierarchyData instance may be used as-is to add, remove or
+     * modify items in the hierarchy. These modifications to the object are not
+     * automatically reflected back to the TreeGrid. Items modified should be
+     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
+     * when adding or removing items
+     * {@link HierarchicalDataProvider#refreshAll()} should be called.
+     *
+     * @param items
+     *            the data items to display, not null
+     */
     @Override
-    public void setItems(T... items) {
-        throw new UnsupportedOperationException("Not implemented");
+    public void setItems(@SuppressWarnings("unchecked") T... items) {
+        Objects.requireNonNull(items, "Given items may not be null");
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(
+                new HierarchyData<T>().addItems(null, items)));
     }
 
     @Override
@@ -138,34 +224,97 @@ public class TreeGrid<T> extends Grid<T> {
         return (TreeGridState) super.getState(markAsDirty);
     }
 
-    /**
-     * Toggle the expansion of an item in this grid. If the item is already
-     * expanded, it will be collapsed.
-     * <p>
-     * Toggling expansion on a leaf item in the hierarchy will have no effect.
-     *
-     * @param item
-     *            the item to toggle expansion for
-     */
-    public void toggleCollapse(T item) {
-        getDataProvider().setCollapsed(item,
-                !getDataProvider().isCollapsed(item));
-        getDataCommunicator().reset();
+    @Override
+    public HierarchicalDataCommunicator<T> getDataCommunicator() {
+        return (HierarchicalDataCommunicator<T>) super.getDataCommunicator();
     }
 
     @Override
     public HierarchicalDataProvider<T, ?> getDataProvider() {
-        DataProvider<T, ?> dataProvider = super.getDataProvider();
-        // FIXME DataCommunicator by default has a CallbackDataProvider if no
-        // DataProvider is set, resulting in a class cast exception if we don't
-        // check it here.
-
-        // Once fixed, remove this method from the exclude list in
-        // StateGetDoesNotMarkDirtyTest
-        if (!(dataProvider instanceof HierarchicalDataProvider)) {
-            throw new IllegalStateException("No data provider has been set.");
+        if (!(super.getDataProvider() instanceof HierarchicalDataProvider)) {
+            return null;
         }
-        return (HierarchicalDataProvider<T, ?>) dataProvider;
+        return (HierarchicalDataProvider<T, ?>) super.getDataProvider();
+    }
+
+    @Override
+    protected void doReadDesign(Element design, DesignContext context) {
+        super.doReadDesign(design, context);
+        Attributes attrs = design.attributes();
+        if (attrs.hasKey("hierarchy-column")) {
+            setHierarchyColumn(DesignAttributeHandler
+                    .readAttribute("hierarchy-column", attrs, String.class));
+        }
+    }
+
+    @Override
+    protected void readData(Element body,
+            List<DeclarativeValueProvider<T>> providers) {
+        getSelectionModel().deselectAll();
+        List<T> selectedItems = new ArrayList<>();
+        HierarchyData<T> data = new HierarchyData<T>();
+
+        for (Element row : body.children()) {
+            T item = deserializeDeclarativeRepresentation(row.attr("item"));
+            T parent = null;
+            if (row.hasAttr("parent")) {
+                parent = deserializeDeclarativeRepresentation(
+                        row.attr("parent"));
+            }
+            data.addItem(parent, item);
+            if (row.hasAttr("selected")) {
+                selectedItems.add(item);
+            }
+            Elements cells = row.children();
+            int i = 0;
+            for (Element cell : cells) {
+                providers.get(i).addValue(item, cell.html());
+                i++;
+            }
+        }
+
+        setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+        selectedItems.forEach(getSelectionModel()::select);
+    }
+
+    @Override
+    protected void doWriteDesign(Element design, DesignContext designContext) {
+        super.doWriteDesign(design, designContext);
+        if (getColumnByInternalId(getState(false).hierarchyColumnId) != null) {
+            String hierarchyColumn = getColumnByInternalId(
+                    getState(false).hierarchyColumnId).getId();
+            DesignAttributeHandler.writeAttribute("hierarchy-column",
+                    design.attributes(), hierarchyColumn, null, String.class,
+                    designContext);
+        }
+    }
+
+    @Override
+    protected void writeData(Element body, DesignContext designContext) {
+        getDataProvider().fetch(new HierarchicalQuery<>(null, null))
+                .forEach(item -> writeRow(body, item, null, designContext));
+    }
+
+    private void writeRow(Element container, T item, T parent,
+            DesignContext context) {
+        Element tableRow = container.appendElement("tr");
+        tableRow.attr("item", serializeDeclarativeRepresentation(item));
+        if (parent != null) {
+            tableRow.attr("parent", serializeDeclarativeRepresentation(parent));
+        }
+        if (getSelectionModel().isSelected(item)) {
+            tableRow.attr("selected", "");
+        }
+        for (Column<T, ?> column : getColumns()) {
+            Object value = column.getValueProvider().apply(item);
+            tableRow.appendElement("td")
+                    .append(Optional.ofNullable(value).map(Object::toString)
+                            .map(DesignFormatter::encodeForTextNode)
+                            .orElse(""));
+        }
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item))
+                .forEach(childItem -> writeRow(container, childItem, item,
+                        context));
     }
 
     @Override

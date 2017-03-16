@@ -31,8 +31,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.UI;
 
 /**
- * {@link DataProvider} wrapper for {@link Collection}s. This class does not
- * actually handle the {@link Query} parameters.
+ * {@link DataProvider} wrapper for {@link Collection}s.
  *
  * @param <T>
  *            data type
