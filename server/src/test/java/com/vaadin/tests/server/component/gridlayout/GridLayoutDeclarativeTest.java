@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -37,7 +38,7 @@ public class GridLayoutDeclarativeTest
 
     @Test
     public void testMargins() {
-        testMargins("vaadin-grid-layout", false);
+        testMargins("vaadin-grid-layout", new MarginInfo(false));
     }
 
     @Test
