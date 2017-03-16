@@ -1121,6 +1121,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * based on the row item.
          *
          * @return the value provider function
+         *
+         * @since 8.0.3
          */
         public SerializableFunction<T, ? extends V> getValueProvider() {
             return valueProvider;
@@ -1822,6 +1824,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param renderer
          *            the new renderer
          * @return this column
+         *
+         * @since 8.0.3
          */
         public Column<T, V> setRenderer(Renderer<? super V> renderer) {
             Objects.requireNonNull(renderer, "Renderer can't be null");
@@ -2199,6 +2203,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param propertySet
      *            the property set to use
+     *
+     * @since 8.0.3
      */
     protected void setPropertySet(PropertySet<T> propertySet) {
         Objects.requireNonNull(propertySet, "propertySet cannot be null");
@@ -2294,6 +2300,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @return the used bean type or <code>null</code> if no bean type has been
      *         defined
+     *
+     * @since 8.0.3
      */
     public Class<T> getBeanType() {
         return beanType;
@@ -2417,6 +2425,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param renderer
      *            the renderer
      * @return a new column instance
+     *
+     * @since 8.0.3
      */
     protected <V> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
             AbstractRenderer<? super T, ? super V> renderer) {
@@ -3726,6 +3736,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param beanTypeClassName
      *            the fully qualified class name of the bean type
+     *
+     * @since 8.0.3
      */
     @SuppressWarnings("unchecked")
     protected void setBeanType(String beanTypeClassName) {
@@ -3743,6 +3755,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param beanType
      *            the bean type class
+     *
+     * @since 8.0.3
      */
     protected void setBeanType(Class<T> beanType) {
         this.beanType = beanType;
