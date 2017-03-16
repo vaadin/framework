@@ -29,6 +29,7 @@ import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 import com.vaadin.ui.GridDragSourceExtension;
 
@@ -83,8 +84,7 @@ public class GridDragSourceExtensionConnector extends
 
             // Set drag data in DataTransfer object
             ((NativeEvent) event).getDataTransfer()
-                    .setData(GridDragSourceExtensionState.DATA_TYPE_DRAG_DATA,
-                            dragData.toJson());
+                    .setData(DragSourceState.DATA_TYPE_TEXT, dragData.toJson());
         }
     }
 

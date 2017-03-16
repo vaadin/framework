@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.extensions;
 
-import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -42,7 +41,7 @@ import elemental.events.EventTarget;
 @Connect(DropTargetExtension.class)
 public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
-    private static final String CLASS_DRAG_OVER = "v-drag-over";
+    protected static final String CLASS_DRAG_OVER = "v-drag-over";
 
     // Create event listeners
     private final EventListener dragEnterListener = this::onDragEnter;
@@ -59,35 +58,46 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dropTargetWidget = ((ComponentConnector) target).getWidget();
 
-        EventTarget dropTarget = getDropTargetElement().cast();
+        addDropListeners(getDropTargetElement());
+    }
 
-        // dragenter event
-        dropTarget.addEventListener(BrowserEvents.DRAGENTER, dragEnterListener);
+    /**
+     * Adds dragenter, dragover, dragleave and drop event listeners to the given
+     * DOM element.
+     *
+     * @param element
+     *         DOM element to attach event listeners to.
+     */
+    protected void addDropListeners(Element element) {
+        EventTarget target = element.cast();
 
-        // dragover event
-        dropTarget.addEventListener(BrowserEvents.DRAGOVER, dragOverListener);
+        target.addEventListener(Event.DRAGENTER, dragEnterListener);
+        target.addEventListener(Event.DRAGOVER, dragOverListener);
+        target.addEventListener(Event.DRAGLEAVE, dragLeaveListener);
+        target.addEventListener(Event.DROP, dropListener);
+    }
 
-        // dragleave event
-        dropTarget.addEventListener(BrowserEvents.DRAGLEAVE, dragLeaveListener);
+    /**
+     * Removes dragenter, dragover, dragleave and drop event listeners from the
+     * given DOM element.
+     *
+     * @param element
+     *         DOM element to remove event listeners from.
+     */
+    protected void removeDropListeners(Element element) {
+        EventTarget target = element.cast();
 
-        // drop event
-        dropTarget.addEventListener(BrowserEvents.DROP, dropListener);
+        target.removeEventListener(Event.DRAGENTER, dragEnterListener);
+        target.removeEventListener(Event.DRAGOVER, dragOverListener);
+        target.removeEventListener(Event.DRAGLEAVE, dragLeaveListener);
+        target.removeEventListener(Event.DROP, dropListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        EventTarget dropTarget = getDropTargetElement().cast();
-
-        // Remove listeners
-        dropTarget.removeEventListener(BrowserEvents.DRAGENTER,
-                dragEnterListener);
-        dropTarget.removeEventListener(BrowserEvents.DRAGOVER,
-                dragOverListener);
-        dropTarget.removeEventListener(BrowserEvents.DRAGLEAVE,
-                dragLeaveListener);
-        dropTarget.removeEventListener(BrowserEvents.DROP, dropListener);
+        removeDropListeners(getDropTargetElement());
     }
 
     /**
@@ -107,7 +117,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragEnter(Event event) {
-        addTargetIndicator(getDropTargetElement());
+        addTargetIndicator(event);
     }
 
     /**
@@ -126,6 +136,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                                 .valueOf(getState().dropEffect.name()));
             }
 
+            // Add drop target indicator in case the element doesn't have one
+            addTargetIndicator(event);
+
             // Prevent default to allow drop
             nativeEvent.preventDefault();
             nativeEvent.stopPropagation();
@@ -135,7 +148,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                     .setDropEffect(DataTransfer.DropEffect.NONE);
 
             // Remove drop target indicator
-            removeTargetIndicator(getDropTargetElement());
+            removeTargetIndicator(event);
         }
     }
 
@@ -164,7 +177,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragLeave(Event event) {
-        removeTargetIndicator(getDropTargetElement());
+        removeTargetIndicator(event);
     }
 
     /**
@@ -182,10 +195,10 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             String dataTransferText = nativeEvent.getDataTransfer().getData(
                     DragSourceState.DATA_TYPE_TEXT);
 
-            getRpcProxy(DropTargetRpc.class).drop(dataTransferText);
+            sendDropEventToServer(dataTransferText, event);
         }
 
-        removeTargetIndicator(getDropTargetElement());
+        removeTargetIndicator(event);
     }
 
     private boolean dropAllowed(NativeEvent event) {
@@ -197,12 +210,40 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         return true;
     }
 
-    private void addTargetIndicator(Element element) {
-        element.addClassName(CLASS_DRAG_OVER);
+    /**
+     * Initiates a server RPC for the drop event.
+     *
+     * @param dataTransferText
+     *         Client side textual data that can be set for the drag source and
+     *         is transferred to the drop target.
+     * @param dropEvent
+     *         Client side drop event.
+     */
+    protected void sendDropEventToServer(String dataTransferText,
+            Event dropEvent) {
+        getRpcProxy(DropTargetRpc.class).drop(dataTransferText);
     }
 
-    private void removeTargetIndicator(Element element) {
-        element.removeClassName(CLASS_DRAG_OVER);
+    /**
+     * Add class that indicates that the component is a target.
+     *
+     * @param event
+     *         The drag enter or dragover event that triggered the indication.
+     */
+    protected void addTargetIndicator(Event event) {
+        getDropTargetElement().addClassName(CLASS_DRAG_OVER);
+    }
+
+    /**
+     * Remove the drag target indicator class name from the target element.
+     * <p>
+     * This is triggered on dragleave, drop and dragover events.
+     *
+     * @param event
+     *         the event that triggered the removal of the indicator
+     */
+    protected void removeTargetIndicator(Event event) {
+        getDropTargetElement().removeClassName(CLASS_DRAG_OVER);
     }
 
     private native boolean executeScript(NativeEvent event, String script)/*-{
