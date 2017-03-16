@@ -214,6 +214,8 @@ public abstract class ConnectorBundleLoader {
 
     /**
      * Starts loading the deferred bundle if it hasn't already been started.
+     *
+     * @since 8.0.3
      */
     public void ensureDeferredBundleLoaded() {
         if (!isBundleLoaded(DEFERRED_BUNDLE_NAME)) {
@@ -242,6 +244,8 @@ public abstract class ConnectorBundleLoader {
      * This method is intended for testing the loading mechanism.
      *
      * @return a list of bundles, not <code>null</code>
+     *
+     * @since 8.0.3
      */
     public List<String> getLoadedBundles() {
         ArrayList<String> bundles = new ArrayList<>();

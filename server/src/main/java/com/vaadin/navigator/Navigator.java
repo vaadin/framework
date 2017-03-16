@@ -993,6 +993,8 @@ public class Navigator implements Serializable {
      * @param state
      *            state string
      * @return suitable provider
+     *
+     * @since 8.0.3
      */
     protected ViewProvider getViewProvider(String state) {
         String longestViewName = null;
