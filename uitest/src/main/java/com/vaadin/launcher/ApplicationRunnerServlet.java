@@ -337,7 +337,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     private static String findLastModifiedApplication() {
         String lastModifiedClassName = null;
 
-        File uitestDir = new File("uitest/src");
+        File uitestDir = new File("src/main/java");
         if (uitestDir.isDirectory()) {
             LinkedList<File> stack = new LinkedList<>();
             stack.add(uitestDir);
@@ -358,7 +358,6 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                             lastModifiedTimestamp = file.lastModified();
                             lastModifiedClassName = className;
                         }
-
                     }
                 }
             }
