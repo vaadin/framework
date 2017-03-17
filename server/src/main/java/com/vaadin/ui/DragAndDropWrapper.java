@@ -33,6 +33,8 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dnd.DragSourceExtension;
+import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable;
@@ -44,7 +46,13 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperState;
 import com.vaadin.ui.declarative.DesignContext;
 
+/**
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DragSourceExtension} and
+ *             {@link DropTargetExtension}.
+ */
 @SuppressWarnings("serial")
+@Deprecated
 public class DragAndDropWrapper extends CustomComponent
         implements DropTarget, DragSource, LegacyComponent {
 
