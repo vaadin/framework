@@ -1,0 +1,95 @@
+---
+title: TreeGrid
+order: 25
+layout: page
+---
+
+[[components.treegrid]]
+= TreeGrid
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/treegrid"]
+endif::web[]
+
+IMPORTANT: The [classname]#TreeGrid# component is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha1.
+
+[[components.treegrid.overview]]
+== Overview
+
+[classname]#TreeGrid# is for displaying hierarchical tabular data laid out in rows and columns.
+It is otherwise identical to the [classname]#Grid# component, but it adds the possibility to show
+hierarchical data, allowing the user to expand and collapse nodes to show or hide data.
+
+See the documentation for <<dummy/../../../framework/components/components-grid.asciidoc#components.grid,"Grid">> for all the shared features between [classname]#Grid# and [classname]#TreeGrid#.
+
+[[figure.components.treegrid.basic]]
+.A [classname]#TreeGrid#
+image::img/tree-grid-basic.png[width=70%, scaledwidth=100%]
+
+[[components.treegrid.data]]
+== Binding to Data
+
+[classname]#TreeGrid# is used by binding it to a hierarchical data provider. The data provider can be based on in-memory or back end data. For in-memory data, the [classname]#InMemoryHierarchicalDataProvider# can be used, and for loading data from a back end, you need to implement three methods from the [interfacename]#HierarchicalDataProvider# interface. Usage of both data providers is described in
+<<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
+
+Populating a [classname]#TreeGrid# with in-memory data can be done as follows
+
+[source, java]
+----
+Project rootProject = getRootRroject();
+
+HierarchyData<Project> data = new HierarchyData<>();
+// add a root level item with null parent
+data.addItem(null, rootProject);
+
+// Add all children for root item
+rootProject.flattened().forEach(
+       project -> data.addItems(project, project.getSubProjects()));
+
+TreeGrid<Project> treeGrid = new TreeGrid<>();
+treeGrid.setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+
+// the first column gets the hierarchy indicator by default
+treeGrid.addColumn(Project::getName).setCaption("Project Name");
+treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
+treeGrid.addColumn(Project::getdLastModified).setCaption("Last Modified");
+----
+
+The [classname]#HierarchyData# class can be used to build the hierarchical data structure,
+and it can then be passed on to [classname]#InMemoryHierarchicalDataProvider#. It is simply a hierarchical
+collection, that the data provider uses to populate the [classname]#TreeGrid#.
+
+The [methodname]#setItems# method in [classname]#TreeGrid# can be used to set the root level items. Internally
+an [classname]#InMemoryHierarchicalDataProvider# with [classname]#HierarchyData# is used. If at any time you want to modify the in-memory data in the grid, you may do it as follows
+
+[source, java]
+----
+InMemoryHierarchicalDataProvider<Project> dataProvider = (InMemoryHierarchicalDataProvider<Project>) treeGrid.getDataProvider();
+
+HierarchyData<Project> data = dataProvider.getData();
+// add new items
+data.addItem(null, newProject);
+data.addItems(newProject, newProject.getChildren());
+
+// after adding / removing data, data provider needs to be refreshed
+dataProvider.refreshAll();
+----
+
+Note that for adding or removing nodes, you always need to call the [methodname]#refreshAll# method in the data provider you are using. The [methodname]#refreshItem# method can only be used when just the data for that item is updated, but not for updates that add or remove items.
+
+== Changing the Hierarchy Column
+
+By default, the [classname]#TreeGrid# shows the hierarchy indicator by default in the first column of the grid.
+You can change it with with the [methodname]#setHierarchyColumn#, method, that takes as a parameter the column's ID specified with the [methodname]#setId# method in [classname]#Column#.
+
+[source, java]
+----
+// the first column gets the hierarchy indicator by default
+treeGrid.addColumn(Project::getLastModified).setCaption("Last Modified");
+treeGrid.addColumn(Project::getName).setCaption("Project Name").setId("name");
+treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
+
+treeGrid.setHierarchyColumn("name");
+----
+
