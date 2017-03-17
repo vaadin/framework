@@ -45,7 +45,7 @@ The following preferences need to be set to keep the project consistent. You nee
  1. Set *New text file line delimiter* to *Unix*
 1. Go to XML -> XML Files -> Editor
  1. Ensure the settings are follows:
- 
+
   * Line width: 72
   * Format comments: true
   * Join lines: true
@@ -59,7 +59,7 @@ The following preferences need to be set to keep the project consistent. You nee
 1. In a Project Explorer  right-click *vaadin-uitest*
 1. Open *Run As* -> *Maven build...*
 1. Type in <code>jetty:run-exploded</code> into *Goals* and click *Run*
-1. Open URL *http://localhost:8888/run/&lt;testUI&gt;*
+1. Open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
 
 ## Setting up IntelliJ IDEA to Develop Vaadin 7
 
@@ -71,23 +71,22 @@ The following preferences need to be set to keep the project consistent. You nee
 1. Have a coffee break while IDEA is loading dependencies and indexing the project
 1. Run Maven targets <code>clean</code> and <code>install</code> using *Maven Projects* tool window to compile the whole project
 
-## Running a specific UI test
+### Running a specific UI test
 
 1. Open *Maven Projects*
 1. Open *vaadin-uitest* -> *Plugins* -> *jetty* -> *jetty:run-exploded*
-1. Open URL *http://localhost:8888/run/&lt;testUI&gt;*
+1. Open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
 
-## Running a Development Server
+### Running a Development Server
 
 1. Open *Run* menu  and click *Edit Configurations*
-1. Click green ***+*** sign at top left corner, select *Maven* from popup 
+1. Click green ***+*** sign at top left corner, select *Maven* from popup
 1. In the run configuration page, set any name for the configuration, select *vaadin-uitest* project folder as *Working directory*
 1. Type <code>exec:exec@run-development-server</code> into *Command line* and save the configuration
-1. Run the configuration and open URL *http://localhost:8888/run/&lt;testUI&gt;*
+1. Run the configuration and open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
 
-## Running a Development Server in a debug mode
+### Running a Development Server in a debug mode
 
 1. Type <code>exec:exec@debug-development-server</code> into *Command line* and save the configuration
-1. In the same dialog, create new "Remote" debug configuration, using *localhost* and *Port 5005* 
-1. Start both configurations and open URL *http://localhost:8888/run/&lt;testUI&gt;*
-
+1. In the same dialog, create new "Remote" debug configuration, using *localhost* and *Port 5005*
+1. Start both configurations and open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
