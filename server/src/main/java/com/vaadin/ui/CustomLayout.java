@@ -52,6 +52,11 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  *
  * <p>
+ * A location is identified with the attribute "data-location" or "location"
+ * which has the location name as its value.
+ * </p>
+ *
+ * <p>
  * The default theme handles the styles that are not defined by drawing the
  * subcomponents just as in OrderedLayout.
  * </p>
