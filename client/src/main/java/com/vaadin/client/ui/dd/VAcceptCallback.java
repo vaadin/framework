@@ -15,6 +15,15 @@
  */
 package com.vaadin.client.ui.dd;
 
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
+
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement, see
+ *             {@link DropTargetExtensionConnector}
+ */
+@Deprecated
 public interface VAcceptCallback {
 
     /**

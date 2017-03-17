@@ -16,10 +16,16 @@
 package com.vaadin.client.ui.dd;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 
 /**
  * Wrapper for html5 File object.
+ * 
+ * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement currently, see
+ *             {@link DropTargetExtensionConnector}
  */
+@Deprecated
 public class VHtml5File extends JavaScriptObject {
 
     protected VHtml5File() {

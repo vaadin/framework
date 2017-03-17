@@ -20,10 +20,17 @@ import java.util.Iterator;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector}
+ */
+@Deprecated
 public abstract class VAbstractDropHandler implements VDropHandler {
 
     private UIDL criterioUIDL;

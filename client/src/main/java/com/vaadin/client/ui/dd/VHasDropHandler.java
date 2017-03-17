@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 
 /**
  * Used to detect Widget from widget tree that has {@link #getDropHandler()}
@@ -23,7 +24,10 @@ import com.vaadin.client.ComponentConnector;
  * Decide whether to get rid of this class. If so, {@link VAbstractDropHandler}
  * must extend {@link ComponentConnector}.
  *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector}
  */
+@Deprecated
 public interface VHasDropHandler {
     public VDropHandler getDropHandler();
 }
