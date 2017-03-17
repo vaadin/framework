@@ -46,6 +46,8 @@ include::components-twincolselect.asciidoc[leveloffset=+2]
 
 include::components-grid.asciidoc[leveloffset=+2]
 
+include::components-treegrid.asciidoc[leveloffset=+2]
+
 include::components-menubar.asciidoc[leveloffset=+2]
 
 include::components-upload.asciidoc[leveloffset=+2]

@@ -22,7 +22,7 @@ You have full control over how you configure and lay out the individual input fi
 There are UI components in the framework that lists multiple similar objects and lets the user view, select and in some cases even edit those objects.
 A listing component can get its data from an in-memory collection or lazily fetch it from some backend.
 In either case, there are options available for defining how the data is sorted and filtered before being displayed to the user.
-Read more about how to provide lists of data to these components in <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers,"Showing Many Items in a Listing">>.
+Read more about how to provide lists of data to these components in <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers,"Showing Many Items in a Listing">>. For using hierarchical data, see <<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
 Using a listing component as an input field to select one or many of the listed items is described in <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting items">>.
 
 Vaadin Data Model topic references::
@@ -30,3 +30,4 @@ Vaadin Data Model topic references::
 * <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
 * <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers,"Showing Many Items in a Listing">>
 * <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting items">>
+* <<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>
