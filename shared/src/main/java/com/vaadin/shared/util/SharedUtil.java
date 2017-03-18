@@ -243,7 +243,7 @@ public class SharedUtil implements Serializable {
      * @param uri
      *            The uri to which the parameters should be added.
      * @param extraParams
-     *            One or more parameters in the format "a=b" or "c=d&e=f". An
+     *            One or more parameters in the format "a=b" or "c=d&amp;e=f". An
      *            empty string is allowed but will not modify the url.
      * @return The modified URI with the get parameters in extraParams added.
      */
