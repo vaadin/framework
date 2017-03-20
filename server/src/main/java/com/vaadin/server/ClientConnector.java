@@ -223,7 +223,7 @@ public interface ClientConnector extends Connector {
      * Notifies the connector that it is connected to a VaadinSession (and
      * therefore also to a UI).
      * <p>
-     * The caller of this method is {@link #setParent(ClientConnector)} if the
+     * The caller of this method is {@link Connector#setParent(ClientConnector)} if the
      * parent is itself already attached to the session. If not, the parent will
      * call the {@link #attach()} for all its children when it is attached to
      * the session. This method is always called before the connector's data is
