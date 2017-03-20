@@ -56,7 +56,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
         createDataProviderSelect();
         createHierarchyColumnSelect();
-        createCollapseDisabledSelect();
+        createCollapseAllowedSelect();
     }
 
     private void initializeDataProviders() {
@@ -105,15 +105,15 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                 (treeGrid, value, data) -> treeGrid.setHierarchyColumn(value));
     }
 
-    private void createCollapseDisabledSelect() {
+    private void createCollapseAllowedSelect() {
         LinkedHashMap<String, SerializablePredicate<HierarchicalTestBean>> options = new LinkedHashMap<>();
-        options.put("all enabled", t -> true);
+        options.put("all allowed", t -> true);
         options.put("all disabled", t -> false);
         options.put("depth 0 disabled", t -> t.getDepth() != 0);
         options.put("depth 1 disabled", t -> t.getDepth() != 1);
 
-        createSelectAction("Collapse disabled", CATEGORY_FEATURES, options,
-                "all enabled", (treeGrid, value, data) -> treeGrid
+        createSelectAction("Collapse allowed", CATEGORY_FEATURES, options,
+                "all allowed", (treeGrid, value, data) -> treeGrid
                         .setItemCollapseAllowedProvider(value));
     }
 
