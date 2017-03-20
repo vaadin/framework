@@ -54,7 +54,7 @@ import com.vaadin.ui.renderers.Renderer;
  */
 public class TreeGrid<T> extends Grid<T> {
 
-    private SerializablePredicate<T> itemCollapseDisabledProvider = t -> false;
+    private SerializablePredicate<T> itemCollapseAllowedProvider = t -> true;
 
     public TreeGrid() {
         super(new HierarchicalDataCommunicator<>());
@@ -71,9 +71,9 @@ public class TreeGrid<T> extends Grid<T> {
             }
         });
         addDataGenerator((item, json) -> {
-            if (itemCollapseDisabledProvider.test(item)) {
-                json.put(TreeGridCommunicationConstants.ROW_COLLAPSE_DISABLED,
-                        true);
+            if (!itemCollapseAllowedProvider.test(item)) {
+                json.put(TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED,
+                        false);
             }
         });
     }
@@ -224,17 +224,16 @@ public class TreeGrid<T> extends Grid<T> {
     }
 
     /**
-     * Sets the item collapse disabled provider for this TreeGrid. The provider
-     * should return {@code true} for any row that should not be collapsed. By
-     * default every row can be collapsed.
+     * Sets the item collapse allowed provider for this TreeGrid. The provider
+     * should return {@code true} for any item that the user can collapse.
      *
      * @param provider
-     *            the item collapse disabled provider, not {@code null}
+     *            the item collapse allowed provider, not {@code null}
      */
-    public void setItemCollapseDisabledProvider(
+    public void setItemCollapseAllowedProvider(
             SerializablePredicate<T> provider) {
         Objects.requireNonNull(provider, "Provider can't be null");
-        itemCollapseDisabledProvider = provider;
+        itemCollapseAllowedProvider = provider;
         // Redraw
         getDataCommunicator().reset();
     }

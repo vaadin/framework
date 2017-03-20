@@ -138,7 +138,7 @@ public class TreeGridConnector extends GridConnector {
                                     ClickableRenderer.RendererClickEvent<JsonObject> event) {
                                 try {
                                     if (!isCollapsed(event.getRow())
-                                            && isCollapseDisabled(
+                                            && !isCollapseAllowed(
                                                     event.getRow())) {
                                         return;
                                     }
@@ -167,9 +167,10 @@ public class TreeGridConnector extends GridConnector {
                 new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
     }
 
-    protected boolean isCollapseDisabled(JsonObject row) {
-        String key = TreeGridCommunicationConstants.ROW_COLLAPSE_DISABLED;
-        return row.hasKey(key) && row.getBoolean(key);
+    protected boolean isCollapseAllowed(JsonObject row) {
+        String key = TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED;
+        // By default collapsing is allowed
+        return row.hasKey(key) ? row.getBoolean(key) : true;
     }
 
     @Override
