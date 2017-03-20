@@ -17,6 +17,7 @@
 package com.vaadin.v7.ui;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -39,6 +40,7 @@ import com.vaadin.ui.DateTimeField;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.util.TimeZoneUtil;
 import com.vaadin.v7.data.Buffered;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Validator;
@@ -138,6 +140,8 @@ public class DateField extends AbstractField<Date> implements
      * Overridden format string
      */
     private String dateFormat;
+
+    private ZoneId zoneId;
 
     private boolean lenient = false;
 
@@ -265,6 +269,13 @@ public class DateField extends AbstractField<Date> implements
 
         if (getDateFormat() != null) {
             target.addAttribute("format", dateFormat);
+        }
+
+        if (getZoneId() != null) {
+            String timeZoneJSON = TimeZoneUtil.toJSON(getZoneId(), getLocale());
+            if (timeZoneJSON != null) {
+                target.addAttribute("timeZoneJSON", timeZoneJSON);
+            }
         }
 
         if (!isLenient()) {
@@ -899,6 +910,30 @@ public class DateField extends AbstractField<Date> implements
     public void setLenient(boolean lenient) {
         this.lenient = lenient;
         markAsDirty();
+    }
+
+    /**
+     * Sets the {@link ZoneId}, which is used when {@code z} is included inside the
+     * {@link #setDateFormat(String)}.
+     *
+     * @param zoneId
+     *            the zone id
+     * @since 8.0.4
+     */
+    public void setZoneId(ZoneId zoneId) {
+        this.zoneId = zoneId;
+        markAsDirty();
+    }
+
+    /**
+     * Returns the {@link ZoneId}, which is used when {@code z} is included inside the
+     * {@link #setDateFormat(String)}.
+     *
+     * @return the zoneId
+     * @since 8.0.4
+     */
+    public ZoneId getZoneId() {
+        return zoneId;
     }
 
     /**

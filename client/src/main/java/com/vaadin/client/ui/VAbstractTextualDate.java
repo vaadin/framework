@@ -66,6 +66,9 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /** For internal use only. May be removed or replaced in the future. */
     public String formatStr;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    public String timeZoneJSON;
+
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
         text = new TextBox();
@@ -150,7 +153,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         Date currentDate = getDate();
         if (currentDate != null) {
             dateText = getDateTimeService().formatDate(currentDate,
-                    getFormatString());
+                    getFormatString(), timeZoneJSON);
         } else {
             dateText = "";
         }
@@ -193,7 +196,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                     // FIXME: Add a description/example here of when this is
                     // needed
                     text.setValue(getDateTimeService().formatDate(getDate(),
-                            getFormatString()), false);
+                            getFormatString(), timeZoneJSON), false);
                 }
 
                 // remove possibly added invalid value indication

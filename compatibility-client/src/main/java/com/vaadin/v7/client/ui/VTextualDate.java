@@ -56,6 +56,9 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
     public String formatStr;
 
     /** For internal use only. May be removed or replaced in the future. */
+    public String timeZoneJSON;
+
+    /** For internal use only. May be removed or replaced in the future. */
     public boolean lenient;
 
     private static final String CLASSNAME_PROMPT = "prompt";
@@ -203,7 +206,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         Date currentDate = getDate();
         if (currentDate != null) {
             dateText = getDateTimeService().formatDate(currentDate,
-                    getFormatString());
+                    getFormatString(), timeZoneJSON);
         } else {
             dateText = "";
         }
@@ -255,7 +258,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     // FIXME: Add a description/example here of when this is
                     // needed
                     text.setValue(getDateTimeService().formatDate(getDate(),
-                            getFormatString()), false);
+                            getFormatString(), timeZoneJSON), false);
                 }
 
                 // remove possibly added invalid value indication

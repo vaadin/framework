@@ -37,6 +37,9 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
         if (uidl.hasAttribute("format")) {
             getWidget().formatStr = uidl.getStringAttribute("format");
         }
+        if (uidl.hasAttribute("timeZoneJSON")) {
+            getWidget().timeZoneJSON = uidl.getStringAttribute("timeZoneJSON");
+        }
 
         getWidget().inputPrompt = uidl
                 .getStringAttribute(VTextualDate.ATTR_INPUTPROMPT);

@@ -46,6 +46,9 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
         if (uidl.hasAttribute("format")) {
             getWidget().formatStr = uidl.getStringAttribute("format");
         }
+        if (uidl.hasAttribute("timeZoneJSON")) {
+            getWidget().timeZoneJSON = uidl.getStringAttribute("timeZoneJSON");
+        }
 
         getWidget().lenient = !uidl.getBooleanAttribute("strict");
 
