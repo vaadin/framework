@@ -212,6 +212,10 @@ public class VCustomLayout extends ComplexPanel {
             final String location = elem.getAttribute("location");
             locationToElement.put(location, elem);
             elem.setInnerHTML("");
+        } else if (elem.hasAttribute("data-location")) {
+            final String location = elem.getAttribute("data-location");
+            locationToElement.put(location, elem);
+            elem.setInnerHTML("");
         } else {
             final int len = DOM.getChildCount(elem);
             for (int i = 0; i < len; i++) {
