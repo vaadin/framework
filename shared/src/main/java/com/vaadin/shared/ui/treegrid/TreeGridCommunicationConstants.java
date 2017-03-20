@@ -17,10 +17,12 @@ package com.vaadin.shared.ui.treegrid;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.ui.grid.GridState;
+
 /**
  * Set of contants used by TreeGrid. These are commonly used JsonObject keys
  * which are considered to be reserved for internal use.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
  */
@@ -29,4 +31,10 @@ public class TreeGridCommunicationConstants implements Serializable {
     public static final String ROW_DEPTH = "d";
     public static final String ROW_COLLAPSED = "c";
     public static final String ROW_LEAF = "l";
+
+    /**
+     * This key is close to the {@link GridState#JSONKEY_CELLDESCRIPTION}. Upper
+     * case character used to make a difference.
+     */
+    public static final String ROW_COLLAPSE_DISABLED = "cD";
 }

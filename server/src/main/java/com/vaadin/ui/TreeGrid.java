@@ -33,14 +33,15 @@ import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
-
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -52,6 +53,8 @@ import com.vaadin.ui.renderers.Renderer;
  *            the grid bean type
  */
 public class TreeGrid<T> extends Grid<T> {
+
+    private SerializablePredicate<T> itemCollapseDisabledProvider = t -> false;
 
     public TreeGrid() {
         super(new HierarchicalDataCommunicator<>());
@@ -65,6 +68,12 @@ public class TreeGrid<T> extends Grid<T> {
                 } else {
                     getDataCommunicator().doExpand(rowKey, rowIndex);
                 }
+            }
+        });
+        addDataGenerator((item, json) -> {
+            if (itemCollapseDisabledProvider.test(item)) {
+                json.put(TreeGridCommunicationConstants.ROW_COLLAPSE_DISABLED,
+                        true);
             }
         });
     }
@@ -214,6 +223,22 @@ public class TreeGrid<T> extends Grid<T> {
         getState().hierarchyColumnId = getInternalIdForColumn(getColumn(id));
     }
 
+    /**
+     * Sets the item collapse disabled provider for this TreeGrid. The provider
+     * should return {@code true} for any row that should not be collapsed. By
+     * default every row can be collapsed.
+     *
+     * @param provider
+     *            the item collapse disabled provider, not {@code null}
+     */
+    public void setItemCollapseDisabledProvider(
+            SerializablePredicate<T> provider) {
+        Objects.requireNonNull(provider, "Provider can't be null");
+        itemCollapseDisabledProvider = provider;
+        // Redraw
+        getDataCommunicator().reset();
+    }
+
     @Override
     protected TreeGridState getState() {
         return (TreeGridState) super.getState();
@@ -312,9 +337,8 @@ public class TreeGrid<T> extends Grid<T> {
                             .map(DesignFormatter::encodeForTextNode)
                             .orElse(""));
         }
-        getDataProvider().fetch(new HierarchicalQuery<>(null, item))
-                .forEach(childItem -> writeRow(container, childItem, item,
-                        context));
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item)).forEach(
+                childItem -> writeRow(container, childItem, item, context));
     }
 
     @Override
