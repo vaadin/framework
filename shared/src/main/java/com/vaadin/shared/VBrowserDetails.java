@@ -566,7 +566,8 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isTooOldToFunctionProperly() {
         // Check Trident version to detect compatibility mode
-        if (isIE() && getBrowserMajorVersion() < 11) {
+        if (isIE() && getBrowserMajorVersion() < 11
+                && getBrowserEngineVersion() < 7) {
             return true;
         }
         // Webkit 533 in Safari 4.1+, Android 2.2+, iOS 4+
