@@ -106,6 +106,7 @@ public class VFlash extends HTML {
 
     @Override
     public void setWidth(String width) {
+        // explicitly not calling super here
         if (this.width != width) {
             this.width = width;
             needsRebuild = true;
@@ -114,6 +115,7 @@ public class VFlash extends HTML {
 
     @Override
     public void setHeight(String height) {
+        // explicitly not calling super here
         if (this.height != height) {
             this.height = height;
             needsRebuild = true;
@@ -135,6 +137,18 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * Set dimensions of the containing layout slot so that the size of the
+     * embed object can be calculated from percentages if needed.
+     *
+     * Triggers embed resizing if percentage sizes are in use.
+     *
+     * @since
+     * @param slotOffsetHeight
+     *            offset height of the layout slot
+     * @param slotOffsetWidth
+     *            offset width of the layout slot
+     */
     public void setSlotHeightAndWidth(int slotOffsetHeight,
             int slotOffsetWidth) {
         this.slotOffsetHeight = slotOffsetHeight;
@@ -269,7 +283,7 @@ public class VFlash extends HTML {
         return html.toString();
     }
 
-    protected void resizeEmbedElement() {
+    private void resizeEmbedElement() {
         // find <embed> element
         com.google.gwt.dom.client.Element objectElem = getElement()
                 .getFirstChildElement();
@@ -291,17 +305,15 @@ public class VFlash extends HTML {
 
     }
 
-    protected String getRelativePixelWidth() {
-        double percent = Double
-                .parseDouble(width.substring(0, width.indexOf('%')));
-        int widthInPixels = (int) (percent / 100) * slotOffsetWidth;
+    private String getRelativePixelWidth() {
+        float relative = WidgetUtil.parseRelativeSize(width);
+        int widthInPixels = (int) (relative / 100) * slotOffsetWidth;
         return widthInPixels + "px";
     }
 
-    protected String getRelativePixelHeight() {
-        double percent = Double
-                .parseDouble(height.substring(0, height.indexOf('%')));
-        int heightInPixels = (int) (percent / 100) * slotOffsetHeight;
+    private String getRelativePixelHeight() {
+        float relative = WidgetUtil.parseRelativeSize(height);
+        int heightInPixels = (int) (relative / 100) * slotOffsetHeight;
         return heightInPixels + "px";
     }
 
