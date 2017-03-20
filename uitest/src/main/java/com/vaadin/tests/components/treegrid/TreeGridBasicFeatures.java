@@ -114,7 +114,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
         createSelectAction("Collapse disabled", CATEGORY_FEATURES, options,
                 "all enabled", (treeGrid, value, data) -> treeGrid
-                        .setItemCollapseDisabledProvider(value));
+                        .setItemCollapseAllowedProvider(value));
     }
 
     static class HierarchicalTestBean {
