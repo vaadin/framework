@@ -136,11 +136,20 @@ public class TreeGridConnector extends GridConnector {
                             @Override
                             public void onClick(
                                     ClickableRenderer.RendererClickEvent<JsonObject> event) {
-                                toggleCollapse(getRowKey(event.getRow()),
-                                        event.getCell().getRowIndex(),
-                                        !isCollapsed(event.getRow()));
-                                event.stopPropagation();
-                                event.preventDefault();
+                                try {
+                                    if (!isCollapsed(event.getRow())
+                                            && isCollapseDisabled(
+                                                    event.getRow())) {
+                                        return;
+                                    }
+
+                                    toggleCollapse(getRowKey(event.getRow()),
+                                            event.getCell().getRowIndex(),
+                                            !isCollapsed(event.getRow()));
+                                } finally {
+                                    event.stopPropagation();
+                                    event.preventDefault();
+                                }
                             }
                         });
 
@@ -158,6 +167,11 @@ public class TreeGridConnector extends GridConnector {
                 new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
     }
 
+    protected boolean isCollapseDisabled(JsonObject row) {
+        String key = TreeGridCommunicationConstants.ROW_COLLAPSE_DISABLED;
+        return row.hasKey(key) && row.getBoolean(key);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();
@@ -169,7 +183,7 @@ public class TreeGridConnector extends GridConnector {
             GridEventHandler<?> eventHandler)
     /*-{
         var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-    
+
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
     }-*/;

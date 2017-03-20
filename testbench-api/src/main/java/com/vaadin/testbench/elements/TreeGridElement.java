@@ -97,8 +97,8 @@ public class TreeGridElement extends GridElement {
     public boolean isRowExpanded(int rowIndex, int hierarchyColumnIndex) {
         WebElement expandElement = getExpandElement(rowIndex,
                 hierarchyColumnIndex);
-        return expandElement.getAttribute("expanded") != null
-                && expandElement.getAttribute("collapsed") == null;
+        String classes = expandElement.getAttribute("class");
+        return classes.contains("expanded") && !classes.contains("collapsed");
     }
 
     /**
@@ -111,10 +111,7 @@ public class TreeGridElement extends GridElement {
      * @return {@code true} if collapsed, {@code false} if expanded
      */
     public boolean isRowCollapsed(int rowIndex, int hierarchyColumnIndex) {
-        WebElement expandElement = getExpandElement(rowIndex,
-                hierarchyColumnIndex);
-        return expandElement.getAttribute("collapsed") != null
-                && expandElement.getAttribute("expanded") == null;
+        return !isRowExpanded(rowIndex, hierarchyColumnIndex);
     }
 
     /**
