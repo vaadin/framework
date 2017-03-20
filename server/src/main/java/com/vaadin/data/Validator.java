@@ -31,8 +31,8 @@ import com.vaadin.server.SerializablePredicate;
  * For instance, the following validator checks if a number is positive:
  *
  * <pre>
- * Validator&lt;Integer&gt; v = num -> {
- *     if (num >= 0)
+ * Validator&lt;Integer&gt; v = num -&gt; {
+ *     if (num &gt;= 0)
  *         return ValidationResult.ok();
  *     else
  *         return ValidationResult.error("number must be positive");
@@ -87,7 +87,7 @@ public interface Validator<T>
      * 10, inclusive:
      *
      * <pre>
-     * Validator&lt;Integer&gt; v = Validator.from(num -> num >= 0 && num <= 10,
+     * Validator&lt;Integer&gt; v = Validator.from(num -&gt; num &gt;= 0 && num &lt;= 10,
      *         "number must be between 0 and 10");
      * </pre>
      *
