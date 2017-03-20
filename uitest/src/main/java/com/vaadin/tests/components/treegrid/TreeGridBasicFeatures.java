@@ -107,10 +107,10 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
     private void createCollapseDisabledSelect() {
         LinkedHashMap<String, SerializablePredicate<HierarchicalTestBean>> options = new LinkedHashMap<>();
-        options.put("all enabled", t -> false);
-        options.put("all disabled", t -> true);
-        options.put("depth 0 disabled", t -> t.getDepth() == 0);
-        options.put("depth 1 disabled", t -> t.getDepth() == 1);
+        options.put("all enabled", t -> true);
+        options.put("all disabled", t -> false);
+        options.put("depth 0 disabled", t -> t.getDepth() != 0);
+        options.put("depth 1 disabled", t -> t.getDepth() != 1);
 
         createSelectAction("Collapse disabled", CATEGORY_FEATURES, options,
                 "all enabled", (treeGrid, value, data) -> treeGrid
