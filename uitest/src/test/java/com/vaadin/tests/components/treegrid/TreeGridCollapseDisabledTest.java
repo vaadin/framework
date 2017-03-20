@@ -24,7 +24,7 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
 
     @Test
     public void collapse_disabled_for_all() {
-        selectMenuPath("Component", "Features", "Collapse disabled",
+        selectMenuPath("Component", "Features", "Collapse allowed",
                 "all disabled");
 
         // Assert first and second row can be expanded, but not collapsed
@@ -37,7 +37,7 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
 
     @Test
     public void collapse_disabled_for_depth0() {
-        selectMenuPath("Component", "Features", "Collapse disabled",
+        selectMenuPath("Component", "Features", "Collapse allowed",
                 "depth 0 disabled");
 
         // Assert first row expands
@@ -53,7 +53,7 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
 
     @Test
     public void collapse_disabled_for_depth1() {
-        selectMenuPath("Component", "Features", "Collapse disabled",
+        selectMenuPath("Component", "Features", "Collapse allowed",
                 "depth 1 disabled");
 
         // Assert first row expands
@@ -74,7 +74,7 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
      */
     @Test
     public void json_for_cell_description_not_overridden() {
-        selectMenuPath("Component", "Features", "Collapse disabled",
+        selectMenuPath("Component", "Features", "Collapse allowed",
                 "depth 0 disabled");
 
         // Test that cell description works
