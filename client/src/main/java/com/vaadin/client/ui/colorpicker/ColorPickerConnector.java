@@ -27,8 +27,8 @@ import com.vaadin.ui.ColorPicker;
 
 /**
  * A class that defines default implementation for a color picker connector.
- * Connects the server side {@link com.vaadin.ui.ColorPicker} with the client
- * side counterpart {@link VColorPicker}
+ * Connects the server side {@link ColorPicker} with the client side counterpart
+ * {@link VColorPicker}
  *
  * @since 7.0.0
  */

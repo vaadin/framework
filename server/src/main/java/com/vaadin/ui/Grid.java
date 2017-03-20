@@ -134,10 +134,9 @@ import elemental.json.JsonValue;
  * <p>
  * Each column has its own {@link Renderer} that displays data into something
  * that can be displayed in the browser. That data is first converted with a
- * {@link com.vaadin.data.util.converter.Converter Converter} into something
- * that the Renderer can process. This can also be an implicit step - if a
- * column has a simple data type, like a String, no explicit assignment is
- * needed.
+ * {@link Converter} into something that the Renderer can process. This can also
+ * be an implicit step - if a column has a simple data type, like a String, no
+ * explicit assignment is needed.
  * <p>
  * Usually a renderer takes some kind of object, and converts it into a
  * HTML-formatted string.
@@ -2371,6 +2370,8 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Set<CELLTYPE> cellGroupForCell = getCellGroupForCell(cell);
                     if (cellGroupForCell != null) {
                         removeCellFromGroup(cell, cellGroupForCell);
+                    } else {
+                        cell.detach();
                     }
                     rowState.cells.remove(cell.getCellState());
                 }
@@ -2386,11 +2387,13 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                             CELLTYPE mergedCell = cellGroups.remove(cellGroup);
                             cellGroup.remove(cell);
                             cellGroups.put(cellGroup, mergedCell);
-
                             group.remove(columnId);
                         } else {
+                            // Only one cell remaining in the group, disband it
+                            // The contents of the group if removed
                             rowState.cellGroups.remove(group);
-                            cellGroups.remove(cellGroup);
+                            CELLTYPE mergedCell = cellGroups.remove(cellGroup);
+                            mergedCell.detach();
                         }
                         return;
                     }
@@ -4027,8 +4030,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
          * Getting a field before the editor has been opened depends on special
          * support from the {@link FieldGroup} in use. Using this method with a
          * user-provided <code>FieldGroup</code> might cause
-         * {@link com.vaadin.data.fieldgroup.FieldGroup.BindException
-         * BindException} to be thrown.
+         * {@link FieldGroup.BindException BindException} to be thrown.
          *
          * @return the bound field; or <code>null</code> if the respective
          *         column is not editable
@@ -4245,11 +4247,10 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
     }
 
     /**
-     * An abstract base class for server-side
-     * {@link com.vaadin.ui.renderers.Renderer Grid renderers}. This class
-     * currently extends the AbstractExtension superclass, but this fact should
-     * be regarded as an implementation detail and subject to change in a future
-     * major or minor Vaadin revision.
+     * An abstract base class for server-side {@link Renderer Grid renderers}.
+     * This class currently extends the AbstractExtension superclass, but this
+     * fact should be regarded as an implementation detail and subject to change
+     * in a future major or minor Vaadin revision.
      *
      * @param <T>
      *            the type this renderer knows how to present
@@ -4811,8 +4812,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Type type = null;
                     try {
                         type = (getState(false).getClass()
-                                .getField(diffStateKey)
-                                .getGenericType());
+                                .getField(diffStateKey).getGenericType());
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     } catch (SecurityException e) {
@@ -4852,8 +4852,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
                     Type type = null;
                     try {
                         type = (getState(false).getClass()
-                                .getField(diffStateKey)
-                                .getGenericType());
+                                .getField(diffStateKey).getGenericType());
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     } catch (SecurityException e) {

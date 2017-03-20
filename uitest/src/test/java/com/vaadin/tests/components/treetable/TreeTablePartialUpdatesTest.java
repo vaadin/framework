@@ -28,6 +28,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
 import com.vaadin.testbench.elements.TreeTableElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -49,7 +50,7 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // expand the first root element
         treeTable.getCell(0, 0)
-                .findElement(By.className("v-treetable-treespacer")).click();
+        .findElement(By.className("v-treetable-treespacer")).click();
         treeTable = $(TreeTableElement.class).first();
 
         // wait for the scrollposition element to disappear
@@ -67,7 +68,12 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // scroll far enough down to drop the first row from the cache
         // but not far enough to reach the last row
-        scrollable.scroll(1692);
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            // Chrome 56 requires different scroll position
+            scrollable.scroll(846);
+        } else {
+            scrollable.scroll(1692);
+        }
 
         // wait for the scrollposition element to disappear
         waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
@@ -119,7 +125,7 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // expand the first root element
         treeTable.getCell(0, 0)
-                .findElement(By.className("v-treetable-treespacer")).click();
+        .findElement(By.className("v-treetable-treespacer")).click();
 
         // wait for the scrollposition element to disappear
         waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
@@ -151,7 +157,7 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // expand the second root element
         treeTable.getCell(201, 0)
-                .findElement(By.className("v-treetable-treespacer")).click();
+        .findElement(By.className("v-treetable-treespacer")).click();
 
         // wait for the scrollposition element to disappear
         waitUntilNot(ExpectedConditions.visibilityOfElementLocated(
@@ -168,7 +174,7 @@ public class TreeTablePartialUpdatesTest extends MultiBrowserTest {
 
         // collapse the second root element
         treeTable.getCell(201, 0)
-                .findElement(By.className("v-treetable-treespacer")).click();
+        .findElement(By.className("v-treetable-treespacer")).click();
 
         // wait for the scrollposition element to disappear
         waitUntilNot(ExpectedConditions.visibilityOfElementLocated(

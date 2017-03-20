@@ -18,9 +18,8 @@ package com.vaadin.data.validator;
 import com.vaadin.data.Validator;
 
 /**
- * Abstract {@link com.vaadin.data.Validator Validator} implementation that
- * provides a basic Validator implementation except the
- * {@link #isValidValue(Object)} method.
+ * Abstract {@link Validator} implementation that provides a basic Validator
+ * implementation except the {@link #isValidValue(Object)} method.
  * <p>
  * To include the value that failed validation in the exception message you can
  * use "{0}" in the error message. This will be replaced with the failed value
