@@ -67,6 +67,29 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
         assertCollapseRow(0);
     }
 
+    @Test
+    public void collapse_disabled_mode_change_with_expanded_rows() {
+        // Assert first row expands
+        assertExpandRow(0);
+
+        // Assert second row expands and collapses
+        assertExpandRow(1);
+        assertCollapseRow(1);
+
+        selectMenuPath("Component", "Features", "Collapse allowed",
+                "depth 1 disabled");
+
+        Assert.assertTrue("First row should still be expanded",
+                grid.isRowExpanded(0, 0));
+
+        // Assert second row expands but does not collapse
+        assertExpandRow(1);
+        assertCollapseRowDisabled(1);
+
+        // Assert first row still collapses
+        assertCollapseRow(0);
+    }
+
     private void assertExpandRow(int row) {
         Assert.assertFalse(grid.isRowExpanded(row, 0));
         grid.expandWithClick(row);

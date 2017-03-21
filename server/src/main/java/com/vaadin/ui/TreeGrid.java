@@ -35,7 +35,6 @@ import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -54,8 +53,6 @@ import com.vaadin.ui.renderers.Renderer;
  */
 public class TreeGrid<T> extends Grid<T> {
 
-    private SerializablePredicate<T> itemCollapseAllowedProvider = t -> true;
-
     public TreeGrid() {
         super(new HierarchicalDataCommunicator<>());
 
@@ -68,12 +65,6 @@ public class TreeGrid<T> extends Grid<T> {
                 } else {
                     getDataCommunicator().doExpand(rowKey, rowIndex);
                 }
-            }
-        });
-        addDataGenerator((item, json) -> {
-            if (!itemCollapseAllowedProvider.test(item)) {
-                json.put(TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED,
-                        false);
             }
         });
     }
@@ -229,16 +220,18 @@ public class TreeGrid<T> extends Grid<T> {
      * <p>
      * <strong>Note:</strong> This callback will be accessed often when sending
      * data to the client. The callback should not do any costly operations.
+     * <p>
+     * This method is a shortcut to method with the same name in
+     * {@link HierarchicalDataCommunicator}.
      *
      * @param provider
      *            the item collapse allowed provider, not {@code null}
+     *
+     * @see HierarchicalDataCommunicator#setItemCollapseAllowedProvider(SerializablePredicate)
      */
     public void setItemCollapseAllowedProvider(
             SerializablePredicate<T> provider) {
-        Objects.requireNonNull(provider, "Provider can't be null");
-        itemCollapseAllowedProvider = provider;
-        // Redraw
-        getDataCommunicator().reset();
+        getDataCommunicator().setItemCollapseAllowedProvider(provider);
     }
 
     @Override

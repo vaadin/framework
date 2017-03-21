@@ -15,6 +15,9 @@
  */
 package com.vaadin.testbench.elements;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
@@ -97,7 +100,8 @@ public class TreeGridElement extends GridElement {
     public boolean isRowExpanded(int rowIndex, int hierarchyColumnIndex) {
         WebElement expandElement = getExpandElement(rowIndex,
                 hierarchyColumnIndex);
-        String classes = expandElement.getAttribute("class");
+        List<String> classes = Arrays
+                .asList(expandElement.getAttribute("class").split(" "));
         return classes.contains("expanded") && !classes.contains("collapsed");
     }
 

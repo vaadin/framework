@@ -241,7 +241,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     /**
      * Get the object used for filtering in this data communicator.
-     * 
+     *
      * @return the filter object of this data communicator
      */
     protected Object getFilter() {
@@ -250,7 +250,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     /**
      * Get the client rpc interface for this data communicator.
-     * 
+     *
      * @return the client rpc interface for this data communicator
      */
     protected DataCommunicatorClientRpc getClientRpc() {

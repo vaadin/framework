@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.HierarchyMapper.TreeLevelQuery;
 import com.vaadin.server.SerializableConsumer;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.extension.datacommunicator.HierarchicalDataCommunicatorState;
 import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
@@ -56,6 +57,11 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     private static final int INITIAL_FETCH_SIZE = 100;
 
     private HierarchyMapper mapper = new HierarchyMapper();
+
+    /**
+     * Collapse allowed provider used to allow/disallow collapsing nodes.
+     */
+    private SerializablePredicate<T> itemCollapseAllowedProvider = t -> true;
 
     /**
      * The captured client side cache size.
@@ -209,6 +215,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             hierarchyData.put(TreeGridCommunicationConstants.ROW_COLLAPSED,
                     mapper.isCollapsed(key));
             hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF, false);
+            hierarchyData.put(
+                    TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED,
+                    itemCollapseAllowedProvider.test(item));
         }
 
         // add hierarchy information to row as metadata
@@ -384,6 +393,25 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status
         refresh(expandedItem);
+    }
+
+    /**
+     * Sets the item collapse allowed provider for this
+     * HierarchicalDataCommunicator. The provider should return {@code true} for
+     * any item that the user can collapse.
+     * <p>
+     * <strong>Note:</strong> This callback will be accessed often when sending
+     * data to the client. The callback should not do any costly operations.
+     *
+     * @param provider
+     *            the item collapse allowed provider, not {@code null}
+     */
+    public void setItemCollapseAllowedProvider(
+            SerializablePredicate<T> provider) {
+        Objects.requireNonNull(provider, "Provider can't be null");
+        itemCollapseAllowedProvider = provider;
+
+        getActiveDataHandler().getActiveData().forEach(this::refresh);
     }
 
 }
