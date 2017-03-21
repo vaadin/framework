@@ -733,6 +733,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         return appConfig;
     }
 
+    /**
+     * @since 8.0.3
+     */
     protected abstract String getContextRootPath(BootstrapContext context);
 
     protected abstract String getServiceUrl(BootstrapContext context);
