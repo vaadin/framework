@@ -44,8 +44,7 @@ $tg-expander-padding: 10px !default;
     }
 
     &.collapse-disabled {
-      opacity: .3;
-      filter: alpha(opacity=30);
+      @include opacity($v-disabled-opacity);
       cursor: default;
     }
   }
