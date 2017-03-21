@@ -226,6 +226,9 @@ public class TreeGrid<T> extends Grid<T> {
     /**
      * Sets the item collapse allowed provider for this TreeGrid. The provider
      * should return {@code true} for any item that the user can collapse.
+     * <p>
+     * <strong>Note:</strong> This callback will be accessed often when sending
+     * data to the client. The callback should not do any costly operations.
      *
      * @param provider
      *            the item collapse allowed provider, not {@code null}

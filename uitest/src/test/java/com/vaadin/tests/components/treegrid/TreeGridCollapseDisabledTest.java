@@ -67,30 +67,6 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
         assertCollapseRow(0);
     }
 
-    /**
-     * The collapse disabled uses really similar key for data communication as
-     * the cell description in Grid. This test is in place to make sure no one
-     * changes it to be conflicting
-     */
-    @Test
-    public void json_for_cell_description_not_overridden() {
-        selectMenuPath("Component", "Features", "Collapse allowed",
-                "depth 0 disabled");
-
-        // Test that cell description works
-        grid.getCell(0, 1).showTooltip();
-        Assert.assertEquals("No description tooltip shown",
-                "Hierarchy depth: 0", getTooltipElement().getText());
-
-        // Test collapse disabled
-        assertExpandRow(0);
-        assertCollapseRowDisabled(0);
-
-        // Test collapse enabled
-        assertExpandRow(1);
-        assertCollapseRow(1);
-    }
-
     private void assertExpandRow(int row) {
         Assert.assertFalse(grid.isRowExpanded(row, 0));
         grid.expandWithClick(row);
