@@ -93,3 +93,15 @@ treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
 treeGrid.setHierarchyColumn("name");
 ----
 
+== Listening to Events
+
+In addition to supporting all the listeners of the standard [classname]#Grid#, [classname]#TreeGrid# supports listening to the expansion and collapsing of items in its hierarchy.
+The expand and collapse listeners can be added as follows:
+
+[source, java]
+----
+treeGrid.addExpandListener(event -> log("Item expanded: " + event.getExpandedItem()));
+treeGrid.addCollapseListener(event -> log("Item collapsed: " + event.getCollapsedItem()));
+----
+
+where the return types of the methods `getExpandedItem` and `getCollapsedItem` are the same as the type of the [classname]#TreeGrid# the events originated from.
