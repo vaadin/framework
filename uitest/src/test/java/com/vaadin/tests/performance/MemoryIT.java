@@ -40,6 +40,14 @@ public class MemoryIT extends SingleBrowserTest {
         performTest(GridMemory.PATH, 100000, "grid-v8-100thousand-items-");
         performTest(CompatibilityGridMemory.PATH, 100000,
                 "grid-v7-100thousand-items-");
+
+        performTest(TreeGridMemory.PATH, 1, "tree-grid-one-item-");
+        performTest(TreeTableMemory.PATH, 1, "tree-table-one-item-");
+
+        performTest(TreeGridMemory.PATH, 100000,
+                "tree-grid-100thousand-items-");
+        performTest(TreeTableMemory.PATH, 100000,
+                "tree-table-100thousand-items-");
     }
 
     @Override
