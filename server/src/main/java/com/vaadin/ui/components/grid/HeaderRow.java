@@ -139,6 +139,8 @@ public interface HeaderRow extends Serializable {
      * The order of the components in the returned collection is not specified.
      *
      * @return a collection of components in the row
+     *
+     * @since 8.0.3
      */
     public Collection<? extends Component> getComponents();
 }

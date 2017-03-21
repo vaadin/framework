@@ -313,6 +313,8 @@ public class ApplicationConfiguration implements EntryPoint {
      * Gets the URL to the context root of the web application
      *
      * @return the URL to the server-side context root as a string
+     *
+     * @since 8.0.3
      */
     public String getContextRootUrl() {
         return contextRootUrl;

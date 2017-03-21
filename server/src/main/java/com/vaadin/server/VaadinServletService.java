@@ -120,6 +120,8 @@ public class VaadinServletService extends VaadinService {
      * @param request
      *            the request for which the location should be determined
      * @return A relative path to the context root. Never ends with a slash (/).
+     *
+     * @since 8.0.3
      */
     public static String getContextRootRelativePath(VaadinRequest request) {
         VaadinServletRequest servletRequest = (VaadinServletRequest) request;

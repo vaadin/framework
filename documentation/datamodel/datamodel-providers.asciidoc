@@ -94,7 +94,7 @@ All components will automatically update themselves when the sorting of the data
 [source, java]
 ----
 ListDataProvider<Person> dataProvider =
-  DataProvider.fromCollection(persons);
+  DataProvider.ofCollection(persons);
 
 dataProvider.setSortOrder(Person::getName,
   SortDirection.ASCENDING);
@@ -116,7 +116,7 @@ You can configure the data provider to always apply some specific filter to limi
 [source, java]
 ----
 ListDataProvider<Person> dataProvider =
-  DataProvider.fromCollection(persons);
+  DataProvider.ofCollection(persons);
 
 ComboBox<Person> comboBox = new ComboBox<>();
 comboBox.setDataProvider(dataProvider);
@@ -141,7 +141,7 @@ To configure filtering through a component beyond what is possible with `Caption
 [source, java]
 ----
 ListDataProvider<Person> dataProvider =
-  DataProvider.fromCollection(persons);
+  DataProvider.ofCollection(persons);
 
 comboBox.setDataProvider(dataProvider.filteringBy(
   (person, filterText) -> {
@@ -185,6 +185,7 @@ Button modifyPersonButton = new Button("Modify person",
 });
 ----
 
+[[datamodel.dataproviders.lazy]]
 == Lazy Loading Data to a Listing
 
 All the previous examples have shown cases with a limited amount of data that can be loaded as item instances in memory.
