@@ -57,6 +57,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createDataProviderSelect();
         createHierarchyColumnSelect();
         createCollapseAllowedSelect();
+        createListenerMenu();
     }
 
     private void initializeDataProviders() {
@@ -115,6 +116,16 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createSelectAction("Collapse allowed", CATEGORY_FEATURES, options,
                 "all allowed", (treeGrid, value, data) -> treeGrid
                         .setItemCollapseAllowedProvider(value));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void createListenerMenu() {
+        createListenerAction("Collapse listener", "State",
+                treeGrid -> treeGrid.addCollapseListener(event -> log(
+                        "Item collapsed: " + event.getCollapsedItem())));
+        createListenerAction("Expand listener", "State",
+                treeGrid -> treeGrid.addExpandListener(event -> log(
+                        "Item expanded: " + event.getExpandedItem())));
     }
 
     static class HierarchicalTestBean {
