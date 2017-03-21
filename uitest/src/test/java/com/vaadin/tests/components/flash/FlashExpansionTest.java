@@ -17,10 +17,7 @@ public class FlashExpansionTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // No Flash support in Chrome, FF, PhantomJS
-        List<DesiredCapabilities> capabilities = getBrowsersSupportingShiftClick();
-        capabilities.removeAll(getBrowserCapabilities(Browser.CHROME));
-        return capabilities;
+        return getBrowsersSupportingFlash();
     }
 
     private final By locator = By.tagName("embed");
@@ -29,7 +26,7 @@ public class FlashExpansionTest extends MultiBrowserTest {
     public void testFlashIsExpanded() throws Exception {
         openTestURL();
         /* Allow the flash plugin to load */
-        sleep(5000);
+        waitForElementPresent(locator);
         WebElement embed = $(FlashElement.class).first().findElement(locator);
         String width = embed.getAttribute("width");
         Assert.assertTrue("Width is not 400.0px initially",
@@ -40,4 +37,9 @@ public class FlashExpansionTest extends MultiBrowserTest {
                 "400.0px".equals(widthAfterExpansion));
     }
 
+    private List<DesiredCapabilities> getBrowsersSupportingFlash() {
+        // No Flash support in Chrome, FF, PhantomJS
+        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
+                Browser.IE11);
+    }
 }
