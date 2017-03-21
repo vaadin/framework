@@ -18,12 +18,14 @@ package com.vaadin.client.ui.dd;
 import java.util.HashSet;
 
 import com.vaadin.client.UIDL;
-import com.vaadin.client.extensions.DropTargetExtensionConnector;
+import com.vaadin.event.dnd.DropTargetExtension;
 
 /**
  *
  * @author Vaadin Ltd
- * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector}
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDragOverCriteria(String)} and
+ *             {@link DropTargetExtension#setDropCriteria(String)}
  */
 @Deprecated
 public class VLazyInitItemIdentifiers extends VAcceptCriterion {

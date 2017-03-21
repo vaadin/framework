@@ -56,6 +56,12 @@ import com.vaadin.ui.declarative.DesignContext;
 public class DragAndDropWrapper extends CustomComponent
         implements DropTarget, DragSource, LegacyComponent {
 
+    /**
+     * @deprecated Since 8.1, will be replaced by FileDropTargetExtension and
+     *             FileDropEvent,
+     *             https://github.com/vaadin/framework/issues/8891
+     */
+    @Deprecated
     public class WrapperTransferable extends TransferableImpl {
 
         private Html5File[] files;
