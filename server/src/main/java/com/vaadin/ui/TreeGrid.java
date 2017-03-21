@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,6 +35,7 @@ import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -40,7 +43,7 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
-
+import com.vaadin.util.ReflectTools;
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -53,6 +56,123 @@ import com.vaadin.ui.renderers.Renderer;
  */
 public class TreeGrid<T> extends Grid<T> {
 
+    /**
+     * Item expand event listener.
+     * 
+     * @author Vaadin Ltd
+     * @since 8.1
+     * @param <T>
+     *            the expanded item's type
+     */
+    @FunctionalInterface
+    public interface ExpandListener<T> extends Serializable {
+
+        public static final Method EXPAND_METHOD = ReflectTools.findMethod(
+                ExpandListener.class, "itemExpand", ExpandEvent.class);
+
+        /**
+         * Callback method for when an item has been expanded.
+         * 
+         * @param event
+         *            the expand event
+         */
+        public void itemExpand(ExpandEvent<T> event);
+    }
+
+    /**
+     * Item collapse event listener.
+     * 
+     * @author Vaadin Ltd
+     * @since 8.1
+     * @param <T>
+     *            the collapsed item's type
+     */
+    @FunctionalInterface
+    public interface CollapseListener<T> extends Serializable {
+
+        public static final Method COLLAPSE_METHOD = ReflectTools.findMethod(
+                CollapseListener.class, "itemCollapse", CollapseEvent.class);
+
+        /**
+         * Callback method for when an item has been collapsed.
+         * 
+         * @param event
+         *            the collapse event
+         */
+        public void itemCollapse(CollapseEvent<T> event);
+    }
+
+    /**
+     * An event that is fired when an item is expanded.
+     * 
+     * @author Vaadin Ltd
+     * @since 8.1
+     * @param <T>
+     *            the expanded item's type
+     */
+    public static class ExpandEvent<T> extends Component.Event {
+
+        private final T expandedItem;
+
+        /**
+         * Construct an expand event.
+         * 
+         * @param source
+         *            the tree grid this event originated from
+         * @param item
+         *            the item that was expanded
+         */
+        public ExpandEvent(TreeGrid<T> source, T expandedItem) {
+            super(source);
+            this.expandedItem = expandedItem;
+        }
+
+        /**
+         * Get the expanded item that triggered this event.
+         * 
+         * @return the expanded item
+         */
+        public T getExpandedItem() {
+            return expandedItem;
+        }
+    }
+
+    /**
+     * An event that is fired when an item is collapsed. Note that expanded
+     * subtrees of the collapsed item will not trigger collapse events.
+     * 
+     * @author Vaadin Ltd
+     * @since 8.1
+     * @param <T>
+     *            collapsed item type
+     */
+    public static class CollapseEvent<T> extends Component.Event {
+
+        private final T collapsedItem;
+
+        /**
+         * Construct a collapse event.
+         * 
+         * @param source
+         *            the tree grid this event originated from
+         * @param item
+         *            the item that was collapsed
+         */
+        public CollapseEvent(TreeGrid<T> source, T collapsedItem) {
+            super(source);
+            this.collapsedItem = collapsedItem;
+        }
+
+        /**
+         * Get the collapsed item that triggered this event.
+         * 
+         * @return the collapsed item
+         */
+        public T getCollapsedItem() {
+            return collapsedItem;
+        }
+    }
+
     public TreeGrid() {
         super(new HierarchicalDataCommunicator<>());
 
@@ -62,11 +182,43 @@ public class TreeGrid<T> extends Grid<T> {
                     boolean collapse) {
                 if (collapse) {
                     getDataCommunicator().doCollapse(rowKey, rowIndex);
+                    fireCollapseEvent(
+                            getDataCommunicator().getKeyMapper().get(rowKey));
                 } else {
                     getDataCommunicator().doExpand(rowKey, rowIndex);
+                    fireExpandEvent(
+                            getDataCommunicator().getKeyMapper().get(rowKey));
                 }
             }
         });
+    }
+
+    /**
+     * Adds an ExpandListener to this TreeGrid.
+     * 
+     * @see ExpandEvent
+     * 
+     * @param listener
+     *            the listener to add
+     * @return a registration for the listener
+     */
+    public Registration addExpandListener(ExpandListener<T> listener) {
+        return addListener(ExpandEvent.class, listener,
+                ExpandListener.EXPAND_METHOD);
+    }
+
+    /**
+     * Adds a CollapseListener to this TreeGrid.
+     * 
+     * @see CollapseEvent
+     * 
+     * @param listener
+     *            the listener to add
+     * @return a registration for the listener
+     */
+    public Registration addCollapseListener(CollapseListener<T> listener) {
+        return addListener(CollapseEvent.class, listener,
+                CollapseListener.COLLAPSE_METHOD);
     }
 
     /**
@@ -335,5 +487,25 @@ public class TreeGrid<T> extends Grid<T> {
                 return super.setRenderer(renderer);
             }
         };
+    }
+
+    /**
+     * Emit an expand event.
+     * 
+     * @param item
+     *            the item that was expanded
+     */
+    private void fireExpandEvent(T item) {
+        fireEvent(new ExpandEvent<>(this, item));
+    }
+
+    /**
+     * Emit a collapse event.
+     * 
+     * @param item
+     *            the item that was collapsed
+     */
+    private void fireCollapseEvent(T item) {
+        fireEvent(new CollapseEvent<>(this, item));
     }
 }

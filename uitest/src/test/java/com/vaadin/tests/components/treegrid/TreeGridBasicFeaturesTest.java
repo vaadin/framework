@@ -119,6 +119,34 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                 .isElementPresent(By.className("v-tree-grid-expander")));
     }
 
+    @Test
+    public void expand_and_collapse_listeners() {
+        selectMenuPath("Component", "State", "Expand listener");
+        selectMenuPath("Component", "State", "Collapse listener");
+
+        Assert.assertFalse(logContainsText("Item expanded: 0 | 0"));
+        Assert.assertFalse(logContainsText("Item collapsed: 0 | 0"));
+
+        grid.collapseWithClick(0);
+
+        Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
+        Assert.assertFalse(logContainsText("Item collapsed: 0 | 0"));
+
+        grid.collapseWithClick(0);
+
+        Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
+        Assert.assertTrue(logContainsText("Item collapsed: 0 | 0"));
+
+        selectMenuPath("Component", "State", "Expand listener");
+        selectMenuPath("Component", "State", "Collapse listener");
+
+        grid.collapseWithClick(1);
+        grid.collapseWithClick(1);
+
+        Assert.assertFalse(logContainsText("Item expanded: 0 | 1"));
+        Assert.assertFalse(logContainsText("Item collapsed: 0 | 1"));
+    }
+
     private void assertCellTexts(int startRowIndex, int cellIndex,
             String[] cellTexts) {
         int index = startRowIndex;

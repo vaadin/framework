@@ -43,7 +43,7 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the bean type
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
  */
 public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
@@ -344,8 +344,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
                 collapsedRowIndex);
 
-        getClientRpc().removeRows(collapsedRowIndex + 1,
-                collapsedSubTreeSize);
+        getClientRpc().removeRows(collapsedRowIndex + 1, collapsedSubTreeSize);
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status
         refresh(collapsedItem);
