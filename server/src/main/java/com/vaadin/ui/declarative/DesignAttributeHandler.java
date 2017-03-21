@@ -176,8 +176,9 @@ public class DesignAttributeHandler implements Serializable {
                 .getPropertyDescriptors()) {
             Method getter = descriptor.getReadMethod();
             Method setter = descriptor.getWriteMethod();
-            if (getter != null && setter != null && getFormatter()
-                    .canConvert(descriptor.getPropertyType())) {
+            Class<?> propertyType = descriptor.getPropertyType();
+            if (getter != null && setter != null && propertyType != null
+                    && getFormatter().canConvert(propertyType)) {
                 String attribute = toAttributeName(descriptor.getName());
                 entry.addAttribute(attribute, getter, setter);
             }
@@ -197,6 +198,7 @@ public class DesignAttributeHandler implements Serializable {
      *            the attribute list where the attribute will be written
      * @param defaultInstance
      *            the default instance for comparing default values
+     * @since 8.0
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void writeAttribute(Object component, String attribute,
@@ -236,6 +238,7 @@ public class DesignAttributeHandler implements Serializable {
      *            the default attribute value
      * @param inputType
      *            the type of the input value
+     * @since 8.0
      */
     public static <T> void writeAttribute(String attribute,
             Attributes attributes, T value, T defaultValue, Class<T> inputType,

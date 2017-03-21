@@ -28,6 +28,8 @@ import com.vaadin.v7.data.Property;
  *            bean type
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class NestedPropertyDescriptor<BT>
@@ -50,7 +52,7 @@ public class NestedPropertyDescriptor<BT>
     public NestedPropertyDescriptor(String name, Class<BT> beanType)
             throws IllegalArgumentException {
         this.name = name;
-        NestedMethodProperty<?> property = new NestedMethodProperty<>(
+        NestedMethodProperty<?> property = new NestedMethodProperty<Object>(
                 beanType, name);
         this.propertyType = property.getType();
     }
@@ -67,7 +69,7 @@ public class NestedPropertyDescriptor<BT>
 
     @Override
     public Property<?> createProperty(BT bean) {
-        return new NestedMethodProperty<>(bean, name);
+        return new NestedMethodProperty<Object>(bean, name);
     }
 
 }

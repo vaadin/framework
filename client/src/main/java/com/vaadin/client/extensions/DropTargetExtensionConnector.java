@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
@@ -39,6 +40,9 @@ import elemental.events.EventTarget;
 /**
  * Extension to add drop target functionality to a widget for using HTML5 drag
  * and drop. Client side counterpart of {@link DropTargetExtension}.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 @Connect(DropTargetExtension.class)
 public class DropTargetExtensionConnector extends AbstractExtensionConnector {
@@ -51,8 +55,15 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     private final EventListener dragLeaveListener = this::onDragLeave;
     private final EventListener dropListener = this::onDrop;
 
+    /**
+     * Widget of the drop target component.
+     */
+    private Widget dropTargetWidget;
+
     @Override
     protected void extend(ServerConnector target) {
+        dropTargetWidget = ((ComponentConnector) target).getWidget();
+
         EventTarget dropTarget = getDropTargetElement().cast();
 
         // dragenter event
@@ -91,7 +102,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @return the drop target element in the parent widget.
      */
     protected Element getDropTargetElement() {
-        return ((ComponentConnector) getParent()).getWidget().getElement();
+        return dropTargetWidget.getElement();
     }
 
     /**
@@ -185,7 +196,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             }
 
             getRpcProxy(DropTargetRpc.class)
-                    .drop(types, data, getState().dropEffect);
+                    .drop(types, data, getState().dropEffect, data.get(
+                            DragSourceExtensionConnector.DATA_TYPE_DRAG_SOURCE_ID));
         }
 
         removeTargetIndicator(getDropTargetElement());

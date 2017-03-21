@@ -41,6 +41,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.communication.ConnectionStateHandler;
 import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.MessageHandler;
@@ -328,6 +329,11 @@ public class ApplicationConnection implements HasHandlers {
         protected String encodeQueryStringParameterValue(String queryString) {
             return URL.encodeQueryString(queryString);
         }
+
+        @Override
+        protected String getContextRootUrl() {
+            return getConfiguration().getContextRootUrl();
+        }
     };
 
     public static class MultiStepDuration extends Duration {
@@ -481,7 +487,7 @@ public class ApplicationConnection implements HasHandlers {
                 return vi;
             }
         }
-    
+
         client.getProfilingData = $entry(function() {
             var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
@@ -496,7 +502,7 @@ public class ApplicationConnection implements HasHandlers {
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
-    
+
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
@@ -513,7 +519,7 @@ public class ApplicationConnection implements HasHandlers {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
-    
+
         $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 

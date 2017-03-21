@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -50,10 +51,12 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  * <li>Sends all needed events on content changes.
  * </ul>
  *
- * @see com.vaadin.v7.data.Container
+ * @see Container
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link ListDataProvider}
  */
 
 @Deprecated
@@ -71,23 +74,23 @@ public class IndexedContainer
     /**
      * Linked list of ordered Property IDs.
      */
-    private ArrayList<Object> propertyIds = new ArrayList<>();
+    private ArrayList<Object> propertyIds = new ArrayList<Object>();
 
     /**
      * Property ID to type mapping.
      */
-    private Hashtable<Object, Class<?>> types = new Hashtable<>();
+    private Hashtable<Object, Class<?>> types = new Hashtable<Object, Class<?>>();
 
     /**
      * Hash of Items, where each Item is implemented as a mapping from Property
      * ID to Property value.
      */
-    private Hashtable<Object, Map<Object, Object>> items = new Hashtable<>();
+    private Hashtable<Object, Map<Object, Object>> items = new Hashtable<Object, Map<Object, Object>>();
 
     /**
      * Set of properties that are read-only.
      */
-    private HashSet<Property<?>> readOnlyProperties = new HashSet<>();
+    private HashSet<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
 
     /**
      * List of all Property value change event listeners listening all the
@@ -135,11 +138,6 @@ public class IndexedContainer
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#getContainerPropertyIds()
-     */
     @Override
     public Collection<?> getContainerPropertyIds() {
         return Collections.unmodifiableCollection(propertyIds);
@@ -157,12 +155,6 @@ public class IndexedContainer
         return types.get(propertyId);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
-     * java.lang.Object)
-     */
     @Override
     public Property getContainerProperty(Object itemId, Object propertyId) {
         // map lookup more efficient than propertyIds if there are many
@@ -175,12 +167,6 @@ public class IndexedContainer
         return new IndexedContainerProperty(itemId, propertyId);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
-     * java.lang.Class, java.lang.Object)
-     */
     @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) {
@@ -209,7 +195,7 @@ public class IndexedContainer
             }
             // store for next rows
             if (defaultPropertyValues == null) {
-                defaultPropertyValues = new HashMap<>();
+                defaultPropertyValues = new HashMap<Object, Object>();
             }
             defaultPropertyValues.put(propertyId, defaultValue);
         }
@@ -220,11 +206,6 @@ public class IndexedContainer
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeAllItems()
-     */
     @Override
     public boolean removeAllItems() {
         int origSize = size();
@@ -262,11 +243,6 @@ public class IndexedContainer
         return id;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#addItem(java.lang.Object)
-     */
     @Override
     public Item addItem(Object itemId) {
         Item item = internalAddItemAtEnd(itemId,
@@ -298,11 +274,6 @@ public class IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeItem(java.lang.Object)
-     */
     @Override
     public boolean removeItem(Object itemId) {
         if (itemId == null || items.remove(itemId) == null) {
@@ -323,11 +294,6 @@ public class IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object )
-     */
     @Override
     public boolean removeContainerProperty(Object propertyId) {
 
@@ -357,12 +323,6 @@ public class IndexedContainer
 
     /* Container.Ordered methods */
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
-     * java.lang.Object)
-     */
     @Override
     public Item addItemAfter(Object previousItemId, Object newItemId) {
         return internalAddItemAfter(previousItemId, newItemId,
@@ -388,11 +348,6 @@ public class IndexedContainer
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Indexed#addItemAt(int, java.lang.Object)
-     */
     @Override
     public Item addItemAt(int index, Object newItemId) {
         return internalAddItemAt(index, newItemId,
@@ -434,7 +389,7 @@ public class IndexedContainer
 
     @Override
     protected void registerNewItem(int index, Object newItemId, Item item) {
-        Hashtable<Object, Object> t = new Hashtable<>();
+        Hashtable<Object, Object> t = new Hashtable<Object, Object>();
         items.put(newItemId, t);
         addDefaultValues(t);
     }
@@ -485,11 +440,6 @@ public class IndexedContainer
             super(source);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property.ValueChangeEvent#getProperty()
-         */
         @Override
         public Property getProperty() {
             return (Property) getSource();
@@ -505,7 +455,7 @@ public class IndexedContainer
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Deprecated
     @Override
@@ -521,7 +471,7 @@ public class IndexedContainer
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Deprecated
     @Override
@@ -529,23 +479,17 @@ public class IndexedContainer
         removePropertySetChangeListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.
-     * vaadin.data.Property.ValueChangeListener)
-     */
     @Override
     public void addValueChangeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
-            propertyValueChangeListeners = new LinkedList<>();
+            propertyValueChangeListeners = new LinkedList<Property.ValueChangeListener>();
         }
         propertyValueChangeListeners.add(listener);
     }
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+     *             {@link #addValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -553,12 +497,6 @@ public class IndexedContainer
         addValueChangeListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com
-     * .vaadin.data.Property.ValueChangeListener)
-     */
     @Override
     public void removeValueChangeListener(
             Property.ValueChangeListener listener) {
@@ -569,7 +507,7 @@ public class IndexedContainer
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+     *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -655,19 +593,19 @@ public class IndexedContainer
             Object itemId, Property.ValueChangeListener listener) {
         if (listener != null) {
             if (singlePropertyValueChangeListeners == null) {
-                singlePropertyValueChangeListeners = new Hashtable<>();
+                singlePropertyValueChangeListeners = new Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>();
             }
             Map<Object, List<Property.ValueChangeListener>> propertySetToListenerListMap = singlePropertyValueChangeListeners
                     .get(propertyId);
             if (propertySetToListenerListMap == null) {
-                propertySetToListenerListMap = new Hashtable<>();
+                propertySetToListenerListMap = new Hashtable<Object, List<Property.ValueChangeListener>>();
                 singlePropertyValueChangeListeners.put(propertyId,
                         propertySetToListenerListMap);
             }
             List<Property.ValueChangeListener> listenerList = propertySetToListenerListMap
                     .get(itemId);
             if (listenerList == null) {
-                listenerList = new LinkedList<>();
+                listenerList = new LinkedList<Property.ValueChangeListener>();
                 propertySetToListenerListMap.put(itemId, listenerList);
             }
             listenerList.add(listener);
@@ -710,9 +648,9 @@ public class IndexedContainer
 
     /* Internal Item and Property implementations */
 
-    /*
-     * A class implementing the com.vaadin.data.Item interface to be contained
-     * in the list.
+    /**
+     * A class implementing the {@link Item} interface to be contained in the
+     * list.
      *
      * @author Vaadin Ltd.
      *
@@ -738,11 +676,6 @@ public class IndexedContainer
             this.itemId = itemId;
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Item#getItemProperty(java.lang.Object)
-         */
         @Override
         public Property getItemProperty(Object id) {
             if (!propertyIds.contains(id)) {
@@ -821,7 +754,7 @@ public class IndexedContainer
          * properties at container level. See
          * {@link IndexedContainer#addContainerProperty(Object, Class, Object)}
          *
-         * @see com.vaadin.v7.data.Item#addProperty(Object, Property)
+         * @see Item#addProperty(Object, Property)
          */
         @Override
         public boolean addItemProperty(Object id, Property property)
@@ -835,7 +768,7 @@ public class IndexedContainer
          * properties at container level. See
          * {@link IndexedContainer#removeContainerProperty(Object)}
          *
-         * @see com.vaadin.v7.data.Item#removeProperty(Object)
+         * @see Item#removeProperty(Object)
          */
         @Override
         public boolean removeItemProperty(Object id)
@@ -889,41 +822,21 @@ public class IndexedContainer
             this.itemId = itemId;
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property#getType()
-         */
         @Override
         public Class<T> getType() {
             return (Class<T>) types.get(propertyId);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property#getValue()
-         */
         @Override
         public T getValue() {
             return (T) items.get(itemId).get(propertyId);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property#isReadOnly()
-         */
         @Override
         public boolean isReadOnly() {
             return readOnlyProperties.contains(this);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property#setReadOnly(boolean)
-         */
         @Override
         public void setReadOnly(boolean newStatus) {
             if (newStatus) {
@@ -933,11 +846,6 @@ public class IndexedContainer
             }
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property#setValue(java.lang.Object)
-         */
         @Override
         public void setValue(Object newValue)
                 throws Property.ReadOnlyException {
@@ -963,6 +871,8 @@ public class IndexedContainer
 
             firePropertyValueChange(this);
         }
+
+        // LegacyPropertyHelper has been removed in Vaadin 8
 
         /**
          * Calculates a integer hash-code for the Property that's unique inside
@@ -998,12 +908,6 @@ public class IndexedContainer
                     && lp.itemId.equals(itemId);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(
-         * com.vaadin.data.Property.ValueChangeListener)
-         */
         @Override
         public void addValueChangeListener(
                 Property.ValueChangeListener listener) {
@@ -1012,7 +916,7 @@ public class IndexedContainer
 
         /**
          * @deprecated As of 7.0, replaced by
-         *             {@link #addValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+         *             {@link #addValueChangeListener(Property.ValueChangeListener)}
          **/
         @Override
         @Deprecated
@@ -1020,12 +924,6 @@ public class IndexedContainer
             addValueChangeListener(listener);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener
-         * (com.vaadin.data.Property.ValueChangeListener)
-         */
         @Override
         public void removeValueChangeListener(
                 Property.ValueChangeListener listener) {
@@ -1034,7 +932,7 @@ public class IndexedContainer
 
         /**
          * @deprecated As of 7.0, replaced by
-         *             {@link #removeValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+         *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
          **/
         @Override
         @Deprecated
@@ -1048,23 +946,11 @@ public class IndexedContainer
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
-     * boolean[])
-     */
     @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         sortContainer(propertyId, ascending);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds
-     * ()
-     */
     @Override
     public Collection<?> getSortableContainerPropertyIds() {
         return getSortablePropertyIds();
@@ -1101,11 +987,15 @@ public class IndexedContainer
                 ? (ListSet<Object>) ((ListSet<Object>) getAllItemIds()).clone()
                 : null);
         nc.setItemSetChangeListeners(getItemSetChangeListeners() != null
-                ? new LinkedList<>(getItemSetChangeListeners()) : null);
+                ? new LinkedList<Container.ItemSetChangeListener>(
+                        getItemSetChangeListeners())
+                : null);
         nc.propertyIds = propertyIds != null
                 ? (ArrayList<Object>) propertyIds.clone() : null;
         nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null
-                ? new LinkedList<>(getPropertySetChangeListeners()) : null);
+                ? new LinkedList<Container.PropertySetChangeListener>(
+                        getPropertySetChangeListeners())
+                : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null
                 ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
                         .clone()
@@ -1131,7 +1021,7 @@ public class IndexedContainer
         if (items == null) {
             nc.items = null;
         } else {
-            nc.items = new Hashtable<>();
+            nc.items = new Hashtable<Object, Map<Object, Object>>();
             for (final Iterator<?> i = items.keySet().iterator(); i
                     .hasNext();) {
                 final Object id = i.next();
@@ -1177,21 +1067,11 @@ public class IndexedContainer
         removeFilter(filter);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.AbstractInMemoryContainer#getContainerFilters()
-     */
     @Override
     public boolean hasContainerFilters() {
         return super.hasContainerFilters();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.AbstractInMemoryContainer#getContainerFilters()
-     */
     @Override
     public Collection<Filter> getContainerFilters() {
         return super.getContainerFilters();

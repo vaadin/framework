@@ -17,7 +17,10 @@ package com.vaadin.client.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -207,5 +210,54 @@ public abstract class ConnectorBundleLoader {
         s.setWhiteSpace(WhiteSpace.NORMAL);
         s.setVisibility(Visibility.VISIBLE);
         s.setMargin(0, Unit.PX);
+    }
+
+    /**
+     * Starts loading the deferred bundle if it hasn't already been started.
+     *
+     * @since 8.0.3
+     */
+    public void ensureDeferredBundleLoaded() {
+        if (!isBundleLoaded(DEFERRED_BUNDLE_NAME)) {
+            loadBundle(DEFERRED_BUNDLE_NAME, new BundleLoadCallback() {
+                @Override
+                public void loaded() {
+                    // Nothing to do
+                }
+
+                @Override
+                public void failed(Throwable reason) {
+                    getLogger().log(Level.SEVERE,
+                            "Error loading deferred bundle", reason);
+                }
+            });
+        }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ConnectorBundleLoader.class.getName());
+    }
+
+    /**
+     * Gets a list of all currently loaded bundle names.
+     * <p>
+     * This method is intended for testing the loading mechanism.
+     *
+     * @return a list of bundles, not <code>null</code>
+     *
+     * @since 8.0.3
+     */
+    public List<String> getLoadedBundles() {
+        ArrayList<String> bundles = new ArrayList<>();
+
+        JsArrayString keys = asyncBlockLoaders.getKeys();
+        for (int i = 0; i < keys.length(); i++) {
+            String bundleName = keys.get(i);
+            if (isBundleLoaded(bundleName)) {
+                bundles.add(bundleName);
+            }
+        }
+
+        return bundles;
     }
 }

@@ -212,6 +212,10 @@ public class VCustomLayout extends ComplexPanel {
             final String location = elem.getAttribute("location");
             locationToElement.put(location, elem);
             elem.setInnerHTML("");
+        } else if (elem.hasAttribute("data-location")) {
+            final String location = elem.getAttribute("data-location");
+            locationToElement.put(location, elem);
+            elem.setInnerHTML("");
         } else {
             final int len = DOM.getChildCount(elem);
             for (int i = 0; i < len; i++) {
@@ -305,10 +309,12 @@ public class VCustomLayout extends ComplexPanel {
      */
     public void updateCaption(ComponentConnector childConnector) {
         Widget widget = childConnector.getWidget();
-        if (widget.getParent() != this) {
+
+        if (!widget.isAttached()) {
             // Widget has not been added because the location was not found
             return;
         }
+
         VCaptionWrapper wrapper = childWidgetToCaptionWrapper.get(widget);
         if (VCaption.isNeeded(childConnector)) {
             if (wrapper == null) {

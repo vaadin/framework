@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.ui.AbstractListing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Transferable;
@@ -44,6 +45,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -65,8 +67,7 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
 /**
  * <p>
  * A class representing a selection of items the user has selected in a UI. The
- * set of choices is presented as a set of {@link com.com.vaadin.v7.data.Item}s
- * in a {@link com.com.vaadin.v7.data.Container}.
+ * set of choices is presented as a set of {@link Item}s in a {@link Container}.
  * </p>
  *
  * <p>
@@ -77,6 +78,7 @@ import com.vaadin.v7.shared.ui.select.AbstractSelectState;
  *
  * @author Vaadin Ltd.
  * @since 5.0
+ * @deprecated As of 8.0, replaced by {@link AbstractListing}
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -108,7 +110,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         /**
          * Item caption mode: Index of the item is used as caption. The index
          * mode can only be used with the containers implementing the
-         * {@link com.vaadin.data.Container.Indexed} interface.
+         * {@link Container.Indexed} interface.
          */
         INDEX,
         /**
@@ -221,6 +223,11 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
+     * Is the select in multiselect mode?
+     */
+    private boolean multiSelect = false;
+
+    /**
      * Select options.
      */
     protected Container items;
@@ -233,17 +240,17 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Keymapper used to map key values.
      */
-    protected KeyMapper<Object> itemIdMapper = new KeyMapper<>();
+    protected KeyMapper<Object> itemIdMapper = new KeyMapper<Object>();
 
     /**
      * Item icons.
      */
-    private final HashMap<Object, Resource> itemIcons = new HashMap<>();
+    private final HashMap<Object, Resource> itemIcons = new HashMap<Object, Resource>();
 
     /**
      * Item captions.
      */
-    private final HashMap<Object, String> itemCaptions = new HashMap<>();
+    private final HashMap<Object, String> itemCaptions = new HashMap<Object, String>();
 
     /**
      * Item caption mode.
@@ -354,6 +361,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Paints select attributes
+        if (isMultiSelect()) {
+            target.addAttribute("selectmode", "multi");
+        }
         if (isNewItemsAllowed()) {
             target.addAttribute("allownewitem", true);
         }
@@ -447,8 +457,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Invoked when the value of a variable has changed.
      *
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
-     *      java.util.Map)
+     * @see AbstractComponent#changeVariables(java.lang.Object, java.util.Map)
      */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
@@ -472,7 +481,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 // TODO Optimize by adding repaintNotNeeded when applicable
 
                 // Converts the key-array to id-set
-                final LinkedList<Object> acceptedSelections = new LinkedList<>();
+                final LinkedList<Object> acceptedSelections = new LinkedList<Object>();
                 for (int i = 0; i < clientSideSelectedKeys.length; i++) {
                     final Object id = itemIdMapper
                             .get(clientSideSelectedKeys[i]);
@@ -504,9 +513,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                     @SuppressWarnings("unchecked")
                     Set<Object> newsel = (Set<Object>) getValue();
                     if (newsel == null) {
-                        newsel = new LinkedHashSet<>();
+                        newsel = new LinkedHashSet<Object>();
                     } else {
-                        newsel = new LinkedHashSet<>(newsel);
+                        newsel = new LinkedHashSet<Object>(newsel);
                     }
                     newsel.removeAll(visibleNotSelected);
                     newsel.addAll(acceptedSelections);
@@ -648,7 +657,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Gets the selected item id or in multiselect mode a set of selected ids.
      *
-     * @see com.vaadin.v7.ui.AbstractField#getValue()
+     * @see AbstractField#getValue()
      */
     @Override
     public Object getValue() {
@@ -658,14 +667,14 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
             // If the return value is not a set
             if (retValue == null) {
-                return new HashSet<>();
+                return new HashSet<Object>();
             }
             if (retValue instanceof Set) {
                 return Collections.unmodifiableSet((Set<?>) retValue);
             } else if (retValue instanceof Collection) {
                 return new HashSet<Object>((Collection<?>) retValue);
             } else {
-                final Set<Object> s = new HashSet<>();
+                final Set<Object> s = new HashSet<Object>();
                 if (items.containsId(retValue)) {
                     s.add(retValue);
                 }
@@ -688,7 +697,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *
      * @param newValue
      *            the New selected item or collection of selected items.
-     * @see com.vaadin.v7.ui.AbstractField#setValue(java.lang.Object)
+     * @see AbstractField#setValue(java.lang.Object)
      */
     @Override
     public void setValue(Object newValue) throws Property.ReadOnlyException {
@@ -715,17 +724,15 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
      *            True if read-only check should be omitted.
-     * @see com.vaadin.v7.ui.AbstractField#setValue(java.lang.Object,
-     *      java.lang.Boolean)
+     * @see AbstractField#setValue(java.lang.Object, java.lang.Boolean)
      */
     @Override
     protected void setValue(Object newFieldValue, boolean repaintIsNotNeeded,
-            boolean ignoreReadOnly)
-            throws com.vaadin.v7.data.Property.ReadOnlyException,
+            boolean ignoreReadOnly) throws Property.ReadOnlyException,
             ConversionException, InvalidValueException {
         if (isMultiSelect()) {
             if (newFieldValue == null) {
-                super.setValue(new LinkedHashSet<>(), repaintIsNotNeeded,
+                super.setValue(new LinkedHashSet<Object>(), repaintIsNotNeeded,
                         ignoreReadOnly);
             } else if (Collection.class
                     .isAssignableFrom(newFieldValue.getClass())) {
@@ -779,19 +786,19 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *
      * @param propertyId
      *            the Id identifying the property.
-     * @see com.com.vaadin.v7.data.Container#getType(java.lang.Object)
+     * @see Container#getType(java.lang.Object)
      */
     @Override
     public Class<?> getType(Object propertyId) {
         return items.getType(propertyId);
     }
 
-    /*
+    /**
      * Gets the number of items in the container.
      *
      * @return the Number of items in the container.
      *
-     * @see com.vaadin.data.Container#size()
+     * @see Container#size()
      */
     @Override
     public int size() {
@@ -819,8 +826,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Gets the Property identified by the given itemId and propertyId from the
      * Container
      *
-     * @see com.com.vaadin.v7.data.Container#getContainerProperty(Object,
-     *      Object)
+     * @see Container#getContainerProperty(Object, Object)
      */
     @Override
     public Property getContainerProperty(Object itemId, Object propertyId) {
@@ -835,8 +841,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * returns false.
      *
      * @return True if the operation succeeded.
-     * @see com.com.vaadin.v7.data.Container#addContainerProperty(java.lang.Object,
-     *      java.lang.Class, java.lang.Object)
+     * @see Container#addContainerProperty(java.lang.Object, java.lang.Class,
+     *      java.lang.Object)
      */
     @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
@@ -857,7 +863,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * returns false.
      *
      * @return True if the operation succeeded.
-     * @see com.com.vaadin.v7.data.Container#removeAllItems()
+     * @see Container#removeAllItems()
      */
     @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
@@ -879,7 +885,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * method. if the creation fails, null is returned.
      *
      * @return the Id of the created item or null in case of failure.
-     * @see com.com.vaadin.v7.data.Container#addItem()
+     * @see Container#addItem()
      */
     @Override
     public Object addItem() throws UnsupportedOperationException {
@@ -904,7 +910,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @param itemId
      *            the Identification of the item to be created.
      * @return the Created item with the given id, or null in case of failure.
-     * @see com.com.vaadin.v7.data.Container#addItem(java.lang.Object)
+     * @see Container#addItem(java.lang.Object)
      */
     @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
@@ -949,11 +955,6 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         addItems(itemIds.toArray());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeItem(java.lang.Object)
-     */
     @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
@@ -983,7 +984,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         if (isMultiSelect()) {
             Collection<Object> valueAsCollection = (Collection<Object>) value;
-            List<Object> newSelection = new ArrayList<>(
+            List<Object> newSelection = new ArrayList<Object>(
                     valueAsCollection.size());
             for (Object subValue : valueAsCollection) {
                 if (containsId(subValue)) {
@@ -1011,7 +1012,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * returns false.
      *
      * @return True if the operation succeeded.
-     * @see com.com.vaadin.v7.data.Container#removeContainerProperty(java.lang.Object)
+     * @see Container#removeContainerProperty(java.lang.Object)
      */
     @Override
     public boolean removeContainerProperty(Object propertyId)
@@ -1032,7 +1033,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * As a side-effect the fields value (selection) is set to null due old
      * selection not necessary exists in new Container.
      *
-     * @see com.com.vaadin.v7.data.Container.Viewer#setContainerDataSource(Container)
+     * @see Container.Viewer#setContainerDataSource(Container)
      *
      * @param newDataSource
      *            the new data source.
@@ -1091,7 +1092,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Gets the viewing data-source container.
      *
-     * @see com.com.vaadin.v7.data.Container.Viewer#getContainerDataSource()
+     * @see Container.Viewer#getContainerDataSource()
      */
     @Override
     public Container getContainerDataSource() {
@@ -1106,7 +1107,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @return the Value of property multiSelect.
      */
     public boolean isMultiSelect() {
-        return getState(false).multiSelect;
+        return multiSelect;
     }
 
     /**
@@ -1125,16 +1126,16 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             throw new IllegalStateException(
                     "Multiselect and NullSelectionItemId can not be set at the same time.");
         }
-        if (multiSelect != getState(false).multiSelect) {
+        if (multiSelect != this.multiSelect) {
 
             // Selection before mode change
             final Object oldValue = getValue();
 
-            getState().multiSelect = multiSelect;
+            this.multiSelect = multiSelect;
 
             // Convert the value type
             if (multiSelect) {
-                final Set<Object> s = new HashSet<>();
+                final Set<Object> s = new HashSet<Object>();
                 if (oldValue != null) {
                     s.add(oldValue);
                 }
@@ -1539,7 +1540,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             setValue(itemId);
         } else if (!isSelected(itemId) && itemId != null
                 && items.containsId(itemId)) {
-            final Set<Object> s = new HashSet<>((Set<?>) getValue());
+            final Set<Object> s = new HashSet<Object>((Set<?>) getValue());
             s.add(itemId);
             setValue(s);
         }
@@ -1557,7 +1558,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void unselect(Object itemId) {
         if (isSelected(itemId)) {
             if (isMultiSelect()) {
-                final Set<Object> s = new HashSet<>((Set<?>) getValue());
+                final Set<Object> s = new HashSet<Object>((Set<?>) getValue());
                 s.remove(itemId);
                 setValue(s);
             } else {
@@ -1569,7 +1570,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Notifies this listener that the Containers contents has changed.
      *
-     * @see com.com.vaadin.v7.data.Container.PropertySetChangeListener#containerPropertySetChange(com.com.vaadin.v7.data.Container.PropertySetChangeEvent)
+     * @see Container.PropertySetChangeListener#containerPropertySetChange(Container.PropertySetChangeEvent)
      */
     @Override
     public void containerPropertySetChange(
@@ -1580,20 +1581,20 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Adds a new Property set change listener for this Container.
      *
-     * @see com.com.vaadin.v7.data.Container.PropertySetChangeNotifier#addListener(com.com.vaadin.v7.data.Container.PropertySetChangeListener)
+     * @see Container.PropertySetChangeNotifier#addListener(Container.PropertySetChangeListener)
      */
     @Override
     public void addPropertySetChangeListener(
             Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners == null) {
-            propertySetEventListeners = new LinkedHashSet<>();
+            propertySetEventListeners = new LinkedHashSet<PropertySetChangeListener>();
         }
         propertySetEventListeners.add(listener);
     }
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -1604,7 +1605,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Removes a previously registered Property set change listener.
      *
-     * @see com.com.vaadin.v7.data.Container.PropertySetChangeNotifier#removeListener(com.com.vaadin.v7.data.Container.PropertySetChangeListener)
+     * @see Container.PropertySetChangeNotifier#removeListener(Container.PropertySetChangeListener)
      */
     @Override
     public void removePropertySetChangeListener(
@@ -1619,7 +1620,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.com.vaadin.v7.data.Container.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -1630,20 +1631,20 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Adds an Item set change listener for the object.
      *
-     * @see com.com.vaadin.v7.data.Container.ItemSetChangeNotifier#addListener(com.com.vaadin.v7.data.Container.ItemSetChangeListener)
+     * @see Container.ItemSetChangeNotifier#addListener(Container.ItemSetChangeListener)
      */
     @Override
     public void addItemSetChangeListener(
             Container.ItemSetChangeListener listener) {
         if (itemSetEventListeners == null) {
-            itemSetEventListeners = new LinkedHashSet<>();
+            itemSetEventListeners = new LinkedHashSet<ItemSetChangeListener>();
         }
         itemSetEventListeners.add(listener);
     }
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addItemSetChangeListener(com.com.vaadin.v7.data.Container.ItemSetChangeListener)}
+     *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -1654,7 +1655,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Removes the Item set change listener from the object.
      *
-     * @see com.com.vaadin.v7.data.Container.ItemSetChangeNotifier#removeListener(com.com.vaadin.v7.data.Container.ItemSetChangeListener)
+     * @see Container.ItemSetChangeNotifier#removeListener(Container.ItemSetChangeListener)
      */
     @Override
     public void removeItemSetChangeListener(
@@ -1669,7 +1670,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeItemSetChangeListener(com.com.vaadin.v7.data.Container.ItemSetChangeListener)}
+     *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -1702,7 +1703,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Lets the listener know a Containers Item set has changed.
      *
-     * @see com.com.vaadin.v7.data.Container.ItemSetChangeListener#containerItemSetChange(com.com.vaadin.v7.data.Container.ItemSetChangeEvent)
+     * @see Container.ItemSetChangeListener#containerItemSetChange(Container.ItemSetChangeEvent)
      */
     @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
@@ -1759,7 +1760,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         /**
          * Gets the Property where the event occurred.
          *
-         * @see com.com.vaadin.v7.data.Container.ItemSetChangeEvent#getContainer()
+         * @see Container.ItemSetChangeEvent#getContainer()
          */
         @Override
         public Container getContainer() {
@@ -1781,7 +1782,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         /**
          * Retrieves the Container whose contents have been modified.
          *
-         * @see com.com.vaadin.v7.data.Container.PropertySetChangeEvent#getContainer()
+         * @see Container.PropertySetChangeEvent#getContainer()
          */
         @Override
         public Container getContainer() {
@@ -1798,7 +1799,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      */
     @Override
     public boolean isEmpty() {
-        if (!isMultiSelect()) {
+        if (!multiSelect) {
             return super.isEmpty();
         } else {
             Object value = getValue();
@@ -1880,7 +1881,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Notifies the component that it is connected to an application.
      *
-     * @see com.vaadin.v7.ui.AbstractField#attach()
+     * @see AbstractField#attach()
      */
     @Override
     public void attach() {
@@ -1890,7 +1891,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Detaches the component from application.
      *
-     * @see com.vaadin.ui.AbstractComponent#detach()
+     * @see vaadin.ui.AbstractComponent#detach()
      */
     @Override
     public void detach() {
@@ -1923,7 +1924,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         // TODO clean this up - type is either Item.PropertySetChangeNotifier or
         // Property.ValueChangeNotifier
-        HashSet<Object> captionChangeNotifiers = new HashSet<>();
+        HashSet<Object> captionChangeNotifiers = new HashSet<Object>();
 
         public void addNotifierForItem(Object itemId) {
             switch (getItemCaptionMode()) {
@@ -1993,14 +1994,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
 
         @Override
-        public void valueChange(
-                com.vaadin.v7.data.Property.ValueChangeEvent event) {
+        public void valueChange(Property.ValueChangeEvent event) {
             markAsDirty();
         }
 
         @Override
-        public void itemPropertySetChange(
-                com.vaadin.v7.data.Item.PropertySetChangeEvent event) {
+        public void itemPropertySetChange(Item.PropertySetChangeEvent event) {
             markAsDirty();
         }
 
@@ -2049,7 +2048,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      */
     private static abstract class AbstractItemSetCriterion
             extends ClientSideCriterion {
-        protected final Collection<Object> itemIds = new HashSet<>();
+        protected final Collection<Object> itemIds = new HashSet<Object>();
         protected AbstractSelect select;
 
         public AbstractItemSetCriterion(AbstractSelect select,
@@ -2224,7 +2223,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     protected void readItems(Element design, DesignContext context) {
-        Set<String> selected = new HashSet<>();
+        Set<String> selected = new HashSet<String>();
         for (Element child : design.children()) {
             readItem(child, selected, context);
         }

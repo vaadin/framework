@@ -23,6 +23,9 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * RPC for firing server side drop event when client side drop event happens on
  * drop target.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public interface DropTargetRpc extends ServerRpc {
 
@@ -36,7 +39,9 @@ public interface DropTargetRpc extends ServerRpc {
      *         Contains data from {@code DataTransfer} object.
      * @param dropEffect
      *         Drop effect set for the drop target where drop happened.
+     * @param dragSourceId
+     *         Drag source component connector's ID.
      */
     public void drop(List<String> types, Map<String, String> data,
-            DropEffect dropEffect);
+            DropEffect dropEffect, String dragSourceId);
 }

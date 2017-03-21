@@ -528,6 +528,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @param listener
      *            The listener to add
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addClickListener(ClickListener listener) {
         return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,

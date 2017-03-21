@@ -30,6 +30,7 @@ import com.vaadin.v7.data.util.converter.Converter.ConversionException;
  *
  * Note that depending on the QueryDelegate in use this does not necessarily map
  * into an actual column in a database table.
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 final public class ColumnProperty implements Property {
@@ -253,6 +254,8 @@ final public class ColumnProperty implements Property {
     public String getPropertyId() {
         return propertyId;
     }
+
+    // LegacyPropertyHelper has been removed in Vaadin 8
 
     private static Logger getLogger() {
         return Logger.getLogger(ColumnProperty.class.getName());

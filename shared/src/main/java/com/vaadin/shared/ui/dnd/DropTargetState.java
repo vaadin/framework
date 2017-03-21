@@ -19,6 +19,9 @@ import com.vaadin.shared.communication.SharedState;
 
 /**
  * State class containing parameters for DropTargetExtension.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public class DropTargetState extends SharedState {
     /**

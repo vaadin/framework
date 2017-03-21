@@ -17,14 +17,18 @@ package com.vaadin.v7.data.fieldgroup;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 import com.vaadin.v7.ui.Field;
 
 /**
- * Factory interface for creating new LegacyField-instances based on the data
- * type that should be edited.
+ * Factory interface for creating new Field-instances based on the data type
+ * that should be edited.
  *
  * @author Vaadin Ltd.
  * @since 7.0
+ * @deprecated As of 8.0, no direct replacement available. {@link Binder#forMemberField(HasValue)} and
+ * {@link Binder#bindInstanceFields(Object)} should be used instead.
  */
 @Deprecated
 public interface FieldGroupFieldFactory extends Serializable {

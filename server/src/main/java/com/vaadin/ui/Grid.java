@@ -72,6 +72,8 @@ import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableSupplier;
 import com.vaadin.server.Setter;
+import com.vaadin.server.VaadinServiceClassLoaderUtil;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -85,7 +87,6 @@ import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
@@ -97,12 +98,10 @@ import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
-import com.vaadin.ui.components.grid.FooterCell;
 import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
-import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
@@ -116,6 +115,7 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
+import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.renderers.Renderer;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -136,6 +136,8 @@ import elemental.json.JsonValue;
  */
 public class Grid<T> extends AbstractListing<T> implements HasComponents,
         HasDataProvider<T>, SortNotifier<GridSortOrder<T>> {
+
+    private static final String DECLARATIVE_DATA_ITEM_TYPE = "data-item-type";
 
     /**
      * A callback method for fetching items. The callback is provided with a
@@ -645,8 +647,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         .hasKey(diffStateKey) : "Field name has changed";
                 Type type = null;
                 try {
-                    type = getState(false).getClass()
-                            .getDeclaredField(diffStateKey).getGenericType();
+                    type = getState(false).getClass().getField(diffStateKey)
+                            .getGenericType();
                 } catch (NoSuchFieldException | SecurityException e) {
                     e.printStackTrace();
                 }
@@ -832,6 +834,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private DescriptionGenerator<T> descriptionGenerator;
 
         private Binding<T, ?> editorBinding;
+        private Map<T, Component> activeComponents = new HashMap<>();
 
         private String userId;
 
@@ -887,7 +890,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
             } else {
-                return compareComparables(a.toString(), b.toString());
+                return compareComparables(Objects.toString(a, ""),
+                        Objects.toString(b, ""));
             }
         }
 
@@ -902,9 +906,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
                 Class<?> baseType = ReflectTools.findCommonBaseType(aClass,
                         bClass);
-                if (!baseType.isAssignableFrom(Comparable.class)) {
-                    return false;
+                if (Comparable.class.isAssignableFrom(baseType)) {
+                    return true;
                 }
+            }
+            if ((a == null && b instanceof Comparable<?>)
+                    || (b == null && a instanceof Comparable<?>)) {
+                return true;
             }
 
             return false;
@@ -957,6 +965,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             V providerValue = valueProvider.apply(data);
 
+            // Make Grid track components.
+            if (renderer instanceof ComponentRenderer
+                    && providerValue instanceof Component) {
+                addComponent(data, (Component) providerValue);
+            }
             JsonValue rendererValue = renderer.encode(providerValue);
 
             obj.put(communicationId, rendererValue);
@@ -975,6 +988,38 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     descriptionObj.put(communicationId, description);
                 }
             }
+        }
+
+        private void addComponent(T data, Component component) {
+            if (activeComponents.containsKey(data)) {
+                if (activeComponents.get(data).equals(component)) {
+                    // Reusing old component
+                    return;
+                }
+                removeComponent(data);
+            }
+            activeComponents.put(data, component);
+            addComponentToGrid(component);
+        }
+
+        @Override
+        public void destroyData(T item) {
+            removeComponent(item);
+        }
+
+        private void removeComponent(T item) {
+            Component component = activeComponents.remove(item);
+            if (component != null) {
+                removeComponentFromGrid(component);
+            }
+        }
+
+        @Override
+        public void destroyAllData() {
+            // Make a defensive copy of keys, as the map gets cleared when
+            // removing components.
+            new HashSet<>(activeComponents.keySet())
+                    .forEach(this::removeComponent);
         }
 
         /**
@@ -1072,6 +1117,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Gets the function used to produce the value for data in this column
+         * based on the row item.
+         *
+         * @return the value provider function
+         *
+         * @since 8.0.3
+         */
+        public SerializableFunction<T, ? extends V> getValueProvider() {
+            return valueProvider;
+        }
+
+        /**
          * Sets whether the user can sort this column or not.
          *
          * @param sortable
@@ -1104,6 +1161,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setCaption(String caption) {
             Objects.requireNonNull(caption, "Header caption can't be null");
+            if (caption.equals(getState(false).caption)) {
+                return this;
+            }
             getState().caption = caption;
 
             HeaderRow row = getGrid().getDefaultHeaderRow();
@@ -1757,6 +1817,36 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Sets the Renderer for this Column. Setting the renderer will cause
+         * all currently available row data to be recreated and sent to the
+         * client.
+         *
+         * @param renderer
+         *            the new renderer
+         * @return this column
+         *
+         * @since 8.0.3
+         */
+        public Column<T, V> setRenderer(Renderer<? super V> renderer) {
+            Objects.requireNonNull(renderer, "Renderer can't be null");
+
+            // Remove old renderer
+            Connector oldRenderer = getState().renderer;
+            if (oldRenderer != null && oldRenderer instanceof Extension) {
+                removeExtension((Extension) oldRenderer);
+            }
+
+            // Set new renderer
+            getState().renderer = renderer;
+            addExtension(renderer);
+
+            // Trigger redraw
+            getParent().getDataCommunicator().reset();
+
+            return this;
+        }
+
+        /**
          * Gets the grid that this column belongs to.
          *
          * @return the grid that this column belongs to, or <code>null</code> if
@@ -1984,7 +2074,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     private Editor<T> editor;
 
-    private final PropertySet<T> propertySet;
+    private PropertySet<T> propertySet;
+
+    private Class<T> beanType = null;
 
     /**
      * Creates a new grid without support for creating columns based on property
@@ -1996,20 +2088,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @see #withPropertySet(PropertySet)
      */
     public Grid() {
-        this(new PropertySet<T>() {
-            @Override
-            public Stream<PropertyDefinition<T, ?>> getProperties() {
-                // No columns configured by default
-                return Stream.empty();
-            }
-
-            @Override
-            public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
-                throw new IllegalStateException(
-                        "A Grid created without a bean type class literal or a custom property set"
-                                + " doesn't support finding properties by name.");
-            }
-        });
+        this(new DataCommunicator<>());
     }
 
     /**
@@ -2025,6 +2104,33 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public Grid(Class<T> beanType) {
         this(BeanPropertySet.get(beanType));
+        this.beanType = beanType;
+    }
+
+    /**
+     * Creates a new grid with the given data communicator and without support
+     * for creating columns based on property names.
+     *
+     * @param dataCommunicator
+     *            the custom data communicator to set
+     * @see #Grid()
+     * @see #Grid(PropertySet, DataCommunicator)
+     */
+    protected Grid(DataCommunicator<T> dataCommunicator) {
+        this(new PropertySet<T>() {
+            @Override
+            public Stream<PropertyDefinition<T, ?>> getProperties() {
+                // No columns configured by default
+                return Stream.empty();
+            }
+
+            @Override
+            public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
+                throw new IllegalStateException(
+                        "A Grid created without a bean type class literal or a custom property set"
+                                + " doesn't support finding properties by name.");
+            }
+        }, dataCommunicator);
     }
 
     /**
@@ -2039,23 +2145,34 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the property set implementation to use, not <code>null</code>.
      */
     protected Grid(PropertySet<T> propertySet) {
-        Objects.requireNonNull(propertySet, "propertySet cannot be null");
-        this.propertySet = propertySet;
+        this(propertySet, new DataCommunicator<>());
+    }
 
+    /**
+     * Creates a grid using a custom {@link PropertySet} implementation and
+     * custom data communicator.
+     * <p>
+     * Property set is used for configuring the initial columns and resolving
+     * property names for {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     *
+     * @see #withPropertySet(PropertySet)
+     *
+     * @param propertySet
+     *            the property set implementation to use, not <code>null</code>.
+     * @param dataCommunicator
+     *            the data communicator to use, not<code>null</code>
+     */
+    protected Grid(PropertySet<T> propertySet,
+            DataCommunicator<T> dataCommunicator) {
+        super(dataCommunicator);
         registerRpc(new GridServerRpcImpl());
-
         setDefaultHeaderRow(appendHeaderRow());
-
         setSelectionModel(new SingleSelectionModelImpl<>());
 
         detailsManager = new DetailsManager<>();
         addExtension(detailsManager);
         addDataGenerator(detailsManager);
-
-        editor = createEditor();
-        if (editor instanceof Extension) {
-            addExtension((Extension) editor);
-        }
 
         addDataGenerator((item, json) -> {
             String styleName = styleGenerator.apply(item);
@@ -2070,9 +2187,37 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
         });
 
+        setPropertySet(propertySet);
+
         // Automatically add columns for all available properties
         propertySet.getProperties().map(PropertyDefinition::getName)
                 .forEach(this::addColumn);
+    }
+
+    /**
+     * Sets the property set to use for this grid. Does not create or update
+     * columns in any way but will delete and re-create the editor.
+     * <p>
+     * This is only meant to be called from constructors and readDesign, at a
+     * stage where it does not matter if you throw away the editor.
+     *
+     * @param propertySet
+     *            the property set to use
+     *
+     * @since 8.0.3
+     */
+    protected void setPropertySet(PropertySet<T> propertySet) {
+        Objects.requireNonNull(propertySet, "propertySet cannot be null");
+        this.propertySet = propertySet;
+
+        if (editor instanceof Extension) {
+            removeExtension((Extension) editor);
+        }
+        editor = createEditor();
+        if (editor instanceof Extension) {
+            addExtension((Extension) editor);
+        }
+
     }
 
     /**
@@ -2145,6 +2290,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public Grid(String caption, Collection<T> items) {
         this(caption, DataProvider.ofCollection(items));
+    }
+
+    /**
+     * Gets the bean type used by this grid.
+     * <p>
+     * The bean type is used to automatically set up a column added using a
+     * property name.
+     *
+     * @return the used bean type or <code>null</code> if no bean type has been
+     *         defined
+     *
+     * @since 8.0.3
+     */
+    public Class<T> getBeanType() {
+        return beanType;
     }
 
     public <V> void fireColumnVisibilityChangeEvent(Column<T, V> column,
@@ -2252,9 +2412,25 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
             AbstractRenderer<? super T, ? super V> renderer) {
         String generatedIdentifier = getGeneratedIdentifier();
-        Column<T, V> column = new Column<>(valueProvider, renderer);
+        Column<T, V> column = createColumn(valueProvider, renderer);
         addColumn(generatedIdentifier, column);
         return column;
+    }
+
+    /**
+     * Creates a column instance from a value provider and a renderer.
+     *
+     * @param valueProvider
+     *            the value provider
+     * @param renderer
+     *            the renderer
+     * @return a new column instance
+     *
+     * @since 8.0.3
+     */
+    protected <V> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
+            AbstractRenderer<? super T, ? super V> renderer) {
+        return new Column<>(valueProvider, renderer);
     }
 
     private void addColumn(String identifier, Column<T, ?> column) {
@@ -2286,12 +2462,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
             String columnId = column.getInternalId();
+            int displayIndex = getState(false).columnOrder.indexOf(columnId);
+            assert displayIndex != -1 : "Tried to remove a column which is not included in columnOrder. This should not be possible as all columns should be in columnOrder.";
             columnKeys.remove(columnId);
             columnIds.remove(column.getId());
             column.remove();
             getHeader().removeColumn(columnId);
             getFooter().removeColumn(columnId);
             getState(true).columnOrder.remove(columnId);
+
+            if (displayIndex < getFrozenColumnCount()) {
+                setFrozenColumnCount(getFrozenColumnCount() - 1);
+            }
         }
     }
 
@@ -2306,6 +2488,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void removeColumn(String columnId) {
         removeColumn(getColumnOrThrow(columnId));
+    }
+
+    /**
+     * Removes all columns from this Grid.
+     *
+     * @since 8.0.2
+     */
+    public void removeAllColumns() {
+        for (Column<T, ?> column : getColumns()) {
+            removeColumn(column);
+        }
     }
 
     /**
@@ -2379,28 +2572,23 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return column;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Note that the order of the returned components it not specified.
+     */
     @Override
     public Iterator<Component> iterator() {
         Set<Component> componentSet = new LinkedHashSet<>(extensionComponents);
         Header header = getHeader();
         for (int i = 0; i < header.getRowCount(); ++i) {
             HeaderRow row = header.getRow(i);
-            getColumns().forEach(column -> {
-                HeaderCell cell = row.getCell(column);
-                if (cell.getCellType() == GridStaticCellType.WIDGET) {
-                    componentSet.add(cell.getComponent());
-                }
-            });
+            componentSet.addAll(row.getComponents());
         }
         Footer footer = getFooter();
         for (int i = 0; i < footer.getRowCount(); ++i) {
             FooterRow row = footer.getRow(i);
-            getColumns().forEach(column -> {
-                FooterCell cell = row.getCell(column);
-                if (cell.getCellType() == GridStaticCellType.WIDGET) {
-                    componentSet.add(cell.getComponent());
-                }
-            });
+            componentSet.addAll(row.getComponents());
         }
         return Collections.unmodifiableSet(componentSet).iterator();
     }
@@ -2410,6 +2598,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * means that no data columns will be frozen, but the built-in selection
      * checkbox column will still be frozen if it's in use. Setting the count to
      * -1 will also disable the selection column.
+     * <p>
+     * <em>NOTE:</em> this count includes {@link Column#isHidden() hidden
+     * columns} in the count.
      * <p>
      * The default value is 0.
      *
@@ -3505,6 +3696,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     @Override
     protected void doReadDesign(Element design, DesignContext context) {
         Attributes attrs = design.attributes();
+        if (design.hasAttr(DECLARATIVE_DATA_ITEM_TYPE)) {
+            String itemType = design.attr(DECLARATIVE_DATA_ITEM_TYPE);
+            setBeanType(itemType);
+        }
+
         if (attrs.hasKey("selection-mode")) {
             setSelectionMode(DesignAttributeHandler.readAttribute(
                     "selection-mode", attrs, SelectionMode.class));
@@ -3529,9 +3725,63 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
+    /**
+     * Sets the bean type to use for property mapping.
+     * <p>
+     * This method is responsible also for setting or updating the property set
+     * so that it matches the given bean type.
+     * <p>
+     * Protected mostly for Designer needs, typically should not be overridden
+     * or even called.
+     *
+     * @param beanTypeClassName
+     *            the fully qualified class name of the bean type
+     *
+     * @since 8.0.3
+     */
+    @SuppressWarnings("unchecked")
+    protected void setBeanType(String beanTypeClassName) {
+        setBeanType((Class<T>) resolveClass(beanTypeClassName));
+    }
+
+    /**
+     * Sets the bean type to use for property mapping.
+     * <p>
+     * This method is responsible also for setting or updating the property set
+     * so that it matches the given bean type.
+     * <p>
+     * Protected mostly for Designer needs, typically should not be overridden
+     * or even called.
+     *
+     * @param beanType
+     *            the bean type class
+     *
+     * @since 8.0.3
+     */
+    protected void setBeanType(Class<T> beanType) {
+        this.beanType = beanType;
+        setPropertySet(BeanPropertySet.get(beanType));
+    }
+
+    private Class<?> resolveClass(String qualifiedClassName) {
+        try {
+            Class<?> resolvedClass = Class.forName(qualifiedClassName, true,
+                    VaadinServiceClassLoaderUtil.findDefaultClassLoader());
+            return resolvedClass;
+        } catch (ClassNotFoundException | SecurityException e) {
+            throw new IllegalArgumentException(
+                    "Unable to find class " + qualifiedClassName, e);
+        }
+
+    }
+
     @Override
     protected void doWriteDesign(Element design, DesignContext designContext) {
         Attributes attr = design.attributes();
+        if (this.beanType != null) {
+            design.attr(DECLARATIVE_DATA_ITEM_TYPE,
+                    this.beanType.getCanonicalName());
+        }
         DesignAttributeHandler.writeAttribute("selection-allowed", attr,
                 isReadOnly(), false, Boolean.class, designContext);
 
@@ -3610,14 +3860,24 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         for (Element col : colgroups.get(0).getElementsByTag("col")) {
             String id = DesignAttributeHandler.readAttribute("column-id",
                     col.attributes(), null, String.class);
-            DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-            Column<T, String> column = new Column<>(provider,
-                    new HtmlRenderer());
-            addColumn(getGeneratedIdentifier(), column);
-            if (id != null) {
-                column.setId(id);
+
+            // If there is a property with a matching name available,
+            // map to that
+            Optional<PropertyDefinition<T, ?>> property = propertySet
+                    .getProperties().filter(p -> p.getName().equals(id))
+                    .findFirst();
+            Column<T, ?> column;
+            if (property.isPresent()) {
+                column = addColumn(id);
+            } else {
+                DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
+                column = new Column<>(provider, new HtmlRenderer());
+                addColumn(getGeneratedIdentifier(), column);
+                if (id != null) {
+                    column.setId(id);
+                }
+                providers.add(provider);
             }
-            providers.add(provider);
             column.readDesign(col, context);
         }
 
@@ -3632,7 +3892,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
-    private void readData(Element body,
+    protected void readData(Element body,
             List<DeclarativeValueProvider<T>> providers) {
         getSelectionModel().deselectAll();
         List<T> items = new ArrayList<>();
@@ -3671,14 +3931,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         if (designContext.shouldWriteData(this)) {
             Element bodyElement = tableElement.appendElement("tbody");
-            getDataProvider().fetch(new Query<>()).forEach(
-                    item -> writeRow(bodyElement, item, designContext));
+            writeData(bodyElement, designContext);
         }
 
         if (getFooter().getRowCount() > 0) {
             getFooter().writeDesign(tableElement.appendElement("tfoot"),
                     designContext);
         }
+    }
+
+    protected void writeData(Element body, DesignContext designContext) {
+        getDataProvider().fetch(new Query<>())
+                .forEach(item -> writeRow(body, item, designContext));
     }
 
     private void writeRow(Element container, T item, DesignContext context) {

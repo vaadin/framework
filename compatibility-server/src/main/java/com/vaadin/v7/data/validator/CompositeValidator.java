@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 import com.vaadin.v7.data.Validator;
 
 /**
@@ -32,6 +34,10 @@ import com.vaadin.v7.data.Validator;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, no direct replacement available. See {@link Binder#forField(HasValue)} and various methods for
+ * validation and conversion chaining: {@code withValidator(...)}, {@code withConverter(...)},
+ * {@code withNullRepresentation(...)}
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -74,7 +80,7 @@ public class CompositeValidator implements Validator {
     /**
      * List of contained validators.
      */
-    private final List<Validator> validators = new LinkedList<>();
+    private final List<Validator> validators = new LinkedList<Validator>();
 
     /**
      * Construct a composite validator in <code>AND</code> mode without error
@@ -240,7 +246,7 @@ public class CompositeValidator implements Validator {
             return null;
         }
 
-        final HashSet<Validator> found = new HashSet<>();
+        final HashSet<Validator> found = new HashSet<Validator>();
         for (Validator v : validators) {
             if (validatorType.isAssignableFrom(v.getClass())) {
                 found.add(v);

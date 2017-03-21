@@ -114,6 +114,34 @@ public class VaadinServletService extends VaadinService {
         return sb.toString();
     }
 
+    /**
+     * Gets a relative path you can use to refer to the context root.
+     *
+     * @param request
+     *            the request for which the location should be determined
+     * @return A relative path to the context root. Never ends with a slash (/).
+     *
+     * @since 8.0.3
+     */
+    public static String getContextRootRelativePath(VaadinRequest request) {
+        VaadinServletRequest servletRequest = (VaadinServletRequest) request;
+        // Generate location from the request by finding how many "../" should
+        // be added to the servlet path before we get to the context root
+
+        String servletPath = servletRequest.getServletPath();
+        if (servletPath == null) {
+            // Not allowed by the spec but servers are servers...
+            servletPath = "";
+        }
+
+        String pathInfo = servletRequest.getPathInfo();
+        if (pathInfo != null && !"".equals(pathInfo)) {
+            servletPath += pathInfo;
+        }
+
+        return getCancelingRelativePath(servletPath);
+    }
+
     @Override
     public String getConfiguredWidgetset(VaadinRequest request) {
         return getDeploymentConfiguration()

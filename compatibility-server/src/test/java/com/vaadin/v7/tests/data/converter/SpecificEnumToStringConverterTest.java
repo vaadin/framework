@@ -43,7 +43,7 @@ public class SpecificEnumToStringConverterTest {
         @Override
         public String convertToModel(Enum value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                throws ConversionException {
             if (value == null) {
                 return null;
             }
@@ -54,7 +54,7 @@ public class SpecificEnumToStringConverterTest {
         @Override
         public Enum convertToPresentation(String value,
                 Class<? extends Enum> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                throws ConversionException {
             if (value == null) {
                 return null;
             }

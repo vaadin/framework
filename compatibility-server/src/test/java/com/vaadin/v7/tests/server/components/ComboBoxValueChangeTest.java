@@ -27,7 +27,7 @@ public class ComboBoxValueChangeTest
 
     @Override
     protected void setValue(AbstractField<Object> field) {
-        Map<String, Object> variables = new HashMap<>();
+        Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("selected", new String[] { "myvalue" });
         ((ComboBox) field).changeVariables(field, variables);
     }

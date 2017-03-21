@@ -24,7 +24,7 @@ import java.security.PrivilegedAction;
  * @since 7.4
  * @author Vaadin Ltd
  */
-class VaadinServiceClassLoaderUtil {
+public class VaadinServiceClassLoaderUtil {
 
     private static class GetClassLoaderPrivilegedAction
             implements PrivilegedAction<ClassLoader> {
@@ -48,7 +48,7 @@ class VaadinServiceClassLoaderUtil {
      *             if current security policy doesn't allow acquiring current
      *             thread's context class loader
      */
-    static protected ClassLoader findDefaultClassLoader()
+    public static ClassLoader findDefaultClassLoader()
             throws SecurityException {
         return AccessController.doPrivileged(
                 new VaadinServiceClassLoaderUtil.GetClassLoaderPrivilegedAction());

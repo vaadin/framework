@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.grid]]
-= [classname]#Grid#
+= Grid
 
 ifdef::web[]
 [.sampler]
@@ -310,8 +310,8 @@ the [methodname]#removeColumn()#, as described later.
 === Hiding and Removing Columns
 
 Columns can be hidden by calling [methodname]#setHidden()# in [classname]#Column#.
-Furthermore, you can set the columns user hideable using method
-[methodname]#setHideable()#.
+Furthermore, you can set the columns user hidable using method
+[methodname]#setHidable()#.
 
 Columns can be removed with [methodname]#removeColumn()# and
 [methodname]#removeAllColumns()#. To restore a previously removed column,
@@ -403,9 +403,23 @@ You set the column renderer in the [classname]#Grid.Column# object as follows:
 [source, java]
 ----
 // the type of birthYear is a number
-Column<Integer> bornColumn = grid.addColumn(Person:getBirthYear,
+Column<Person, Integer> bornColumn = grid.addColumn(Person:getBirthYear,
       new NumberRenderer("born in %d AD"));
 ----
+
+Changing the renderer during runtime is also possible, but for type safety
+you should store the column reference with data types for doing this.
+When you change the renderer, the content of Grid is refreshed.
+
+[source, java]
+----
+Column<Person, Integer> ageColumn = grid.addColumn(Person::getBirthYear);
+// The default renderer is TextRenderer
+addComponent(new Button("Change renderer", 
+	clickEvent -> ageColumn.setRenderer(new NumberRenderer())
+));
+----
+
 The following renderers are available, as defined in the server-side
 [package]#com.vaadin.ui.renderers# package:
 
@@ -448,7 +462,7 @@ The column type must be a [interfacename]#Resource#, as described in
 +
 [source, java]
 ----
-Column<ThemeResource> imageColumn = grid.addColumn(
+Column<Person, ThemeResource> imageColumn = grid.addColumn(
     p -> new ThemeResource("img/"+p.getLastname()+".jpg"),
     new ImageRenderer());
 ----
@@ -478,7 +492,7 @@ Set the renderer in the [classname]#Grid.Column# object:
 +
 [source, java]
 ----
-Column<String> htmlColumn grid.addColumn(person ->
+Column<Person, String> htmlColumn grid.addColumn(person ->
       "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>",
       new HtmlRenderer());
 ----
@@ -502,6 +516,45 @@ Column<Integer> birthYear = grid.addColumn(Person::getBirthYear,
 [classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
 must be between 0.0 and 1.0.
 
+[classname]#ComponentRenderer#:: Renders a Vaadin [classname]#Component# in a column. Since components
+are quite complex, the [classname]#ComponentRenderer# comes with possible performance issues.
+To use it efficiently you should use as few nested components as possible.
+
++
+Use [classname]#Button# in [classname]#Grid#:
++
+----
+grid.addColumn(person -> {
+      Button button = new Button("Click me!");
+      button.addClickListener(click -> 
+            Notification.show("Clicked: " + person.toString()));
+      return button;
+}, new ComponentRenderer());
+----
+
+Components will occasionally be generated again during runtime. If you have a state in your 
+component and not in the data object, you need to handle storing it yourself. Below is a simple
+example on how to achieve this.
+
++
+Store a [classname]#TextField# with changed value.
++
+----
+Map<Person, TextField> textFields = new HashMap<>();
+grid.addColumn(person -> {
+      // Check for existing text field
+      if (textFields.containsKey(person)) {
+            return textFields.get(person);
+      }
+      // Create a new one
+      TextField textField = new TextField();
+      textField.setValue(person.getLastname());
+      // Store the text field when user updates the value
+      textField.addValueChangeListener(change -> 
+            textFields.put(person, textField));
+      return textField;
+      }, new ComponentRenderer());
+----
 
 [[components.grid.renderer.custom]]
 === Custom Renderers
@@ -680,19 +733,15 @@ direction)#, which allows specifying the sort direction.
 grid.sort(nameColumn, SortDirection.DESCENDING);
 ----
 
-To sort on multiple columns, you need to use the fluid sort API with
-[methodname]#sort(Sort)#, which allows chaining sorting rules. Sorting rules are
-created with the static [methodname]#by()# method, which defines the primary
-sort column, and [methodname]#then()#, which can be used to specify any
-secondary sort columns. They default to ascending sort order, but the sort
-direction can be given with an optional parameter.
-
+To sort by multiple columns, you need to use the fluid sort builder API
+[classname]#GridSortOrderBuilder#, which allows you to easily construct sorting information to be passed to grid's [methodname]#setSortOrder()# method.
+A sort builder is created with the static methods [methodname]#asc()# and [methodname]#desc()#,
+and additional sorting information can by chained with [methodname]#thenAsc()# and [methodname]#thenDesc()#.
 
 [source, java]
 ----
-// Sort first by city and then by name
-grid.sort(Sort.by(cityColumn, SortDirection.ASCENDING)
-              .then(nameColumn, SortDirection.DESCENDING));
+// Sort first by city (ascending) and then by name (descending)
+grid.setSortOrder(GridSortOrder.asc(cityColumn).thenDesc(nameColumn))
 ----
 
 

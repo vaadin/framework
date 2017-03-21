@@ -66,6 +66,8 @@ import com.vaadin.v7.ui.Tree.ExpandListener;
  * standard Hierarchical implementations. Developer must however note that
  * {@link Collapsible} containers can not be shared among several users as they
  * share UI state in the container.
+ *
+ * @deprecated As of 8.0. New hierarchical components are planned in an upcoming version of Vaadin Framework 8.
  */
 @SuppressWarnings({ "serial" })
 @Deprecated
@@ -197,7 +199,7 @@ public class TreeTable extends Table implements Hierarchical {
      */
     private class HierarchicalStrategy extends AbstractStrategy {
 
-        private final HashSet<Object> openItems = new HashSet<>();
+        private final HashSet<Object> openItems = new HashSet<Object>();
 
         @Override
         public boolean isNodeOpen(Object itemId) {
@@ -284,7 +286,7 @@ public class TreeTable extends Table implements Hierarchical {
          */
         private List<Object> getPreOrder() {
             if (preOrder == null) {
-                preOrder = new ArrayList<>();
+                preOrder = new ArrayList<Object>();
                 Collection<?> rootItemIds = getContainerDataSource()
                         .rootItemIds();
                 for (Object id : rootItemIds) {
@@ -624,8 +626,7 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     @Override
-    public void containerItemSetChange(
-            com.vaadin.v7.data.Container.ItemSetChangeEvent event) {
+    public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         // Can't do partial repaints if items are added or removed during the
         // expand/collapse request
         toggledItemId = null;
@@ -895,7 +896,7 @@ public class TreeTable extends Table implements Hierarchical {
 
     @Override
     protected List<Object> getItemIds(int firstIndex, int rows) {
-        List<Object> itemIds = new ArrayList<>();
+        List<Object> itemIds = new ArrayList<Object>();
         for (int i = firstIndex; i < firstIndex + rows; i++) {
             itemIds.add(getIdByIndex(i));
         }
@@ -909,8 +910,8 @@ public class TreeTable extends Table implements Hierarchical {
             return;
         }
 
-        Set<String> selected = new HashSet<>();
-        Stack<Object> parents = new Stack<>();
+        Set<String> selected = new HashSet<String>();
+        Stack<Object> parents = new Stack<Object>();
         int lastDepth = -1;
 
         for (Element tr : tbody.children()) {

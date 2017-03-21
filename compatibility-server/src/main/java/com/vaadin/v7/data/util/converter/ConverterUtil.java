@@ -19,7 +19,9 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinSession;
-
+/*
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public class ConverterUtil implements Serializable {
 
@@ -52,6 +54,7 @@ public class ConverterUtil implements Serializable {
         }
 
         if (session != null) {
+            // Intentional change in compatibility package
             ConverterFactory factory = (ConverterFactory) session
                     .getConverterFactory();
             if (factory == null) {

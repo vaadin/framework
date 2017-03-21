@@ -9,6 +9,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -403,6 +404,56 @@ public class GridTest {
     }
 
     @Test
+    public void removeAllColumns() {
+        grid.removeAllColumns();
+
+        Assert.assertEquals(Collections.emptyList(), grid.getColumns());
+    }
+
+    @Test
+    public void removeAllColumnsInGridWithoutColumns() {
+        grid.removeAllColumns();
+        grid.removeAllColumns();
+        Assert.assertEquals(Collections.emptyList(), grid.getColumns());
+    }
+
+    @Test
+    public void removeFrozenColumn() {
+        grid.setFrozenColumnCount(3);
+        grid.removeColumn(fooColumn);
+        assertEquals(2, grid.getFrozenColumnCount());
+    }
+
+    @Test
+    public void removeHiddenFrozenColumn() {
+        lengthColumn.setHidden(true);
+        grid.setFrozenColumnCount(3);
+        grid.removeColumn(lengthColumn);
+        assertEquals(2, grid.getFrozenColumnCount());
+    }
+
+    @Test
+    public void removeNonFrozenColumn() {
+        grid.setFrozenColumnCount(3);
+        grid.removeColumn(randomColumn);
+        assertEquals(3, grid.getFrozenColumnCount());
+    }
+
+    @Test
+    public void testFrozenColumnRemoveColumn() {
+        assertEquals("Grid should not start with a frozen column", 0,
+                grid.getFrozenColumnCount());
+
+        int columnCount = grid.getColumns().size();
+        grid.setFrozenColumnCount(columnCount);
+
+        grid.removeColumn(grid.getColumns().get(0));
+        assertEquals(
+                "Frozen column count should be updated when removing a frozen column",
+                columnCount - 1, grid.getFrozenColumnCount());
+    }
+
+    @Test
     public void setColumns_reorder() {
         // Will remove other columns
         grid.setColumns("length", "foo");
@@ -485,6 +536,12 @@ public class GridTest {
     @Test
     public void defaultSorting_differentComparables() {
         testValueProviderSorting(10.1, 200, 3000.1, 4000);
+    }
+
+    @Test
+    public void defaultSorting_mutuallyComparableTypes() {
+        testValueProviderSorting(new Date(10), new java.sql.Date(1000000),
+                new Date(100000000));
     }
 
     private static void testValueProviderSorting(Object... expectedOrder) {

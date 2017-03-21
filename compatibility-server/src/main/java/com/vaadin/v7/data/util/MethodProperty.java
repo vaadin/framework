@@ -25,6 +25,9 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.util.SerializerHelper;
@@ -58,6 +61,8 @@ import com.vaadin.v7.util.SerializerHelper;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -767,6 +772,39 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     @Override
     public void fireValueChange() {
         super.fireValueChange();
+    }
+
+    /**
+     * The instance used by this property
+     *
+     * @return the instance used for fetching the property value
+     * @since 7.7.7
+     */
+    public Object getInstance() {
+        return instance;
+    }
+
+    /**
+     * Sets the instance used by this property.
+     * <p>
+     * The new instance must be of the same type as the old instance
+     * <p>
+     * To be consistent with {@link #setValue(Object)}, this method will fire a
+     * value change event even if the value stays the same
+     *
+     * @param instance
+     *            the instance to use
+     * @since 7.7.7
+     */
+    public void setInstance(Object instance) {
+        if (this.instance.getClass() != instance.getClass()) {
+            throw new IllegalArgumentException("The new instance is of type "
+                    + instance.getClass().getName()
+                    + " which does not match the old instance type "
+                    + this.instance.getClass().getName());
+        }
+        this.instance = instance;
+        fireValueChange();
     }
 
     private static final Logger getLogger() {

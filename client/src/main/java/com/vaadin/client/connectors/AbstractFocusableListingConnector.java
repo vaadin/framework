@@ -27,6 +27,7 @@ import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
  *
  * @param <WIDGET>
  *            widget type which has to allow to register focus/blur handlers
+ * @since 8.0
  */
 public abstract class AbstractFocusableListingConnector<WIDGET extends Widget & HasAllFocusHandlers>
         extends AbstractListingConnector {

@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.event.EventRouter;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
@@ -596,6 +595,7 @@ public class Page implements Serializable {
      * @return a registration object for removing the listener
      * @deprecated Use {@link Page#addPopStateListener(PopStateListener)}
      *             instead
+     * @since 8.0
      */
     @Deprecated
     public Registration addUriFragmentChangedListener(
@@ -845,6 +845,7 @@ public class Page implements Serializable {
      * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
      * @see UI#setResizeLazy(boolean)
      * @see Registration
+     * @since 8.0
      */
     public Registration addBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
@@ -1135,7 +1136,7 @@ public class Page implements Serializable {
      * For internal use only. Used to update the server-side location when the
      * client-side location changes.
      *
-     * @since 7.2
+     * @since 8.0
      *
      * @param location
      *            the new location URI

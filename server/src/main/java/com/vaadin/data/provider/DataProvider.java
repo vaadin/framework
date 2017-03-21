@@ -53,8 +53,8 @@ import com.vaadin.shared.Registration;
  * @see #ofCollection(Collection)
  * @see #ofItems(Object...)
  * @see #fromStream(Stream)
- * @see #fromCallbacks(SerializableFunction, SerializableToIntFunction)
- * @see #fromFilteringCallbacks(SerializableFunction, SerializableToIntFunction)
+ * @see #fromCallbacks(FetchCallback, CountCallback)
+ * @see #fromFilteringCallbacks(FetchCallback, CountCallback)
  * @see ListDataProvider
  * @see BackEndDataProvider
  *
@@ -93,6 +93,14 @@ public interface DataProvider<T, F> extends Serializable {
      * Refreshes the given item. This method should be used to inform all
      * {@link DataProviderListener DataProviderListeners} that an item has been
      * updated or replaced with a new instance.
+     * <p>
+     * For this to work properly, the item must either implement
+     * {@link #equals(Object)} and {@link #hashCode()} to consider both the old
+     * and the new item instances to be equal, or alternatively
+     * {@link #getId(Object)} should be implemented to return an appropriate
+     * identifier.
+     *
+     * @see #getId(Object)
      *
      * @param item
      *            the item to refresh
@@ -269,7 +277,7 @@ public interface DataProvider<T, F> extends Serializable {
      * <p>
      * <strong>Using big streams is not recommended, you should instead use a
      * lazy data provider.</strong> See
-     * {@link #fromCallbacks(SerializableFunction, SerializableToIntFunction)}
+     * {@link #fromCallbacks(FetchCallback, CountCallback)}
      * or {@link BackEndDataProvider} for more info.
      *
      * @param <T>

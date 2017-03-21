@@ -54,13 +54,15 @@ import elemental.json.JsonObject;
 
 /**
  * Provides Vaadin server-side container data source to a
- * {@link com.vaadin.client.ui.grid.GridConnector}. This is currently
+ * {@link com.vaadin.v7.client.connectors.GridConnector}. This is currently
  * implemented as an Extension hardcoded to support a specific connector type.
  * This will be changed once framework support for something more flexible has
  * been implemented.
  *
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class RpcDataProviderExtension extends AbstractExtension {
@@ -72,9 +74,9 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private class ActiveItemHandler implements Serializable, DataGenerator {
 
-        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<>();
-        private final KeyMapper<Object> keyMapper = new KeyMapper<>();
-        private final Set<Object> droppedItems = new HashSet<>();
+        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<Object, GridValueChangeListener>();
+        private final KeyMapper<Object> keyMapper = new KeyMapper<Object>();
+        private final Set<Object> droppedItems = new HashSet<Object>();
 
         /**
          * Registers ValueChangeListeners for given item ids.
@@ -118,7 +120,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @return collection of item ids
          */
         public Collection<Object> getActiveItemIds() {
-            return new HashSet<>(activeItemMap.keySet());
+            return new HashSet<Object>(activeItemMap.keySet());
         }
 
         /**
@@ -127,7 +129,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @return collection of value change listeners
          */
         public Collection<GridValueChangeListener> getValueChangeListeners() {
-            return new HashSet<>(activeItemMap.values());
+            return new HashSet<GridValueChangeListener>(activeItemMap.values());
         }
 
         @Override
@@ -245,7 +247,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             else {
                 // Remove obsolete value change listeners.
-                Set<Object> keySet = new HashSet<>(
+                Set<Object> keySet = new HashSet<Object>(
                         activeItemHandler.activeItemMap.keySet());
                 for (Object itemId : keySet) {
                     activeItemHandler.removeListener(itemId);
@@ -273,7 +275,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /** Size possibly changed with a bare ItemSetChangeEvent */
     private boolean bareItemSetTriggeredSizeChange = false;
 
-    private final Set<DataGenerator> dataGenerators = new LinkedHashSet<>();
+    private final Set<DataGenerator> dataGenerators = new LinkedHashSet<DataGenerator>();
 
     private final ActiveItemHandler activeItemHandler = new ActiveItemHandler();
 
@@ -458,7 +460,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void insertRowData(final int index, final int count) {
         if (rowChanges == null) {
-            rowChanges = new ArrayList<>();
+            rowChanges = new ArrayList<Runnable>();
         }
 
         if (rowChanges.isEmpty()) {
@@ -491,7 +493,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void removeRowData(final int index, final int count) {
         if (rowChanges == null) {
-            rowChanges = new ArrayList<>();
+            rowChanges = new ArrayList<Runnable>();
         }
 
         if (rowChanges.isEmpty()) {
@@ -516,7 +518,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public void updateRowData(Object itemId) {
         if (updatedItemIds == null) {
-            updatedItemIds = new LinkedHashSet<>();
+            updatedItemIds = new LinkedHashSet<Object>();
         }
 
         if (updatedItemIds.isEmpty()) {

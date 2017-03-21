@@ -21,6 +21,11 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import com.vaadin.data.provider.AbstractBackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
+import com.vaadin.server.SerializableComparator;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Sortable;
 import com.vaadin.v7.data.Item;
@@ -37,6 +42,10 @@ import com.vaadin.v7.data.Property;
  * values. The comparator can be set using the constructor. If no comparator is
  * provided a default comparator is used.
  *
+ *
+ * @deprecated As of 8.0, sorting is integrated into {@link DataProvider} and {@link Query#getSortOrders()}.
+ * For in-memory case, you can use also {@link ListDataProvider#setSortComparator(SerializableComparator)}.
+ * For back-end DataProviders, see {@link AbstractBackEndDataProvider#setSortOrders(List)}.
  */
 @Deprecated
 public class DefaultItemSorter implements ItemSorter {
@@ -166,8 +175,8 @@ public class DefaultItemSorter implements ItemSorter {
         this.container = container;
 
         // Removes any non-sortable property ids
-        final List<Object> ids = new ArrayList<>();
-        final List<Boolean> orders = new ArrayList<>();
+        final List<Object> ids = new ArrayList<Object>();
+        final List<Boolean> orders = new ArrayList<Boolean>();
         final Collection<?> sortable = container
                 .getSortableContainerPropertyIds();
         for (int i = 0; i < propertyId.length; i++) {

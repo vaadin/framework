@@ -22,18 +22,25 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 
 /**
  * Class for handling a set of identified Properties. The elements contained in
- * a </code>MapItem</code> can be referenced using locally unique identifiers.
+ * a <code>MapItem</code> can be referenced using locally unique identifiers.
  * The class supports listeners who are interested in changes to the Property
  * set managed by the class.
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, no direct replacement available. You can use {@link Map} directly as an item for {@link Binder}
+ * or {@link DataProvider} and access item properties with lambdas like {@code binder.forField(component).bind(...)} or
+ * {@code new Grid<Map<...>>(dataProvider).addColumn(map->map.get(...))}.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -45,12 +52,12 @@ public class PropertysetItem
     /**
      * Mapping from property id to property.
      */
-    private HashMap<Object, Property<?>> map = new HashMap<>();
+    private HashMap<Object, Property<?>> map = new HashMap<Object, Property<?>>();
 
     /**
      * List of all property ids to maintain the order.
      */
-    private LinkedList<Object> list = new LinkedList<>();
+    private LinkedList<Object> list = new LinkedList<Object>();
 
     /**
      * List of property set modification listeners.
@@ -205,14 +212,14 @@ public class PropertysetItem
     public void addPropertySetChangeListener(
             Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
-            propertySetChangeListeners = new LinkedList<>();
+            propertySetChangeListeners = new LinkedList<PropertySetChangeListener>();
         }
         propertySetChangeListeners.add(listener);
     }
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.vaadin.v7.data.Item.PropertySetChangeListener)}
+     *             {@link #addPropertySetChangeListener(Item.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated
@@ -236,7 +243,7 @@ public class PropertysetItem
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.v7.data.Item.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Item.PropertySetChangeListener)}
      **/
     @Override
     @Deprecated

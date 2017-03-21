@@ -20,6 +20,8 @@ import java.io.Serializable;
 /**
  * Interface implemented by old Vaadin 7 exception types to produce the error
  * message to show in a component.
+ * 
+ * @since 8.0
  */
 @Deprecated
 public interface ErrorMessageProducer extends Serializable {

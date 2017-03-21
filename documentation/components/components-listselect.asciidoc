@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.listselect]]
-= [classname]#ListSelect#
+= ListSelect
 
 ifdef::web[]
 [.sampler]

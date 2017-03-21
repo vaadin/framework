@@ -101,7 +101,7 @@ import elemental.json.JsonValue;
 
 /**
  * Connects the client side {@link Grid} widget with the server side
- * {@link com.vaadin.ui.components.grid.Grid} component.
+ * <code>Grid</code> component.
  * <p>
  * The Grid is typed to JSONObject. The structure of the JSONObject is described
  * at {@link com.vaadin.shared.data.DataProviderRpc#setRowData(int, List)
@@ -153,7 +153,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     }
 
     /**
-     * Custom implementation of the custom grid column using a JSONObject to
+     * Custom implementation of the custom grid column using a JSONObject to
      * represent the cell value and String as a column type.
      */
     private class CustomGridColumn extends Grid.Column<Object, JsonObject> {
@@ -389,7 +389,7 @@ public class GridConnector extends AbstractHasComponentsConnector
             } else {
                 Collection<Column<?, JsonObject>> errorColumns;
                 if (errorColumnsIds != null) {
-                    errorColumns = new ArrayList<>();
+                    errorColumns = new ArrayList<Column<?, JsonObject>>();
                     for (String colId : errorColumnsIds) {
                         errorColumns.add(columnIdToColumn.get(colId));
                     }
@@ -435,7 +435,7 @@ public class GridConnector extends AbstractHasComponentsConnector
         public void onColumnReorder(ColumnReorderEvent<JsonObject> event) {
             if (!columnsUpdatedFromState) {
                 List<Column<?, JsonObject>> columns = getWidget().getColumns();
-                final List<String> newColumnOrder = new ArrayList<>();
+                final List<String> newColumnOrder = new ArrayList<String>();
                 for (Column<?, JsonObject> column : columns) {
                     if (column instanceof CustomGridColumn) {
                         newColumnOrder.add(((CustomGridColumn) column).id);
@@ -494,8 +494,8 @@ public class GridConnector extends AbstractHasComponentsConnector
     private class CustomDetailsGenerator
             implements HeightAwareDetailsGenerator {
 
-        private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<>();
-        private final Map<String, Integer> idToRowIndex = new HashMap<>();
+        private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<String, ComponentConnector>();
+        private final Map<String, Integer> idToRowIndex = new HashMap<String, Integer>();
 
         @Override
         public Widget getDetails(int rowIndex) {
@@ -544,7 +544,7 @@ public class GridConnector extends AbstractHasComponentsConnector
         }
 
         public void updateConnectorHierarchy(List<ServerConnector> children) {
-            Set<String> connectorIds = new HashSet<>();
+            Set<String> connectorIds = new HashSet<String>();
             for (ServerConnector child : children) {
                 if (child instanceof ComponentConnector) {
                     connectorIds.add(child.getConnectorId());
@@ -553,7 +553,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                 }
             }
 
-            Set<String> removedDetails = new HashSet<>();
+            Set<String> removedDetails = new HashSet<String>();
             for (Entry<String, ComponentConnector> entry : idToDetailsMap
                     .entrySet()) {
                 ComponentConnector connector = entry.getValue();
@@ -626,9 +626,9 @@ public class GridConnector extends AbstractHasComponentsConnector
     /**
      * Maps a generated column id to a grid column instance
      */
-    private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<>();
+    private Map<String, CustomGridColumn> columnIdToColumn = new HashMap<String, CustomGridColumn>();
 
-    private List<String> columnOrder = new ArrayList<>();
+    private List<String> columnOrder = new ArrayList<String>();
 
     /**
      * {@link #columnsUpdatedFromState} is set to true when
@@ -642,7 +642,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     private RpcDataSource dataSource;
 
     /* Used to track Grid editor columns with validation errors */
-    private final Map<Column<?, JsonObject>, String> columnToErrorMessage = new HashMap<>();
+    private final Map<Column<?, JsonObject>, String> columnToErrorMessage = new HashMap<Column<?, JsonObject>, String>();
 
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
 
@@ -1106,7 +1106,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     private void purgeRemovedColumns() {
 
         // Get columns still registered in the state
-        Set<String> columnsInState = new HashSet<>();
+        Set<String> columnsInState = new HashSet<String>();
         for (GridColumnState columnState : getState().columns) {
             columnsInState.add(columnState.id);
         }
@@ -1131,7 +1131,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     }
 
     private void onSortStateChange() {
-        List<SortOrder> sortOrder = new ArrayList<>();
+        List<SortOrder> sortOrder = new ArrayList<SortOrder>();
 
         String[] sortColumns = getState().sortColumns;
         SortDirection[] sortDirs = getState().sortDirs;
@@ -1288,7 +1288,7 @@ public class GridConnector extends AbstractHasComponentsConnector
      * @return displayed error string
      */
     private String getColumnErrors() {
-        List<String> errors = new ArrayList<>();
+        List<String> errors = new ArrayList<String>();
 
         for (Grid.Column<?, JsonObject> c : getWidget().getColumns()) {
             if (!(c instanceof CustomGridColumn)) {

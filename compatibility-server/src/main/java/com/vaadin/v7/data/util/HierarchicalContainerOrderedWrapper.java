@@ -17,14 +17,18 @@ package com.vaadin.v7.data.util;
 
 import java.util.Collection;
 
+import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Hierarchical;
 
 /**
  * A wrapper class for adding external ordering to containers not implementing
- * the {@link com.vaadin.v7.data.Container.Ordered} interface while retaining
- * {@link Hierarchical} features.
+ * the {@link Container.Ordered} interface while retaining {@link Hierarchical}
+ * features.
  *
  * @see ContainerOrderedWrapper
+ *
+ * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
+ * version of Vaadin Framework 8.
  */
 @Deprecated
 @SuppressWarnings({ "serial" })

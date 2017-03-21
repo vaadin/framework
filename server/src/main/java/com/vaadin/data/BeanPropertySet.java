@@ -40,7 +40,7 @@ import com.vaadin.util.ReflectTools;
  *
  * @author Vaadin Ltd
  *
- * @since
+ * @since 8.0
  *
  * @param <T>
  *            the type of the bean
@@ -134,13 +134,18 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
         @Override
         public Optional<Setter<T, V>> getSetter() {
-            Method setter = descriptor.getWriteMethod();
-            if (setter == null) {
+            if (descriptor.getWriteMethod() == null) {
                 return Optional.empty();
             }
 
-            return Optional.of(
-                    (bean, value) -> invokeWrapExceptions(setter, bean, value));
+            Setter<T, V> setter = (bean, value) -> {
+                // Do not "optimize" this getter call,
+                // if its done outside the code block, that will produce
+                // NotSerializableException because of some lambda compilation magic
+                Method innerSetter = descriptor.getWriteMethod();
+                invokeWrapExceptions(innerSetter, bean, value);
+            };
+            return Optional.of(setter);
         }
 
         @SuppressWarnings("unchecked")

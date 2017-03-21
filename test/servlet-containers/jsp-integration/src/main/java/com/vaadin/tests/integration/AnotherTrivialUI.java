@@ -1,4 +1,3 @@
-package com.vaadin.tests.integration;
 /*
  * Copyright 2000-2017 Vaadin Ltd.
  *
@@ -14,6 +13,7 @@ package com.vaadin.tests.integration;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.tests.integration;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;

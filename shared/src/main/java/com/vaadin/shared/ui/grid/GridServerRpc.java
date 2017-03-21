@@ -79,7 +79,7 @@ public interface GridServerRpc extends ServerRpc {
     /**
      * Informs the server that a column's visibility has been changed.
      *
-     * @since 7.5.0
+     * @since 8.0
      * @param columnInternalId
      *            the internal id of the column
      * @param hidden

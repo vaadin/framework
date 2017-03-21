@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.data.util.filter;
 
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -32,6 +34,10 @@ import com.vaadin.v7.data.Property;
  * reference value.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+ * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+ * filters are specific to the implementation.
  */
 @Deprecated
 public abstract class Compare implements Filter {
@@ -55,6 +61,10 @@ public abstract class Compare implements Filter {
      * use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated  As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+     * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+     * filters are specific to the implementation.
      */
     @Deprecated
     public static final class Equal extends Compare {
@@ -88,6 +98,10 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+     * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+     * filters are specific to the implementation.
      */
     @Deprecated
     public static final class Greater extends Compare {
@@ -122,6 +136,10 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+     * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+     * filters are specific to the implementation.
      */
     @Deprecated
     public static final class Less extends Compare {
@@ -156,6 +174,10 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+     * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+     * filters are specific to the implementation.
      */
     @Deprecated
     public static final class GreaterOrEqual extends Compare {
@@ -190,6 +212,10 @@ public abstract class Compare implements Filter {
      * and may use e.g. database comparison operations.
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+     * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+     * filters are specific to the implementation.
      */
     @Deprecated
     public static final class LessOrEqual extends Compare {

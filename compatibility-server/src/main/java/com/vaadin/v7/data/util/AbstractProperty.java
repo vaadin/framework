@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.v7.data.Property;
 
 /**
@@ -29,6 +32,8 @@ import com.vaadin.v7.data.Property;
  * {@link ReadOnlyStatusChangeListener}s.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
  */
 @Deprecated
 public abstract class AbstractProperty<T> implements Property<T>,
@@ -69,6 +74,8 @@ public abstract class AbstractProperty<T> implements Property<T>,
             fireReadOnlyStatusChange();
         }
     }
+
+    // LegacyPropertyHelper has been removed in Vaadin 8
 
     /* Events */
 
@@ -113,14 +120,14 @@ public abstract class AbstractProperty<T> implements Property<T>,
     public void addReadOnlyStatusChangeListener(
             Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
-            readOnlyStatusChangeListeners = new LinkedList<>();
+            readOnlyStatusChangeListeners = new LinkedList<ReadOnlyStatusChangeListener>();
         }
         readOnlyStatusChangeListeners.add(listener);
     }
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addReadOnlyStatusChangeListener(com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener)}
+     *             {@link #addReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
      **/
     @Override
     @Deprecated
@@ -144,7 +151,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener)}
+     *             {@link #removeReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
      **/
     @Override
     @Deprecated
@@ -199,7 +206,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     @Override
     public void addValueChangeListener(ValueChangeListener listener) {
         if (valueChangeListeners == null) {
-            valueChangeListeners = new LinkedList<>();
+            valueChangeListeners = new LinkedList<ValueChangeListener>();
         }
         valueChangeListeners.add(listener);
 
@@ -207,7 +214,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+     *             {@link #addValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated
@@ -225,7 +232,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
+     *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
      **/
     @Override
     @Deprecated

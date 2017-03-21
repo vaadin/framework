@@ -47,8 +47,8 @@ import com.vaadin.ui.declarative.DesignContext;
  *
  * <p>
  * The {@link #getParent()} method allows retrieving the parent component of a
- * component. While there is a {@link #setParent(HasComponents)}, you
- * rarely need it as you normally add components with the
+ * component. While there is a {@link #setParent(HasComponents)}, you rarely
+ * need it as you normally add components with the
  * {@link ComponentContainer#addComponent(Component) addComponent()} method of
  * the layout or other {@code ComponentContainer}, which automatically sets the
  * parent.
@@ -616,17 +616,17 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <td width=120><b>Example</b></td>
      * </tr>
      * <tr>
-     * <td>&lt;b></td>
+     * <td>&lt;b&gt;</td>
      * <td>bold</td>
      * <td><b>bold text</b></td>
      * </tr>
      * <tr>
-     * <td>&lt;i></td>
+     * <td>&lt;i&gt;</td>
      * <td>italic</td>
      * <td><i>italic text</i></td>
      * </tr>
      * <tr>
-     * <td>&lt;u></td>
+     * <td>&lt;u&gt;</td>
      * <td>underlined</td>
      * <td><u>underlined text</u></td>
      * </tr>
@@ -636,10 +636,10 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <td>N/A</td>
      * </tr>
      * <tr>
-     * <td>&lt;ul><br>
-     * &lt;li>item1<br>
-     * &lt;li>item1<br>
-     * &lt;/ul></td>
+     * <td>&lt;ul&gt;<br>
+     * &lt;li&gt;item1<br>
+     * &lt;li&gt;item1<br>
+     * &lt;/ul&gt;</td>
      * <td>item list</td>
      * <td>
      * <ul>
@@ -900,6 +900,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return a registration object for removing this listener
      * @see Component.Event
      * @see Registration
+     * @since 8.0
      */
     public Registration addListener(Component.Listener listener);
 

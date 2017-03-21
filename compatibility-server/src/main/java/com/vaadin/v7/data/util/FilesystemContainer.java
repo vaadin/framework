@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Resource;
 import com.vaadin.util.FileTypeResolver;
 import com.vaadin.v7.data.Container;
@@ -41,6 +42,9 @@ import com.vaadin.v7.data.Property;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
+ * version of Vaadin Framework 8.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -81,7 +85,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     static {
 
-        FILE_PROPERTIES = new ArrayList<>();
+        FILE_PROPERTIES = new ArrayList<String>();
         FILE_PROPERTIES.add(PROPERTY_NAME);
         FILE_PROPERTIES.add(PROPERTY_ICON);
         FILE_PROPERTIES.add(PROPERTY_SIZE);
@@ -441,7 +445,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     public Collection<File> getItemIds() {
 
         if (recursive) {
-            final Collection<File> col = new ArrayList<>();
+            final Collection<File> col = new ArrayList<File>();
             for (int i = 0; i < roots.length; i++) {
                 addItemIds(col, roots[i]);
             }
@@ -741,7 +745,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support adding new properties.
          *
-         * @see com.vaadin.v7.data.Item#addItemProperty(Object, Property)
+         * @see Item#addItemProperty(Object, Property)
          */
         @Override
         public boolean addItemProperty(Object id, Property property)
@@ -753,7 +757,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support removing properties.
          *
-         * @see com.vaadin.v7.data.Item#removeItemProperty(Object)
+         * @see Item#removeItemProperty(Object)
          */
         @Override
         public boolean removeItemProperty(Object id)

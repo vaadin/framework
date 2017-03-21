@@ -35,8 +35,8 @@ class CacheFlushNotifier implements Serializable {
      * SQLContainer instance reference list and dead reference queue. Used for
      * the cache flush notification feature.
      */
-    private static List<WeakReference<SQLContainer>> allInstances = new ArrayList<>();
-    private static ReferenceQueue<SQLContainer> deadInstances = new ReferenceQueue<>();
+    private static List<WeakReference<SQLContainer>> allInstances = new ArrayList<WeakReference<SQLContainer>>();
+    private static ReferenceQueue<SQLContainer> deadInstances = new ReferenceQueue<SQLContainer>();
 
     /**
      * Adds the given SQLContainer to the cache flush notification receiver list
@@ -47,7 +47,7 @@ class CacheFlushNotifier implements Serializable {
     public static void addInstance(SQLContainer c) {
         removeDeadReferences();
         if (c != null) {
-            allInstances.add(new WeakReference<>(c, deadInstances));
+            allInstances.add(new WeakReference<SQLContainer>(c, deadInstances));
         }
     }
 

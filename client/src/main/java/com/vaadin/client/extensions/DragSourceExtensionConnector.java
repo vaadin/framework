@@ -21,6 +21,7 @@ import java.util.Map;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DragSourceExtension;
@@ -35,18 +36,33 @@ import elemental.events.EventTarget;
 /**
  * Extension to add drag source functionality to a widget for using HTML5 drag
  * and drop. Client side counterpart of {@link DragSourceExtension}.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 @Connect(DragSourceExtension.class)
 public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     private static final String CLASS_DRAGGABLE = "v-draggable";
 
+    /**
+     * Data type for storing drag source extension connector's ID
+     */
+    static final String DATA_TYPE_DRAG_SOURCE_ID = "drag-source-id";
+
     // Create event listeners
     private final EventListener dragStartListener = this::onDragStart;
     private final EventListener dragEndListener = this::onDragEnd;
 
+    /**
+     * Widget of the drag source component.
+     */
+    private Widget dragSourceWidget;
+
     @Override
     protected void extend(ServerConnector target) {
+        dragSourceWidget = ((ComponentConnector) target).getWidget();
+
         Element dragSourceElement = getDraggableElement();
 
         dragSourceElement.setDraggable(Element.DRAGGABLE_TRUE);
@@ -96,6 +112,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             nativeEvent.getDataTransfer().setData(format, data.get(format));
         }
 
+        // Store the extension's connector ID in DataTransfer.data
+        nativeEvent.getDataTransfer()
+                .setData(DATA_TYPE_DRAG_SOURCE_ID, getConnectorId());
+
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
@@ -124,7 +144,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @return the draggable element in the parent widget.
      */
     protected Element getDraggableElement() {
-        return ((ComponentConnector) getParent()).getWidget().getElement();
+        return dragSourceWidget.getElement();
     }
 
     private native void setEffectAllowed(DataTransfer dataTransfer,

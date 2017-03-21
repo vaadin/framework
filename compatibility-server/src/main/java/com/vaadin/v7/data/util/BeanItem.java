@@ -26,13 +26,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.util.BeanUtil;
+import com.vaadin.v7.data.Property;
 
 /**
  * A wrapper class for adding the Item interface to any Java Bean.
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, no direct replacement available. You can use any bean directly as an item for {@link Binder}
+ * or {@link DataProvider} and access the item properties with lambdas like {@code binder.forField(component).bind(...)} or
+ * {@code new Grid<Bean>(dataProvider).addColumn(bean->bean.getSomething())}.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -41,7 +48,7 @@ public class BeanItem<BT> extends PropertysetItem {
     /**
      * The bean which this Item is based on.
      */
-    private final BT bean;
+    private BT bean;
 
     /**
      * <p>
@@ -186,7 +193,7 @@ public class BeanItem<BT> extends PropertysetItem {
      */
     static <BT> LinkedHashMap<String, VaadinPropertyDescriptor<BT>> getPropertyDescriptors(
             final Class<BT> beanClass) {
-        final LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pdMap = new LinkedHashMap<>();
+        final LinkedHashMap<String, VaadinPropertyDescriptor<BT>> pdMap = new LinkedHashMap<String, VaadinPropertyDescriptor<BT>>();
 
         // Try to introspect, if it fails, we just have an empty Item
         try {
@@ -199,7 +206,7 @@ public class BeanItem<BT> extends PropertysetItem {
                 final Method getMethod = pd.getReadMethod();
                 if ((getMethod != null)
                         && getMethod.getDeclaringClass() != Object.class) {
-                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<>(
+                    VaadinPropertyDescriptor<BT> vaadinPropertyDescriptor = new MethodPropertyDescriptor<BT>(
                             pd.getName(), pd.getPropertyType(),
                             pd.getReadMethod(), pd.getWriteMethod());
                     pdMap.put(pd.getName(), vaadinPropertyDescriptor);
@@ -223,7 +230,7 @@ public class BeanItem<BT> extends PropertysetItem {
      *            not specified
      */
     public void expandProperty(String propertyId, String... subPropertyIds) {
-        Set<String> subPropertySet = new HashSet<>(
+        Set<String> subPropertySet = new HashSet<String>(
                 Arrays.asList(subPropertyIds));
 
         if (0 == subPropertyIds.length) {
@@ -252,7 +259,7 @@ public class BeanItem<BT> extends PropertysetItem {
      */
     public void addNestedProperty(String nestedPropertyId) {
         addItemProperty(nestedPropertyId,
-                new NestedMethodProperty<>(getBean(), nestedPropertyId));
+                new NestedMethodProperty<Object>(getBean(), nestedPropertyId));
     }
 
     /**
@@ -264,4 +271,47 @@ public class BeanItem<BT> extends PropertysetItem {
         return bean;
     }
 
+    /**
+     * Changes the Java Bean this item is based on.
+     * <p>
+     * This will cause any existing properties to be re-mapped to the new bean.
+     * Any added custom properties which are not of type {@link MethodProperty}
+     * or {@link NestedMethodProperty} will not be updated to reflect the change
+     * of bean.
+     * <p>
+     * Changing the bean will fire value change events for all properties of
+     * type {@link MethodProperty} or {@link NestedMethodProperty}.
+     *
+     * @param bean
+     *            The new bean to use for this item, not <code>null</code>
+     * @since 7.7.7
+     */
+    public void setBean(BT bean) {
+        if (bean == null) {
+            throw new IllegalArgumentException("Bean cannot be null");
+        }
+
+        if (getBean().getClass() != bean.getClass()) {
+            throw new IllegalArgumentException(
+                    "The new bean class " + bean.getClass().getName()
+                            + " does not match the old bean class "
+                            + getBean().getClass());
+        }
+
+        // Remap properties
+        for (Object propertyId : getItemPropertyIds()) {
+            Property p = getItemProperty(propertyId);
+            if (p instanceof MethodProperty) {
+                MethodProperty mp = (MethodProperty) p;
+                assert (mp.getInstance() == getBean());
+                mp.setInstance(bean);
+            } else if (p instanceof NestedMethodProperty) {
+                NestedMethodProperty nmp = (NestedMethodProperty) p;
+                assert (nmp.getInstance() == getBean());
+                nmp.setInstance(bean);
+            }
+        }
+
+        this.bean = bean;
+    }
 }

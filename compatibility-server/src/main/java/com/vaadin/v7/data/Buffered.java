@@ -18,6 +18,7 @@ package com.vaadin.v7.data;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
@@ -45,6 +46,8 @@ import com.vaadin.v7.data.Validator.InvalidValueException;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated As of 8.0, no replacement available, see {@link Binder#writeBean(Object)}, {@link Binder#clearFields()}
+ *
  */
 @Deprecated
 public interface Buffered extends Serializable {
@@ -180,6 +183,7 @@ public interface Buffered extends Serializable {
             return source;
         }
 
+        // Intentional change in compatibility package
         @Override
         public ErrorMessage getErrorMessage() {
             // no message, only the causes to be painted

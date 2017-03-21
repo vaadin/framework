@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2016 Vaadin Ltd.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,12 +24,12 @@ import com.vaadin.v7.ui.ComboBox;
 
 /**
  * A component that represents color selection swatches within a color picker.
- * 
+ *
  * @since 7.0.0
  */
 @Deprecated
-public class ColorPickerSelect extends CustomComponent implements
-        ColorSelector, ValueChangeListener {
+public class ColorPickerSelect extends CustomComponent
+        implements ColorSelector, ValueChangeListener {
 
     /** The range. */
     private final ComboBox range;
@@ -49,7 +49,7 @@ public class ColorPickerSelect extends CustomComponent implements
 
         /**
          * Instantiates a new color range property id.
-         * 
+         *
          * @param caption
          *            the caption
          */
@@ -65,7 +65,7 @@ public class ColorPickerSelect extends CustomComponent implements
 
     /**
      * Instantiates a new color picker select.
-     * 
+     *
      * @param rows
      *            the rows
      * @param columns
@@ -102,12 +102,12 @@ public class ColorPickerSelect extends CustomComponent implements
 
     /**
      * Creates the all colors.
-     * 
+     *
      * @param rows
      *            the rows
      * @param columns
      *            the columns
-     * 
+     *
      * @return the color[][]
      */
     private Color[][] createAllColors(int rows, int columns) {
@@ -131,8 +131,8 @@ public class ColorPickerSelect extends CustomComponent implements
                         value = 1f - ((row - (rows / 2f)) / (rows / 2f));
                     }
 
-                    colors[row][col] = new Color(Color.HSVtoRGB(hue,
-                            saturation, value));
+                    colors[row][col] = new Color(
+                            Color.HSVtoRGB(hue, saturation, value));
                 }
 
                 // The last row should have the black&white gradient
@@ -141,8 +141,8 @@ public class ColorPickerSelect extends CustomComponent implements
                     float saturation = 0f;
                     float value = 1f - ((float) col / (float) columns);
 
-                    colors[row][col] = new Color(Color.HSVtoRGB(hue,
-                            saturation, value));
+                    colors[row][col] = new Color(
+                            Color.HSVtoRGB(hue, saturation, value));
                 }
             }
         }
@@ -152,14 +152,14 @@ public class ColorPickerSelect extends CustomComponent implements
 
     /**
      * Creates the color.
-     * 
+     *
      * @param color
      *            the color
      * @param rows
      *            the rows
      * @param columns
      *            the columns
-     * 
+     *
      * @return the color[][]
      */
     private Color[][] createColors(Color color, int rows, int columns) {
@@ -183,12 +183,12 @@ public class ColorPickerSelect extends CustomComponent implements
                             / (((float) rows * (float) columns) / 2f);
                 } else {
                     index -= ((rows * columns) / 2);
-                    value = 1f - index
-                            / (((float) rows * (float) columns) / 2f);
+                    value = 1f
+                            - index / (((float) rows * (float) columns) / 2f);
                 }
 
-                colors[row][col] = new Color(Color.HSVtoRGB(hue, saturation,
-                        value));
+                colors[row][col] = new Color(
+                        Color.HSVtoRGB(hue, saturation, value));
             }
         }
 

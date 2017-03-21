@@ -110,6 +110,13 @@ public abstract class VaadinUriResolver implements Serializable {
                     ApplicationConstants.VAADIN_PROTOCOL_PREFIX.length());
             vaadinUri = vaadinDirUri + relativeUrl;
         }
+        if (vaadinUri
+                .startsWith(ApplicationConstants.CONTEXT_PROTOCOL_PREFIX)) {
+            final String contextRoot = getContextRootUrl();
+            String relativeUrl = vaadinUri.substring(
+                    ApplicationConstants.CONTEXT_PROTOCOL_PREFIX.length());
+            vaadinUri = contextRoot + relativeUrl;
+        }
 
         return vaadinUri;
     }
@@ -139,6 +146,15 @@ public abstract class VaadinUriResolver implements Serializable {
      * @return the service URL
      */
     protected abstract String getServiceUrl();
+
+    /**
+     * Gets the URL pointing to the context root.
+     *
+     * @return the context root URL
+     *
+     * @since 8.0.3
+     */
+    protected abstract String getContextRootUrl();
 
     /**
      * Gets the URI of the directory of the current theme.

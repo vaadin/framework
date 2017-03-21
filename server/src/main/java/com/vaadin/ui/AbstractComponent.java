@@ -43,6 +43,7 @@ import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.event.ContextClickEvent.ContextClickNotifier;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ErrorMessage.ErrorLevel;
@@ -513,6 +514,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            the new description string for the component.
      * @param mode
      *            the content mode for the description
+     * @since 8.0
      */
     public void setDescription(String description, ContentMode mode) {
         getState().description = description;
@@ -540,6 +542,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     getClass().getName() + " already has a parent.");
         }
 
+        ClientConnector oldParent = getParent();
+
         // Send a detach event if the component is currently attached
         if (isAttached()) {
             detach();
@@ -551,6 +555,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // Send attach event if the component is now attached
         if (isAttached()) {
             attach();
+        }
+
+        if (oldParent != null) {
+            oldParent.markAsDirty();
         }
     }
 
@@ -1420,6 +1428,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @param visible
      *            <code>true</code> to make the required indicator visible,
      *            <code>false</code> if not
+     * @since 8.0
      */
     protected void setRequiredIndicatorVisible(boolean visible) {
         if (getState(false) instanceof AbstractFieldState) {
@@ -1443,6 +1452,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *
      * @return <code>true</code> if visible, <code>false</code> if not
      * @see #setRequiredIndicatorVisible(boolean)
+     * @since 8.0
      */
     protected boolean isRequiredIndicatorVisible() {
         if (getState(false) instanceof AbstractFieldState) {

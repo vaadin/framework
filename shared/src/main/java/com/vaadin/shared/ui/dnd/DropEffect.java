@@ -17,6 +17,9 @@ package com.vaadin.shared.ui.dnd;
 
 /**
  * Used to specify the drop effect to use on dragenter or dragover events.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
  */
 public enum DropEffect {
     /**

@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.ui.themes;
 
+import com.vaadin.ui.themes.ValoTheme;
+
 /**
  * <p>
  * The Base theme is the foundation for all Vaadin themes. Although it is not
@@ -32,7 +34,7 @@ package com.vaadin.v7.ui.themes;
  * name as a string constant <code>THEME_NAME</code>.
  *
  * @since 6.3.0
- *
+ * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is supported.
  */
 @Deprecated
 public class BaseTheme {

@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.combobox]]
-= [classname]#ComboBox#
+= ComboBox
 
 ifdef::web[]
 [.sampler]

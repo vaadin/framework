@@ -74,7 +74,9 @@ public class ClassesSerializableTest {
             // interfaces
             "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
             "com\\.vaadin\\.buildhelpers.*", //
+            "com\\.vaadin\\.util\\.EncodeUtil.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
+            "com\\.vaadin\\.data\\.provider\\.HierarchyMapper\\$TreeLevelQuery",
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //
             "com\\.vaadin\\.data\\.util.BeanItemContainerGenerator.*",
@@ -235,6 +237,7 @@ public class ClassesSerializableTest {
         Assert.fail(
                 "Serializable not implemented by the following classes and interfaces: "
                         + nonSerializableString);
+
     }
 
     private static boolean isFunctionalType(Type type) {
@@ -350,15 +353,16 @@ public class ClassesSerializableTest {
     private Collection<String> findClassesInJar(File file) throws IOException {
         Collection<String> classes = new ArrayList<>();
 
-        JarFile jar = new JarFile(file);
-        Enumeration<JarEntry> e = jar.entries();
-        while (e.hasMoreElements()) {
-            JarEntry entry = e.nextElement();
-            if (entry.getName().endsWith(".class")) {
-                String nameWithoutExtension = entry.getName()
-                        .replaceAll("\\.class", "");
-                String className = nameWithoutExtension.replace('/', '.');
-                classes.add(className);
+        try (JarFile jar = new JarFile(file)) {
+            Enumeration<JarEntry> e = jar.entries();
+            while (e.hasMoreElements()) {
+                JarEntry entry = e.nextElement();
+                if (entry.getName().endsWith(".class")) {
+                    String nameWithoutExtension = entry.getName()
+                            .replaceAll("\\.class", "");
+                    String className = nameWithoutExtension.replace('/', '.');
+                    classes.add(className);
+                }
             }
         }
         return classes;

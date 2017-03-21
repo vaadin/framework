@@ -2,6 +2,7 @@ package com.vaadin.tests.components.uitest.components;
 
 import java.time.LocalDate;
 
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.AbstractDateField;
@@ -28,7 +29,7 @@ public class DatesCssTest extends GridLayout {
         createDateFieldWith("Small", ChameleonTheme.DATEFIELD_SMALL, null);
         createDateFieldWith("Big", ChameleonTheme.DATEFIELD_BIG, null);
 
-        AbstractDateField df = new DateField("Popup date field");
+        AbstractDateField<LocalDate, DateResolution> df = new DateField("Popup date field");
         df.setId("datefield" + debugIdCounter++);
         df.setValue(date);
         addComponent(df);
@@ -47,7 +48,7 @@ public class DatesCssTest extends GridLayout {
 
     private void createDateFieldWith(String caption, String primaryStyleName,
             String width) {
-        AbstractDateField df = new TestDateField("Date field");
+        AbstractDateField<LocalDate, DateResolution> df = new TestDateField("Date field");
         df.setId("datefield" + debugIdCounter++);
         df.setValue(date);
 

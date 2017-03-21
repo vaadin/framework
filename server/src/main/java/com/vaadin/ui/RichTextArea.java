@@ -18,7 +18,6 @@ package com.vaadin.ui;
 
 import java.util.Objects;
 
-import elemental.json.Json;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -26,6 +25,8 @@ import com.vaadin.shared.ui.richtextarea.RichTextAreaClientRpc;
 import com.vaadin.shared.ui.richtextarea.RichTextAreaServerRpc;
 import com.vaadin.shared.ui.richtextarea.RichTextAreaState;
 import com.vaadin.ui.declarative.DesignContext;
+
+import elemental.json.Json;
 
 /**
  * A simple RichTextArea to edit HTML format text.
@@ -88,6 +89,7 @@ public class RichTextArea extends AbstractField<String>
      *
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public RichTextArea(ValueChangeListener<String> valueChangeListener) {
         addValueChangeListener(valueChangeListener);
@@ -104,6 +106,7 @@ public class RichTextArea extends AbstractField<String>
      *            the caption for the field
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public RichTextArea(String caption,
             ValueChangeListener<String> valueChangeListener) {
@@ -124,6 +127,7 @@ public class RichTextArea extends AbstractField<String>
      *            the value for the field, not {@code null}
      * @param valueChangeListener
      *            the value change listener, not {@code null}
+     * @since 8.0
      */
     public RichTextArea(String caption, String value,
             ValueChangeListener<String> valueChangeListener) {
@@ -216,11 +220,4 @@ public class RichTextArea extends AbstractField<String>
         return getState(false).valueChangeTimeout;
     }
 
-    /**
-     * Clears the value of this field.
-     */
-    @Override
-    public void clear() {
-        setValue("");
-    }
 }

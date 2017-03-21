@@ -255,7 +255,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>release-assemblies</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

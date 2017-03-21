@@ -13,9 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;

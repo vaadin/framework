@@ -24,6 +24,7 @@ import com.vaadin.v7.ui.Calendar;
  * @since 7.1
  * @author Vaadin Ltd.
  *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated

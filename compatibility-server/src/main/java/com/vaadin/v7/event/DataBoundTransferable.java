@@ -28,13 +28,14 @@ import com.vaadin.v7.data.Container;
  * (identified by its Id) and optionally also a property identifier (e.g. a
  * table column identifier when transferring a single table cell).
  *
- * The component must implement the interface
- * {@link com.vaadin.v7.data.Container.Viewer}.
+ * The component must implement the interface {@link Container.Viewer}.
  *
  * In most cases, receivers of data transfers should depend on this class
  * instead of its concrete subclasses.
  *
  * @since 6.3
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public abstract class DataBoundTransferable extends TransferableImpl {
@@ -63,8 +64,8 @@ public abstract class DataBoundTransferable extends TransferableImpl {
     /**
      * Returns the container data source from which the transfer occurs.
      *
-     * {@link com.vaadin.v7.data.Container.Viewer#getContainerDataSource()} is
-     * used to obtain the underlying container of the source component.
+     * {@link Container.Viewer#getContainerDataSource()} is used to obtain the
+     * underlying container of the source component.
      *
      * @return Container
      */

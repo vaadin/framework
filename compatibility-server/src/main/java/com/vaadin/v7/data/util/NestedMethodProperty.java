@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.MethodProperty.MethodException;
@@ -41,6 +44,8 @@ import com.vaadin.v7.data.util.MethodProperty.MethodException;
  * @see MethodProperty
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
  */
 @Deprecated
 public class NestedMethodProperty<T> extends AbstractProperty<T> {
@@ -125,7 +130,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private void initialize(Class<?> beanClass, String propertyName)
             throws IllegalArgumentException {
 
-        List<Method> getMethods = new ArrayList<>();
+        List<Method> getMethods = new ArrayList<Method>();
 
         String lastSimplePropertyName = propertyName;
         Class<?> lastClass = beanClass;
@@ -193,9 +198,10 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
 
     /**
      * Gets the value stored in the Property. The value is resolved by calling
-     * the specified getter method with the argument specified at instantiation.
+     * the specified getter methods on the current instance:
      *
      * @return the value of the Property
+     * @see #getInstance()
      */
     @Override
     public T getValue() {
@@ -265,6 +271,39 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      */
     protected List<Method> getGetMethods() {
         return Collections.unmodifiableList(getMethods);
+    }
+
+    /**
+     * The instance used by this property
+     *
+     * @return the instance used for fetching the property value
+     * @since 7.7.7
+     */
+    public Object getInstance() {
+        return instance;
+    }
+
+    /**
+     * Sets the instance used by this property.
+     * <p>
+     * The new instance must be of the same type as the old instance
+     * <p>
+     * To be consistent with {@link #setValue(Object)}, this method will fire a
+     * value change event even if the value stays the same
+     *
+     * @param instance
+     *            the instance to use
+     * @since 7.7.7
+     */
+    public void setInstance(Object instance) {
+        if (this.instance.getClass() != instance.getClass()) {
+            throw new IllegalArgumentException("The new instance is of type "
+                    + instance.getClass().getName()
+                    + " which does not match the old instance type "
+                    + this.instance.getClass().getName());
+        }
+        this.instance = instance;
+        fireValueChange();
     }
 
 }

@@ -34,6 +34,8 @@ import com.vaadin.server.VaadinSession;
  *
  * @author Vaadin Ltd
  * @since 7.0
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class DefaultConverterFactory implements ConverterFactory {
@@ -58,7 +60,7 @@ public class DefaultConverterFactory implements ConverterFactory {
         if (reverseConverter != null) {
             log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
-            return new ReverseConverter<>(reverseConverter);
+            return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
         log.finest(getClass().getName() + " could not find a converter for "
