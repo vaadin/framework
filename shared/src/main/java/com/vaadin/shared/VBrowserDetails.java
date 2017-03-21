@@ -149,12 +149,8 @@ public class VBrowserDetails implements Serializable {
                         parseVersionString(tmp);
                     }
                 } else if (isTrident) {
-                    // Check Trident version to detect compatibility mode
-                    int majorVersion = browserMajorVersion = 11;
-                    if (browserEngineVersion <= 7) {
-                        majorVersion = (int) (browserEngineVersion + 4);
-                    }
-                    setIEMode(majorVersion);
+                    // See https://msdn.microsoft.com/en-us/library/ms537503(v=vs.85).aspx#TriToken
+                    setIEMode((int) browserEngineVersion + 4);
                 } else {
                     String ieVersionString = userAgent
                             .substring(userAgent.indexOf("msie ") + 5);
