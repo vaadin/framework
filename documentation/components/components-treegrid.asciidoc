@@ -104,4 +104,4 @@ treeGrid.addExpandListener(event -> log("Item expanded: " + event.getExpandedIte
 treeGrid.addCollapseListener(event -> log("Item collapsed: " + event.getCollapsedItem()));
 ----
 
-where the return types of the methods `getExpandedItem` and `getCollapsedItem` are the same as the type of the [classname]#TreeGrid# the events originated from.
+The return types of the methods `getExpandedItem` and `getCollapsedItem` are the same as the type of the [classname]#TreeGrid# the events originated from.

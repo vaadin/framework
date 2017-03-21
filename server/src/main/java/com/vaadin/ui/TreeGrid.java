@@ -195,6 +195,8 @@ public class TreeGrid<T> extends Grid<T> {
     /**
      * Adds an ExpandListener to this TreeGrid.
      * 
+     * @see ExpandEvent
+     * 
      * @param listener
      *            the listener to add
      * @return a registration for the listener
@@ -206,6 +208,8 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Adds a CollapseListener to this TreeGrid.
+     * 
+     * @see CollapseEvent
      * 
      * @param listener
      *            the listener to add
