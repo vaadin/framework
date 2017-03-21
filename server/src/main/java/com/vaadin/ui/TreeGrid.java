@@ -68,7 +68,7 @@ public class TreeGrid<T> extends Grid<T> {
     public interface ExpandListener<T> extends Serializable {
 
         public static final Method EXPAND_METHOD = ReflectTools.findMethod(
-                ExpandListener.class, "onExpand", ExpandEvent.class);
+                ExpandListener.class, "itemExpand", ExpandEvent.class);
 
         /**
          * Callback method for when an item has been expanded.
@@ -91,7 +91,7 @@ public class TreeGrid<T> extends Grid<T> {
     public interface CollapseListener<T> extends Serializable {
 
         public static final Method COLLAPSE_METHOD = ReflectTools.findMethod(
-                CollapseListener.class, "onCollapse", CollapseEvent.class);
+                CollapseListener.class, "itemCollapse", CollapseEvent.class);
 
         /**
          * Callback method for when an item has been collapsed.
