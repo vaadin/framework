@@ -54,6 +54,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
         createDataProviderSelect();
         createHierarchyColumnSelect();
+        createListenerMenu();
     }
 
     private void initializeDataProviders() {
@@ -100,6 +101,16 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createSelectAction("Set hierarchy column", CATEGORY_FEATURES, options,
                 grid.getColumns().get(0).getId(),
                 (treeGrid, value, data) -> treeGrid.setHierarchyColumn(value));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void createListenerMenu() {
+        createListenerAction("Collapse listener", "State",
+                treeGrid -> treeGrid.addCollapseListener(event -> log(
+                        "Item collapsed: " + event.getCollapsedItem())));
+        createListenerAction("Expand listener", "State",
+                treeGrid -> treeGrid.addExpandListener(event -> log(
+                        "Item expanded: " + event.getExpandedItem())));
     }
 
     static class HierarchicalTestBean {
