@@ -120,13 +120,13 @@ public class VBrowserDetails implements Serializable {
                         .substring(userAgent.indexOf("webkit/") + 7);
                 tmp = tmp.replaceFirst("([0-9]+)[^0-9].+", "$1");
                 browserEngineVersion = Float.parseFloat(tmp);
-            } else if (isIE) {
-                int tridentPos = userAgent.indexOf("trident/");
-                if (tridentPos >= 0) {
-                    String tmp = userAgent
-                            .substring(tridentPos + "trident/".length());
-                    tmp = tmp.replaceFirst("([0-9]+\\.[0-9]+).*", "$1");
-                    browserEngineVersion = Float.parseFloat(tmp);
+            } else if (isTrident) {
+                String tmp = userAgent
+                        .substring(userAgent.indexOf("trident/") + 8);
+                tmp = tmp.replaceFirst("([0-9]+\\.[0-9]+).*", "$1");
+                browserEngineVersion = Float.parseFloat(tmp);
+                if (browserEngineVersion > 7) {
+                    browserEngineVersion = 7;
                 }
             } else if (isEdge) {
                 browserEngineVersion = 0;
