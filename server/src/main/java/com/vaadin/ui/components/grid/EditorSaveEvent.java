@@ -21,10 +21,10 @@ import com.vaadin.ui.Grid;
 
 /**
  * An event that is fired when a Grid editor is saved.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
- * 
+ *
  * @see EditorSaveListener
  * @see Editor#addSaveListener(EditorSaveListener)
  *
@@ -37,7 +37,7 @@ public class EditorSaveEvent<T> extends EventObject {
 
     /**
      * Constructor for a editor save event.
-     * 
+     *
      * @param editor
      *            the source of the event
      * @param bean
@@ -56,7 +56,7 @@ public class EditorSaveEvent<T> extends EventObject {
 
     /**
      * Gets the editors' grid.
-     * 
+     *
      * @return the editors' grid
      */
     public Grid<T> getGrid() {
@@ -67,6 +67,7 @@ public class EditorSaveEvent<T> extends EventObject {
      * Gets the bean being edited.
      *
      * @return the bean being edited
+     * @since 8.0.3
      */
     public T getBean() {
         return bean;
