@@ -93,3 +93,17 @@ treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
 treeGrid.setHierarchyColumn("name");
 ----
 
+== Prevent Node Collapsing
+
+[classname]#TreeGrid# supports setting a callback method that can allow or prevent the user from collapsing an expanded node.
+It can be set with [methodname]#setItemCollapseAllowedProvider# method, that takes a [classname]#SerializablePredicate#.
+
+Avoid doing any heavy operations in the method, since it is called for each item when it's being sent to the client.
+
+Example using a predefined set of persons that can not be collapsed:
+[source, java]
+----
+Set<Person> alwaysExpanded;
+personTreeGrid.setItemCollapseAllowedProvider(person -> 
+       !alwaysExpanded.contains(person));
+----
