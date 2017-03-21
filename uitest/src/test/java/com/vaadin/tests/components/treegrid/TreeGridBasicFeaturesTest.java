@@ -127,14 +127,12 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         Assert.assertFalse(logContainsText("Item expanded: 0 | 0"));
         Assert.assertFalse(logContainsText("Item collapsed: 0 | 0"));
 
-        grid.getRow(0).getCell(0)
-                .findElement(By.className("v-tree-grid-expander")).click();
+        grid.collapseWithClick(0);
 
         Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
         Assert.assertFalse(logContainsText("Item collapsed: 0 | 0"));
 
-        grid.getRow(0).getCell(0)
-                .findElement(By.className("v-tree-grid-expander")).click();
+        grid.collapseWithClick(0);
 
         Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
         Assert.assertTrue(logContainsText("Item collapsed: 0 | 0"));
