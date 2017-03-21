@@ -37,6 +37,8 @@ public class ApplicationConstants implements Serializable {
     public static final String VAADIN_PROTOCOL_PREFIX = "vaadin://";
     /**
      * An internal protocol used for referencing the application context path.
+     *
+     * @since 8.0.3
      */
     public static final String CONTEXT_PROTOCOL_PREFIX = "context://";
     public static final String FONTICON_PROTOCOL_PREFIX = "fonticon://";
@@ -78,6 +80,8 @@ public class ApplicationConstants implements Serializable {
     /**
      * Configuration parameter giving the (in some cases relative) URL to the
      * web application context root.
+     * 
+     * @since 8.0.3
      */
     public static final String CONTEXT_ROOT_URL = "contextRootUrl";
 

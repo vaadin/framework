@@ -350,20 +350,26 @@ public class Navigator implements Serializable {
 
     /**
      * The {@link UI} bound with the Navigator.
+     *
+     * @since 8.0.3
      */
     protected UI ui;
-    
+
     /**
-     * The {@link NavigationStateManager} that is used to get, listen to
-     * and manipulate the navigation state used by the Navigator.
+     * The {@link NavigationStateManager} that is used to get, listen to and
+     * manipulate the navigation state used by the Navigator.
+     *
+     * @since 8.0.3
      */
     protected NavigationStateManager stateManager;
-    
+
     /**
-     *  The {@link ViewDisplay} used by the Navigator.
+     * The {@link ViewDisplay} used by the Navigator.
+     *
+     * @since 8.0.3
      */
     protected ViewDisplay display;
-    
+
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<>();
     private List<ViewProvider> providers = new LinkedList<>();
