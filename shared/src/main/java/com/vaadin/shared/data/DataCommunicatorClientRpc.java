@@ -63,6 +63,7 @@ public interface DataCommunicatorClientRpc extends ClientRpc {
      *            the destination index of the new row data
      * @param count
      *            the number of rows inserted
+     * @since 8.1
      */
     void insertRows(int firstRowIndex, int count);
 
@@ -74,6 +75,7 @@ public interface DataCommunicatorClientRpc extends ClientRpc {
      * @param count
      *            the number of removed rows, starting from
      *            <code>firstRowIndex</code>
+     * @since 8.1
      */
     void removeRows(int firstRowIndex, int count);
 }
