@@ -96,7 +96,8 @@ treeGrid.setHierarchyColumn("name");
 == Prevent Node Collapsing
 
 [classname]#TreeGrid# supports setting a callback method that can allow or prevent the user from collapsing an expanded node.
-It can be set with [methodname]#setItemCollapseAllowedProvider# method, that takes a [classname]#SerializablePredicate#.
+It can be set with [methodname]#setItemCollapseAllowedProvider# method, that takes a [interfacename]#SerializablePredicate#.
+For nodes that cannot be collapsed, the [literal]#++collapse-disabled++# class name is applied to the expansion element
 
 Avoid doing any heavy operations in the method, since it is called for each item when it is being sent to the client.
 
