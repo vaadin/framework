@@ -6202,7 +6202,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         if (isAttached()) {
             refreshHeader();
-            refreshBody();
+            requestRefreshBody();
             refreshFooter();
         }
     }
@@ -7827,7 +7827,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             selectionColumn.initDone();
         } else {
             selectionColumn = null;
-            refreshBody();
+            requestRefreshBody();
         }
 
         updateFrozenColumns();
@@ -7857,7 +7857,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         // Refresh rendered rows to update selection, if it has changed
-        refreshBody();
+        requestRefreshBody();
     }
 
     /**
@@ -8525,7 +8525,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public void setCellStyleGenerator(
             CellStyleGenerator<T> cellStyleGenerator) {
         this.cellStyleGenerator = cellStyleGenerator;
-        refreshBody();
+        requestRefreshBody();
     }
 
     /**
@@ -8547,7 +8547,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     public void setRowStyleGenerator(RowStyleGenerator<T> rowStyleGenerator) {
         this.rowStyleGenerator = rowStyleGenerator;
-        refreshBody();
+        requestRefreshBody();
     }
 
     /**
