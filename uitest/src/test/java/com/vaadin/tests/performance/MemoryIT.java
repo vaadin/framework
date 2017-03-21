@@ -107,7 +107,8 @@ public class MemoryIT extends SingleBrowserTest {
     private void openUI(String path, int itemsNumber) {
         getDriver().get(StringUtils.strip(getBaseURL(), "/") + path + "?items="
                 + itemsNumber);
-        Assert.assertTrue(isElementPresent(By.className("v-grid")));
+        Assert.assertTrue(isElementPresent(By.className("v-grid"))
+                || isElementPresent(By.className("v-table")));
     }
 
     private void close() {
