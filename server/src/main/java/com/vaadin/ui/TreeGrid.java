@@ -138,7 +138,8 @@ public class TreeGrid<T> extends Grid<T> {
     }
 
     /**
-     * An event that is fired when an item is collapsed.
+     * An event that is fired when an item is collapsed. Note that expanded
+     * subtrees of the collapsed item will not trigger collapse events.
      * 
      * @author Vaadin Ltd
      * @since 8.1

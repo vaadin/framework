@@ -105,3 +105,4 @@ treeGrid.addCollapseListener(event -> log("Item collapsed: " + event.getCollapse
 ----
 
 The return types of the methods `getExpandedItem` and `getCollapsedItem` are the same as the type of the [classname]#TreeGrid# the events originated from.
+Note that collapse listeners will not be triggered for any expanded subtrees of the collapsed item.
