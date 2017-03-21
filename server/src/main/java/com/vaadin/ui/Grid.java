@@ -2115,6 +2115,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the custom data communicator to set
      * @see #Grid()
      * @see #Grid(PropertySet, DataCommunicator)
+     * @since 8.1
      */
     protected Grid(DataCommunicator<T> dataCommunicator) {
         this(new PropertySet<T>() {
@@ -2162,6 +2163,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the property set implementation to use, not <code>null</code>.
      * @param dataCommunicator
      *            the data communicator to use, not<code>null</code>
+     * @since 8.1
      */
     protected Grid(PropertySet<T> propertySet,
             DataCommunicator<T> dataCommunicator) {

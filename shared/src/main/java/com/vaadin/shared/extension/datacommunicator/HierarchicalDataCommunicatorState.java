@@ -18,7 +18,7 @@ package com.vaadin.shared.extension.datacommunicator;
 /**
  * Shared state for HierarchicalDataCommunicator.
  *
- * @since
+ * @since 8.1
  */
 public class HierarchicalDataCommunicatorState extends DataCommunicatorState {
 

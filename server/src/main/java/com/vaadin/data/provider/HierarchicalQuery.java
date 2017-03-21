@@ -28,7 +28,7 @@ import java.util.Optional;
  * @param <F>
  *            filter type
  *
- * @since 8.0
+ * @since 8.1
  */
 public class HierarchicalQuery<T, F> extends Query<T, F> {
 
@@ -74,7 +74,7 @@ public class HierarchicalQuery<T, F> extends Query<T, F> {
 
     /**
      * Get the hierarchical parent object, can be <code>null</code>.
-     * 
+     *
      * @return the hierarchical parent object, can be <code>null</code>
      */
     public T getParent() {
@@ -83,7 +83,7 @@ public class HierarchicalQuery<T, F> extends Query<T, F> {
 
     /**
      * Get an Optional of the hierarchical parent object.
-     * 
+     *
      * @see #getParent()
      * @return the result of {@link #getParent()} wrapped by an Optional
      */
