@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.performance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,29 +30,32 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 @Category(MeasurementTest.class)
 public class MemoryIT extends SingleBrowserTest {
 
+    private static final int MAX_ITERATIONS = 20;
+
     @Test
     public void measureMemory() {
-        printTeamcityStats("grid-v8-one-item-size",
-                getGridSize(GridMemory.PATH, 1));
-        printTeamcityStats("grid-v7-one-item-size",
-                getGridSize(CompatibilityGridMemory.PATH, 1));
+        performTest(GridMemory.PATH, 1, "grid-v8-one-item-");
+        performTest(CompatibilityGridMemory.PATH, 1, "grid-v7-one-item-");
 
-        printTeamcityStats("grid-v8-100thousand-items-size",
-                getGridSize(GridMemory.PATH, 100000));
-        printTeamcityStats("grid-v7-100thousand-items-size",
-                getGridSize(CompatibilityGridMemory.PATH, 100000));
+        performTest(GridMemory.PATH, 100000, "grid-v8-100thousand-items-");
+        performTest(CompatibilityGridMemory.PATH, 100000,
+                "grid-v7-100thousand-items-");
     }
 
     @Override
     protected void closeApplication() {
     }
 
-    private long getGridSize(String path, int itemsCount) {
-        // Repeat until we get consecutive results within 0.1% of each other
+    private void performTest(String path, int itemsCount,
+            String teamcityStatPrefix) {
         double lastResult = 0;
         int stableNumber = 0;
-        for (int i = 0; i < 500; i++) {
+        List<Long> renderingTimes = new ArrayList<>();
+        List<Long> requestTimes = new ArrayList<>();
+        for (int i = 0; i < MAX_ITERATIONS; i++) {
             openUI(path, itemsCount);
+            renderingTimes.add(testBench().totalTimeSpentRendering());
+            requestTimes.add(testBench().totalTimeSpentServicingRequests());
             long currentResult = Long
                     .parseLong(findElement(By.id("memory")).getText());
             close();
@@ -59,12 +65,29 @@ public class MemoryIT extends SingleBrowserTest {
             }
             lastResult = currentResult;
             if (stableNumber == 5) {
-                return currentResult;
+                System.out.println(
+                        "Memory usage stabilized after " + i + " iterations");
+                printTeamcityStats(teamcityStatPrefix + "size", currentResult);
+                printTeamcityStats(teamcityStatPrefix + "rendering-time",
+                        median(renderingTimes));
+                printTeamcityStats(teamcityStatPrefix + "request-time",
+                        median(requestTimes));
+                return;
+            }
+            if (i == MAX_ITERATIONS) {
+                Assert.fail("Memory size does not stabilize");
             }
         }
+    }
 
-        Assert.fail("Memory size does not stabilize");
-        return -1;
+    private long median(List<Long> values) {
+        values.sort(Long::compareTo);
+        int middle = values.size() / 2;
+        if (values.size() % 2 == 1) {
+            return values.get(middle);
+        } else {
+            return (values.get(middle - 1) + values.get(middle)) / 2;
+        }
     }
 
     private boolean approx(double num1, double num2, double epsilon) {
