@@ -19,9 +19,9 @@ folders or dragging a document on a program to open it. Framework version 8.1 ad
 
 == Drag Source
 
-Any component can be made a drag source that has a set of data that is transferred when it is dragged and dropped. 
+Any component can be made a drag source that has textual data that is transferred when it is dragged and dropped.
 
-To make a component a drag source, you apply the [classname]#DragSourceExtension# to it. Then you can define the data to transfer, and the allowed drag effect.
+To make a component a drag source, you apply the [classname]#DragSourceExtension# to it. Then you can define the text to transfer, and the allowed drag effect.
 
 [source, java]
 ----
@@ -30,14 +30,13 @@ DragSourceExtension<Label> dragSource = new DragSourceExtension<>(draggableLabel
 
 // set the allowed effect
 dragSource.setEffectAllowed(EffectAllowed.MOVE);
-// set the data to transfer
-dragSource.setTransferData("text/plain", "hello receiver");
+// set the text to transfer
+dragSource.setDataTransferText("hello receiver");
 ----
 
 The __effect allowed__ specifies the allowed effects that must match the __drop effect__ of the drop target. If these don't match, the drop event is never fired on the target. If multiple effects are allowed, the user can use the modifier keys to switch between the desired effects. The default effect and the modifier keys are system and browser dependent.
 
-The __transfer data__ is a set of data, that the drop target will receive in the __drop event__. The first parameter given is the type of the data, and the second parameter is the actual data as string. The type parameter thus acts as a key for the actual data. For more information about the
-type parameter, see https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types[MDN recommendations].
+The __data transfer text__ is textual data, that the drop target will receive in the __drop event__.
 
 The [classname]#DragStartEvent# is fired when the drag has started, and the [classname]#DragEndEvent# event when the drag has ended, either in a drop or a cancel.
 
@@ -88,9 +87,7 @@ dropTarget.addDropListener(event -> {
         dropTargetLayout.addComponent(dragSource.get());
         
         // get possible transfer data
-        // NOTE that "text" is same as "text/plain" from drag source data,
-        // see the HTML5 standard for more info
-        String message = event.getTransferData("text");
+        String message = event.getDataTransferText();
         Notification.show("DropEvent with data transfer: "+ message);
     }
 });
