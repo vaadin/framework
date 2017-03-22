@@ -33,7 +33,7 @@ import com.vaadin.ui.Component;
 public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final String dataTransferText;
     private final DropEffect dropEffect;
-    private final DragSourceExtension<AbstractComponent> dragSourceExtension;
+    private final DragSourceExtension<? extends AbstractComponent> dragSourceExtension;
     private final AbstractComponent dragSource;
 
     /**
@@ -51,7 +51,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      *         event.
      */
     public DropEvent(T target, String dataTransferText, DropEffect dropEffect,
-            DragSourceExtension<AbstractComponent> dragSourceExtension) {
+            DragSourceExtension<? extends AbstractComponent> dragSourceExtension) {
         super(target);
 
         this.dataTransferText = dataTransferText;
@@ -101,7 +101,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      *
      * @return Drag source extension or an empty optional
      */
-    public Optional<DragSourceExtension<AbstractComponent>> getDragSourceExtension() {
+    public Optional<DragSourceExtension<? extends AbstractComponent>> getDragSourceExtension() {
         return Optional.ofNullable(dragSourceExtension);
     }
 

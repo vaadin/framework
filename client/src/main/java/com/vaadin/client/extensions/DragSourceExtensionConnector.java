@@ -42,12 +42,6 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     private static final String CLASS_DRAGGABLE = "v-draggable";
 
-    /**
-     * Data type for storing drag source extension connector's ID
-     */
-    @Deprecated // TODO remove
-    static final String DATA_TYPE_DRAG_SOURCE_ID = "drag-source-id";
-
     // Create event listeners
     private final EventListener dragStartListener = this::onDragStart;
     private final EventListener dragEndListener = this::onDragEnd;
@@ -106,11 +100,6 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Set text data parameter
         nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
                 getState().dataTransferText);
-
-        // TODO: 22/03/2017 remove
-        // Store the extension's connector ID in DataTransfer.data
-        nativeEvent.getDataTransfer()
-                .setData(DATA_TYPE_DRAG_SOURCE_ID, getConnectorId());
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side

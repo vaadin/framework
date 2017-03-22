@@ -36,6 +36,9 @@ import com.vaadin.ui.AbstractComponent;
 public class DragSourceExtension<T extends AbstractComponent> extends
         AbstractExtension {
 
+    private Registration dragStartListenerHandle;
+    private Registration dragEndListenerHandle;
+
     /**
      * Extends {@code target} component and makes it a drag source.
      *
@@ -62,6 +65,23 @@ public class DragSourceExtension<T extends AbstractComponent> extends
         });
 
         super.extend(target);
+
+        // Set current extension as active drag source in the UI
+        dragStartListenerHandle = addDragStartListener(
+                event -> getUI().setActiveDragSource(this));
+
+        // Remove current extension as active drag source from the UI
+        dragEndListenerHandle = addDragEndListener(
+                event -> getUI().setActiveDragSource(null));
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+
+        // Remove listeners attached on construction
+        dragStartListenerHandle.remove();
+        dragEndListenerHandle.remove();
     }
 
     /**

@@ -44,6 +44,7 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.event.UIEvents.PollEvent;
 import com.vaadin.event.UIEvents.PollListener;
 import com.vaadin.event.UIEvents.PollNotifier;
+import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
@@ -293,6 +294,11 @@ public abstract class UI extends AbstractSingleComponentContainer
      * the client has id 0.
      */
     private int lastProcessedClientToServerId = -1;
+
+    /**
+     * Stores the extension of the active drag source component
+     */
+    private DragSourceExtension<? extends AbstractComponent> activeDragSource;
 
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
@@ -1800,6 +1806,27 @@ public abstract class UI extends AbstractSingleComponentContainer
                 listener, WindowOrderUpdateListener.windowOrderUpdateMethod);
         return () -> removeListener(EventId.WINDOW_ORDER,
                 WindowOrderUpdateEvent.class, listener);
+    }
+
+    /**
+     * Sets the drag source of an active HTML5 drag event.
+     *
+     * @param extension
+     *         Extension of the drag source component.
+     */
+    public void setActiveDragSource(
+            DragSourceExtension<? extends AbstractComponent> extension) {
+        this.activeDragSource = extension;
+    }
+
+    /**
+     * Gets the drag source of an active HTML5 drag event.
+     *
+     * @return Extension of the drag source component if the drag event is
+     * active and originated from this UI, {@literal null} otherwise.
+     */
+    public DragSourceExtension<? extends AbstractComponent> getActiveDragSource() {
+        return this.activeDragSource;
     }
 
     /**
