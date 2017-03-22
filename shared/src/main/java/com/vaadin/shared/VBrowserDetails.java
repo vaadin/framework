@@ -120,13 +120,13 @@ public class VBrowserDetails implements Serializable {
                         .substring(userAgent.indexOf("webkit/") + 7);
                 tmp = tmp.replaceFirst("([0-9]+)[^0-9].+", "$1");
                 browserEngineVersion = Float.parseFloat(tmp);
-            } else if (isIE) {
-                int tridentPos = userAgent.indexOf("trident/");
-                if (tridentPos >= 0) {
-                    String tmp = userAgent
-                            .substring(tridentPos + "Trident/".length());
-                    tmp = tmp.replaceFirst("([0-9]+\\.[0-9]+).*", "$1");
-                    browserEngineVersion = Float.parseFloat(tmp);
+            } else if (isTrident) {
+                String tmp = userAgent
+                        .substring(userAgent.indexOf("trident/") + 8);
+                tmp = tmp.replaceFirst("([0-9]+\\.[0-9]+).*", "$1");
+                browserEngineVersion = Float.parseFloat(tmp);
+                if (browserEngineVersion > 7) {
+                    browserEngineVersion = 7;
                 }
             } else if (isEdge) {
                 browserEngineVersion = 0;
@@ -148,6 +148,9 @@ public class VBrowserDetails implements Serializable {
                         tmp = tmp.replaceFirst("(\\.[0-9]+).+", "$1");
                         parseVersionString(tmp);
                     }
+                } else if (isTrident) {
+                    // See https://msdn.microsoft.com/en-us/library/ms537503(v=vs.85).aspx#TriToken
+                    setIEMode((int) browserEngineVersion + 4);
                 } else {
                     String ieVersionString = userAgent
                             .substring(userAgent.indexOf("msie ") + 5);
@@ -565,7 +568,6 @@ public class VBrowserDetails implements Serializable {
      *         supported or might work
      */
     public boolean isTooOldToFunctionProperly() {
-        // Check Trident version to detect compatibility mode
         if (isIE() && getBrowserMajorVersion() < 11) {
             return true;
         }
