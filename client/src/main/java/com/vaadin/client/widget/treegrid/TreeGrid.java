@@ -21,11 +21,11 @@ import com.vaadin.client.widgets.Grid;
 import elemental.json.JsonObject;
 
 /**
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class TreeGrid  extends Grid<JsonObject> {
+public class TreeGrid extends Grid<JsonObject> {
 
     /**
      * Method for accessing the private {@link Grid#focusCell(int, int)} method
@@ -42,4 +42,9 @@ public class TreeGrid  extends Grid<JsonObject> {
     public native boolean isElementInChildWidget(Element e)/*-{
         return this.@com.vaadin.client.widgets.Grid::isElementInChildWidget(*)(e);
     }-*/;
+
+    @Override
+    protected String getFocusPrimaryStyleName() {
+        return "v-tree-grid";
+    }
 }
