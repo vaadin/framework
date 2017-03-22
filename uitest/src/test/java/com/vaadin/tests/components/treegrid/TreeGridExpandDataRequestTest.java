@@ -4,12 +4,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.TreeGridElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-@RunLocally(Browser.PHANTOMJS)
 public class TreeGridExpandDataRequestTest extends SingleBrowserTest {
 
     @Override
