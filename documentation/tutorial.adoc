@@ -549,6 +549,10 @@ you can edit the raw content of the .html file. If you wish to take a shortcut
 or think you did something wrong when using the designer, you can just
 copy-paste the content of https://github.com/vaadin/tutorial/blob/master/src/main/resources/my/vaadin/app/CustomerFormDesign.html[the final state] to your own .html file.
 
+TIP: Some difference in video with Vaadin Framework 8, 
+For status' NativeSelect Component, set Itemtype as CustomerStatus enum.
+Use DateField Component for birthday, instead of PopupDateField.
+
 At this point we only have a static mockup of the actual UI. To implement a
 functional form component, we need some Java code as well. Vaadin Designer
 automatically creates a similarly named Java class, but a good habit is to never touch the auto-generated file, in this case the
