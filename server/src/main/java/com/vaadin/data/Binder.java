@@ -1602,7 +1602,7 @@ public class Binder<BEAN> implements Serializable {
      * level validators if a bean is currently set with
      * {@link #setBean(Object)}, and returns whether any of the validators
      * failed.
-     * 
+     *
      * @return whether this binder is in a valid state
      * @throws IllegalStateException
      *             if bean level validators have been configured and no bean is
@@ -1789,7 +1789,7 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * The listener is added to all fields regardless of whether the method is
      * invoked before or after field is bound.
-     * 
+     *
      * @see ValueChangeEvent
      * @see ValueChangeListener
      *
@@ -1933,11 +1933,10 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Check whether any of the bound fields' values have uncommitted changed
-     * since last explicit call to {@link #readBean(Object)},
-     * {@link #removeBean()}, {@link #writeBean(Object)} or
-     * {@link #writeBeanIfValid(Object)}. Unsuccessful write operations will not
-     * affect this value.
+     * Check whether any of the bound fields' have uncommitted changes since
+     * last explicit call to {@link #readBean(Object)}, {@link #removeBean()},
+     * {@link #writeBean(Object)} or {@link #writeBeanIfValid(Object)}.
+     * Unsuccessful write operations will not affect this value.
      * <p>
      * Note that if you use {@link #setBean(Object)} method, Binder tries to
      * commit changes as soon as all validators have passed. Thus, when using
