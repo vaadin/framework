@@ -1933,12 +1933,17 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Check whether any of the bound fields' values have changed since last
-     * explicit call to {@link #setBean(Object)}, {@link #readBean(Object)},
+     * Check whether any of the bound fields' values have uncommitted changed
+     * since last explicit call to {@link #readBean(Object)},
      * {@link #removeBean()}, {@link #writeBean(Object)} or
      * {@link #writeBeanIfValid(Object)}. Unsuccessful write operations will not
-     * affect this value. Return values for each case are compiled into the
-     * following table:
+     * affect this value.
+     * <p>
+     * Note that if you use {@link #setBean(Object)} method, Binder tries to
+     * commit changes as soon as all validators have passed. Thus, when using
+     * this method with it seldom makes sense and almost always returns false.
+     *
+     * Return values for each case are compiled into the following table:
      *
      * <p>
      *
