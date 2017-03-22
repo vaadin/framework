@@ -18,6 +18,7 @@ package com.vaadin.event.dd;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.shared.MouseEventDetails;
 
 /**
@@ -25,8 +26,9 @@ import com.vaadin.shared.MouseEventDetails;
  * implementation and for extension.
  *
  * @since 6.3
- *
+ * @deprecated Replaced in 8.1 by {@link DropEvent#getTransferData(String)}
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class TargetDetailsImpl implements TargetDetails {
 

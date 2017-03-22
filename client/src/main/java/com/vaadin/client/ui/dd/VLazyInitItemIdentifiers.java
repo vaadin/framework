@@ -18,10 +18,16 @@ package com.vaadin.client.ui.dd;
 import java.util.HashSet;
 
 import com.vaadin.client.UIDL;
+import com.vaadin.event.dnd.DropTargetExtension;
 
 /**
  *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDragOverCriteria(String)} and
+ *             {@link DropTargetExtension#setDropCriteria(String)}
  */
+@Deprecated
 public class VLazyInitItemIdentifiers extends VAcceptCriterion {
     private boolean loaded = false;
     private HashSet<String> hashSet;

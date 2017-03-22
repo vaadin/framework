@@ -18,6 +18,8 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.vaadin.event.dnd.DragSourceExtension;
+import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.ui.Component;
 
 /**
@@ -25,7 +27,11 @@ import com.vaadin.ui.Component;
  * Currently Transferable is only used for drag and drop.
  *
  * @since 6.3
+ * @deprecated Since 8.1 replaced by
+ *             {@link DragSourceExtension#setTransferData(String, String)},
+ *             {@link DropEvent#getTransferData(String)}.
  */
+@Deprecated
 public interface Transferable extends Serializable {
 
     /**

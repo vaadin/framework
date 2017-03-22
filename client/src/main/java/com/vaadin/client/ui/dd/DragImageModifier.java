@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.dd;
 
 import com.google.gwt.dom.client.Element;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
 
 /**
  * Interface implemented by widgets if the drag image used for drag'n'drop
@@ -25,7 +26,10 @@ import com.google.gwt.dom.client.Element;
  *
  * @since 7.2
  * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement, see
+ *             {@link DragSourceExtensionConnector}
  */
+@Deprecated
 public interface DragImageModifier {
 
     /**
