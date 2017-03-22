@@ -143,7 +143,7 @@ public class VFlash extends HTML {
      *
      * Triggers embed resizing if percentage sizes are in use.
      *
-     * @since
+     * @since 7.7.8
      * @param slotOffsetHeight
      *            offset height of the layout slot
      * @param slotOffsetWidth

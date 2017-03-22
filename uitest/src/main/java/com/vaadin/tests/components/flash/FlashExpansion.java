@@ -18,7 +18,6 @@ package com.vaadin.tests.components.flash;
 import com.vaadin.server.ClassResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Flash;
 
 public class FlashExpansion extends TestBase {
@@ -32,15 +31,7 @@ public class FlashExpansion extends TestBase {
         player.setHeight("300px");
         player.setSource(new ClassResource("simple.swf"));
         addComponent(player);
-        Button button = new Button("click");
-        button.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                player.setSizeFull();
-
-            }
-        });
+        Button button = new Button("click", e -> player.setSizeFull());
         addComponent(button);
     }
 
