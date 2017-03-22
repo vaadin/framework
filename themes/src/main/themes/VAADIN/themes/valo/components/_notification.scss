@@ -135,6 +135,16 @@ $v-notification-title-color: $v-focus-color !default;
 
   .#{$primary-stylename}.error {
     @include valo-notification-error-style($primary-stylename);
+    @include valo-notification-closable-style;
+    &:after {
+      color: #fff;
+      border-color: #fff;
+      border-color: rgba(255,255,255,.3);
+    }
+    &:active:after {
+      background-color: #fff;
+      color: #000;
+    }
   }
 
 
@@ -151,11 +161,15 @@ $v-notification-title-color: $v-focus-color !default;
       @include valo-notification-small-style($primary-stylename);
     }
 
+    .#{$primary-stylename}.critical-error {
+      @include valo-notification-error-style($primary-stylename);
+    }
+
     .#{$primary-stylename}.closable {
       @include valo-notification-closable-style;
 
       &.dark,
-      &.error,
+      &.critical-error,
       &.system {
         &:after {
           color: #fff;
