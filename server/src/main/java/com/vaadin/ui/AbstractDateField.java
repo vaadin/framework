@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
 import java.util.Calendar;
@@ -55,6 +56,7 @@ import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.util.TimeZoneUtil;
 
 /**
  * A date editor component with {@link LocalDate} as an input value.
@@ -87,6 +89,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Overridden format string
      */
     private String dateFormat;
+
+    private ZoneId zoneId;
 
     private boolean lenient = false;
 
@@ -175,6 +179,13 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
         if (getDateFormat() != null) {
             target.addAttribute("format", getDateFormat());
+        }
+
+        if (getZoneId() != null) {
+            String timeZoneJSON = TimeZoneUtil.toJSON(getZoneId(), getLocale());
+            if (timeZoneJSON != null) {
+                target.addAttribute("timeZoneJSON", timeZoneJSON);
+            }
         }
 
         if (!isLenient()) {
@@ -463,6 +474,30 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     public String getDateFormat() {
         return dateFormat;
+    }
+
+    /**
+     * Sets the {@link ZoneId}, which is used when {@code z} is included inside the
+     * {@link #setDateFormat(String)}.
+     *
+     * @param zoneId
+     *            the zone id
+     * @since
+     */
+    public void setZoneId(ZoneId zoneId) {
+        this.zoneId = zoneId;
+        markAsDirty();
+    }
+
+    /**
+     * Returns the {@link ZoneId}, which is used when {@code z} is included inside the
+     * {@link #setDateFormat(String)}.
+     *
+     * @return the zoneId
+     * @since
+     */
+    public ZoneId getZoneId() {
+        return zoneId;
     }
 
     /**

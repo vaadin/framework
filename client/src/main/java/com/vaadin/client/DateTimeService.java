@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.TimeZone;
+import com.google.gwt.i18n.client.TimeZoneInfo;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
@@ -302,17 +304,42 @@ public class DateTimeService {
      *            The date to convert
      * @param formatStr
      *            The format string that might contain MMM or MMMM
-     * @param dateTimeService
-     *            Reference to the Vaadin DateTimeService
      * @return
      */
     public String formatDate(Date date, String formatStr) {
+        return formatDate(date, formatStr, null);
+    }
+
+    /**
+     * Check if format contains the month name. If it does we manually convert
+     * it to the month name since DateTimeFormat.format always uses the current
+     * locale and will replace the month name wrong if current locale is
+     * different from the locale set for the DateField.
+     *
+     * MMMM is converted into long month name, MMM is converted into short month
+     * name. '' are added around the name to avoid that DateTimeFormat parses
+     * the month name as a pattern.
+     *
+     * z is converted into the time zone name, using the specified {@code timeZoneJSON}
+     *
+     * @param date
+     *            The date to convert
+     * @param formatStr
+     *            The format string that might contain MMM or MMMM
+     * @param timeZoneJSON
+     *            The JSON string that is used to construct {@link TimeZoneInfo}
+     *
+     * @return the formatted date string
+     * @since
+     */
+    public String formatDate(Date date, String formatStr, String timeZoneJSON) {
         /*
          * Format month and day names separately when locale for the
          * DateTimeService is not the same as the browser locale
          */
         formatStr = formatMonthNames(date, formatStr);
         formatStr = formatDayNames(date, formatStr);
+        formatStr = formatTimeZone(date, formatStr, timeZoneJSON);
 
         // Format uses the browser locale
         DateTimeFormat format = DateTimeFormat.getFormat(formatStr);
@@ -406,6 +433,51 @@ public class DateTimeService {
         }
 
         return formatStr;
+    }
+
+    private String formatTimeZone(Date date, String formatStr, String timeZoneJSON) {
+        // should we check if it is inside single quotes?
+        if (formatStr.indexOf('z') == -1 || timeZoneJSON == null) {
+            return formatStr;
+        }
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo.buildTimeZoneData(timeZoneJSON);
+        TimeZone timeZone = TimeZone.createTimeZone(timeZoneInfo);
+
+        return replaceTimeZone(formatStr, timeZone.getShortName(date));
+    }
+
+    private static String replaceTimeZone(String formatStr, String timeZoneName) {
+        int start = getIndexOf(formatStr, 'z');
+        if (start == -1) {
+            return formatStr;
+        }
+        int end = start;
+        while (end + 1 < formatStr.length() && formatStr.charAt(end + 1) == 'z') {
+            end++;
+        }
+        return formatStr.substring(0, start) + "'" + timeZoneName + "'" + formatStr.substring(end + 1);
+    }
+
+    /**
+     * Returns the first index of the specified {@code ch}, which is outside the quotes.
+     */
+    private static int getIndexOf(String str, char ch) {
+        boolean inQuote = false;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '\'') {
+                if (i + 1 < str.length() && str.charAt(i + 1) == '\'') {
+                    i++;
+                }
+                else {
+                    inQuote ^= true;
+                }
+            }
+            else if (c == ch && !inQuote) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
