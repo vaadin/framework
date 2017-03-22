@@ -3,12 +3,18 @@ package com.vaadin.tests.components.treegrid;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.Range;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.TreeGrid;
 
@@ -19,6 +25,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     private TreeGrid<HierarchicalTestBean> grid;
     private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
     private LazyHierarchicalDataProvider lazyDataProvider;
+    private HierarchicalDataProvider<HierarchicalTestBean, ?> loggingDataProvider;
 
     @Override
     public TreeGrid getComponent() {
@@ -79,6 +86,26 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
         inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
         lazyDataProvider = new LazyHierarchicalDataProvider(3, 2);
+        loggingDataProvider = new InMemoryHierarchicalDataProvider<HierarchicalTestBean>(
+                data) {
+
+            @Override
+            public Stream<HierarchicalTestBean> fetchChildren(
+                    HierarchicalQuery<HierarchicalTestBean, SerializablePredicate<HierarchicalTestBean>> query) {
+                Optional<HierarchicalTestBean> parentOptional = query
+                        .getParentOptional();
+                if (parentOptional.isPresent()) {
+                    log("Children request: " + parentOptional.get() + " ; "
+                            + Range.withLength(query.getOffset(),
+                                    query.getLimit()));
+                } else {
+                    log("Root node request: " + Range
+                            .withLength(query.getOffset(), query.getLimit()));
+                }
+                return super.fetchChildren(query);
+            }
+        };
+
     }
 
     @SuppressWarnings("unchecked")
@@ -87,6 +114,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         LinkedHashMap<String, DataProvider> options = new LinkedHashMap<>();
         options.put("LazyHierarchicalDataProvider", lazyDataProvider);
         options.put("InMemoryHierarchicalDataProvider", inMemoryDataProvider);
+        options.put("LoggingDataProvider", loggingDataProvider);
 
         createSelectAction("Set data provider", CATEGORY_FEATURES, options,
                 "LazyHierarchicalDataProvider",

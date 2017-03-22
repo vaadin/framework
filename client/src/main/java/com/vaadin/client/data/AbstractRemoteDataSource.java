@@ -181,6 +181,14 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     private final HashMap<Integer, T> indexToRowMap = new HashMap<>();
     private final HashMap<Object, Integer> keyToIndexMap = new HashMap<>();
 
+    /*
+     * This is the cache portion that was moved due to rows being added. When
+     * the client receives more data from the server, it will check if this
+     * cache now fits into the continuous range of rows. If yes, it will added
+     * to the end. If not, it will be discarded.
+     */
+    private Map<Integer, T> invalidCache = new HashMap<>();
+
     private Set<DataChangeHandler> dataChangeHandlers = new LinkedHashSet<>();
 
     private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
@@ -276,6 +284,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         }
 
         Profiler.enter("AbstractRemoteDataSource.checkCacheCoverage");
+
+        // Clean up invalidated data
+        invalidCache.clear();
 
         Range minCacheRange = getMinCacheRange();
 
@@ -496,6 +507,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                  */
                 if (!cached.isEmpty()) {
                     cached = cached.combineWith(newUsefulData);
+                    // Attempt to restore invalidated items
+                    restoreItemsFromInvalidCache(maxCacheRange);
                 } else {
                     cached = newUsefulData;
                 }
@@ -531,6 +544,53 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Profiler.leave("AbstractRemoteDataSource.setRowData");
 
+    }
+
+    /**
+     * Go through items invalidated by {@link #insertRowData(int, int)}. If the
+     * server has pre-emptively sent added row data immediately after informing
+     * of row addition, the invalid cache can be restored to proper index range.
+     *
+     * @param maxCacheRange
+     *            the maximum amount of rows that can cached
+     */
+    private void restoreItemsFromInvalidCache(Range maxCacheRange) {
+        if (invalidCache.isEmpty()) {
+            // No old invalid cache available
+            return;
+        }
+
+        Range potentialCache = maxCacheRange.partitionWith(cached)[2];
+        if (potentialCache.isEmpty()) {
+            // Cache is full
+            return;
+        }
+
+        if (invalidCache.containsKey(potentialCache.getStart() - 1)) {
+            // Invalid cache is contains a key it should not.
+            invalidCache.clear();
+            return;
+        }
+
+        int start = potentialCache.getStart();
+        int last = start;
+        try {
+            for (int i = potentialCache.getStart(); i < potentialCache
+                    .getEnd(); ++i) {
+                if (!invalidCache.containsKey(i)) {
+                    return;
+                }
+                T row = invalidCache.get(i);
+                indexToRowMap.put(i, row);
+                keyToIndexMap.put(getRowKey(row), i);
+                last = i;
+            }
+        } finally {
+            // Update cachce range and clean up
+            invalidCache.clear();
+            cached = cached.combineWith(
+                    Range.between(potentialCache.getStart(), last + 1));
+        }
     }
 
     private Stream<DataChangeHandler> getHandlers() {
@@ -625,7 +685,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * If holes were supported, we could shift the higher part of
              * "cached" and leave a hole the size of "count" in the middle.
              */
-            cached = cached.splitAt(firstRowIndex)[0];
+            Range[] splitAt = cached.splitAt(firstRowIndex);
+            cached = splitAt[0];
+            Range invalid = splitAt[1];
+
+            if (!invalid.isEmpty() && invalidCache.isEmpty()) {
+                // Store all invalidated items to a map.
+                for (int i = invalid.getStart(); i < invalid.getEnd(); ++i) {
+                    invalidCache.put(i + count, indexToRowMap.get(i));
+                }
+            }
 
             for (int i = firstRowIndex; i < oldCacheEnd; i++) {
                 T row = indexToRowMap.remove(Integer.valueOf(i));
