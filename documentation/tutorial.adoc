@@ -549,7 +549,7 @@ you can edit the raw content of the .html file. If you wish to take a shortcut
 or think you did something wrong when using the designer, you can just
 copy-paste the content of https://github.com/vaadin/tutorial/blob/master/src/main/resources/my/vaadin/app/CustomerFormDesign.html[the final state] to your own .html file.
 
-TIP: Some difference in video with Vaadin Framework 8, 
+TIP: With Vaadin Framework 8, make following things differently:
 For status' NativeSelect Component, set Itemtype as CustomerStatus enum.
 Use DateField Component for birthday, instead of PopupDateField.
 
