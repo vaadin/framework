@@ -106,6 +106,18 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
+     * Gets the server side drag data. This data is available throughout the
+     * drag event on the server side and can be used to transfer data between
+     * drag source and drop target when they are placed in the same UI.
+     *
+     * @return Optional server side drag data if set and the drag source and the
+     * drop target are placed in the same UI, otherwise empty {@code Optional}.
+     */
+    public Optional<Object> getDragData() {
+        return getDragSourceExtension().map(DragSourceExtension::getDragData);
+    }
+
+    /**
      * Returns the drop target component where the drop event occurred.
      *
      * @return Component on which a drag source was dropped.

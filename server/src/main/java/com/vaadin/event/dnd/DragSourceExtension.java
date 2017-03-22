@@ -40,6 +40,12 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     private Registration dragEndListenerHandle;
 
     /**
+     * Stores the server side drag data that is available for the drop target
+     * when placed in the same UI.
+     */
+    private Object dragData;
+
+    /**
      * Extends {@code target} component and makes it a drag source.
      *
      * @param target
@@ -143,6 +149,29 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      */
     public void clearDataTransferText() {
         getState().dataTransferText = null;
+    }
+
+    /**
+     * Set server side drag data. This data is available throughout the drag
+     * event on the server side and can be used to transfer data between drag
+     * source and drop target when they are placed in the same UI.
+     *
+     * @param data
+     *         Data to transfer to drop event.
+     */
+    public void setDragData(Object data) {
+        dragData = data;
+    }
+
+    /**
+     * Get server side drag data. This data is available throughout the drag
+     * event on the server side and can be used to transfer data between drag
+     * source and drop target when they are placed in the same UI.
+     *
+     * @return Server side drag data if set, otherwise {@literal null}.
+     */
+    public Object getDragData() {
+        return dragData;
     }
 
     /**
