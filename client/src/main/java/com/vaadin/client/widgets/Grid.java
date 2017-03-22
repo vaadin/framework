@@ -6197,14 +6197,18 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         rowSelectedStyleName = rowStyle + "-selected";
         rowStripeStyleName = rowStyle + "-stripe";
 
-        cellFocusStyleName = getStylePrimaryName() + "-cell-focused";
-        rowFocusStyleName = getStylePrimaryName() + "-row-focused";
+        cellFocusStyleName = getFocusPrimaryStyleName() + "-cell-focused";
+        rowFocusStyleName = getFocusPrimaryStyleName() + "-row-focused";
 
         if (isAttached()) {
             refreshHeader();
             requestRefreshBody();
             refreshFooter();
         }
+    }
+
+    protected String getFocusPrimaryStyleName() {
+        return getStylePrimaryName();
     }
 
     /**

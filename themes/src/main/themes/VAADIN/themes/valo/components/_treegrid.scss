@@ -10,6 +10,9 @@ $tg-expander-width: 10px !default;
 /** Expander button right side padding */
 $tg-expander-padding: 10px !default;
 
+$v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
+
+
 @mixin treegrid {
 
   // Expander with and item indentation constants
@@ -57,5 +60,29 @@ $tg-expander-padding: 10px !default;
   .v-tree-grid-cell-content {
     display: inline-block;
   }
+
+  .v-tree-grid-row-focused {
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: $v-grid-cell-focused-border;
+      display: none;
+      pointer-events: none;
+    }
+  }
+  .v-grid:focus .v-tree-grid-row-focused:before {
+    display: block;
+  }
+
+  .v-grid.v-disabled:focus .v-tree-grid-row-focused:before {
+    // Disabled Grid should not show cell focus outline
+    display: none;
+  }
+
 }
 

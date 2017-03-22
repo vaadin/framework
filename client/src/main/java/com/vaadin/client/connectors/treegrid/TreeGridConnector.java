@@ -169,7 +169,7 @@ public class TreeGridConnector extends GridConnector {
             GridEventHandler<?> eventHandler)
     /*-{
         var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-    
+
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
     }-*/;
@@ -256,38 +256,43 @@ public class TreeGridConnector extends GridConnector {
 
             // Navigate within hierarchy with ALT/OPTION + ARROW KEY when
             // hierarchy column is selected
-            if (isHierarchyColumn(event.getCell()) && domEvent.getAltKey()
-                    && (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
-                            || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT)) {
+            if (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
+                            || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT) {
 
                 // Hierarchy metadata
-                boolean collapsed, leaf;
+                boolean collapsedOrLeaf, leaf;
                 JsonObject rowData = event.getCell().getRow();
                 if (rowData.hasKey(
                         TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
-                    collapsed = isCollapsed(rowData);
                     JsonObject rowDescription = rowData.getObject(
                             TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
                     leaf = rowDescription.getBoolean(
                             TreeGridCommunicationConstants.ROW_LEAF);
+                    collapsedOrLeaf = leaf || isCollapsed(rowData);
                     switch (domEvent.getKeyCode()) {
                     case KeyCodes.KEY_RIGHT:
-                        if (!leaf && collapsed) {
+                        if (!leaf && collapsedOrLeaf) {
+                            // expand
                             toggleCollapse(getRowKey(rowData),
-                                    event.getCell().getRowIndex(), true);
+                                    event.getCell().getRowIndex(), false);
+                        } else {
+                            // navigate down
+                            getWidget().focusCell(event.getCell().getRowIndex()+1,event.getCell().getColumnIndex());
                         }
                         break;
                     case KeyCodes.KEY_LEFT:
-                        if (!collapsed) {
-                            // collapse node
+                        if (collapsedOrLeaf ) {
+                            // navigate up
+                            getWidget().focusCell(Math.max(0, event.getCell().getRowIndex() - 1), event.getCell().getColumnIndex());
+                        } else {
+                            // collapse
                             toggleCollapse(getRowKey(rowData),
-                                    event.getCell().getRowIndex(), false);
+                                    event.getCell().getRowIndex(), true);
                         }
                         break;
                     }
                 }
                 event.setHandled(true);
-                return;
             }
         }
     }
