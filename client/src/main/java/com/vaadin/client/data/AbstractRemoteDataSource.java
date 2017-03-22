@@ -181,13 +181,17 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     private final HashMap<Integer, T> indexToRowMap = new HashMap<>();
     private final HashMap<Object, Integer> keyToIndexMap = new HashMap<>();
 
-    /*
-     * This is the cache portion that was moved due to rows being added. When
-     * the client receives more data from the server, it will check if this
-     * cache now fits into the continuous range of rows. If yes, it will added
-     * to the end. If not, it will be discarded.
+    /**
+     * Map used to temporarily store rows invalidated by
+     * {@link #insertRowData(int, int)}. If the backend has pre-emptively pushed
+     * the row data for the added rows, these rows will be used again to fill
+     * the cache. If no data update is received, the map is cleared upon
+     * requesting the rows from the backend.
+     * <p>
+     * Subsequent calls to row data insertions clears the map to avoid potential
+     * issues with weird ordering of data updates.
      */
-    private Map<Integer, T> invalidCache = new HashMap<>();
+    private Map<Integer, T> invalidatedRows;
 
     private Set<DataChangeHandler> dataChangeHandlers = new LinkedHashSet<>();
 
@@ -286,7 +290,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Profiler.enter("AbstractRemoteDataSource.checkCacheCoverage");
 
         // Clean up invalidated data
-        invalidCache.clear();
+        invalidatedRows = null;
 
         Range minCacheRange = getMinCacheRange();
 
@@ -508,7 +512,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                 if (!cached.isEmpty()) {
                     cached = cached.combineWith(newUsefulData);
                     // Attempt to restore invalidated items
-                    restoreItemsFromInvalidCache(maxCacheRange);
+                    fillCacheFromInvalidatedRows(maxCacheRange);
                 } else {
                     cached = newUsefulData;
                 }
@@ -518,6 +522,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     cached.length()));
 
             updatePinnedRows(rowData);
+
         }
 
         if (!partition[0].isEmpty() || !partition[2].isEmpty()) {
@@ -554,42 +559,47 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * @param maxCacheRange
      *            the maximum amount of rows that can cached
      */
-    private void restoreItemsFromInvalidCache(Range maxCacheRange) {
-        if (invalidCache.isEmpty()) {
+    private void fillCacheFromInvalidatedRows(Range maxCacheRange) {
+        if (invalidatedRows == null || invalidatedRows.isEmpty()) {
             // No old invalid cache available
             return;
         }
 
         Range potentialCache = maxCacheRange.partitionWith(cached)[2];
-        if (potentialCache.isEmpty()) {
-            // Cache is full
-            return;
-        }
-
-        if (invalidCache.containsKey(potentialCache.getStart() - 1)) {
-            // Invalid cache is contains a key it should not.
-            invalidCache.clear();
-            return;
-        }
-
         int start = potentialCache.getStart();
         int last = start;
         try {
-            for (int i = potentialCache.getStart(); i < potentialCache
-                    .getEnd(); ++i) {
-                if (!invalidCache.containsKey(i)) {
+            if (potentialCache.isEmpty()
+                    || invalidatedRows.containsKey(start - 1)) {
+                // Cache is already full or invalidated rows contains unexpected
+                // indices.
+                return;
+            }
+
+            for (int i = start; i < potentialCache.getEnd(); ++i) {
+                if (!invalidatedRows.containsKey(i)) {
                     return;
                 }
-                T row = invalidCache.get(i);
+                T row = invalidatedRows.get(i);
                 indexToRowMap.put(i, row);
                 keyToIndexMap.put(getRowKey(row), i);
                 last = i;
             }
+
+            // Cache filled from invalidated rows. Can continue as if it was
+            // never invalidated.
+            invalidatedRows = null;
         } finally {
             // Update cachce range and clean up
-            invalidCache.clear();
-            cached = cached.combineWith(
-                    Range.between(potentialCache.getStart(), last + 1));
+            if (invalidatedRows != null) {
+                invalidatedRows.clear();
+            }
+
+            Range updated = Range.between(start, last + 1);
+            cached = cached.combineWith(updated);
+
+            dataChangeHandlers.forEach(dch -> dch
+                    .dataUpdated(updated.getStart(), updated.length()));
         }
     }
 
@@ -619,6 +629,12 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected void removeRowData(int firstRowIndex, int count) {
         Profiler.enter("AbstractRemoteDataSource.removeRowData");
+
+        // Cache was not filled since previous insertRowData. The old rows are
+        // no longer useful.
+        if (invalidatedRows != null) {
+            invalidatedRows.clear();
+        }
 
         size -= count;
 
@@ -664,6 +680,12 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     protected void insertRowData(int firstRowIndex, int count) {
         Profiler.enter("AbstractRemoteDataSource.insertRowData");
 
+        // Cache was not filled since previous insertRowData. The old rows are
+        // no longer useful.
+        if (invalidatedRows != null) {
+            invalidatedRows.clear();
+        }
+
         size += count;
 
         if (firstRowIndex <= cached.getStart()) {
@@ -689,10 +711,11 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             cached = splitAt[0];
             Range invalid = splitAt[1];
 
-            if (!invalid.isEmpty() && invalidCache.isEmpty()) {
+            if (!invalid.isEmpty() && invalidatedRows == null) {
+                invalidatedRows = new HashMap<>();
                 // Store all invalidated items to a map.
                 for (int i = invalid.getStart(); i < invalid.getEnd(); ++i) {
-                    invalidCache.put(i + count, indexToRowMap.get(i));
+                    invalidatedRows.put(i + count, indexToRowMap.get(i));
                 }
             }
 
