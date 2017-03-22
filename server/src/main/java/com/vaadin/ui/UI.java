@@ -1813,6 +1813,8 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @param extension
      *         Extension of the drag source component.
+     * @see DragSourceExtension
+     * @since
      */
     public void setActiveDragSource(
             DragSourceExtension<? extends AbstractComponent> extension) {
@@ -1824,6 +1826,8 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @return Extension of the drag source component if the drag event is
      * active and originated from this UI, {@literal null} otherwise.
+     * @see DragSourceExtension
+     * @since
      */
     public DragSourceExtension<? extends AbstractComponent> getActiveDragSource() {
         return this.activeDragSource;
