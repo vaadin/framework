@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  * anything.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
  */
 class HierarchyMapper implements Serializable {
 

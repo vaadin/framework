@@ -1812,25 +1812,25 @@ public abstract class UI extends AbstractSingleComponentContainer
      * Sets the drag source of an active HTML5 drag event.
      *
      * @param extension
-     *         Extension of the drag source component.
+     *            Extension of the drag source component.
      * @see DragSourceExtension
-     * @since
+     * @since 8.1
      */
     public void setActiveDragSource(
             DragSourceExtension<? extends AbstractComponent> extension) {
-        this.activeDragSource = extension;
+        activeDragSource = extension;
     }
 
     /**
      * Gets the drag source of an active HTML5 drag event.
      *
      * @return Extension of the drag source component if the drag event is
-     * active and originated from this UI, {@literal null} otherwise.
+     *         active and originated from this UI, {@literal null} otherwise.
      * @see DragSourceExtension
-     * @since
+     * @since 8.1
      */
     public DragSourceExtension<? extends AbstractComponent> getActiveDragSource() {
-        return this.activeDragSource;
+        return activeDragSource;
     }
 
     /**
