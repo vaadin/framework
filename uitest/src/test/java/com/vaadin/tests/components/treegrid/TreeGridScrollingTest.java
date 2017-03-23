@@ -129,7 +129,7 @@ public class TreeGridScrollingTest extends SingleBrowserTest {
         verifyRow(1, 1, 0);
         verifyRow(0, 0, 0);
 
-        grid.expandWithClick(3);
+        grid.collapseWithClick(3);
 
         verifyRow(0, 0, 0);
         verifyRow(1, 1, 0);
@@ -144,7 +144,7 @@ public class TreeGridScrollingTest extends SingleBrowserTest {
         verifyRow(1, 1, 0);
         verifyRow(0, 0, 0);
 
-        grid.expandWithClick(0);
+        grid.collapseWithClick(0);
 
         verifyRow(0, 0, 0);
         verifyRow(10, 0, 10);
