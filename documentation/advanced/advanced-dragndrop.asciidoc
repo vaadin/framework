@@ -50,13 +50,16 @@ dragSource.addDragEndListener(event ->
 );
 ----
 
-It is possible to transfer any Object as server side data to the drop target if both the drag source and drop target are placed in the same UI.
+It is possible to transfer any Object as server side data to the drop target if both the drag source and drop target are placed in the same UI. This data is available in the drop event via the `DropEvent.getDragData()` method.
 
 [source, java]
 ----
 dragSource.addDragStartListener(event ->
     dragSource.setDragData(myObject);
 );
+dragSource.addDragEndListener(event ->
+    dragSource.setDragData(null);
+};
 ----
 
 [NOTE]
@@ -99,7 +102,7 @@ dropTarget.addDropListener(event -> {
         String message = event.getDataTransferText();
         Notification.show("DropEvent with data transfer: "+ message);
 
-        // handle possible server side drag data
+        // handle possible server side drag data, if the drag source was in the same UI
         event.getDragData().ifPresent(data -> handleMyDragData((MyObject) data));
     }
 });

@@ -41,7 +41,7 @@ public class DragSourceExtension<T extends AbstractComponent> extends
 
     /**
      * Stores the server side drag data that is available for the drop target if
-     * it is placed in the same UI.
+     * it is in the same UI.
      */
     private Object dragData;
 
@@ -154,7 +154,7 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     /**
      * Set server side drag data. This data is available in the drop event and
      * can be used to transfer data between drag source and drop target if they
-     * are placed in the same UI.
+     * are in the same UI.
      *
      * @param data
      *         Data to transfer to drop event.
@@ -166,7 +166,7 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     /**
      * Get server side drag data. This data is available in the drop event and
      * can be used to transfer data between drag source and drop target if they
-     * are placed in the same UI.
+     * are in the same UI.
      *
      * @return Server side drag data if set, otherwise {@literal null}.
      */
