@@ -30,6 +30,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.provider.bov.Person;
+import com.vaadin.tests.data.bean.Address;
+import com.vaadin.tests.data.bean.Country;
+import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.server.ClassesSerializableTest;
 
 public class BeanPropertySetTest {
@@ -97,6 +100,31 @@ public class BeanPropertySetTest {
         Assert.assertSame(
                 "Deserialized instance should be the same as in the cache",
                 BeanPropertySet.get(Person.class).getProperty("born")
+                        .orElseThrow(RuntimeException::new),
+                deserializedDefinition);
+    }
+    
+    @Test
+    public void testSerializeDeserialize_nestedPropertyDefinition() throws Exception {
+        PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> definition = BeanPropertySet
+                .get(com.vaadin.tests.data.bean.Person.class).getProperty("address.postalCode")
+                .orElseThrow(RuntimeException::new);
+
+        PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> deserializedDefinition = ClassesSerializableTest
+                .serializeAndDeserialize(definition);
+
+        ValueProvider<com.vaadin.tests.data.bean.Person, ?> getter = deserializedDefinition.getGetter();
+        Address address = new Address("Ruukinkatu 2-4",20540, "Turku", Country.FINLAND);
+        com.vaadin.tests.data.bean.Person person = new com.vaadin.tests.data.bean.Person("Jon","Doe","jon.doe@vaadin.com",32,Sex.MALE, address );
+        
+        Integer postalCode = (Integer) getter.apply(person);
+
+        Assert.assertEquals("Deserialized definition should be functional",
+                address.getPostalCode(), postalCode);
+
+        Assert.assertSame(
+                "Deserialized instance should be the same as in the cache",
+                BeanPropertySet.get(com.vaadin.tests.data.bean.Person.class).getProperty("address.postalCode")
                         .orElseThrow(RuntimeException::new),
                 deserializedDefinition);
     }
