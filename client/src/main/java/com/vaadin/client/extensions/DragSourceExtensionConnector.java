@@ -25,6 +25,7 @@ import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.DropEffect;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -113,12 +114,17 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * event occurs.
      *
      * @param event
+     *         browser event to be handled
      */
     protected void onDragEnd(Event event) {
         // Initiate server start dragend event when there is a DragEndListener
         // attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
-            getRpcProxy(DragSourceRpc.class).dragEnd();
+            String dropEffect = getDropEffect(
+                    ((NativeEvent) event).getDataTransfer());
+
+            getRpcProxy(DragSourceRpc.class)
+                    .dragEnd(DropEffect.valueOf(dropEffect.toUpperCase()));
         }
     }
 
@@ -135,6 +141,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     private native void setEffectAllowed(DataTransfer dataTransfer,
             String effectAllowed)/*-{
         dataTransfer.effectAllowed = effectAllowed;
+    }-*/;
+
+    private native String getDropEffect(DataTransfer dataTransfer)/*-{
+        return dataTransfer.dropEffect;
     }-*/;
 
     @Override

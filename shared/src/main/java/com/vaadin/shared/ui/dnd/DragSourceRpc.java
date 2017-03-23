@@ -33,6 +33,10 @@ public interface DragSourceRpc extends ServerRpc {
 
     /**
      * Called when dragend event happens on client side.
+     *
+     * @param dropEffect
+     *         Drop effect of the dragend event, extracted from {@code
+     *         DataTransfer.dropEffect} parameter.
      */
-    public void dragEnd();
+    public void dragEnd(DropEffect dropEffect);
 }

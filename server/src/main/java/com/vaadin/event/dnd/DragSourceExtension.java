@@ -21,6 +21,7 @@ import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
 
@@ -56,10 +57,9 @@ public class DragSourceExtension<T extends AbstractComponent> extends
             }
 
             @Override
-            public void dragEnd() {
+            public void dragEnd(DropEffect dropEffect) {
                 DragEndEvent<T> event = new DragEndEvent<>(target,
-                        getState(false).dataTransferText,
-                        getState(false).effectAllowed);
+                        getState(false).dataTransferText, dropEffect);
                 fireEvent(event);
             }
         });
