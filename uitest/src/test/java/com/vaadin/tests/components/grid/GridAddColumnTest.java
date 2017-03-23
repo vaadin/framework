@@ -60,7 +60,7 @@ public class GridAddColumnTest extends SingleBrowserTest {
         GridCellElement firstHeader = grid.getHeaderCell(0, 0);
         Assert.assertTrue("No label element in header",
                 firstHeader.isElementPresent(By.className("v-label")));
-        Assert.assertEquals("Unexpected text in label", "Label Header",
+        Assert.assertEquals("Text in label does not match", "Label Header",
                 firstHeader.getText());
     }
 
