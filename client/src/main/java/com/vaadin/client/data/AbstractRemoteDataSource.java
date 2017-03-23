@@ -49,6 +49,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * Callback used by
      * {@link AbstractRemoteDataSource#requestRows(int, int, RequestRowsCallback)}
      * to pass data to the underlying implementation when data has been fetched.
+     *
+     * @param <T>
+     *            the row type
      */
     public static class RequestRowsCallback<T> {
         private final Range requestedRange;
@@ -56,7 +59,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         private final AbstractRemoteDataSource<T> source;
 
         /**
-         * Creates a new callback
+         * Creates a new callback.
          *
          * @param source
          *            the data source for which the request is made
@@ -183,13 +186,19 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     /**
      * Map used to temporarily store rows invalidated by
-     * {@link #insertRowData(int, int)}. If the backend has pre-emptively pushed
-     * the row data for the added rows, these rows will be used again to fill
-     * the cache. If no data update is received, the map is cleared upon
-     * requesting the rows from the backend.
+     * {@link #insertRowData(int, int)}. All invalidated rows are stored with
+     * their indices matching the state after row insertion. If the backend has
+     * pre-emptively pushed the row data for the added rows, these rows will be
+     * used again to fill the cache.
      * <p>
-     * Subsequent calls to row data insertions clears the map to avoid potential
-     * issues with weird ordering of data updates.
+     * To avoid this cache invalidation issue from getting too big, this class
+     * does not attempt to track these rows indefinitely. Multiple row
+     * manipulations without filling the gaps in between will remove all
+     * invalidated rows and prevent any attempts to restore them. This is
+     * indicated by having the map empty, not {@code null}.
+     * <p>
+     * The map is set to {@code null} upon requesting the rows from the backend
+     * to indicate that future row additions can attempt to restore the cache.
      */
     private Map<Integer, T> invalidatedRows;
 
@@ -711,9 +720,16 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             cached = splitAt[0];
             Range invalid = splitAt[1];
 
+            /*
+             * If we already have a map in invalidatedRows, we're in a state
+             * where multiple row manipulations without data received have
+             * happened and the cache restoration is prevented completely.
+             */
+
             if (!invalid.isEmpty() && invalidatedRows == null) {
                 invalidatedRows = new HashMap<>();
-                // Store all invalidated items to a map.
+                // Store all invalidated items to a map. Indices are updated to
+                // match what they should be after the insertion.
                 for (int i = invalid.getStart(); i < invalid.getEnd(); ++i) {
                     invalidatedRows.put(i + count, indexToRowMap.get(i));
                 }
@@ -749,7 +765,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     /**
-     * Gets the current range of cached rows
+     * Gets the current range of cached rows.
      *
      * @return the range of currently cached rows
      */
