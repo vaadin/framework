@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.grid.GridConnector;
 import com.vaadin.client.renderers.HierarchyRenderer;
@@ -52,9 +51,6 @@ public class TreeGridConnector extends GridConnector {
     private String hierarchyColumnId;
 
     private HierarchyRenderer hierarchyRenderer;
-
-    // Expander click event handling
-    private HandlerRegistration expanderClickHandlerRegistration;
 
     @Override
     public TreeGrid getWidget() {
@@ -143,18 +139,11 @@ public class TreeGridConnector extends GridConnector {
                 new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
     }
 
-    @Override
-    public void onUnregister() {
-        super.onUnregister();
-
-        expanderClickHandlerRegistration.removeHandler();
-    }
-
     private native void replaceCellFocusEventHandler(Grid<?> grid,
             GridEventHandler<?> eventHandler)
     /*-{
         var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-
+    
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
     }-*/;

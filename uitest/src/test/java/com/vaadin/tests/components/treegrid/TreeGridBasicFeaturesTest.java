@@ -132,7 +132,7 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
         Assert.assertFalse(logContainsText("Item collapsed: 0 | 0"));
 
-        grid.expandWithClick(0);
+        grid.collapseWithClick(0);
 
         Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
         Assert.assertTrue(logContainsText("Item collapsed: 0 | 0"));
@@ -140,7 +140,7 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Expand listener");
         selectMenuPath("Component", "State", "Collapse listener");
 
-        grid.collapseWithClick(1);
+        grid.expandWithClick(1);
         grid.collapseWithClick(1);
 
         Assert.assertFalse(logContainsText("Item expanded: 0 | 1"));
