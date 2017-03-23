@@ -107,8 +107,8 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     private static class BeanPropertyDefinition<T, V>
             implements PropertyDefinition<T, V> {
 
-        protected final PropertyDescriptor descriptor;
-        protected final BeanPropertySet<T> propertySet;
+        private final PropertyDescriptor descriptor;
+        private final BeanPropertySet<T> propertySet;
 
         public BeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDescriptor descriptor) {
@@ -172,6 +172,10 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             return propertySet;
         }
 
+        public PropertyDescriptor getDescriptor() {
+            return descriptor;
+        }
+
         private Object writeReplace() {
             /*
              * Instead of serializing this actual property definition, only
@@ -184,15 +188,18 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     private static class NestedBeanPropertyDefinition<T, V>
-            extends BeanPropertyDefinition<T, V> {
+            implements PropertyDefinition<T, V> {
 
-        protected final PropertyDefinition<T, ?> parent;
+        private final PropertyDefinition<T, ?> parent;
+        private final PropertyDescriptor descriptor;
+        private final BeanPropertySet<T> propertySet;
 
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent,
                 PropertyDescriptor descriptor) {
-            super(propertySet, descriptor);
+            this.propertySet = propertySet;
             this.parent = parent;
+            this.descriptor = descriptor;
         }
 
         @Override
@@ -221,6 +228,42 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                         parent.getGetter().apply(bean), value);
             };
             return Optional.of(setter);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Class<V> getType() {
+            return (Class<V>) ReflectTools
+                    .convertPrimitiveType(descriptor.getPropertyType());
+        }
+
+        @Override
+        public String getName() {
+            return descriptor.getName();
+        }
+
+        @Override
+        public String getCaption() {
+            return SharedUtil.propertyIdToHumanFriendly(getName());
+        }
+
+        @Override
+        public BeanPropertySet<T> getPropertySet() {
+            return propertySet;
+        }
+
+        public PropertyDescriptor getDescriptor() {
+            return descriptor;
+        }
+
+        private Object writeReplace() {
+            /*
+             * Instead of serializing this actual property definition, only
+             * serialize a DTO that when deserialized will get the corresponding
+             * property definition from the cache.
+             */
+            return new SerializedPropertyDefinition(getPropertySet().beanType,
+                    parent.getName() + "."  + getName());
         }
     }
 
