@@ -50,6 +50,15 @@ dragSource.addDragEndListener(event ->
 );
 ----
 
+It is possible to transfer any Object as server side data to the drop target if both the drag source and drop target are placed in the same UI.
+
+[source, java]
+----
+dragSource.addDragStartListener(event ->
+    dragSource.setDragData(myObject);
+);
+----
+
 [NOTE]
 ====
 The browsers allow the user to select and drag and drop text, which may cause some issues when trying to drag a component that has text. You can fix this by setting the following style rule to the drag source component to prevent dragging of the text instead of the whole component.
@@ -89,6 +98,9 @@ dropTarget.addDropListener(event -> {
         // get possible transfer data
         String message = event.getDataTransferText();
         Notification.show("DropEvent with data transfer: "+ message);
+
+        // handle possible server side drag data
+        event.getDragData().ifPresent(data -> handleMyDragData((MyObject) data));
     }
 });
 ----
