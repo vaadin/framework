@@ -123,6 +123,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             String dropEffect = getDropEffect(
                     ((NativeEvent) event).getDataTransfer());
 
+            assert dropEffect != null : "Drop effect should never be null";
+            
             getRpcProxy(DragSourceRpc.class)
                     .dragEnd(DropEffect.valueOf(dropEffect.toUpperCase()));
         }
