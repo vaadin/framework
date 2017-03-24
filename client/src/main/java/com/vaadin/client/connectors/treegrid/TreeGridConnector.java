@@ -255,8 +255,7 @@ public class TreeGridConnector extends GridConnector {
                             case KeyCodes.KEY_RIGHT:
                                 if (collapsed) {
                                     // expand
-                                    toggleCollapse(getRowKey(rowData),
-                                            event.getCell().getRowIndex(), false);
+                                    setCollapsed(event.getCell().getRowIndex(), false);
                                 }
                                 break;
                             case KeyCodes.KEY_LEFT:
@@ -266,8 +265,7 @@ public class TreeGridConnector extends GridConnector {
                                     getRpcProxy(FocusParentRpc.class).focusParent(event.getCell().getRowIndex(), columnIndex);
                                 } else {
                                     // collapse
-                                    toggleCollapse(getRowKey(rowData),
-                                            event.getCell().getRowIndex(), true);
+                                    setCollapsed(event.getCell().getRowIndex(), true);
                                 }
                                 break;
                         }
