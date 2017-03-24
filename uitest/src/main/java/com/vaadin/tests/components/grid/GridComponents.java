@@ -50,6 +50,8 @@ public class GridComponents extends AbstractTestUIWithLog {
             button.setId(string.replace(' ', '_').toLowerCase());
             return button;
         }, new ComponentRenderer());
+        // make sure the buttons and focus outlines fit completely in a row
+        grid.setRowHeight(40);
 
         addComponent(grid);
         grid.setSizeFull();

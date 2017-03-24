@@ -3,8 +3,6 @@ package com.vaadin.tests.components.grid.basics;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.By;
-
 public class GridRowHeightTest extends GridBasicsTest {
 
     @Test
@@ -49,8 +47,7 @@ public class GridRowHeightTest extends GridBasicsTest {
     }
 
     private int getBodyRowHeight() {
-        return getGridElement().getBody()
-                .findElement(By.className("v-grid-row")).getSize().getHeight();
+        return getGridElement().getRow(0).getSize().getHeight();
     }
 
     private int getFooterHeight() {
