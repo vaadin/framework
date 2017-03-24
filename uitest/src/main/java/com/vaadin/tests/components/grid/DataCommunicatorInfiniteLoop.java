@@ -25,16 +25,16 @@ public class DataCommunicatorInfiniteLoop extends AbstractTestUI {
         @Override
         public int size(Query<String, Void> query) {
             if (sendRealCount) {
-                return 0;
+                return 1;
             } else {
                 sendRealCount = true;
-                return 1;
+                return 2;
             }
         }
 
         @Override
         public Stream<String> fetch(Query<String, Void> query) {
-            return Stream.of();
+            return Stream.of("one item").skip(query.getOffset());
         }
 
         @Override

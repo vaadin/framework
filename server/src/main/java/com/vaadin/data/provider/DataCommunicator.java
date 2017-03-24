@@ -334,7 +334,7 @@ public class DataCommunicator<T> extends AbstractExtension {
                             inMemorySorting, filter))
                     .collect(Collectors.toList());
 
-            if (!initial && rowsToPush.size() < limit) {
+            if (!initial && rowsToPush.size() == 0) {
                 triggerReset = true;
             }
 

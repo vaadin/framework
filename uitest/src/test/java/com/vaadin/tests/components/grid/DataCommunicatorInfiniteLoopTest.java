@@ -11,6 +11,6 @@ public class DataCommunicatorInfiniteLoopTest extends SingleBrowserTest {
     public void grid_does_not_get_stuck_in_infinite_loop() {
         openTestURL();
         waitUntil(driver -> driver.findElement(By.className("v-grid-body"))
-                .findElements(By.className("v-grid-row")).isEmpty());
+                .findElements(By.className("v-grid-row")).size() == 1);
     }
 }
