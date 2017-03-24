@@ -618,6 +618,7 @@
                 <module>themes</module>
                 <module>uitest</module>
                 <module>liferay</module>
+                <module>liferay-integration</module>
                 <module>all</module>
                 <module>compatibility-server</module>
                 <module>compatibility-server-gae</module>
@@ -668,6 +669,7 @@
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
+                <module>liferay-integration</module>
                 <!-- Nexus staging bug needs the last module to be deployed. -->
                 <module>testbench-api</module>
                 <!-- BOM is built and released separately -->
@@ -733,6 +735,7 @@
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
+                <module>liferay-integration</module>
                 <!-- Nexus staging bug needs the last module to be deployed. -->
                 <module>testbench-api</module>
                 <!-- BOM is built and released separately -->
@@ -798,6 +801,7 @@
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
+                <module>liferay-integration</module>
                 <module>testbench-api</module>
                 <module>bom</module>
             </modules>
@@ -857,6 +861,7 @@
                 <module>client-compiler</module>
                 <module>shared</module>
                 <module>compatibility-shared</module>
+                <module>liferay-integration</module>
             </modules>
             <repositories>
                 <repository>
