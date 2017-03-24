@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CloseSessionTest extends MultiBrowserTest {
@@ -23,6 +24,7 @@ public class CloseSessionTest extends MultiBrowserTest {
     @Test
     public void testCloseAndReopen() {
         clickButton("Close VaadinServiceSession and reopen page");
+        waitUntil(driver -> isElementPresent(UIElement.class));
         assertLogText(2, "4. Same hash as current? false");
         assertLogText(0, "6. Same WrappedSession id? true");
     }
@@ -34,6 +36,7 @@ public class CloseSessionTest extends MultiBrowserTest {
     @Test
     public void testInvalidateHttpSessionAndReopen() {
         clickButton("Invalidate HttpSession and reopen page");
+        waitUntil(driver -> isElementPresent(UIElement.class));
         assertLogText(2, "4. Same hash as current? false");
         assertLogText(0, "6. Same WrappedSession id? false");
     }
