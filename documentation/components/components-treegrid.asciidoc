@@ -128,6 +128,6 @@ Note that collapse listeners will not be triggered for any expanded subtrees of 
 [[components.treegrid.keyboard]]
 == Keyboard Navigation and Focus Handling in TreeGrid
 
-As opposed to [classname]#Grid#, individual cell are not focusable in [classname]#TreeGrid#, and only whole rows
-receive focus. User can navigate through rows with kbd:[Up] and kbd:[Down], collapse rows with kbd:[Left],
+As opposed to [classname]#Grid#, individual cells are not focusable in [classname]#TreeGrid#, and only whole rows
+receive focus. The user can navigate through rows with kbd:[Up] and kbd:[Down], collapse rows with kbd:[Left],
 and expand them with kbd:[Right].
