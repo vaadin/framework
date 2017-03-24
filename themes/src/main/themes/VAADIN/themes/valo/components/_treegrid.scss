@@ -66,7 +66,7 @@ $v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
     display: inline-block;
   }
 
-  .v-tree-grid-row-focused {
+  .v-grid-rowmode-row-focused {
 
     &:before {
       content: "";
@@ -80,11 +80,11 @@ $v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
       pointer-events: none;
     }
   }
-  .v-grid:focus .v-tree-grid-row-focused:before {
+  .v-grid:focus .v-grid-rowmode-row-focused:before {
     display: block;
   }
 
-  .v-grid.v-disabled:focus .v-tree-grid-row-focused:before {
+  .v-grid.v-disabled:focus .v-grid-rowmode-row-focused:before {
     // Disabled Grid should not show cell focus outline
     display: none;
   }

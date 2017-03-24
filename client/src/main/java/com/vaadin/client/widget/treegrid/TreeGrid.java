@@ -45,6 +45,6 @@ public class TreeGrid extends Grid<JsonObject> {
 
     @Override
     protected String getFocusPrimaryStyleName() {
-        return "v-tree-grid";
+        return super.getStylePrimaryName() + "-rowmode";
     }
 }
