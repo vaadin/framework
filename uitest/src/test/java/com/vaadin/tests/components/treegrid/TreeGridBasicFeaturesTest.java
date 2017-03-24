@@ -121,7 +121,7 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
 
     @Override
     protected boolean useNativeEventsForIE() {
-        //Fixes IE11 selectmMenuPath troubles
+        //Fixes IE11 selectMenuPath troubles
         return false;
     }
 
