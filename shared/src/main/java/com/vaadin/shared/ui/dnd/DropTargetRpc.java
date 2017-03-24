@@ -32,8 +32,6 @@ public interface DropTargetRpc extends ServerRpc {
      * @param dataTransferText
      *         Data of type {@code "text"} from the {@code DataTransfer}
      *         object.
-     * @param dropEffect
-     *         Drop effect set for the drop target where drop happened.
      */
-    public void drop(String dataTransferText, DropEffect dropEffect);
+    public void drop(String dataTransferText);
 }

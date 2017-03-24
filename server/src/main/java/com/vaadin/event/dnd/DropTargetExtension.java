@@ -43,9 +43,9 @@ public class DropTargetExtension<T extends AbstractComponent> extends
      *         Component to be extended.
      */
     public DropTargetExtension(T target) {
-        registerRpc((DropTargetRpc) (dataTransferText, dropEffect) -> {
+        registerRpc((DropTargetRpc) dataTransferText -> {
             DropEvent<T> event = new DropEvent<>(target, dataTransferText,
-                    dropEffect, getUI().getActiveDragSource());
+                    getUI().getActiveDragSource());
 
             fireEvent(event);
         });

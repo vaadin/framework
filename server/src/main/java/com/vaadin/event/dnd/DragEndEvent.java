@@ -15,7 +15,7 @@
  */
 package com.vaadin.event.dnd;
 
-import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
@@ -30,7 +30,7 @@ import com.vaadin.ui.Component;
  */
 public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
     private final String dataTransferText;
-    private final EffectAllowed effectAllowed;
+    private final DropEffect dropEffect;
 
     /**
      * Creates a server side dragend event.
@@ -40,16 +40,16 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
      * @param dataTransferText
      *         Data of type {@code "text"} from the {@code DataTransfer}
      *         object.
-     * @param effectAllowed
-     *         Allowed effects from {@code DataTransfer.effectAllowed} object.
+     * @param dropEffect
+     *         Drop effect from {@code DataTransfer.dropEffect} object.
      */
     public DragEndEvent(T source, String dataTransferText,
-            EffectAllowed effectAllowed) {
+            DropEffect dropEffect) {
         super(source);
 
         this.dataTransferText = dataTransferText;
 
-        this.effectAllowed = effectAllowed;
+        this.dropEffect = dropEffect;
     }
 
     /**
@@ -64,12 +64,13 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Returns the {@code effectAllowed} parameter of this event.
+     * Get drop effect of the dragend event.
      *
-     * @return This event's {@code effectAllowed} parameter.
+     * @return The {@code DataTransfer.dropEffect} parameter of the client side
+     * dragend event.
      */
-    public EffectAllowed getEffectAllowed() {
-        return effectAllowed;
+    public DropEffect getDropEffect() {
+        return dropEffect;
     }
 
     /**
