@@ -100,6 +100,8 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.themes\\.valoutil\\.BodyStyleName", //
             "com\\.vaadin\\.server\\.communication\\.JSR356WebsocketInitializer.*", //
             "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
+            "com\\.vaadin\\.osgi.*",//
+            "com\\.vaadin\\.server\\.osgi.*"
     };
 
     /**

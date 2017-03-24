@@ -1,0 +1,6 @@
+Bundle-SymbolicName: ${project.groupId}.compatibility.shared
+Bundle-Name: Vaadin Compatibility Shared
+Import-Package: com.vaadin*;version="[${osgi.bundle.version},${osgi.bundle.version}]",\
+    org.osgi*
+Export-Package: \
+  com.vaadin.v7.shared*;-noimport:=true
