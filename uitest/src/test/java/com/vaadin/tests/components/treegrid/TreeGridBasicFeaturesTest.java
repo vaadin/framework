@@ -40,7 +40,8 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
 
     @Before
     public void before() {
-        openTestURL("theme=valo","debug");
+        setDebug(true);
+        openTestURL("theme=valo");
         grid = $(TreeGridElement.class).first();
     }
 
