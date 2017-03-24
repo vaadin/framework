@@ -145,36 +145,39 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     private void loadRequestedRows() {
         final Range requestedRows = getPushRows();
         if (!requestedRows.isEmpty()) {
-            Stream<TreeLevelQuery> levelQueries = mapper
-                    .splitRangeToLevelQueries(requestedRows.getStart(),
-                            requestedRows.getEnd() - 1);
-
-            JsonObject[] dataObjects = new JsonObject[requestedRows.length()];
-            BiConsumer<JsonObject, Integer> rowDataMapper = (object,
-                    index) -> dataObjects[index
-                            - requestedRows.getStart()] = object;
-            List<T> fetchedItems = new ArrayList<>(dataObjects.length);
-
-            levelQueries.forEach(query -> {
-                List<T> results = doFetchQuery(query.startIndex, query.size,
-                        getKeyMapper().get(query.node.getParentKey()))
-                                .collect(Collectors.toList());
-                // TODO if the size differers from expected, all goes to hell
-                fetchedItems.addAll(results);
-                List<JsonObject> rowData = results.stream()
-                        .map(item -> createDataObject(item, query.depth))
-                        .collect(Collectors.toList());
-                mapper.reorderLevelQueryResultsToFlatOrdering(rowDataMapper,
-                        query, rowData);
-            });
-            verifyNoNullItems(dataObjects, requestedRows);
-
-            sendData(requestedRows.getStart(), Arrays.asList(dataObjects));
-            getActiveDataHandler().addActiveData(fetchedItems.stream());
-            getActiveDataHandler().cleanUp(fetchedItems.stream());
+            doPushRows(requestedRows);
         }
 
         setPushRows(Range.withLength(0, 0));
+    }
+
+    private void doPushRows(final Range requestedRows) {
+        Stream<TreeLevelQuery> levelQueries = mapper.splitRangeToLevelQueries(
+                requestedRows.getStart(), requestedRows.getEnd() - 1);
+
+        JsonObject[] dataObjects = new JsonObject[requestedRows.length()];
+        BiConsumer<JsonObject, Integer> rowDataMapper = (object,
+                index) -> dataObjects[index
+                        - requestedRows.getStart()] = object;
+        List<T> fetchedItems = new ArrayList<>(dataObjects.length);
+
+        levelQueries.forEach(query -> {
+            List<T> results = doFetchQuery(query.startIndex, query.size,
+                    getKeyMapper().get(query.node.getParentKey()))
+                            .collect(Collectors.toList());
+            // TODO if the size differers from expected, all goes to hell
+            fetchedItems.addAll(results);
+            List<JsonObject> rowData = results.stream()
+                    .map(item -> createDataObject(item, query.depth))
+                    .collect(Collectors.toList());
+            mapper.reorderLevelQueryResultsToFlatOrdering(rowDataMapper, query,
+                    rowData);
+        });
+        verifyNoNullItems(dataObjects, requestedRows);
+
+        sendData(requestedRows.getStart(), Arrays.asList(dataObjects));
+        getActiveDataHandler().addActiveData(fetchedItems.stream());
+        getActiveDataHandler().cleanUp(fetchedItems.stream());
     }
 
     /*
@@ -387,8 +390,10 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
         mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
 
-        // TODO optimize by sending "enough" of the expanded items directly
         getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
+        // TODO optimize by sending "just enough" of the expanded items directly
+        doPushRows(Range.withLength(expandedRowIndex + 1, expandedNodeSize));
+
         // expanded node needs to be updated to be marked as expanded
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status
