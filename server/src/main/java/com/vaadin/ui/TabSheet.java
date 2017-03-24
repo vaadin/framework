@@ -1027,13 +1027,15 @@ public class TabSheet extends AbstractComponentContainer
          * Sets the description for the tab. The description can be used to
          * briefly describe the state of the tab to the user, and is typically
          * shown as a tooltip when hovering over the tab.
-         * 
+         *
          * @see ContentMode
-         * 
+         *
          * @param description
          *            the new description string for the tab
          * @param mode
          *            content mode used to display the description
+         * 
+         * @since 8.1
          */
         public void setDescription(String description, ContentMode mode);
 
@@ -1237,8 +1239,7 @@ public class TabSheet extends AbstractComponentContainer
 
         @Override
         public void setDescription(String description) {
-            tabState.description = description;
-            markAsDirty();
+            setDescription(description, ContentMode.PREFORMATTED);
         }
 
         @Override

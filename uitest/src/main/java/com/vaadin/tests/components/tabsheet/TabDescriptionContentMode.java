@@ -13,11 +13,11 @@ public class TabDescriptionContentMode extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         TabSheet tabSheet = new TabSheet();
-        
+
         Tab firstTab = tabSheet.addTab(new Label());
         firstTab.setCaption("First tab");
         firstTab.setDescription("First tab description", ContentMode.TEXT);
-        
+
         Tab secondTab = tabSheet.addTab(new Label());
         secondTab.setCaption("Second tab");
         secondTab.setDescription("Second tab\ndescription",
