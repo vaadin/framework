@@ -442,4 +442,22 @@ class HierarchyMapper implements Serializable {
         }
     }
 
+    /**
+     * Returns parent index for the row or {@code null}
+     *
+     * @param rowIndex the row index
+     * @return the parent index or {@code null} for top-level items
+     * @since
+     */
+    public Integer getParentIndex(int rowIndex) {
+        return nodes.stream().
+                filter(treeNode ->
+                        treeNode.getParentKey() != null &&
+                                treeNode.getStartIndex() <= rowIndex &&
+                                treeNode.getEndIndex() >= rowIndex)
+                .map(treeNode -> treeNode.getStartIndex() - 1)
+                .findFirst()
+                .orElse(null);
+    }
+
 }

@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -58,7 +60,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Item expand event listener.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -72,7 +74,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Callback method for when an item has been expanded.
-         * 
+         *
          * @param event
          *            the expand event
          */
@@ -81,7 +83,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Item collapse event listener.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -95,7 +97,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Callback method for when an item has been collapsed.
-         * 
+         *
          * @param event
          *            the collapse event
          */
@@ -104,7 +106,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * An event that is fired when an item is expanded.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -116,10 +118,10 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Construct an expand event.
-         * 
+         *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param expandedItem
          *            the item that was expanded
          */
         public ExpandEvent(TreeGrid<T> source, T expandedItem) {
@@ -129,7 +131,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Get the expanded item that triggered this event.
-         * 
+         *
          * @return the expanded item
          */
         public T getExpandedItem() {
@@ -140,7 +142,7 @@ public class TreeGrid<T> extends Grid<T> {
     /**
      * An event that is fired when an item is collapsed. Note that expanded
      * subtrees of the collapsed item will not trigger collapse events.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -152,10 +154,10 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Construct a collapse event.
-         * 
+         *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param collapsedItem
          *            the item that was collapsed
          */
         public CollapseEvent(TreeGrid<T> source, T collapsedItem) {
@@ -165,7 +167,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Get the collapsed item that triggered this event.
-         * 
+         *
          * @return the collapsed item
          */
         public T getCollapsedItem() {
@@ -191,13 +193,24 @@ public class TreeGrid<T> extends Grid<T> {
                 }
             }
         });
+        registerRpc(new FocusParentRpc() {
+            @Override
+            public void focusParent(int rowIndex, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(rowIndex);
+                if (parentIndex != null)
+                    getRpcProxy(FocusRpc.class).focusRow(
+                            parentIndex,
+                            cellIndex
+                    );
+            }
+        });
     }
 
     /**
      * Adds an ExpandListener to this TreeGrid.
-     * 
+     *
      * @see ExpandEvent
-     * 
+     *
      * @param listener
      *            the listener to add
      * @return a registration for the listener
@@ -209,9 +222,9 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Adds a CollapseListener to this TreeGrid.
-     * 
+     *
      * @see CollapseEvent
-     * 
+     *
      * @param listener
      *            the listener to add
      * @return a registration for the listener
@@ -491,7 +504,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Emit an expand event.
-     * 
+     *
      * @param item
      *            the item that was expanded
      */
@@ -501,7 +514,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Emit a collapse event.
-     * 
+     *
      * @param item
      *            the item that was collapsed
      */
