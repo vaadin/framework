@@ -32,7 +32,6 @@ import com.vaadin.ui.Component;
  */
 public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final String dataTransferText;
-    private final DropEffect dropEffect;
     private final DragSourceExtension<? extends AbstractComponent> dragSourceExtension;
     private final AbstractComponent dragSource;
 
@@ -44,19 +43,15 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * @param dataTransferText
      *         Data of type {@code "text"} from the {@code DataTransfer}
      *         object.
-     * @param dropEffect
-     *         Drop effect from {@code DataTransfer.dropEffect} object.
      * @param dragSourceExtension
      *         Drag source extension of the component that initiated the drop
      *         event.
      */
-    public DropEvent(T target, String dataTransferText, DropEffect dropEffect,
+    public DropEvent(T target, String dataTransferText,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension) {
         super(target);
 
         this.dataTransferText = dataTransferText;
-
-        this.dropEffect = dropEffect;
 
         this.dragSourceExtension = dragSourceExtension;
         this.dragSource = Optional.ofNullable(dragSourceExtension)
@@ -72,15 +67,6 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      */
     public String getDataTransferText() {
         return dataTransferText;
-    }
-
-    /**
-     * Get drop effect set for the current drop target.
-     *
-     * @return {@code dropEffect} parameter set for the current drop target.
-     */
-    public DropEffect getDropEffect() {
-        return dropEffect;
     }
 
     /**

@@ -19,7 +19,6 @@ import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -76,7 +75,8 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
 
         dragSource.addDragEndListener(event -> {
             event.getComponent().removeStyleName("dragged");
-            log(event.getComponent().getValue() + " dragend");
+            log(event.getComponent().getValue() + " dragend, dropEffect="
+                    + event.getDropEffect());
         });
     }
 
@@ -84,8 +84,6 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         // Create and attach extension
         DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
                 target);
-
-        dropTarget.setDropEffect(DropEffect.MOVE);
 
         // Add listener
         dropTarget.addDropListener(event -> {

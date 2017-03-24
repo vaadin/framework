@@ -182,8 +182,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             String dataTransferText = nativeEvent.getDataTransfer().getData(
                     DragSourceState.DATA_TYPE_TEXT);
 
-            getRpcProxy(DropTargetRpc.class)
-                    .drop(dataTransferText, getState().dropEffect);
+            getRpcProxy(DropTargetRpc.class).drop(dataTransferText);
         }
 
         removeTargetIndicator(getDropTargetElement());
