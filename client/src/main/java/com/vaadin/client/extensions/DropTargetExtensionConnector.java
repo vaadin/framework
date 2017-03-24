@@ -15,12 +15,6 @@
  */
 package com.vaadin.client.extensions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
@@ -30,6 +24,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
 
@@ -184,20 +179,11 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             nativeEvent.preventDefault();
             nativeEvent.stopPropagation();
 
-            // Initiate firing server side drop event
-            JsArrayString typesJsArray = getTypes(
-                    nativeEvent.getDataTransfer());
-            List<String> types = new ArrayList<>();
-            Map<String, String> data = new HashMap<>();
-            for (int i = 0; i < typesJsArray.length(); i++) {
-                types.add(typesJsArray.get(i));
-                data.put(typesJsArray.get(i), nativeEvent.getDataTransfer()
-                        .getData(typesJsArray.get(i)));
-            }
+            String dataTransferText = nativeEvent.getDataTransfer().getData(
+                    DragSourceState.DATA_TYPE_TEXT);
 
             getRpcProxy(DropTargetRpc.class)
-                    .drop(types, data, getState().dropEffect, data.get(
-                            DragSourceExtensionConnector.DATA_TYPE_DRAG_SOURCE_ID));
+                    .drop(dataTransferText, getState().dropEffect);
         }
 
         removeTargetIndicator(getDropTargetElement());
@@ -222,10 +208,6 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     private native boolean executeScript(NativeEvent event, String script)/*-{
         return new Function('event', script)(event);
-    }-*/;
-
-    private native JsArrayString getTypes(DataTransfer dataTransfer)/*-{
-        return dataTransfer.types;
     }-*/;
 
     @Override

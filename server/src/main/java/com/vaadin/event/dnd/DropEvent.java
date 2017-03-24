@@ -15,9 +15,6 @@
  */
 package com.vaadin.event.dnd;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -34,9 +31,9 @@ import com.vaadin.ui.Component;
  * @since 8.1
  */
 public class DropEvent<T extends AbstractComponent> extends Component.Event {
-    private final Map<String, String> data;
+    private final String dataTransferText;
     private final DropEffect dropEffect;
-    private final DragSourceExtension<AbstractComponent> dragSourceExtension;
+    private final DragSourceExtension<? extends AbstractComponent> dragSourceExtension;
     private final AbstractComponent dragSource;
 
     /**
@@ -44,25 +41,20 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      *
      * @param target
      *         Component that received the drop.
-     * @param types
-     *         List of data types from {@code DataTransfer.types} object.
-     * @param data
-     *         Map containing all types and corresponding data from the {@code
-     *         DataTransfer} object.
+     * @param dataTransferText
+     *         Data of type {@code "text"} from the {@code DataTransfer}
+     *         object.
      * @param dropEffect
      *         Drop effect from {@code DataTransfer.dropEffect} object.
      * @param dragSourceExtension
      *         Drag source extension of the component that initiated the drop
      *         event.
      */
-    public DropEvent(T target, List<String> types, Map<String, String> data,
-            DropEffect dropEffect,
-            DragSourceExtension<AbstractComponent> dragSourceExtension) {
+    public DropEvent(T target, String dataTransferText, DropEffect dropEffect,
+            DragSourceExtension<? extends AbstractComponent> dragSourceExtension) {
         super(target);
 
-        // Create a linked map that preserves the order of types
-        this.data = new LinkedHashMap<>();
-        types.forEach(type -> this.data.put(type, data.get(type)));
+        this.dataTransferText = dataTransferText;
 
         this.dropEffect = dropEffect;
 
@@ -72,15 +64,14 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Get data from the client side {@code DataTransfer} object.
+     * Get data of type {@code "text"} from the client side {@code DataTransfer}
+     * object.
      *
-     * @param format
-     *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
-     * @return Data for the given format if exists in the client side {@code
-     * DataTransfer}, otherwise {@code null}.
+     * @return Data of type {@code "text"} if exists in the client side {@code
+     * DataTransfer} object, otherwise {@literal null}.
      */
-    public String getTransferData(String format) {
-        return data != null ? data.get(format) : null;
+    public String getDataTransferText() {
+        return dataTransferText;
     }
 
     /**
@@ -110,8 +101,21 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      *
      * @return Drag source extension or an empty optional
      */
-    public Optional<DragSourceExtension<AbstractComponent>> getDragSourceExtension() {
+    public Optional<DragSourceExtension<? extends AbstractComponent>> getDragSourceExtension() {
         return Optional.ofNullable(dragSourceExtension);
+    }
+
+    /**
+     * Gets the server side drag data. This data can be set during the drag
+     * start event on the server side and can be used to transfer data between
+     * drag source and drop target when they are in the same UI.
+     *
+     * @return Optional server side drag data if set and the drag source and the
+     * drop target are in the same UI, otherwise empty {@code Optional}.
+     * @see DragSourceExtension#setDragData(Object)
+     */
+    public Optional<Object> getDragData() {
+        return getDragSourceExtension().map(DragSourceExtension::getDragData);
     }
 
     /**

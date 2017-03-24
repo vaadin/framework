@@ -35,6 +35,7 @@ import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
@@ -58,7 +59,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Item expand event listener.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -72,7 +73,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Callback method for when an item has been expanded.
-         * 
+         *
          * @param event
          *            the expand event
          */
@@ -81,7 +82,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Item collapse event listener.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -95,7 +96,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Callback method for when an item has been collapsed.
-         * 
+         *
          * @param event
          *            the collapse event
          */
@@ -104,7 +105,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * An event that is fired when an item is expanded.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -116,7 +117,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Construct an expand event.
-         * 
+         *
          * @param source
          *            the tree grid this event originated from
          * @param item
@@ -129,7 +130,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Get the expanded item that triggered this event.
-         * 
+         *
          * @return the expanded item
          */
         public T getExpandedItem() {
@@ -140,7 +141,7 @@ public class TreeGrid<T> extends Grid<T> {
     /**
      * An event that is fired when an item is collapsed. Note that expanded
      * subtrees of the collapsed item will not trigger collapse events.
-     * 
+     *
      * @author Vaadin Ltd
      * @since 8.1
      * @param <T>
@@ -152,7 +153,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Construct a collapse event.
-         * 
+         *
          * @param source
          *            the tree grid this event originated from
          * @param item
@@ -165,7 +166,7 @@ public class TreeGrid<T> extends Grid<T> {
 
         /**
          * Get the collapsed item that triggered this event.
-         * 
+         *
          * @return the collapsed item
          */
         public T getCollapsedItem() {
@@ -195,9 +196,9 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Adds an ExpandListener to this TreeGrid.
-     * 
+     *
      * @see ExpandEvent
-     * 
+     *
      * @param listener
      *            the listener to add
      * @return a registration for the listener
@@ -209,9 +210,9 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Adds a CollapseListener to this TreeGrid.
-     * 
+     *
      * @see CollapseEvent
-     * 
+     *
      * @param listener
      *            the listener to add
      * @return a registration for the listener
@@ -366,6 +367,26 @@ public class TreeGrid<T> extends Grid<T> {
         getState().hierarchyColumnId = getInternalIdForColumn(getColumn(id));
     }
 
+    /**
+     * Sets the item collapse allowed provider for this TreeGrid. The provider
+     * should return {@code true} for any item that the user can collapse.
+     * <p>
+     * <strong>Note:</strong> This callback will be accessed often when sending
+     * data to the client. The callback should not do any costly operations.
+     * <p>
+     * This method is a shortcut to method with the same name in
+     * {@link HierarchicalDataCommunicator}.
+     *
+     * @param provider
+     *            the item collapse allowed provider, not {@code null}
+     *
+     * @see HierarchicalDataCommunicator#setItemCollapseAllowedProvider(SerializablePredicate)
+     */
+    public void setItemCollapseAllowedProvider(
+            SerializablePredicate<T> provider) {
+        getDataCommunicator().setItemCollapseAllowedProvider(provider);
+    }
+
     @Override
     protected TreeGridState getState() {
         return (TreeGridState) super.getState();
@@ -464,9 +485,8 @@ public class TreeGrid<T> extends Grid<T> {
                             .map(DesignFormatter::encodeForTextNode)
                             .orElse(""));
         }
-        getDataProvider().fetch(new HierarchicalQuery<>(null, item))
-                .forEach(childItem -> writeRow(container, childItem, item,
-                        context));
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item)).forEach(
+                childItem -> writeRow(container, childItem, item, context));
     }
 
     @Override
@@ -491,7 +511,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Emit an expand event.
-     * 
+     *
      * @param item
      *            the item that was expanded
      */
@@ -501,7 +521,7 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Emit a collapse event.
-     * 
+     *
      * @param item
      *            the item that was collapsed
      */

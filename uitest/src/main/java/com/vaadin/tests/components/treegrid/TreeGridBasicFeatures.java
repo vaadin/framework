@@ -45,7 +45,8 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         grid.addColumn(HierarchicalTestBean::toString).setCaption("String")
                 .setId("string");
         grid.addColumn(HierarchicalTestBean::getDepth).setCaption("Depth")
-                .setId("depth");
+                .setId("depth").setDescriptionGenerator(
+                        t -> "Hierarchy depth: " + t.getDepth());
         grid.addColumn(HierarchicalTestBean::getIndex)
                 .setCaption("Index on this depth").setId("index");
         grid.setHierarchyColumn("string");
@@ -61,6 +62,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
         createDataProviderSelect();
         createHierarchyColumnSelect();
+        createCollapseAllowedSelect();
         createListenerMenu();
     }
 
@@ -129,6 +131,18 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createSelectAction("Set hierarchy column", CATEGORY_FEATURES, options,
                 grid.getColumns().get(0).getId(),
                 (treeGrid, value, data) -> treeGrid.setHierarchyColumn(value));
+    }
+
+    private void createCollapseAllowedSelect() {
+        LinkedHashMap<String, SerializablePredicate<HierarchicalTestBean>> options = new LinkedHashMap<>();
+        options.put("all allowed", t -> true);
+        options.put("all disabled", t -> false);
+        options.put("depth 0 disabled", t -> t.getDepth() != 0);
+        options.put("depth 1 disabled", t -> t.getDepth() != 1);
+
+        createSelectAction("Collapse allowed", CATEGORY_FEATURES, options,
+                "all allowed", (treeGrid, value, data) -> treeGrid
+                        .setItemCollapseAllowedProvider(value));
     }
 
     @SuppressWarnings("unchecked")

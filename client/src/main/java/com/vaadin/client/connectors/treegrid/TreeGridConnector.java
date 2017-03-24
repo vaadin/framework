@@ -23,10 +23,8 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.grid.GridConnector;
-import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.renderers.HierarchyRenderer;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.GridEventHandler;
@@ -53,9 +51,6 @@ public class TreeGridConnector extends GridConnector {
     private String hierarchyColumnId;
 
     private HierarchyRenderer hierarchyRenderer;
-
-    // Expander click event handling
-    private HandlerRegistration expanderClickHandlerRegistration;
 
     @Override
     public TreeGrid getWidget() {
@@ -121,7 +116,7 @@ public class TreeGridConnector extends GridConnector {
 
     private HierarchyRenderer getHierarchyRenderer() {
         if (hierarchyRenderer == null) {
-            hierarchyRenderer = new HierarchyRenderer();
+            hierarchyRenderer = new HierarchyRenderer(this::setCollapsed);
         }
         return hierarchyRenderer;
     }
@@ -129,20 +124,6 @@ public class TreeGridConnector extends GridConnector {
     @Override
     protected void init() {
         super.init();
-
-        expanderClickHandlerRegistration = getHierarchyRenderer()
-                .addClickHandler(
-                        new ClickableRenderer.RendererClickHandler<JsonObject>() {
-                            @Override
-                            public void onClick(
-                                    ClickableRenderer.RendererClickEvent<JsonObject> event) {
-                                toggleCollapse(getRowKey(event.getRow()),
-                                        event.getCell().getRowIndex(),
-                                        !isCollapsed(event.getRow()));
-                                event.stopPropagation();
-                                event.preventDefault();
-                            }
-                        });
 
         // Swap Grid's CellFocusEventHandler to this custom one
         // The handler is identical to the original one except for the child
@@ -156,13 +137,6 @@ public class TreeGridConnector extends GridConnector {
         // widget check
         replaceClickEvent(getWidget(),
                 new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
-    }
-
-    @Override
-    public void onUnregister() {
-        super.onUnregister();
-
-        expanderClickHandlerRegistration.removeHandler();
     }
 
     private native void replaceCellFocusEventHandler(Grid<?> grid,
@@ -188,9 +162,10 @@ public class TreeGridConnector extends GridConnector {
         return cell.getColumn().getRenderer() instanceof HierarchyRenderer;
     }
 
-    private void toggleCollapse(String rowKey, int rowIndex, boolean collapse) {
+    private void setCollapsed(int rowIndex, boolean collapsed) {
+        String rowKey = getRowKey(getDataSource().getRow(rowIndex));
         getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
-                collapse);
+                collapsed);
     }
 
     /**
@@ -273,15 +248,15 @@ public class TreeGridConnector extends GridConnector {
                     switch (domEvent.getKeyCode()) {
                     case KeyCodes.KEY_RIGHT:
                         if (!leaf && collapsed) {
-                            toggleCollapse(getRowKey(rowData),
-                                    event.getCell().getRowIndex(), true);
+                            setCollapsed(event.getCell().getRowIndex(),
+                                    !collapsed);
                         }
                         break;
                     case KeyCodes.KEY_LEFT:
                         if (!collapsed) {
                             // collapse node
-                            toggleCollapse(getRowKey(rowData),
-                                    event.getCell().getRowIndex(), false);
+                            setCollapsed(event.getCell().getRowIndex(),
+                                    !collapsed);
                         }
                         break;
                     }

@@ -17,8 +17,16 @@ package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.And;
+import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDropCriteria(String)}
+ */
+@Deprecated
 @AcceptCriterion(And.class)
 final public class VAnd extends VAcceptCriterion implements VAcceptCallback {
     private boolean b1;

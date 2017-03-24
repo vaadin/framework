@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.renderers;
 
+import java.util.function.BiConsumer;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,20 +37,54 @@ import elemental.json.JsonObject;
 
 /**
  * A renderer for displaying hierarchical columns in TreeGrid.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
  */
 public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
-    
+
     private static final String CLASS_TREE_GRID_NODE = "v-tree-grid-node";
     private static final String CLASS_TREE_GRID_EXPANDER = "v-tree-grid-expander";
     private static final String CLASS_TREE_GRID_CELL_CONTENT = "v-tree-grid-cell-content";
     private static final String CLASS_COLLAPSED = "collapsed";
+    private static final String CLASS_COLLAPSE_DISABLED = "collapse-disabled";
     private static final String CLASS_EXPANDED = "expanded";
     private static final String CLASS_DEPTH = "depth-";
 
     private Renderer innerRenderer;
+
+    /**
+     * Constructs a HierarchyRenderer with given collapse callback. Callback is
+     * called when user clicks on the expander of a row. Callback is given the
+     * row index and the target collapsed state.
+     *
+     * @param collapseCallback
+     *            the callback for collapsing nodes with row index
+     */
+    public HierarchyRenderer(BiConsumer<Integer, Boolean> collapseCallback) {
+        addClickHandler(event -> {
+            try {
+                JsonObject row = (JsonObject) event.getRow();
+                // Row needs to have hierarchy description
+                if (!hasHierarchyData(row)) {
+                    return;
+                }
+
+                JsonObject hierarchyData = getHierarchyData(row);
+                if ((!isCollapsed(hierarchyData)
+                        && !isCollapseAllowed(hierarchyData))
+                        || isLeaf(hierarchyData)) {
+                    return;
+                }
+
+                collapseCallback.accept(event.getCell().getRowIndex(),
+                        !isCollapsed(hierarchyData));
+            } finally {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        });
+    }
 
     @Override
     public Widget createWidget() {
@@ -63,18 +99,15 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         int depth = 0;
         boolean leaf = false;
         boolean collapsed = false;
-        if (row.hasKey(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
-            JsonObject rowDescription = row.getObject(
-                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+        boolean collapseAllowed = true;
+        if (hasHierarchyData(row)) {
+            JsonObject rowDescription = getHierarchyData(row);
 
-            depth = (int) rowDescription
-                    .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
-            leaf = rowDescription
-                    .getBoolean(TreeGridCommunicationConstants.ROW_LEAF);
+            depth = getDepth(rowDescription);
+            leaf = isLeaf(rowDescription);
             if (!leaf) {
-                collapsed = rowDescription.getBoolean(
-                        TreeGridCommunicationConstants.ROW_COLLAPSED);
+                collapsed = isCollapsed(rowDescription);
+                collapseAllowed = isCollapseAllowed(rowDescription);
             }
         }
 
@@ -89,22 +122,64 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             cellWidget.setExpanderState(ExpanderState.EXPANDED);
         }
 
-        // Render the contents of the inner renderer. For non widget renderers
-        // the cell reference needs to be wrapped so that its getElement method
+        cellWidget.setCollapseAllowed(collapseAllowed);
+
+        // Render the contents of the inner renderer. For non widget
+        // renderers
+        // the cell reference needs to be wrapped so that its getElement
+        // method
         // returns the correct element we want to render.
         if (innerRenderer instanceof WidgetRenderer) {
-            ((WidgetRenderer) innerRenderer).render(cell, data, ((HierarchyItem) widget).content);
+            ((WidgetRenderer) innerRenderer).render(cell, data,
+                    ((HierarchyItem) widget).content);
         } else {
-            innerRenderer.render(new HierarchyRendererCellReferenceWrapper(cell,
-                    ((HierarchyItem) widget).content.getElement()), data);
+            innerRenderer.render(
+                    new HierarchyRendererCellReferenceWrapper(cell,
+                            ((HierarchyItem) widget).content.getElement()),
+                    data);
         }
     }
 
+    private int getDepth(JsonObject rowDescription) {
+        return (int) rowDescription
+                .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
+    }
+
+    private JsonObject getHierarchyData(JsonObject row) {
+        return row.getObject(
+                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+    }
+
+    private boolean hasHierarchyData(JsonObject row) {
+        return row.hasKey(
+                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+    }
+
+    private boolean isLeaf(JsonObject rowDescription) {
+        boolean leaf;
+        leaf = rowDescription
+                .getBoolean(TreeGridCommunicationConstants.ROW_LEAF);
+        return leaf;
+    }
+
+    private boolean isCollapseAllowed(JsonObject row) {
+        return row.getBoolean(
+                TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED);
+    }
+
+    private boolean isCollapsed(JsonObject rowDescription) {
+        boolean collapsed;
+        collapsed = rowDescription
+                .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
+        return collapsed;
+    }
+
     /**
-     * Sets the renderer to be wrapped. This is the original renderer before hierarchy is applied.
+     * Sets the renderer to be wrapped. This is the original renderer before
+     * hierarchy is applied.
      *
      * @param innerRenderer
-     *         Renderer to be wrapped.
+     *            Renderer to be wrapped.
      */
     public void setInnerRenderer(Renderer innerRenderer) {
         this.innerRenderer = innerRenderer;
@@ -166,11 +241,13 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         }
 
         private void setDepth(int depth) {
-            String classNameToBeReplaced = getFullClassName(CLASS_DEPTH, panel.getElement().getClassName());
+            String classNameToBeReplaced = getFullClassName(CLASS_DEPTH,
+                    panel.getElement().getClassName());
             if (classNameToBeReplaced == null) {
                 panel.getElement().addClassName(CLASS_DEPTH + depth);
             } else {
-                panel.getElement().replaceClassName(classNameToBeReplaced, CLASS_DEPTH + depth);
+                panel.getElement().replaceClassName(classNameToBeReplaced,
+                        CLASS_DEPTH + depth);
             }
         }
 
@@ -178,7 +255,8 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             int start = classNameList.indexOf(prefix);
             int end = start + prefix.length();
             if (start > -1) {
-                while (end < classNameList.length() && classNameList.charAt(end) != ' ') {
+                while (end < classNameList.length()
+                        && classNameList.charAt(end) != ' ') {
                     end++;
                 }
                 return classNameList.substring(start, end);
@@ -200,6 +278,15 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             default:
                 expander.getElement().removeClassName(CLASS_COLLAPSED);
                 expander.getElement().removeClassName(CLASS_EXPANDED);
+            }
+        }
+
+        private void setCollapseAllowed(boolean collapseAllowed) {
+            if (expander.getElement().hasClassName(CLASS_EXPANDED)
+                    && !collapseAllowed) {
+                expander.getElement().addClassName(CLASS_COLLAPSE_DISABLED);
+            } else {
+                expander.getElement().removeClassName(CLASS_COLLAPSE_DISABLED);
             }
         }
 

@@ -17,6 +17,7 @@ package com.vaadin.event.dd;
 
 import java.util.Map;
 
+import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.ui.Component;
 
 /**
@@ -25,7 +26,9 @@ import com.vaadin.ui.Component;
  * and provide a {@link DropHandler} which will handle the actual drop event.
  *
  * @since 6.3
+ * @deprecated Replaced in 8.1 by {@link DropTargetExtension}.
  */
+@Deprecated
 public interface DropTarget extends Component {
 
     /**

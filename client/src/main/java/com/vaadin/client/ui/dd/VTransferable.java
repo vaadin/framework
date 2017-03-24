@@ -20,12 +20,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
 import com.vaadin.event.dd.DragSource;
 
 /**
- * Client side counterpart for Transferable in com.vaadin.event.Transferable
+ * Client side counterpart for Transferable in com.vaadin.event.Transferable.
  *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DragSourceExtensionConnector}
  */
+@Deprecated
 public class VTransferable {
 
     private ComponentConnector component;

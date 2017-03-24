@@ -42,6 +42,11 @@ $tg-expander-padding: 10px !default;
         content: $tg-expander-char-collapsed;
       }
     }
+
+    &.collapse-disabled {
+      @include opacity($v-disabled-opacity);
+      cursor: default;
+    }
   }
 
   // Hierarchy depth styling

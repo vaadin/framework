@@ -308,22 +308,24 @@ public class GridConnector extends AbstractListingConnector
      */
     @OnStateChange("header")
     void updateHeader() {
-        final Grid<JsonObject> grid = getWidget();
-        final SectionState state = getState().header;
+        Scheduler.get().scheduleFinally(() -> {
+            final Grid<JsonObject> grid = getWidget();
+            final SectionState state = getState().header;
 
-        while (grid.getHeaderRowCount() > 0) {
-            grid.removeHeaderRow(0);
-        }
-
-        for (RowState rowState : state.rows) {
-            HeaderRow row = grid.appendHeaderRow();
-
-            if (rowState.defaultHeader) {
-                grid.setDefaultHeaderRow(row);
+            while (grid.getHeaderRowCount() > 0) {
+                grid.removeHeaderRow(0);
             }
 
-            updateStaticRow(rowState, row);
-        }
+            for (RowState rowState : state.rows) {
+                HeaderRow row = grid.appendHeaderRow();
+
+                if (rowState.defaultHeader) {
+                    grid.setDefaultHeaderRow(row);
+                }
+
+                updateStaticRow(rowState, row);
+            }
+        });
     }
 
     private void updateStaticRow(RowState rowState,

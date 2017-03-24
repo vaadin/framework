@@ -15,10 +15,6 @@
  */
 package com.vaadin.event.dnd;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -35,7 +31,7 @@ import com.vaadin.ui.Component;
  */
 public class DragStartEvent<T extends AbstractComponent> extends
         Component.Event {
-    private final Map<String, String> data;
+    private final String dataTransferText;
     private final EffectAllowed effectAllowed;
 
     /**
@@ -43,35 +39,30 @@ public class DragStartEvent<T extends AbstractComponent> extends
      *
      * @param source
      *         Component that is dragged.
-     * @param types
-     *         List of data types from {@code DataTransfer.types} object.
-     * @param data
-     *         Map containing all types and corresponding data from the {@code
-     *         DataTransfer} object.
+     * @param dataTransferText
+     *         Data of type {@code "text"} from the {@code DataTransfer}
+     *         object.
      * @param effectAllowed
      *         Allowed effects from {@code DataTransfer.effectAllowed} object.
      */
-    public DragStartEvent(T source, List<String> types,
-            Map<String, String> data, EffectAllowed effectAllowed) {
+    public DragStartEvent(T source, String dataTransferText,
+            EffectAllowed effectAllowed) {
         super(source);
 
-        // Create a linked map that preserves the order of types
-        this.data = new LinkedHashMap<>();
-        types.forEach(type -> this.data.put(type, data.get(type)));
+        this.dataTransferText = dataTransferText;
 
         this.effectAllowed = effectAllowed;
     }
 
     /**
-     * Get data from the client side {@code DataTransfer} object.
+     * Get data of type {@code "text"} from the client side {@code DataTransfer}
+     * object.
      *
-     * @param format
-     *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
-     * @return Data for the given format if exists in the client side {@code
-     * DataTransfer}, otherwise {@code null}.
+     * @return Data of type {@code "text"} if exists in the client side {@code
+     * DataTransfer} object, otherwise {@literal null}.
      */
-    public String getTransferData(String format) {
-        return data != null ? data.get(format) : null;
+    public String getDataTransferText() {
+        return dataTransferText;
     }
 
     /**

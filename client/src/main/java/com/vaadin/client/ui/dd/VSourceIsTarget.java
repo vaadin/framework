@@ -18,10 +18,18 @@ package com.vaadin.client.ui.dd;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
+import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDropCriteria(String)}
+ */
+@Deprecated
 @AcceptCriterion(SourceIsTarget.class)
-final public class VSourceIsTarget extends VAcceptCriterion {
+public final class VSourceIsTarget extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {
