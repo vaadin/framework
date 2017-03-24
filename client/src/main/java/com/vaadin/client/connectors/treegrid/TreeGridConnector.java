@@ -33,6 +33,8 @@ import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
@@ -47,6 +49,12 @@ import elemental.json.JsonObject;
  */
 @Connect(com.vaadin.ui.TreeGrid.class)
 public class TreeGridConnector extends GridConnector {
+
+    public TreeGridConnector() {
+        registerRpc(FocusRpc.class, (rowIndex, cellIndex) -> {
+            getWidget().focusCell(rowIndex, cellIndex);
+        });
+    }
 
     private String hierarchyColumnId;
 
@@ -229,42 +237,40 @@ public class TreeGridConnector extends GridConnector {
                 return;
             }
 
-            // Navigate within hierarchy with ALT/OPTION + ARROW KEY when
-            // hierarchy column is selected
+            // Navigate within hierarchy with ARROW KEYs
             if (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
-                            || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT) {
+                    || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT) {
 
                 // Hierarchy metadata
-                boolean collapsedOrLeaf, leaf;
                 JsonObject rowData = event.getCell().getRow();
                 if (rowData.hasKey(
                         TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
                     JsonObject rowDescription = rowData.getObject(
                             TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
-                    leaf = rowDescription.getBoolean(
+                    boolean leaf = rowDescription.getBoolean(
                             TreeGridCommunicationConstants.ROW_LEAF);
-                    collapsedOrLeaf = leaf || isCollapsed(rowData);
-                    switch (domEvent.getKeyCode()) {
-                    case KeyCodes.KEY_RIGHT:
-                        if (!leaf && collapsedOrLeaf) {
-                            // expand
-                            toggleCollapse(getRowKey(rowData),
-                                    event.getCell().getRowIndex(), false);
-                        } else {
-                            // navigate down
-                            getWidget().focusCell(event.getCell().getRowIndex()+1,event.getCell().getColumnIndex());
+                    if (!leaf) {
+                        boolean collapsed = isCollapsed(rowData);
+                        switch (domEvent.getKeyCode()) {
+                            case KeyCodes.KEY_RIGHT:
+                                if (collapsed) {
+                                    // expand
+                                    toggleCollapse(getRowKey(rowData),
+                                            event.getCell().getRowIndex(), false);
+                                }
+                                break;
+                            case KeyCodes.KEY_LEFT:
+                                if (collapsed) {
+                                    // navigate up
+                                    int columnIndex = event.getCell().getColumnIndex();
+                                    getRpcProxy(FocusParentRpc.class).focusParent(event.getCell().getRowIndex(), columnIndex);
+                                } else {
+                                    // collapse
+                                    toggleCollapse(getRowKey(rowData),
+                                            event.getCell().getRowIndex(), true);
+                                }
+                                break;
                         }
-                        break;
-                    case KeyCodes.KEY_LEFT:
-                        if (collapsedOrLeaf ) {
-                            // navigate up
-                            getWidget().focusCell(Math.max(0, event.getCell().getRowIndex() - 1), event.getCell().getColumnIndex());
-                        } else {
-                            // collapse
-                            toggleCollapse(getRowKey(rowData),
-                                    event.getCell().getRowIndex(), true);
-                        }
-                        break;
                     }
                 }
                 event.setHandled(true);

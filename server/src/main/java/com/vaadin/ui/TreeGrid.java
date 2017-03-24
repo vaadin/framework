@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -120,7 +122,7 @@ public class TreeGrid<T> extends Grid<T> {
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param expandedItem
          *            the item that was expanded
          */
         public ExpandEvent(TreeGrid<T> source, T expandedItem) {
@@ -156,7 +158,7 @@ public class TreeGrid<T> extends Grid<T> {
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param collapsedItem
          *            the item that was collapsed
          */
         public CollapseEvent(TreeGrid<T> source, T collapsedItem) {
@@ -190,6 +192,17 @@ public class TreeGrid<T> extends Grid<T> {
                     fireExpandEvent(
                             getDataCommunicator().getKeyMapper().get(rowKey));
                 }
+            }
+        });
+        registerRpc(new FocusParentRpc() {
+            @Override
+            public void focusParent(int rowIndex, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(rowIndex);
+                if (parentIndex != null)
+                    getRpcProxy(FocusRpc.class).focusRow(
+                            parentIndex,
+                            cellIndex
+                    );
             }
         });
     }
