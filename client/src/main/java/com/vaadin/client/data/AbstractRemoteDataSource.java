@@ -599,7 +599,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             // never invalidated.
             invalidatedRows = null;
         } finally {
-            // Update cachce range and clean up
+            // Update cache range and clean up
             if (invalidatedRows != null) {
                 invalidatedRows.clear();
             }
