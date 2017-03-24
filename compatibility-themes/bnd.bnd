@@ -1,0 +1,6 @@
+Bundle-SymbolicName: ${project.groupId}.compatibility.themes
+Bundle-Name: Vaadin Compatibility Themes
+Bundle-Version: ${osgi.bundle.version}
+Import-Package: com.vaadin.*;version='[${osgi.bundle.version},${osgi.bundle.version}]',\
+    * 
+Export-Package: com.vaadin.osgi.compatibility.themes;-noimport:=true

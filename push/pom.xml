@@ -134,28 +134,9 @@
                     <outputDirectory>${project.build.outputDirectory}/VAADIN</outputDirectory>
                 </configuration>
             </plugin>
-
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
-                        <Bundle-RequiredExecutionEnvironment>${osgi.execution.environment}</Bundle-RequiredExecutionEnvironment>
-                        <Export-Package>VAADIN</Export-Package>
-                        <Require-Bundle>com.vaadin.external.atmosphere.runtime;bundle-version="${atmosphere.runtime.version}";visibility:=reexport</Require-Bundle>
-                    </instructions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>bundle-manifest</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
