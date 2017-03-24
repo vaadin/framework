@@ -447,7 +447,6 @@ class HierarchyMapper implements Serializable {
      *
      * @param rowIndex the row index
      * @return the parent index or {@code null} for top-level items
-     * @since
      */
     public Integer getParentIndex(int rowIndex) {
         return nodes.stream().

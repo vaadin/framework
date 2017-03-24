@@ -21,7 +21,7 @@ import com.vaadin.shared.communication.ClientRpc;
  * RPC to handle focusing in TreeGrid.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
  */
 public interface FocusRpc extends ClientRpc {
 

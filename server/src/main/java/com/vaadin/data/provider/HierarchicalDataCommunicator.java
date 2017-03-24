@@ -391,7 +391,6 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *
      * @param rowIndex the row index
      * @return the parent index or {@code null} for top-level items
-     * @since
      */
     public Integer getParentIndex(int rowIndex) {
         return mapper.getParentIndex(rowIndex);
