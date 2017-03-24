@@ -1,0 +1,8 @@
+Bundle-SymbolicName: ${project.groupId}.shared
+Bundle-Activator: com.vaadin.osgi.resources.OSGiVaadinResources
+Bundle-Name: Vaadin Shared
+Import-Package: com.vaadin*;version="[${osgi.bundle.version},${osgi.bundle.version}]",\
+  org.osgi*
+Export-Package: com.vaadin.osgi.resources;-noimport:=true,\
+  com.vaadin.shared*;-noimport:=true,\
+  elemental*;-noimport:=true
