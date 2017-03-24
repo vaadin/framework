@@ -1034,7 +1034,7 @@ public class TabSheet extends AbstractComponentContainer
          *            the new description string for the tab
          * @param mode
          *            content mode used to display the description
-         * 
+         *
          * @since 8.1
          */
         public void setDescription(String description, ContentMode mode);
