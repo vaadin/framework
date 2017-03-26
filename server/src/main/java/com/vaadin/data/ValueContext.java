@@ -95,13 +95,16 @@ public class ValueContext implements Serializable {
     /**
      * Constructor for {@code ValueContext}.
      *
+     * @param
+     *      component
+     *            The component can be {@code null}.
      * @param locale
-     *            The locale used with conversion. Can be null.
+     *            The locale used with conversion. Can be {@code null}.
      * @param hasValue
-     *            The value source related to current value. Can be null.
+     *            The value source related to current value. Can be {@code null}.
      */
-    public ValueContext(HasValue<?> hasValue, Locale locale) {
-        this.component = null;
+    public ValueContext(Component component, HasValue<?> hasValue, Locale locale) {
+        this.component = component;
         this.hasValue = hasValue;
         this.locale = locale;
     }
