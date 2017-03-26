@@ -172,7 +172,11 @@ can also do some sanitization on valid inputs, such as removing leading and
 trailing whitespace from a string. Since [interfacename]#Validator# is a functional
 interface, you can often simply write a lambda expression instead of a full class
 declaration. There is also an [methodname]#withValidator# overload that creates a
-validator from a boolean function and an error message.
+validator from a boolean function and an error message. If the application requires
+more sophisticated validation diagnostics (ex. locale-specific), there is
+[methodname]#withValidator# method, which uses boolean function and [classname]#ErrorMessageProvider#.
+[classname]#ErrorMessageProvider# can compose diagnostic messages based on locale
+and source component value, provided with [classname]#ValueContext#.
 
 [source, java]
 ----

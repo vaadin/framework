@@ -871,7 +871,7 @@ public class Binder<BEAN> implements Serializable {
             if (field instanceof Component) {
                 return new ValueContext((Component) field, field);
             }
-            return new ValueContext(field, findLocale());
+            return new ValueContext(null, field, findLocale());
         }
 
         /**
