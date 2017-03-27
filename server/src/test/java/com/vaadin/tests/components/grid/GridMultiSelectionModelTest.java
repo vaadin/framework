@@ -34,8 +34,9 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.GridSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModel.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 
 import elemental.json.JsonObject;
 
@@ -616,7 +617,7 @@ public class GridMultiSelectionModelTest {
         UI ui = new MockUI();
 
         Grid<String> grid = new Grid<>();
-        MultiSelectionModelImpl<String> model = (MultiSelectionModelImpl<String>) grid
+        MultiSelectionModel<String> model = (MultiSelectionModel<String>) grid
                 .setSelectionMode(SelectionMode.MULTI);
 
         ui.setContent(grid);
@@ -655,7 +656,7 @@ public class GridMultiSelectionModelTest {
         UI ui = new MockUI();
         ui.setContent(grid);
 
-        MultiSelectionModelImpl<String> model = (MultiSelectionModelImpl<String>) grid
+        MultiSelectionModel<String> model = (MultiSelectionModel<String>) grid
                 .setSelectionMode(SelectionMode.MULTI);
 
         // no items yet, default data provider is empty not in memory one
