@@ -38,15 +38,15 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * Creates a new LocalDateRenderer.
      * <p>
      * The renderer is configured to render with the systems default locale and
-     * FormatStyle.LONG, with the empty string as its null representation.
+     * {@code FormatStyle.LONG}, with an empty string as its null
+     * representation.
      * 
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/FormatStyle.html#LONG">
      *      FormatStyle.LONG</a>
      */
     public LocalDateRenderer() {
-        this(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
-                .withLocale(Locale.getDefault()), "");
+        this(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG), "");
     }
 
     /**
@@ -56,9 +56,9 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * displayed in the given locale.
      * 
      * @param formatPattern
-     *            the format pattern to format the date with
+     *            the format pattern to format the date with, not {@code null}
      * @param locale
-     *            the locale to use
+     *            the locale to use, not {@code null}
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
      * 
@@ -93,7 +93,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * The renderer is configured to render with the given formatter.
      * 
      * @param formatter
-     *            the formatter to use
+     *            the formatter to use, not {@code null}
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
      * 
