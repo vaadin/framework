@@ -338,7 +338,7 @@ public class DataCommunicator<T> extends AbstractExtension {
                 triggerReset = true;
             }
 
-            pushData(offset, rowsToPush.stream());
+            pushData(offset, rowsToPush);
         }
 
         if (!updatedData.isEmpty()) {
@@ -399,18 +399,17 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param data
      *            data objects to send as an iterable
      */
-    protected void pushData(int firstIndex, Stream<T> data) {
+    protected void pushData(int firstIndex, List<T> data) {
         JsonArray dataArray = Json.createArray();
 
         int i = 0;
-        List<T> collected = data.collect(Collectors.toList());
-        for (T item : collected) {
+        for (T item : data) {
             dataArray.set(i++, getDataObject(item));
         }
 
         rpc.setData(firstIndex, dataArray);
-        handler.addActiveData(collected.stream());
-        handler.cleanUp(collected.stream());
+        handler.addActiveData(data.stream());
+        handler.cleanUp(data.stream());
     }
 
     /**
