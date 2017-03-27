@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.vaadin.data.HasValue;
@@ -153,7 +154,11 @@ public abstract class CustomField<T> extends AbstractField<T>
 
     @Override
     public Iterator<Component> iterator() {
-        return new ComponentIterator();
+        if (getContent() != null) {
+            return Collections.singletonList(getContent()).iterator();
+        } else {
+            return Collections.<Component> emptyList().iterator();
+        }
     }
 
     /**
