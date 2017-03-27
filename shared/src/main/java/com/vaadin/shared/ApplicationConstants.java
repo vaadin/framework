@@ -160,6 +160,8 @@ public class ApplicationConstants implements Serializable {
 
     /**
      * Content type to use for text/html responses (should always be UTF-8).
+     *
+     * @since 7.7.8
      */
     public static final String CONTENT_TYPE_TEXT_HTML_UTF_8 = "text/html; charset=utf-8";
 

@@ -143,11 +143,11 @@ public class VFlash extends HTML {
      *
      * Triggers embed resizing if percentage sizes are in use.
      *
-     * @since
      * @param slotOffsetHeight
      *            offset height of the layout slot
      * @param slotOffsetWidth
      *            offset width of the layout slot
+     * @since 7.7.8
      */
     public void setSlotHeightAndWidth(int slotOffsetHeight,
             int slotOffsetWidth) {
