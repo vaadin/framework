@@ -142,8 +142,18 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
-            getRpcProxy(DragSourceRpc.class).dragStart();
+            sendDragStartEventToServer(event);
         }
+    }
+
+    /**
+     * Initiates a server RPC for the drag start event.
+     *
+     * @param dragStartEvent
+     *         Client side dragstart event.
+     */
+    protected void sendDragStartEventToServer(Event dragStartEvent) {
+        getRpcProxy(DragSourceRpc.class).dragStart();
     }
 
     /**

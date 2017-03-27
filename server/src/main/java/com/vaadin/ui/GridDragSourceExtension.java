@@ -15,11 +15,17 @@
  */
 package com.vaadin.ui;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.event.dnd.DragSourceExtension;
+import com.vaadin.event.dnd.grid.GridDragStartEvent;
+import com.vaadin.event.dnd.grid.GridDragStartListener;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 
 import elemental.json.JsonObject;
@@ -63,6 +69,20 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
         target.addDataGenerator(dragDataGenerator);
     }
 
+    @Override
+    protected void registerDragSourceRpc(Grid<T> target) {
+        registerRpc(new GridDragSourceExtensionRpc() {
+            @Override
+            public void dragStart(List<String> draggedItemKeys) {
+                GridDragStartEvent<T> event = new GridDragStartEvent<>(target,
+                        getState(false).dataTransferText,
+                        getState(false).effectAllowed, draggedItemKeys);
+
+                fireEvent(event);
+            }
+        });
+    }
+
     /**
      * Drag data generator. Appends drag data to row data json if generator
      * function is set by the user of this extension.
@@ -98,6 +118,22 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
     public void setDragDataGenerator(
             SerializableFunction<T, JsonObject> generator) {
         generatorFunction = generator;
+    }
+
+    /**
+     * Attaches dragstart listeenr for the current drag source grid. {@link
+     * GridDragStartListener#dragStart(GridDragStartEvent)} is called when
+     * dragstart event happens on the client side.
+     *
+     * @param listener
+     *         Listener to handle the dragstart event.
+     * @return Handle to be used to remove this listener.
+     */
+    public Registration addGridDragStartListener(
+            GridDragStartListener<T> listener) {
+        return addListener(DragSourceState.EVENT_DRAGSTART,
+                GridDragStartEvent.class, listener,
+                GridDragStartListener.DRAG_START_METHOD);
     }
 
     /**

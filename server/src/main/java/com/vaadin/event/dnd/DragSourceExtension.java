@@ -53,6 +53,27 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      *         Component to be extended.
      */
     public DragSourceExtension(T target) {
+
+        registerDragSourceRpc(target);
+
+        super.extend(target);
+
+        // Set current extension as active drag source in the UI
+        dragStartListenerHandle = addDragStartListener(
+                event -> getUI().setActiveDragSource(this));
+
+        // Remove current extension as active drag source from the UI
+        dragEndListenerHandle = addDragEndListener(
+                event -> getUI().setActiveDragSource(null));
+    }
+
+    /**
+     * Register server RPC.
+     *
+     * @param target
+     *         Extended component.
+     */
+    protected void registerDragSourceRpc(T target) {
         registerRpc(new DragSourceRpc() {
             @Override
             public void dragStart() {
@@ -69,16 +90,6 @@ public class DragSourceExtension<T extends AbstractComponent> extends
                 fireEvent(event);
             }
         });
-
-        super.extend(target);
-
-        // Set current extension as active drag source in the UI
-        dragStartListenerHandle = addDragStartListener(
-                event -> getUI().setActiveDragSource(this));
-
-        // Remove current extension as active drag source from the UI
-        dragEndListenerHandle = addDragEndListener(
-                event -> getUI().setActiveDragSource(null));
     }
 
     @Override
