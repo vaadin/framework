@@ -60,6 +60,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
@@ -701,13 +702,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             var hScroll = esc.@com.vaadin.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             return $entry(function(e) {
                 var target = e.target;
-        
+
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -728,29 +729,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // Delta mode 0 is in pixels; we don't need to do anything...
-        
+
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
                 if(e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-        
+
                 // Other delta modes aren't supported
                 if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-        
+
                     // Print warning message
                     esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
                 }
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -1054,9 +1055,8 @@ public class Escalator extends Widget
                     + columnConfiguration.getColumnWidthActual(columnIndex);
 
             final double viewportStartPx = getScrollLeft();
-            double viewportEndPx = viewportStartPx + WidgetUtil
-                    .getRequiredWidthBoundingClientRectDouble(getElement())
-                    - frozenPixels;
+            double viewportEndPx = viewportStartPx
+                    + getBoundingWidth(getElement()) - frozenPixels;
             if (verticalScrollbar.showsScrollHandle()) {
                 viewportEndPx -= WidgetUtil.getNativeScrollbarSize();
             }
@@ -1744,8 +1744,7 @@ public class Escalator extends Widget
                 final boolean isVisible = !cell.getStyle().getDisplay()
                         .equals(Display.NONE.getCssName());
                 if (isVisible) {
-                    maxWidth = Math.max(maxWidth, WidgetUtil
-                            .getRequiredWidthBoundingClientRectDouble(cell));
+                    maxWidth = Math.max(maxWidth, getBoundingWidth(cell));
                 }
                 row = TableRowElement.as(row.getNextSiblingElement());
             }
@@ -1982,8 +1981,7 @@ public class Escalator extends Widget
 
             detectionTr.appendChild(cellElem);
             root.appendChild(detectionTr);
-            double boundingHeight = WidgetUtil
-                    .getRequiredHeightBoundingClientRectDouble(cellElem);
+            double boundingHeight = getBoundingHeight(cellElem);
             defaultRowHeight = Math.max(1.0d, boundingHeight);
             root.removeChild(detectionTr);
 
@@ -2059,8 +2057,7 @@ public class Escalator extends Widget
             cellClone.getStyle().clearWidth();
 
             cell.getParentElement().insertBefore(cellClone, cell);
-            double requiredWidth = WidgetUtil
-                    .getRequiredWidthBoundingClientRectDouble(cellClone);
+            double requiredWidth = getBoundingWidth(cellClone);
             if (BrowserInfo.get().isIE()) {
                 /*
                  * IE browsers have some issues with subpixels. Occasionally
@@ -5279,9 +5276,7 @@ public class Escalator extends Widget
             if (spacerDecoContainer.getParentElement() == null) {
                 getElement().appendChild(spacerDecoContainer);
                 // calculate the spacer deco width, it won't change
-                spacerDecoWidth = WidgetUtil
-                        .getRequiredWidthBoundingClientRectDouble(
-                                spacer.getDecoElement());
+                spacerDecoWidth = getBoundingWidth(spacer.getDecoElement());
             }
 
             initSpacerContent(spacer);
@@ -5680,6 +5675,19 @@ public class Escalator extends Widget
         setWidth(null);
 
         publishJSHelpers(root);
+    }
+
+    private double getBoundingWidth(Element element) {
+        // Gets the current width, including border and padding, for the element
+        // while ignoring any transforms applied to the element (e.g. scale)
+        return new ComputedStyle(element).getWidthIncludingBorderPadding();
+    }
+
+    private double getBoundingHeight(Element element) {
+        // Gets the current height, including border and padding, for the
+        // element while ignoring any transforms applied to the element (e.g.
+        // scale)
+        return new ComputedStyle(element).getHeightIncludingBorderPadding();
     }
 
     private int getBodyRowCount() {
@@ -6292,10 +6300,8 @@ public class Escalator extends Widget
         }
 
         Profiler.enter("Escalator.recalculateElementSizes");
-        widthOfEscalator = Math.max(0, WidgetUtil
-                .getRequiredWidthBoundingClientRectDouble(getElement()));
-        heightOfEscalator = Math.max(0, WidgetUtil
-                .getRequiredHeightBoundingClientRectDouble(getElement()));
+        widthOfEscalator = Math.max(0, getBoundingWidth(getElement()));
+        heightOfEscalator = Math.max(0, getBoundingHeight(getElement()));
 
         header.recalculateSectionHeight();
         body.recalculateSectionHeight();
@@ -6662,8 +6668,7 @@ public class Escalator extends Widget
      * @return escalator's inner width
      */
     public double getInnerWidth() {
-        return WidgetUtil
-                .getRequiredWidthBoundingClientRectDouble(tableWrapper);
+        return getBoundingWidth(tableWrapper);
     }
 
     /**
