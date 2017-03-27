@@ -54,7 +54,7 @@ Button saveButton = new Button("Save",
       binder.writeBean(person);
       // A real application would also save the updated person
       // using the application's backend
-    } catch (BindingException e) {
+    } catch (ValidationException e) {
       Notification.show("Person could not be saved, " +
         "please check error messages for each field.");
     }
