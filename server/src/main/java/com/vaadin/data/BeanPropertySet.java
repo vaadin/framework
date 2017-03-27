@@ -104,13 +104,12 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         }
     }
 
-    private static class BeanPropertyDefinition<T, V>
+    private abstract static class AbstractBeanPropertyDefinition<T, V>
             implements PropertyDefinition<T, V> {
-
         private final PropertyDescriptor descriptor;
         private final BeanPropertySet<T> propertySet;
 
-        public BeanPropertyDefinition(BeanPropertySet<T> propertySet,
+        public AbstractBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDescriptor descriptor) {
             this.propertySet = propertySet;
             this.descriptor = descriptor;
@@ -121,33 +120,6 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                                 + propertySet.beanType + "."
                                 + descriptor.getName());
             }
-
-        }
-
-        @Override
-        public ValueProvider<T, V> getGetter() {
-            return bean -> {
-                Method readMethod = descriptor.getReadMethod();
-                Object value = invokeWrapExceptions(readMethod, bean);
-                return getType().cast(value);
-            };
-        }
-
-        @Override
-        public Optional<Setter<T, V>> getSetter() {
-            if (descriptor.getWriteMethod() == null) {
-                return Optional.empty();
-            }
-
-            Setter<T, V> setter = (bean, value) -> {
-                // Do not "optimize" this getter call,
-                // if its done outside the code block, that will produce
-                // NotSerializableException because of some lambda compilation
-                // magic
-                Method innerSetter = descriptor.getWriteMethod();
-                invokeWrapExceptions(innerSetter, bean, value);
-            };
-            return Optional.of(setter);
         }
 
         @SuppressWarnings("unchecked")
@@ -172,8 +144,43 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             return propertySet;
         }
 
-        public PropertyDescriptor getDescriptor() {
+        protected PropertyDescriptor getDescriptor() {
             return descriptor;
+        }
+    }
+
+    private static class BeanPropertyDefinition<T, V>
+            extends AbstractBeanPropertyDefinition<T, V> {
+
+        public BeanPropertyDefinition(BeanPropertySet<T> propertySet,
+                PropertyDescriptor descriptor) {
+            super(propertySet, descriptor);
+        }
+
+        @Override
+        public ValueProvider<T, V> getGetter() {
+            return bean -> {
+                Method readMethod = getDescriptor().getReadMethod();
+                Object value = invokeWrapExceptions(readMethod, bean);
+                return getType().cast(value);
+            };
+        }
+
+        @Override
+        public Optional<Setter<T, V>> getSetter() {
+            if (getDescriptor().getWriteMethod() == null) {
+                return Optional.empty();
+            }
+
+            Setter<T, V> setter = (bean, value) -> {
+                // Do not "optimize" this getter call,
+                // if its done outside the code block, that will produce
+                // NotSerializableException because of some lambda compilation
+                // magic
+                Method innerSetter = getDescriptor().getWriteMethod();
+                invokeWrapExceptions(innerSetter, bean, value);
+            };
+            return Optional.of(setter);
         }
 
         private Object writeReplace() {
@@ -188,24 +195,21 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     private static class NestedBeanPropertyDefinition<T, V>
-            implements PropertyDefinition<T, V> {
+            extends AbstractBeanPropertyDefinition<T, V> {
 
         private final PropertyDefinition<T, ?> parent;
-        private final PropertyDescriptor descriptor;
-        private final BeanPropertySet<T> propertySet;
 
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent,
                 PropertyDescriptor descriptor) {
-            this.propertySet = propertySet;
+            super(propertySet, descriptor);
             this.parent = parent;
-            this.descriptor = descriptor;
         }
 
         @Override
         public ValueProvider<T, V> getGetter() {
             return bean -> {
-                Method readMethod = descriptor.getReadMethod();
+                Method readMethod = getDescriptor().getReadMethod();
                 Object value = invokeWrapExceptions(readMethod,
                         parent.getGetter().apply(bean));
                 return getType().cast(value);
@@ -214,7 +218,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
         @Override
         public Optional<Setter<T, V>> getSetter() {
-            if (descriptor.getWriteMethod() == null) {
+            if (getDescriptor().getWriteMethod() == null) {
                 return Optional.empty();
             }
 
@@ -223,37 +227,11 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                 // if its done outside the code block, that will produce
                 // NotSerializableException because of some lambda compilation
                 // magic
-                Method innerSetter = descriptor.getWriteMethod();
+                Method innerSetter = getDescriptor().getWriteMethod();
                 invokeWrapExceptions(innerSetter,
                         parent.getGetter().apply(bean), value);
             };
             return Optional.of(setter);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public Class<V> getType() {
-            return (Class<V>) ReflectTools
-                    .convertPrimitiveType(descriptor.getPropertyType());
-        }
-
-        @Override
-        public String getName() {
-            return descriptor.getName();
-        }
-
-        @Override
-        public String getCaption() {
-            return SharedUtil.propertyIdToHumanFriendly(getName());
-        }
-
-        @Override
-        public BeanPropertySet<T> getPropertySet() {
-            return propertySet;
-        }
-
-        public PropertyDescriptor getDescriptor() {
-            return descriptor;
         }
 
         private Object writeReplace() {
@@ -263,7 +241,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              * property definition from the cache.
              */
             return new SerializedPropertyDefinition(getPropertySet().beanType,
-                    parent.getName() + "."  + getName());
+                    parent.getName() + "." + getName());
         }
     }
 
@@ -313,29 +291,34 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     @Override
-    public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
+    public Optional<PropertyDefinition<T, ?>> getProperty(String name)
+            throws IllegalArgumentException {
         Optional<PropertyDefinition<T, ?>> definition = Optional
                 .ofNullable(definitions.get(name));
         if (!definition.isPresent() && name.contains(".")) {
             try {
+                String parentName = name.substring(0, name.lastIndexOf('.'));
+                Optional<PropertyDefinition<T, ?>> parent = getProperty(
+                        parentName);
+                if (!parent.isPresent()) {
+                    throw new IllegalArgumentException(
+                            "Cannot find property descriptor [" + parentName
+                                    + "] for " + beanType.getName());
+                }
+
                 Optional<PropertyDescriptor> descriptor = Optional.ofNullable(
                         BeanUtil.getPropertyDescriptor(beanType, name));
                 if (descriptor.isPresent()) {
-                    String[] propertyChain = name.split("\\.");
-                    String parentProperty = Stream.of(propertyChain)
-                            .filter(item -> !item.equals(
-                                    propertyChain[propertyChain.length - 1]))
-                            .collect(Collectors.joining("."));
-                    Optional<PropertyDefinition<T, ?>> parent = getProperty(
-                            parentProperty);
-                    if (parent.isPresent()) {
-                        NestedBeanPropertyDefinition<T, ?> nestedDefinition = new NestedBeanPropertyDefinition<>(
-                                this, parent.get(), descriptor.get());
-                        definitions.put(name, nestedDefinition);
-                        return Optional.of(nestedDefinition);
-                    }
-
+                    NestedBeanPropertyDefinition<T, ?> nestedDefinition = new NestedBeanPropertyDefinition<>(
+                            this, parent.get(), descriptor.get());
+                    definitions.put(name, nestedDefinition);
+                    return Optional.of(nestedDefinition);
+                } else {
+                    throw new IllegalArgumentException(
+                            "Cannot find property descriptor [" + name
+                                    + "] for " + beanType.getName());
                 }
+
             } catch (IntrospectionException e) {
                 throw new IllegalArgumentException(
                         "Cannot find property descriptors for "

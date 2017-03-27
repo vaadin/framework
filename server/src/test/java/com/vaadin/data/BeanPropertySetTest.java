@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ import org.junit.Test;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
+import com.vaadin.tests.data.bean.FatherAndSon;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.server.ClassesSerializableTest;
 
@@ -103,20 +105,25 @@ public class BeanPropertySetTest {
                         .orElseThrow(RuntimeException::new),
                 deserializedDefinition);
     }
-    
+
     @Test
-    public void testSerializeDeserialize_nestedPropertyDefinition() throws Exception {
+    public void testSerializeDeserialize_nestedPropertyDefinition()
+            throws Exception {
         PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> definition = BeanPropertySet
-                .get(com.vaadin.tests.data.bean.Person.class).getProperty("address.postalCode")
+                .get(com.vaadin.tests.data.bean.Person.class)
+                .getProperty("address.postalCode")
                 .orElseThrow(RuntimeException::new);
 
         PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> deserializedDefinition = ClassesSerializableTest
                 .serializeAndDeserialize(definition);
 
-        ValueProvider<com.vaadin.tests.data.bean.Person, ?> getter = deserializedDefinition.getGetter();
-        Address address = new Address("Ruukinkatu 2-4",20540, "Turku", Country.FINLAND);
-        com.vaadin.tests.data.bean.Person person = new com.vaadin.tests.data.bean.Person("Jon","Doe","jon.doe@vaadin.com",32,Sex.MALE, address );
-        
+        ValueProvider<com.vaadin.tests.data.bean.Person, ?> getter = deserializedDefinition
+                .getGetter();
+        Address address = new Address("Ruukinkatu 2-4", 20540, "Turku",
+                Country.FINLAND);
+        com.vaadin.tests.data.bean.Person person = new com.vaadin.tests.data.bean.Person(
+                "Jon", "Doe", "jon.doe@vaadin.com", 32, Sex.MALE, address);
+
         Integer postalCode = (Integer) getter.apply(person);
 
         Assert.assertEquals("Deserialized definition should be functional",
@@ -124,9 +131,55 @@ public class BeanPropertySetTest {
 
         Assert.assertSame(
                 "Deserialized instance should be the same as in the cache",
-                BeanPropertySet.get(com.vaadin.tests.data.bean.Person.class).getProperty("address.postalCode")
-                        .orElseThrow(RuntimeException::new),
+                BeanPropertySet.get(com.vaadin.tests.data.bean.Person.class)
+                        .getProperty("address.postalCode").orElseThrow(
+                                RuntimeException::new),
                 deserializedDefinition);
+    }
+
+    @Test
+    public void testSerializeDeserialize_nestedPropertyDefinition_samePropertyNameOnMultipleLevels()
+            throws Exception {
+        PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
+                .get(FatherAndSon.class).getProperty("father.father.firstName")
+                .orElseThrow(RuntimeException::new);
+
+        ValueProvider<FatherAndSon, ?> getter = definition.getGetter();
+
+        FatherAndSon grandFather = new FatherAndSon("Grand Old Jon", "Doe",
+                null, null);
+        FatherAndSon father = new FatherAndSon("Old Jon", "Doe", grandFather,
+                null);
+        FatherAndSon son = new FatherAndSon("Jon", "Doe", father, null);
+
+        String firstName = (String) getter.apply(son);
+
+        Assert.assertEquals(grandFather.getFirstName(), firstName);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testSerializeDeserialize_nestedPropertyDefinition_propertyChainBroken()
+            throws Exception {
+        PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
+                .get(FatherAndSon.class).getProperty("father.firstName")
+                .orElseThrow(RuntimeException::new);
+
+        ValueProvider<FatherAndSon, ?> getter = definition.getGetter();
+
+        getter.apply(new FatherAndSon("Jon", "Doe", null, null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSerializeDeserialize_nestedPropertyDefinition_invalidPropertyNameInChain()
+            throws Exception {
+        BeanPropertySet.get(FatherAndSon.class)
+                .getProperty("grandfather.firstName");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSerializeDeserialize_nestedPropertyDefinition_invalidPropertyNameAtChainEnd()
+            throws Exception {
+        BeanPropertySet.get(FatherAndSon.class).getProperty("father.age");
     }
 
     @Test
