@@ -359,6 +359,9 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void addDataGenerator(DataGenerator<T> generator) {
         Objects.requireNonNull(generator, "generator cannot be null");
         generators.add(generator);
+
+        // Make sure data gets generated when adding data generators.
+        reset();
     }
 
     /**
