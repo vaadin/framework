@@ -20,11 +20,14 @@ import java.util.Optional;
 
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.event.dnd.DragSourceExtension;
+import com.vaadin.event.dnd.grid.GridDragEndEvent;
+import com.vaadin.event.dnd.grid.GridDragEndListener;
 import com.vaadin.event.dnd.grid.GridDragStartEvent;
 import com.vaadin.event.dnd.grid.GridDragStartListener;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 
@@ -80,6 +83,16 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
 
                 fireEvent(event);
             }
+
+            @Override
+            public void dragEnd(DropEffect dropEffect,
+                    List<String> draggedItemKeys) {
+                GridDragEndEvent<T> event = new GridDragEndEvent<>(target,
+                        getState(false).dataTransferText, dropEffect,
+                        draggedItemKeys);
+
+                fireEvent(event);
+            }
         });
     }
 
@@ -121,7 +134,7 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
     }
 
     /**
-     * Attaches dragstart listeenr for the current drag source grid. {@link
+     * Attaches dragstart listener for the current drag source grid. {@link
      * GridDragStartListener#dragStart(GridDragStartEvent)} is called when
      * dragstart event happens on the client side.
      *
@@ -134,6 +147,22 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
         return addListener(DragSourceState.EVENT_DRAGSTART,
                 GridDragStartEvent.class, listener,
                 GridDragStartListener.DRAG_START_METHOD);
+    }
+
+    /**
+     * Attaches dragend listener for the current drag source grid. {@link
+     * GridDragEndListener#dragEnd(GridDragEndEvent)} is called when
+     * dragend event happens on the client side.
+     *
+     * @param listener
+     *         Listener to handle the dragend event.
+     * @return Handle to be used to remove this listener.
+     */
+    public Registration addGridDragEndListener(
+            GridDragEndListener<T> listener) {
+        return addListener(DragSourceState.EVENT_DRAGEND,
+                GridDragEndEvent.class, listener,
+                GridDragEndListener.DRAG_END_METHOD);
     }
 
     /**

@@ -30,6 +30,7 @@ import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 import com.vaadin.shared.ui.grid.GridState;
@@ -89,6 +90,20 @@ public class GridDragSourceExtensionConnector extends
         // Start server RPC with dragged item keys
         getRpcProxy(GridDragSourceExtensionRpc.class)
                 .dragStart(draggedItemKeys);
+    }
+
+    @Override
+    protected void sendDragEndEventToServer(Event dragEndEvent,
+            DropEffect dropEffect) {
+        List<String> draggedItemKeys = new ArrayList<>();
+
+        // Collect dragged rows and add their keys to the list
+        getDraggedRows(dragEndEvent).forEach(
+                row -> draggedItemKeys.add(row.get(GridState.JSONKEY_ROWKEY)));
+
+        // Send server RPC with dragged item keys
+        getRpcProxy(GridDragSourceExtensionRpc.class)
+                .dragEnd(dropEffect, draggedItemKeys);
     }
 
     private List<JsonObject> getDraggedRows(Event dragStartEvent) {

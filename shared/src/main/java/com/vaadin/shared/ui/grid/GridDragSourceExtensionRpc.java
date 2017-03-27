@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.grid;
 import java.util.List;
 
 import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.ui.dnd.DropEffect;
 
 /**
  * RPC for firing server side drag start and drag end events when the
@@ -35,4 +36,15 @@ public interface GridDragSourceExtensionRpc extends ServerRpc {
      *         Keys of the items in Grid being dragged.
      */
     public void dragStart(List<String> draggedItemKeys);
+
+    /**
+     * Called when dragend event happens on client side.
+     *
+     * @param dropEffect
+     *         Drop effect of the dragend event, extracted from {@code
+     *         DataTransfer.dropEffect} parameter.
+     * @param draggedItemKeys
+     *         Keys of the items in Grid having been dragged.
+     */
+    public void dragEnd(DropEffect dropEffect, List<String> draggedItemKeys);
 }

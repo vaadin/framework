@@ -1,0 +1,69 @@
+/*
+ * Copyright 2000-2016 Vaadin Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.vaadin.event.dnd.grid;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.vaadin.event.dnd.DragEndEvent;
+import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.ui.Grid;
+
+/**
+ * Server side drop event on an HTML5 drop target {@link Grid} row.
+ *
+ * @param <T>
+ *         The Grid bean type.
+ * @author Vaadin Ltd.
+ * @see com.vaadin.ui.GridDragSourceExtension#addGridDragStartListener(GridDragStartListener)
+ * @since
+ */
+public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {
+
+    private final Set<T> draggedItems;
+
+    /**
+     * Creates a server side drag end event.
+     *
+     * @param source
+     *         Grid component in which the items were dragged.
+     * @param dataTransferText
+     *         Data of type {@code "text"} from the {@code DataTransfer}
+     *         object.
+     * @param dropEffect
+     *         Drop effect from {@code DataTransfer.dropEffect} object.
+     * @param draggedItemKeys
+     *         Keys of the items having been dragged.
+     */
+    public GridDragEndEvent(Grid<T> source, String dataTransferText,
+            DropEffect dropEffect, List<String> draggedItemKeys) {
+        super(source, dataTransferText, dropEffect);
+
+        draggedItems = new HashSet<T>();
+        draggedItemKeys.forEach(key -> draggedItems
+                .add(source.getDataCommunicator().getKeyMapper().get(key)));
+    }
+
+    /**
+     * Get the dragged row items.
+     *
+     * @return Set of row items that were being dragged.
+     */
+    public Set<T> getDraggedItems() {
+        return draggedItems;
+    }
+}

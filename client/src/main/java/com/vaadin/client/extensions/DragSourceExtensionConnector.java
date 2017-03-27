@@ -172,9 +172,23 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
             assert dropEffect != null : "Drop effect should never be null";
 
-            getRpcProxy(DragSourceRpc.class)
-                    .dragEnd(DropEffect.valueOf(dropEffect.toUpperCase()));
+            sendDragEndEventToServer(event,
+                    DropEffect.valueOf(dropEffect.toUpperCase()));
         }
+    }
+
+    /**
+     * Initiates a server RPC for the drag start event.
+     *
+     * @param dragEndEvent
+     *         Client side dragend event.
+     * @param dropEffect
+     *         Drop effect of the dragend event, extracted from {@code
+     *         DataTransfer.dropEffect} parameter.
+     */
+    protected void sendDragEndEventToServer(Event dragEndEvent,
+            DropEffect dropEffect) {
+        getRpcProxy(DragSourceRpc.class).dragEnd(dropEffect);
     }
 
     /**
