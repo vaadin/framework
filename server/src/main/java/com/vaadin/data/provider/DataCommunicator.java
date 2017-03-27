@@ -66,15 +66,13 @@ public class DataCommunicator<T> extends AbstractExtension {
         @Override
         public void requestRows(int firstRowIndex, int numberOfRows,
                 int firstCachedRowIndex, int cacheSize) {
-            pushRows = Range.withLength(firstRowIndex, numberOfRows);
-            markAsDirty();
+            onRequestRows(firstRowIndex, numberOfRows, firstCachedRowIndex,
+                    cacheSize);
         }
 
         @Override
         public void dropRows(JsonArray keys) {
-            for (int i = 0; i < keys.length(); ++i) {
-                handler.dropActiveData(keys.getString(i));
-            }
+            onDropRows(keys);
         }
     }
 
@@ -190,11 +188,11 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
     /** Empty default data provider */
-    private DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
+    protected DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
             q -> Stream.empty(), q -> 0);
     private final DataKeyMapper<T> keyMapper;
 
-    private boolean reset = false;
+    protected boolean reset = false;
     private final Set<T> updatedData = new HashSet<>();
     private int minPushSize = 40;
     private Range pushRows = Range.withLength(0, minPushSize);
@@ -224,6 +222,78 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
+     * Set the range of rows to push for next response.
+     *
+     * @param pushRows
+     * @since 8.1
+     */
+    protected void setPushRows(Range pushRows) {
+        this.pushRows = pushRows;
+    }
+
+    /**
+     * Get the current range of rows to push in the next response.
+     *
+     * @return the range of rows to push
+     * @since 8.1
+     */
+    protected Range getPushRows() {
+        return pushRows;
+    }
+
+    /**
+     * Get the object used for filtering in this data communicator.
+     *
+     * @return the filter object of this data communicator
+     * @since 8.1
+     */
+    protected Object getFilter() {
+        return filter;
+    }
+
+    /**
+     * Get the client rpc interface for this data communicator.
+     *
+     * @return the client rpc interface for this data communicator
+     * @since 8.1
+     */
+    protected DataCommunicatorClientRpc getClientRpc() {
+        return rpc;
+    }
+
+    /**
+     * Request the given rows to be available on the client side.
+     *
+     * @param firstRowIndex
+     *            the index of the first requested row
+     * @param numberOfRows
+     *            the number of requested rows
+     * @param firstCachedRowIndex
+     *            the index of the first cached row
+     * @param cacheSize
+     *            the number of cached rows
+     * @since 8.1
+     */
+    protected void onRequestRows(int firstRowIndex, int numberOfRows,
+            int firstCachedRowIndex, int cacheSize) {
+        setPushRows(Range.withLength(firstRowIndex, numberOfRows));
+        markAsDirty();
+    }
+
+    /**
+     * Triggered when rows have been dropped from the client side cache.
+     *
+     * @param keys
+     *            the keys of the rows that have been dropped
+     * @since 8.1
+     */
+    protected void onDropRows(JsonArray keys) {
+        for (int i = 0; i < keys.length(); ++i) {
+            handler.dropActiveData(keys.getString(i));
+        }
+    }
+
+    /**
      * Initially and in the case of a reset all data should be pushed to the
      * client.
      */
@@ -231,6 +301,17 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
+        sendDataToClient(initial);
+    }
+
+    /**
+     * Send the needed data and updates to the client side.
+     *
+     * @param initial
+     *            {@code true} if initial data load, {@code false} if not
+     * @since 8.1
+     */
+    protected void sendDataToClient(boolean initial) {
         if (getDataProvider() == null) {
             return;
         }
@@ -241,10 +322,11 @@ public class DataCommunicator<T> extends AbstractExtension {
             rpc.reset(dataProviderSize);
         }
 
+        Range requestedRows = getPushRows();
         boolean triggerReset = false;
-        if (!pushRows.isEmpty()) {
-            int offset = pushRows.getStart();
-            int limit = pushRows.length();
+        if (!requestedRows.isEmpty()) {
+            int offset = requestedRows.getStart();
+            int limit = requestedRows.length();
 
             @SuppressWarnings({ "rawtypes", "unchecked" })
             List<T> rowsToPush = (List<T>) getDataProvider()
@@ -256,7 +338,7 @@ public class DataCommunicator<T> extends AbstractExtension {
                 triggerReset = true;
             }
 
-            pushData(offset, rowsToPush.stream());
+            pushData(offset, rowsToPush);
         }
 
         if (!updatedData.isEmpty()) {
@@ -268,7 +350,7 @@ public class DataCommunicator<T> extends AbstractExtension {
             rpc.updateData(dataArray);
         }
 
-        pushRows = Range.withLength(0, 0);
+        setPushRows(Range.withLength(0, 0));
         reset = triggerReset;
         updatedData.clear();
     }
@@ -284,9 +366,6 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void addDataGenerator(DataGenerator<T> generator) {
         Objects.requireNonNull(generator, "generator cannot be null");
         generators.add(generator);
-
-        // Make sure data gets generated when adding data generators.
-        reset();
     }
 
     /**
@@ -320,18 +399,17 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param data
      *            data objects to send as an iterable
      */
-    protected void pushData(int firstIndex, Stream<T> data) {
+    protected void pushData(int firstIndex, List<T> data) {
         JsonArray dataArray = Json.createArray();
 
         int i = 0;
-        List<T> collected = data.collect(Collectors.toList());
-        for (T item : collected) {
+        for (T item : data) {
             dataArray.set(i++, getDataObject(item));
         }
 
         rpc.setData(firstIndex, dataArray);
-        handler.addActiveData(collected.stream());
-        handler.cleanUp(collected.stream());
+        handler.addActiveData(data.stream());
+        handler.cleanUp(data.stream());
     }
 
     /**
@@ -350,6 +428,16 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         return dataObject;
+    }
+
+    /**
+     * Returns the active data handler.
+     *
+     * @return the active data handler
+     * @since 8.1
+     */
+    protected ActiveDataHandler getActiveDataHandler() {
+        return handler;
     }
 
     /**
@@ -411,6 +499,16 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
+     * Returns the currently set updated data.
+     *
+     * @return the set of data that should be updated on the next response
+     * @since 8.1
+     */
+    protected Set<T> getUpdatedData() {
+        return updatedData;
+    }
+
+    /**
      * Sets the {@link Comparator} to use with in-memory sorting.
      *
      * @param comparator
@@ -419,6 +517,16 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void setInMemorySorting(Comparator<T> comparator) {
         inMemorySorting = comparator;
         reset();
+    }
+
+    /**
+     * Returns the {@link Comparator} to use with in-memory sorting.
+     *
+     * @return comparator used to sort data
+     * @since 8.1
+     */
+    public Comparator<T> getInMemorySorting() {
+        return inMemorySorting;
     }
 
     /**
@@ -431,6 +539,16 @@ public class DataCommunicator<T> extends AbstractExtension {
         backEndSorting.clear();
         backEndSorting.addAll(sortOrder);
         reset();
+    }
+
+    /**
+     * Returns the {@link QuerySortOrder} to use with backend sorting.
+     *
+     * @return list of sort order information to pass to a query
+     * @since 8.1
+     */
+    public List<QuerySortOrder> getBackEndSorting() {
+        return backEndSorting;
     }
 
     /**
@@ -502,7 +620,7 @@ public class DataCommunicator<T> extends AbstractExtension {
          * (and theoretically allows to the client doesn't request more data in
          * a happy path).
          */
-        pushRows = Range.between(0, getMinPushSize());
+        setPushRows(Range.between(0, getMinPushSize()));
         if (isAttached()) {
             attachDataProviderListener();
         }
