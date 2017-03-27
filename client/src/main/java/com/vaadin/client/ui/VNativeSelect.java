@@ -35,8 +35,6 @@ public class VNativeSelect extends FocusableFlowPanelComposite
      * Creates a new {@code VNativeSelect} instance.
      */
     public VNativeSelect() {
-        listBox.setWidth("100%");
-        listBox.setHeight("100%");
         getWidget().add(listBox);
     }
 
@@ -78,5 +76,29 @@ public class VNativeSelect extends FocusableFlowPanelComposite
      */
     public ListBox getListBox() {
         return listBox;
+    }
+
+    @Override
+    public void setWidth(String width) {
+        if ("".equals(width)) {
+            // undefined width
+            getListBox().setWidth("");
+        } else {
+            // fill the composite
+            getListBox().setWidth("100%");
+        }
+        super.setWidth(width);
+    }
+
+    @Override
+    public void setHeight(String height) {
+        if ("".equals(height)) {
+            // undefined height
+            getListBox().setHeight("");
+        } else {
+            // fill the composite
+            getListBox().setHeight("100%");
+        }
+        super.setHeight(height);
     }
 }
