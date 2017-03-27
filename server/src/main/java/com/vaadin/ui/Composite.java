@@ -263,7 +263,8 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public String getId() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        // Design.read relies on being able to call this
+        return null;
     }
 
     @Override
@@ -278,7 +279,8 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public String getCaption() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        // Design.read relies on being able to call this
+        return null;
     }
 
     @Override
