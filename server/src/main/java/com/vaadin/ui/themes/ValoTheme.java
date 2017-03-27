@@ -110,6 +110,13 @@ public class ValoTheme {
      */
     public static final String NOTIFICATION_FAILURE = "failure";
 
+    /**
+     * Styles the notification to look like {@link Type#ERROR_MESSAGE}, without
+     * setting the position and delay and without the close button. Can be
+     * combined with any other Notification style.
+     */
+    public static final String NOTIFICATION_CRITICAL_ERROR = "critical-error";
+
     /***************************************************************************
      *
      * Label styles
