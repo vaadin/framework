@@ -261,9 +261,9 @@ clipboard. Select the text content of the whole class from your browser, choose
 "Edit > Copy", focus the node representing the [packagename]#my.vaadin.app# Java package in Eclipse's Java Resources view and choose "Edit > Paste".
 Eclipse is smart enough to automatically create a properly named Java file for the class.
 
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/CustomerStatus.java[CustomerStatus] - this is a simple enum class
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/Customer.java[Customer] - this is the main domain object, a basic Java bean that we will be using in our example
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/CustomerService.java[CustomerService] - this is a simple facade via which you can request and modify [classname]#Customer# instances.
+ * https://raw.githubusercontent.com/vaadin/tutorial/v7/src/main/java/my/vaadin/app/CustomerStatus.java[CustomerStatus] - this is a simple enum class
+ * https://raw.githubusercontent.com/vaadin/tutorial/v7/src/main/java/my/vaadin/app/Customer.java[Customer] - this is the main domain object, a basic Java bean that we will be using in our example
+ * https://raw.githubusercontent.com/vaadin/tutorial/v7/src/main/java/my/vaadin/app/CustomerService.java[CustomerService] - this is a simple facade via which you can request and modify [classname]#Customer# instances.
  You can think of this as your entry point to your fake database.
 
 In the next steps, we will be using these classes and build a UI around them.
