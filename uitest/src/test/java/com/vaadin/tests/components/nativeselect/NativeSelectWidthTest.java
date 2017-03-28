@@ -3,7 +3,6 @@ package com.vaadin.tests.components.nativeselect;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -19,7 +18,6 @@ public class NativeSelectWidthTest extends MultiBrowserTest {
         openTestURL();
     }
 
-    @Ignore
     @Test
     public void testWidthIs200Px() {
         WebElement nativeSelect = $(NativeSelectElement.class).first()
