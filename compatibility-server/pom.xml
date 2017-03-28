@@ -59,13 +59,6 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-
-        <!-- Google App Engine -->
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
