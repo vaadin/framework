@@ -449,14 +449,13 @@ class HierarchyMapper implements Serializable {
      * @return the parent index or {@code null} for top-level items
      */
     public Integer getParentIndex(int rowIndex) {
-        return nodes.stream().
-                filter(treeNode ->
-                        treeNode.getParentKey() != null &&
-                                treeNode.getStartIndex() <= rowIndex &&
-                                treeNode.getEndIndex() >= rowIndex)
+        return nodes.stream()
+                .filter(treeNode -> treeNode.getParentKey() != null
+                        && treeNode.getStartIndex() <= rowIndex
+                        && treeNode.getEndIndex() >= rowIndex)
+                .min((a, b) -> Math.min(a.getEndIndex() - a.getStartIndex(),
+                        b.getEndIndex() - b.getStartIndex()))
                 .map(treeNode -> treeNode.getStartIndex() - 1)
-                .findFirst()
                 .orElse(null);
     }
-
 }

@@ -249,27 +249,27 @@ public class TreeGridConnector extends GridConnector {
                             TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
                     boolean leaf = rowDescription.getBoolean(
                             TreeGridCommunicationConstants.ROW_LEAF);
-                    if (!leaf) {
-                        boolean collapsed = isCollapsed(rowData);
-                        switch (domEvent.getKeyCode()) {
-                            case KeyCodes.KEY_RIGHT:
-                                if (collapsed) {
-                                    // expand
-                                    setCollapsed(event.getCell().getRowIndex(), false);
-                                }
-                                break;
-                            case KeyCodes.KEY_LEFT:
-                                if (collapsed) {
-                                    // navigate up
-                                    int columnIndex = event.getCell().getColumnIndex();
-                                    getRpcProxy(FocusParentRpc.class).focusParent(event.getCell().getRowIndex(), columnIndex);
-                                } else {
-                                    // collapse
-                                    setCollapsed(event.getCell().getRowIndex(), true);
-                                }
-                                break;
+                    boolean collapsed = isCollapsed(rowData);
+                    switch (domEvent.getKeyCode()) {
+                    case KeyCodes.KEY_RIGHT:
+                        if (collapsed && !leaf) {
+                            // expand
+                            setCollapsed(event.getCell().getRowIndex(), false);
                         }
+                        break;
+                    case KeyCodes.KEY_LEFT:
+                        if (collapsed || leaf) {
+                            // navigate up
+                            int columnIndex = event.getCell().getColumnIndex();
+                            getRpcProxy(FocusParentRpc.class).focusParent(
+                                    event.getCell().getRowIndex(), columnIndex);
+                        } else if (!leaf) {
+                            // collapse
+                            setCollapsed(event.getCell().getRowIndex(), true);
+                        }
+                        break;
                     }
+
                 }
                 event.setHandled(true);
             }
