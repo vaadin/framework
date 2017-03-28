@@ -158,6 +158,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                         iterator.remove();
                     }
                 }
+                cell.detach();
             }
         }
 

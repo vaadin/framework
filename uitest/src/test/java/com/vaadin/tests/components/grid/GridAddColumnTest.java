@@ -5,8 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class GridAddColumnTest extends SingleBrowserTest {
@@ -62,6 +64,19 @@ public class GridAddColumnTest extends SingleBrowserTest {
                 firstHeader.isElementPresent(By.className("v-label")));
         Assert.assertEquals("Text in label does not match", "Label Header",
                 firstHeader.getText());
+    }
+
+    @Test
+    public void replace_all_columns() {
+        $(ButtonElement.class).first().click();
+
+        // Verify button got clicked
+        Assert.assertTrue(isElementPresent(NotificationElement.class));
+        Assert.assertEquals("Columns replaced.",
+                $(NotificationElement.class).first().getText());
+
+        // Run default rendering test
+        columns_rendered_correctly();
     }
 
     private void assertCellEquals(int rowIndex, int colIndex, String content) {
