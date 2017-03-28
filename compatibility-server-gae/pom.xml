@@ -7,15 +7,14 @@
         <artifactId>vaadin-root</artifactId>
         <version>8.0-SNAPSHOT</version>
     </parent>
-    <artifactId>vaadin-compatibility-server</artifactId>
-    <name>vaadin-compatibility-server</name>
+    <artifactId>vaadin-compatibility-server-gae</artifactId>
+    <name>vaadin-compatibility-server-gae</name>
     <packaging>jar</packaging>
 
     <url>https://vaadin.com/</url>
-    <description>Vaadin 7 compatibility package for Vaadin 8</description>
+    <description>Vaadin 7 GAE Servlet</description>
 
     <properties>
-        <!-- These files are directly from Vaadin 7 -->
         <sonar.skip>true</sonar.skip>
     </properties>
     <dependencies>
@@ -27,13 +26,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-server</artifactId>
-            <version>${project.version}</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>vaadin-compatibility-shared</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -42,22 +34,11 @@
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- Google App Engine -->
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- Bean Validation API -->
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
             <scope>provided</scope>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -76,28 +57,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>biz.aQute.bnd</groupId>
-                <artifactId>bnd-maven-plugin</artifactId>
-            </plugin>            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                        <index>false</index>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-
 </project>
