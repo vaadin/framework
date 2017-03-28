@@ -19,6 +19,7 @@ import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.event.dnd.grid.GridDropEvent;
 import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
@@ -32,18 +33,40 @@ import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
  * @since
  */
 public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
-    public GridDropTargetExtension(Grid<T> target) {
+
+    /**
+     * Extends a Grid and makes it's rows drop targets for HTML5 drag and drop.
+     *
+     * @param target
+     *         Grid to be extended.
+     */
+    public GridDropTargetExtension(Grid<T> target, DropLocation dropLocation) {
         super(target);
+
+        setDropLocation(dropLocation);
     }
 
-    @Override
-    protected void registerDropTargetRpc(Grid<T> target) {
-        registerRpc((GridDropTargetExtensionRpc) (dataTransferText, rowKey) -> {
-            GridDropEvent<T> event = new GridDropEvent<>(target,
-                    dataTransferText, getUI().getActiveDragSource(), rowKey);
+    /**
+     * Sets the location within grid rows where elements can be dropped.
+     *
+     * @param dropLocation
+     *         Location within grid rows where elements can be dropped.
+     */
+    public void setDropLocation(DropLocation dropLocation) {
+        if (dropLocation == null) {
+            throw new IllegalArgumentException("Drop location cannot be null");
+        }
 
-            fireEvent(event);
-        });
+        getState().dropLocation = dropLocation;
+    }
+
+    /**
+     * Gets the location within grid rows where elements can be dropped.
+     *
+     * @return Location within grid rows where elements can be dropped.
+     */
+    public DropLocation getDropLocation() {
+        return getState(false).dropLocation;
     }
 
     /**
@@ -58,6 +81,16 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
     public Registration addGridDropListener(GridDropListener<T> listener) {
         return addListener(GridDropEvent.class, listener,
                 GridDropListener.DROP_METHOD);
+    }
+
+    @Override
+    protected void registerDropTargetRpc(Grid<T> target) {
+        registerRpc((GridDropTargetExtensionRpc) (dataTransferText, rowKey) -> {
+            GridDropEvent<T> event = new GridDropEvent<>(target,
+                    dataTransferText, getUI().getActiveDragSource(), rowKey);
+
+            fireEvent(event);
+        });
     }
 
     @Override

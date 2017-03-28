@@ -15,18 +15,20 @@
  */
 package com.vaadin.client.connectors.grid;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.user.client.Window;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 import com.vaadin.shared.ui.grid.GridState;
@@ -45,6 +47,19 @@ import elemental.json.JsonObject;
 @Connect(GridDropTargetExtension.class)
 public class GridDropTargetExtensionConnector extends
         DropTargetExtensionConnector {
+
+    // Drag over class name suffixes
+    private final static String CLASS_SUFFIX_BEFORE = "-before";
+    private final static String CLASS_SUFFIX_AFTER = "-after";
+
+    // Drag over class names
+    private final static String CLASS_DRAG_OVER_BEFORE =
+            CLASS_DRAG_OVER + CLASS_SUFFIX_BEFORE;
+    private final static String CLASS_DRAG_OVER_AFTER =
+            CLASS_DRAG_OVER + CLASS_SUFFIX_AFTER;
+
+    /** Current drag over class name */
+    private String dragOverClassName;
 
     private GridConnector gridConnector;
 
@@ -78,15 +93,51 @@ public class GridDropTargetExtensionConnector extends
     }
 
     @Override
-    protected void addTargetIndicator(Event event) {
-        getTargetRow(((Element) event.getTarget()))
-                .ifPresent(e -> e.addClassName(CLASS_DRAG_OVER));
+    protected void setTargetIndicator(Event event) {
+        getTargetRow(((Element) event.getTarget())).ifPresent(target -> {
+
+            // Get required class name
+            String className = getTargetClassName(target, (NativeEvent) event);
+
+            // Add or replace class name if changed
+            if (!target.hasClassName(className)) {
+                if (dragOverClassName != null) {
+                    target.removeClassName(dragOverClassName);
+                }
+                target.addClassName(className);
+                dragOverClassName = className;
+            }
+        });
+    }
+
+    private String getTargetClassName(Element target, NativeEvent event) {
+        String classSuffix = "";
+
+        if (getState().dropLocation == DropLocation.BETWEEN_ROWS) {
+            if (getRelativeY(target, event) < (target.getOffsetHeight() / 2)) {
+                classSuffix = CLASS_SUFFIX_BEFORE;
+            } else {
+                classSuffix = CLASS_SUFFIX_AFTER;
+            }
+        }
+
+        return CLASS_DRAG_OVER + classSuffix;
+    }
+
+    private int getRelativeY(Element element, NativeEvent event) {
+        int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
+        return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
     }
 
     @Override
     protected void removeTargetIndicator(Event event) {
-        getTargetRow(((Element) event.getTarget()))
-                .ifPresent(e -> e.removeClassName(CLASS_DRAG_OVER));
+
+        // Remove all possible drag over class names
+        getTargetRow((Element) event.getTarget()).ifPresent(e -> {
+            e.removeClassName(CLASS_DRAG_OVER);
+            e.removeClassName(CLASS_DRAG_OVER_BEFORE);
+            e.removeClassName(CLASS_DRAG_OVER_AFTER);
+        });
     }
 
     private Optional<TableRowElement> getTargetRow(Element source) {

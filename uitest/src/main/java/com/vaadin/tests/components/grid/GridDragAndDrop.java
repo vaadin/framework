@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
@@ -58,7 +58,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
 
         GridDropTargetExtension<Bean> dropTarget = new GridDropTargetExtension<>(
-                dropTargetComponent);
+                dropTargetComponent, DropLocation.BETWEEN_ROWS);
         dropTarget.addGridDropListener(event -> {
             log(event.getDataTransferText() + ", targetId=" + event
                     .getDropTargetRow().getId());

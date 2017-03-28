@@ -15,18 +15,28 @@
  */
 package com.vaadin.shared.ui.grid;
 
-import com.vaadin.shared.ui.dnd.DropTargetState;
-
 /**
- * State class containing parameters for GridDropTargetExtension.
+ * Defines the locations within the Grid row where an element can be dropped.
  *
- * @author Vaadin Ltd
+ * @author Vaadin Ltd.
  * @since
  */
-public class GridDropTargetExtensionState extends DropTargetState {
+public enum DropLocation {
+    /**
+     * The drop event can happen between Grid rows. The drop is above a row
+     * when the cursor is over the top 50% of a row, otherwise below the
+     * row.
+     */
+    BETWEEN_ROWS,
 
     /**
-     * Stores the drop location type of the drop target Grid.
+     * The drop event can happen on top of Grid rows. The target of the drop
+     * is the row under the cursor at the time of the drop event.
      */
-    public DropLocation dropLocation;
+    ON_TOP_OF_ROWS,
+
+    /**
+     *
+     */
+    ON_TOP_OR_BETWEEN_ROWS
 }
