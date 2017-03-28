@@ -323,13 +323,20 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         Range requestedRows = getPushRows();
+        boolean triggerReset = false;
         if (!requestedRows.isEmpty()) {
             int offset = requestedRows.getStart();
             int limit = requestedRows.length();
 
             @SuppressWarnings({ "rawtypes", "unchecked" })
-            Stream<T> rowsToPush = getDataProvider().fetch(new Query(offset,
-                    limit, backEndSorting, inMemorySorting, filter));
+            List<T> rowsToPush = (List<T>) getDataProvider()
+                    .fetch(new Query(offset, limit, backEndSorting,
+                            inMemorySorting, filter))
+                    .collect(Collectors.toList());
+
+            if (!initial && !reset && rowsToPush.size() == 0) {
+                triggerReset = true;
+            }
 
             pushData(offset, rowsToPush);
         }
@@ -344,7 +351,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         setPushRows(Range.withLength(0, 0));
-        reset = false;
+        reset = triggerReset;
         updatedData.clear();
     }
 
@@ -392,18 +399,17 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @param data
      *            data objects to send as an iterable
      */
-    protected void pushData(int firstIndex, Stream<T> data) {
+    protected void pushData(int firstIndex, List<T> data) {
         JsonArray dataArray = Json.createArray();
 
         int i = 0;
-        List<T> collected = data.collect(Collectors.toList());
-        for (T item : collected) {
+        for (T item : data) {
             dataArray.set(i++, getDataObject(item));
         }
 
         rpc.setData(firstIndex, dataArray);
-        handler.addActiveData(collected.stream());
-        handler.cleanUp(collected.stream());
+        handler.addActiveData(data.stream());
+        handler.cleanUp(data.stream());
     }
 
     /**
