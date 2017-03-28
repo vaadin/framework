@@ -97,6 +97,27 @@ public class LocalDateTimeRenderer
      * Creates a new LocalDateTimeRenderer.
      * <p>
      * The renderer is configured to render with the given string format, as
+     * displayed in the systems default locale, with an empty string as its null
+     * representation.
+     * 
+     * @param formatPattern
+     *            the format pattern to format the date with, not {@code null}
+     * 
+     * @throws IllegalArgumentException
+     *             if format pattern is null
+     * 
+     * @see <a href=
+     *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
+     *      Format Pattern Syntax</a>
+     */
+    public LocalDateTimeRenderer(String formatPattern) {
+        this(formatPattern, Locale.getDefault());
+    }
+
+    /**
+     * Creates a new LocalDateTimeRenderer.
+     * <p>
+     * The renderer is configured to render with the given string format, as
      * displayed in the given locale, with an empty string as its null
      * representation.
      * 

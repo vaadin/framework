@@ -53,6 +53,52 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * Creates a new LocalDateRenderer.
      * <p>
      * The renderer is configured to render with the given string format, as
+     * displayed in the systems default locale, with an empty string as its null
+     * representation.
+     * 
+     * @param formatPattern
+     *            the format pattern to format the date with, not {@code null}
+     * 
+     * @throws IllegalArgumentException
+     *             if format pattern is null
+     * 
+     * @see <a href=
+     *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
+     *      Format Pattern Syntax</a>
+     */
+    public LocalDateRenderer(String formatPattern) {
+        this(formatPattern, Locale.getDefault());
+    }
+
+    /**
+     * Creates a new LocalDateRenderer.
+     * <p>
+     * The renderer is configured to render with the given string format, as
+     * displayed in the given locale, with an empty string as its null
+     * representation.
+     * 
+     * @param formatPattern
+     *            the format pattern to format the date with, not {@code null}
+     * @param locale
+     *            the locale to use, not {@code null}
+     * 
+     * @throws IllegalArgumentException
+     *             if format pattern is null
+     * @throws IllegalArgumentException
+     *             if locale is null
+     * 
+     * @see <a href=
+     *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
+     *      Format Pattern Syntax</a>
+     */
+    public LocalDateRenderer(String formatPattern, Locale locale) {
+        this(formatPattern, locale, "");
+    }
+
+    /**
+     * Creates a new LocalDateRenderer.
+     * <p>
+     * The renderer is configured to render with the given string format, as
      * displayed in the given locale.
      * 
      * @param formatPattern
@@ -85,6 +131,22 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
         }
 
         formatter = DateTimeFormatter.ofPattern(formatPattern, locale);
+    }
+
+    /**
+     * Creates a new LocalDateRenderer.
+     * <p>
+     * The renderer is configured to render with the given formatter, with an
+     * empty string as its null representation.
+     * 
+     * @param formatter
+     *            the formatter to use, not {@code null}
+     * 
+     * @throws IllegalArgumentException
+     *             if formatter is null
+     */
+    public LocalDateRenderer(DateTimeFormatter formatter) {
+        this(formatter, "");
     }
 
     /**
