@@ -88,9 +88,11 @@ image:img/notification-error.png[width=30%, scaledwidth=50%]
 Error messages are notifications that require the highest user attention, with
 alert colors, and they require the user to click the message to dismiss it. The
 error message box does not itself include an instruction to click the message,
-although the close box in the upper right corner indicates it visually. Unlike
+although the close icon on the right side indicates it visually. Unlike
 with other notifications, the user can not interact with the application while
-the error message is displayed.
+the error message is displayed. If you don't want to show the close icon,
+you can hide by adding the style constant
+[literal]#ValoTheme.NOTIFICATION_CRITICAL_ERROR# to the [classname]#Notification#.
 
 [parameter]#TRAY_NOTIFICATION#::
 image:img/notification-tray.png[width=30%, scaledwidth=50%]
