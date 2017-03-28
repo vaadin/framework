@@ -1,7 +1,6 @@
 Bundle-SymbolicName: ${project.groupId}.compatibility.server
 Bundle-Name: Vaadin Compatibility Server
 Import-Package: com.vaadin*;version="[${osgi.bundle.version},${osgi.bundle.version}]",\
-    !com.google*,\
     org.osgi*,\
     javax.validation*;resolution:=optional;version='${javax.validation.version}',\
     *
