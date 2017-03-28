@@ -48,17 +48,19 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
         checkRowFocused(3);
 
         // Should navigate 100 items down
-
-        for (int i = 0; i < 50; i++) {
-            new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN).perform();
+        Keys downKeyArr[] = new Keys[100];
+        for (int i = 0; i < 100; i++) {
+            downKeyArr[i] = Keys.DOWN;
         }
-        WebElement son1_1_99 = gindFocusedRow();
+        new Actions(getDriver()).sendKeys(downKeyArr).perform();
+
+        WebElement son1_1_99 = findFocusedRow();
         assertEquals("Son 1/1/99 --", son1_1_99.getText());
 
         // Should navigate to "Dad 1/1" back
         new Actions(getDriver())
                 .sendKeys(Keys.HOME, Keys.DOWN, Keys.DOWN, Keys.DOWN).perform();
-        WebElement dad1_1 = gindFocusedRow();
+        WebElement dad1_1 = findFocusedRow();
         assertEquals("Dad 1/1 --", dad1_1.getText());
 
         // Should collapse "Dad 1/1"
@@ -87,7 +89,7 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
         assertNoErrorNotifications();
     }
 
-    private WebElement gindFocusedRow() {
+    private WebElement findFocusedRow() {
         return grid.findElement(By.className("v-grid-rowmode-row-focused"));
     }
 
