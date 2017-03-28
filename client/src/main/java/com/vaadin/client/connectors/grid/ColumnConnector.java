@@ -73,7 +73,12 @@ public class ColumnConnector extends AbstractExtensionConnector {
                 return null;
             }
         };
+
+        // Initially set a renderer
+        updateRenderer();
+
         getParent().addColumn(column, getState().internalId);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -149,6 +154,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             // time to remove columns (and have problems with frozen columns)
             // before throwing everything away
             parent.removeColumn(column);
+            parent = null;
         }
         column = null;
     }
