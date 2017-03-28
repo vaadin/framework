@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.grid.renderers.LocalDateRendererState;
  * The server-side Renderer operates on {@code LocalDate}s, but the data is
  * serialized as a string, and displayed as-is on the client side. This is to be
  * able to support the server's locale.
- * 
+ *
  * @since 8.1
  * @author Vaadin Ltd
  */

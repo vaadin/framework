@@ -17,7 +17,7 @@ package com.vaadin.shared.ui.grid.renderers;
 
 /**
  * Shared state of LocalDateTimeRenderer.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
  */

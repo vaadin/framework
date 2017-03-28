@@ -26,7 +26,7 @@ import elemental.json.JsonValue;
 
 /**
  * A renderer for presenting {@code LocalDateTime} objects.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
  */
@@ -43,7 +43,7 @@ public class LocalDateTimeRenderer
      * attached to, with the format style being {@code FormatStyle.LONG} for the
      * date and {@code FormatStyle.SHORT} for time, with an empty string as its
      * null representation.
-     * 
+     *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/FormatStyle.html#LONG">
      *      FormatStyle.LONG</a>
@@ -62,10 +62,10 @@ public class LocalDateTimeRenderer
      * <p>
      * The renderer is configured to render with the given formatter, with the
      * empty string as its null representation.
-     * 
+     *
      * @param formatter
      *            the formatter to use, not {@code null}
-     * 
+     *
      * @throws IllegalArgumentException
      *             if formatter is null
      */
@@ -77,12 +77,12 @@ public class LocalDateTimeRenderer
      * Creates a new LocalDateTimeRenderer.
      * <p>
      * The renderer is configured to render with the given formatter.
-     * 
+     *
      * @param formatter
      *            the formatter to use, not {@code null}
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
-     * 
+     *
      * @throws IllegalArgumentException
      *             if formatter is null
      */
@@ -102,13 +102,13 @@ public class LocalDateTimeRenderer
      * The renderer is configured to render with the given string format, as
      * displayed in the grid's locale it is attached to, with an empty string as
      * its null representation.
-     * 
+     *
      * @param formatPattern
      *            the format pattern to format the date with, not {@code null}
-     * 
+     *
      * @throws IllegalArgumentException
      *             if format pattern is null
-     * 
+     *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
      *      Format Pattern Syntax</a>
@@ -124,19 +124,19 @@ public class LocalDateTimeRenderer
      * The renderer is configured to render with the given string format, as
      * displayed in the given locale, with an empty string as its null
      * representation.
-     * 
+     *
      * @param formatPattern
      *            the format pattern to format the date with, not {@code null}
      * @param locale
      *            the locale to use, not {@code null}
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
-     * 
+     *
      * @throws IllegalArgumentException
      *             if format pattern is null
      * @throws IllegalArgumentException
      *             if locale is null
-     * 
+     *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
      *      Format Pattern Syntax</a>
@@ -150,19 +150,19 @@ public class LocalDateTimeRenderer
      * <p>
      * The renderer is configured to render with the given string format, as
      * displayed in the given locale.
-     * 
+     *
      * @param formatPattern
      *            the format pattern to format the date with, not {@code null}
      * @param locale
      *            the locale to use, not {@code null}
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
-     * 
+     *
      * @throws IllegalArgumentException
      *             if format pattern is null
      * @throws IllegalArgumentException
      *             if locale is null
-     * 
+     *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
      *      Format Pattern Syntax</a>
