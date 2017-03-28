@@ -138,7 +138,7 @@ public class BeanPropertySetTest {
     }
 
     @Test
-    public void testSerializeDeserialize_nestedPropertyDefinition_samePropertyNameOnMultipleLevels()
+    public void nestedPropertyDefinition_samePropertyNameOnMultipleLevels()
             throws Exception {
         PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
                 .get(FatherAndSon.class).getProperty("father.father.firstName")
@@ -158,7 +158,7 @@ public class BeanPropertySetTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testSerializeDeserialize_nestedPropertyDefinition_propertyChainBroken()
+    public void nestedPropertyDefinition_propertyChainBroken()
             throws Exception {
         PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
                 .get(FatherAndSon.class).getProperty("father.firstName")
@@ -170,14 +170,14 @@ public class BeanPropertySetTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSerializeDeserialize_nestedPropertyDefinition_invalidPropertyNameInChain()
+    public void nestedPropertyDefinition_invalidPropertyNameInChain()
             throws Exception {
         BeanPropertySet.get(FatherAndSon.class)
                 .getProperty("grandfather.firstName");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSerializeDeserialize_nestedPropertyDefinition_invalidPropertyNameAtChainEnd()
+    public void nestedPropertyDefinition_invalidPropertyNameAtChainEnd()
             throws Exception {
         BeanPropertySet.get(FatherAndSon.class).getProperty("father.age");
     }
