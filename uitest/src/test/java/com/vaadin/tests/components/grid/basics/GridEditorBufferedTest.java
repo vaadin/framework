@@ -68,7 +68,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
         selectMenuPath("Component", "Columns", "Column 0", "Hidden");
         editRow(100);
 
-        WebElement textField = getEditor().getField(1);
+        WebElement textField = getEditor().getField(4);
 
         textField.click();
         // without this, the click in the middle of the field might not be after
@@ -81,8 +81,8 @@ public class GridEditorBufferedTest extends GridEditorTest {
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
 
         assertEditorClosed();
-        assertEquals("(100, 2) changed",
-                getGridElement().getCell(100, 1).getText());
+        assertEquals("<b>100</b> changed",
+                getGridElement().getCell(100, 4).getText());
     }
 
     @Test
