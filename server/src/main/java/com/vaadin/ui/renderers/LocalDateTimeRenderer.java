@@ -34,13 +34,15 @@ public class LocalDateTimeRenderer
         extends AbstractRenderer<Object, LocalDateTime> {
 
     private DateTimeFormatter formatter;
+    private boolean getLocaleFromGrid;
 
     /**
      * Creates a new LocalDateTimeRenderer.
      * <p>
-     * The renderer is configured to render with the systems default locale with
-     * {@code FormatStyle.LONG} for the date and {@code FormatStyle.SHORT} for
-     * time, with an empty string as its null representation.
+     * The renderer is configured to render with the grid's locale it is
+     * attached to, with the format style being {@code FormatStyle.LONG} for the
+     * date and {@code FormatStyle.SHORT} for time, with an empty string as its
+     * null representation.
      * 
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/FormatStyle.html#LONG">
@@ -52,6 +54,7 @@ public class LocalDateTimeRenderer
     public LocalDateTimeRenderer() {
         this(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG,
                 FormatStyle.SHORT), "");
+        getLocaleFromGrid = true;
     }
 
     /**
@@ -97,8 +100,8 @@ public class LocalDateTimeRenderer
      * Creates a new LocalDateTimeRenderer.
      * <p>
      * The renderer is configured to render with the given string format, as
-     * displayed in the systems default locale, with an empty string as its null
-     * representation.
+     * displayed in the grid's locale it is attached to, with an empty string as
+     * its null representation.
      * 
      * @param formatPattern
      *            the format pattern to format the date with, not {@code null}
@@ -112,6 +115,7 @@ public class LocalDateTimeRenderer
      */
     public LocalDateTimeRenderer(String formatPattern) {
         this(formatPattern, Locale.getDefault());
+        getLocaleFromGrid = true;
     }
 
     /**
@@ -184,6 +188,15 @@ public class LocalDateTimeRenderer
         String dateString;
         if (value == null) {
             dateString = getNullRepresentation();
+        } else if (getLocaleFromGrid) {
+            if (getParentGrid() == null) {
+                throw new IllegalStateException(
+                        "Could not find a locale to format with: "
+                                + "this renderer should either be attached to a grid "
+                                + "or constructed with locale information");
+            }
+            dateString = value
+                    .format(formatter.withLocale(getParentGrid().getLocale()));
         } else {
             dateString = value.format(formatter);
         }

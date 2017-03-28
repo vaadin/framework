@@ -41,6 +41,7 @@ public class LocalDateRenderers extends AbstractTestUI {
                 .withLocale(new Locale("fi"));
 
         Grid<TimeBean> grid = new Grid<>();
+        grid.setLocale(new Locale("en"));
         grid.addColumn(TimeBean::getLocalDate, new LocalDateRenderer())
                 .setCaption("LocalDate");
         grid.addColumn(TimeBean::getLocalDate,
