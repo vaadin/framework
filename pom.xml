@@ -620,6 +620,7 @@
                 <module>liferay</module>
                 <module>all</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
@@ -662,6 +663,7 @@
                 <module>client-compiled</module>
                 <module>themes</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
@@ -726,6 +728,7 @@
                 <module>client-compiled</module>
                 <module>themes</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
@@ -790,6 +793,7 @@
                 <module>client-compiled</module>
                 <module>themes</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
@@ -848,6 +852,7 @@
                 <module>push</module>
                 <module>client</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>client-compiler</module>
                 <module>shared</module>
