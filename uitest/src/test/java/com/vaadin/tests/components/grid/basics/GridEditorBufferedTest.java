@@ -65,8 +65,8 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
     @Test
     public void testKeyboardSaveWithHiddenColumn() {
-        editRow(100);
         selectMenuPath("Component", "Columns", "Column 0", "Hidden");
+        editRow(100);
 
         WebElement textField = getEditor().getField(1);
 
