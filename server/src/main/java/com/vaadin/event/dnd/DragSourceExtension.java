@@ -58,6 +58,14 @@ public class DragSourceExtension<T extends AbstractComponent> extends
 
         super.extend(target);
 
+        initListeners();
+    }
+
+    /**
+     * Initializes the event listeners this drag source is using.
+     */
+    protected void initListeners() {
+
         // Set current extension as active drag source in the UI
         dragStartListenerHandle = addDragStartListener(
                 event -> getUI().setActiveDragSource(this));
@@ -78,15 +86,13 @@ public class DragSourceExtension<T extends AbstractComponent> extends
             @Override
             public void dragStart() {
                 DragStartEvent<T> event = new DragStartEvent<>(target,
-                        getState(false).dataTransferText,
                         getState(false).effectAllowed);
                 fireEvent(event);
             }
 
             @Override
             public void dragEnd(DropEffect dropEffect) {
-                DragEndEvent<T> event = new DragEndEvent<>(target,
-                        getState(false).dataTransferText, dropEffect);
+                DragEndEvent<T> event = new DragEndEvent<>(target, dropEffect);
                 fireEvent(event);
             }
         });

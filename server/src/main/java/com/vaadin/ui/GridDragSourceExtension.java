@@ -17,6 +17,8 @@ package com.vaadin.ui;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.event.dnd.DragSourceExtension;
@@ -77,9 +79,10 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
         registerRpc(new GridDragSourceExtensionRpc() {
             @Override
             public void dragStart(List<String> draggedItemKeys) {
+
                 GridDragStartEvent<T> event = new GridDragStartEvent<>(target,
-                        getState(false).dataTransferText,
-                        getState(false).effectAllowed, draggedItemKeys);
+                        getState(false).effectAllowed,
+                        getDraggedItems(target, draggedItemKeys));
 
                 fireEvent(event);
             }
@@ -87,13 +90,22 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
             @Override
             public void dragEnd(DropEffect dropEffect,
                     List<String> draggedItemKeys) {
+
                 GridDragEndEvent<T> event = new GridDragEndEvent<>(target,
-                        getState(false).dataTransferText, dropEffect,
-                        draggedItemKeys);
+                        dropEffect, getDraggedItems(target, draggedItemKeys));
 
                 fireEvent(event);
             }
         });
+    }
+
+    /**
+     * Collects the dragged items of a Grid given the list of item keys.
+     */
+    private Set<T> getDraggedItems(Grid<T> grid, List<String> draggedItemKeys) {
+        return draggedItemKeys.stream()
+                .map(key -> grid.getDataCommunicator().getKeyMapper().get(key))
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -133,14 +145,20 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
         generatorFunction = generator;
     }
 
+    @Override
+    public void setDataTransferText(String data) throws
+            UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Setting dataTransferText is not supported");
+    }
+
     /**
-     * Attaches dragstart listener for the current drag source grid. {@link
-     * GridDragStartListener#dragStart(GridDragStartEvent)} is called when
-     * dragstart event happens on the client side.
+     * Attaches dragstart listener for the current drag source grid.
      *
      * @param listener
      *         Listener to handle the dragstart event.
      * @return Handle to be used to remove this listener.
+     * @see GridDragStartEvent
      */
     public Registration addGridDragStartListener(
             GridDragStartListener<T> listener) {
@@ -150,13 +168,12 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
     }
 
     /**
-     * Attaches dragend listener for the current drag source grid. {@link
-     * GridDragEndListener#dragEnd(GridDragEndEvent)} is called when
-     * dragend event happens on the client side.
+     * Attaches dragend listener for the current drag source grid.
      *
      * @param listener
      *         Listener to handle the dragend event.
      * @return Handle to be used to remove this listener.
+     * @see GridDragEndEvent
      */
     public Registration addGridDragEndListener(
             GridDragEndListener<T> listener) {

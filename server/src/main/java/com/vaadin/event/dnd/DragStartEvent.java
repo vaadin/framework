@@ -20,8 +20,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
- * Server side dragstart event. Fired when an HTML5 dragstart happens on the
- * client.
+ * HTML5 drag start event.
  *
  * @param <T>
  *         Type of the component that is dragged.
@@ -31,38 +30,20 @@ import com.vaadin.ui.Component;
  */
 public class DragStartEvent<T extends AbstractComponent> extends
         Component.Event {
-    private final String dataTransferText;
     private final EffectAllowed effectAllowed;
 
     /**
-     * Creates a server side dragstart event.
+     * Creates a drag start event.
      *
      * @param source
      *         Component that is dragged.
-     * @param dataTransferText
-     *         Data of type {@code "text"} from the {@code DataTransfer}
-     *         object.
      * @param effectAllowed
      *         Allowed effects from {@code DataTransfer.effectAllowed} object.
      */
-    public DragStartEvent(T source, String dataTransferText,
-            EffectAllowed effectAllowed) {
+    public DragStartEvent(T source, EffectAllowed effectAllowed) {
         super(source);
 
-        this.dataTransferText = dataTransferText;
-
         this.effectAllowed = effectAllowed;
-    }
-
-    /**
-     * Get data of type {@code "text"} from the client side {@code DataTransfer}
-     * object.
-     *
-     * @return Data of type {@code "text"} if exists in the client side {@code
-     * DataTransfer} object, otherwise {@literal null}.
-     */
-    public String getDataTransferText() {
-        return dataTransferText;
     }
 
     /**

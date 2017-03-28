@@ -35,10 +35,11 @@ public interface GridDragEndListener<T> extends ConnectorEventListener {
             .getDeclaredMethods()[0];
 
     /**
-     * Called when dragend is fired on a Grid row.
+     * Invoked when the user has dropped the dragged grid rows, or canceled the
+     * drag.
      *
      * @param event
-     *         Server side drag end event.
+     *         The drag end event.
      */
     void dragEnd(GridDragEndEvent<T> event);
 }

@@ -137,7 +137,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         // Set text data parameter
         nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
-                getState().dataTransferText);
+                createDataTransferText(event));
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
@@ -147,7 +147,22 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
+     * Creates data of type {@code "text"} for the {@code DataTransfer} object
+     * of the given event.
+     *
+     * @param dragStartEvent
+     *         Event to set the data for.
+     * @return Textual data to be set for the event.
+     */
+    protected String createDataTransferText(Event dragStartEvent) {
+        return getState().dataTransferText;
+    }
+
+    /**
      * Initiates a server RPC for the drag start event.
+     * <p>
+     * This method is called only if there is a server side drag start event
+     * handler attached.
      *
      * @param dragStartEvent
      *         Client side dragstart event.
@@ -178,7 +193,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Initiates a server RPC for the drag start event.
+     * Initiates a server RPC for the drag end event.
      *
      * @param dragEndEvent
      *         Client side dragend event.

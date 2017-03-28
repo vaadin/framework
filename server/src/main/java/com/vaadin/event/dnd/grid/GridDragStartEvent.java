@@ -15,8 +15,6 @@
  */
 package com.vaadin.event.dnd.grid;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.vaadin.event.dnd.DragStartEvent;
@@ -24,7 +22,7 @@ import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.Grid;
 
 /**
- * Server side drop event on an HTML5 drop target {@link Grid} row.
+ * Drag start event on an HTML5 drag source {@link Grid} row.
  *
  * @param <T>
  *         The Grid bean type.
@@ -37,25 +35,20 @@ public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
     private final Set<T> draggedItems;
 
     /**
-     * Creates a server side drag start event.
+     * Creates a drag start event.
      *
      * @param source
-     *         Grid component in which the items are dragged.
-     * @param dataTransferText
-     *         Data of type {@code "text"} from the {@code DataTransfer}
-     *         object.
+     *         The source grid where the rows are being dragged from.
      * @param effectAllowed
      *         Allowed effect from {@code DataTransfer.effectAllowed} object.
-     * @param draggedItemKeys
-     *         Keys of the items being dragged.
+     * @param draggedItems
+     *         Set of items being dragged.
      */
-    public GridDragStartEvent(Grid<T> source, String dataTransferText,
-            EffectAllowed effectAllowed, List<String> draggedItemKeys) {
-        super(source, dataTransferText, effectAllowed);
+    public GridDragStartEvent(Grid<T> source, EffectAllowed effectAllowed,
+            Set<T> draggedItems) {
+        super(source, effectAllowed);
 
-        draggedItems = new HashSet<>();
-        draggedItemKeys.forEach(key -> draggedItems
-                .add(source.getDataCommunicator().getKeyMapper().get(key)));
+        this.draggedItems = draggedItems;
     }
 
     /**

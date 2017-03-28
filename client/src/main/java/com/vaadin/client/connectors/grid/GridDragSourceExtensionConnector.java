@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
@@ -29,7 +28,6 @@ import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
@@ -55,6 +53,11 @@ public class GridDragSourceExtensionConnector extends
 
     private GridConnector gridConnector;
 
+    /**
+     * List of dragged item keys.
+     */
+    private List<String> draggedItemKeys;
+
     @Override
     protected void extend(ServerConnector target) {
         this.gridConnector = (GridConnector) target;
@@ -69,41 +72,29 @@ public class GridDragSourceExtensionConnector extends
 
     @Override
     protected void onDragStart(Event event) {
-        super.onDragStart(event);
 
-        // Collect and set drag data on client side as "text" type
+        // Collect the keys of dragged rows
+        draggedItemKeys = getDraggedRows(event).stream()
+                .map(row -> row.getString(GridState.JSONKEY_ROWKEY))
+                .collect(Collectors.toList());
+
+        super.onDragStart(event);
+    }
+
+    @Override
+    protected String createDataTransferText(Event dragStartEvent) {
         JsonArray dragData = toJsonArray(
-                getDraggedRows(event).stream().map(this::getDragData)
+                getDraggedRows(dragStartEvent).stream().map(this::getDragData)
                         .collect(Collectors.toList()));
-        ((NativeEvent) event).getDataTransfer()
-                .setData(DragSourceState.DATA_TYPE_TEXT, dragData.toJson());
+        return dragData.toJson();
     }
 
     @Override
     protected void sendDragStartEventToServer(Event dragStartEvent) {
-        List<String> draggedItemKeys = new ArrayList<>();
-
-        // Collect dragged rows and add their keys to the list
-        getDraggedRows(dragStartEvent).forEach(
-                row -> draggedItemKeys.add(row.get(GridState.JSONKEY_ROWKEY)));
 
         // Start server RPC with dragged item keys
         getRpcProxy(GridDragSourceExtensionRpc.class)
                 .dragStart(draggedItemKeys);
-    }
-
-    @Override
-    protected void sendDragEndEventToServer(Event dragEndEvent,
-            DropEffect dropEffect) {
-        List<String> draggedItemKeys = new ArrayList<>();
-
-        // Collect dragged rows and add their keys to the list
-        getDraggedRows(dragEndEvent).forEach(
-                row -> draggedItemKeys.add(row.get(GridState.JSONKEY_ROWKEY)));
-
-        // Send server RPC with dragged item keys
-        getRpcProxy(GridDragSourceExtensionRpc.class)
-                .dragEnd(dropEffect, draggedItemKeys);
     }
 
     private List<JsonObject> getDraggedRows(Event dragStartEvent) {
@@ -124,6 +115,23 @@ public class GridDragSourceExtensionConnector extends
         }
 
         return draggedRows;
+    }
+
+    @Override
+    protected void onDragEnd(Event event) {
+        super.onDragEnd(event);
+
+        // Clear item key list
+        draggedItemKeys = null;
+    }
+
+    @Override
+    protected void sendDragEndEventToServer(Event dragEndEvent,
+            DropEffect dropEffect) {
+
+        // Send server RPC with dragged item keys
+        getRpcProxy(GridDragSourceExtensionRpc.class)
+                .dragEnd(dropEffect, draggedItemKeys);
     }
 
     /**
