@@ -18,6 +18,7 @@ package com.vaadin.event.dnd;
 import java.util.Objects;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
@@ -218,6 +219,16 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     public Registration addDragEndListener(DragEndListener<T> listener) {
         return addListener(DragSourceState.EVENT_DRAGEND, DragEndEvent.class,
                 listener, DragEndListener.DRAGEND_METHOD);
+    }
+
+    /**
+     * Set a custom drag image for the current drag source.
+     *
+     * @param imageResource
+     *         Resource of the image to be displayed as drag image.
+     */
+    public void setDragImage(Resource imageResource) {
+        setResource(DragSourceState.RESOURCE_DRAG_IMAGE, imageResource);
     }
 
     @Override

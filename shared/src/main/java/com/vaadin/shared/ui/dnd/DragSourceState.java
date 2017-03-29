@@ -40,6 +40,8 @@ public class DragSourceState extends SharedState {
      */
     public static final String DATA_TYPE_TEXT = "text";
 
+    public static final String RESOURCE_DRAG_IMAGE = "drag-image";
+
     /**
      * {@code DataTransfer.effectAllowed} parameter for the drag event.
      */

@@ -18,9 +18,11 @@ package com.vaadin.client.extensions;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
@@ -118,6 +120,14 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         removeDragListeners(dragSource);
     }
 
+    @OnStateChange("resources")
+    private void prefetchDragImage() {
+        String dragImageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
+        if (dragImageUrl != null && !dragImageUrl.isEmpty()) {
+            Image.prefetch(dragImageUrl);
+        }
+    }
+
     /**
      * Event handler for the {@code dragstart} event. Called when {@code
      * dragstart} event occurs.
@@ -134,6 +144,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             setEffectAllowed(nativeEvent.getDataTransfer(),
                     getState().effectAllowed.getValue());
         }
+
+        // Set drag image
+        setDragImage(event);
 
         // Set text data parameter
         nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
@@ -172,6 +185,21 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      */
     protected void sendDragStartEventToServer(Event dragStartEvent) {
         getRpcProxy(DragSourceRpc.class).dragStart();
+    }
+
+    /**
+     * Sets the drag image to be displayed.
+     *
+     * @param dragStartEvent
+     *         The drag start event.
+     */
+    protected void setDragImage(Event dragStartEvent) {
+        String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Image dragImage = new Image(imageUrl);
+            ((NativeEvent) dragStartEvent).getDataTransfer()
+                    .setDragImage(dragImage.getElement(), 0, 0);
+        }
     }
 
     /**
