@@ -23,6 +23,7 @@ import com.vaadin.shared.communication.ClientRpc;
  * @author Vaadin Ltd
  * @since 8.1
  */
+@FunctionalInterface
 public interface FocusRpc extends ClientRpc {
 
     /**
