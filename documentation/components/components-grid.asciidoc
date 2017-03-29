@@ -518,7 +518,9 @@ must be between 0.0 and 1.0.
 
 [classname]#ComponentRenderer#:: Renders a Vaadin [classname]#Component# in a column. Since components
 are quite complex, the [classname]#ComponentRenderer# comes with possible performance issues.
-To use it efficiently you should use as few nested components as possible.
+To use it efficiently you should use as few nested components as possible. If the components used are
+of a different size than the default row height, [methodname]#Grid.setRowHeight()# can be used to adjust
+the height of all rows in the Grid.
 
 +
 Use [classname]#Button# in [classname]#Grid#:
@@ -530,6 +532,8 @@ grid.addColumn(person -> {
             Notification.show("Clicked: " + person.toString()));
       return button;
 }, new ComponentRenderer());
+// make sure the buttons fit in the cells of the Grid
+grid.setRowHeight(40);
 ----
 
 Components will occasionally be generated again during runtime. If you have a state in your 
