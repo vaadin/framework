@@ -328,6 +328,20 @@ public class GridConnector extends AbstractListingConnector
         });
     }
 
+    @OnStateChange("rowHeight")
+    void updateRowHeight() {
+        double rowHeight = getState().rowHeight;
+        if (rowHeight >= 0) {
+            getWidget().getEscalator().getHeader()
+                    .setDefaultRowHeight(rowHeight);
+            getWidget().getEscalator().getBody().setDefaultRowHeight(rowHeight);
+            getWidget().getEscalator().getFooter()
+                    .setDefaultRowHeight(rowHeight);
+        } else if (getWidget().isAttached()) {
+            getWidget().resetSizesFromDom();
+        }
+    }
+
     private void updateStaticRow(RowState rowState,
             Grid.StaticSection.StaticRow row) {
         rowState.cells.forEach((columnId, cellState) -> {

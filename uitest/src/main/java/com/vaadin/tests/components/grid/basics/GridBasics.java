@@ -382,6 +382,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         MenuItem heightMenu = sizeMenu.addItem("Height", null);
         Stream.of(50, 100, 200, 400).map(i -> i + "px").forEach(
                 i -> addGridMethodMenu(heightMenu, i, i, grid::setHeight));
+
+        MenuItem rowHeightMenu = sizeMenu.addItem("Row Height", null);
+        Stream.of(-1, 20, 40, 100).forEach(i -> addGridMethodMenu(rowHeightMenu,
+                String.valueOf(i), (double) i, grid::setRowHeight));
     }
 
     private void createStateMenu(MenuItem stateMenu) {

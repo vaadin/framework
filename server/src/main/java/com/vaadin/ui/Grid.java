@@ -2738,6 +2738,30 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Sets the height of a row. If -1 (default), the row height is calculated
+     * based on the theme for an empty row before the Grid is displayed.
+     * <p>
+     * Note that all header, body and footer rows get the same height if
+     * explicitly set. In automatic mode, each section is calculated separately
+     * based on an empty row of that type.
+     *
+     * @param rowHeight
+     *            The height of a row in pixels or -1 for automatic calculation
+     */
+    public void setRowHeight(double rowHeight) {
+        getState().rowHeight = rowHeight;
+    }
+
+    /**
+     * Returns the currently explicitly set row height or -1 if automatic.
+     *
+     * @return explicitly set row height in pixels or -1 if in automatic mode
+     */
+    public double getRowHeight() {
+        return getState(false).rowHeight;
+    }
+
+    /**
      * Sets the style generator that is used for generating class names for rows
      * in this grid. Returning null from the generator results in no custom
      * style name being set.

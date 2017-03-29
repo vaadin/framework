@@ -72,6 +72,8 @@ public class GridComponentsTest extends MultiBrowserTest {
     public void testRow0() {
         openTestURL();
         assertRowExists(0, "Row 0");
+        Assert.assertEquals("Grid row height is not what it should be", 40,
+                $(GridElement.class).first().getRow(0).getSize().getHeight());
     }
 
     @Test
