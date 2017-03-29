@@ -488,7 +488,7 @@ component tree) is used.
 Formats a column with the [classname]#LocalDate# type.
 The renderer can be constructed with a [classname]#DateTimeFormatter#, or with a custom pattern string.
 The locale is either given explicitly with the pattern, resolved from the given [classname]#DateTimeFormatter# or from the grid the renderer is attached to, if neither of the previous are given.
-For the pattern string syntax, refer to the following documentation: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns.
+For the pattern string syntax, refer to the following documentation: link:https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns[docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns].
 
 +
 [source, java]
