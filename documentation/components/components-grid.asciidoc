@@ -150,7 +150,7 @@ SingleSelectionModel<Person> defaultModel =
       (SingleSelectionModel<Person>) grid.getSelectionModel();
 
 // Use multi-selection mode
-MultiSelectionModel<Person> selectionModel = 
+MultiSelectionModel<Person> selectionModel =
       (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
 ----
 
@@ -200,7 +200,7 @@ access to [classname]#MultiSelectionEvent#, which allows to easily access differ
 // Grid in multi-selection mode
 Grid<Person> grid = Grid<>()
 grid.setItems(people);
-MultiSelectionModel<Person> selectionModel 
+MultiSelectionModel<Person> selectionModel
       = (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
 
 selectionModel.selectAll();
@@ -415,7 +415,7 @@ When you change the renderer, the content of Grid is refreshed.
 ----
 Column<Person, Integer> ageColumn = grid.addColumn(Person::getBirthYear);
 // The default renderer is TextRenderer
-addComponent(new Button("Change renderer", 
+addComponent(new Button("Change renderer",
 	clickEvent -> ageColumn.setRenderer(new NumberRenderer())
 ));
 ----
@@ -446,7 +446,7 @@ people.add(new Person("Johannes Kepler", 1571));
 Grid<Person> grid = new Grid<>(people);
 
 // Render a button that deletes the data row (item)
-grid.addColumn(person -> "Delete", 
+grid.addColumn(person -> "Delete",
       new ButtonRenderer(clickEvent -> {
           people.remove(clickEvent.getValue());
           grid.setItems(people);
@@ -475,7 +475,7 @@ format specifier, such as "[literal]#++%tF++#".
 +
 [source, java]
 ----
-Grid.Column<Date> bornColumn = grid.addColumn(person:getBirthDate,
+Column<Person, Date> bornColumn = grid.addColumn(Person:getBirthDate,
       new DateRenderer("%1$tB %1$te, %1$tY",
                      Locale.ENGLISH));
 ----
@@ -483,6 +483,53 @@ Grid.Column<Date> bornColumn = grid.addColumn(person:getBirthDate,
 +
 Optionally, a locale can be given. Otherwise, the default locale (in the
 component tree) is used.
+
+[classname]#LocalDateRenderer#::
+Formats a column with the [classname]#LocalDate# type.
+The renderer can be constructed with a [classname]#DateTimeFormatter#, or with a custom pattern string.
+The locale is either given explicitly with the pattern, resolved from the given [classname]#DateTimeFormatter# or from the grid the renderer is attached to, if neither of the previous are given.
+For the pattern string syntax, refer to the following documentation: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns.
+
++
+[source, java]
+----
+DateTimeFormatter formatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.LONG)
+        .withLocale(Locale.ENGLISH);
+
+Column<Person, LocalDate> bornColumn =
+        grid.addColumn(
+          Person::getBirthDate,
+          new LocalDateRenderer(formatter));
+
+// Alternatively, with a custom pattern:
+Column<Person, LocalDate> bornColumn =
+        grid.addColumn(
+          Person::getBirthDate,
+          new LocalDateRenderer("yyyy MM dd"));
+----
+
+[classname]#LocalDateTimeRenderer#::
+Otherwise the same as [classname]#LocalDateRenderer#, except for the [classname]#LocalDateTime# type.
+
++
+[source, java]
+----
+DateTimeFormatter formatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.LONG, FormatStyle.SHORT)
+        .withLocale(Locale.ENGLISH);
+
+Column<Person, LocalDateTime> bornColumn =
+        grid.addColumn(
+          Person::getBirthDateAndTime,
+          new LocalDateTimeRenderer(formatter));
+
+// Alternatively, with a custom pattern:
+Column<Person, LocalDateTime> bornColumn =
+        grid.addColumn(
+          Person::getBirthDateAndTime,
+          new LocalDateTimeRenderer("yyyy.MM.dd 'at' hh:mm"));
+----
 
 [classname]#HTMLRenderer#:: Renders the cell as HTML.
 This allows formatting the cell content, as well as using HTML features such as hyperlinks.
@@ -526,16 +573,15 @@ Use [classname]#Button# in [classname]#Grid#:
 ----
 grid.addColumn(person -> {
       Button button = new Button("Click me!");
-      button.addClickListener(click -> 
+      button.addClickListener(click ->
             Notification.show("Clicked: " + person.toString()));
       return button;
 }, new ComponentRenderer());
 ----
-
-Components will occasionally be generated again during runtime. If you have a state in your 
++
+Components will occasionally be generated again during runtime. If you have a state in your
 component and not in the data object, you need to handle storing it yourself. Below is a simple
 example on how to achieve this.
-
 +
 Store a [classname]#TextField# with changed value.
 +
@@ -550,7 +596,7 @@ grid.addColumn(person -> {
       TextField textField = new TextField();
       textField.setValue(person.getLastname());
       // Store the text field when user updates the value
-      textField.addValueChangeListener(change -> 
+      textField.addValueChangeListener(change ->
             textFields.put(person, textField));
       return textField;
       }, new ComponentRenderer());
