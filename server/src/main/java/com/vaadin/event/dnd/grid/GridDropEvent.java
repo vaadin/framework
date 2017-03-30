@@ -26,7 +26,7 @@ import com.vaadin.ui.Grid;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see com.vaadin.ui.GridDropTargetExtension#addDropListener(GridDropListener)
+ * @see com.vaadin.ui.GridDropTargetExtension#addGridDropListener(GridDropListener)
  * @since
  */
 public class GridDropEvent<T> extends DropEvent<Grid<T>> {

@@ -25,20 +25,21 @@ import com.vaadin.event.ConnectorEventListener;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see com.vaadin.ui.GridDropTargetExtension#addGridDropListener(GridDropListener)
+ * @see com.vaadin.ui.GridDragSourceExtension#addGridDragEndListener(GridDragEndListener)
  * @since
  */
 @FunctionalInterface
-public interface GridDropListener<T> extends ConnectorEventListener {
+public interface GridDragEndListener<T> extends ConnectorEventListener {
 
-    static final Method DROP_METHOD = GridDropListener.class
+    static final Method DRAG_END_METHOD = GridDragEndListener.class
             .getDeclaredMethods()[0];
 
     /**
-     * Called when drop event is fired on a Grid row.
+     * Invoked when the user has dropped the dragged grid rows, or canceled the
+     * drag.
      *
      * @param event
-     *         Server side drop event.
+     *         The drag end event.
      */
-    void drop(GridDropEvent<T> event);
+    void dragEnd(GridDragEndEvent<T> event);
 }
