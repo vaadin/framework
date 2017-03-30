@@ -103,6 +103,11 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
      * Collects the dragged items of a Grid given the list of item keys.
      */
     private Set<T> getDraggedItems(Grid<T> grid, List<String> draggedItemKeys) {
+        if (draggedItemKeys == null || draggedItemKeys.isEmpty()) {
+            throw new IllegalStateException(
+                    "The drag event does not contain dragged items");
+        }
+
         return draggedItemKeys.stream()
                 .map(key -> grid.getDataCommunicator().getKeyMapper().get(key))
                 .collect(Collectors.toSet());

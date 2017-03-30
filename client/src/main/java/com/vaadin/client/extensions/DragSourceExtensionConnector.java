@@ -144,6 +144,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
             sendDragStartEventToServer(event);
         }
+
+        // Stop event bubbling
+        nativeEvent.stopPropagation();
     }
 
     /**
@@ -152,7 +155,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *
      * @param dragStartEvent
      *         Event to set the data for.
-     * @return Textual data to be set for the event.
+     * @return Textual data to be set for the event or {@literal null}.
      */
     protected String createDataTransferText(Event dragStartEvent) {
         return getState().dataTransferText;
