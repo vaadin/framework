@@ -15,11 +15,22 @@
  */
 package com.vaadin.ui;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.event.dnd.DragSourceExtension;
+import com.vaadin.event.dnd.grid.GridDragEndEvent;
+import com.vaadin.event.dnd.grid.GridDragEndListener;
+import com.vaadin.event.dnd.grid.GridDragStartEvent;
+import com.vaadin.event.dnd.grid.GridDragStartListener;
 import com.vaadin.server.SerializableFunction;
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
 
 import elemental.json.JsonObject;
@@ -63,6 +74,45 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
         target.addDataGenerator(dragDataGenerator);
     }
 
+    @Override
+    protected void registerDragSourceRpc(Grid<T> target) {
+        registerRpc(new GridDragSourceExtensionRpc() {
+            @Override
+            public void dragStart(List<String> draggedItemKeys) {
+
+                GridDragStartEvent<T> event = new GridDragStartEvent<>(target,
+                        getState(false).effectAllowed,
+                        getDraggedItems(target, draggedItemKeys));
+
+                fireEvent(event);
+            }
+
+            @Override
+            public void dragEnd(DropEffect dropEffect,
+                    List<String> draggedItemKeys) {
+
+                GridDragEndEvent<T> event = new GridDragEndEvent<>(target,
+                        dropEffect, getDraggedItems(target, draggedItemKeys));
+
+                fireEvent(event);
+            }
+        });
+    }
+
+    /**
+     * Collects the dragged items of a Grid given the list of item keys.
+     */
+    private Set<T> getDraggedItems(Grid<T> grid, List<String> draggedItemKeys) {
+        if (draggedItemKeys == null || draggedItemKeys.isEmpty()) {
+            throw new IllegalStateException(
+                    "The drag event does not contain dragged items");
+        }
+
+        return draggedItemKeys.stream()
+                .map(key -> grid.getDataCommunicator().getKeyMapper().get(key))
+                .collect(Collectors.toSet());
+    }
+
     /**
      * Drag data generator. Appends drag data to row data json if generator
      * function is set by the user of this extension.
@@ -98,6 +148,43 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
     public void setDragDataGenerator(
             SerializableFunction<T, JsonObject> generator) {
         generatorFunction = generator;
+    }
+
+    @Override
+    public void setDataTransferText(String data) throws
+            UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "Setting dataTransferText is not supported");
+    }
+
+    /**
+     * Attaches dragstart listener for the current drag source grid.
+     *
+     * @param listener
+     *         Listener to handle the dragstart event.
+     * @return Handle to be used to remove this listener.
+     * @see GridDragStartEvent
+     */
+    public Registration addGridDragStartListener(
+            GridDragStartListener<T> listener) {
+        return addListener(DragSourceState.EVENT_DRAGSTART,
+                GridDragStartEvent.class, listener,
+                GridDragStartListener.DRAG_START_METHOD);
+    }
+
+    /**
+     * Attaches dragend listener for the current drag source grid.
+     *
+     * @param listener
+     *         Listener to handle the dragend event.
+     * @return Handle to be used to remove this listener.
+     * @see GridDragEndEvent
+     */
+    public Registration addGridDragEndListener(
+            GridDragEndListener<T> listener) {
+        return addListener(DragSourceState.EVENT_DRAGEND,
+                GridDragEndEvent.class, listener,
+                GridDragEndListener.DRAG_END_METHOD);
     }
 
     /**

@@ -137,13 +137,41 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         // Set text data parameter
         nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
-                getState().dataTransferText);
+                createDataTransferText(event));
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
-            getRpcProxy(DragSourceRpc.class).dragStart();
+            sendDragStartEventToServer(event);
         }
+
+        // Stop event bubbling
+        nativeEvent.stopPropagation();
+    }
+
+    /**
+     * Creates data of type {@code "text"} for the {@code DataTransfer} object
+     * of the given event.
+     *
+     * @param dragStartEvent
+     *         Event to set the data for.
+     * @return Textual data to be set for the event or {@literal null}.
+     */
+    protected String createDataTransferText(Event dragStartEvent) {
+        return getState().dataTransferText;
+    }
+
+    /**
+     * Initiates a server RPC for the drag start event.
+     * <p>
+     * This method is called only if there is a server side drag start event
+     * handler attached.
+     *
+     * @param dragStartEvent
+     *         Client side dragstart event.
+     */
+    protected void sendDragStartEventToServer(Event dragStartEvent) {
+        getRpcProxy(DragSourceRpc.class).dragStart();
     }
 
     /**
@@ -162,9 +190,23 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
             assert dropEffect != null : "Drop effect should never be null";
 
-            getRpcProxy(DragSourceRpc.class)
-                    .dragEnd(DropEffect.valueOf(dropEffect.toUpperCase()));
+            sendDragEndEventToServer(event,
+                    DropEffect.valueOf(dropEffect.toUpperCase()));
         }
+    }
+
+    /**
+     * Initiates a server RPC for the drag end event.
+     *
+     * @param dragEndEvent
+     *         Client side dragend event.
+     * @param dropEffect
+     *         Drop effect of the dragend event, extracted from {@code
+     *         DataTransfer.dropEffect} parameter.
+     */
+    protected void sendDragEndEventToServer(Event dragEndEvent,
+            DropEffect dropEffect) {
+        getRpcProxy(DragSourceRpc.class).dragEnd(dropEffect);
     }
 
     /**

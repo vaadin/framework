@@ -59,7 +59,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
         GridDropTargetExtension<Bean> dropTarget = new GridDropTargetExtension<>(
                 dropTargetComponent);
-        dropTarget.addDropListener((GridDropListener<Bean>) event -> {
+        dropTarget.addGridDropListener(event -> {
             log(event.getDataTransferText() + ", targetId=" + event
                     .getDropTargetRow().getId());
         });

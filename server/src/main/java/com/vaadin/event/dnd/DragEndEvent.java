@@ -20,7 +20,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
- * Server side dragend event. Fired when an HTML5 dragend happens on the client.
+ * HTML5 drag end event.
  *
  * @param <T>
  *         Type of the component that was dragged.
@@ -29,38 +29,20 @@ import com.vaadin.ui.Component;
  * @since 8.1
  */
 public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
-    private final String dataTransferText;
     private final DropEffect dropEffect;
 
     /**
-     * Creates a server side dragend event.
+     * Creates a drag end event.
      *
      * @param source
      *         Component that was dragged.
-     * @param dataTransferText
-     *         Data of type {@code "text"} from the {@code DataTransfer}
-     *         object.
      * @param dropEffect
      *         Drop effect from {@code DataTransfer.dropEffect} object.
      */
-    public DragEndEvent(T source, String dataTransferText,
-            DropEffect dropEffect) {
+    public DragEndEvent(T source, DropEffect dropEffect) {
         super(source);
 
-        this.dataTransferText = dataTransferText;
-
         this.dropEffect = dropEffect;
-    }
-
-    /**
-     * Get data of type {@code "text"} from the client side {@code DataTransfer}
-     * object.
-     *
-     * @return Data of type {@code "text"} if exists in the client side {@code
-     * DataTransfer} object, otherwise {@literal null}.
-     */
-    public String getDataTransferText() {
-        return dataTransferText;
     }
 
     /**
