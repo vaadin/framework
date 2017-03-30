@@ -80,7 +80,7 @@ public class ApplicationConstants implements Serializable {
     /**
      * Configuration parameter giving the (in some cases relative) URL to the
      * web application context root.
-     * 
+     *
      * @since 8.0.3
      */
     public static final String CONTEXT_ROOT_URL = "contextRootUrl";
@@ -174,6 +174,8 @@ public class ApplicationConstants implements Serializable {
 
     /**
      * Content type to use for text/html responses (should always be UTF-8).
+     *
+     * @since 7.7.8
      */
     public static final String CONTENT_TYPE_TEXT_HTML_UTF_8 = "text/html; charset=utf-8";
 

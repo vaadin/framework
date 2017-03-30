@@ -370,6 +370,7 @@ public class ComputedStyle {
      * Returns the current height, padding and border from the DOM.
      *
      * @return the computed height including padding and borders
+     * @since 8.0.5
      */
     public double getHeightIncludingBorderPadding() {
         double h = getHeight();
@@ -385,6 +386,7 @@ public class ComputedStyle {
      * Returns the current width, padding and border from the DOM.
      *
      * @return the computed width including padding and borders
+     * @since 8.0.5
      */
     public double getWidthIncludingBorderPadding() {
         double w = getWidth();
