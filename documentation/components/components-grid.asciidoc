@@ -263,7 +263,7 @@ The setter methods in [classname]#Column# have _fluent API_, so you can easily c
 
 [source, java]
 ----
-grid.addColumn(Person:getBirthDate, new DateRenderer())
+grid.addColumn(Person::getBirthDate, new DateRenderer())
       .setCaption("Birth Date")
       .setWidth("100px")
       .setResizable(false);
@@ -325,7 +325,7 @@ explicitly through the column object with [methodname]#setCaption()#.
 
 [source, java]
 ----
-Column<Date> bornColumn = grid.addColumn(Person:getBirthDate);
+Column<Date> bornColumn = grid.addColumn(Person::getBirthDate);
 bornColumn.setCaption("Born date");
 ----
 
@@ -403,7 +403,7 @@ You set the column renderer in the [classname]#Grid.Column# object as follows:
 [source, java]
 ----
 // the type of birthYear is a number
-Column<Person, Integer> bornColumn = grid.addColumn(Person:getBirthYear,
+Column<Person, Integer> bornColumn = grid.addColumn(Person::getBirthYear,
       new NumberRenderer("born in %d AD"));
 ----
 
@@ -475,7 +475,7 @@ format specifier, such as "[literal]#++%tF++#".
 +
 [source, java]
 ----
-Column<Person, Date> bornColumn = grid.addColumn(Person:getBirthDate,
+Column<Person, Date> bornColumn = grid.addColumn(Person::getBirthDate,
       new DateRenderer("%1$tB %1$te, %1$tY",
                      Locale.ENGLISH));
 ----
