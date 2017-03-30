@@ -81,7 +81,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
 
         assertEditorClosed();
-        assertEquals("<b>100</b> changed",
+        assertEquals("100 changed",
                 getGridElement().getCell(100, 4).getText());
     }
 
