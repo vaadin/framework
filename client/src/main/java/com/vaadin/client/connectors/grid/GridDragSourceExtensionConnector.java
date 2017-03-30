@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
@@ -29,15 +28,16 @@ import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
+import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.ui.GridDragSourceExtension;
 
 import elemental.events.Event;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 /**
  * Adds HTML5 drag and drop functionality to a {@link com.vaadin.client.widgets.Grid
@@ -53,6 +53,11 @@ public class GridDragSourceExtensionConnector extends
 
     private GridConnector gridConnector;
 
+    /**
+     * List of dragged item keys.
+     */
+    private List<String> draggedItemKeys;
+
     @Override
     protected void extend(ServerConnector target) {
         this.gridConnector = (GridConnector) target;
@@ -67,25 +72,66 @@ public class GridDragSourceExtensionConnector extends
 
     @Override
     protected void onDragStart(Event event) {
-        super.onDragStart(event);
 
-        if (event.getTarget() instanceof TableRowElement) {
-            TableRowElement row = (TableRowElement) event.getTarget();
+        // Collect the keys of dragged rows
+        draggedItemKeys = getDraggedRows(event).stream()
+                .map(row -> row.getString(GridState.JSONKEY_ROWKEY))
+                .collect(Collectors.toList());
+
+        super.onDragStart(event);
+    }
+
+    @Override
+    protected String createDataTransferText(Event dragStartEvent) {
+        JsonArray dragData = toJsonArray(
+                getDraggedRows(dragStartEvent).stream().map(this::getDragData)
+                        .collect(Collectors.toList()));
+        return dragData.toJson();
+    }
+
+    @Override
+    protected void sendDragStartEventToServer(Event dragStartEvent) {
+
+        // Start server RPC with dragged item keys
+        getRpcProxy(GridDragSourceExtensionRpc.class)
+                .dragStart(draggedItemKeys);
+    }
+
+    private List<JsonObject> getDraggedRows(Event dragStartEvent) {
+        List<JsonObject> draggedRows = new ArrayList<>();
+
+        if (dragStartEvent.getTarget() instanceof TableRowElement) {
+            TableRowElement row = (TableRowElement) dragStartEvent.getTarget();
             int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
                     .getLogicalRowIndex(row);
 
             JsonObject rowData = gridConnector.getDataSource().getRow(rowIndex);
 
-            // Generate drag data. Dragged row or all the selected rows
-            JsonValue dragData = dragMultipleRows(rowData) ? toJsonArray(
-                    getSelectedVisibleRows().stream().map(this::getDragData)
-                            .collect(Collectors.toList()))
-                    : getDragData(rowData);
-
-            // Set drag data in DataTransfer object
-            ((NativeEvent) event).getDataTransfer()
-                    .setData(DragSourceState.DATA_TYPE_TEXT, dragData.toJson());
+            if (dragMultipleRows(rowData)) {
+                getSelectedVisibleRows().forEach(draggedRows::add);
+            } else {
+                draggedRows.add(rowData);
+            }
         }
+
+        return draggedRows;
+    }
+
+    @Override
+    protected void onDragEnd(Event event) {
+        super.onDragEnd(event);
+
+        // Clear item key list
+        draggedItemKeys = null;
+    }
+
+    @Override
+    protected void sendDragEndEventToServer(Event dragEndEvent,
+            DropEffect dropEffect) {
+
+        // Send server RPC with dragged item keys
+        getRpcProxy(GridDragSourceExtensionRpc.class)
+                .dragEnd(dropEffect, draggedItemKeys);
     }
 
     /**

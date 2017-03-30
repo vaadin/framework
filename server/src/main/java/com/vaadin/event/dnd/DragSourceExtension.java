@@ -53,24 +53,18 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      *         Component to be extended.
      */
     public DragSourceExtension(T target) {
-        registerRpc(new DragSourceRpc() {
-            @Override
-            public void dragStart() {
-                DragStartEvent<T> event = new DragStartEvent<>(target,
-                        getState(false).dataTransferText,
-                        getState(false).effectAllowed);
-                fireEvent(event);
-            }
 
-            @Override
-            public void dragEnd(DropEffect dropEffect) {
-                DragEndEvent<T> event = new DragEndEvent<>(target,
-                        getState(false).dataTransferText, dropEffect);
-                fireEvent(event);
-            }
-        });
+        registerDragSourceRpc(target);
 
         super.extend(target);
+
+        initListeners();
+    }
+
+    /**
+     * Initializes the event listeners this drag source is using.
+     */
+    protected void initListeners() {
 
         // Set current extension as active drag source in the UI
         dragStartListenerHandle = addDragStartListener(
@@ -79,6 +73,29 @@ public class DragSourceExtension<T extends AbstractComponent> extends
         // Remove current extension as active drag source from the UI
         dragEndListenerHandle = addDragEndListener(
                 event -> getUI().setActiveDragSource(null));
+    }
+
+    /**
+     * Register server RPC.
+     *
+     * @param target
+     *         Extended component.
+     */
+    protected void registerDragSourceRpc(T target) {
+        registerRpc(new DragSourceRpc() {
+            @Override
+            public void dragStart() {
+                DragStartEvent<T> event = new DragStartEvent<>(target,
+                        getState(false).effectAllowed);
+                fireEvent(event);
+            }
+
+            @Override
+            public void dragEnd(DropEffect dropEffect) {
+                DragEndEvent<T> event = new DragEndEvent<>(target, dropEffect);
+                fireEvent(event);
+            }
+        });
     }
 
     @Override

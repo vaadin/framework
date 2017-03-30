@@ -20,25 +20,25 @@ import java.lang.reflect.Method;
 import com.vaadin.event.ConnectorEventListener;
 
 /**
- * Drop listener for HTML5 drop on a Grid row.
+ * Drag start listener for HTML5 drag start on a Grid row.
  *
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see com.vaadin.ui.GridDropTargetExtension#addGridDropListener(GridDropListener)
+ * @see com.vaadin.ui.GridDragSourceExtension#addGridDragStartListener(GridDragStartListener)
  * @since
  */
 @FunctionalInterface
-public interface GridDropListener<T> extends ConnectorEventListener {
+public interface GridDragStartListener<T> extends ConnectorEventListener {
 
-    static final Method DROP_METHOD = GridDropListener.class
+    static final Method DRAG_START_METHOD = GridDragStartListener.class
             .getDeclaredMethods()[0];
 
     /**
-     * Called when drop event is fired on a Grid row.
+     * Invoked when the user has started dragging grid's rows.
      *
      * @param event
-     *         Server side drop event.
+     *         The drag start event.
      */
-    void drop(GridDropEvent<T> event);
+    void dragStart(GridDragStartEvent<T> event);
 }

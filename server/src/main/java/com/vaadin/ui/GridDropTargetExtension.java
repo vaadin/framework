@@ -55,7 +55,7 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
      *         Listener to handle drop event.
      * @return Handle to be used to remove this listener.
      */
-    public Registration addDropListener(GridDropListener<T> listener) {
+    public Registration addGridDropListener(GridDropListener<T> listener) {
         return addListener(GridDropEvent.class, listener,
                 GridDropListener.DROP_METHOD);
     }
