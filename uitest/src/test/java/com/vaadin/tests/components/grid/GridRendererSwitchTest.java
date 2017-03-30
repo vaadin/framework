@@ -130,8 +130,7 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
     }
 
     @Test
-    public void testSwtichRendererOfHiddenColumn() {
-
+    public void testSwitchRendererOfHiddenColumn() {
         setDebug(true);
         openTestURL();
 
