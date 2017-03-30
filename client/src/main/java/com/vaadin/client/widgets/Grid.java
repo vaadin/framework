@@ -4884,10 +4884,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 ColumnConfiguration conf = null;
                 int index = 0;
 
-                if (grid != null && (bodyRenderer instanceof WidgetRenderer
-                        || renderer instanceof WidgetRenderer)) {
+                if (!isHidden() && grid != null
+                        && (bodyRenderer instanceof WidgetRenderer
+                                || renderer instanceof WidgetRenderer)) {
                     // Column needs to be recreated.
-                    index = grid.getColumns().indexOf(this);
+                    index = grid.getVisibleColumns().indexOf(this);
                     conf = grid.escalator.getColumnConfiguration();
                     widthInConfiguration = conf.getColumnWidth(index);
 
@@ -4908,7 +4909,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     conf.setColumnWidth(index, widthInConfiguration);
                 }
 
-                if (grid != null) {
+                if (!isHidden() && grid != null) {
                     grid.requestRefreshBody();
                 }
             }
