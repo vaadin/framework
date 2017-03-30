@@ -114,6 +114,8 @@ public class ValoTheme {
      * Styles the notification to look like {@link Type#ERROR_MESSAGE}, without
      * setting the position and delay and without the close button. Can be
      * combined with any other Notification style.
+     * 
+     * @since 8.0.5
      */
     public static final String NOTIFICATION_CRITICAL_ERROR = "critical-error";
 
@@ -1041,9 +1043,9 @@ public class ValoTheme {
      *
      * <p>
      * The text content of the logo should be very short, since the logo area
-     * only shows approximately three letters. Using one of the
-     * Vaadin Icons is a good way to quickly create a logo for your
-     * application. Vaadin Icons are included in the Valo theme.
+     * only shows approximately three letters. Using one of the Vaadin Icons is
+     * a good way to quickly create a logo for your application. Vaadin Icons
+     * are included in the Valo theme.
      * <p>
      *
      * <h4>Example</h4>
