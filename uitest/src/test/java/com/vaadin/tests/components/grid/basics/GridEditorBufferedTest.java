@@ -68,7 +68,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
         selectMenuPath("Component", "Columns", "Column 0", "Hidden");
         editRow(100);
 
-        WebElement textField = getEditor().getField(4);
+        WebElement textField = getEditor().getField(5);
 
         textField.click();
         // without this, the click in the middle of the field might not be after
