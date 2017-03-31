@@ -69,7 +69,6 @@ import com.vaadin.server.EncodeResult;
 import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.SerializableComparator;
-import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableSupplier;
 import com.vaadin.server.Setter;
 import com.vaadin.server.VaadinServiceClassLoaderUtil;
@@ -820,7 +819,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public static class Column<T, V> extends AbstractGridExtension<T> {
 
-        private final SerializableFunction<T, ? extends V> valueProvider;
+        private final ValueProvider<T, V> valueProvider;
 
         private SortOrderProvider sortOrderProvider = direction -> {
             String id = getId();
@@ -1126,7 +1125,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @since 8.0.3
          */
-        public SerializableFunction<T, ? extends V> getValueProvider() {
+        public ValueProvider<T, V> getValueProvider() {
             return valueProvider;
         }
 
