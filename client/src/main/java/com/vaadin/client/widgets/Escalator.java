@@ -3111,44 +3111,24 @@ public class Escalator extends Widget
                  */
                 int rowsLeft = getRowCount();
                 if (rowsLeft < escalatorRowCount) {
-                    int escalatorRowsToRemove = escalatorRowCount - rowsLeft;
-                    for (int i = 0; i < escalatorRowsToRemove; i++) {
-                        final TableRowElement tr = visualRowOrder
-                                .remove(removedVisualInside.getStart());
-
-                        paintRemoveRow(tr, index);
+                    /*
+                     * Remove extra DOM rows and refresh contents.
+                     */
+                    for (int i = escalatorRowCount - 1; i >= rowsLeft; i--) {
+                        final TableRowElement tr = visualRowOrder.remove(i);
+                        paintRemoveRow(tr, i);
                         removeRowPosition(tr);
                     }
-                    escalatorRowCount -= escalatorRowsToRemove;
 
-                    /*
-                     * Because we're removing escalator rows, we don't have
-                     * anything to scroll by. Let's make sure the viewport is
-                     * scrolled to top, to render any rows possibly left above.
-                     */
-                    body.setBodyScrollPosition(tBodyScrollLeft, 0);
+                    moveAndUpdateEscalatorRows(
+                            Range.withLength(0, visualRowOrder.size()), 0, 0);
+                    sortDomElements();
+                    setTopRowLogicalIndex(0);
 
-                    /*
-                     * We might have removed some rows from the middle, so let's
-                     * make sure we're not left with any holes. Also remember:
-                     * visualIndex == logicalIndex applies now.
-                     */
-                    final int dirtyRowsStart = removedLogicalInside.getStart();
-                    double y = getRowTop(dirtyRowsStart);
-                    for (int i = dirtyRowsStart; i < escalatorRowCount; i++) {
-                        final TableRowElement tr = visualRowOrder.get(i);
-                        setRowPosition(tr, 0, y);
-                        y += getDefaultRowHeight();
-                        y += spacerContainer.getSpacerHeight(i);
-                    }
+                    scroller.recalculateScrollbarsForVirtualViewport();
 
-                    // #8825 update data starting from the first moved row
-                    final int start = dirtyRowsStart;
-                    final int end = escalatorRowCount;
-                    for (int i = start; i < end; i++) {
-                        final TableRowElement tr = visualRowOrder.get(i);
-                        refreshRow(tr, i);
-                    }
+                    fireRowVisibilityChangeEvent();
+                    return;
                 }
 
                 else {

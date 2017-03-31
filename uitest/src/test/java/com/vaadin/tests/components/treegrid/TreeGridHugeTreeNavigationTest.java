@@ -24,7 +24,7 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
     @Before
     public void before() {
         setDebug(true);
-        openTestURL("theme=valo");
+        openTestURL("debug&theme=valo");
         grid = $(TreeGridElement.class).first();
     }
 
@@ -67,7 +67,7 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         assertCellTexts(0, 0, new String[] { "Granddad 0", "Granddad 1",
                 "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2" });
-        checkRowFocused(4);
+        checkRowFocused(3);
 
         // Should navigate to "Granddad 1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
@@ -87,6 +87,39 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
                 new String[] { "Granddad 0", "Granddad 1", "Granddad 2" });
         checkRowFocused(1);
         assertNoErrorNotifications();
+    }
+
+    @Test
+    public void no_exception_when_calling_expand_or_collapse_twice() {
+
+        // Currently the collapsed state is updated in a round trip to the
+        // server, thus it is possible to trigger an expand on the same row
+        // multiple times through the UI. This should not cause exceptions, but
+        // rather ignore the redundant calls.
+
+        grid.getRow(0).getCell(0).click();
+        new Actions(getDriver()).sendKeys(Keys.RIGHT, Keys.RIGHT).perform();
+        assertNoErrorNotifications();
+        new Actions(getDriver()).sendKeys(Keys.LEFT, Keys.LEFT).perform();
+        assertNoErrorNotifications();
+    }
+
+    @Test
+    public void can_toggle_collapse_on_row_that_is_no_longer_in_cache() {
+        grid.getRow(0).getCell(0).click();
+
+        // Collapse
+        new Actions(getDriver()).sendKeys(Keys.RIGHT, Keys.DOWN, Keys.RIGHT)
+                .perform();
+        grid.scrollToRow(200);
+        new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
+        assertEquals(6, grid.getRowCount());
+
+        // Expand
+        new Actions(getDriver()).sendKeys(Keys.RIGHT, Keys.UP).perform();
+        grid.scrollToRow(200);
+        new Actions(getDriver()).sendKeys(Keys.RIGHT).perform();
+        assertEquals(606, grid.getRowCount());
     }
 
     private WebElement findFocusedRow() {

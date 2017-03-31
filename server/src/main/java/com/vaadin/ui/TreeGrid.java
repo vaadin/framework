@@ -24,8 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.vaadin.shared.ui.treegrid.FocusParentRpc;
-import com.vaadin.shared.ui.treegrid.FocusRpc;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -39,6 +37,8 @@ import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -184,13 +184,15 @@ public class TreeGrid<T> extends Grid<T> {
             public void setNodeCollapsed(String rowKey, int rowIndex,
                     boolean collapse) {
                 if (collapse) {
-                    getDataCommunicator().doCollapse(rowKey, rowIndex);
-                    fireCollapseEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
+                    if (getDataCommunicator().doCollapse(rowKey, rowIndex)) {
+                        fireCollapseEvent(getDataCommunicator().getKeyMapper()
+                                .get(rowKey));
+                    }
                 } else {
-                    getDataCommunicator().doExpand(rowKey, rowIndex);
-                    fireExpandEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
+                    if (getDataCommunicator().doExpand(rowKey, rowIndex)) {
+                        fireExpandEvent(getDataCommunicator().getKeyMapper()
+                                .get(rowKey));
+                    }
                 }
             }
         });
