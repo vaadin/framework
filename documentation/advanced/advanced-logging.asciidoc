@@ -58,9 +58,9 @@ SLF4J site.
 
 In order to get the [package]#java.util.logging# to SLF4J bridge installed, you
 need to add the following snippet of code to your [classname]#UI# class at the
-very top://TODO: Sure it's UI class and not the
-servlet?
+very top:
 
+//TODO: Sure it's UI class and not the servlet?
 
 [source, java]
 ----
