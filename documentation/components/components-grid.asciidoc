@@ -484,6 +484,43 @@ Column<Person, Date> bornColumn = grid.addColumn(Person::getBirthDate,
 Optionally, a locale can be given. Otherwise, the default locale (in the
 component tree) is used.
 
+[classname]#HTMLRenderer#:: Renders the cell as HTML.
+This allows formatting the cell content, as well as using HTML features such as hyperlinks.
+
++
+Set the renderer in the [classname]#Grid.Column# object:
++
+[source, java]
+----
+Column<Person, String> htmlColumn grid.addColumn(person ->
+      "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>",
+      new HtmlRenderer());
+----
+
+[classname]#NumberRenderer#:: Formats column values with a numeric type extending [classname]#Number#:
+[classname]#Integer#, [classname]#Double#, etc. The format can be specified
+either by the subclasses of [classname]#java.text.NumberFormat#, namely
+[classname]#DecimalFormat# and [classname]#ChoiceFormat#, or by
+[methodname]#String.format()#.
+
++
+For example:
++
+[source, java]
+----
+// Use decimal format
+Column<Integer> birthYear = grid.addColumn(Person::getBirthYear,
+      new NumberRenderer(new DecimalFormat("in #### AD")));
+----
+
+[classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
+must be between 0.0 and 1.0.
+
+[WARNING]
+====
+The following renderers are to be released in version 8.1 and are currently only available in link:https://vaadin.com/releases[pre-release versions] of the framework.
+====
+
 [classname]#LocalDateRenderer#::
 Formats a column with the [classname]#LocalDate# type.
 The renderer can be constructed with a [classname]#DateTimeFormatter#, or with a custom pattern string.
@@ -531,37 +568,6 @@ Column<Person, LocalDateTime> bornColumn =
           new LocalDateTimeRenderer("yyyy.MM.dd 'at' hh:mm"));
 ----
 
-[classname]#HTMLRenderer#:: Renders the cell as HTML.
-This allows formatting the cell content, as well as using HTML features such as hyperlinks.
-
-+
-Set the renderer in the [classname]#Grid.Column# object:
-+
-[source, java]
-----
-Column<Person, String> htmlColumn grid.addColumn(person ->
-      "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>",
-      new HtmlRenderer());
-----
-
-[classname]#NumberRenderer#:: Formats column values with a numeric type extending [classname]#Number#:
-[classname]#Integer#, [classname]#Double#, etc. The format can be specified
-either by the subclasses of [classname]#java.text.NumberFormat#, namely
-[classname]#DecimalFormat# and [classname]#ChoiceFormat#, or by
-[methodname]#String.format()#.
-
-+
-For example:
-+
-[source, java]
-----
-// Use decimal format
-Column<Integer> birthYear = grid.addColumn(Person::getBirthYear,
-      new NumberRenderer(new DecimalFormat("in #### AD")));
-----
-
-[classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
-must be between 0.0 and 1.0.
 
 [classname]#ComponentRenderer#:: Renders a Vaadin [classname]#Component# in a column. Since components
 are quite complex, the [classname]#ComponentRenderer# comes with possible performance issues.
