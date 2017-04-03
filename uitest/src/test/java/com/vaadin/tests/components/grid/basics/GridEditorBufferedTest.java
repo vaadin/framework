@@ -64,6 +64,28 @@ public class GridEditorBufferedTest extends GridEditorTest {
     }
 
     @Test
+    public void testKeyboardSaveWithHiddenColumn() {
+        selectMenuPath("Component", "Columns", "Column 0", "Hidden");
+        editRow(100);
+
+        WebElement textField = getEditor().getField(5);
+
+        textField.click();
+        // without this, the click in the middle of the field might not be after
+        // the old text on some browsers
+        new Actions(getDriver()).sendKeys(Keys.END).perform();
+
+        textField.sendKeys(" changed");
+
+        // Save from keyboard
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+
+        assertEditorClosed();
+        assertEquals("100 changed",
+                getGridElement().getCell(100, 4).getText());
+    }
+
+    @Test
     public void testKeyboardSaveWithInvalidEdition() {
         makeInvalidEdition();
 
