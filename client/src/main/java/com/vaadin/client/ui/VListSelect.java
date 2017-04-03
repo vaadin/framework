@@ -30,6 +30,8 @@ import com.vaadin.client.FastStringSet;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.connectors.AbstractMultiSelectConnector.MultiSelectWidget;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.listselect.ListSelectState;
+import com.vaadin.shared.ui.nativeselect.NativeSelectState;
 
 import elemental.json.JsonObject;
 
@@ -57,10 +59,13 @@ public class VListSelect extends Composite
      */
     public VListSelect() {
         container = new FlowPanel();
+        container.setStyleName(ListSelectState.PRIMARY_STYLENAME);
+
         initWidget(container);
 
         select = new ListBox();
         select.setMultipleSelect(true);
+        select.setStyleName(NativeSelectState.STYLE_NAME + "-select");
 
         // Add event handlers
         select.addClickHandler(
@@ -71,6 +76,12 @@ public class VListSelect extends Composite
         container.add(select);
 
         updateEnabledState();
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        select.setStyleName(style + "-select");
     }
 
     /**
@@ -102,24 +113,6 @@ public class VListSelect extends Composite
         Objects.nonNull(listener);
         selectionChangeListeners.add(listener);
         return (Registration) () -> selectionChangeListeners.remove(listener);
-    }
-
-    @Override
-    public void setStyleName(String style) {
-        super.setStyleName(style);
-        updateStyleNames();
-    }
-
-    @Override
-    public void setStylePrimaryName(String style) {
-        super.setStylePrimaryName(style);
-        updateStyleNames();
-    }
-
-    /** Update the style names for container & select. */
-    protected void updateStyleNames() {
-        container.setStyleName(getStylePrimaryName());
-        select.setStyleName(getStylePrimaryName() + "-select");
     }
 
     @Override
@@ -163,7 +156,7 @@ public class VListSelect extends Composite
         return selectedItemKeys;
     }
 
-    private void selectionEvent(Object source){
+    private void selectionEvent(Object source) {
         if (source == select) {
             // selection can change by adding and at the same time removing
             // previous keys, or by just adding (e.g. when modifier keys are
