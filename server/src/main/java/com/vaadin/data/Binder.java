@@ -2128,6 +2128,8 @@ public class Binder<BEAN> implements Serializable {
                 .stream()
                 .filter(memberField -> HasValue.class
                         .isAssignableFrom(memberField.getType()))
+                .filter(memberField -> !isFieldBound(memberField,
+                        objectWithMemberFields))
                 .map(memberField -> handleProperty(memberField,
                         objectWithMemberFields,
                         (property, type) -> bindProperty(objectWithMemberFields,
@@ -2139,17 +2141,33 @@ public class Binder<BEAN> implements Serializable {
         }
     }
 
+    private boolean isFieldBound(Field memberField,
+            Object objectWithMemberFields) {
+        try {
+            HasValue field = (HasValue) getMemberFieldValue(memberField,
+                    objectWithMemberFields);
+            return bindings.stream()
+                    .anyMatch(binding -> binding.getField() == field);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private int accumulate(int count, boolean value) {
         return value ? count + 1 : count;
     }
 
-    @SuppressWarnings("unchecked")
     private BindingBuilder<BEAN, ?> getIncompleteMemberFieldBinding(
             Field memberField, Object objectWithMemberFields) {
+        return incompleteMemberFieldBindings
+                .get(getMemberFieldValue(memberField, objectWithMemberFields));
+    }
+
+    private Object getMemberFieldValue(Field memberField,
+            Object objectWithMemberFields) {
         memberField.setAccessible(true);
         try {
-            return incompleteMemberFieldBindings
-                    .get(memberField.get(objectWithMemberFields));
+            return memberField.get(objectWithMemberFields);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             throw new RuntimeException(e);
         } finally {
