@@ -73,6 +73,11 @@ public class BinderInstanceFieldTest {
         private IntegerTextField firstName;
     }
 
+    public static class BindOneFieldRequiresConverter extends FormLayout {
+        private TextField firstName;
+        private TextField age;
+    }
+
     public static class BindGeneric<T> extends FormLayout {
         private CustomField<T> firstName;
     }
@@ -389,6 +394,24 @@ public class BinderInstanceFieldTest {
                 String.valueOf(person.getAge()));
 
         Assert.assertFalse(binder.validate().isOk());
+    }
+
+    @Test
+    public void bindInstanceFields_preconfiguredFieldNotBoundToPropertyPreserved() {
+        BindOneFieldRequiresConverter form = new BindOneFieldRequiresConverter();
+        form.age = new TextField();
+        form.firstName = new TextField();
+        Binder<Person> binder = new Binder<>(Person.class);
+        binder.forField(form.age)
+                .withConverter(str -> Integer.parseInt(str) / 2,
+                        integer -> Integer.toString(integer * 2))
+                .bind(Person::getAge, Person::setAge);
+        binder.bindInstanceFields(form);
+        Person person = new Person();
+        person.setFirstName("first");
+        person.setAge(45);
+        binder.setBean(person);
+        Assert.assertEquals("90", form.age.getValue());
     }
 
     @Test(expected = IllegalStateException.class)
