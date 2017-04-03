@@ -108,10 +108,12 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             implements PropertyDefinition<T, V> {
         private final PropertyDescriptor descriptor;
         private final BeanPropertySet<T> propertySet;
+        private final Class<?> propertyHolderType;
 
         public AbstractBeanPropertyDefinition(BeanPropertySet<T> propertySet,
-                PropertyDescriptor descriptor) {
+                Class<?> propertyHolderType, PropertyDescriptor descriptor) {
             this.propertySet = propertySet;
+            this.propertyHolderType = propertyHolderType;
             this.descriptor = descriptor;
 
             if (descriptor.getReadMethod() == null) {
@@ -147,14 +149,19 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         protected PropertyDescriptor getDescriptor() {
             return descriptor;
         }
+
+        @Override
+        public Class<?> getPropertyHolderType() {
+            return propertyHolderType;
+        }
     }
 
     private static class BeanPropertyDefinition<T, V>
             extends AbstractBeanPropertyDefinition<T, V> {
 
         public BeanPropertyDefinition(BeanPropertySet<T> propertySet,
-                PropertyDescriptor descriptor) {
-            super(propertySet, descriptor);
+                Class<T> propertyHolderType, PropertyDescriptor descriptor) {
+            super(propertySet, propertyHolderType, descriptor);
         }
 
         @Override
@@ -202,7 +209,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent,
                 PropertyDescriptor descriptor) {
-            super(propertySet, descriptor);
+            super(propertySet, parent.getType(), descriptor);
             this.parent = parent;
         }
 
@@ -258,7 +265,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             definitions = BeanUtil.getBeanPropertyDescriptors(beanType).stream()
                     .filter(BeanPropertySet::hasNonObjectReadMethod)
                     .map(descriptor -> new BeanPropertyDefinition<>(this,
-                            descriptor))
+                            beanType, descriptor))
                     .collect(Collectors.toMap(PropertyDefinition::getName,
                             Function.identity()));
         } catch (IntrospectionException e) {

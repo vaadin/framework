@@ -104,8 +104,9 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
     private void configureRequired(BindingBuilder<BEAN, ?> binding,
             PropertyDefinition<BEAN, ?> definition, BeanValidator validator) {
         assert requiredConfigurator != null;
+        Class<?> propertyHolderType = definition.getPropertyHolderType();
         BeanDescriptor descriptor = validator.getJavaxBeanValidator()
-                .getConstraintsForClass(beanType);
+                .getConstraintsForClass(propertyHolderType);
         PropertyDescriptor propertyDescriptor = descriptor
                 .getConstraintsForProperty(definition.getName());
         if (propertyDescriptor == null) {
