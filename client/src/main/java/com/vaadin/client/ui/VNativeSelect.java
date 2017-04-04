@@ -44,7 +44,7 @@ public class VNativeSelect extends FocusableFlowPanelComposite
     @Override
     public void setStylePrimaryName(String style) {
         super.setStylePrimaryName(style);
-        setStylePrimaryName(listBox.getElement(), style);
+        getListBox().setStyleName(style + "-select");
     }
 
     /**
