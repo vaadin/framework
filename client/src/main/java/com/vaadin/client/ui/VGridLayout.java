@@ -88,7 +88,20 @@ public class VGridLayout extends ComplexPanel {
 
         setStyleName(CLASSNAME);
         addStyleName(StyleConstants.UI_LAYOUT);
+
+        publishJSHelpers(getElement());
     }
+
+    private native void publishJSHelpers(Element root)
+    /*-{
+        var self = this;
+        root.getRowCount = $entry(function () {
+           return self.@VGridLayout::getRowCount()();
+        });
+        root.getColumnCount = $entry(function () {
+           return self.@VGridLayout::getColumnCount()();
+        });
+    }-*/;
 
     private GridLayoutConnector getConnector() {
         return (GridLayoutConnector) ConnectorMap.get(client)
@@ -623,6 +636,10 @@ public class VGridLayout extends ComplexPanel {
 
     Cell[][] cells;
 
+    private int rowCount;
+
+    private int columnCount;
+
     /**
      * Private helper class.
      */
@@ -882,6 +899,8 @@ public class VGridLayout extends ComplexPanel {
     }
 
     public void setSize(int rows, int cols) {
+        rowCount = rows;
+        columnCount = cols;
         if (cells == null) {
             cells = new Cell[cols][rows];
         } else if (cells.length != cols || cells[0].length != rows) {
@@ -895,6 +914,14 @@ public class VGridLayout extends ComplexPanel {
             }
             cells = newCells;
         }
+    }
+
+    private int getRowCount() {
+        return rowCount;
+    }
+
+    private int getColumnCount() {
+        return columnCount;
     }
 
     @Override

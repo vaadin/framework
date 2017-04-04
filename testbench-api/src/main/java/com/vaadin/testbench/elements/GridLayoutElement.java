@@ -19,5 +19,33 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.GridLayout")
 public class GridLayoutElement extends AbstractLayoutElement {
+    /**
+     * Gets the total number of rows in the layout.
+     *
+     * @return the number of rows in the layout,
+     */
+    public long getRowCount() {
+        Long res = (Long) getCommandExecutor()
+                .executeScript("return arguments[0].getRowCount()", this);
+        if (res == null) {
+            throw new IllegalStateException("getRowCount returned null");
+        }
 
+        return res.longValue();
+    }
+
+    /**
+     * Gets the total number of columns in the layout.
+     *
+     * @return the number of columns in the layout,
+     */
+    public long getColumnCount() {
+        Long res = (Long) getCommandExecutor()
+                .executeScript("return arguments[0].getColumnCount()", this);
+        if (res == null) {
+            throw new IllegalStateException("getColumnCount returned null");
+        }
+
+        return res.longValue();
+    }
 }
