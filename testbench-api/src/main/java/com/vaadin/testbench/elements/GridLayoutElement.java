@@ -15,6 +15,9 @@
  */
 package com.vaadin.testbench.elements;
 
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.GridLayout")
@@ -47,5 +50,29 @@ public class GridLayoutElement extends AbstractLayoutElement {
         }
 
         return res.longValue();
+    }
+
+    /**
+     * Gets the cell element at the given position.
+     *
+     * @param row
+     *            the row coordinate
+     * @param column
+     *            the column coordinate
+     * @return the cell element at the given position
+     * @throws NoSuchElementException
+     *             if no cell was found at the given position
+     */
+    public WebElement getCell(int row, int column) {
+        WebElement res = (WebElement) getCommandExecutor().executeScript(
+                "return arguments[0].getCell(" + row + "," + column + ")",
+                this);
+        if (res == null) {
+            throw new NoSuchElementException(
+                    "No cell found at " + row + "," + column);
+        }
+
+        return res;
+
     }
 }

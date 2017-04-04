@@ -36,7 +36,7 @@ public class GridLayoutUI extends AbstractTestUI {
 
         GridLayout tenTimesTen = new GridLayout(10, 10);
         tenTimesTen.addComponent(new Label("5-5"), 5, 5);
-        tenTimesTen.addComponent(new Button("7-7"), 7, 7);
+        tenTimesTen.addComponent(new Button("7-7 8-8"), 7, 7, 8, 8);
         tenTimesTen.setId(TEN_ROWS_TEN_COLS);
         addComponent(tenTimesTen);
     }

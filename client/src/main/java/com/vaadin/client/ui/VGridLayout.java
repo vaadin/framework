@@ -101,6 +101,9 @@ public class VGridLayout extends ComplexPanel {
         root.getColumnCount = $entry(function () {
            return self.@VGridLayout::getColumnCount()();
         });
+        root.getCell = $entry(function (row,column) {
+           return self.@VGridLayout::getCellElement(*)(row, column);
+        });
     }-*/;
 
     private GridLayoutConnector getConnector() {
@@ -796,6 +799,20 @@ public class VGridLayout extends ComplexPanel {
     /** For internal use only. May be removed or replaced in the future. */
     public Cell getCell(int row, int col) {
         return cells[col][row];
+    }
+
+    private Element getCellElement(int row, int col) {
+        if (row < 0 || row >= getRowCount() || col < 0
+                || col >= getColumnCount()) {
+            return null;
+        }
+
+        Cell cell = cells[col][row];
+        if (cell == null || cell.slot == null) {
+            return null;
+        }
+
+        return cell.slot.getWrapperElement();
     }
 
     /**
