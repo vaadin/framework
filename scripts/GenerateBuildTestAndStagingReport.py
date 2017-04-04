@@ -74,6 +74,7 @@ def getApiDiffHtml():
         "compatibility-server-gae",
         "compatibility-shared",
         "liferay-integration",
+        "osgi-integration",
         "server", "shared"
     ]
     link_list = list(map(lambda module: "<a href='http://{}/repository/download/{}/{}:id/apidiff/{}/japicmp.html'>{}</a>".format(args.teamcityUrl, args.buildTypeId, args.buildId, module, module), modules))
@@ -123,7 +124,7 @@ def completeArtifactNames(artifactIds, version):
     return list(map(lambda x: completeArtifactName(x, version), artifactIds))
 
 
-allowedArtifacts = completeArtifactNames([ 'vaadin-maven-plugin', 'vaadin-archetypes', 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet', 'vaadin-root', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', "vaadin-compatibility-server-gae", 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes', 'vaadin-liferay-integration', 'vaadin-testbench-api', 'vaadin-bom' ], args.version)
+allowedArtifacts = completeArtifactNames([ 'vaadin-maven-plugin', 'vaadin-archetypes', 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet', 'vaadin-root', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-compatibility-shared', 'vaadin-compatibility-server', "vaadin-compatibility-server-gae", 'vaadin-compatibility-client', 'vaadin-compatibility-client-compiled', 'vaadin-compatibility-themes', 'vaadin-liferay-integration', "vaadin-osgi-integration", 'vaadin-testbench-api', 'vaadin-bom' ], args.version)
 
 content = "<html><head></head><body><table>"
 traffic_light = "<svg width=\"20px\" height=\"20px\" style=\"padding-right:5px\"><circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"{color}\"/></svg>"
