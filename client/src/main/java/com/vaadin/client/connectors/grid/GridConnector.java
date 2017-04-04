@@ -338,7 +338,9 @@ public class GridConnector extends AbstractListingConnector
             getWidget().getEscalator().getFooter()
                     .setDefaultRowHeight(rowHeight);
         } else if (getWidget().isAttached()) {
-            getWidget().resetSizesFromDom();
+            // finally to make sure column sizes have been set before this
+            Scheduler.get()
+                    .scheduleFinally(() -> getWidget().resetSizesFromDom());
         }
     }
 
