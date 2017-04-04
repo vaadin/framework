@@ -105,6 +105,21 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
     }
 
     @Test
+    public void uncollapsible_item() {
+        grid.getRow(0).getCell(0).click();
+        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT).perform();
+        grid.waitForVaadin();
+        //expand Dad 2/1
+        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT).perform();
+        grid.waitForVaadin();
+        assertNoErrorNotifications();
+        assertCellTexts(5,0,"Son 2/1/0");
+        new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
+        grid.waitForVaadin();
+        assertNoErrorNotifications();
+        assertCellTexts(5,0,"Son 2/1/0");
+    }
+    @Test
     public void can_toggle_collapse_on_row_that_is_no_longer_in_cache() {
         grid.getRow(0).getCell(0).click();
 
@@ -148,7 +163,7 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
     }
 
     private void assertCellTexts(int startRowIndex, int cellIndex,
-            String[] cellTexts) {
+            String... cellTexts) {
         int index = startRowIndex;
         for (String cellText : cellTexts) {
             assertEquals(cellText,

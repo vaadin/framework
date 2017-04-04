@@ -268,7 +268,7 @@ public class TreeGridConnector extends GridConnector {
                                 int columnIndex = cell.getColumnIndex();
                                 getRpcProxy(FocusParentRpc.class).focusParent(
                                         cell.getRowIndex(), columnIndex);
-                            } else if (!leaf) {
+                            } else if (isCollapseAllowed(rowDescription)) {
                                 setCollapsed(cell.getRowIndex(), true);
                             }
                             break;
@@ -289,13 +289,14 @@ public class TreeGridConnector extends GridConnector {
                 .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
     }
 
-    private static int getDepth(JsonObject rowData) {
-        assert rowData
-                .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
-                        + rowData.asString();
-        return (int) rowData
-                .getObject(
-                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)
-                .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
+    /**
+     * Checks if the item can be collapsed
+     *
+     * @param row the item row
+     * @return {@code true} if the item is allowed to be collapsed, {@code false} otherwise.
+     */
+    public static boolean isCollapseAllowed(JsonObject row) {
+        return row.getBoolean(
+                TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED);
     }
 }

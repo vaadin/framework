@@ -35,6 +35,7 @@ public class TreeGridHugeTreeNavigation extends AbstractComponentTest<TreeGrid> 
         treeGrid.addColumn((i) -> "--").setCaption("Nothing");
         treeGrid.setHierarchyColumn("string");
         treeGrid.setId("testComponent");
+        treeGrid.setItemCollapseAllowedProvider(s -> !"Dad 2/1".equals(s));
         addTestComponent(treeGrid);
     }
 
