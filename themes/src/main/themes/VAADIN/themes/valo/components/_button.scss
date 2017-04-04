@@ -16,8 +16,6 @@
   @if $include-additional-styles {
     .#{$primary-stylename}-primary {
       @include valo-button-style($background-color: $v-selection-color);
-      $padding-width: round($v-unit-size/2);
-      padding: 0 $padding-width;
       font-weight: bold;
       $min-width: round($v-unit-size * 2.2);
       min-width: $min-width;
