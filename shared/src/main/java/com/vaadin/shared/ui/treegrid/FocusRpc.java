@@ -31,8 +31,8 @@ public interface FocusRpc extends ClientRpc {
      *
      * @param rowIndex
      *            the row index
-     * @param cellIndex
+     * @param columnIndex
      *            the cell index
      */
-    void focusRow(int rowIndex, int cellIndex);
+    void focusCell(int rowIndex, int columnIndex);
 }

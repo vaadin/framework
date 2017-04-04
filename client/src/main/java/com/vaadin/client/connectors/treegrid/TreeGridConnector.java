@@ -241,9 +241,15 @@ public class TreeGridConnector extends GridConnector {
             if (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
                     || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT) {
 
+                event.setHandled(true);
+                EventCellReference<JsonObject> cell = event.getCell();
                 // Hierarchy metadata
-                JsonObject rowData = event.getCell().getRow();
-                if (rowData.hasKey(
+                JsonObject rowData = cell.getRow();
+                if (rowData == null) {
+                    // Row data is lost from the cache, i.e. the row is at least outside the visual area,
+                    // let's scroll the row into the view
+                    getWidget().scrollToRow(cell.getRowIndex());
+                } else if (rowData.hasKey(
                         TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
                     JsonObject rowDescription = rowData.getObject(
                             TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
@@ -251,27 +257,24 @@ public class TreeGridConnector extends GridConnector {
                             TreeGridCommunicationConstants.ROW_LEAF);
                     boolean collapsed = isCollapsed(rowData);
                     switch (domEvent.getKeyCode()) {
-                    case KeyCodes.KEY_RIGHT:
-                        if (collapsed && !leaf) {
-                            // expand
-                            setCollapsed(event.getCell().getRowIndex(), false);
-                        }
-                        break;
-                    case KeyCodes.KEY_LEFT:
-                        if (collapsed || leaf) {
-                            // navigate up
-                            int columnIndex = event.getCell().getColumnIndex();
-                            getRpcProxy(FocusParentRpc.class).focusParent(
-                                    event.getCell().getRowIndex(), columnIndex);
-                        } else if (!leaf) {
-                            // collapse
-                            setCollapsed(event.getCell().getRowIndex(), true);
-                        }
-                        break;
+                        case KeyCodes.KEY_RIGHT:
+                            if (collapsed && !leaf) {
+                                setCollapsed(cell.getRowIndex(), false);
+                            }
+                            break;
+                        case KeyCodes.KEY_LEFT:
+                            if (collapsed || leaf) {
+                                // navigate up
+                                int columnIndex = cell.getColumnIndex();
+                                getRpcProxy(FocusParentRpc.class).focusParent(
+                                        cell.getRowIndex(), columnIndex);
+                            } else if (!leaf) {
+                                setCollapsed(cell.getRowIndex(), true);
+                            }
+                            break;
                     }
 
                 }
-                event.setHandled(true);
             }
         }
     }

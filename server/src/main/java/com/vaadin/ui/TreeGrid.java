@@ -201,7 +201,7 @@ public class TreeGrid<T> extends Grid<T> {
             public void focusParent(int rowIndex, int cellIndex) {
                 Integer parentIndex = getDataCommunicator().getParentIndex(rowIndex);
                 if (parentIndex != null) {
-                    getRpcProxy(FocusRpc.class).focusRow(parentIndex, cellIndex);
+                    getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
                 }
             }
         });

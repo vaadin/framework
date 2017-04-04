@@ -24,7 +24,7 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
     @Before
     public void before() {
         setDebug(true);
-        openTestURL("debug&theme=valo");
+        openTestURL();
         grid = $(TreeGridElement.class).first();
     }
 
@@ -108,18 +108,28 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
     public void can_toggle_collapse_on_row_that_is_no_longer_in_cache() {
         grid.getRow(0).getCell(0).click();
 
-        // Collapse
-        new Actions(getDriver()).sendKeys(Keys.RIGHT, Keys.DOWN, Keys.RIGHT)
-                .perform();
+        // Expand 2 levels
+        new Actions(getDriver()).sendKeys(Keys.RIGHT).perform();
+        grid.waitForVaadin();
+        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.RIGHT).perform();
+        grid.waitForVaadin();
         grid.scrollToRow(200);
+        grid.waitForVaadin();
+        //Jump into view
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
+        grid.waitForVaadin();
+        //Collapse
+        new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
+        grid.waitForVaadin();
         assertEquals(6, grid.getRowCount());
 
         // Expand
         new Actions(getDriver()).sendKeys(Keys.RIGHT, Keys.UP).perform();
+        grid.waitForVaadin();
         grid.scrollToRow(200);
         new Actions(getDriver()).sendKeys(Keys.RIGHT).perform();
-        assertEquals(606, grid.getRowCount());
+        grid.waitForVaadin();
+        assertEquals(306, grid.getRowCount());
     }
 
     private WebElement findFocusedRow() {
