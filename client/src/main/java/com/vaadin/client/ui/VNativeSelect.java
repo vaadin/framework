@@ -20,6 +20,7 @@ import java.util.Objects;
 import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
+import com.vaadin.shared.ui.nativeselect.NativeSelectState;
 
 /**
  * The client-side widget for the {@code NativeSelect} component.
@@ -35,7 +36,15 @@ public class VNativeSelect extends FocusableFlowPanelComposite
      * Creates a new {@code VNativeSelect} instance.
      */
     public VNativeSelect() {
+        setStyleName(NativeSelectState.STYLE_NAME);
+        getListBox().setStyleName(NativeSelectState.STYLE_NAME + "-select");
         getWidget().add(listBox);
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        setStylePrimaryName(listBox.getElement(), style);
     }
 
     /**
