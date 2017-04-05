@@ -37,6 +37,8 @@ import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -120,7 +122,7 @@ public class TreeGrid<T> extends Grid<T> {
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param expandedItem
          *            the item that was expanded
          */
         public ExpandEvent(TreeGrid<T> source, T expandedItem) {
@@ -156,7 +158,7 @@ public class TreeGrid<T> extends Grid<T> {
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param collapsedItem
          *            the item that was collapsed
          */
         public CollapseEvent(TreeGrid<T> source, T collapsedItem) {
@@ -182,13 +184,24 @@ public class TreeGrid<T> extends Grid<T> {
             public void setNodeCollapsed(String rowKey, int rowIndex,
                     boolean collapse) {
                 if (collapse) {
-                    getDataCommunicator().doCollapse(rowKey, rowIndex);
-                    fireCollapseEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
+                    if (getDataCommunicator().doCollapse(rowKey, rowIndex)) {
+                        fireCollapseEvent(getDataCommunicator().getKeyMapper()
+                                .get(rowKey));
+                    }
                 } else {
-                    getDataCommunicator().doExpand(rowKey, rowIndex);
-                    fireExpandEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
+                    if (getDataCommunicator().doExpand(rowKey, rowIndex)) {
+                        fireExpandEvent(getDataCommunicator().getKeyMapper()
+                                .get(rowKey));
+                    }
+                }
+            }
+        });
+        registerRpc(new FocusParentRpc() {
+            @Override
+            public void focusParent(int rowIndex, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(rowIndex);
+                if (parentIndex != null) {
+                    getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
                 }
             }
         });

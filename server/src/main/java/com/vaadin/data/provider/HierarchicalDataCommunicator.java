@@ -335,14 +335,16 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     /**
-     * Collapses given row, removing all its subtrees.
+     * Collapses given row, removing all its subtrees. Calling this method will
+     * have no effect if the row is already collapsed.
      *
      * @param collapsedRowKey
      *            the key of the row, not {@code null}
      * @param collapsedRowIndex
      *            the index of row to collapse
+     * @return {@code true} if the row was collapsed, {@code false} otherwise
      */
-    public void doCollapse(String collapsedRowKey, int collapsedRowIndex) {
+    public boolean doCollapse(String collapsedRowKey, int collapsedRowIndex) {
         if (collapsedRowIndex < 0 | collapsedRowIndex >= mapper.getTreeSize()) {
             throw new IllegalArgumentException("Invalid row index "
                     + collapsedRowIndex + " when tree grid size of "
@@ -353,24 +355,30 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         Objects.requireNonNull(collapsedItem,
                 "Cannot find item for given key " + collapsedItem);
 
+        if (mapper.isCollapsed(collapsedRowKey)) {
+            return false;
+        }
         int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
                 collapsedRowIndex);
-
-        getClientRpc().removeRows(collapsedRowIndex + 1, collapsedSubTreeSize);
+        getClientRpc().removeRows(collapsedRowIndex + 1,
+                collapsedSubTreeSize);
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status
         refresh(collapsedItem);
+        return true;
     }
 
     /**
-     * Expands the given row.
+     * Expands the given row. Calling this method will have no effect if the row
+     * is already expanded.
      *
      * @param expandedRowKey
      *            the key of the row, not {@code null}
      * @param expandedRowIndex
      *            the index of the row to expand
+     * @return {@code true} if the row was expanded, {@code false} otherwise
      */
-    public void doExpand(String expandedRowKey, final int expandedRowIndex) {
+    public boolean doExpand(String expandedRowKey, final int expandedRowIndex) {
         if (expandedRowIndex < 0 | expandedRowIndex >= mapper.getTreeSize()) {
             throw new IllegalArgumentException("Invalid row index "
                     + expandedRowIndex + " when tree grid size of "
@@ -388,16 +396,21 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
                     + " returned no child nodes.");
         }
 
+        if (!mapper.isCollapsed(expandedRowKey)) {
+            return false;
+        }
         mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
-
         getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
-        // TODO optimize by sending "just enough" of the expanded items directly
-        doPushRows(Range.withLength(expandedRowIndex + 1, expandedNodeSize));
+        // TODO optimize by sending "just enough" of the expanded items
+        // directly
+        doPushRows(
+                Range.withLength(expandedRowIndex + 1, expandedNodeSize));
 
         // expanded node needs to be updated to be marked as expanded
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status
         refresh(expandedItem);
+        return true;
     }
 
     /**
@@ -419,4 +432,13 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         getActiveDataHandler().getActiveData().forEach(this::refresh);
     }
 
+    /**
+     * Returns parent index for the row or {@code null}
+     *
+     * @param rowIndex the row index
+     * @return the parent index or {@code null} for top-level items
+     */
+    public Integer getParentIndex(int rowIndex) {
+        return mapper.getParentIndex(rowIndex);
+    }
 }

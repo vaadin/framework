@@ -33,6 +33,8 @@ import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
@@ -47,6 +49,12 @@ import elemental.json.JsonObject;
  */
 @Connect(com.vaadin.ui.TreeGrid.class)
 public class TreeGridConnector extends GridConnector {
+
+    public TreeGridConnector() {
+        registerRpc(FocusRpc.class, (rowIndex, cellIndex) -> {
+            getWidget().focusCell(rowIndex, cellIndex);
+        });
+    }
 
     private String hierarchyColumnId;
 
@@ -143,7 +151,7 @@ public class TreeGridConnector extends GridConnector {
             GridEventHandler<?> eventHandler)
     /*-{
         var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-    
+
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
     }-*/;
@@ -229,40 +237,44 @@ public class TreeGridConnector extends GridConnector {
                 return;
             }
 
-            // Navigate within hierarchy with ALT/OPTION + ARROW KEY when
-            // hierarchy column is selected
-            if (isHierarchyColumn(event.getCell()) && domEvent.getAltKey()
-                    && (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
-                            || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT)) {
+            // Navigate within hierarchy with ARROW KEYs
+            if (domEvent.getKeyCode() == KeyCodes.KEY_LEFT
+                    || domEvent.getKeyCode() == KeyCodes.KEY_RIGHT) {
 
+                event.setHandled(true);
+                EventCellReference<JsonObject> cell = event.getCell();
                 // Hierarchy metadata
-                boolean collapsed, leaf;
-                JsonObject rowData = event.getCell().getRow();
-                if (rowData.hasKey(
+                JsonObject rowData = cell.getRow();
+                if (rowData == null) {
+                    // Row data is lost from the cache, i.e. the row is at least outside the visual area,
+                    // let's scroll the row into the view
+                    getWidget().scrollToRow(cell.getRowIndex());
+                } else if (rowData.hasKey(
                         TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
-                    collapsed = isCollapsed(rowData);
                     JsonObject rowDescription = rowData.getObject(
                             TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
-                    leaf = rowDescription.getBoolean(
+                    boolean leaf = rowDescription.getBoolean(
                             TreeGridCommunicationConstants.ROW_LEAF);
+                    boolean collapsed = isCollapsed(rowData);
                     switch (domEvent.getKeyCode()) {
-                    case KeyCodes.KEY_RIGHT:
-                        if (!leaf && collapsed) {
-                            setCollapsed(event.getCell().getRowIndex(),
-                                    !collapsed);
-                        }
-                        break;
-                    case KeyCodes.KEY_LEFT:
-                        if (!collapsed) {
-                            // collapse node
-                            setCollapsed(event.getCell().getRowIndex(),
-                                    !collapsed);
-                        }
-                        break;
+                        case KeyCodes.KEY_RIGHT:
+                            if (collapsed && !leaf) {
+                                setCollapsed(cell.getRowIndex(), false);
+                            }
+                            break;
+                        case KeyCodes.KEY_LEFT:
+                            if (collapsed || leaf) {
+                                // navigate up
+                                int columnIndex = cell.getColumnIndex();
+                                getRpcProxy(FocusParentRpc.class).focusParent(
+                                        cell.getRowIndex(), columnIndex);
+                            } else if (isCollapseAllowed(rowDescription)) {
+                                setCollapsed(cell.getRowIndex(), true);
+                            }
+                            break;
                     }
+
                 }
-                event.setHandled(true);
-                return;
             }
         }
     }
@@ -277,13 +289,14 @@ public class TreeGridConnector extends GridConnector {
                 .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
     }
 
-    private static int getDepth(JsonObject rowData) {
-        assert rowData
-                .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
-                        + rowData.asString();
-        return (int) rowData
-                .getObject(
-                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)
-                .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
+    /**
+     * Checks if the item can be collapsed
+     *
+     * @param row the item row
+     * @return {@code true} if the item is allowed to be collapsed, {@code false} otherwise.
+     */
+    public static boolean isCollapseAllowed(JsonObject row) {
+        return row.getBoolean(
+                TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED);
     }
 }

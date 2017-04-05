@@ -93,6 +93,7 @@ treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
 treeGrid.setHierarchyColumn("name");
 ----
 
+[[components.treegrid.node.collapsing]]
 == Prevent Node Collapsing
 
 [classname]#TreeGrid# supports setting a callback method that can allow or prevent the user from collapsing an expanded node.
@@ -105,10 +106,11 @@ Example using a predefined set of persons that can not be collapsed:
 [source, java]
 ----
 Set<Person> alwaysExpanded;
-personTreeGrid.setItemCollapseAllowedProvider(person -> 
+personTreeGrid.setItemCollapseAllowedProvider(person ->
        !alwaysExpanded.contains(person));
 ----
 
+[[components.treegrid.events]]
 == Listening to Events
 
 In addition to supporting all the listeners of the standard [classname]#Grid#, [classname]#TreeGrid# supports listening to the expansion and collapsing of items in its hierarchy.
@@ -122,3 +124,10 @@ treeGrid.addCollapseListener(event -> log("Item collapsed: " + event.getCollapse
 
 The return types of the methods `getExpandedItem` and `getCollapsedItem` are the same as the type of the [classname]#TreeGrid# the events originated from.
 Note that collapse listeners will not be triggered for any expanded subtrees of the collapsed item.
+
+[[components.treegrid.keyboard]]
+== Keyboard Navigation and Focus Handling in TreeGrid
+
+As opposed to [classname]#Grid#, individual cells are not focusable in [classname]#TreeGrid#, and only whole rows
+receive focus. The user can navigate through rows with kbd:[Up] and kbd:[Down], collapse rows with kbd:[Left],
+and expand them with kbd:[Right].
