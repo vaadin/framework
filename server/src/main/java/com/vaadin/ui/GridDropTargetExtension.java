@@ -19,7 +19,7 @@ import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.event.dnd.grid.GridDropEvent;
 import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.grid.DropLocation;
+import com.vaadin.shared.ui.grid.DropLocationAllowed;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
@@ -39,25 +39,28 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
      *
      * @param target
      *         Grid to be extended.
+     * @param dropLocationAllowed
+     *         Allowed location within Grid rows where elements can be dropped.
      */
-    public GridDropTargetExtension(Grid<T> target, DropLocation dropLocation) {
+    public GridDropTargetExtension(Grid<T> target,
+            DropLocationAllowed dropLocationAllowed) {
         super(target);
 
-        setDropLocation(dropLocation);
+        setDropLocation(dropLocationAllowed);
     }
 
     /**
-     * Sets the location within grid rows where elements can be dropped.
+     * Sets the allowed location within grid rows where elements can be dropped.
      *
-     * @param dropLocation
-     *         Location within grid rows where elements can be dropped.
+     * @param dropLocationAllowed
+     *         Allowed location within grid rows where elements can be dropped.
      */
-    public void setDropLocation(DropLocation dropLocation) {
-        if (dropLocation == null) {
+    public void setDropLocation(DropLocationAllowed dropLocationAllowed) {
+        if (dropLocationAllowed == null) {
             throw new IllegalArgumentException("Drop location cannot be null");
         }
 
-        getState().dropLocation = dropLocation;
+        getState().dropLocationAllowed = dropLocationAllowed;
     }
 
     /**
@@ -65,8 +68,8 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
      *
      * @return Location within grid rows where elements can be dropped.
      */
-    public DropLocation getDropLocation() {
-        return getState(false).dropLocation;
+    public DropLocationAllowed getDropLocation() {
+        return getState(false).dropLocationAllowed;
     }
 
     /**
@@ -85,12 +88,18 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
 
     @Override
     protected void registerDropTargetRpc(Grid<T> target) {
-        registerRpc((GridDropTargetExtensionRpc) (dataTransferText, rowKey) -> {
-            GridDropEvent<T> event = new GridDropEvent<>(target,
-                    dataTransferText, getUI().getActiveDragSource(), rowKey);
+        registerRpc(
+                (GridDropTargetExtensionRpc) (dataTransferText, rowKey, dropLocation) -> {
 
-            fireEvent(event);
-        });
+                    T dropTargetRow = target.getDataCommunicator()
+                            .getKeyMapper().get(rowKey);
+
+                    GridDropEvent<T> event = new GridDropEvent<>(target,
+                            dataTransferText, getUI().getActiveDragSource(),
+                            dropTargetRow, dropLocation);
+
+                    fireEvent(event);
+                });
     }
 
     @Override

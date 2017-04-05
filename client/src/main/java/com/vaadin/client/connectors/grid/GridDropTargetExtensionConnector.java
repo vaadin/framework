@@ -29,6 +29,7 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
+import com.vaadin.shared.ui.grid.DropLocationAllowed;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 import com.vaadin.shared.ui.grid.GridState;
@@ -58,7 +59,9 @@ public class GridDropTargetExtensionConnector extends
     private final static String CLASS_DRAG_OVER_AFTER =
             CLASS_DRAG_OVER + CLASS_SUFFIX_AFTER;
 
-    /** Current drag over class name */
+    /**
+     * Current drag over class name
+     */
     private String dragOverClassName;
 
     private GridConnector gridConnector;
@@ -75,21 +78,45 @@ public class GridDropTargetExtensionConnector extends
             Event dropEvent) {
 
         String rowKey = null;
+        DropLocation dropLocation = null;
+
         Optional<TableRowElement> targetRow = getTargetRow(
                 (Element) dropEvent.getTarget());
         if (targetRow.isPresent()) {
             rowKey = getRowData(targetRow.get())
                     .getString(GridState.JSONKEY_ROWKEY);
+            dropLocation = getDropLocation(targetRow.get(),
+                    (NativeEvent) dropEvent);
         }
 
         getRpcProxy(GridDropTargetExtensionRpc.class)
-                .drop(dataTransferText, rowKey);
+                .drop(dataTransferText, rowKey, dropLocation);
     }
 
     private JsonObject getRowData(TableRowElement row) {
         int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
                 .getLogicalRowIndex(row);
         return gridConnector.getDataSource().getRow(rowIndex);
+    }
+
+    /**
+     * Returns the location of the event within the row.
+     */
+    private DropLocation getDropLocation(Element target, NativeEvent event) {
+        if (getState().dropLocationAllowed
+                == DropLocationAllowed.BETWEEN_ROWS) {
+            if (getRelativeY(target, event) < (target.getOffsetHeight() / 2)) {
+                return DropLocation.ABOVE;
+            } else {
+                return DropLocation.BELOW;
+            }
+        }
+        return DropLocation.ON_TOP;
+    }
+
+    private int getRelativeY(Element element, NativeEvent event) {
+        int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
+        return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
     }
 
     @Override
@@ -111,22 +138,22 @@ public class GridDropTargetExtensionConnector extends
     }
 
     private String getTargetClassName(Element target, NativeEvent event) {
-        String classSuffix = "";
+        String classSuffix;
 
-        if (getState().dropLocation == DropLocation.BETWEEN_ROWS) {
-            if (getRelativeY(target, event) < (target.getOffsetHeight() / 2)) {
-                classSuffix = CLASS_SUFFIX_BEFORE;
-            } else {
-                classSuffix = CLASS_SUFFIX_AFTER;
-            }
+        switch (getDropLocation(target, event)) {
+        case ABOVE:
+            classSuffix = CLASS_SUFFIX_BEFORE;
+            break;
+        case BELOW:
+            classSuffix = CLASS_SUFFIX_AFTER;
+            break;
+        case ON_TOP:
+        default:
+            classSuffix = "";
+            break;
         }
 
         return CLASS_DRAG_OVER + classSuffix;
-    }
-
-    private int getRelativeY(Element element, NativeEvent event) {
-        int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
-        return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
     }
 
     @Override

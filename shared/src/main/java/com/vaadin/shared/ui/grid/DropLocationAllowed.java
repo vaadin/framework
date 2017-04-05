@@ -15,28 +15,23 @@
  */
 package com.vaadin.shared.ui.grid;
 
-import com.vaadin.shared.communication.ServerRpc;
-
 /**
- * RPC for firing server side drop event when client side drop event happens on
- * drop target Grid.
+ * Defines the locations within the Grid row where an element can be dropped.
  *
  * @author Vaadin Ltd.
  * @since
  */
-public interface GridDropTargetExtensionRpc extends ServerRpc {
+public enum DropLocationAllowed {
+    /**
+     * The drop event can happen between Grid rows. The drop is above a row
+     * when the cursor is over the top 50% of a row, otherwise below the
+     * row.
+     */
+    BETWEEN_ROWS,
 
     /**
-     * Called when drop event happens on client side.
-     *
-     * @param dataTransferText
-     *         Data of type {@code "text"} from the {@code DataTransfer}
-     *         object.
-     * @param rowKey
-     *         Key of the row on which the drop event occured.
-     * @param dropLocation
-     *         Location of the drop within the row.
+     * The drop event can happen on top of Grid rows. The target of the drop
+     * is the row under the cursor at the time of the drop event.
      */
-    public void drop(String dataTransferText, String rowKey,
-            DropLocation dropLocation);
+    ON_TOP_OF_ROWS,
 }

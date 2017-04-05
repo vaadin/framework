@@ -16,27 +16,25 @@
 package com.vaadin.shared.ui.grid;
 
 /**
- * Defines the locations within the Grid row where an element can be dropped.
+ * Defines possible drop locations within a Grid row.
  *
  * @author Vaadin Ltd.
  * @since
  */
 public enum DropLocation {
-    /**
-     * The drop event can happen between Grid rows. The drop is above a row
-     * when the cursor is over the top 50% of a row, otherwise below the
-     * row.
-     */
-    BETWEEN_ROWS,
 
     /**
-     * The drop event can happen on top of Grid rows. The target of the drop
-     * is the row under the cursor at the time of the drop event.
+     * Drop on top of the row.
      */
-    ON_TOP_OF_ROWS,
+    ON_TOP,
 
     /**
-     *
+     * Drop above or before the row.
      */
-    ON_TOP_OR_BETWEEN_ROWS
+    ABOVE,
+
+    /**
+     * Drop below or after the row.
+     */
+    BELOW
 }

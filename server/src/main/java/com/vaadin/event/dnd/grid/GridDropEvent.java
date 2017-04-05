@@ -17,11 +17,12 @@ package com.vaadin.event.dnd.grid;
 
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.event.dnd.DropEvent;
+import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Grid;
 
 /**
- * Server side drop event on an HTML5 drop target {@link Grid} row.
+ * Drop event on an HTML5 drop target {@link Grid} row.
  *
  * @param <T>
  *         The Grid bean type.
@@ -32,9 +33,10 @@ import com.vaadin.ui.Grid;
 public class GridDropEvent<T> extends DropEvent<Grid<T>> {
 
     private final T dropTargetRow;
+    private final DropLocation dropLocation;
 
     /**
-     * Creates a server side Grid row drop event.
+     * Creates a Grid row drop event.
      *
      * @param target
      *         Grid that received the drop.
@@ -44,16 +46,18 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      * @param dragSourceExtension
      *         Drag source extension of the component that initiated the drop
      *         event.
-     * @param dropTargetRowKey
-     *         Key of the target row that received the drop.
+     * @param dropTargetRow
+     *         Target row that received the drop.
+     * @param dropLocation
+     *         Location of the drop within the target row.
      */
     public GridDropEvent(Grid<T> target, String dataTransferText,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension,
-            String dropTargetRowKey) {
+            T dropTargetRow, DropLocation dropLocation) {
         super(target, dataTransferText, dragSourceExtension);
 
-        dropTargetRow = target.getDataCommunicator().getKeyMapper()
-                .get(dropTargetRowKey);
+        this.dropTargetRow = dropTargetRow;
+        this.dropLocation = dropLocation;
     }
 
     /**
@@ -63,5 +67,14 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      */
     public T getDropTargetRow() {
         return dropTargetRow;
+    }
+
+    /**
+     * Get the location of the drop within the row.
+     *
+     * @return Location of the drop within the row.
+     */
+    public DropLocation getDropLocation() {
+        return dropLocation;
     }
 }
