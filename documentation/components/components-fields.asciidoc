@@ -173,10 +173,10 @@ trailing whitespace from a string. Since [interfacename]#Validator# is a functio
 interface, you can often simply write a lambda expression instead of a full class
 declaration. There is also an [methodname]#withValidator# overload that creates a
 validator from a boolean function and an error message. If the application requires
-more sophisticated validation diagnostics (ex. locale-specific), there is
-[methodname]#withValidator# method, which uses boolean function and [classname]#ErrorMessageProvider#.
-[classname]#ErrorMessageProvider# can compose diagnostic messages based on locale
-and source component value, provided with [classname]#ValueContext#.
+more sophisticated validation diagnostics (ex. locale-specific), there is a
+method [methodname]#withValidator#, which uses a boolean function and an [classname]#ErrorMessageProvider#.
+The [classname]#ErrorMessageProvider# can compose diagnostic messages based on the locale of the validation
+and the source component value, which are provided with the [classname]#ValueContext#.
 
 [source, java]
 ----

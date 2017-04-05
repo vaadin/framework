@@ -62,6 +62,7 @@ public class ValueContext implements Serializable {
      *
      * @param component
      *            The component related to current value. Can be null.
+     *            If the component implements {@link HasValue}, it will be returned by {@link #getHasValue()} as well.
      */
     @SuppressWarnings("unchecked")
     public ValueContext(Component component) {
@@ -145,7 +146,7 @@ public class ValueContext implements Serializable {
 
     /**
      * Returns an {@code Optional} for the {@code HasValue} used in the value
-     * conversion.
+     * conversion. In certain complicated cases, ex. cross-field validation, HasValue might be not available.
      *
      * @return the optional of {@code HasValue}
      */
