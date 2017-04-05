@@ -146,8 +146,11 @@ public class TreeGrid<T> extends Grid<T> {
         }
 
         /**
+         * Returns whether this event was triggered by user interaction, on the
+         * client side, or programmatically, on the server side.
          *
-         * @return
+         * @return {@code true} if this event originates from the client,
+         *         {@code false} otherwise.
          */
         public boolean isUserOriginated() {
             return userOriginated;
@@ -197,8 +200,11 @@ public class TreeGrid<T> extends Grid<T> {
         }
 
         /**
+         * Returns whether this event was triggered by user interaction, on the
+         * client side, or programmatically, on the server side.
          *
-         * @return
+         * @return {@code true} if this event originates from the client,
+         *         {@code false} otherwise.
          */
         public boolean isUserOriginated() {
             return userOriginated;
@@ -432,18 +438,22 @@ public class TreeGrid<T> extends Grid<T> {
      *            the item to expand
      */
     public void expand(T item) {
-        getDataCommunicator().setExpanded(item).ifPresent(key -> {
+        getDataCommunicator().setPendingExpand(item).ifPresent(key -> {
             getRpcProxy(TreeGridClientRpc.class).setExpanded(key);
             fireExpandEvent(item, false);
         });
     }
 
     /**
-     *
+     * Collapses the given item.
+     * <p>
+     * If the item is already collapsed, does nothing.
+     * 
      * @param item
+     *            the item to collapse
      */
     public void collapse(T item) {
-        getDataCommunicator().setCollapsed(item).ifPresent(key -> {
+        getDataCommunicator().collapseItem(item).ifPresent(key -> {
             getRpcProxy(TreeGridClientRpc.class).setCollapsed(key);
             fireCollapseEvent(item, false);
         });

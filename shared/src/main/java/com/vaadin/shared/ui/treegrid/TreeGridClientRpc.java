@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.treegrid;
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
+ * Server-to-client RPC interface for the TreeGrid component.
  *
  * @since 8.1
  * @author Vaadin Ltd
@@ -25,14 +26,20 @@ import com.vaadin.shared.communication.ClientRpc;
 public interface TreeGridClientRpc extends ClientRpc {
 
     /**
+     * Inform the client that an item with the given key has been expanded by
+     * the server.
      *
      * @param key
+     *            the communication key of the expanded item
      */
     public void setExpanded(String key);
 
     /**
+     * Inform the client that an item with the given key has been collapsed by
+     * the server.
      *
      * @param key
+     *            the communication key of the collapsed item
      */
     public void setCollapsed(String key);
 }

@@ -62,6 +62,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     private HierarchyMapper mapper = new HierarchyMapper();
 
+    private Set<String> pendingExpand = new HashSet<>();
+
     /**
      * Collapse allowed provider used to allow/disallow collapsing nodes.
      */
@@ -405,15 +407,20 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         refresh(expandedItem);
     }
 
-    private Set<String> pendingExpand = new HashSet<>();
-
     /**
+     * Set an item as pending expansion.
+     * <p>
+     * Calling this method reserves a communication key for the item that is
+     * guaranteed to not be invalidated until the item is expanded. Has no
+     * effect and returns an empty optional if the given item is already
+     * expanded or has no children.
      *
      * @param item
-     *            the item to expand
-     * @return
+     *            the item to set as pending expansion
+     * @return an optional of the communication key used for the item, empty if
+     *         the item cannot be expanded
      */
-    public Optional<String> setExpanded(T item) {
+    public Optional<String> setPendingExpand(T item) {
         Objects.requireNonNull(item, "Item cannot be null");
         if (getKeyMapper().has(item)
                 && !mapper.isCollapsed(getKeyMapper().key(item))) {
@@ -430,12 +437,18 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     /**
+     * Collapse an item.
+     * <p>
+     * This method will either collapse an item directly, or remove its pending
+     * expand status. If the item is not expanded or pending expansion, calling
+     * this method has no effect.
      *
      * @param item
      *            the item to collapse
-     * @return
+     * @return an optional of the communication key used for the item, empty if
+     *         the item cannot be collapsed
      */
-    public Optional<String> setCollapsed(T item) {
+    public Optional<String> collapseItem(T item) {
         Objects.requireNonNull(item, "Item cannot be null");
         if (!getKeyMapper().has(item)) {
             // keymapper should always have items that are expanded or pending
