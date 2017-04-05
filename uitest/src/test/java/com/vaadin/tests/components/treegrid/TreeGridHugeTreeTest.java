@@ -16,28 +16,28 @@ public class TreeGridHugeTreeTest extends SingleBrowserTest {
         openTestURL();
 
         grid = $(TreeGridElement.class).first();
-        ButtonElement expandFirstRowButton = $(ButtonElement.class).get(0);
-        ButtonElement collapseFirstRowButton = $(ButtonElement.class).get(1);
+        ButtonElement expandSecondRowButton = $(ButtonElement.class).get(0);
+        ButtonElement collapseSecondRowButton = $(ButtonElement.class).get(1);
 
         grid.expandWithClick(2);
         grid.expandWithClick(3);
         grid.scrollToRow(300);
 
-        expandFirstRowButton.click();
+        expandSecondRowButton.click();
 
         grid.scrollToRow(0);
         assertCellTexts(0, 0, new String[] { "Granddad 0", "Granddad 1",
                 "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2", "Dad 2/0" });
 
         grid.scrollToRow(300);
-        collapseFirstRowButton.click();
+        collapseSecondRowButton.click();
         grid.scrollToRow(0);
         assertCellTexts(0, 0, new String[] { "Granddad 0", "Granddad 1",
                 "Granddad 2", "Dad 2/0" });
 
         grid.scrollToRow(300);
-        expandFirstRowButton.click();
-        collapseFirstRowButton.click();
+        expandSecondRowButton.click();
+        collapseSecondRowButton.click();
         grid.scrollToRow(0);
         assertCellTexts(0, 0, new String[] { "Granddad 0", "Granddad 1",
                 "Granddad 2", "Dad 2/0" });
