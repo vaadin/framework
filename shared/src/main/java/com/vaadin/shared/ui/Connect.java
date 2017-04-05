@@ -98,6 +98,10 @@ public @interface Connect {
         /**
          * Loaded to the client only if needed.
          */
-        LAZY
+        LAZY,
+        /**
+         * Completely left out of the widgetset.
+         */
+        NONE
     }
 }
