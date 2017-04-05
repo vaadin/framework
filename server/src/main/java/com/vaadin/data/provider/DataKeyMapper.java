@@ -39,6 +39,13 @@ public interface DataKeyMapper<T> extends Serializable {
     String key(T dataObject);
 
     /**
+     *
+     * @param dataObject
+     * @return
+     */
+    boolean has(T dataObject);
+
+    /**
      * Gets the data object identified by given key.
      *
      * @param key

@@ -64,6 +64,11 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
         return key;
     }
 
+    @Override
+    public boolean has(V o) {
+        return objectKeyMap.containsKey(o);
+    }
+
     /**
      * Retrieves object with the key.
      *

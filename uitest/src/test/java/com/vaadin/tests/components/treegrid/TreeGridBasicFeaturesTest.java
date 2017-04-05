@@ -35,28 +35,71 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
 
     @Before
     public void before() {
-        openTestURL("theme=valo");
+        openTestURL("theme=valo&debug");
         grid = $(TreeGridElement.class).first();
     }
 
     @Test
-    @Ignore // currently no implementation exists for toggling from the server
-            // side
     public void toggle_collapse_server_side() {
         Assert.assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        selectMenuPath("Component", "Features", "Toggle expand", "0 | 0");
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
         Assert.assertEquals(6, grid.getRowCount());
         assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
 
-        selectMenuPath("Component", "Features", "Toggle expand", "0 | 0");
+        // expanding already expanded item should have no effect
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        Assert.assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
         Assert.assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        // collapsing a leaf should have no effect
-        selectMenuPath("Component", "Features", "Toggle expand", "1 | 0");
+        // collapsing the same item twice should have no effect
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
         Assert.assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 1 | 1");
+        // 1 | 1 not yet visible, shouldn't immediately expand anything
+        Assert.assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        // 1 | 1 becomes visible and is also expanded
+        Assert.assertEquals(9, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "2 | 0", "2 | 1",
+                "2 | 2", "1 | 2" });
+
+        // collapsing a leaf should have no effect
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 2 | 1");
+        Assert.assertEquals(9, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "2 | 0", "2 | 1",
+                "2 | 2", "1 | 2" });
+
+        // collapsing 0 | 0 should collapse the expanded 1 | 1
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
+        Assert.assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+
+        // 1 | 1 should not be expanded this time
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        Assert.assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+
+        assertNoSystemNotifications();
+        assertNoErrorNotifications();
     }
 
     @Test
@@ -130,18 +173,40 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Expand listener");
         selectMenuPath("Component", "State", "Collapse listener");
 
-        Assert.assertFalse(logContainsText("Item expanded: 0 | 0"));
-        Assert.assertFalse(logContainsText("Item collapsed: 0 | 0"));
+        Assert.assertFalse(logContainsText(
+                "Item expanded (user originated: true): 0 | 0"));
+        Assert.assertFalse(logContainsText(
+                "Item collapsed (user originated: true): 0 | 0"));
 
         grid.expandWithClick(0);
 
-        Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
-        Assert.assertFalse(logContainsText("Item collapsed: 0 | 0"));
+        Assert.assertTrue(logContainsText(
+                "Item expanded (user originated: true): 0 | 0"));
+        Assert.assertFalse(logContainsText(
+                "Item collapsed (user originated: true): 0 | 0"));
 
         grid.collapseWithClick(0);
 
-        Assert.assertTrue(logContainsText("Item expanded: 0 | 0"));
-        Assert.assertTrue(logContainsText("Item collapsed: 0 | 0"));
+        Assert.assertTrue(logContainsText(
+                "Item expanded (user originated: true): 0 | 0"));
+        Assert.assertTrue(logContainsText(
+                "Item collapsed (user originated: true): 0 | 0"));
+
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+
+        Assert.assertTrue(logContainsText(
+                "Item expanded (user originated: false): 0 | 0"));
+        Assert.assertFalse(logContainsText(
+                "Item collapsed (user originated: false): 0 | 0"));
+
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
+
+        Assert.assertTrue(logContainsText(
+                "Item expanded (user originated: false): 0 | 0"));
+        Assert.assertTrue(logContainsText(
+                "Item collapsed (user originated: false): 0 | 0"));
 
         selectMenuPath("Component", "State", "Expand listener");
         selectMenuPath("Component", "State", "Collapse listener");
@@ -149,8 +214,10 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         grid.expandWithClick(1);
         grid.collapseWithClick(1);
 
-        Assert.assertFalse(logContainsText("Item expanded: 0 | 1"));
-        Assert.assertFalse(logContainsText("Item collapsed: 0 | 1"));
+        Assert.assertFalse(logContainsText(
+                "Item expanded (user originated: true): 0 | 1"));
+        Assert.assertFalse(logContainsText(
+                "Item collapsed (user originated: true): 0 | 1"));
     }
 
     private void assertCellTexts(int startRowIndex, int cellIndex,
