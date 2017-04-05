@@ -195,7 +195,6 @@ abstract class JsniWorkaround {
      * to Java code.
      *
      * @see #createScrollListenerFunction(Escalator)
-     * @see Escalator#onScroll()
      * @see Escalator.Scroller#onScroll()
      */
     protected final JavaScriptObject scrollListenerFunction;
@@ -205,7 +204,6 @@ abstract class JsniWorkaround {
      * it on to Java code.
      *
      * @see #createMousewheelListenerFunction(Escalator)
-     * @see Escalator#onScroll()
      * @see Escalator.Scroller#onScroll()
      */
     protected final JavaScriptObject mousewheelListenerFunction;
@@ -253,7 +251,7 @@ abstract class JsniWorkaround {
      *
      * @param esc
      *            a reference to the current instance of {@link Escalator}
-     * @see Escalator#onScroll()
+     * @see Escalator.Scroller#onScroll()
      */
     protected abstract JavaScriptObject createScrollListenerFunction(
             Escalator esc);
@@ -264,7 +262,7 @@ abstract class JsniWorkaround {
      *
      * @param esc
      *            a reference to the current instance of {@link Escalator}
-     * @see Escalator#onScroll()
+     * @see Escalator.Scroller#onScroll()
      */
     protected abstract JavaScriptObject createMousewheelListenerFunction(
             Escalator esc);
@@ -1139,10 +1137,10 @@ public class Escalator extends Widget
          * Usually {@code "th"} or {@code "td"}.
          * <p>
          * <em>Note:</em> To actually <em>create</em> such an element, use
-         * {@link #createCellElement(int, int)} instead.
+         * {@link #createCellElement(double)} instead.
          *
          * @return the tag name for the element to represent cells as
-         * @see #createCellElement(int, int)
+         * @see #createCellElement(double)
          */
         protected abstract String getCellElementTagName();
 
@@ -1207,7 +1205,7 @@ public class Escalator extends Widget
          * range of logical indices. This may be fewer than {@code numberOfRows}
          * , even zero, if not all the removed rows are actually visible.
          * <p>
-         * The implementation must call {@link #paintRemoveRow(Element, int)}
+         * The implementation must call {@link #paintRemoveRow(TableRowElement, int)}
          * for each row that is removed from the DOM.
          *
          * @param index
@@ -3120,8 +3118,10 @@ public class Escalator extends Widget
                         removeRowPosition(tr);
                     }
 
-                    moveAndUpdateEscalatorRows(
-                            Range.withLength(0, visualRowOrder.size()), 0, 0);
+                    // Move rest of the rows to the Escalator's top
+                    Range visualRange = Range.withLength(0, visualRowOrder.size());
+                    moveAndUpdateEscalatorRows(visualRange, 0, 0);
+
                     sortDomElements();
                     setTopRowLogicalIndex(0);
 
@@ -6424,7 +6424,7 @@ public class Escalator extends Widget
      * @param rows
      *            the number of rows that should be visible in Escalator's body
      * @throws IllegalArgumentException
-     *             if {@code rows} is &leq; 0, {@link Double#isInifinite(double)
+     *             if {@code rows} is &leq; 0, {@link Double#isInfinite(double)
      *             infinite} or {@link Double#isNaN(double) NaN}.
      * @see #setHeightMode(HeightMode)
      */

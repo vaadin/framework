@@ -357,16 +357,15 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
         if (mapper.isCollapsed(collapsedRowKey)) {
             return false;
-        } else {
-            int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
-                    collapsedRowIndex);
-            getClientRpc().removeRows(collapsedRowIndex + 1,
-                    collapsedSubTreeSize);
-            // FIXME seems like a slight overkill to do this just for refreshing
-            // expanded status
-            refresh(collapsedItem);
-            return true;
         }
+        int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
+                collapsedRowIndex);
+        getClientRpc().removeRows(collapsedRowIndex + 1,
+                collapsedSubTreeSize);
+        // FIXME seems like a slight overkill to do this just for refreshing
+        // expanded status
+        refresh(collapsedItem);
+        return true;
     }
 
     /**
@@ -399,20 +398,19 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
         if (!mapper.isCollapsed(expandedRowKey)) {
             return false;
-        } else {
-            mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
-            getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
-            // TODO optimize by sending "just enough" of the expanded items
-            // directly
-            doPushRows(
-                    Range.withLength(expandedRowIndex + 1, expandedNodeSize));
-
-            // expanded node needs to be updated to be marked as expanded
-            // FIXME seems like a slight overkill to do this just for refreshing
-            // expanded status
-            refresh(expandedItem);
-            return true;
         }
+        mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
+        getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
+        // TODO optimize by sending "just enough" of the expanded items
+        // directly
+        doPushRows(
+                Range.withLength(expandedRowIndex + 1, expandedNodeSize));
+
+        // expanded node needs to be updated to be marked as expanded
+        // FIXME seems like a slight overkill to do this just for refreshing
+        // expanded status
+        refresh(expandedItem);
+        return true;
     }
 
     /**
