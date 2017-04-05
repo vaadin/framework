@@ -26,7 +26,7 @@ import com.vaadin.shared.ui.dnd.DropTargetState;
 public class GridDropTargetExtensionState extends DropTargetState {
 
     /**
-     * Stores the allowed drop location type of the drop target Grid.
+     * Stores the drop mode of the drop target Grid.
      */
-    public DropLocationAllowed dropLocationAllowed;
+    public DropMode dropMode;
 }

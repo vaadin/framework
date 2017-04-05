@@ -21,17 +21,18 @@ package com.vaadin.shared.ui.grid;
  * @author Vaadin Ltd.
  * @since
  */
-public enum DropLocationAllowed {
+public enum DropMode {
+
     /**
      * The drop event can happen between Grid rows. The drop is above a row
      * when the cursor is over the top 50% of a row, otherwise below the
      * row.
      */
-    BETWEEN_ROWS,
+    BETWEEN,
 
     /**
      * The drop event can happen on top of Grid rows. The target of the drop
      * is the row under the cursor at the time of the drop event.
      */
-    ON_TOP_OF_ROWS,
+    ON_TOP,
 }

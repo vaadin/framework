@@ -16,7 +16,7 @@
 package com.vaadin.shared.ui.grid;
 
 /**
- * Defines possible drop locations within a Grid row.
+ * Defines drop locations within a Grid row.
  *
  * @author Vaadin Ltd.
  * @since

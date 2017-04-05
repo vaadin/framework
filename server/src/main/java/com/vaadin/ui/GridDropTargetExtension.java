@@ -19,7 +19,7 @@ import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.event.dnd.grid.GridDropEvent;
 import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.grid.DropLocationAllowed;
+import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
@@ -39,37 +39,41 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
      *
      * @param target
      *         Grid to be extended.
-     * @param dropLocationAllowed
-     *         Allowed location within Grid rows where elements can be dropped.
+     * @param dropMode
+     *         Drop mode that describes the allowed drop locations within the
+     *         Grid's row.
+     * @see GridDropEvent#getDropLocation()
      */
-    public GridDropTargetExtension(Grid<T> target,
-            DropLocationAllowed dropLocationAllowed) {
+    public GridDropTargetExtension(Grid<T> target, DropMode dropMode) {
         super(target);
 
-        setDropLocation(dropLocationAllowed);
+        setDropMode(dropMode);
     }
 
     /**
-     * Sets the allowed location within grid rows where elements can be dropped.
+     * Sets the drop mode of this drop target.
      *
-     * @param dropLocationAllowed
-     *         Allowed location within grid rows where elements can be dropped.
+     * @param dropMode
+     *         Drop mode that describes the allowed drop locations within the
+     *         Grid's row.
+     * @see GridDropEvent#getDropLocation()
      */
-    public void setDropLocation(DropLocationAllowed dropLocationAllowed) {
-        if (dropLocationAllowed == null) {
-            throw new IllegalArgumentException("Drop location cannot be null");
+    public void setDropMode(DropMode dropMode) {
+        if (dropMode == null) {
+            throw new IllegalArgumentException("Drop mode cannot be null");
         }
 
-        getState().dropLocationAllowed = dropLocationAllowed;
+        getState().dropMode = dropMode;
     }
 
     /**
-     * Gets the location within grid rows where elements can be dropped.
+     * Gets the drop mode of this drop target.
      *
-     * @return Location within grid rows where elements can be dropped.
+     * @return Drop mode that describes the allowed drop locations within the
+     *         Grid's row.
      */
-    public DropLocationAllowed getDropLocation() {
-        return getState(false).dropLocationAllowed;
+    public DropMode getDropMode() {
+        return getState(false).dropMode;
     }
 
     /**

@@ -29,7 +29,7 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
-import com.vaadin.shared.ui.grid.DropLocationAllowed;
+import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 import com.vaadin.shared.ui.grid.GridState;
@@ -103,8 +103,7 @@ public class GridDropTargetExtensionConnector extends
      * Returns the location of the event within the row.
      */
     private DropLocation getDropLocation(Element target, NativeEvent event) {
-        if (getState().dropLocationAllowed
-                == DropLocationAllowed.BETWEEN_ROWS) {
+        if (getState().dropMode == DropMode.BETWEEN) {
             if (getRelativeY(target, event) < (target.getOffsetHeight() / 2)) {
                 return DropLocation.ABOVE;
             } else {
