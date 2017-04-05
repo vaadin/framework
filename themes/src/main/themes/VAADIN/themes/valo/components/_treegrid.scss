@@ -1,3 +1,5 @@
+@import "grid";
+
 /** Expander button visual - expanded */
 $tg-expander-char-expanded: '\f0d7' !default;
 
@@ -10,7 +12,9 @@ $tg-expander-width: 10px !default;
 /** Expander button right side padding */
 $tg-expander-padding: 10px !default;
 
-@mixin treegrid {
+@mixin valo-treegrid ($primary-stylename: v-treegrid) {
+
+  @include valo-grid($primary-stylename);
 
   // Expander with and item indentation constants
   $indent: $tg-expander-width + $tg-expander-padding;
@@ -18,7 +22,7 @@ $tg-expander-padding: 10px !default;
   // Classname for depth styling
   $class-depth: depth !default;
 
-  .v-tree-grid-expander {
+  .#{$primary-stylename}-expander {
     display: inline-block;
     width: $tg-expander-width;
     padding-right: $tg-expander-padding;
@@ -50,7 +54,7 @@ $tg-expander-padding: 10px !default;
   }
 
   // Hierarchy depth styling
-  .v-tree-grid-node {
+  .#{$primary-stylename}-node {
     @for $i from 0 through 15 {
       &.#{$class-depth}-#{$i} {
         padding-left: $indent * $i;
@@ -59,7 +63,7 @@ $tg-expander-padding: 10px !default;
   }
 
   // Expander and cell content in same line
-  .v-tree-grid-cell-content {
+  .#{$primary-stylename}-cell-content {
     display: inline-block;
   }
 }

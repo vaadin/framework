@@ -32,6 +32,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.treegrid.HierarchyRendererCellReferenceWrapper;
 import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
+import com.vaadin.shared.ui.treegrid.TreeGridState;
 
 import elemental.json.JsonObject;
 
@@ -43,9 +44,12 @@ import elemental.json.JsonObject;
  */
 public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
 
-    private static final String CLASS_TREE_GRID_NODE = "v-tree-grid-node";
-    private static final String CLASS_TREE_GRID_EXPANDER = "v-tree-grid-expander";
-    private static final String CLASS_TREE_GRID_CELL_CONTENT = "v-tree-grid-cell-content";
+    private static final String CLASS_TREE_GRID_NODE = TreeGridState.PRIMARY_STYLE_NAME
+            + "-node";
+    private static final String CLASS_TREE_GRID_EXPANDER = TreeGridState.PRIMARY_STYLE_NAME
+            + "-expander";
+    private static final String CLASS_TREE_GRID_CELL_CONTENT = TreeGridState.PRIMARY_STYLE_NAME
+            + "-cell-content";
     private static final String CLASS_COLLAPSED = "collapsed";
     private static final String CLASS_COLLAPSE_DISABLED = "collapse-disabled";
     private static final String CLASS_EXPANDED = "expanded";

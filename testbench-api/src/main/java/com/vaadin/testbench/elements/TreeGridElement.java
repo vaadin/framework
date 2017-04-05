@@ -132,7 +132,7 @@ public class TreeGridElement extends GridElement {
      */
     public WebElement getExpandElement(int rowIndex, int hierarchyColumnIndex) {
         return getCell(rowIndex, hierarchyColumnIndex)
-                .findElement(By.className("v-tree-grid-expander"));
+                .findElement(By.className("v-treegrid-expander"));
 
     }
 }
