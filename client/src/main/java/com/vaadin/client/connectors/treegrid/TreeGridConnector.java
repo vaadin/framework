@@ -340,11 +340,8 @@ public class TreeGridConnector extends GridConnector {
                 .forEach(rowIndex -> {
                     String rowKey = getDataSource().getRow(rowIndex)
                             .getString(DataCommunicatorConstants.KEY);
-                    if (pendingExpansion.contains(
-                            getDataSource().getRow(rowIndex).getString(
-                                    DataCommunicatorConstants.KEY))) {
+                    if (pendingExpansion.remove(rowKey)) {
                         setCollapsedServerInitiated(rowIndex, false);
-                        pendingExpansion.remove(rowKey);
                     }
                 });
     }

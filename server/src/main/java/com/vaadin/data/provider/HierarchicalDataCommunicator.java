@@ -62,7 +62,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     private HierarchyMapper mapper = new HierarchyMapper();
 
-    private Set<String> pendingExpand = new HashSet<>();
+    private Set<String> rowKeysPendingExpand = new HashSet<>();
 
     /**
      * Collapse allowed provider used to allow/disallow collapsing nodes.
@@ -284,7 +284,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             // cannot drop expanded rows since the parent item is needed always
             // when fetching more rows
             String itemKey = keys.getString(i);
-            if (mapper.isCollapsed(itemKey) && !pendingExpand.contains(itemKey)) {
+            if (mapper.isCollapsed(itemKey) && !rowKeysPendingExpand.contains(itemKey)) {
                 getActiveDataHandler().dropActiveData(itemKey);
             }
         }
@@ -395,7 +395,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
 
         mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
-        pendingExpand.remove(expandedRowKey);
+        rowKeysPendingExpand.remove(expandedRowKey);
 
         getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
         // TODO optimize by sending "just enough" of the expanded items directly
@@ -432,7 +432,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             return Optional.empty();
         }
         String key = getKeyMapper().key(item);
-        pendingExpand.add(key);
+        rowKeysPendingExpand.add(key);
         return Optional.of(key);
     }
 
@@ -458,11 +458,12 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         String nodeKey = getKeyMapper().key(item);
         Optional<TreeNode> node = mapper.getNodeForKey(nodeKey);
         if (node.isPresent()) {
+            rowKeysPendingExpand.remove(nodeKey);
             doCollapse(nodeKey, node.get().getStartIndex() - 1);
             return Optional.of(nodeKey);
         }
-        if (pendingExpand.contains(nodeKey)) {
-            pendingExpand.remove(nodeKey);
+        if (rowKeysPendingExpand.contains(nodeKey)) {
+            rowKeysPendingExpand.remove(nodeKey);
             return Optional.of(nodeKey);
         }
         return Optional.empty();
