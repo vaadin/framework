@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -14,9 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TreeGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.ParameterizedTB3Runner;
 
-@RunWith(ParameterizedTB3Runner.class)
 public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
 
     private TreeGridElement grid;
@@ -35,16 +32,16 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
         // Should navigate to "Granddad 1" and expand it
         new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.RIGHT).perform();
         assertEquals(6, grid.getRowCount());
-        assertCellTexts(0, 0, new String[] { "Granddad 0", "Granddad 1",
-                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2" });
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1",
+                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2");
         checkRowFocused(1);
 
         // Should navigate to and expand "Dad 1/1"
         new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT)
                 .perform();
         assertCellTexts(0, 0,
-                new String[] { "Granddad 0", "Granddad 1", "Dad 1/0", "Dad 1/1",
-                        "Son 1/1/0", "Son 1/1/1", "Son 1/1/2", "Son 1/1/3" });
+                "Granddad 0", "Granddad 1", "Dad 1/0", "Dad 1/1",
+                "Son 1/1/0", "Son 1/1/1", "Son 1/1/2", "Son 1/1/3");
         checkRowFocused(3);
 
         // Should navigate 100 items down
@@ -65,26 +62,24 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
 
         // Should collapse "Dad 1/1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
-        assertCellTexts(0, 0, new String[] { "Granddad 0", "Granddad 1",
-                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2" });
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1",
+                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2");
         checkRowFocused(3);
 
         // Should navigate to "Granddad 1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
-        assertCellTexts(0, 0, new String[] { "Granddad 0", "Granddad 1",
-                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2" });
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1",
+                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2");
         checkRowFocused(1);
 
         // Should collapse "Granddad 1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
-        assertCellTexts(0, 0,
-                new String[] { "Granddad 0", "Granddad 1", "Granddad 2" });
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1", "Granddad 2");
         checkRowFocused(1);
 
         // Nothing should happen
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
-        assertCellTexts(0, 0,
-                new String[] { "Granddad 0", "Granddad 1", "Granddad 2" });
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1", "Granddad 2");
         checkRowFocused(1);
         assertNoErrorNotifications();
     }
