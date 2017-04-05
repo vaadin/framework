@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.connectors.treegrid.TreeGridConnector;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.treegrid.HierarchyRendererCellReferenceWrapper;
 import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
@@ -72,7 +73,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
 
                 JsonObject hierarchyData = getHierarchyData(row);
                 if ((!isCollapsed(hierarchyData)
-                        && !isCollapseAllowed(hierarchyData))
+                        && !TreeGridConnector.isCollapseAllowed(hierarchyData))
                         || isLeaf(hierarchyData)) {
                     return;
                 }
@@ -107,7 +108,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             leaf = isLeaf(rowDescription);
             if (!leaf) {
                 collapsed = isCollapsed(rowDescription);
-                collapseAllowed = isCollapseAllowed(rowDescription);
+                collapseAllowed = TreeGridConnector.isCollapseAllowed(rowDescription);
             }
         }
 
@@ -160,11 +161,6 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         leaf = rowDescription
                 .getBoolean(TreeGridCommunicationConstants.ROW_LEAF);
         return leaf;
-    }
-
-    private boolean isCollapseAllowed(JsonObject row) {
-        return row.getBoolean(
-                TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED);
     }
 
     private boolean isCollapsed(JsonObject rowDescription) {

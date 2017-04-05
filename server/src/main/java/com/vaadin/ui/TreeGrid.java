@@ -37,6 +37,8 @@ import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridClientRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
@@ -123,7 +125,7 @@ public class TreeGrid<T> extends Grid<T> {
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param expandedItem
          *            the item that was expanded
          * @param userOriginated
          *            whether the expand was triggered by a user interaction or
@@ -177,7 +179,7 @@ public class TreeGrid<T> extends Grid<T> {
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param collapsedItem
          *            the item that was collapsed
          * @param userOriginated
          *            whether the collapse was triggered by a user interaction
@@ -219,17 +221,26 @@ public class TreeGrid<T> extends Grid<T> {
             public void setNodeCollapsed(String rowKey, int rowIndex,
                     boolean collapse, boolean userOriginated) {
                 if (collapse) {
-                    getDataCommunicator().doCollapse(rowKey, rowIndex);
-                    if (userOriginated) {
+                    if (getDataCommunicator().doCollapse(rowKey, rowIndex)
+                            && userOriginated) {
                         fireCollapseEvent(getDataCommunicator().getKeyMapper()
                                 .get(rowKey), true);
                     }
                 } else {
-                    getDataCommunicator().doExpand(rowKey, rowIndex);
-                    if (userOriginated) {
+                    if (getDataCommunicator().doExpand(rowKey, rowIndex)
+                            && userOriginated) {
                         fireExpandEvent(getDataCommunicator().getKeyMapper()
                                 .get(rowKey), true);
                     }
+                }
+            }
+        });
+        registerRpc(new FocusParentRpc() {
+            @Override
+            public void focusParent(int rowIndex, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(rowIndex);
+                if (parentIndex != null) {
+                    getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
                 }
             }
         });
@@ -448,7 +459,7 @@ public class TreeGrid<T> extends Grid<T> {
      * Collapses the given item.
      * <p>
      * If the item is already collapsed, does nothing.
-     * 
+     *
      * @param item
      *            the item to collapse
      */
