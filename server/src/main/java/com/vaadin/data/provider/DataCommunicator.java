@@ -463,6 +463,9 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
     }
 
+    /**
+     * Drops all data associated with this data communicator.
+     */
     protected void dropAllData() {
         for (DataGenerator<T> g : generators) {
             g.destroyAllData();
