@@ -106,6 +106,17 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
+    public void pending_expands_cleared_when_data_provider_set() {
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 1 | 1");
+        selectMenuPath("Component", "Features", "Set data provider",
+                "LazyHierarchicalDataProvider");
+        grid.expandWithClick(0);
+        assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+    }
+
+    @Test
     public void non_leaf_collapse_on_click() {
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });

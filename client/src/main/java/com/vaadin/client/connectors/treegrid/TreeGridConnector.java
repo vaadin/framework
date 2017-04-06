@@ -69,7 +69,7 @@ public class TreeGridConnector extends GridConnector {
 
     private HierarchyRenderer hierarchyRenderer;
 
-    private Set<String> pendingExpansion = new HashSet<>();
+    private Set<String> rowKeysPendingExpand = new HashSet<>();
 
     @Override
     public TreeGrid getWidget() {
@@ -161,7 +161,7 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void setExpanded(String key) {
-                pendingExpansion.add(key);
+                rowKeysPendingExpand.add(key);
                 Range cache = ((AbstractRemoteDataSource) getDataSource())
                         .getCachedRange();
                 checkExpand(cache.getStart(), cache.length());
@@ -169,7 +169,7 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void setCollapsed(String key) {
-                pendingExpansion.remove(key);
+                rowKeysPendingExpand.remove(key);
             }
         });
     }
@@ -201,7 +201,7 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void resetDataAndSize(int estimatedNewDataSize) {
-                // NO-OP
+                rowKeysPendingExpand.clear();
             }
         });
     }
@@ -345,14 +345,14 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private void checkExpand(int firstRowIndex, int numberOfRows) {
-        if (pendingExpansion.isEmpty()) {
+        if (rowKeysPendingExpand.isEmpty()) {
             return;
         }
         IntStream.range(firstRowIndex, firstRowIndex + numberOfRows)
                 .forEach(rowIndex -> {
                     String rowKey = getDataSource().getRow(rowIndex)
                             .getString(DataCommunicatorConstants.KEY);
-                    if (pendingExpansion.remove(rowKey)) {
+                    if (rowKeysPendingExpand.remove(rowKey)) {
                         setCollapsedServerInitiated(rowIndex, false);
                     }
                 });

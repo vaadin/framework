@@ -463,7 +463,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
     }
 
-    private void dropAllData() {
+    protected void dropAllData() {
         for (DataGenerator<T> g : generators) {
             g.destroyAllData();
         }

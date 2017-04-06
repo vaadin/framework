@@ -291,6 +291,12 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     @Override
+    protected void dropAllData() {
+        super.dropAllData();
+        rowKeysPendingExpand.clear();
+    }
+
+    @Override
     public HierarchicalDataProvider<T, ?> getDataProvider() {
         return (HierarchicalDataProvider<T, ?>) super.getDataProvider();
     }
