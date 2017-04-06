@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
 
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.grid.DropLocationAllowed;
+import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridDragSourceExtension;
@@ -60,7 +60,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
 
         GridDropTargetExtension<Bean> dropTarget = new GridDropTargetExtension<>(
-                dropTargetComponent, DropLocationAllowed.ON_TOP_OF_ROWS);
+                dropTargetComponent, DropMode.ON_TOP);
         dropTarget.addGridDropListener(event -> {
             log(event.getDataTransferText() + ", targetId=" + event
                     .getDropTargetRow().getId() + ", location=" + event
@@ -81,14 +81,12 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                 .setSelectionMode(event.getValue()));
 
         // Drop locations
-        List<DropLocationAllowed> dropLocations = Arrays
-                .asList(DropLocationAllowed.values());
-        RadioButtonGroup<DropLocationAllowed> dropLocationSelect = new RadioButtonGroup<>(
+        List<DropMode> dropLocations = Arrays.asList(DropMode.values());
+        RadioButtonGroup<DropMode> dropLocationSelect = new RadioButtonGroup<>(
                 "Allowed drop location", dropLocations);
-//        dropLocationSelect.setItemCaptionGenerator(item -> item.);
-        dropLocationSelect.setSelectedItem(DropLocationAllowed.ON_TOP_OF_ROWS);
+        dropLocationSelect.setSelectedItem(DropMode.ON_TOP);
         dropLocationSelect.addValueChangeListener(
-                event -> dropTarget.setDropLocation(event.getValue()));
+                event -> dropTarget.setDropMode(event.getValue()));
 
         Layout controls = new HorizontalLayout(selectionModeSelect,
                 dropLocationSelect);
