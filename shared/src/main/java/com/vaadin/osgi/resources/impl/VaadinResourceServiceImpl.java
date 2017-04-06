@@ -23,71 +23,58 @@ import com.vaadin.osgi.resources.VaadinResourceService;
 /**
  * Implementation of {@link VaadinResourceService}. Uses bundle version as a
  * prefix for the /VAADIN/ folder.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  * @since 8.1
  */
 public class VaadinResourceServiceImpl implements VaadinResourceService {
     private static final String NAMESPACE_PREFIX = "vaadin-%s";
 
-    private static final String VAADIN_ROOT_ALIAS_FORMAT = "/%s/VAADIN/%s";
-    private static final String VAADIN_ROOT_FORMAT = "/VAADIN/%s";
-
-    private static final String VAADIN_THEME_ALIAS_FORMAT = "/%s/VAADIN/themes/%s";
-    private static final String VAADIN_WIDGETSET_ALIAS_FORMAT = "/%s/VAADIN/widgetsets/%s";
-
-    private static final String VAADIN_THEME_PATH_FORMAT = "/VAADIN/themes/%s";
-    private static final String VAADIN_WIDGETSET_PATH_FORMAT = "/VAADIN/widgetsets/%s";
-
     private String bundleVersion;
+
+    private String pathPrefix;
 
     /**
      * Sets the version of the bundle managing this service.
-     * 
+     *
      * <p>
      * This needs to be called before any other method after the service is
      * created.
-     * 
+     *
      * @param bundleVersion
      *            the version of the bundle managing this service
      */
     public void setBundleVersion(String bundleVersion) {
         this.bundleVersion = bundleVersion;
+        pathPrefix = String.format(NAMESPACE_PREFIX, bundleVersion);
     }
 
     @Override
     public void publishTheme(String themeName, HttpService httpService)
             throws NamespaceException {
-        doPublish(themeName, VAADIN_THEME_ALIAS_FORMAT,
-                VAADIN_THEME_PATH_FORMAT, httpService);
-    }
-
-    private void doPublish(String resourceName, String aliasFormat,
-            String pathFormat, HttpService httpService)
-            throws NamespaceException {
-        String bundleVersionPrefix = String.format(NAMESPACE_PREFIX,
-                bundleVersion);
-
-        String resourcePath = String.format(pathFormat, resourceName);
-        String resourceAlias = String.format(aliasFormat, bundleVersionPrefix,
-                resourceName);
-
-        httpService.registerResources(resourceAlias, resourcePath, null);
+        String themeAlias = PathFormatHelper.getThemeAlias(themeName,
+                pathPrefix);
+        String themePath = PathFormatHelper.getThemePath(themeName);
+        httpService.registerResources(themeAlias, themePath, null);
     }
 
     @Override
     public void publishResource(String resource, HttpService httpService)
             throws NamespaceException {
-        doPublish(resource, VAADIN_ROOT_ALIAS_FORMAT, VAADIN_ROOT_FORMAT,
-                httpService);
+        String alias = PathFormatHelper.getRootResourceAlias(resource,
+                pathPrefix);
+        String path = PathFormatHelper.getRootResourcePath(resource);
+        httpService.registerResources(alias, path, null);
     }
 
     @Override
     public void publishWidgetset(String widgetset, HttpService httpService)
             throws NamespaceException {
-        doPublish(widgetset, VAADIN_WIDGETSET_ALIAS_FORMAT,
-                VAADIN_WIDGETSET_PATH_FORMAT, httpService);
+        String widgetsetAlias = PathFormatHelper.getWidgetsetAlias(widgetset,
+                pathPrefix);
+        String widgetsetPath = PathFormatHelper.getWidgetsetPath(widgetset);
+        httpService.registerResources(widgetsetAlias, widgetsetPath, null);
     }
 
     @Override
