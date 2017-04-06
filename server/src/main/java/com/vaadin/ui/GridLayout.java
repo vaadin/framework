@@ -1303,14 +1303,14 @@ public class GridLayout extends AbstractLayout
         }
         setRows(Math.max(rows.size(), 1));
         Map<Component, Alignment> alignments = new HashMap<Component, Alignment>();
-        List<Integer> columnExpandRatios = new ArrayList<Integer>();
+        List<Float> columnExpandRatios = new ArrayList<Float>();
         for (int row = 0; row < rowElements.size(); ++row) {
             Element rowElement = rowElements.get(row);
 
             // Row Expand
             if (rowElement.hasAttr("expand")) {
-                int expand = DesignAttributeHandler.readAttribute("expand",
-                        rowElement.attributes(), int.class);
+                float expand = DesignAttributeHandler.readAttribute("expand",
+                        rowElement.attributes(), float.class);
                 setRowExpandRatio(row, expand);
             }
 
@@ -1360,11 +1360,11 @@ public class GridLayout extends AbstractLayout
                 if (row == 0) {
                     if (col.hasAttr("expand")) {
                         for (String expand : col.attr("expand").split(",")) {
-                            columnExpandRatios.add(Integer.parseInt(expand));
+                            columnExpandRatios.add(Float.parseFloat(expand));
                         }
                     } else {
                         for (int c = 0; c < colspan; ++c) {
-                            columnExpandRatios.add(0);
+                            columnExpandRatios.add(0f);
                         }
                     }
                 }
@@ -1468,7 +1468,7 @@ public class GridLayout extends AbstractLayout
 
             // Row Expand
             DesignAttributeHandler.writeAttribute("expand", row.attributes(),
-                    (int) getRowExpandRatio(i), 0, int.class);
+                     getRowExpandRatio(i), 0.0f, float.class);
 
             int colspan = 1;
             Element col;
@@ -1509,7 +1509,7 @@ public class GridLayout extends AbstractLayout
                         // A column with expand and no content in the end of
                         // first row needs to be present.
                         for (int c = j; c < componentMap[i].length; ++c) {
-                            if ((int) getColumnExpandRatio(c) > 0) {
+                            if (getColumnExpandRatio(c) > 0) {
                                 hasExpands = true;
                             }
                         }
@@ -1551,7 +1551,7 @@ public class GridLayout extends AbstractLayout
                     String expands = "";
                     boolean expandRatios = false;
                     for (int c = 0; c < colspan; ++c) {
-                        int colExpand = (int) getColumnExpandRatio(j + c);
+                        float colExpand = getColumnExpandRatio(j + c);
                         if (colExpand > 0) {
                             expandRatios = true;
                         }
