@@ -15,13 +15,17 @@
  */
 package com.vaadin.osgi.servlet;
 
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.annotation.WebServlet;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -46,6 +50,9 @@ import com.vaadin.server.VaadinServlet;
  */
 @Component(immediate = true)
 public class VaadinServletRegistration {
+    private Map<Long, ServiceRegistration<?>> registeredServlets = Collections
+            .synchronizedMap(new LinkedHashMap<>());
+
     private static final String MISSING_ANNOTATION_MESSAGE_FORMAT = "The property '%s' must be set in a '%s' without the '%s' annotation!";
     private static final String URL_PATTERNS_NOT_SET_MESSAGE_FORMAT = "The property '%s' must be set when the 'urlPatterns' attribute is not set!";
 
@@ -78,8 +85,17 @@ public class VaadinServletRegistration {
                     Boolean.toString(annotation.asyncSupported()));
         }
 
-        bundleContext.registerService(Servlet.class, servlet, properties);
+        ServiceRegistration<Servlet> servletRegistration = bundleContext
+                .registerService(Servlet.class, servlet, properties);
+        Long serviceId = getServiceId(reference);
+        registeredServlets.put(serviceId, servletRegistration);
+
         bundleContext.ungetService(reference);
+    }
+
+    private Long getServiceId(ServiceReference<VaadinServlet> reference) {
+        return (Long) reference
+                .getProperty(org.osgi.framework.Constants.SERVICE_ID);
     }
 
     private boolean validateSettings(WebServlet annotation,
@@ -112,8 +128,13 @@ public class VaadinServletRegistration {
         }
     }
 
-    void unbindVaadinServlet(VaadinServlet servlet) {
-
+    void unbindVaadinServlet(ServiceReference<VaadinServlet> servletRef) {
+        Long serviceId = getServiceId(servletRef);
+        ServiceRegistration<?> servletRegistration = registeredServlets
+                .remove(serviceId);
+        if (servletRegistration != null) {
+            servletRegistration.unregister();
+        }
     }
 
     @Reference(cardinality = ReferenceCardinality.OPTIONAL)
