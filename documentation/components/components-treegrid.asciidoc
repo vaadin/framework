@@ -53,7 +53,7 @@ treeGrid.setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
 // the first column gets the hierarchy indicator by default
 treeGrid.addColumn(Project::getName).setCaption("Project Name");
 treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
-treeGrid.addColumn(Project::getdLastModified).setCaption("Last Modified");
+treeGrid.addColumn(Project::getLastModified).setCaption("Last Modified");
 ----
 
 The [classname]#HierarchyData# class can be used to build the hierarchical data structure,
@@ -78,6 +78,26 @@ dataProvider.refreshAll();
 
 Note that for adding or removing nodes, you always need to call the [methodname]#refreshAll# method in the data provider you are using. The [methodname]#refreshItem# method can only be used when just the data for that item is updated, but not for updates that add or remove items.
 
+[[components.treegrid.expandcollapse]]
+== Expanding and Collapsing Nodes
+
+[classname]#TreeGrid# nodes that have children can be expanded and collapsed by either user interaction or through the server-side API:
+
+[source, java]
+----
+// Expands a child project. If the child project is not yet
+// in the visible hierarchy, nothing will be shown.
+treeGrid.expand(childProject);
+// Expands the root project. If child project now becomes
+// visible it is also expanded into view.
+treeGrid.expand(rootProject);
+// Collapses the child project.
+treeGrid.collapse(childProject);
+----
+
+To use the server-side API with a backend data provider the [methodname]#hashCode# method for the node's type must be implemented so that when the desired node is  retrieved from the backend it has the same hash as the object passed to either [methodname]#expand# or [methodname]#collapse#.
+
+[[components.treegrid.hierarchycolumn]]
 == Changing the Hierarchy Column
 
 By default, the [classname]#TreeGrid# shows the hierarchy indicator by default in the first column of the grid.

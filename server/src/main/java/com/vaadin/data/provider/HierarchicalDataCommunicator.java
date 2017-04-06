@@ -17,8 +17,11 @@ package com.vaadin.data.provider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
@@ -27,6 +30,7 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.HierarchyMapper.TreeLevelQuery;
+import com.vaadin.data.provider.HierarchyMapper.TreeNode;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
@@ -57,6 +61,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     private static final int INITIAL_FETCH_SIZE = 100;
 
     private HierarchyMapper mapper = new HierarchyMapper();
+
+    private Set<String> rowKeysPendingExpand = new HashSet<>();
 
     /**
      * Collapse allowed provider used to allow/disallow collapsing nodes.
@@ -278,10 +284,16 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             // cannot drop expanded rows since the parent item is needed always
             // when fetching more rows
             String itemKey = keys.getString(i);
-            if (mapper.isCollapsed(itemKey)) {
+            if (mapper.isCollapsed(itemKey) && !rowKeysPendingExpand.contains(itemKey)) {
                 getActiveDataHandler().dropActiveData(itemKey);
             }
         }
+    }
+
+    @Override
+    protected void dropAllData() {
+        super.dropAllData();
+        rowKeysPendingExpand.clear();
     }
 
     @Override
@@ -400,6 +412,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             return false;
         }
         mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
+        rowKeysPendingExpand.remove(expandedRowKey);
+
         getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
         // TODO optimize by sending "just enough" of the expanded items
         // directly
@@ -411,6 +425,68 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         // expanded status
         refresh(expandedItem);
         return true;
+    }
+
+    /**
+     * Set an item as pending expansion.
+     * <p>
+     * Calling this method reserves a communication key for the item that is
+     * guaranteed to not be invalidated until the item is expanded. Has no
+     * effect and returns an empty optional if the given item is already
+     * expanded or has no children.
+     *
+     * @param item
+     *            the item to set as pending expansion
+     * @return an optional of the communication key used for the item, empty if
+     *         the item cannot be expanded
+     */
+    public Optional<String> setPendingExpand(T item) {
+        Objects.requireNonNull(item, "Item cannot be null");
+        if (getKeyMapper().has(item)
+                && !mapper.isCollapsed(getKeyMapper().key(item))) {
+            // item is already expanded
+            return Optional.empty();
+        }
+        if (!getDataProvider().hasChildren(item)) {
+            // ignore item with no children
+            return Optional.empty();
+        }
+        String key = getKeyMapper().key(item);
+        rowKeysPendingExpand.add(key);
+        return Optional.of(key);
+    }
+
+    /**
+     * Collapse an item.
+     * <p>
+     * This method will either collapse an item directly, or remove its pending
+     * expand status. If the item is not expanded or pending expansion, calling
+     * this method has no effect.
+     *
+     * @param item
+     *            the item to collapse
+     * @return an optional of the communication key used for the item, empty if
+     *         the item cannot be collapsed
+     */
+    public Optional<String> collapseItem(T item) {
+        Objects.requireNonNull(item, "Item cannot be null");
+        if (!getKeyMapper().has(item)) {
+            // keymapper should always have items that are expanded or pending
+            // expand
+            return Optional.empty();
+        }
+        String nodeKey = getKeyMapper().key(item);
+        Optional<TreeNode> node = mapper.getNodeForKey(nodeKey);
+        if (node.isPresent()) {
+            rowKeysPendingExpand.remove(nodeKey);
+            doCollapse(nodeKey, node.get().getStartIndex() - 1);
+            return Optional.of(nodeKey);
+        }
+        if (rowKeysPendingExpand.contains(nodeKey)) {
+            rowKeysPendingExpand.remove(nodeKey);
+            return Optional.of(nodeKey);
+        }
+        return Optional.empty();
     }
 
     /**

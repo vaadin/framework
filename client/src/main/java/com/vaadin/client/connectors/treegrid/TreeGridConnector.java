@@ -16,7 +16,10 @@
 package com.vaadin.client.connectors.treegrid;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.BrowserEvents;
@@ -25,6 +28,9 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.grid.GridConnector;
+import com.vaadin.client.data.AbstractRemoteDataSource;
+import com.vaadin.client.data.DataChangeHandler;
+import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.HierarchyRenderer;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.GridEventHandler;
@@ -32,10 +38,13 @@ import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.shared.Range;
+import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.treegrid.FocusParentRpc;
 import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridClientRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 
@@ -59,6 +68,8 @@ public class TreeGridConnector extends GridConnector {
     private String hierarchyColumnId;
 
     private HierarchyRenderer hierarchyRenderer;
+
+    private Set<String> rowKeysPendingExpand = new HashSet<>();
 
     @Override
     public TreeGrid getWidget() {
@@ -145,6 +156,54 @@ public class TreeGridConnector extends GridConnector {
         // widget check
         replaceClickEvent(getWidget(),
                 new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
+
+        registerRpc(TreeGridClientRpc.class, new TreeGridClientRpc() {
+
+            @Override
+            public void setExpanded(String key) {
+                rowKeysPendingExpand.add(key);
+                Range cache = ((AbstractRemoteDataSource) getDataSource())
+                        .getCachedRange();
+                checkExpand(cache.getStart(), cache.length());
+            }
+
+            @Override
+            public void setCollapsed(String key) {
+                rowKeysPendingExpand.remove(key);
+            }
+        });
+    }
+
+    @Override
+    public void setDataSource(DataSource<JsonObject> dataSource) {
+        super.setDataSource(dataSource);
+        dataSource.addDataChangeHandler(new DataChangeHandler() {
+
+            @Override
+            public void dataUpdated(int firstRowIndex, int numberOfRows) {
+                checkExpand(firstRowIndex, numberOfRows);
+            }
+
+            @Override
+            public void dataRemoved(int firstRowIndex, int numberOfRows) {
+                // NO-OP
+            }
+
+            @Override
+            public void dataAdded(int firstRowIndex, int numberOfRows) {
+                // NO-OP
+            }
+
+            @Override
+            public void dataAvailable(int firstRowIndex, int numberOfRows) {
+                // NO-OP
+            }
+
+            @Override
+            public void resetDataAndSize(int estimatedNewDataSize) {
+                rowKeysPendingExpand.clear();
+            }
+        });
     }
 
     private native void replaceCellFocusEventHandler(Grid<?> grid,
@@ -173,7 +232,13 @@ public class TreeGridConnector extends GridConnector {
     private void setCollapsed(int rowIndex, boolean collapsed) {
         String rowKey = getRowKey(getDataSource().getRow(rowIndex));
         getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
-                collapsed);
+                collapsed, true);
+    }
+
+    private void setCollapsedServerInitiated(int rowIndex, boolean collapsed) {
+        String rowKey = getRowKey(getDataSource().getRow(rowIndex));
+        getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
+                collapsed, false);
     }
 
     /**
@@ -277,6 +342,20 @@ public class TreeGridConnector extends GridConnector {
                 }
             }
         }
+    }
+
+    private void checkExpand(int firstRowIndex, int numberOfRows) {
+        if (rowKeysPendingExpand.isEmpty()) {
+            return;
+        }
+        IntStream.range(firstRowIndex, firstRowIndex + numberOfRows)
+                .forEach(rowIndex -> {
+                    String rowKey = getDataSource().getRow(rowIndex)
+                            .getString(DataCommunicatorConstants.KEY);
+                    if (rowKeysPendingExpand.remove(rowKey)) {
+                        setCollapsedServerInitiated(rowIndex, false);
+                    }
+                });
     }
 
     private static boolean isCollapsed(JsonObject rowData) {

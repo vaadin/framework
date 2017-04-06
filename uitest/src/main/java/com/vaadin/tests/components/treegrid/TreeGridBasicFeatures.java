@@ -63,6 +63,8 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createDataProviderSelect();
         createHierarchyColumnSelect();
         createCollapseAllowedSelect();
+        createExpandMenu();
+        createCollapseMenu();
         createListenerMenu();
     }
 
@@ -146,13 +148,45 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     }
 
     @SuppressWarnings("unchecked")
+    private void createExpandMenu() {
+        createCategory("Server-side expand", CATEGORY_FEATURES);
+        createClickAction("Expand 0 | 0", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid.expand(value),
+                new HierarchicalTestBean(null, 0, 0));
+        createClickAction("Expand 1 | 1", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid.expand(value),
+                new HierarchicalTestBean("/0/0", 1, 1));
+        createClickAction("Expand 2 | 1", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid.expand(value),
+                new HierarchicalTestBean("/0/0/1/1", 2, 1));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void createCollapseMenu() {
+        createCategory("Server-side collapse", CATEGORY_FEATURES);
+        createClickAction("Collapse 0 | 0", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid.collapse(value),
+                new HierarchicalTestBean(null, 0, 0));
+        createClickAction("Collapse 1 | 1", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid.collapse(value),
+                new HierarchicalTestBean("/0/0", 1, 1));
+        createClickAction("Collapse 2 | 1", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid.collapse(value),
+                new HierarchicalTestBean("/0/0/1/1", 2, 1));
+    }
+
+    @SuppressWarnings("unchecked")
     private void createListenerMenu() {
         createListenerAction("Collapse listener", "State",
                 treeGrid -> treeGrid.addCollapseListener(event -> log(
-                        "Item collapsed: " + event.getCollapsedItem())));
+                        "Item collapsed (user originated: "
+                                + event.isUserOriginated() + "): "
+                                + event.getCollapsedItem())));
         createListenerAction("Expand listener", "State",
                 treeGrid -> treeGrid.addExpandListener(event -> log(
-                        "Item expanded: " + event.getExpandedItem())));
+                        "Item expanded (user originated: "
+                                + event.isUserOriginated() + "): "
+                                + event.getExpandedItem())));
     }
 
     static class HierarchicalTestBean {

@@ -1,12 +1,13 @@
 package com.vaadin.tests.components.treegrid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-import com.vaadin.testbench.parallel.Browser;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
@@ -17,10 +18,6 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TreeGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.ParameterizedTB3Runner;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(ParameterizedTB3Runner.class)
 public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
@@ -41,28 +38,82 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
     @Before
     public void before() {
         setDebug(true);
-        openTestURL("theme=valo");
+        openTestURL();
         grid = $(TreeGridElement.class).first();
     }
 
     @Test
-    @Ignore // currently no implementation exists for toggling from the server
-            // side
     public void toggle_collapse_server_side() {
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        selectMenuPath("Component", "Features", "Toggle expand", "0 | 0");
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
         assertEquals(6, grid.getRowCount());
         assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
 
-        selectMenuPath("Component", "Features", "Toggle expand", "0 | 0");
+        // expanding already expanded item should have no effect
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        // collapsing a leaf should have no effect
-        selectMenuPath("Component", "Features", "Toggle expand", "1 | 0");
+        // collapsing the same item twice should have no effect
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
         assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 1 | 1");
+        // 1 | 1 not yet visible, shouldn't immediately expand anything
+        assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        // 1 | 1 becomes visible and is also expanded
+        assertEquals(9, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "2 | 0", "2 | 1",
+                "2 | 2", "1 | 2" });
+
+        // collapsing a leaf should have no effect
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 2 | 1");
+        assertEquals(9, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "2 | 0", "2 | 1",
+                "2 | 2", "1 | 2" });
+
+        // collapsing 0 | 0 should collapse the expanded 1 | 1
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
+        assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+
+        // 1 | 1 should not be expanded this time
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+
+        assertNoSystemNotifications();
+        assertNoErrorNotifications();
+    }
+
+    @Test
+    public void pending_expands_cleared_when_data_provider_set() {
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 1 | 1");
+        selectMenuPath("Component", "Features", "Set data provider",
+                "LazyHierarchicalDataProvider");
+        grid.expandWithClick(0);
+        assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
     }
 
     @Test
@@ -105,20 +156,21 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         // Should expand "1 | 1" without moving focus
         new Actions(getDriver()).sendKeys(Keys.RIGHT).perform();
         assertEquals(9, grid.getRowCount());
-        assertCellTexts(2, 0, new String[] { "1 | 1", "2 | 0",  "2 | 1",  "2 | 2",  "1 | 2"});
+        assertCellTexts(2, 0,
+                new String[] { "1 | 1", "2 | 0", "2 | 1", "2 | 2", "1 | 2" });
         assertTrue(grid.getRow(2).hasClassName("v-grid-rowmode-row-focused"));
 
         // Should collapse "1 | 1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         assertEquals(6, grid.getRowCount());
-        assertCellTexts(2, 0, new String[] { "1 | 1", "1 | 2",  "0 | 1"});
+        assertCellTexts(2, 0, new String[] { "1 | 1", "1 | 2", "0 | 1" });
         assertTrue(grid.getRow(2).hasClassName("v-grid-rowmode-row-focused"));
-
 
         // Should navigate to "0 | 0"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         assertEquals(6, grid.getRowCount());
-        assertCellTexts(0, 0, new String[] { "0 | 0", "1 | 0", "1 | 1", "1 | 2" , "0 | 1" });
+        assertCellTexts(0, 0,
+                new String[] { "0 | 0", "1 | 0", "1 | 1", "1 | 2", "0 | 1" });
         assertTrue(grid.getRow(0).hasClassName("v-grid-rowmode-row-focused"));
 
         // Should collapse "0 | 0"
@@ -171,18 +223,40 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Expand listener");
         selectMenuPath("Component", "State", "Collapse listener");
 
-        assertFalse(logContainsText("Item expanded: 0 | 0"));
-        assertFalse(logContainsText("Item collapsed: 0 | 0"));
+        assertFalse(logContainsText(
+                "Item expanded (user originated: true): 0 | 0"));
+        assertFalse(logContainsText(
+                "Item collapsed (user originated: true): 0 | 0"));
 
         grid.expandWithClick(0);
 
-        assertTrue(logContainsText("Item expanded: 0 | 0"));
-        assertFalse(logContainsText("Item collapsed: 0 | 0"));
+        assertTrue(logContainsText(
+                "Item expanded (user originated: true): 0 | 0"));
+        assertFalse(logContainsText(
+                "Item collapsed (user originated: true): 0 | 0"));
 
         grid.collapseWithClick(0);
 
-        assertTrue(logContainsText("Item expanded: 0 | 0"));
-        assertTrue(logContainsText("Item collapsed: 0 | 0"));
+        assertTrue(logContainsText(
+                "Item expanded (user originated: true): 0 | 0"));
+        assertTrue(logContainsText(
+                "Item collapsed (user originated: true): 0 | 0"));
+
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+
+        assertTrue(logContainsText(
+                "Item expanded (user originated: false): 0 | 0"));
+        assertFalse(logContainsText(
+                "Item collapsed (user originated: false): 0 | 0"));
+
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
+
+        assertTrue(logContainsText(
+                "Item expanded (user originated: false): 0 | 0"));
+        assertTrue(logContainsText(
+                "Item collapsed (user originated: false): 0 | 0"));
 
         selectMenuPath("Component", "State", "Expand listener");
         selectMenuPath("Component", "State", "Collapse listener");
@@ -190,8 +264,10 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         grid.expandWithClick(1);
         grid.collapseWithClick(1);
 
-        assertFalse(logContainsText("Item expanded: 0 | 1"));
-        assertFalse(logContainsText("Item collapsed: 0 | 1"));
+        assertFalse(logContainsText(
+                "Item expanded (user originated: true): 0 | 1"));
+        assertFalse(logContainsText(
+                "Item collapsed (user originated: true): 0 | 1"));
     }
 
     private void assertCellTexts(int startRowIndex, int cellIndex,
