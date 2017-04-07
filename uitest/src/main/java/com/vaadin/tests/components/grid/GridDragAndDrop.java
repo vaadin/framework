@@ -20,16 +20,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridDragSourceExtension;
 import com.vaadin.ui.GridDropTargetExtension;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.RadioButtonGroup;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
@@ -37,9 +37,10 @@ import elemental.json.JsonObject;
 public class GridDragAndDrop extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
+
         // Drag source Grid
         Grid<Bean> dragSourceComponent = new Grid<>();
-        dragSourceComponent.setItems(createItems(50));
+        dragSourceComponent.setItems(createItems(50, "left"));
         dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
         dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
 
@@ -47,48 +48,61 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                 dragSourceComponent);
         dragSource.setDragDataGenerator(bean -> {
             JsonObject ret = Json.createObject();
-            ret.put("val", bean.getValue());
+            ret.put("generatedId", bean.getId());
+            ret.put("generatedValue", bean.getValue());
             return ret;
         });
 
         // Drop target Grid
         Grid<Bean> dropTargetComponent = new Grid<>();
-        dropTargetComponent.setItems(createItems(5));
+        dropTargetComponent.setItems(createItems(5, "right"));
         dropTargetComponent.addColumn(Bean::getId).setCaption("ID");
         dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
 
         GridDropTargetExtension<Bean> dropTarget = new GridDropTargetExtension<>(
-                dropTargetComponent);
+                dropTargetComponent, DropMode.ON_TOP);
         dropTarget.addGridDropListener(event -> {
             log(event.getDataTransferText() + ", targetId=" + event
-                    .getDropTargetRow().getId());
+                    .getDropTargetRow().getId() + ", location=" + event
+                    .getDropLocation());
         });
 
-        // Layout grids
-        Layout layout = new HorizontalLayout();
-        layout.addComponents(dragSourceComponent, dropTargetComponent);
+        // Layout the two grids
+        Layout grids = new HorizontalLayout();
+        grids.addComponents(dragSourceComponent, dropTargetComponent);
 
-        // Selection mode combo box
-        ComboBox<Grid.SelectionMode> selectionModeSwitch = new ComboBox<>(
-                "Change selection mode");
-        selectionModeSwitch.setItems(Arrays.asList(Grid.SelectionMode.SINGLE,
-                Grid.SelectionMode.MULTI));
-        selectionModeSwitch.setEmptySelectionAllowed(false);
-        selectionModeSwitch.addValueChangeListener(event -> dragSourceComponent
+        // Selection modes
+        List<Grid.SelectionMode> selectionModes = Arrays.asList(
+                Grid.SelectionMode.SINGLE, Grid.SelectionMode.MULTI);
+        RadioButtonGroup<Grid.SelectionMode> selectionModeSelect = new RadioButtonGroup<>(
+                "Selection mode", selectionModes);
+        selectionModeSelect.setSelectedItem(Grid.SelectionMode.SINGLE);
+        selectionModeSelect.addValueChangeListener(event -> dragSourceComponent
                 .setSelectionMode(event.getValue()));
-        selectionModeSwitch.setSelectedItem(Grid.SelectionMode.SINGLE);
 
-        addComponents(selectionModeSwitch, layout);
+        // Drop locations
+        List<DropMode> dropLocations = Arrays.asList(DropMode.values());
+        RadioButtonGroup<DropMode> dropLocationSelect = new RadioButtonGroup<>(
+                "Allowed drop location", dropLocations);
+        dropLocationSelect.setSelectedItem(DropMode.ON_TOP);
+        dropLocationSelect.addValueChangeListener(
+                event -> dropTarget.setDropMode(event.getValue()));
+
+        Layout controls = new HorizontalLayout(selectionModeSelect,
+                dropLocationSelect);
+
+        addComponents(controls, grids);
 
         // Set dragover styling
         Page.getCurrent().getStyles().add(".v-drag-over {color: red;}");
     }
 
-    private List<Bean> createItems(int num) {
+    private List<Bean> createItems(int num, String prefix) {
         List<Bean> items = new ArrayList<>(num);
 
         IntStream.range(0, num)
-                .forEach(i -> items.add(new Bean("id_" + i, "value_" + i)));
+                .forEach(i -> items
+                        .add(new Bean(prefix + "_" + i, "value_" + i)));
 
         return items;
     }

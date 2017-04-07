@@ -117,7 +117,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragEnter(Event event) {
-        addTargetIndicator(event);
+        setTargetIndicator(event);
     }
 
     /**
@@ -137,7 +137,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             }
 
             // Add drop target indicator in case the element doesn't have one
-            addTargetIndicator(event);
+            setTargetIndicator(event);
 
             // Prevent default to allow drop
             nativeEvent.preventDefault();
@@ -230,7 +230,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @param event
      *         The drag enter or dragover event that triggered the indication.
      */
-    protected void addTargetIndicator(Event event) {
+    protected void setTargetIndicator(Event event) {
         getDropTargetElement().addClassName(CLASS_DRAG_OVER);
     }
 
