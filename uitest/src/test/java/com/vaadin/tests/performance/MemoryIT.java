@@ -108,6 +108,7 @@ public class MemoryIT extends SingleBrowserTest {
         getDriver().get(StringUtils.strip(getBaseURL(), "/") + path + "?items="
                 + itemsNumber);
         Assert.assertTrue(isElementPresent(By.className("v-grid"))
+                || isElementPresent(By.className("v-treegrid"))
                 || isElementPresent(By.className("v-table")));
     }
 
