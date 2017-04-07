@@ -66,5 +66,30 @@ $tg-expander-padding: 10px !default;
   .#{$primary-stylename}-cell-content {
     display: inline-block;
   }
+
+  .#{$primary-stylename}-rowmode-row-focused {
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: $v-grid-cell-focused-border;
+      display: none;
+      pointer-events: none;
+    }
+  }
+
+  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-row-focused:before {
+    display: block;
+  }
+
+  .#{$primary-stylename}.v-disabled:focus .#{$primary-stylename}-rowmode-row-focused:before {
+    // Disabled Grid should not show cell focus outline
+    display: none;
+  }
+
 }
 

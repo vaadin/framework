@@ -39,6 +39,16 @@ public interface DataKeyMapper<T> extends Serializable {
     String key(T dataObject);
 
     /**
+     * Check whether this key mapper contains the given data object.
+     *
+     * @param dataObject
+     *            the data object to check
+     * @return {@code true} if the given data object is contained in this key
+     *         mapper, {@code false} otherwise
+     */
+    boolean has(T dataObject);
+
+    /**
      * Gets the data object identified by given key.
      *
      * @param key

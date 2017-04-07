@@ -37,7 +37,10 @@ import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridClientRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -115,17 +118,24 @@ public class TreeGrid<T> extends Grid<T> {
 
         private final T expandedItem;
 
+        private final boolean userOriginated;
+
         /**
          * Construct an expand event.
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param expandedItem
          *            the item that was expanded
+         * @param userOriginated
+         *            whether the expand was triggered by a user interaction or
+         *            the server
          */
-        public ExpandEvent(TreeGrid<T> source, T expandedItem) {
+        public ExpandEvent(TreeGrid<T> source, T expandedItem,
+                boolean userOriginated) {
             super(source);
             this.expandedItem = expandedItem;
+            this.userOriginated = userOriginated;
         }
 
         /**
@@ -135,6 +145,17 @@ public class TreeGrid<T> extends Grid<T> {
          */
         public T getExpandedItem() {
             return expandedItem;
+        }
+
+        /**
+         * Returns whether this event was triggered by user interaction, on the
+         * client side, or programmatically, on the server side.
+         *
+         * @return {@code true} if this event originates from the client,
+         *         {@code false} otherwise.
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
         }
     }
 
@@ -151,17 +172,24 @@ public class TreeGrid<T> extends Grid<T> {
 
         private final T collapsedItem;
 
+        private final boolean userOriginated;
+
         /**
          * Construct a collapse event.
          *
          * @param source
          *            the tree grid this event originated from
-         * @param item
+         * @param collapsedItem
          *            the item that was collapsed
+         * @param userOriginated
+         *            whether the collapse was triggered by a user interaction
+         *            or the server
          */
-        public CollapseEvent(TreeGrid<T> source, T collapsedItem) {
+        public CollapseEvent(TreeGrid<T> source, T collapsedItem,
+                boolean userOriginated) {
             super(source);
             this.collapsedItem = collapsedItem;
+            this.userOriginated = userOriginated;
         }
 
         /**
@@ -172,6 +200,17 @@ public class TreeGrid<T> extends Grid<T> {
         public T getCollapsedItem() {
             return collapsedItem;
         }
+
+        /**
+         * Returns whether this event was triggered by user interaction, on the
+         * client side, or programmatically, on the server side.
+         *
+         * @return {@code true} if this event originates from the client,
+         *         {@code false} otherwise.
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
     }
 
     public TreeGrid() {
@@ -180,15 +219,28 @@ public class TreeGrid<T> extends Grid<T> {
         registerRpc(new NodeCollapseRpc() {
             @Override
             public void setNodeCollapsed(String rowKey, int rowIndex,
-                    boolean collapse) {
+                    boolean collapse, boolean userOriginated) {
                 if (collapse) {
-                    getDataCommunicator().doCollapse(rowKey, rowIndex);
-                    fireCollapseEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
+                    if (getDataCommunicator().doCollapse(rowKey, rowIndex)
+                            && userOriginated) {
+                        fireCollapseEvent(getDataCommunicator().getKeyMapper()
+                                .get(rowKey), true);
+                    }
                 } else {
-                    getDataCommunicator().doExpand(rowKey, rowIndex);
-                    fireExpandEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
+                    if (getDataCommunicator().doExpand(rowKey, rowIndex)
+                            && userOriginated) {
+                        fireExpandEvent(getDataCommunicator().getKeyMapper()
+                                .get(rowKey), true);
+                    }
+                }
+            }
+        });
+        registerRpc(new FocusParentRpc() {
+            @Override
+            public void focusParent(int rowIndex, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(rowIndex);
+                if (parentIndex != null) {
+                    getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
                 }
             }
         });
@@ -387,6 +439,37 @@ public class TreeGrid<T> extends Grid<T> {
         getDataCommunicator().setItemCollapseAllowedProvider(provider);
     }
 
+    /**
+     * Expands the given item.
+     * <p>
+     * If the item is currently expanded, does nothing. If the item does not
+     * have any children, does nothing.
+     *
+     * @param item
+     *            the item to expand
+     */
+    public void expand(T item) {
+        getDataCommunicator().setPendingExpand(item).ifPresent(key -> {
+            getRpcProxy(TreeGridClientRpc.class).setExpanded(key);
+            fireExpandEvent(item, false);
+        });
+    }
+
+    /**
+     * Collapses the given item.
+     * <p>
+     * If the item is already collapsed, does nothing.
+     *
+     * @param item
+     *            the item to collapse
+     */
+    public void collapse(T item) {
+        getDataCommunicator().collapseItem(item).ifPresent(key -> {
+            getRpcProxy(TreeGridClientRpc.class).setCollapsed(key);
+            fireCollapseEvent(item, false);
+        });
+    }
+
     @Override
     protected TreeGridState getState() {
         return (TreeGridState) super.getState();
@@ -514,9 +597,12 @@ public class TreeGrid<T> extends Grid<T> {
      *
      * @param item
      *            the item that was expanded
+     * @param userOriginated
+     *            whether the expand was triggered by a user interaction or the
+     *            server
      */
-    private void fireExpandEvent(T item) {
-        fireEvent(new ExpandEvent<>(this, item));
+    private void fireExpandEvent(T item, boolean userOriginated) {
+        fireEvent(new ExpandEvent<>(this, item, userOriginated));
     }
 
     /**
@@ -524,8 +610,11 @@ public class TreeGrid<T> extends Grid<T> {
      *
      * @param item
      *            the item that was collapsed
+     * @param userOriginated
+     *            whether the collapse was triggered by a user interaction or
+     *            the server
      */
-    private void fireCollapseEvent(T item) {
-        fireEvent(new CollapseEvent<>(this, item));
+    private void fireCollapseEvent(T item, boolean userOriginated) {
+        fireEvent(new CollapseEvent<>(this, item, userOriginated));
     }
 }
