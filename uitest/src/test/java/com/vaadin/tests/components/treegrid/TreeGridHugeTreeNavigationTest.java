@@ -143,18 +143,18 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
     }
 
     private WebElement findFocusedRow() {
-        return grid.findElement(By.className("v-grid-rowmode-row-focused"));
+        return grid.findElement(By.className("v-treegrid-rowmode-row-focused"));
     }
 
     private void checkRowFocused(int index) {
         if (index > 0) {
             assertFalse(grid.getRow(index - 1)
-                    .hasClassName("v-grid-rowmode-row-focused"));
-        }
-        assertTrue(
-                grid.getRow(index).hasClassName("v-grid-rowmode-row-focused"));
+                .hasClassName("v-treegrid-rowmode-row-focused"));
+    }
+        assertTrue(grid.getRow(index)
+                .hasClassName("v-treegrid-rowmode-row-focused"));
         assertFalse(grid.getRow(index + 1)
-                .hasClassName("v-grid-rowmode-row-focused"));
+                .hasClassName("v-treegrid-rowmode-row-focused"));
     }
 
     private void assertCellTexts(int startRowIndex, int cellIndex,
