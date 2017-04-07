@@ -19,6 +19,7 @@ import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.event.dnd.grid.GridDropEvent;
 import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
 
@@ -32,18 +33,47 @@ import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
  * @since
  */
 public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
-    public GridDropTargetExtension(Grid<T> target) {
+
+    /**
+     * Extends a Grid and makes it's rows drop targets for HTML5 drag and drop.
+     *
+     * @param target
+     *         Grid to be extended.
+     * @param dropMode
+     *         Drop mode that describes the allowed drop locations within the
+     *         Grid's row.
+     * @see GridDropEvent#getDropLocation()
+     */
+    public GridDropTargetExtension(Grid<T> target, DropMode dropMode) {
         super(target);
+
+        setDropMode(dropMode);
     }
 
-    @Override
-    protected void registerDropTargetRpc(Grid<T> target) {
-        registerRpc((GridDropTargetExtensionRpc) (dataTransferText, rowKey) -> {
-            GridDropEvent<T> event = new GridDropEvent<>(target,
-                    dataTransferText, getUI().getActiveDragSource(), rowKey);
+    /**
+     * Sets the drop mode of this drop target.
+     *
+     * @param dropMode
+     *         Drop mode that describes the allowed drop locations within the
+     *         Grid's row.
+     * @see GridDropEvent#getDropLocation()
+     */
+    public void setDropMode(DropMode dropMode) {
+        if (dropMode == null) {
+            throw new IllegalArgumentException("Drop mode cannot be null");
+        }
 
-            fireEvent(event);
-        });
+        getState().dropMode = dropMode;
+    }
+
+    /**
+     * Gets the drop mode of this drop target.
+     *
+     * @return Drop mode that describes the allowed drop locations within the
+     *         Grid's row.
+     */
+    public DropMode getDropMode() {
+        return getState(false).dropMode;
     }
 
     /**
@@ -58,6 +88,22 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
     public Registration addGridDropListener(GridDropListener<T> listener) {
         return addListener(GridDropEvent.class, listener,
                 GridDropListener.DROP_METHOD);
+    }
+
+    @Override
+    protected void registerDropTargetRpc(Grid<T> target) {
+        registerRpc(
+                (GridDropTargetExtensionRpc) (dataTransferText, rowKey, dropLocation) -> {
+
+                    T dropTargetRow = target.getDataCommunicator()
+                            .getKeyMapper().get(rowKey);
+
+                    GridDropEvent<T> event = new GridDropEvent<>(target,
+                            dataTransferText, getUI().getActiveDragSource(),
+                            dropTargetRow, dropLocation);
+
+                    fireEvent(event);
+                });
     }
 
     @Override
