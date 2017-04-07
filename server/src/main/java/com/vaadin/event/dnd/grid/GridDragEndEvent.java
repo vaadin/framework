@@ -20,6 +20,7 @@ import java.util.Set;
 import com.vaadin.event.dnd.DragEndEvent;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.GridDragSource;
 
 /**
  * Drop event on an HTML5 drop target {@link Grid} row.
@@ -27,7 +28,7 @@ import com.vaadin.ui.Grid;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see com.vaadin.ui.GridDragSourceExtension#addGridDragStartListener(GridDragStartListener)
+ * @see GridDragSource#addGridDragStartListener(GridDragStartListener)
  * @since
  */
 public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {

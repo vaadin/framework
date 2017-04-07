@@ -18,6 +18,7 @@ package com.vaadin.event.dnd.grid;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.ui.GridDragSource;
 
 /**
  * Drag start listener for HTML5 drag start on a Grid row.
@@ -25,7 +26,7 @@ import com.vaadin.event.ConnectorEventListener;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see com.vaadin.ui.GridDragSourceExtension#addGridDragStartListener(GridDragStartListener)
+ * @see GridDragSource#addGridDragStartListener(GridDragStartListener)
  * @since
  */
 @FunctionalInterface
