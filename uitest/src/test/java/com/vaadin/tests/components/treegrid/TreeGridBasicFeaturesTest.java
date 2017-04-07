@@ -66,13 +66,13 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
 
         // Should expand "0 | 0"
         grid.getRow(0).getCell(0)
-                .findElement(By.className("v-tree-grid-expander")).click();
+                .findElement(By.className("v-treegrid-expander")).click();
         Assert.assertEquals(6, grid.getRowCount());
         assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
 
         // Should collapse "0 | 0"
         grid.getRow(0).getCell(0)
-                .findElement(By.className("v-tree-grid-expander")).click();
+                .findElement(By.className("v-treegrid-expander")).click();
         Assert.assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
     }
@@ -98,25 +98,25 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
     @Test
     public void changing_hierarchy_column() {
         Assert.assertTrue(grid.getRow(0).getCell(0)
-                .isElementPresent(By.className("v-tree-grid-expander")));
+                .isElementPresent(By.className("v-treegrid-expander")));
         Assert.assertFalse(grid.getRow(0).getCell(1)
-                .isElementPresent(By.className("v-tree-grid-expander")));
+                .isElementPresent(By.className("v-treegrid-expander")));
 
         selectMenuPath("Component", "Features", "Set hierarchy column",
                 "depth");
 
         Assert.assertFalse(grid.getRow(0).getCell(0)
-                .isElementPresent(By.className("v-tree-grid-expander")));
+                .isElementPresent(By.className("v-treegrid-expander")));
         Assert.assertTrue(grid.getRow(0).getCell(1)
-                .isElementPresent(By.className("v-tree-grid-expander")));
+                .isElementPresent(By.className("v-treegrid-expander")));
 
         selectMenuPath("Component", "Features", "Set hierarchy column",
                 "string");
 
         Assert.assertTrue(grid.getRow(0).getCell(0)
-                .isElementPresent(By.className("v-tree-grid-expander")));
+                .isElementPresent(By.className("v-treegrid-expander")));
         Assert.assertFalse(grid.getRow(0).getCell(1)
-                .isElementPresent(By.className("v-tree-grid-expander")));
+                .isElementPresent(By.className("v-treegrid-expander")));
     }
 
     @Override
