@@ -20,6 +20,7 @@ import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.GridDropTarget;
 
 /**
  * Drop event on an HTML5 drop target {@link Grid} row.
@@ -27,7 +28,7 @@ import com.vaadin.ui.Grid;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see com.vaadin.ui.GridDropTargetExtension#addGridDropListener(GridDropListener)
+ * @see GridDropTarget#addGridDropListener(GridDropListener)
  * @since
  */
 public class GridDropEvent<T> extends DropEvent<Grid<T>> {

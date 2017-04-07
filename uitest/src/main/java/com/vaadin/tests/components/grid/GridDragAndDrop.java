@@ -25,8 +25,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.GridDragSourceExtension;
-import com.vaadin.ui.GridDropTargetExtension;
+import com.vaadin.ui.GridDragSource;
+import com.vaadin.ui.GridDropTarget;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.RadioButtonGroup;
@@ -44,7 +44,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
         dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
 
-        GridDragSourceExtension<Bean> dragSource = new GridDragSourceExtension<>(
+        GridDragSource<Bean> dragSource = new GridDragSource<>(
                 dragSourceComponent);
         dragSource.setDragDataGenerator(bean -> {
             JsonObject ret = Json.createObject();
@@ -59,7 +59,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dropTargetComponent.addColumn(Bean::getId).setCaption("ID");
         dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
 
-        GridDropTargetExtension<Bean> dropTarget = new GridDropTargetExtension<>(
+        GridDropTarget<Bean> dropTarget = new GridDropTarget<>(
                 dropTargetComponent, DropMode.ON_TOP);
         dropTarget.addGridDropListener(event -> {
             log(event.getDataTransferText() + ", targetId=" + event

@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.dnd.DropEffect;
  * @author Vaadin Ltd.
  * @since
  */
-public interface GridDragSourceExtensionRpc extends ServerRpc {
+public interface GridDragSourceRpc extends ServerRpc {
 
     /**
      * Called when dragstart event happens on client side.

@@ -15,19 +15,18 @@
  */
 package com.vaadin.shared.ui.grid;
 
-import com.vaadin.shared.ui.dnd.DragSourceState;
+import com.vaadin.shared.ui.dnd.DropTargetState;
 
 /**
- * State class containing parameters for GridDragSourceExtension.
+ * State class containing parameters for GridDropTarget.
  *
  * @author Vaadin Ltd
  * @since
  */
-public class GridDragSourceExtensionState extends DragSourceState {
+public class GridDropTargetState extends DropTargetState {
 
     /**
-     * Json key for storing data for a dragged row.
+     * Stores the drop mode of the drop target Grid.
      */
-    public static final String JSONKEY_DRAG_DATA = "drag-data";
-
+    public DropMode dropMode;
 }
