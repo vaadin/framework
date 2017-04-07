@@ -29,10 +29,10 @@ import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropEffect;
-import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
-import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
+import com.vaadin.shared.ui.grid.GridDragSourceRpc;
+import com.vaadin.shared.ui.grid.GridDragSourceState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.GridDragSourceExtension;
+import com.vaadin.ui.GridDragSource;
 
 import elemental.events.Event;
 import elemental.json.Json;
@@ -41,14 +41,13 @@ import elemental.json.JsonObject;
 
 /**
  * Adds HTML5 drag and drop functionality to a {@link com.vaadin.client.widgets.Grid
- * Grid}'s rows. This is the client side counterpart of {@link
- * GridDragSourceExtension}.
+ * Grid}'s rows. This is the client side counterpart of {@link GridDragSource}.
  *
  * @author Vaadin Ltd
  * @since
  */
-@Connect(GridDragSourceExtension.class)
-public class GridDragSourceExtensionConnector extends
+@Connect(GridDragSource.class)
+public class GridDragSourceConnector extends
         DragSourceExtensionConnector {
 
     private GridConnector gridConnector;
@@ -93,8 +92,7 @@ public class GridDragSourceExtensionConnector extends
     protected void sendDragStartEventToServer(Event dragStartEvent) {
 
         // Start server RPC with dragged item keys
-        getRpcProxy(GridDragSourceExtensionRpc.class)
-                .dragStart(draggedItemKeys);
+        getRpcProxy(GridDragSourceRpc.class).dragStart(draggedItemKeys);
     }
 
     private List<JsonObject> getDraggedRows(Event dragStartEvent) {
@@ -130,7 +128,7 @@ public class GridDragSourceExtensionConnector extends
             DropEffect dropEffect) {
 
         // Send server RPC with dragged item keys
-        getRpcProxy(GridDragSourceExtensionRpc.class)
+        getRpcProxy(GridDragSourceRpc.class)
                 .dragEnd(dropEffect, draggedItemKeys);
     }
 
@@ -204,9 +202,8 @@ public class GridDragSourceExtensionConnector extends
      * @return Drag data if present or row data otherwise.
      */
     private JsonObject getDragData(JsonObject row) {
-        return row.hasKey(GridDragSourceExtensionState.JSONKEY_DRAG_DATA)
-                ? row.getObject(GridDragSourceExtensionState.JSONKEY_DRAG_DATA)
-                : row;
+        return row.hasKey(GridDragSourceState.JSONKEY_DRAG_DATA)
+                ? row.getObject(GridDragSourceState.JSONKEY_DRAG_DATA) : row;
     }
 
     @Override
@@ -239,7 +236,7 @@ public class GridDragSourceExtensionConnector extends
     }
 
     @Override
-    public GridDragSourceExtensionState getState() {
-        return (GridDragSourceExtensionState) super.getState();
+    public GridDragSourceState getState() {
+        return (GridDragSourceState) super.getState();
     }
 }
