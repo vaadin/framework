@@ -20,8 +20,8 @@ import com.vaadin.event.dnd.grid.GridDropEvent;
 import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.DropMode;
-import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
-import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
+import com.vaadin.shared.ui.grid.GridDropTargetRpc;
+import com.vaadin.shared.ui.grid.GridDropTargetState;
 
 /**
  * Makes the rows of a Grid HTML5 drop targets. This is the server side
@@ -32,7 +32,7 @@ import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
  * @author Vaadin Ltd
  * @since
  */
-public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
+public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
     /**
      * Extends a Grid and makes it's rows drop targets for HTML5 drag and drop.
@@ -44,7 +44,7 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
      *         Grid's row.
      * @see GridDropEvent#getDropLocation()
      */
-    public GridDropTargetExtension(Grid<T> target, DropMode dropMode) {
+    public GridDropTarget(Grid<T> target, DropMode dropMode) {
         super(target);
 
         setDropMode(dropMode);
@@ -93,7 +93,7 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
     @Override
     protected void registerDropTargetRpc(Grid<T> target) {
         registerRpc(
-                (GridDropTargetExtensionRpc) (dataTransferText, rowKey, dropLocation) -> {
+                (GridDropTargetRpc) (dataTransferText, rowKey, dropLocation) -> {
 
                     T dropTargetRow = target.getDataCommunicator()
                             .getKeyMapper().get(rowKey);
@@ -107,12 +107,12 @@ public class GridDropTargetExtension<T> extends DropTargetExtension<Grid<T>> {
     }
 
     @Override
-    protected GridDropTargetExtensionState getState() {
-        return (GridDropTargetExtensionState) super.getState();
+    protected GridDropTargetState getState() {
+        return (GridDropTargetState) super.getState();
     }
 
     @Override
-    protected GridDropTargetExtensionState getState(boolean markAsDirty) {
-        return (GridDropTargetExtensionState) super.getState(markAsDirty);
+    protected GridDropTargetState getState(boolean markAsDirty) {
+        return (GridDropTargetState) super.getState(markAsDirty);
     }
 }

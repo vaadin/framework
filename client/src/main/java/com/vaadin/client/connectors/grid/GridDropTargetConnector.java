@@ -30,23 +30,23 @@ import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
-import com.vaadin.shared.ui.grid.GridDropTargetExtensionRpc;
-import com.vaadin.shared.ui.grid.GridDropTargetExtensionState;
+import com.vaadin.shared.ui.grid.GridDropTargetRpc;
+import com.vaadin.shared.ui.grid.GridDropTargetState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.GridDropTargetExtension;
+import com.vaadin.ui.GridDropTarget;
 
 import elemental.events.Event;
 import elemental.json.JsonObject;
 
 /**
  * Makes Grid an HTML5 drop target. This is the client side counterpart of
- * {@link GridDropTargetExtension}.
+ * {@link GridDropTarget}.
  *
  * @author Vaadin Ltd
  * @since
  */
-@Connect(GridDropTargetExtension.class)
-public class GridDropTargetExtensionConnector extends
+@Connect(GridDropTarget.class)
+public class GridDropTargetConnector extends
         DropTargetExtensionConnector {
 
     // Drag over class name suffixes
@@ -89,7 +89,7 @@ public class GridDropTargetExtensionConnector extends
                     (NativeEvent) dropEvent);
         }
 
-        getRpcProxy(GridDropTargetExtensionRpc.class)
+        getRpcProxy(GridDropTargetRpc.class)
                 .drop(dataTransferText, rowKey, dropLocation);
     }
 
@@ -190,7 +190,7 @@ public class GridDropTargetExtensionConnector extends
     }
 
     @Override
-    public GridDropTargetExtensionState getState() {
-        return (GridDropTargetExtensionState) super.getState();
+    public GridDropTargetState getState() {
+        return (GridDropTargetState) super.getState();
     }
 }

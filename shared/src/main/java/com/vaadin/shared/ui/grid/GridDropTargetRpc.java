@@ -24,7 +24,7 @@ import com.vaadin.shared.communication.ServerRpc;
  * @author Vaadin Ltd.
  * @since
  */
-public interface GridDropTargetExtensionRpc extends ServerRpc {
+public interface GridDropTargetRpc extends ServerRpc {
 
     /**
      * Called when drop event happens on client side.

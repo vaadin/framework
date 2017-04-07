@@ -30,8 +30,8 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
-import com.vaadin.shared.ui.grid.GridDragSourceExtensionRpc;
-import com.vaadin.shared.ui.grid.GridDragSourceExtensionState;
+import com.vaadin.shared.ui.grid.GridDragSourceRpc;
+import com.vaadin.shared.ui.grid.GridDragSourceState;
 
 import elemental.json.JsonObject;
 
@@ -46,7 +46,7 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd.
  * @since
  */
-public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
+public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
     /**
      * Drag data generator that appends drag data to each row.
@@ -64,7 +64,7 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
      * @param target
      *         Grid to be extended.
      */
-    public GridDragSourceExtension(Grid<T> target) {
+    public GridDragSource(Grid<T> target) {
         super(target);
 
         // Create drag data generator
@@ -76,7 +76,7 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
 
     @Override
     protected void registerDragSourceRpc(Grid<T> target) {
-        registerRpc(new GridDragSourceExtensionRpc() {
+        registerRpc(new GridDragSourceRpc() {
             @Override
             public void dragStart(List<String> draggedItemKeys) {
 
@@ -124,7 +124,7 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
      */
     private void generateDragData(T item, JsonObject jsonObject) {
         Optional.ofNullable(generatorFunction).ifPresent(generator -> jsonObject
-                .put(GridDragSourceExtensionState.JSONKEY_DRAG_DATA,
+                .put(GridDragSourceState.JSONKEY_DRAG_DATA,
                         generator.apply(item)));
     }
 
@@ -204,12 +204,12 @@ public class GridDragSourceExtension<T> extends DragSourceExtension<Grid<T>> {
     }
 
     @Override
-    protected GridDragSourceExtensionState getState() {
-        return (GridDragSourceExtensionState) super.getState();
+    protected GridDragSourceState getState() {
+        return (GridDragSourceState) super.getState();
     }
 
     @Override
-    protected GridDragSourceExtensionState getState(boolean markAsDirty) {
-        return (GridDragSourceExtensionState) super.getState(markAsDirty);
+    protected GridDragSourceState getState(boolean markAsDirty) {
+        return (GridDragSourceState) super.getState(markAsDirty);
     }
 }

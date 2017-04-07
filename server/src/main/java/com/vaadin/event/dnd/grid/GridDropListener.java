@@ -18,6 +18,7 @@ package com.vaadin.event.dnd.grid;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.ui.GridDropTarget;
 
 /**
  * Drop listener for HTML5 drop on a Grid row.
@@ -25,7 +26,7 @@ import com.vaadin.event.ConnectorEventListener;
  * @param <T>
  *         The Grid bean type.
  * @author Vaadin Ltd.
- * @see com.vaadin.ui.GridDropTargetExtension#addGridDropListener(GridDropListener)
+ * @see GridDropTarget#addGridDropListener(GridDropListener)
  * @since
  */
 @FunctionalInterface
