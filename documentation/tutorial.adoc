@@ -626,12 +626,9 @@ constructor:
 save.setClickShortcut(KeyCode.ENTER);
 ----
 
-To finish our form, we need to create a public API that we will use in the next
-part from MyUI, to pass in a Customer object that the form should edit. We
-will also add some logic to actually save the changes. We'll start by adding a
-_
-
-_ as a field to the _CustomerForm_ class:
+To finish our form, we need to create a public API that we will use in the next part from MyUI, to pass in a Customer object that the form should edit.
+We will also add some logic to actually save the changes.
+We'll start by adding a [classname]#Binder# as a field to the [classname]#CustomerForm# class:
 
 [source,java]
 ----
