@@ -143,6 +143,98 @@ compatible browser, such as Mozilla Firefox 3.6 or newer.
 
 ////
 
+== Drag and Drop Rows in Grid
+
+It is possible to drag and drop the rows of a Grid component allowing reordering of rows, dragging rows between different Grids, dragging rows outside of a Grid or dropping elements onto rows.
+
+=== Grid Drag Source
+
+A Grid component's rows can be made draggable by applying [classname]#GridDragSource# extension to the component.
+
+You can define the allowed effects and provide a drag data generator.
+
+[source,java]
+----
+Grid<Bean> draggableGrid = new Grid<>();
+// ...
+GridDragSource<Bean> dragSource = new GridDragSource<>(dragSourceComponent);
+
+// set allowed effects
+dragSource.setEffectAllowed(EffectAllowed.MOVE);
+// set the drag data generator
+dragSource.setDragDataGenerator(bean -> {
+    JsonObject ret = Json.createObject();
+    ret.put("beanId", bean.getId());
+    ret.put("beanValue", bean.getValue());
+    return ret;
+});
+----
+
+The _drag data generator_ defines what data should be transferred when a row is dragged and dropped. The generator is executed for every inserted item and returns a `JsonObject` containing the data to be transferred for that item.
+
+[NOTE]
+====
+Note that setting the data transfer text is not supported.
+====
+
+The [classname]#GridDragStartEvent# is fired when dragging a row has started, and the [classname]#GridDragEndEvent# when the drag has ended, either in a drop or a cancel.
+
+[source,java]
+----
+dragSource.addGridDragStartListener(event ->
+    // Keep reference to the dragged items
+    draggedItems = event.getDraggedItems()
+);
+dragSource addGridDragEndListener(event -> {
+    // If drop was successful, remove dragged items from source Grid
+    if (event.getDropEffect() == DropEffect.MOVE) {
+        ((ListDataProvider<Person>) source.getDataProvider()).getItems()
+                .removeAll(event.getDraggedItems() );
+        source.getDataProvider().refreshAll();
+    }
+});
+----
+
+=== Grid Drop Target
+
+To make a Grid component's rows accept a drop event, apply the [classname]#GridDropTarget# extension to the component. When creating the extension you need to define the drop mode.
+
+[source,java]
+----
+Grid<Bean> grid = new Grid<>();
+// ...
+
+GridDropTarget<Bean> dropTarget = new GridDropTarget<>(grid, DropMode.BETWEEN);
+dropTarget.setDropEffect(DropEffect.MOVE);
+----
+
+The _drop mode_ specifies the behaviour of the row when an element is dragged over or dropped onto it. Use `DropMode.ON_TOP` when you want to drop elements on top of a row and `DropMode.BETWEEN` when you want to drop elements between rows.
+
+The [classname]#GridDropEvent# is fired when an element is dropped onto a row or between rows.
+
+[source,java]
+----
+dropTarget.addGridDropListener(event -> {
+    // Accepting dragged items from another Grid
+    event.getDragSourceExtension().ifPresent(source -> {
+        if (source instanceof GridDragSource) {
+            // Get the target Grid's items
+            ListDataProvider<Bean> dataProvider = (ListDataProvider<Bean>)
+                    dropEvent.getComponent().getDataProvider();
+            List<Bean> items = (List<Bean>) dataProvider.getItems();
+
+            // Calculate the target row's index
+            int index = items.indexOf(dropEvent.getDropTargetRow())
+                    + dropEvent.getDropLocation() == DropLocation.BELOW ? 1 : 0;
+
+            // Add dragged items to the target Grid
+            items.addAll(index, draggedItems);
+            dataProvider.refreshAll();
+        }
+    }
+});
+----
+
 (((range="endofrange", startref="term.advanced.dragndrop")))
 
 
