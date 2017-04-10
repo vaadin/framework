@@ -48,12 +48,12 @@ class PortletUIServiceTrackerCustomizer
         implements ServiceTrackerCustomizer<UI, ServiceObjects<UI>> {
 
     private static final String RESOURCE_PATH_PREFIX = "/o/%s";
-    private static final String DISPLAY_CATEGORY = "com.liferay.portlet.display-category";
+    private static final String DISPLAY_CATEGORY = PortletProperties.DISPLAY_CATEGORY;
     private static final String VAADIN_CATEGORY = "category.vaadin";
 
-    private static final String PORTLET_NAME = "javax.portlet.name";
-    private static final String DISPLAY_NAME = "javax.portlet.display-name";
-    private static final String PORTLET_SECURITY_ROLE = "javax.portlet.security-role-ref";
+    private static final String PORTLET_NAME = PortletProperties.PORTLET_NAME;
+    private static final String DISPLAY_NAME = PortletProperties.DISPLAY_NAME;
+    private static final String PORTLET_SECURITY_ROLE = PortletProperties.PORTLET_SECURITY_ROLE;
     private static final String VAADIN_RESOURCE_PATH = "javax.portlet.init-param.vaadin.resources.path";
 
     private Map<ServiceReference<UI>, ServiceRegistration<Portlet>> portletRegistrations = new HashMap<ServiceReference<UI>, ServiceRegistration<Portlet>>();
@@ -75,7 +75,11 @@ class PortletUIServiceTrackerCustomizer
             Class<? extends UI> uiClass = contributedUI.getClass();
             VaadinLiferayPortletConfiguration portletConfiguration = uiClass
                     .getAnnotation(VaadinLiferayPortletConfiguration.class);
-            if (portletConfiguration != null) {
+
+            boolean isPortletUi = uiServiceReference
+                    .getProperty(PortletProperties.PORTLET_UI_PROPERTY) != null
+                    || portletConfiguration != null;
+            if (isPortletUi) {
                 return registerPortlet(uiServiceReference,
                         portletConfiguration);
             } else {
@@ -98,8 +102,13 @@ class PortletUIServiceTrackerCustomizer
 
         OSGiUIProvider uiProvider = new OSGiUIProvider(serviceObjects);
 
-        Dictionary<String, Object> properties = createPortletProperties(
-                uiProvider, reference, configuration);
+        Dictionary<String, Object> properties = null;
+        if (configuration != null) {
+            properties = createPortletProperties(uiProvider, reference,
+                    configuration);
+        } else {
+            properties = createPortletProperties(reference);
+        }
 
         VaadinOSGiPortlet portlet = new VaadinOSGiPortlet(uiProvider);
 
@@ -155,6 +164,19 @@ class PortletUIServiceTrackerCustomizer
         } else if (value == null && defaultValue != null) {
             properties.put(key, defaultValue);
         }
+    }
+
+    private Dictionary<String, Object> createPortletProperties(
+            ServiceReference<UI> reference) {
+        Hashtable<String, Object> properties = new Hashtable<>();
+        for (String key : reference.getPropertyKeys()) {
+            properties.put(key, reference.getProperty(key));
+        }
+        String resourcesPath = String.format(RESOURCE_PATH_PREFIX,
+                service.getResourcePathPrefix());
+        properties.put(VAADIN_RESOURCE_PATH, resourcesPath);
+
+        return properties;
     }
 
     @Override
