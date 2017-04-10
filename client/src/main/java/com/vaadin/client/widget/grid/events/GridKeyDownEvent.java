@@ -31,8 +31,16 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  */
 public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
+    public static final Type<GridKeyDownHandler> TYPE = new Type<GridKeyDownHandler>(
+            BrowserEvents.KEYDOWN, new GridKeyDownEvent(null, null));
+
     public GridKeyDownEvent(Grid<?> grid, CellReference<?> targetCell) {
         super(grid, targetCell);
+    }
+
+    @Override
+    public Type<GridKeyDownHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override

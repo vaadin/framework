@@ -31,8 +31,16 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 public class GridDoubleClickEvent
         extends AbstractGridMouseEvent<GridDoubleClickHandler> {
 
+    public static final Type<GridDoubleClickHandler> TYPE = new Type<GridDoubleClickHandler>(
+            BrowserEvents.DBLCLICK, new GridDoubleClickEvent(null, null));
+
     public GridDoubleClickEvent(Grid<?> grid, CellReference<?> targetCell) {
         super(grid, targetCell);
+    }
+
+    @Override
+    public Type<GridDoubleClickHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override
@@ -51,5 +59,4 @@ public class GridDoubleClickEvent
             handler.onDoubleClick(this);
         }
     }
-
 }

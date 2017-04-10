@@ -30,8 +30,16 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  */
 public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
 
+    public static final Type<GridClickHandler> TYPE = new Type<GridClickHandler>(
+            BrowserEvents.CLICK, new GridClickEvent(null, null));
+
     public GridClickEvent(Grid<?> grid, CellReference<?> targetCell) {
         super(grid, targetCell);
+    }
+
+    @Override
+    public Type<GridClickHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override

@@ -31,6 +31,9 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  */
 public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
 
+    public static final Type<GridKeyUpHandler> TYPE = new Type<GridKeyUpHandler>(
+            BrowserEvents.KEYUP, new GridKeyUpEvent(null, null));
+
     public GridKeyUpEvent(Grid<?> grid, CellReference<?> targetCell) {
         super(grid, targetCell);
     }
@@ -44,6 +47,11 @@ public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
                         && handler instanceof FooterKeyUpHandler)) {
             handler.onKeyUp(this);
         }
+    }
+
+    @Override
+    public Type<GridKeyUpHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override
