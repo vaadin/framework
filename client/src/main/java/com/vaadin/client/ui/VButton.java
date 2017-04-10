@@ -67,6 +67,13 @@ public class VButton extends FocusWidget implements ClickHandler {
 
     private int tabIndex = 0;
 
+    /**
+     * Switch for disabling mouse capturing.
+     *
+     * @see #isCapturing
+     */
+    private boolean capturingEnabled = true;
+
     /*
      * BELOW PRIVATE MEMBERS COPY-PASTED FROM GWT CustomButton
      */
@@ -199,7 +206,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                 clickPending = true;
                 setFocus(true);
                 DOM.setCapture(getElement());
-                isCapturing = true;
+                isCapturing = isCapturingEnabled();
                 addStyleName(CLASSNAME_PRESSED);
             }
             break;
@@ -410,6 +417,27 @@ public class VButton extends FocusWidget implements ClickHandler {
             isCapturing = false;
             isFocusing = false;
         }
+    }
+
+    /**
+     * Enables or disables the widget's capturing of mouse events with the mouse
+     * held down.
+     *
+     * @param enabled
+     *         {@literal true} if capturing enabled, {@literal false} otherwise
+     */
+    public void setCapturingEnabled(boolean enabled) {
+        capturingEnabled = enabled;
+    }
+
+    /**
+     * Returns if the widget's capturing of mouse events are enabled.
+     *
+     * @return {@literal true} if mouse capturing is enabled, {@literal false}
+     * otherwise
+     */
+    public boolean isCapturingEnabled() {
+        return capturingEnabled;
     }
 
     private static native int getHorizontalBorderAndPaddingWidth(Element elem)
