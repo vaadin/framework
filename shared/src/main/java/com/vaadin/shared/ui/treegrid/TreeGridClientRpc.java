@@ -42,4 +42,9 @@ public interface TreeGridClientRpc extends ClientRpc {
      *            the communication key of the collapsed item
      */
     public void setCollapsed(String key);
+
+    /**
+     * Clear all pending expands from the client.
+     */
+    public void clearPendingExpands();
 }

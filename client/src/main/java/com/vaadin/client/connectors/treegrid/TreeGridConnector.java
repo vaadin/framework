@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.BrowserEvents;
@@ -171,6 +170,11 @@ public class TreeGridConnector extends GridConnector {
             public void setCollapsed(String key) {
                 rowKeysPendingExpand.remove(key);
             }
+
+            @Override
+            public void clearPendingExpands() {
+                rowKeysPendingExpand.clear();
+            }
         });
     }
 
@@ -201,7 +205,7 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void resetDataAndSize(int estimatedNewDataSize) {
-                rowKeysPendingExpand.clear();
+                // NO-OP
             }
         });
     }
@@ -348,14 +352,15 @@ public class TreeGridConnector extends GridConnector {
         if (rowKeysPendingExpand.isEmpty()) {
             return;
         }
-        IntStream.range(firstRowIndex, firstRowIndex + numberOfRows)
-                .forEach(rowIndex -> {
-                    String rowKey = getDataSource().getRow(rowIndex)
-                            .getString(DataCommunicatorConstants.KEY);
-                    if (rowKeysPendingExpand.remove(rowKey)) {
-                        setCollapsedServerInitiated(rowIndex, false);
-                    }
-                });
+        for (int rowIndex = firstRowIndex; rowIndex < firstRowIndex
+                + numberOfRows; rowIndex++) {
+            String rowKey = getDataSource().getRow(rowIndex)
+                    .getString(DataCommunicatorConstants.KEY);
+            if (rowKeysPendingExpand.remove(rowKey)) {
+                setCollapsedServerInitiated(rowIndex, false);
+                return;
+            }
+        }
     }
 
     private static boolean isCollapsed(JsonObject rowData) {

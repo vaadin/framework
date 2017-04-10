@@ -391,6 +391,7 @@ public class TreeGrid<T> extends Grid<T> {
             throw new IllegalArgumentException(
                     "TreeGrid only accepts hierarchical data providers");
         }
+        getRpcProxy(TreeGridClientRpc.class).clearPendingExpands();
         super.setDataProvider(dataProvider);
     }
 
