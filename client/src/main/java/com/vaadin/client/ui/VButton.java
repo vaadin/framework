@@ -206,7 +206,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                 clickPending = true;
                 setFocus(true);
                 DOM.setCapture(getElement());
-                isCapturing = capturingEnabled;
+                isCapturing = isCapturingEnabled();
                 addStyleName(CLASSNAME_PRESSED);
             }
             break;
@@ -428,6 +428,16 @@ public class VButton extends FocusWidget implements ClickHandler {
      */
     public void setCapturingEnabled(boolean enabled) {
         capturingEnabled = enabled;
+    }
+
+    /**
+     * Returns if the widget's capturing of mouse events are enabled.
+     *
+     * @return {@literal true} if mouse capturing is enabled, {@literal false}
+     * otherwise
+     */
+    public boolean isCapturingEnabled() {
+        return capturingEnabled;
     }
 
     private static native int getHorizontalBorderAndPaddingWidth(Element elem)

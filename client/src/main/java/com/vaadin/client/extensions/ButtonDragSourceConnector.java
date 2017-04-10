@@ -38,6 +38,8 @@ public class ButtonDragSourceConnector extends DragSourceExtensionConnector {
         super.extend(target);
 
         buttonWidget = ((ButtonConnector) target).getWidget();
+
+        // Disable mouse event capturing to make the widget draggable
         buttonWidget.setCapturingEnabled(false);
     }
 
@@ -45,6 +47,7 @@ public class ButtonDragSourceConnector extends DragSourceExtensionConnector {
     public void onUnregister() {
         super.onUnregister();
 
+        // Reset mouse event capturing
         buttonWidget.setCapturingEnabled(true);
     }
 
