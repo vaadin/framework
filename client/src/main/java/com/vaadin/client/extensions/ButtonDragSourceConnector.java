@@ -20,6 +20,7 @@ import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.button.ButtonConnector;
 import com.vaadin.event.dnd.ButtonDragSource;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.ButtonDragSourceState;
 
 /**
  * Extension to make Button a drag source for HTML5 drag and drop functionality.
@@ -45,5 +46,10 @@ public class ButtonDragSourceConnector extends DragSourceExtensionConnector {
         super.onUnregister();
 
         buttonWidget.setCapturingEnabled(true);
+    }
+
+    @Override
+    public ButtonDragSourceState getState() {
+        return (ButtonDragSourceState) super.getState();
     }
 }

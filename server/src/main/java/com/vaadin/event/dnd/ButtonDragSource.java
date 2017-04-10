@@ -15,6 +15,7 @@
  */
 package com.vaadin.event.dnd;
 
+import com.vaadin.shared.ui.dnd.ButtonDragSourceState;
 import com.vaadin.ui.Button;
 
 /**
@@ -27,5 +28,15 @@ public class ButtonDragSource extends DragSourceExtension<Button> {
 
     public ButtonDragSource(Button target) {
         super(target);
+    }
+
+    @Override
+    protected ButtonDragSourceState getState() {
+        return (ButtonDragSourceState) super.getState();
+    }
+
+    @Override
+    protected ButtonDragSourceState getState(boolean markAsDirty) {
+        return (ButtonDragSourceState) super.getState(markAsDirty);
     }
 }
