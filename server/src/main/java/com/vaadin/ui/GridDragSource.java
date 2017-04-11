@@ -152,6 +152,11 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
     /**
      * Setting the data transfer text for this drag source is not supported.
+     *
+     * @throws UnsupportedOperationException
+     *         Setting dataTransferText is not supported, since the drag data is
+     *         set for each row based on the data provided by the generator.
+     * @see #setDragDataGenerator(SerializableFunction)
      */
     @Override
     public void setDataTransferText(String data) throws

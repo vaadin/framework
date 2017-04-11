@@ -145,37 +145,39 @@ compatible browser, such as Mozilla Firefox 3.6 or newer.
 
 == Drag and Drop Rows in Grid
 
-It is possible to drag and drop the rows of a Grid component. This allows reordering of rows, dragging rows between different Grids, dragging rows outside of a Grid or dropping elements onto rows.
+It is possible to drag and drop the rows of a Grid component. This allows reordering of rows, dragging rows between different Grids, dragging rows outside of a Grid or dropping data onto rows.
 
 === Grid as a Drag Source
 
 A Grid component's rows can be made draggable by applying [classname]#GridDragSource# extension to the component. The extended Grid's rows become draggable, meaning that each row can be grabbed and moved by the mouse individually.
 When the Grid's selection mode is `SelectionMode.MULTI` and multiple rows are selected, it is possible to drag all the visible selected rows by grabbing one of them. However, when the grabbed row is not selected, only that one row will be dragged.
 
-You can define the allowed effects and provide a drag data generator.
+The following example shows how you can define the allowed drag effect and customize the drag data with the drag data generator.
 
 [source,java]
 ----
-Grid<Bean> draggableGrid = new Grid<>();
+Grid<Person> grid = new Grid<>();
 // ...
-GridDragSource<Bean> dragSource = new GridDragSource<>(dragSourceComponent);
+GridDragSource<Person> dragSource = new GridDragSource<>(grid);
 
 // set allowed effects
 dragSource.setEffectAllowed(EffectAllowed.MOVE);
+
 // set the drag data generator
-dragSource.setDragDataGenerator(item -> {
-    JsonObject ret = Json.createObject();
-    ret.put("beanId", item.getId());
-    ret.put("beanValue", item.getValue());
-    return ret;
+dragSource.setDragDataGenerator(person -> {
+    JsonObject data = Json.createObject();
+    data.put("name", person.getFirstName() + " " + person.getLastName());
+    data.put("city", person.getAddress().getCity());
+    return data;
 });
 ----
 
 The _drag data generator_ defines what data should be transferred when a row is dragged and dropped. The generator is executed for every inserted item and returns a `JsonObject` containing the data to be transferred for that item. The generated data is transferred as a JSON array using the HTML5 DataTransfer's data parameter of type `"text"`.
+When no generator is set, the whole row data is transferred, given by the `GridConnector.getDataSource().getRow(index)` method.
 
 [NOTE]
 ====
-Note that calling the `setDataTransferText(String data)` method is not supported.
+Note that calling the inherited `setDataTransferText(String data)` method is not supported, since the drag data is set for each row based on the data provided by the generator.
 ====
 
 The [classname]#GridDragStartEvent# is fired when dragging a row has started, and the [classname]#GridDragEndEvent# when the drag has ended, either in a drop or a cancel.
@@ -186,12 +188,17 @@ dragSource.addGridDragStartListener(event ->
     // Keep reference to the dragged items
     draggedItems = event.getDraggedItems()
 );
-dragSource addGridDragEndListener(event -> {
+
+// Add drag end listener
+dragSource.addGridDragEndListener(event -> {
     // If drop was successful, remove dragged items from source Grid
     if (event.getDropEffect() == DropEffect.MOVE) {
-        ((ListDataProvider<Person>) source.getDataProvider()).getItems()
-                .removeAll(event.getDraggedItems() );
-        source.getDataProvider().refreshAll();
+        ((ListDataProvider<Person>) grid.getDataProvider()).getItems()
+                .removeAll(draggedItems);
+        grid.getDataProvider().refreshAll();
+
+        // Remove reference to dragged items
+        draggedItems = null;
     }
 });
 ----
@@ -206,8 +213,7 @@ To make a Grid component's rows accept a drop event, apply the [classname]#GridD
 ----
 Grid<Bean> grid = new Grid<>();
 // ...
-
-GridDropTarget<Bean> dropTarget = new GridDropTarget<>(grid, DropMode.BETWEEN);
+GridDropTarget<Person> dropTarget = new GridDropTarget<>(grid, DropMode.BETWEEN);
 dropTarget.setDropEffect(DropEffect.MOVE);
 ----
 
@@ -222,19 +228,21 @@ dropTarget.addGridDropListener(event -> {
     event.getDragSourceExtension().ifPresent(source -> {
         if (source instanceof GridDragSource) {
             // Get the target Grid's items
-            ListDataProvider<Bean> dataProvider = (ListDataProvider<Bean>)
-                    dropEvent.getComponent().getDataProvider();
-            List<Bean> items = (List<Bean>) dataProvider.getItems();
+            ListDataProvider<Person> dataProvider = (ListDataProvider<Person>)
+                    event.getComponent().getDataProvider();
+            List<Person> items = (List<Person>) dataProvider.getItems();
 
             // Calculate the target row's index
-            int index = items.indexOf(dropEvent.getDropTargetRow())
-                    + dropEvent.getDropLocation() == DropLocation.BELOW ? 1 : 0;
+            int index = items.indexOf(event.getDropTargetRow()) + (
+                    event.getDropLocation() == DropLocation.BELOW ? 1 : 0);
 
             // Add dragged items to the target Grid
             items.addAll(index, draggedItems);
             dataProvider.refreshAll();
+
+            log("dragData=" + event.getDataTransferText());
         }
-    }
+    });
 });
 ----
 
