@@ -150,6 +150,9 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
         generatorFunction = generator;
     }
 
+    /**
+     * Setting the data transfer text for this drag source is not supported.
+     */
     @Override
     public void setDataTransferText(String data) throws
             UnsupportedOperationException {
