@@ -918,7 +918,7 @@ customers and creating new ones.
 
 The following video shows how to do this step of the tutorial:
 
-video::HuhhsI0GJNc[youtube, width="640", height="400"]
+video::eMCWf3PfXLs[youtube, width="640", height="400"]
 
 In the previous part, we already added the form to the _MyUI_ to see what it looks
 like. By default, we want it to be invisible, so let's first hide it
