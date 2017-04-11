@@ -49,16 +49,6 @@ import elemental.json.JsonObject;
 public class GridDropTargetConnector extends
         DropTargetExtensionConnector {
 
-    // Drag over class name suffixes
-    private final static String CLASS_SUFFIX_BEFORE = "-before";
-    private final static String CLASS_SUFFIX_AFTER = "-after";
-
-    // Drag over class names
-    private final static String CLASS_DRAG_OVER_BEFORE =
-            CLASS_DRAG_OVER + CLASS_SUFFIX_BEFORE;
-    private final static String CLASS_DRAG_OVER_AFTER =
-            CLASS_DRAG_OVER + CLASS_SUFFIX_AFTER;
-
     /**
      * Current drag over class name
      */
@@ -66,11 +56,36 @@ public class GridDropTargetConnector extends
 
     private GridConnector gridConnector;
 
+    /**
+     * Class name to apply when an element is dragged over a row and the
+     * location is {@link DropLocation#ON_TOP}.
+     */
+    private String styleDragCenter;
+
+    /**
+     * Class name to apply when an element is dragged over a row and the
+     * location is {@link DropLocation#ABOVE}.
+     */
+    private String styleDragTop;
+
+    /**
+     * Class name to apply when an element is dragged over a row and the
+     * location is {@link DropLocation#BELOW}.
+     */
+    private String styleDragBottom;
+
     @Override
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
 
         super.extend(target);
+
+        // Generate class names
+        String styleRow =
+                gridConnector.getWidget().getStylePrimaryName() + "-row";
+        styleDragCenter = styleRow + STYLE_SUFFIX_DRAG_CENTER;
+        styleDragTop = styleRow + STYLE_SUFFIX_DRAG_TOP;
+        styleDragBottom = styleRow + STYLE_SUFFIX_DRAG_BOTTOM;
     }
 
     @Override
@@ -137,22 +152,22 @@ public class GridDropTargetConnector extends
     }
 
     private String getTargetClassName(Element target, NativeEvent event) {
-        String classSuffix;
+        String className;
 
         switch (getDropLocation(target, event)) {
         case ABOVE:
-            classSuffix = CLASS_SUFFIX_BEFORE;
+            className = styleDragTop;
             break;
         case BELOW:
-            classSuffix = CLASS_SUFFIX_AFTER;
+            className = styleDragBottom;
             break;
         case ON_TOP:
         default:
-            classSuffix = "";
+            className = styleDragCenter;
             break;
         }
 
-        return CLASS_DRAG_OVER + classSuffix;
+        return className;
     }
 
     @Override
@@ -160,9 +175,9 @@ public class GridDropTargetConnector extends
 
         // Remove all possible drag over class names
         getTargetRow((Element) event.getTarget()).ifPresent(e -> {
-            e.removeClassName(CLASS_DRAG_OVER);
-            e.removeClassName(CLASS_DRAG_OVER_BEFORE);
-            e.removeClassName(CLASS_DRAG_OVER_AFTER);
+            e.removeClassName(styleDragCenter);
+            e.removeClassName(styleDragTop);
+            e.removeClassName(styleDragBottom);
         });
     }
 
