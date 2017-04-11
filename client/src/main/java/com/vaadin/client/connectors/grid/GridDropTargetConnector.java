@@ -50,9 +50,9 @@ public class GridDropTargetConnector extends
         DropTargetExtensionConnector {
 
     /**
-     * Current drag over class name
+     * Current style name
      */
-    private String dragOverClassName;
+    private String currentStyleName;
 
     private GridConnector gridConnector;
 
@@ -134,6 +134,18 @@ public class GridDropTargetConnector extends
     }
 
     @Override
+    protected void onDragEnter(Event event) {
+        // Generate style names for the drop target
+        String styleRow =
+                gridConnector.getWidget().getStylePrimaryName() + "-row";
+        styleDragCenter = styleRow + STYLE_SUFFIX_DRAG_CENTER;
+        styleDragTop = styleRow + STYLE_SUFFIX_DRAG_TOP;
+        styleDragBottom = styleRow + STYLE_SUFFIX_DRAG_BOTTOM;
+
+        super.onDragEnter(event);
+    }
+
+    @Override
     protected void setTargetIndicator(Event event) {
         getTargetRow(((Element) event.getTarget())).ifPresent(target -> {
 
@@ -142,11 +154,11 @@ public class GridDropTargetConnector extends
 
             // Add or replace class name if changed
             if (!target.hasClassName(className)) {
-                if (dragOverClassName != null) {
-                    target.removeClassName(dragOverClassName);
+                if (currentStyleName != null) {
+                    target.removeClassName(currentStyleName);
                 }
                 target.addClassName(className);
-                dragOverClassName = className;
+                currentStyleName = className;
             }
         });
     }
@@ -173,7 +185,7 @@ public class GridDropTargetConnector extends
     @Override
     protected void removeTargetIndicator(Event event) {
 
-        // Remove all possible drag over class names
+        // Remove all possible style names
         getTargetRow((Element) event.getTarget()).ifPresent(e -> {
             e.removeClassName(styleDragCenter);
             e.removeClassName(styleDragTop);

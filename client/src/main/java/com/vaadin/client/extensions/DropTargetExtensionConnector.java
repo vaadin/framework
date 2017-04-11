@@ -129,6 +129,10 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragEnter(Event event) {
+        // Generate style name for drop target
+        styleDragCenter = dropTargetWidget.getStylePrimaryName()
+                + STYLE_SUFFIX_DRAG_CENTER;
+
         setTargetIndicator(event);
     }
 
