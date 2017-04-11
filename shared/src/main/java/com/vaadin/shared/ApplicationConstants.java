@@ -222,4 +222,10 @@ public class ApplicationConstants implements Serializable {
     public static final String FRONTEND_URL_ES5_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
             + "frontend/es5/";
 
+    /**
+     * Configuration name for the HTML bundle to use instead of individual HTML
+     * imports.
+     */
+    public static final String HTML_BUNDLE_NAME = "html-bundle";
+
 }

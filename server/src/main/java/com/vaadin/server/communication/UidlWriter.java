@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.HtmlBundleHandler;
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.ClientCache;
@@ -284,6 +285,7 @@ public class UidlWriter implements Serializable {
 
             List<Dependency> dependencies = Dependency
                     .findDependencies(newConnectorTypes, manager);
+            dependencies = HtmlBundleHandler.replaceWithBundle(dependencies, session);
 
             // Include dependencies in output if there are any
             if (!dependencies.isEmpty()) {
