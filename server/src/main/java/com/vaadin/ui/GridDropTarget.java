@@ -90,6 +90,40 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
                 GridDropListener.DROP_METHOD);
     }
 
+    /**
+     * Sets the threshold between drop locations from the top and the bottom of
+     * a row in pixels.
+     * <p>
+     * Dropping an element
+     * <ul>
+     * <li>within {@code threshold} pixels from the top of a row results in a
+     * drop event with {@link com.vaadin.shared.ui.grid.DropLocation#ABOVE
+     * DropLocation.ABOVE}</li>
+     * <li>within {@code threshold} pixels from the bottom of a row results in
+     * a drop event with {@link com.vaadin.shared.ui.grid.DropLocation#BELOW
+     * DropLocation.BELOW}</li>
+     * <li>anywhere else within the row results in a drop event with {@link
+     * com.vaadin.shared.ui.grid.DropLocation#ON_TOP DropLocation.ON_TOP}</li>
+     * </ul>
+     * The value only has an effect when drop mode is set to {@link
+     * DropMode#ON_TOP_OR_BETWEEN}.
+     * <p>
+     * Default is 5 pixels.
+     */
+    public void setDropThreshold(int threshold) {
+        getState().dropThreshold = threshold;
+    }
+
+    /**
+     * Gets the threshold between drop locations from the top and the bottom of
+     * the row.
+     *
+     * @return The threshold in pixels.
+     */
+    public int getDropThreshold() {
+        return getState(false).dropThreshold;
+    }
+
     @Override
     protected void registerDropTargetRpc(Grid<T> target) {
         registerRpc(
