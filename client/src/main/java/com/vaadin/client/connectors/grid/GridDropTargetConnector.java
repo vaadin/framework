@@ -79,13 +79,6 @@ public class GridDropTargetConnector extends
         gridConnector = (GridConnector) target;
 
         super.extend(target);
-
-        // Generate class names
-        String styleRow =
-                gridConnector.getWidget().getStylePrimaryName() + "-row";
-        styleDragCenter = styleRow + STYLE_SUFFIX_DRAG_CENTER;
-        styleDragTop = styleRow + STYLE_SUFFIX_DRAG_TOP;
-        styleDragBottom = styleRow + STYLE_SUFFIX_DRAG_BOTTOM;
     }
 
     @Override
