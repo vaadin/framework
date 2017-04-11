@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
@@ -193,9 +193,10 @@ public class ComboBoxElement extends AbstractSelectElement {
         try {
             clickElement(getSuggestionPopup().findElement(byNextPage));
             return true;
-        } catch (WebDriverException e) {
-            // PhantomJS driver can throw WDE instead of the more specific
-            // NoSuchElementException
+        } catch (NoSuchElementException e) {
+            // TODO PhantomJS driver can throw WebDriverException instead of the
+            // more specific NoSuchElementException, but we cannot catch raw WDE
+            // as that would swallow timeouts
             return false;
         }
     }
@@ -209,9 +210,10 @@ public class ComboBoxElement extends AbstractSelectElement {
         try {
             clickElement(getSuggestionPopup().findElement(byPrevPage));
             return true;
-        } catch (WebDriverException e) {
-            // PhantomJS driver can throw WDE instead of the more specific
-            // NoSuchElementException
+        } catch (NoSuchElementException e) {
+            // TODO PhantomJS driver can throw WebDriverException instead of the
+            // more specific NoSuchElementException, but we cannot catch raw WDE
+            // as that would swallow timeouts
             return false;
         }
     }
