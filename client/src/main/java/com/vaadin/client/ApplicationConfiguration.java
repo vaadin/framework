@@ -238,6 +238,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * always end with a slash (/).
      */
     private String vaadinDirUrl;
+    private String frontendUrl;
     private String serviceUrl;
     private String contextRootUrl;
     private int uiId;
@@ -339,6 +340,16 @@ public class ApplicationConfiguration implements EntryPoint {
         return vaadinDirUrl;
     }
 
+    /**
+     * Gets the URL of the that the {@literal frontend://} protocol should
+     * resolve to.
+     *
+     * @return the URL of the frontend protocol
+     */
+    public String getFrontendUrl() {
+        return frontendUrl;
+    }
+
     public void setAppId(String appId) {
         id = appId;
     }
@@ -427,6 +438,8 @@ public class ApplicationConfiguration implements EntryPoint {
                 .getConfigString(ApplicationConstants.CONTEXT_ROOT_URL);
         vaadinDirUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
                 .getConfigString(ApplicationConstants.VAADIN_DIR_URL));
+        frontendUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
+                .getConfigString(ApplicationConstants.FRONTEND_URL));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
                 .intValue();
 
