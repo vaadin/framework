@@ -41,8 +41,20 @@ import elemental.events.EventTarget;
 @Connect(DropTargetExtension.class)
 public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
+    /**
+     * Style name suffix for dragging data over the center of the drop target.
+     */
     protected static final String STYLE_SUFFIX_DRAG_CENTER = "-drag-center";
+
+    /**
+     * Style name suffix for dragging data over the top part of the drop target.
+     */
     protected static final String STYLE_SUFFIX_DRAG_TOP = "-drag-top";
+
+    /**
+     * Style name suffix for dragging data over the bottom part of the drop
+     * target.
+     */
     protected static final String STYLE_SUFFIX_DRAG_BOTTOM = "-drag-bottom";
 
     // Create event listeners
@@ -67,10 +79,6 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         dropTargetWidget = ((ComponentConnector) target).getWidget();
 
         addDropListeners(getDropTargetElement());
-
-        // Generate class name
-        styleDragCenter = dropTargetWidget.getStylePrimaryName()
-                + STYLE_SUFFIX_DRAG_CENTER;
     }
 
     /**
