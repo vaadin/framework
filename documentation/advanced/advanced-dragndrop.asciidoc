@@ -143,6 +143,7 @@ compatible browser, such as Mozilla Firefox 3.6 or newer.
 
 ////
 
+[[advanced.dragndrop.grid]]
 == Drag and Drop Rows in Grid
 
 It is possible to drag and drop the rows of a Grid component. This allows reordering of rows, dragging rows between different Grids, dragging rows outside of a Grid or dropping data onto rows.

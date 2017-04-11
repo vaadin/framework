@@ -848,6 +848,12 @@ You can scroll to first item with [methodname]#scrollToStart()#, to end with
 [methodname]#scrollToEnd()#, or to a specific row with [methodname]#scrollTo()#.
 ////
 
+== Drag and Drop Rows
+
+Please refer to the
+<<dummy/../../../framework/advanced/advanced-dragndrop#advanced.dragndrop.grid,"Drag and Drop documentation">>.
+
+[[advanced.dragndrop.grid]]
 
 [[components.grid.stylegeneration]]
 == Generating Row or Cell Styles
