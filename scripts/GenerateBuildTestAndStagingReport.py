@@ -118,7 +118,7 @@ def completeArtifactNames(artifactIds, version):
 
 
 allowedPluginArtifacts = completeArtifactNames([ 'vaadin-maven-plugin' ], args.version)
-allowedArchetypeArtifacts = completeArtifactNames([ 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet' ], args.version)
+allowedArchetypeArtifacts = completeArtifactNames([ 'vaadin-archetypes', 'vaadin-archetype-application', 'vaadin-archetype-application-multimodule', 'vaadin-archetype-application-example', 'vaadin-archetype-widget', 'vaadin-archetype-liferay-portlet' ], args.version)
 allowedFrameworkArtifacts = completeArtifactNames([ 'vaadin-root', 'vaadin-bom', 'vaadin-shared', 'vaadin-server', 'vaadin-client', 'vaadin-client-compiler', 'vaadin-client-compiled', 'vaadin-push', 'vaadin-themes', 'vaadin-widgets' ], args.version)
 
 content = "<html><head></head><body><table>"
