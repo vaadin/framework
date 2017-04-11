@@ -308,8 +308,20 @@ public class PushHandler {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
-
+        if(event == null){
+            getLogger().log(Level.SEVERE,
+                    "Could not get event. This should never happen", e);
+            return;
+        }
+            
         AtmosphereResource resource = event.getResource();
+        
+        if(resource == null){
+            getLogger().log(Level.SEVERE,
+                    "Could not get resource. This should never happen", e);
+            return;
+        }        
+        
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(
                 resource.getRequest(), service);
         VaadinSession session = null;
