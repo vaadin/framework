@@ -976,7 +976,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      *             if there was a problem while locating the file
      */
-    protected URL findResourceURL(String filename) throws IOException {
+    public URL findResourceURL(String filename) throws IOException {
         URL resourceUrl = getServletContext().getResource(filename);
         if (resourceUrl == null) {
             // try if requested file is found from class loader
@@ -1272,7 +1272,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Returns the relative path at which static files are served for a request
      * (if any).
-     * 
+     *
      * @param request
      *            HTTP request
      * @return relative servlet path or null if the request path does not
