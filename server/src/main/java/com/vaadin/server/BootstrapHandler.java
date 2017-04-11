@@ -255,20 +255,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         @Override
         protected String getFrontendUrl() {
             if (frontendUrl == null) {
-                DeploymentConfiguration configuration = context.getSession()
-                        .getConfiguration();
-                if (context.getSession().getBrowser().isEs6Supported()) {
-                    frontendUrl = configuration.getApplicationOrSystemProperty(
-                            ApplicationConstants.FRONTEND_URL_ES6,
-                            ApplicationConstants.FRONTEND_URL_ES6_DEFAULT_VALUE);
-                } else {
-                    frontendUrl = configuration.getApplicationOrSystemProperty(
-                            ApplicationConstants.FRONTEND_URL_ES5,
-                            ApplicationConstants.FRONTEND_URL_ES5_DEFAULT_VALUE);
-                }
-                if (!frontendUrl.endsWith("/")) {
-                    frontendUrl += "/";
-                }
+                frontendUrl = resolveFrontendUrl(context.getSession());
             }
 
             return frontendUrl;
@@ -280,6 +267,33 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         // We do not want to handle /APP requests here, instead let it fall
         // through and produce a 404
         return !ServletPortletHelper.isAppRequest(request);
+    }
+
+    /**
+     * Resolves the URL to use for the {@literal frontend://} protocol.
+     *
+     * @param session
+     *            the session of the user to resolve the protocol for
+     * @return the URL that frontend:// resolves to, possibly using another
+     *         internal protocol
+     */
+    public static String resolveFrontendUrl(VaadinSession session) {
+        DeploymentConfiguration configuration = session.getConfiguration();
+        String frontendUrl;
+        if (session.getBrowser().isEs6Supported()) {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES6,
+                    ApplicationConstants.FRONTEND_URL_ES6_DEFAULT_VALUE);
+        } else {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES5,
+                    ApplicationConstants.FRONTEND_URL_ES5_DEFAULT_VALUE);
+        }
+        if (!frontendUrl.endsWith("/")) {
+            frontendUrl += "/";
+        }
+
+        return frontendUrl;
     }
 
     @Override
