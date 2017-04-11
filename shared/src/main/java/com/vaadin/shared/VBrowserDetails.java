@@ -149,7 +149,8 @@ public class VBrowserDetails implements Serializable {
                         parseVersionString(tmp);
                     }
                 } else if (isTrident) {
-                    // See https://msdn.microsoft.com/en-us/library/ms537503(v=vs.85).aspx#TriToken
+                    // See
+                    // https://msdn.microsoft.com/en-us/library/ms537503(v=vs.85).aspx#TriToken
                     setIEMode((int) browserEngineVersion + 4);
                 } else {
                     String ieVersionString = userAgent
@@ -582,6 +583,25 @@ public class VBrowserDetails implements Serializable {
             return true;
         }
 
+        return false;
+    }
+
+    public boolean isEs6Supported() {
+        if (isTooOldToFunctionProperly()) {
+            return false;
+        }
+
+        // assumes evergreen browsers support ES6
+        if (isChrome() || isFirefox() || isOpera() || isEdge()) {
+            return true;
+        }
+
+        // Safari > 9
+        if (isSafari() && getBrowserMajorVersion() > 9) {
+            return true;
+        }
+
+        // IE11 and Safari 9
         return false;
     }
 
