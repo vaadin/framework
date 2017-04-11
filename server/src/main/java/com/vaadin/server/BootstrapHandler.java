@@ -84,7 +84,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         private String appId;
         private PushMode pushMode;
         private JsonObject applicationParameters;
-        private VaadinUriResolver uriResolver;
+        private BootstrapUriResolver uriResolver;
         private WidgetsetInfo widgetsetInfo;
 
         public BootstrapContext(VaadinResponse response,
@@ -177,7 +177,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return applicationParameters;
         }
 
-        public VaadinUriResolver getUriResolver() {
+        public BootstrapUriResolver getUriResolver() {
             if (uriResolver == null) {
                 uriResolver = new BootstrapUriResolver(this);
             }
@@ -188,6 +188,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     private class BootstrapUriResolver extends VaadinUriResolver {
         private final BootstrapContext context;
+        private String frontendUrl;
 
         public BootstrapUriResolver(BootstrapContext bootstrapContext) {
             context = bootstrapContext;
@@ -249,6 +250,28 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .getString(ApplicationConstants.CONTEXT_ROOT_URL);
             assert root.endsWith("/");
             return root;
+        }
+
+        @Override
+        protected String getFrontendUrl() {
+            if (frontendUrl == null) {
+                DeploymentConfiguration configuration = context.getSession()
+                        .getConfiguration();
+                if (context.getSession().getBrowser().isEs6Supported()) {
+                    frontendUrl = configuration.getApplicationOrSystemProperty(
+                            ApplicationConstants.FRONTEND_URL_ES6,
+                            ApplicationConstants.FRONTEND_URL_ES6_DEFAULT_VALUE);
+                } else {
+                    frontendUrl = configuration.getApplicationOrSystemProperty(
+                            ApplicationConstants.FRONTEND_URL_ES5,
+                            ApplicationConstants.FRONTEND_URL_ES5_DEFAULT_VALUE);
+                }
+                if (!frontendUrl.endsWith("/")) {
+                    frontendUrl += "/";
+                }
+            }
+
+            return frontendUrl;
         }
     }
 
@@ -707,6 +730,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         String vaadinDir = vaadinService.getStaticFileLocation(request)
                 + "/VAADIN/";
         appConfig.put(ApplicationConstants.VAADIN_DIR_URL, vaadinDir);
+        appConfig.put(ApplicationConstants.FRONTEND_URL,
+                context.getUriResolver().getFrontendUrl());
 
         if (!session.getConfiguration().isProductionMode()) {
             appConfig.put("debug", true);

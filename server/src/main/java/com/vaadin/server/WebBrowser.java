@@ -538,4 +538,18 @@ public class WebBrowser implements Serializable {
         return browserDetails.isTooOldToFunctionProperly();
     }
 
+    /**
+     * Checks if the browser supports ECMAScript 6, based on the user agent.
+     *
+     * @return <code>true</code> if the browser supports ES6, <code>false</code>
+     *         otherwise.
+     */
+    public boolean isEs6Supported() {
+        if (browserDetails == null) {
+            // Don't know, so assume no
+            return false;
+        }
+        return browserDetails.isEs6Supported();
+
+    }
 }
