@@ -109,6 +109,9 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * DropMode#ON_TOP_OR_BETWEEN}.
      * <p>
      * Default is 5 pixels.
+     *
+     * @param threshold
+     *         The threshold from the top and bottom of the row in pixels.
      */
     public void setDropThreshold(int threshold) {
         getState().dropThreshold = threshold;
