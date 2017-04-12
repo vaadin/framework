@@ -41,7 +41,21 @@ import elemental.events.EventTarget;
 @Connect(DropTargetExtension.class)
 public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
-    protected static final String CLASS_DRAG_OVER = "v-drag-over";
+    /**
+     * Style name suffix for dragging data over the center of the drop target.
+     */
+    protected static final String STYLE_SUFFIX_DRAG_CENTER = "-drag-center";
+
+    /**
+     * Style name suffix for dragging data over the top part of the drop target.
+     */
+    protected static final String STYLE_SUFFIX_DRAG_TOP = "-drag-top";
+
+    /**
+     * Style name suffix for dragging data over the bottom part of the drop
+     * target.
+     */
+    protected static final String STYLE_SUFFIX_DRAG_BOTTOM = "-drag-bottom";
 
     // Create event listeners
     private final EventListener dragEnterListener = this::onDragEnter;
@@ -53,6 +67,12 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * Widget of the drop target component.
      */
     private Widget dropTargetWidget;
+
+    /**
+     * Class name to apply when an element is dragged over the center of the
+     * target.
+     */
+    private String styleDragCenter;
 
     @Override
     protected void extend(ServerConnector target) {
@@ -117,6 +137,10 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         browser event to be handled
      */
     protected void onDragEnter(Event event) {
+        // Generate style name for drop target
+        styleDragCenter = dropTargetWidget.getStylePrimaryName()
+                + STYLE_SUFFIX_DRAG_CENTER;
+
         setTargetIndicator(event);
     }
 
@@ -231,7 +255,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         The drag enter or dragover event that triggered the indication.
      */
     protected void setTargetIndicator(Event event) {
-        getDropTargetElement().addClassName(CLASS_DRAG_OVER);
+        getDropTargetElement().addClassName(styleDragCenter);
     }
 
     /**
@@ -243,7 +267,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         the event that triggered the removal of the indicator
      */
     protected void removeTargetIndicator(Event event) {
-        getDropTargetElement().removeClassName(CLASS_DRAG_OVER);
+        getDropTargetElement().removeClassName(styleDragCenter);
     }
 
     private native boolean executeScript(NativeEvent event, String script)/*-{
