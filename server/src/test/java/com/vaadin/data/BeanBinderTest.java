@@ -66,6 +66,8 @@ public class BeanBinderTest
         @NotEmpty
         private String lastname;
 
+        private SubConstraint subfield;
+        
         public String getFirstname() {
             return firstname;
         }
@@ -88,6 +90,30 @@ public class BeanBinderTest
 
         public void setLastname(String lastname) {
             this.lastname = lastname;
+        }
+        
+        
+        public SubConstraint getSubfield() {
+            return subfield;
+        }
+
+        public void setSubfield(SubConstraint subfield) {
+            this.subfield = subfield;
+        }
+
+
+        public static class SubConstraint implements Serializable{
+            
+            @NotNull
+            private String name;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
         }
     }
 
@@ -332,6 +358,21 @@ public class BeanBinderTest
 
         TextField field = new TextField();
         binder.bind(field, "lastname");
+        binder.setBean(bean);
+
+        Assert.assertTrue(field.isRequiredIndicatorVisible());
+        testSerialization(binder);
+    }
+    
+    @Test
+    public void subfield_name_fieldIsRequired() {
+        BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
+                RequiredConstraints.class);
+        RequiredConstraints bean = new RequiredConstraints();
+        bean.setSubfield(new RequiredConstraints.SubConstraint());
+        
+        TextField field = new TextField();
+        binder.bind(field, "subfield.name");
         binder.setBean(bean);
 
         Assert.assertTrue(field.isRequiredIndicatorVisible());

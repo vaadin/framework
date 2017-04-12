@@ -59,6 +59,10 @@ public class BinderCustomPropertySetTest {
         public Class<String> getType() {
             return String.class;
         }
+        
+        public Class<?> getPropertyHolderType(){
+            return Map.class;
+        }
 
         @Override
         public String getName() {
