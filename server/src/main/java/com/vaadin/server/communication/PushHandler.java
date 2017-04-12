@@ -310,7 +310,7 @@ public class PushHandler {
         // things.
         if(event == null){
             getLogger().log(Level.SEVERE,
-                    "Could not get event. This should never happen", e);
+                    "Could not get event. This should never happen.");
             return;
         }
             
@@ -318,7 +318,7 @@ public class PushHandler {
         
         if(resource == null){
             getLogger().log(Level.SEVERE,
-                    "Could not get resource. This should never happen", e);
+                    "Could not get resource. This should never happen.");
             return;
         }        
         
