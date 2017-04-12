@@ -313,15 +313,15 @@ public class PushHandler {
                     "Could not get event. This should never happen.");
             return;
         }
-            
+
         AtmosphereResource resource = event.getResource();
-        
+
         if(resource == null){
             getLogger().log(Level.SEVERE,
                     "Could not get resource. This should never happen.");
             return;
-        }        
-        
+        }
+
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(
                 resource.getRequest(), service);
         VaadinSession session = null;
