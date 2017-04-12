@@ -98,13 +98,19 @@ public class TreeGridConnector extends GridConnector {
             // Id of new hierarchy column. Choose first when nothing explicitly
             // set
             String newHierarchyColumnId = getState().hierarchyColumnId;
-            if (newHierarchyColumnId == null) {
+            if (newHierarchyColumnId == null
+                    && !getState().columnOrder.isEmpty()) {
                 newHierarchyColumnId = getState().columnOrder.get(0);
             }
 
             // Columns
             Grid.Column<?, ?> newColumn = getColumn(newHierarchyColumnId);
             Grid.Column<?, ?> oldColumn = getColumn(oldHierarchyColumnId);
+
+            if (newColumn == null && oldColumn == null) {
+                // No hierarchy column defined
+                return;
+            }
 
             // Unwrap renderer of old column
             if (oldColumn != null

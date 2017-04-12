@@ -140,6 +140,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             sendData(0, dataObjects);
             getActiveDataHandler().addActiveData(items.stream());
             getActiveDataHandler().cleanUp(items.stream());
+        } else {
+            getClientRpc().reset(0);
         }
 
         setPushRows(Range.withLength(0, 0));
