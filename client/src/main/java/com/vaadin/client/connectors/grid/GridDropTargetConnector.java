@@ -49,22 +49,30 @@ import elemental.json.JsonObject;
 public class GridDropTargetConnector extends
         DropTargetExtensionConnector {
 
-    // Drag over class name suffixes
-    private final static String CLASS_SUFFIX_BEFORE = "-before";
-    private final static String CLASS_SUFFIX_AFTER = "-after";
-
-    // Drag over class names
-    private final static String CLASS_DRAG_OVER_BEFORE =
-            CLASS_DRAG_OVER + CLASS_SUFFIX_BEFORE;
-    private final static String CLASS_DRAG_OVER_AFTER =
-            CLASS_DRAG_OVER + CLASS_SUFFIX_AFTER;
-
     /**
-     * Current drag over class name
+     * Current style name
      */
-    private String dragOverClassName;
+    private String currentStyleName;
 
     private GridConnector gridConnector;
+
+    /**
+     * Class name to apply when an element is dragged over a row and the
+     * location is {@link DropLocation#ON_TOP}.
+     */
+    private String styleDragCenter;
+
+    /**
+     * Class name to apply when an element is dragged over a row and the
+     * location is {@link DropLocation#ABOVE}.
+     */
+    private String styleDragTop;
+
+    /**
+     * Class name to apply when an element is dragged over a row and the
+     * location is {@link DropLocation#BELOW}.
+     */
+    private String styleDragBottom;
 
     @Override
     protected void extend(ServerConnector target) {
@@ -119,6 +127,18 @@ public class GridDropTargetConnector extends
     }
 
     @Override
+    protected void onDragEnter(Event event) {
+        // Generate style names for the drop target
+        String styleRow =
+                gridConnector.getWidget().getStylePrimaryName() + "-row";
+        styleDragCenter = styleRow + STYLE_SUFFIX_DRAG_CENTER;
+        styleDragTop = styleRow + STYLE_SUFFIX_DRAG_TOP;
+        styleDragBottom = styleRow + STYLE_SUFFIX_DRAG_BOTTOM;
+
+        super.onDragEnter(event);
+    }
+
+    @Override
     protected void setTargetIndicator(Event event) {
         getTargetRow(((Element) event.getTarget())).ifPresent(target -> {
 
@@ -127,42 +147,42 @@ public class GridDropTargetConnector extends
 
             // Add or replace class name if changed
             if (!target.hasClassName(className)) {
-                if (dragOverClassName != null) {
-                    target.removeClassName(dragOverClassName);
+                if (currentStyleName != null) {
+                    target.removeClassName(currentStyleName);
                 }
                 target.addClassName(className);
-                dragOverClassName = className;
+                currentStyleName = className;
             }
         });
     }
 
     private String getTargetClassName(Element target, NativeEvent event) {
-        String classSuffix;
+        String className;
 
         switch (getDropLocation(target, event)) {
         case ABOVE:
-            classSuffix = CLASS_SUFFIX_BEFORE;
+            className = styleDragTop;
             break;
         case BELOW:
-            classSuffix = CLASS_SUFFIX_AFTER;
+            className = styleDragBottom;
             break;
         case ON_TOP:
         default:
-            classSuffix = "";
+            className = styleDragCenter;
             break;
         }
 
-        return CLASS_DRAG_OVER + classSuffix;
+        return className;
     }
 
     @Override
     protected void removeTargetIndicator(Event event) {
 
-        // Remove all possible drag over class names
+        // Remove all possible style names
         getTargetRow((Element) event.getTarget()).ifPresent(e -> {
-            e.removeClassName(CLASS_DRAG_OVER);
-            e.removeClassName(CLASS_DRAG_OVER_BEFORE);
-            e.removeClassName(CLASS_DRAG_OVER_AFTER);
+            e.removeClassName(styleDragCenter);
+            e.removeClassName(styleDragTop);
+            e.removeClassName(styleDragBottom);
         });
     }
 
