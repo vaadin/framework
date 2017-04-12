@@ -174,7 +174,7 @@ dragSource.setDragDataGenerator(person -> {
 ----
 
 The _drag data generator_ defines what data should be transferred when a row is dragged and dropped. The generator is executed for every inserted item and returns a `JsonObject` containing the data to be transferred for that item. The generated data is transferred as a JSON array using the HTML5 DataTransfer's data parameter of type `"text"`.
-When no generator is set, the whole row data is transferred, given by the `GridConnector.getDataSource().getRow(index)` method.
+When no generator is set, the whole row data is transferred as JSON. You can , given by the `GridConnector.getDataSource().getRow(index)` method.
 
 [NOTE]
 ====
@@ -212,7 +212,7 @@ To make a Grid component's rows accept a drop event, apply the [classname]#GridD
 
 [source,java]
 ----
-Grid<Bean> grid = new Grid<>();
+Grid<Person> grid = new Grid<>();
 // ...
 GridDropTarget<Person> dropTarget = new GridDropTarget<>(grid, DropMode.BETWEEN);
 dropTarget.setDropEffect(DropEffect.MOVE);
@@ -241,7 +241,8 @@ dropTarget.addGridDropListener(event -> {
             items.addAll(index, draggedItems);
             dataProvider.refreshAll();
 
-            log("dragData=" + event.getDataTransferText());
+            // Show the dropped data
+            Notification.show("Dropped row data: " + event.getDataTransferText());
         }
     });
 });
