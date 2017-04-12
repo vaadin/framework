@@ -287,6 +287,9 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             if (session.getConfiguration().isXsrfProtectionEnabled()) {
                 writer.write(getSecurityKeyUIDL(session));
             }
+            if (session.getConfiguration().getPushMode().isEnabled()) {
+                writer.write(getPushIdUIDL(session));
+            }
             new UidlWriter().write(uI, writer, false);
             writer.write("}");
 
@@ -308,6 +311,18 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
                 + seckey + "\",";
+    }
+
+    /**
+     * Gets the push connection identifier as UIDL.
+     *
+     * @param session
+     *            the vaadin session to which the security key belongs
+     * @return the push identifier UIDL
+     */
+    private static String getPushIdUIDL(VaadinSession session) {
+        return "\"" + ApplicationConstants.UIDL_PUSH_ID + "\":\""
+                + session.getPushId() + "\",";
     }
 
     private static final Logger getLogger() {
