@@ -287,7 +287,9 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             if (session.getConfiguration().isXsrfProtectionEnabled()) {
                 writer.write(getSecurityKeyUIDL(session));
             }
-            writer.write(getPushIdUIDL(session));
+            if (uI.getPushConfiguration().getPushMode().isEnabled()) {
+                writer.write(getPushIdUIDL(session));
+            }
             new UidlWriter().write(uI, writer, false);
             writer.write("}");
 
