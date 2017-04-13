@@ -2317,6 +2317,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
             extends KeyEvent<HANDLER> {
 
+        public AbstractGridKeyEvent() {
+        }
+
+        /**
+         * @deprecated This constructor's arguments are no longer used. Use the
+         *             no-args constructor instead.
+         */
+        @Deprecated
         public AbstractGridKeyEvent(Grid<?> grid, CellReference<?> targetCell) {
         }
 
@@ -2350,12 +2358,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         @Override
         protected void dispatch(HANDLER handler) {
             EventTarget target = getNativeEvent().getEventTarget();
-            if (Element.is(target) && getGrid() != null
-                    && !getGrid().isElementInChildWidget(Element.as(target))) {
+            Grid<?> grid = getGrid();
+            if (Element.is(target) && grid != null
+                    && !grid.isElementInChildWidget(Element.as(target))) {
 
                 Section section = Section.FOOTER;
-                final RowContainer container = getGrid().cellFocusHandler.containerWithFocus;
-                if (container == getGrid().escalator.getHeader()) {
+                final RowContainer container = grid.cellFocusHandler.containerWithFocus;
+                if (container == grid.escalator.getHeader()) {
                     section = Section.HEADER;
                 } else if (container == getGrid().escalator.getBody()) {
                     section = Section.BODY;
@@ -2371,6 +2380,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public static abstract class AbstractGridMouseEvent<HANDLER extends AbstractGridMouseEventHandler>
             extends MouseEvent<HANDLER> {
 
+        public AbstractGridMouseEvent() {
+        }
+
+        /**
+         * @deprecated This constructor's arguments are no longer used. Use the
+         *             no-args constructor instead.
+         */
+        @Deprecated
         public AbstractGridMouseEvent(Grid<?> grid,
                 CellReference<?> targetCell) {
         }
@@ -2399,10 +2416,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *         from a grid
          */
         public CellReference<?> getTargetCell() {
-            if (getGrid() == null) {
+            Grid<?> grid = getGrid();
+            if (grid == null) {
                 return null;
             }
-            return getGrid().getEventCell();
+            return grid.getEventCell();
         }
 
         @Override
@@ -2413,18 +2431,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 return;
             }
 
-            if (getGrid() == null) {
+            Grid<?> grid = getGrid();
+            if (grid == null) {
                 // Target is not an element of a grid
                 return;
             }
 
             Element targetElement = Element.as(target);
-            if (getGrid().isElementInChildWidget(targetElement)) {
+            if (grid.isElementInChildWidget(targetElement)) {
                 // Target is some widget inside of Grid
                 return;
             }
 
-            final RowContainer container = getGrid().escalator
+            final RowContainer container = grid.escalator
                     .findRowContainer(targetElement);
             if (container == null) {
                 // No container for given element
@@ -2432,9 +2451,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             Section section = Section.FOOTER;
-            if (container == getGrid().escalator.getHeader()) {
+            if (container == grid.escalator.getHeader()) {
                 section = Section.HEADER;
-            } else if (container == getGrid().escalator.getBody()) {
+            } else if (container == grid.escalator.getBody()) {
                 section = Section.BODY;
             }
 
