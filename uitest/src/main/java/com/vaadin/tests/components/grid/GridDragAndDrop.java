@@ -15,15 +15,22 @@
  */
 package com.vaadin.tests.components.grid;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.vaadin.server.Page;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.util.Person;
+import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridDragSource;
 import com.vaadin.ui.GridDropTarget;
@@ -35,41 +42,23 @@ import elemental.json.Json;
 import elemental.json.JsonObject;
 
 public class GridDragAndDrop extends AbstractTestUIWithLog {
+
+    private Set<Person> draggedItems;
+
     @Override
     protected void setup(VaadinRequest request) {
 
         // Drag source Grid
-        Grid<Bean> dragSourceComponent = new Grid<>();
-        dragSourceComponent.setItems(createItems(50, "left"));
-        dragSourceComponent.addColumn(Bean::getId).setCaption("ID");
-        dragSourceComponent.addColumn(Bean::getValue).setCaption("Value");
-
-        GridDragSource<Bean> dragSource = new GridDragSource<>(
-                dragSourceComponent);
-        dragSource.setDragDataGenerator(bean -> {
-            JsonObject ret = Json.createObject();
-            ret.put("generatedId", bean.getId());
-            ret.put("generatedValue", bean.getValue());
-            return ret;
-        });
+        Grid<Person> left = createGridAndFillWithData(50);
+        GridDragSource<Person> dragSource = applyDragSource(left);
 
         // Drop target Grid
-        Grid<Bean> dropTargetComponent = new Grid<>();
-        dropTargetComponent.setItems(createItems(5, "right"));
-        dropTargetComponent.addColumn(Bean::getId).setCaption("ID");
-        dropTargetComponent.addColumn(Bean::getValue).setCaption("Value");
-
-        GridDropTarget<Bean> dropTarget = new GridDropTarget<>(
-                dropTargetComponent, DropMode.ON_TOP);
-        dropTarget.addGridDropListener(event -> {
-            log(event.getDataTransferText() + ", targetId=" + event
-                    .getDropTargetRow().getId() + ", location=" + event
-                    .getDropLocation());
-        });
+        Grid<Person> right = createGridAndFillWithData(5);
+        GridDropTarget<Person> dropTarget = applyDropTarget(right);
 
         // Layout the two grids
         Layout grids = new HorizontalLayout();
-        grids.addComponents(dragSourceComponent, dropTargetComponent);
+        grids.addComponents(left, right);
 
         // Selection modes
         List<Grid.SelectionMode> selectionModes = Arrays.asList(
@@ -77,14 +66,14 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         RadioButtonGroup<Grid.SelectionMode> selectionModeSelect = new RadioButtonGroup<>(
                 "Selection mode", selectionModes);
         selectionModeSelect.setSelectedItem(Grid.SelectionMode.SINGLE);
-        selectionModeSelect.addValueChangeListener(event -> dragSourceComponent
+        selectionModeSelect.addValueChangeListener(event -> left
                 .setSelectionMode(event.getValue()));
 
         // Drop locations
         List<DropMode> dropLocations = Arrays.asList(DropMode.values());
         RadioButtonGroup<DropMode> dropLocationSelect = new RadioButtonGroup<>(
                 "Allowed drop location", dropLocations);
-        dropLocationSelect.setSelectedItem(DropMode.ON_TOP);
+        dropLocationSelect.setSelectedItem(DropMode.BETWEEN);
         dropLocationSelect.addValueChangeListener(
                 event -> dropTarget.setDropMode(event.getValue()));
 
@@ -92,45 +81,104 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                 dropLocationSelect);
 
         addComponents(controls, grids);
-
-        // Set dragover styling
-        Page.getCurrent().getStyles().add(".v-drag-over {color: red;}");
     }
 
-    private List<Bean> createItems(int num, String prefix) {
-        List<Bean> items = new ArrayList<>(num);
+    private Grid<Person> createGridAndFillWithData(int numberOfItems) {
+        Grid<Person> grid = new Grid<>();
 
-        IntStream.range(0, num)
-                .forEach(i -> items
-                        .add(new Bean(prefix + "_" + i, "value_" + i)));
+        grid.setItems(generateItems(numberOfItems));
+        grid.addColumn(
+                person -> person.getFirstName() + " " + person.getLastName())
+                .setCaption("Name");
+        grid.addColumn(person -> person.getAddress().getStreetAddress())
+                .setCaption("Street Address");
+        grid.addColumn(person -> person.getAddress().getCity())
+                .setCaption("City");
 
-        return items;
+        return grid;
     }
 
-    public static class Bean {
-        private String id;
-        private String value;
+    private GridDragSource<Person> applyDragSource(Grid<Person> grid) {
+        GridDragSource<Person> dragSource = new GridDragSource<>(grid);
 
-        public Bean(String id, String value) {
-            this.id = id;
-            this.value = value;
-        }
+        dragSource.setEffectAllowed(EffectAllowed.MOVE);
 
-        public String getId() {
+        // Set data generator
+        dragSource.setDragDataGenerator(person -> {
+            JsonObject data = Json.createObject();
+            data.put("name",
+                    person.getFirstName() + " " + person.getLastName());
+            data.put("city", person.getAddress().getCity());
+            return data;
+        });
 
-            return id;
-        }
+        // Add drag start listener
+        dragSource.addGridDragStartListener(event ->
+                draggedItems = event.getDraggedItems()
+        );
 
-        public void setId(String id) {
-            this.id = id;
-        }
+        // Add drag end listener
+        dragSource.addGridDragEndListener(event -> {
+            if (event.getDropEffect() == DropEffect.MOVE) {
+                // If drop is successful, remove dragged item from source Grid
+                ((ListDataProvider<Person>) grid.getDataProvider()).getItems()
+                        .removeAll(draggedItems);
+                grid.getDataProvider().refreshAll();
 
-        public String getValue() {
-            return value;
-        }
+                // Remove reference to dragged items
+                draggedItems = null;
+            }
+        });
 
-        public void setValue(String value) {
-            this.value = value;
-        }
+        return dragSource;
+    }
+
+    private GridDropTarget<Person> applyDropTarget(Grid<Person> grid) {
+        // Create and attach extension
+        GridDropTarget<Person> dropTarget = new GridDropTarget<>(grid,
+                DropMode.BETWEEN);
+        dropTarget.setDropEffect(DropEffect.MOVE);
+
+        // Add listener
+        dropTarget.addGridDropListener(event -> {
+            event.getDragSourceExtension().ifPresent(source -> {
+                if (source instanceof GridDragSource) {
+                    ListDataProvider<Person> dataProvider = (ListDataProvider<Person>) event
+                            .getComponent().getDataProvider();
+                    List<Person> items = (List<Person>) dataProvider.getItems();
+
+                    // Calculate the target row's index
+                    int index = items.indexOf(event.getDropTargetRow()) + (
+                            event.getDropLocation() == DropLocation.BELOW
+                                    ? 1 : 0);
+
+                    // Add dragged items to the target Grid
+                    items.addAll(index, draggedItems);
+                    dataProvider.refreshAll();
+
+                    log("dragData=" + event.getDataTransferText()
+                            + ", target="
+                            + event.getDropTargetRow().getFirstName()
+                            + " " + event.getDropTargetRow().getLastName()
+                            + ", location=" + event.getDropLocation());
+                }
+            });
+        });
+
+        return dropTarget;
+    }
+
+    private List<Person> generateItems(int num) {
+        return Stream.generate(() -> generateRandomPerson(new Random()))
+                .limit(num).collect(Collectors.toList());
+    }
+
+    private Person generateRandomPerson(Random r) {
+        return new Person(TestDataGenerator.getFirstName(r),
+                TestDataGenerator.getLastName(r), "foo@bar.com",
+                TestDataGenerator.getPhoneNumber(r),
+                TestDataGenerator.getStreetAddress(r),
+                TestDataGenerator.getPostalCode(r),
+                TestDataGenerator.getCity(r));
     }
 }
