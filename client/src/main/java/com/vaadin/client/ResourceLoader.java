@@ -16,6 +16,7 @@
 
 package com.vaadin.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -401,12 +402,12 @@ public class ResourceLoader {
                     if (rules === undefined) {
                         rules = sheet.rules;
                     }
-    
+
                     if (rules === null) {
                         // Style sheet loaded, but can't access length because of XSS -> assume there's something there
                         return 1;
                     }
-    
+
                     // Return length so we can distinguish 0 (probably 404 error) from normal case.
                     return rules.length;
                 } catch (err) {
@@ -423,7 +424,7 @@ public class ResourceLoader {
             Map<String, Collection<ResourceLoadListener>> listenerMap) {
         Collection<ResourceLoadListener> listeners = listenerMap.get(url);
         if (listeners == null) {
-            listeners = new HashSet<>();
+            listeners = new ArrayList<>();
             listeners.add(listener);
             listenerMap.put(url, listeners);
             return true;
