@@ -117,6 +117,15 @@ public class GridDropTargetConnector extends
             } else {
                 return DropLocation.BELOW;
             }
+        } else if (getState().dropMode == DropMode.ON_TOP_OR_BETWEEN) {
+            if (getRelativeY(target, event) < getState().dropThreshold) {
+                return DropLocation.ABOVE;
+            } else if (target.getOffsetHeight() - getRelativeY(target, event)
+                    < getState().dropThreshold) {
+                return DropLocation.BELOW;
+            } else {
+                return DropLocation.ON_TOP;
+            }
         }
         return DropLocation.ON_TOP;
     }

@@ -35,4 +35,18 @@ public enum DropMode {
      * is the row under the cursor at the time of the drop event.
      */
     ON_TOP,
+
+    /**
+     * The drop event can happen either on top of or between Grid rows. The drop
+     * is either
+     * <ul>
+     * <li><i>above</i> a row when the cursor is over a specified portion of
+     * the top part of the row,</li>
+     * <li><i>below</i> when the cursor is over a specified portion of the
+     * bottom part of the row, or</li>
+     * <li><i>on top</i> when the cursor is over the row but doesn't match the
+     * above conditions.</li>
+     * </ul>
+     */
+    ON_TOP_OR_BETWEEN
 }

@@ -29,4 +29,12 @@ public class GridDropTargetState extends DropTargetState {
      * Stores the drop mode of the drop target Grid.
      */
     public DropMode dropMode;
+
+    /**
+     * Stores the threshold between drop locations within a row in pixels.
+     * Defaults to 5px.
+     *
+     * @see DropMode#ON_TOP_OR_BETWEEN
+     */
+    public int dropThreshold = 5;
 }
