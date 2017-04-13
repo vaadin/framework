@@ -101,6 +101,8 @@ public @interface Connect {
         LAZY,
         /**
          * Completely left out of the widgetset.
+         *
+         * @since 8.1
          */
         NONE
     }
