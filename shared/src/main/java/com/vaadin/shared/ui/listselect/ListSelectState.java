@@ -25,8 +25,9 @@ import com.vaadin.shared.ui.abstractmultiselect.AbstractMultiSelectState;
  * @since 8.0
  */
 public class ListSelectState extends AbstractMultiSelectState {
+    public static final String PRIMARY_STYLENAME = "v-select";
     {
-        primaryStyleName = "v-select";
+        primaryStyleName = PRIMARY_STYLENAME;
     }
     @DelegateToWidget
     public int rows;
