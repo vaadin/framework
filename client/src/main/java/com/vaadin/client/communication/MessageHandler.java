@@ -133,6 +133,9 @@ public class MessageHandler {
     // will hold the CSRF token once received
     private String csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
 
+    // holds the push identifier once received
+    private String pushId = null;
+
     /** Timer for automatic redirect to SessionExpiredURL */
     private Timer redirectTimer;
 
@@ -349,6 +352,12 @@ public class MessageHandler {
             csrfToken = json
                     .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
         }
+
+        // Get push id if present
+        if (json.containsKey(ApplicationConstants.UIDL_PUSH_ID)) {
+            pushId = json.getString(ApplicationConstants.UIDL_PUSH_ID);
+        }
+
         getLogger().info(" * Handling resources from server");
 
         if (json.containsKey("resources")) {
@@ -1691,6 +1700,16 @@ public class MessageHandler {
      */
     public String getCsrfToken() {
         return csrfToken;
+    }
+
+    /**
+     * Gets the push connection identifier for this session. Used when
+     * establishing a push connection with the client.
+     *
+     * @return the push connection identifier string
+     */
+    public String getPushId() {
+        return pushId;
     }
 
     /**
