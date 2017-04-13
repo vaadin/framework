@@ -55,6 +55,8 @@ public class ApplicationConstants implements Serializable {
 
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
+    public static final String UIDL_PUSH_ID = "Vaadin-Push-ID";
+
     @Deprecated
     public static final String UPDATE_VARIABLE_INTERFACE = "v";
     @Deprecated
@@ -121,6 +123,11 @@ public class ApplicationConstants implements Serializable {
      * Name of the parameter used to transmit the CSRF token.
      */
     public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";
+
+    /**
+     * Name of the parameter used to transmit the push connection identifier.
+     */
+    public static final String PUSH_ID_PARAMETER = "v-pushId";
 
     /**
      * The name of the parameter used to transmit RPC invocations
