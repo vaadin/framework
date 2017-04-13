@@ -822,6 +822,12 @@
                 <module>shared</module>
                 <module>compatibility-shared</module>
             </modules>
+            <repositories>
+                <repository>
+                    <id>vaadin-prereleases</id>
+                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                </repository>
+            </repositories>
             <build>
                 <plugins>
                     <plugin>
