@@ -744,6 +744,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     private final String csrfToken = UUID.randomUUID().toString();
 
+    private final String pushId = UUID.randomUUID().toString();
+
     /**
      * Generate an id for the given Connector. Connectors must not call this
      * method more than once, the first time they need an id.
@@ -1415,6 +1417,17 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public String getCsrfToken() {
         assert hasLock();
         return csrfToken;
+    }
+
+    /**
+     * Gets the push connection identifier for this session. Used when
+     * establishing a push connection with the client.
+     *
+     * @return the push connection identifier string
+     */
+    public String getPushId() {
+        assert hasLock();
+        return pushId;
     }
 
     /**
