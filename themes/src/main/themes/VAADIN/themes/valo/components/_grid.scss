@@ -815,6 +815,18 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     min-width: 30px;
   }
 
+  // Drag and drop badge
+  .#{$primary-stylename}-row-drag-badge {
+    background-color: red;
+    color: white;
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    line-height: 30px;
+    text-align: center;
+    float: left;
+  }
 }
 
 
