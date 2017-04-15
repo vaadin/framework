@@ -15,12 +15,9 @@
  */
 package com.vaadin.client.extensions;
 
-import java.util.Optional;
-
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
@@ -81,32 +78,17 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      */
     private String styleDragCenter;
 
-    /**
-     * Style change handler registration.
-     */
-    private HandlerRegistration styleChangeHandler;
-
-    /**
-     * Style name for indicating that the element is drop target.
-     */
-    private String styleDropTarget;
-
     @Override
     protected void extend(ServerConnector target) {
         dropTargetConnector = (ComponentConnector) target;
 
         addDropListeners(getDropTargetElement());
 
-        // Add style for indicating drop target and update when primary style changes
-        styleChangeHandler = dropTargetConnector
-                .addStateChangeHandler("primaryStyleName", event -> {
-                    if (styleDropTarget != null) {
-                        getDropTargetElement().removeClassName(styleDropTarget);
-                    }
-                    styleDropTarget = dropTargetConnector.getWidget()
-                            .getStylePrimaryName() + STYLE_SUFFIX_DROPTARGET;
-                    getDropTargetElement().addClassName(styleDropTarget);
-                });
+        /* Add style for indicating drop target. Updated automatically when
+         primary style name changes.*/
+        getDropTargetElement().addClassName(
+                getStylePrimaryName(getDropTargetElement())
+                        + STYLE_SUFFIX_DROPTARGET);
     }
 
     /**
@@ -147,10 +129,10 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
         removeDropListeners(getDropTargetElement());
 
-        // Remove drop target style and style change handler
-        getDropTargetElement().removeClassName(styleDropTarget);
-        Optional.ofNullable(styleChangeHandler)
-                .ifPresent(HandlerRegistration::removeHandler);
+        // Remove drop target style
+        getDropTargetElement().removeClassName(
+                getStylePrimaryName(getDropTargetElement())
+                        + STYLE_SUFFIX_DROPTARGET);
     }
 
     /**
@@ -311,4 +293,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     public DropTargetState getState() {
         return (DropTargetState) super.getState();
     }
+
+    private native boolean getStylePrimaryName(Element element)/*-{
+        return @com.google.gwt.user.client.ui.UIObject::getStylePrimaryName(Lcom/google/gwt/dom/client/Element;)(element);
+    }-*/;
 }
