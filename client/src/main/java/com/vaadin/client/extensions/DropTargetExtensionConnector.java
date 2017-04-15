@@ -305,4 +305,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     public DropTargetState getState() {
         return (DropTargetState) super.getState();
     }
+
+    private native boolean getStylePrimaryName(Element element)/*-{
+        return @com.google.gwt.user.client.ui.UIObject::getStylePrimaryName(Lcom/google/gwt/dom/client/Element;)(element);
+    }-*/;
 }
