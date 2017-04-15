@@ -815,6 +815,13 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     min-width: 30px;
   }
 
+
+  // Drag and drop
+  .#{$primary-stylename}-droptarget {
+    width: 100%;
+    height: 100%;
+  }
+
 }
 
 

@@ -15,10 +15,12 @@
  */
 package com.vaadin.client.extensions;
 
+import java.util.Optional;
+
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
@@ -57,6 +59,11 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      */
     protected static final String STYLE_SUFFIX_DRAG_BOTTOM = "-drag-bottom";
 
+    /**
+     * Style name suffix for indicating that the element is drop target.
+     */
+    private static final String STYLE_SUFFIX_DROPTARGET = "-droptarget";
+
     // Create event listeners
     private final EventListener dragEnterListener = this::onDragEnter;
     private final EventListener dragOverListener = this::onDragOver;
@@ -64,9 +71,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     private final EventListener dropListener = this::onDrop;
 
     /**
-     * Widget of the drop target component.
+     * Drop target component's connector.
      */
-    private Widget dropTargetWidget;
+    private ComponentConnector dropTargetConnector;
 
     /**
      * Class name to apply when an element is dragged over the center of the
@@ -74,11 +81,32 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      */
     private String styleDragCenter;
 
+    /**
+     * Style change handler registration.
+     */
+    private HandlerRegistration styleChangeHandler;
+
+    /**
+     * Style name for indicating that the element is drop target.
+     */
+    private String styleDropTarget;
+
     @Override
     protected void extend(ServerConnector target) {
-        dropTargetWidget = ((ComponentConnector) target).getWidget();
+        dropTargetConnector = (ComponentConnector) target;
 
         addDropListeners(getDropTargetElement());
+
+        // Add style for indicating drop target and update when primary style changes
+        styleChangeHandler = dropTargetConnector
+                .addStateChangeHandler("primaryStyleName", event -> {
+                    if (styleDropTarget != null) {
+                        getDropTargetElement().removeClassName(styleDropTarget);
+                    }
+                    styleDropTarget = dropTargetConnector.getWidget()
+                            .getStylePrimaryName() + STYLE_SUFFIX_DROPTARGET;
+                    getDropTargetElement().addClassName(styleDropTarget);
+                });
     }
 
     /**
@@ -118,6 +146,11 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         super.onUnregister();
 
         removeDropListeners(getDropTargetElement());
+
+        // Remove drop target style and style change handler
+        getDropTargetElement().removeClassName(styleDropTarget);
+        Optional.ofNullable(styleChangeHandler)
+                .ifPresent(HandlerRegistration::removeHandler);
     }
 
     /**
@@ -127,7 +160,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @return the drop target element in the parent widget.
      */
     protected Element getDropTargetElement() {
-        return dropTargetWidget.getElement();
+        return dropTargetConnector.getWidget().getElement();
     }
 
     /**
@@ -138,7 +171,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      */
     protected void onDragEnter(Event event) {
         // Generate style name for drop target
-        styleDragCenter = dropTargetWidget.getStylePrimaryName()
+        styleDragCenter = dropTargetConnector.getWidget().getStylePrimaryName()
                 + STYLE_SUFFIX_DRAG_CENTER;
 
         setTargetIndicator(event);
