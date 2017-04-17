@@ -71,7 +71,7 @@ public class GridLayoutDeclarativeTest
 
     @Test
     public void testReadIntegerExpandRatioGridLayout() {
-        //To make sure that it can read from old declarative which use
+        // To make sure that it can read from old declarative which use
         // integer expand ratio
         Button b1 = new Button("Button 0,0");
         b1.setCaptionAsHtml(true);
@@ -342,4 +342,19 @@ public class GridLayoutDeclarativeTest
         Assert.assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginBottomComponent")));
     }
+
+    @Test
+    public void designWithPreconfiguredGridLayout() throws Exception {
+        String design = "<html>" //
+                + "<head>" //
+                + "<meta name='package-mapping' content='my:com.vaadin.tests.server.component.gridlayout'>"
+                + "</meta>" + "</head>" + "<body>"
+                + "<my-preconfigured-grid-layout></my-preconfigured-grid-layout>";
+
+        PreconfiguredGridLayout myLayout = (PreconfiguredGridLayout) Design
+                .read(new ByteArrayInputStream(design.getBytes("UTF-8")));
+        Assert.assertEquals(2, myLayout.getRows());
+        Assert.assertEquals(2, myLayout.getColumns());
+    }
+
 }
