@@ -19,13 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.server.Page;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -49,6 +57,8 @@ import elemental.json.JsonObject;
 @Connect(GridDragSource.class)
 public class GridDragSourceConnector extends
         DragSourceExtensionConnector {
+
+    private static final String STYLE_SUFFIX_DRAG_BADGE = "-drag-badge";
 
     private GridConnector gridConnector;
 
@@ -77,7 +87,43 @@ public class GridDragSourceConnector extends
                 .map(row -> row.getString(GridState.JSONKEY_ROWKEY))
                 .collect(Collectors.toList());
 
+        // Add badge showing the number of dragged columns
+        if (draggedItemKeys.size() > 1) {
+            Element draggedRowElement = (Element) event.getTarget();
+
+            Element badge = DOM.createSpan();
+            badge.setClassName(
+                    gridConnector.getWidget().getStylePrimaryName() + "-row"
+                            + STYLE_SUFFIX_DRAG_BADGE);
+            badge.setInnerHTML(draggedItemKeys.size() + "");
+
+            badge.getStyle().setMarginLeft(
+                    getRelativeX(draggedRowElement, (NativeEvent) event) + 10,
+                    Style.Unit.PX);
+            badge.getStyle().setMarginTop(
+                    getRelativeY(draggedRowElement, (NativeEvent) event)
+                            - draggedRowElement.getOffsetHeight() + 10,
+                    Style.Unit.PX);
+
+            draggedRowElement.appendChild(badge);
+
+            // Remove badge on the next animation frame. Drag image will still contain the badge.
+            AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+                badge.removeFromParent();
+            }, (Element) event.getTarget());
+        }
+
         super.onDragStart(event);
+    }
+
+    private int getRelativeY(Element element, NativeEvent event) {
+        int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
+        return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
+    }
+
+    private int getRelativeX(Element element, NativeEvent event) {
+        int relativeLeft = element.getAbsoluteLeft() - Window.getScrollLeft();
+        return WidgetUtil.getTouchOrMouseClientX(event) - relativeLeft;
     }
 
     @Override
