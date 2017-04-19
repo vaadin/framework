@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.nativeselect;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
 
 /**
@@ -42,6 +43,9 @@ public class NativeSelectState extends AbstractSingleSelectState {
      * Caption for item which represents empty selection.
      */
     public String emptySelectionCaption = "";
+
+    @DelegateToWidget
+    public int visibleItemCount = 1;
 
     {
         primaryStyleName = STYLE_NAME;
