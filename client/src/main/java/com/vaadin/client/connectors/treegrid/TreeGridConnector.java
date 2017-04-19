@@ -33,9 +33,7 @@ import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.HierarchyRenderer;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.GridEventHandler;
-import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.treegrid.TreeGrid;
-import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -156,12 +154,6 @@ public class TreeGridConnector extends GridConnector {
 
         getWidget().addBrowserEventHandler(5, new NavigationEventHandler());
 
-        // Swap Grid#clickEvent field
-        // The event is identical to the original one except for the child
-        // widget check
-        replaceClickEvent(getWidget(),
-                new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
-
         registerRpc(TreeGridClientRpc.class, new TreeGridClientRpc() {
 
             @Override
@@ -223,11 +215,6 @@ public class TreeGridConnector extends GridConnector {
 
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
-    }-*/;
-
-    private native void replaceClickEvent(Grid<?> grid, GridClickEvent event)
-    /*-{
-        grid.@com.vaadin.client.widgets.Grid::clickEvent = event;
     }-*/;
 
     private native EventCellReference<?> getEventCell(Grid<?> grid)
