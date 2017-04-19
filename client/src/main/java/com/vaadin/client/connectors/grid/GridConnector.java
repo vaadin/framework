@@ -316,6 +316,10 @@ public class GridConnector extends AbstractListingConnector
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().header;
 
+        while (grid.getHeaderRowCount() > 0) {
+            grid.removeHeaderRow(0);
+        }
+
         for (RowState rowState : state.rows) {
             HeaderRow row = grid.appendHeaderRow();
 
