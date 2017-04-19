@@ -2317,6 +2317,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
             extends KeyEvent<HANDLER> {
 
+        /**
+         * @since 7.7.9
+         */
         public AbstractGridKeyEvent() {
         }
 
@@ -2380,6 +2383,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public static abstract class AbstractGridMouseEvent<HANDLER extends AbstractGridMouseEventHandler>
             extends MouseEvent<HANDLER> {
 
+        /**
+         * @since 7.7.9
+         */
         public AbstractGridMouseEvent() {
         }
 

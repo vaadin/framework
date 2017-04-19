@@ -32,10 +32,20 @@ public class GridDoubleClickEvent
         extends AbstractGridMouseEvent<GridDoubleClickHandler> {
 
     public static final Type<GridDoubleClickHandler> TYPE = new Type<GridDoubleClickHandler>(
-            BrowserEvents.DBLCLICK, new GridDoubleClickEvent(null, null));
+            BrowserEvents.DBLCLICK, new GridDoubleClickEvent());
 
+    /**
+     * @since 7.7.9
+     */
+    public GridDoubleClickEvent() {
+    }
+
+    /**
+     * @deprecated This constructor's arguments are no longer used. Use the
+     *             no-args constructor instead.
+     */
+    @Deprecated
     public GridDoubleClickEvent(Grid<?> grid, CellReference<?> targetCell) {
-        super(grid, targetCell);
     }
 
     @Override

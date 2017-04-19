@@ -32,10 +32,20 @@ public class GridKeyPressEvent
         extends AbstractGridKeyEvent<GridKeyPressHandler> {
 
     public static final Type<GridKeyPressHandler> TYPE = new Type<GridKeyPressHandler>(
-            BrowserEvents.KEYPRESS, new GridKeyPressEvent(null, null));
+            BrowserEvents.KEYPRESS, new GridKeyPressEvent());
 
+    /**
+     * @since 7.7.9
+     */
+    public GridKeyPressEvent() {
+    }
+
+    /**
+     * @deprecated This constructor's arguments are no longer used. Use the
+     *             no-args constructor instead.
+     */
+    @Deprecated
     public GridKeyPressEvent(Grid<?> grid, CellReference<?> targetCell) {
-        super(grid, targetCell);
     }
 
     @Override
