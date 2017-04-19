@@ -42,9 +42,9 @@ import elemental.json.JsonObject;
  * that ONLY visible rows are taken into account.
  *
  * @param <T>
- *         The Grid bean type.
+ *            The Grid bean type.
  * @author Vaadin Ltd.
- * @since
+ * @since 8.1
  */
 public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
@@ -62,7 +62,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * Extends a Grid and makes it's rows draggable.
      *
      * @param target
-     *         Grid to be extended.
+     *            Grid to be extended.
      */
     public GridDragSource(Grid<T> target) {
         super(target);
@@ -118,13 +118,14 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * function is set by the user of this extension.
      *
      * @param item
-     *         Row item for data generation.
+     *            Row item for data generation.
      * @param jsonObject
-     *         Row data in json format.
+     *            Row data in json format.
      */
     private void generateDragData(T item, JsonObject jsonObject) {
-        Optional.ofNullable(generatorFunction).ifPresent(generator -> jsonObject
-                .put(GridDragSourceState.JSONKEY_DRAG_DATA,
+        Optional.ofNullable(generatorFunction)
+                .ifPresent(generator -> jsonObject.put(
+                        GridDragSourceState.JSONKEY_DRAG_DATA,
                         generator.apply(item)));
     }
 
@@ -134,16 +135,17 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * {@link JsonObject} to be appended to the row data.
      * <p>
      * Example:
+     * 
      * <pre>
-     *     dragSourceExtension.setDragDataGenerator(item -> {
-     *         JsonObject dragData = Json.createObject();
-     *         dragData.put("someKey", item.getValue());
-     *         return dragData;
-     *     });
+     * dragSourceExtension.setDragDataGenerator(item -> {
+     *     JsonObject dragData = Json.createObject();
+     *     dragData.put("someKey", item.getValue());
+     *     return dragData;
+     * });
      * </pre>
      *
      * @param generator
-     *         Function to be executed on row data generation.
+     *            Function to be executed on row data generation.
      */
     public void setDragDataGenerator(
             SerializableFunction<T, JsonObject> generator) {
@@ -154,13 +156,14 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * Setting the data transfer text for this drag source is not supported.
      *
      * @throws UnsupportedOperationException
-     *         Setting dataTransferText is not supported, since the drag data is
-     *         set for each row based on the data provided by the generator.
+     *             Setting dataTransferText is not supported, since the drag
+     *             data is set for each row based on the data provided by the
+     *             generator.
      * @see #setDragDataGenerator(SerializableFunction)
      */
     @Override
-    public void setDataTransferText(String data) throws
-            UnsupportedOperationException {
+    public void setDataTransferText(String data)
+            throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Setting dataTransferText is not supported");
     }
@@ -169,7 +172,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * Attaches dragstart listener for the current drag source grid.
      *
      * @param listener
-     *         Listener to handle the dragstart event.
+     *            Listener to handle the dragstart event.
      * @return Handle to be used to remove this listener.
      * @see GridDragStartEvent
      */
@@ -184,7 +187,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * Attaches dragend listener for the current drag source grid.
      *
      * @param listener
-     *         Listener to handle the dragend event.
+     *            Listener to handle the dragend event.
      * @return Handle to be used to remove this listener.
      * @see GridDragEndEvent
      */

@@ -125,8 +125,9 @@ public interface RowContainer {
          * the escalator.
          *
          * @param consumer
-         *         A Consumer function that receives the newly added table row
-         *         elements.
+         *            A Consumer function that receives the newly added table
+         *            row elements.
+         * @since 8.1
          */
         public void setNewEscalatorRowCallback(
                 Consumer<List<TableRowElement>> consumer);

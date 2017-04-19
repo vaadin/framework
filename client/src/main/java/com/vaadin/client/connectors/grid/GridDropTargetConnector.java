@@ -43,11 +43,10 @@ import elemental.json.JsonObject;
  * {@link GridDropTarget}.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
  */
 @Connect(GridDropTarget.class)
-public class GridDropTargetConnector extends
-        DropTargetExtensionConnector {
+public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     /**
      * Current style name
@@ -97,8 +96,8 @@ public class GridDropTargetConnector extends
                     (NativeEvent) dropEvent);
         }
 
-        getRpcProxy(GridDropTargetRpc.class)
-                .drop(dataTransferText, rowKey, dropLocation);
+        getRpcProxy(GridDropTargetRpc.class).drop(dataTransferText, rowKey,
+                dropLocation);
     }
 
     private JsonObject getRowData(TableRowElement row) {
@@ -120,8 +119,8 @@ public class GridDropTargetConnector extends
         } else if (getState().dropMode == DropMode.ON_TOP_OR_BETWEEN) {
             if (getRelativeY(target, event) < getState().dropThreshold) {
                 return DropLocation.ABOVE;
-            } else if (target.getOffsetHeight() - getRelativeY(target, event)
-                    < getState().dropThreshold) {
+            } else if (target.getOffsetHeight()
+                    - getRelativeY(target, event) < getState().dropThreshold) {
                 return DropLocation.BELOW;
             } else {
                 return DropLocation.ON_TOP;
@@ -138,8 +137,8 @@ public class GridDropTargetConnector extends
     @Override
     protected void onDragEnter(Event event) {
         // Generate style names for the drop target
-        String styleRow =
-                gridConnector.getWidget().getStylePrimaryName() + "-row";
+        String styleRow = gridConnector.getWidget().getStylePrimaryName()
+                + "-row";
         styleDragCenter = styleRow + STYLE_SUFFIX_DRAG_CENTER;
         styleDragTop = styleRow + STYLE_SUFFIX_DRAG_TOP;
         styleDragBottom = styleRow + STYLE_SUFFIX_DRAG_BOTTOM;

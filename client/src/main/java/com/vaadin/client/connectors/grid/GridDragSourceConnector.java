@@ -33,7 +33,6 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.server.Page;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -48,15 +47,15 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
- * Adds HTML5 drag and drop functionality to a {@link com.vaadin.client.widgets.Grid
- * Grid}'s rows. This is the client side counterpart of {@link GridDragSource}.
+ * Adds HTML5 drag and drop functionality to a
+ * {@link com.vaadin.client.widgets.Grid Grid}'s rows. This is the client side
+ * counterpart of {@link GridDragSource}.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
  */
 @Connect(GridDragSource.class)
-public class GridDragSourceConnector extends
-        DragSourceExtensionConnector {
+public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
     private static final String STYLE_SUFFIX_DRAG_BADGE = "-drag-badge";
 
@@ -69,7 +68,7 @@ public class GridDragSourceConnector extends
 
     @Override
     protected void extend(ServerConnector target) {
-        this.gridConnector = (GridConnector) target;
+        gridConnector = (GridConnector) target;
 
         // Set newly added rows draggable
         getGridBody().setNewEscalatorRowCallback(
@@ -92,9 +91,8 @@ public class GridDragSourceConnector extends
             Element draggedRowElement = (Element) event.getTarget();
 
             Element badge = DOM.createSpan();
-            badge.setClassName(
-                    gridConnector.getWidget().getStylePrimaryName() + "-row"
-                            + STYLE_SUFFIX_DRAG_BADGE);
+            badge.setClassName(gridConnector.getWidget().getStylePrimaryName()
+                    + "-row" + STYLE_SUFFIX_DRAG_BADGE);
             badge.setInnerHTML(draggedItemKeys.size() + "");
 
             badge.getStyle().setMarginLeft(
@@ -107,7 +105,8 @@ public class GridDragSourceConnector extends
 
             draggedRowElement.appendChild(badge);
 
-            // Remove badge on the next animation frame. Drag image will still contain the badge.
+            // Remove badge on the next animation frame. Drag image will still
+            // contain the badge.
             AnimationScheduler.get().requestAnimationFrame(timestamp -> {
                 badge.removeFromParent();
             }, (Element) event.getTarget());
@@ -128,9 +127,8 @@ public class GridDragSourceConnector extends
 
     @Override
     protected String createDataTransferText(Event dragStartEvent) {
-        JsonArray dragData = toJsonArray(
-                getDraggedRows(dragStartEvent).stream().map(this::getDragData)
-                        .collect(Collectors.toList()));
+        JsonArray dragData = toJsonArray(getDraggedRows(dragStartEvent).stream()
+                .map(this::getDragData).collect(Collectors.toList()));
         return dragData.toJson();
     }
 
@@ -174,8 +172,8 @@ public class GridDragSourceConnector extends
             DropEffect dropEffect) {
 
         // Send server RPC with dragged item keys
-        getRpcProxy(GridDragSourceRpc.class)
-                .dragEnd(dropEffect, draggedItemKeys);
+        getRpcProxy(GridDragSourceRpc.class).dragEnd(dropEffect,
+                draggedItemKeys);
     }
 
     /**
@@ -183,9 +181,9 @@ public class GridDragSourceConnector extends
      * allowed and a selected row is dragged.
      *
      * @param draggedRow
-     *         Data of dragged row.
+     *            Data of dragged row.
      * @return {@code true} if multiple rows are dragged, {@code false}
-     * otherwise.
+     *         otherwise.
      */
     private boolean dragMultipleRows(JsonObject draggedRow) {
         SelectionModel<JsonObject> selectionModel = getGrid()
@@ -208,7 +206,7 @@ public class GridDragSourceConnector extends
      * Get all selected rows from a subset of rows defined by {@code range}.
      *
      * @param range
-     *         Range of indexes.
+     *            Range of indexes.
      * @return List of data of all selected rows in the given range.
      */
     private List<JsonObject> getSelectedRowsInRange(Range range) {
@@ -228,7 +226,7 @@ public class GridDragSourceConnector extends
      * Converts a list of {@link JsonObject}s to a {@link JsonArray}.
      *
      * @param objects
-     *         List of json objects.
+     *            List of json objects.
      * @return Json array containing all json objects.
      */
     private JsonArray toJsonArray(List<JsonObject> objects) {
@@ -244,7 +242,7 @@ public class GridDragSourceConnector extends
      * otherwise.
      *
      * @param row
-     *         Row data.
+     *            Row data.
      * @return Drag data if present or row data otherwise.
      */
     private JsonObject getDragData(JsonObject row) {
