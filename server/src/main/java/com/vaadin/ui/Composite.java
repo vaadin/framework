@@ -44,7 +44,7 @@ import com.vaadin.shared.ui.ContentMode;
  * </p>
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 8.1
  */
 public class Composite extends AbstractComponent implements HasComponents {
 

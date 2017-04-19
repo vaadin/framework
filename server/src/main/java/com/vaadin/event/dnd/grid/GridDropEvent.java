@@ -26,10 +26,10 @@ import com.vaadin.ui.GridDropTarget;
  * Drop event on an HTML5 drop target {@link Grid} row.
  *
  * @param <T>
- *         The Grid bean type.
+ *            The Grid bean type.
  * @author Vaadin Ltd.
  * @see GridDropTarget#addGridDropListener(GridDropListener)
- * @since
+ * @since 8.1
  */
 public class GridDropEvent<T> extends DropEvent<Grid<T>> {
 
@@ -40,17 +40,17 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      * Creates a Grid row drop event.
      *
      * @param target
-     *         Grid that received the drop.
+     *            Grid that received the drop.
      * @param dataTransferText
-     *         Data of type {@code "text"} from the {@code DataTransfer}
-     *         object.
+     *            Data of type {@code "text"} from the {@code DataTransfer}
+     *            object.
      * @param dragSourceExtension
-     *         Drag source extension of the component that initiated the drop
-     *         event.
+     *            Drag source extension of the component that initiated the drop
+     *            event.
      * @param dropTargetRow
-     *         Target row that received the drop.
+     *            Target row that received the drop.
      * @param dropLocation
-     *         Location of the drop within the target row.
+     *            Location of the drop within the target row.
      */
     public GridDropEvent(Grid<T> target, String dataTransferText,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension,

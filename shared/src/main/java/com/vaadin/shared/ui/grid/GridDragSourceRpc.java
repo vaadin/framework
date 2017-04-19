@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.dnd.DropEffect;
  * corresponding client side events happen on the drag source Grid.
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 8.1
  */
 public interface GridDragSourceRpc extends ServerRpc {
 
@@ -33,7 +33,7 @@ public interface GridDragSourceRpc extends ServerRpc {
      * Called when dragstart event happens on client side.
      *
      * @param draggedItemKeys
-     *         Keys of the items in Grid being dragged.
+     *            Keys of the items in Grid being dragged.
      */
     public void dragStart(List<String> draggedItemKeys);
 
@@ -41,10 +41,10 @@ public interface GridDragSourceRpc extends ServerRpc {
      * Called when dragend event happens on client side.
      *
      * @param dropEffect
-     *         Drop effect of the dragend event, extracted from {@code
+     *            Drop effect of the dragend event, extracted from {@code
      *         DataTransfer.dropEffect} parameter.
      * @param draggedItemKeys
-     *         Keys of the items in Grid having been dragged.
+     *            Keys of the items in Grid having been dragged.
      */
     public void dragEnd(DropEffect dropEffect, List<String> draggedItemKeys);
 }

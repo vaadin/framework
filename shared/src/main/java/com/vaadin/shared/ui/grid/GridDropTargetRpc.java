@@ -22,7 +22,7 @@ import com.vaadin.shared.communication.ServerRpc;
  * drop target Grid.
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 8.1
  */
 public interface GridDropTargetRpc extends ServerRpc {
 
@@ -30,12 +30,12 @@ public interface GridDropTargetRpc extends ServerRpc {
      * Called when drop event happens on client side.
      *
      * @param dataTransferText
-     *         Data of type {@code "text"} from the {@code DataTransfer}
-     *         object.
+     *            Data of type {@code "text"} from the {@code DataTransfer}
+     *            object.
      * @param rowKey
-     *         Key of the row on which the drop event occured.
+     *            Key of the row on which the drop event occured.
      * @param dropLocation
-     *         Location of the drop within the row.
+     *            Location of the drop within the row.
      */
     public void drop(String dataTransferText, String rowKey,
             DropLocation dropLocation);

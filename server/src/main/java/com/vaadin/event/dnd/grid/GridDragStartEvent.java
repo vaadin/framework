@@ -26,10 +26,10 @@ import com.vaadin.ui.GridDragSource;
  * Drag start event on an HTML5 drag source {@link Grid} row.
  *
  * @param <T>
- *         The Grid bean type.
+ *            The Grid bean type.
  * @author Vaadin Ltd.
  * @see GridDragSource#addGridDragStartListener(GridDragStartListener)
- * @since
+ * @since 8.1
  */
 public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
 
@@ -39,11 +39,11 @@ public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
      * Creates a drag start event.
      *
      * @param source
-     *         The source grid where the rows are being dragged from.
+     *            The source grid where the rows are being dragged from.
      * @param effectAllowed
-     *         Allowed effect from {@code DataTransfer.effectAllowed} object.
+     *            Allowed effect from {@code DataTransfer.effectAllowed} object.
      * @param draggedItems
-     *         Set of items being dragged.
+     *            Set of items being dragged.
      */
     public GridDragStartEvent(Grid<T> source, EffectAllowed effectAllowed,
             Set<T> draggedItems) {

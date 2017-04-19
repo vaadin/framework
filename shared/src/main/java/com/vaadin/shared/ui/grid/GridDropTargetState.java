@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.dnd.DropTargetState;
  * State class containing parameters for GridDropTarget.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
  */
 public class GridDropTargetState extends DropTargetState {
 

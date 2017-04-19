@@ -26,10 +26,10 @@ import com.vaadin.ui.GridDragSource;
  * Drop event on an HTML5 drop target {@link Grid} row.
  *
  * @param <T>
- *         The Grid bean type.
+ *            The Grid bean type.
  * @author Vaadin Ltd.
  * @see GridDragSource#addGridDragStartListener(GridDragStartListener)
- * @since
+ * @since 8.1
  */
 public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {
 
@@ -39,11 +39,11 @@ public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {
      * Creates a drag end event.
      *
      * @param source
-     *         Grid component in which the items were dragged.
+     *            Grid component in which the items were dragged.
      * @param dropEffect
-     *         Drop effect from {@code DataTransfer.dropEffect} object.
+     *            Drop effect from {@code DataTransfer.dropEffect} object.
      * @param draggedItems
-     *         Set of items having been dragged.
+     *            Set of items having been dragged.
      */
     public GridDragEndEvent(Grid<T> source, DropEffect dropEffect,
             Set<T> draggedItems) {
