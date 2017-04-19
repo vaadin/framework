@@ -106,7 +106,7 @@ public class DateCellContainer extends FlowPanel
     public void onMouseUp(MouseUpEvent event) {
         if (event.getSource() == clickTargetWidget
                 && clickTargetWidget instanceof WeeklyLongEventsDateCell
-                && !calendar.isDisabledOrReadOnly()) {
+                && !calendar.isDisabled()) {
             CalendarEvent calendarEvent = ((WeeklyLongEventsDateCell) clickTargetWidget)
                     .getEvent();
             if (calendar.getEventClickListener() != null) {
