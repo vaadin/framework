@@ -16,6 +16,9 @@
 package com.vaadin.client.widget.treegrid;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.vaadin.client.widget.grid.events.BodyClickHandler;
+import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
 
 import elemental.json.JsonObject;
@@ -42,6 +45,11 @@ public class TreeGrid extends Grid<JsonObject> {
     public native boolean isElementInChildWidget(Element e)/*-{
         return this.@com.vaadin.client.widgets.Grid::isElementInChildWidget(*)(e);
     }-*/;
+
+    @Override
+    public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {
+        return addHandler(handler, TreeGridClickEvent.TYPE);
+    }
 
     @Override
     protected String getFocusPrimaryStyleName() {
