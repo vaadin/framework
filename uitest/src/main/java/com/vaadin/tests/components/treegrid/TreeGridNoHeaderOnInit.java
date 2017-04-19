@@ -17,6 +17,7 @@ public class TreeGridNoHeaderOnInit extends AbstractTestUI {
         grid.addColumn(t -> new Label(t), new ComponentRenderer());
         grid.setItems("Foo", "Bar", "Baz");
         grid.removeHeaderRow(0);
+        grid.appendFooterRow();
         addComponent(grid);
     }
 }

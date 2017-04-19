@@ -12,5 +12,4 @@ public class TreeGridNoHeaderOnInitTest extends SingleBrowserTest {
         openTestURL();
         assertNoErrorNotifications();
     }
-
 }
