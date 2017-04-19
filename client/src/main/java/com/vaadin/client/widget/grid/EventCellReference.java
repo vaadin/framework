@@ -87,7 +87,7 @@ public class EventCellReference<T> extends CellReference<T> {
      * Is the cell reference for a cell in the header of the Grid.
      *
      * @since 7.5
-     * @return <code>true</true> if referenced cell is in the header, 
+     * @return <code>true</true> if referenced cell is in the header,
      *         <code>false</code> if not
      */
     public boolean isHeader() {
@@ -98,7 +98,7 @@ public class EventCellReference<T> extends CellReference<T> {
      * Is the cell reference for a cell in the body of the Grid.
      *
      * @since 7.5
-     * @return <code>true</true> if referenced cell is in the body, 
+     * @return <code>true</true> if referenced cell is in the body,
      *         <code>false</code> if not
      */
     public boolean isBody() {
@@ -109,7 +109,7 @@ public class EventCellReference<T> extends CellReference<T> {
      * Is the cell reference for a cell in the footer of the Grid.
      *
      * @since 7.5
-     * @return <code>true</true> if referenced cell is in the footer, 
+     * @return <code>true</true> if referenced cell is in the footer,
      *         <code>false</code> if not
      */
     public boolean isFooter() {
