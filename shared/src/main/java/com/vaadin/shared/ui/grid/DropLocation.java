@@ -19,7 +19,7 @@ package com.vaadin.shared.ui.grid;
  * Defines drop locations within a Grid row.
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 8.1
  */
 public enum DropLocation {
 

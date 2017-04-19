@@ -24,10 +24,10 @@ import com.vaadin.ui.GridDropTarget;
  * Drop listener for HTML5 drop on a Grid row.
  *
  * @param <T>
- *         The Grid bean type.
+ *            The Grid bean type.
  * @author Vaadin Ltd.
  * @see GridDropTarget#addGridDropListener(GridDropListener)
- * @since
+ * @since 8.1
  */
 @FunctionalInterface
 public interface GridDropListener<T> extends ConnectorEventListener {
@@ -39,7 +39,7 @@ public interface GridDropListener<T> extends ConnectorEventListener {
      * Called when drop event is fired on a Grid row.
      *
      * @param event
-     *         Server side drop event.
+     *            Server side drop event.
      */
     void drop(GridDropEvent<T> event);
 }

@@ -21,7 +21,7 @@ import com.vaadin.shared.AbstractComponentState;
  * Shared state for Composite.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
  */
 public class CompositeState extends AbstractComponentState {
 }

@@ -24,10 +24,10 @@ import com.vaadin.ui.GridDragSource;
  * Drop listener for HTML5 drop on a Grid row.
  *
  * @param <T>
- *         The Grid bean type.
+ *            The Grid bean type.
  * @author Vaadin Ltd.
  * @see GridDragSource#addGridDragEndListener(GridDragEndListener)
- * @since
+ * @since 8.1
  */
 @FunctionalInterface
 public interface GridDragEndListener<T> extends ConnectorEventListener {
@@ -40,7 +40,7 @@ public interface GridDragEndListener<T> extends ConnectorEventListener {
      * drag.
      *
      * @param event
-     *         The drag end event.
+     *            The drag end event.
      */
     void dragEnd(GridDragEndEvent<T> event);
 }
