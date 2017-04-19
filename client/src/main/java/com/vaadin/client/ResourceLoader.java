@@ -249,7 +249,10 @@ public class ResourceLoader {
             addOnloadHandler(linkTag, new ResourceLoadListener() {
                 @Override
                 public void onLoad(ResourceLoadEvent event) {
-                    fireLoad(event);
+                    // Must wait for all HTML imports to finish
+                    // processing to ensure that e.g. the template is
+                    // parsed when calling the element constructor.
+                    runWhenHtmlImportsReady(() -> fireLoad(event));
                 }
 
                 @Override
@@ -465,4 +468,28 @@ public class ResourceLoader {
     private static Logger getLogger() {
         return Logger.getLogger(ResourceLoader.class.getName());
     }
+
+    private static native boolean supportsHtmlWhenReady()
+    /*-{
+        return !!($wnd.HTMLImports && $wnd.HTMLImports.whenReady);
+    }-*/;
+
+    private static native void addHtmlImportsReadyHandler(Runnable handler)
+    /*-{
+        $wnd.HTMLImports.whenReady($entry(function() {
+            handler.@Runnable::run()();
+        }));
+    }-*/;
+
+    protected void runWhenHtmlImportsReady(Runnable runnable) {
+        if (GWT.isClient() && supportsHtmlWhenReady()) {
+            addHtmlImportsReadyHandler(() -> {
+                runnable.run();
+            });
+        } else {
+            runnable.run();
+        }
+
+    }
+
 }
