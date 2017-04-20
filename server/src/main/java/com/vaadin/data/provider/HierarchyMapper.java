@@ -17,7 +17,10 @@ package com.vaadin.data.provider;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -139,6 +142,9 @@ class HierarchyMapper implements Serializable {
     /** The expanded nodes in the tree. */
     private final TreeSet<TreeNode> nodes = new TreeSet<>();
 
+    /** Nodes that have been previously expanded. */
+    private final Map<String, TreeSet<TreeNode>> collapsedNodes = new HashMap<>();
+
     /**
      * Resets the tree, sets given the root level size.
      *
@@ -146,6 +152,7 @@ class HierarchyMapper implements Serializable {
      *            the number of items in the root level
      */
     public void reset(int rootLevelSize) {
+        collapsedNodes.clear();
         nodes.clear();
         nodes.add(new TreeNode(null, 0, rootLevelSize));
     }
@@ -170,6 +177,33 @@ class HierarchyMapper implements Serializable {
      */
     public boolean isCollapsed(String itemKey) {
         return !getNodeForKey(itemKey).isPresent();
+    }
+
+    /**
+     * Return whether the given item key is still being used in this mapper.
+     *
+     * @param itemKey
+     *            the item key to look for
+     * @return {@code true} if the item key is still used, {@code false}
+     *         otherwise
+     */
+    public boolean isKeyStored(String itemKey) {
+        if (getNodeForKey(itemKey).isPresent()) {
+            return true;
+        }
+        // Is the key used in a collapsed subtree?
+        for (Entry<String, TreeSet<TreeNode>> entry : collapsedNodes.entrySet()) {
+            if (entry.getKey() != null && entry.getKey().equals(itemKey)) {
+                return true;
+            }
+            for (TreeNode subTreeNode : entry.getValue()) {
+                if (subTreeNode.getParentKey() != null
+                        && subTreeNode.getParentKey().equals(itemKey)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -222,24 +256,37 @@ class HierarchyMapper implements Serializable {
     /**
      * Expands the node in the given index and with the given key.
      *
-     * @param expanedRowKey
+     * @param expandedRowKey
      *            the key of the expanded item
      * @param expandedRowIndex
      *            the index of the expanded item
      * @param expandedNodeSize
-     *            the size of the subtree of the expanded node
+     *            the size of the subtree of the expanded node, used if
+     *            previously unknown
      * @throws IllegalStateException
      *             if the node was expanded already
+     * @return the actual size of the expand
      */
-    protected void expand(String expanedRowKey, int expandedRowIndex,
+    protected int expand(String expandedRowKey, int expandedRowIndex,
             int expandedNodeSize) {
         if (expandedNodeSize < 1) {
             throw new IllegalArgumentException(
                     "The expanded node's size cannot be less than 1, was "
                             + expandedNodeSize);
         }
-        TreeNode newNode = new TreeNode(expanedRowKey, expandedRowIndex + 1,
-                expandedNodeSize);
+        TreeNode newNode;
+        TreeSet<TreeNode> subTree = null;
+        if (collapsedNodes.containsKey(expandedRowKey)) {
+            subTree = collapsedNodes.remove(expandedRowKey);
+            newNode = subTree.first();
+            int offset = expandedRowIndex - newNode.getStartIndex() + 1;
+            subTree.forEach(node -> node.push(offset));
+            expandedNodeSize = newNode.getEndIndex() - newNode.getStartIndex()
+                    + 1;
+        } else {
+            newNode = new TreeNode(expandedRowKey, expandedRowIndex + 1,
+                    expandedNodeSize);
+        }
 
         boolean added = nodes.add(newNode);
         if (!added) {
@@ -248,19 +295,26 @@ class HierarchyMapper implements Serializable {
         }
 
         // push end indexes for parent nodes
+        final int expandSize = expandedNodeSize;
         List<TreeNode> updated = nodes.headSet(newNode, false).stream()
                 .filter(node -> node.getEndIndex() >= expandedRowIndex)
                 .collect(Collectors.toList());
         nodes.removeAll(updated);
-        updated.stream().forEach(node -> node.pushEnd(expandedNodeSize));
+        updated.stream().forEach(node -> node.pushEnd(expandSize));
         nodes.addAll(updated);
 
         // push start and end indexes for later nodes
         updated = nodes.tailSet(newNode, false).stream()
                 .collect(Collectors.toList());
         nodes.removeAll(updated);
-        updated.stream().forEach(node -> node.push(expandedNodeSize));
+        updated.stream().forEach(node -> node.push(expandSize));
         nodes.addAll(updated);
+
+        if (subTree != null) {
+            nodes.addAll(subTree);
+        }
+
+        return expandSize;
     }
 
     /**
@@ -290,6 +344,9 @@ class HierarchyMapper implements Serializable {
             throw new IllegalStateException("The expected parent key " + key
                     + " is different for the collapsed node " + collapsedNode);
         }
+
+        collapsedNodes.put(collapsedNode.getParentKey(),
+                new TreeSet<>(nodes.tailSet(collapsedNode)));
 
         // remove complete subtree
         AtomicInteger removedSubTreeSize = new AtomicInteger(

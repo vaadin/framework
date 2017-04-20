@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.treegrid;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -67,6 +68,10 @@ public class TreeGridConnector extends GridConnector {
     private HierarchyRenderer hierarchyRenderer;
 
     private Set<String> rowKeysPendingExpand = new HashSet<>();
+
+    private boolean rowAwaitingCollapse = false;
+
+    private boolean rowAwaitingExpand = false;
 
     @Override
     public TreeGrid getWidget() {
@@ -159,14 +164,23 @@ public class TreeGridConnector extends GridConnector {
             @Override
             public void setExpanded(String key) {
                 rowKeysPendingExpand.add(key);
-                Range cache = ((AbstractRemoteDataSource) getDataSource())
-                        .getCachedRange();
-                checkExpand(cache.getStart(), cache.length());
+                checkExpand();
+            }
+
+            @Override
+            public void setExpanded(List<String> keys) {
+                rowKeysPendingExpand.addAll(keys);
+                checkExpand();
             }
 
             @Override
             public void setCollapsed(String key) {
                 rowKeysPendingExpand.remove(key);
+            }
+
+            @Override
+            public void setCollapsed(List<String> keys) {
+                rowKeysPendingExpand.removeAll(keys);
             }
 
             @Override
@@ -188,12 +202,14 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void dataRemoved(int firstRowIndex, int numberOfRows) {
-                // NO-OP
+                rowAwaitingCollapse = false;
+                checkExpand();
             }
 
             @Override
             public void dataAdded(int firstRowIndex, int numberOfRows) {
-                // NO-OP
+                rowAwaitingExpand = false;
+                checkExpand();
             }
 
             @Override
@@ -203,7 +219,8 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void resetDataAndSize(int estimatedNewDataSize) {
-                // NO-OP
+                rowAwaitingCollapse = false;
+                rowAwaitingExpand = false;
             }
         });
     }
@@ -227,15 +244,22 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private void setCollapsed(int rowIndex, boolean collapsed) {
-        String rowKey = getRowKey(getDataSource().getRow(rowIndex));
-        getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
-                collapsed, true);
+        setCollapsed(rowIndex, collapsed, true);
     }
 
-    private void setCollapsedServerInitiated(int rowIndex, boolean collapsed) {
+    private void setCollapsed(int rowIndex, boolean collapsed,
+            boolean userOriginated) {
+        if (isAwaitingRows()) {
+            return;
+        }
+        if (collapsed) {
+            rowAwaitingCollapse = true;
+        } else {
+            rowAwaitingExpand = true;
+        }
         String rowKey = getRowKey(getDataSource().getRow(rowIndex));
         getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
-                collapsed, false);
+                collapsed, userOriginated);
     }
 
     /**
@@ -341,8 +365,14 @@ public class TreeGridConnector extends GridConnector {
         }
     }
 
+    private void checkExpand() {
+        Range cache = ((AbstractRemoteDataSource) getDataSource())
+                .getCachedRange();
+        checkExpand(cache.getStart(), cache.length());
+    }
+
     private void checkExpand(int firstRowIndex, int numberOfRows) {
-        if (rowKeysPendingExpand.isEmpty()) {
+        if (rowKeysPendingExpand.isEmpty() || isAwaitingRows()) {
             return;
         }
         for (int rowIndex = firstRowIndex; rowIndex < firstRowIndex
@@ -350,10 +380,14 @@ public class TreeGridConnector extends GridConnector {
             String rowKey = getDataSource().getRow(rowIndex)
                     .getString(DataCommunicatorConstants.KEY);
             if (rowKeysPendingExpand.remove(rowKey)) {
-                setCollapsedServerInitiated(rowIndex, false);
+                setCollapsed(rowIndex, false, false);
                 return;
             }
         }
+    }
+
+    private boolean isAwaitingRows() {
+        return rowAwaitingCollapse || rowAwaitingExpand;
     }
 
     private static boolean isCollapsed(JsonObject rowData) {

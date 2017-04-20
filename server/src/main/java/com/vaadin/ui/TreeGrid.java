@@ -457,6 +457,27 @@ public class TreeGrid<T> extends Grid<T> {
     }
 
     /**
+     * Expands the given items.
+     * <p>
+     * If an item is currently expanded, does nothing. If an item does not have
+     * any children, does nothing.
+     *
+     * @param items
+     *            the items to expand
+     */
+    public void expand(Collection<T> items) {
+        List<String> expandedKeys = new ArrayList<>();
+        List<T> expandedItems = new ArrayList<>();
+        items.forEach(item -> getDataCommunicator().setPendingExpand(item)
+                .ifPresent(key -> {
+                    expandedKeys.add(key);
+                    expandedItems.add(item);
+                }));
+        getRpcProxy(TreeGridClientRpc.class).setExpanded(expandedKeys);
+        expandedItems.forEach(item -> fireExpandEvent(item, false));
+    }
+
+    /**
      * Collapses the given item.
      * <p>
      * If the item is already collapsed, does nothing.
@@ -469,6 +490,26 @@ public class TreeGrid<T> extends Grid<T> {
             getRpcProxy(TreeGridClientRpc.class).setCollapsed(key);
             fireCollapseEvent(item, false);
         });
+    }
+
+    /**
+     * Collapse the given items.
+     * <p>
+     * For items that are already collapsed, does nothing.
+     *
+     * @param items
+     *            the collection of items to collapse
+     */
+    public void collapse(Collection<T> items) {
+        List<String> collapsedKeys = new ArrayList<>();
+        List<T> collapsedItems = new ArrayList<>();
+        items.forEach(item -> getDataCommunicator().collapseItem(item)
+                .ifPresent(key -> {
+                    collapsedKeys.add(key);
+                    collapsedItems.add(item);
+                }));
+        getRpcProxy(TreeGridClientRpc.class).setCollapsed(collapsedKeys);
+        collapsedItems.forEach(item -> fireCollapseEvent(item, false));
     }
 
     @Override

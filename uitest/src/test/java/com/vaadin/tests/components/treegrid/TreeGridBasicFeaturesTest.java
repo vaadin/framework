@@ -8,11 +8,14 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TreeGridElement;
@@ -270,6 +273,48 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                 "Item collapsed (user originated: true): 0 | 1"));
     }
 
+    @Test
+    @Ignore
+    public void no_race_condition_with_multiple_collapse_or_expand() {
+        testBench().disableWaitForVaadin();
+
+        // toggle expand of two rows simultaneously
+        // only the first of the expands should occur
+        grid.expandWithClick(0);
+        grid.expandWithClick(1);
+        waitUntilRowCountEquals(6);
+        assertCellTexts(0, 0,
+                new String[] { "0 | 0", "1 | 0", "1 | 1", "1 | 2", "0 | 1" });
+
+        // toggle collapse of the expanded first row and immediately expand the
+        // last row
+        // only the collapse should occur
+        grid.collapseWithClick(0);
+        grid.expandWithClick(5);
+        waitUntilRowCountEquals(3);
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+    }
+
+    @Test
+    public void expanded_nodes_stay_expanded_when_parent_expand_state_is_toggled() {
+        grid.expandWithClick(0);
+        grid.expandWithClick(1);
+        grid.collapseWithClick(0);
+        grid.expandWithClick(0);
+        assertCellTexts(0, 0, new String[] { "0 | 0", "1 | 0", "2 | 0", "2 | 1",
+                "2 | 2", "1 | 1", "1 | 2", "0 | 1", "0 | 2" });
+        assertEquals(9, grid.getRowCount());
+
+        grid.expandWithClick(7);
+        grid.expandWithClick(8);
+        grid.collapseWithClick(7);
+        grid.collapseWithClick(0);
+        grid.expandWithClick(1);
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "1 | 0", "2 | 0",
+                "2 | 1", "2 | 2", "1 | 1", "1 | 2", "0 | 2" });
+        assertEquals(9, grid.getRowCount());
+    }
+
     private void assertCellTexts(int startRowIndex, int cellIndex,
             String[] cellTexts) {
         int index = startRowIndex;
@@ -278,5 +323,14 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                     grid.getRow(index).getCell(cellIndex).getText());
             index++;
         }
+    }
+
+    private void waitUntilRowCountEquals(int expectedCount) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver input) {
+                return grid.getRowCount() == expectedCount;
+            }
+        });
     }
 }

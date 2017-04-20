@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui.treegrid;
 
+import java.util.List;
+
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
@@ -35,6 +37,15 @@ public interface TreeGridClientRpc extends ClientRpc {
     public void setExpanded(String key);
 
     /**
+     * Inform the client that a list of items with the given keys have been
+     * expanded by the server.
+     *
+     * @param keys
+     *            the communication keys of the expanded items
+     */
+    public void setExpanded(List<String> keys);
+
+    /**
      * Inform the client that an item with the given key has been collapsed by
      * the server.
      *
@@ -42,6 +53,15 @@ public interface TreeGridClientRpc extends ClientRpc {
      *            the communication key of the collapsed item
      */
     public void setCollapsed(String key);
+
+    /**
+     * Inform the client that a list of items with the given keys have been
+     * collapsed by the server.
+     *
+     * @param keys
+     *            the communication keys of the collapsed items
+     */
+    public void setCollapsed(List<String> keys);
 
     /**
      * Clear all pending expands from the client.

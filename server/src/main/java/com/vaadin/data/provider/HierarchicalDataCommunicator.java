@@ -162,6 +162,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     private void doPushRows(final Range requestedRows) {
         Stream<TreeLevelQuery> levelQueries = mapper.splitRangeToLevelQueries(
                 requestedRows.getStart(), requestedRows.getEnd() - 1);
+        List<TreeLevelQuery> collected = levelQueries
+                .collect(Collectors.toList());
+        levelQueries = collected.stream();
 
         JsonObject[] dataObjects = new JsonObject[requestedRows.length()];
         BiConsumer<JsonObject, Integer> rowDataMapper = (object,
@@ -283,10 +286,11 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     @Override
     protected void onDropRows(JsonArray keys) {
         for (int i = 0; i < keys.length(); i++) {
-            // cannot drop expanded rows since the parent item is needed always
-            // when fetching more rows
+            // cannot drop keys of expanded rows, parents of expanded rows or
+            // rows that are pending expand
             String itemKey = keys.getString(i);
-            if (mapper.isCollapsed(itemKey) && !rowKeysPendingExpand.contains(itemKey)) {
+            if (!mapper.isKeyStored(itemKey)
+                    && !rowKeysPendingExpand.contains(itemKey)) {
                 getActiveDataHandler().dropActiveData(itemKey);
             }
         }
@@ -366,10 +370,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
         Objects.requireNonNull(collapsedRowKey, "Row key cannot be null");
         T collapsedItem = getKeyMapper().get(collapsedRowKey);
-        Objects.requireNonNull(collapsedItem,
-                "Cannot find item for given key " + collapsedItem);
 
-        if (mapper.isCollapsed(collapsedRowKey)) {
+        if (collapsedItem == null || mapper.isCollapsed(collapsedRowKey)) {
             return false;
         }
         int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
@@ -400,10 +402,11 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
         Objects.requireNonNull(expandedRowKey, "Row key cannot be null");
         final T expandedItem = getKeyMapper().get(expandedRowKey);
-        Objects.requireNonNull(expandedItem,
-                "Cannot find item for given key " + expandedRowKey);
+        if (expandedItem == null) {
+            return false;
+        }
 
-        final int expandedNodeSize = doSizeQuery(expandedItem);
+        int expandedNodeSize = doSizeQuery(expandedItem);
         if (expandedNodeSize == 0) {
             // TODO handle 0 size -> not expandable
             throw new IllegalStateException("Row with index " + expandedRowIndex
@@ -413,7 +416,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         if (!mapper.isCollapsed(expandedRowKey)) {
             return false;
         }
-        mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
+        expandedNodeSize = mapper.expand(expandedRowKey, expandedRowIndex,
+                expandedNodeSize);
         rowKeysPendingExpand.remove(expandedRowKey);
 
         getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
