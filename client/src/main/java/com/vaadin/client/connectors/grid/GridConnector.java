@@ -202,6 +202,8 @@ public class GridConnector extends AbstractListingConnector
     protected void init() {
         super.init();
 
+        updateWidgetStyleNames();
+
         registerRpc(GridClientRpc.class, new GridClientRpc() {
 
             @Override
