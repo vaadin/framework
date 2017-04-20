@@ -228,8 +228,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         SubPartAware, DeferredWorker, Focusable,
         com.google.gwt.user.client.ui.Focusable, HasWidgets, HasEnabled {
 
-    private static final String STYLE_NAME = "v-grid";
-
     private static final String SELECT_ALL_CHECKBOX_CLASSNAME = "-select-all-checkbox";
 
     /**
@@ -6046,8 +6044,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         initWidget(escalator);
         getElement().setTabIndex(0);
         cellFocusHandler = new CellFocusHandler();
-
-        setStylePrimaryName(STYLE_NAME);
 
         escalator.getHeader().setEscalatorUpdater(createHeaderUpdater());
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());

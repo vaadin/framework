@@ -17,7 +17,6 @@ package com.vaadin.client.widget.treegrid;
 
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.shared.ui.treegrid.TreeGridState;
 
 import elemental.json.JsonObject;
 
@@ -46,6 +45,6 @@ public class TreeGrid extends Grid<JsonObject> {
 
     @Override
     protected String getFocusPrimaryStyleName() {
-        return TreeGridState.PRIMARY_STYLE_NAME + "-rowmode";
+        return getStylePrimaryName() + "-rowmode";
     }
 }
