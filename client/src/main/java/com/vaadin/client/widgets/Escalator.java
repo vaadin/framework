@@ -888,8 +888,8 @@ public class Escalator extends Widget
                 if (position instanceof AbsolutePosition) {
                     /*
                      * we don't want to put "top: 0" on the footer, since it'll
-                     * render wrong, as we already have
-                     * "bottom: $footer-height".
+                     * render wrong, as we already have "bottom: $footer-height"
+                     * .
                      */
                     footElem.getStyle().setLeft(-scrollLeft, Unit.PX);
                 } else {
@@ -1225,9 +1225,6 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
 
             if (!isAttached()) {
                 return;
@@ -1351,9 +1348,6 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
 
             /*
              * only add items in the DOM if the widget itself is attached to the
@@ -2528,6 +2522,24 @@ public class Escalator extends Widget
 
         public BodyRowContainerImpl(final TableSectionElement bodyElement) {
             super(bodyElement);
+        }
+
+        @Override
+        public void insertRows(int index, int numberOfRows) {
+            super.insertRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                heightByRows = getRowCount();
+            }
+        }
+
+        @Override
+        public void removeRows(int index, int numberOfRows) {
+            super.removeRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                heightByRows = getRowCount();
+            }
         }
 
         @Override
