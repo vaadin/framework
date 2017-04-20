@@ -6442,7 +6442,6 @@ public class Escalator extends Widget
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
-        getLogger().warning("HeightByRows: " + rows);
         if (rows <= 0) {
             throw new IllegalArgumentException(
                     "The number of rows must be a positive number.");
