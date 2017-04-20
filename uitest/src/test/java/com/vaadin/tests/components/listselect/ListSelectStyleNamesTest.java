@@ -77,7 +77,7 @@ public class ListSelectStyleNamesTest extends SingleBrowserTest {
         assertStyleNames(nativeSelect, "newprimary", "v-widget",
                 "custominitial", "newprimary-custominitial", "new",
                 "newprimary-new");
-        assertStyleNames(nativeSelectSelect, "newprimary");
+        assertStyleNames(nativeSelectSelect, "newprimary-select");
         assertStyleNames(listSelect, "newprimary", "v-widget", "custominitial",
                 "newprimary-custominitial", "new", "newprimary-new");
         assertStyleNames(listSelectSelect, "newprimary-select");
