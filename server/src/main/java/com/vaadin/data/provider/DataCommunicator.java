@@ -225,7 +225,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Set the range of rows to push for next response.
      *
      * @param pushRows
-     * @since 8.1
+     * @since
      */
     protected void setPushRows(Range pushRows) {
         this.pushRows = pushRows;
@@ -235,7 +235,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Get the current range of rows to push in the next response.
      *
      * @return the range of rows to push
-     * @since 8.1
+     * @since
      */
     protected Range getPushRows() {
         return pushRows;
@@ -245,7 +245,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Get the object used for filtering in this data communicator.
      *
      * @return the filter object of this data communicator
-     * @since 8.1
+     * @since
      */
     protected Object getFilter() {
         return filter;
@@ -255,7 +255,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Get the client rpc interface for this data communicator.
      *
      * @return the client rpc interface for this data communicator
-     * @since 8.1
+     * @since
      */
     protected DataCommunicatorClientRpc getClientRpc() {
         return rpc;
@@ -272,7 +272,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      *            the index of the first cached row
      * @param cacheSize
      *            the number of cached rows
-     * @since 8.1
+     * @since
      */
     protected void onRequestRows(int firstRowIndex, int numberOfRows,
             int firstCachedRowIndex, int cacheSize) {
@@ -285,7 +285,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @param keys
      *            the keys of the rows that have been dropped
-     * @since 8.1
+     * @since
      */
     protected void onDropRows(JsonArray keys) {
         for (int i = 0; i < keys.length(); ++i) {
@@ -309,7 +309,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @param initial
      *            {@code true} if initial data load, {@code false} if not
-     * @since 8.1
+     * @since
      */
     protected void sendDataToClient(boolean initial) {
         if (getDataProvider() == null) {
@@ -434,7 +434,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Returns the active data handler.
      *
      * @return the active data handler
-     * @since 8.1
+     * @since
      */
     protected ActiveDataHandler getActiveDataHandler() {
         return handler;
@@ -502,7 +502,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Returns the currently set updated data.
      *
      * @return the set of data that should be updated on the next response
-     * @since 8.1
+     * @since
      */
     protected Set<T> getUpdatedData() {
         return updatedData;
@@ -523,7 +523,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Returns the {@link Comparator} to use with in-memory sorting.
      *
      * @return comparator used to sort data
-     * @since 8.1
+     * @since
      */
     public Comparator<T> getInMemorySorting() {
         return inMemorySorting;
@@ -545,7 +545,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Returns the {@link QuerySortOrder} to use with backend sorting.
      *
      * @return list of sort order information to pass to a query
-     * @since 8.1
+     * @since
      */
     public List<QuerySortOrder> getBackEndSorting() {
         return backEndSorting;
