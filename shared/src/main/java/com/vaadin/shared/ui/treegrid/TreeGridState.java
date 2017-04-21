@@ -25,9 +25,8 @@ import com.vaadin.shared.ui.grid.GridState;
  */
 public class TreeGridState extends GridState {
 
-    public static final String PRIMARY_STYLE_NAME = "v-treegrid";
     {
-        primaryStyleName = PRIMARY_STYLE_NAME;
+        primaryStyleName = "v-treegrid";
     }
 
     /**
