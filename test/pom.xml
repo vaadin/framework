@@ -107,6 +107,8 @@
         <module>servlet-containers/jsp-integration</module>
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>
+        <module>web-component-addon</module>
+        <module>web-component-app</module>
     </modules>
 
     <build>
