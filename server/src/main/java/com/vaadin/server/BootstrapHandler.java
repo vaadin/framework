@@ -387,12 +387,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         head.appendElement("meta").attr("http-equiv", "Content-Type").attr(
                 "content", ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
 
-        /*
-         * Enable Chrome Frame in all versions of IE if installed.
-         */
-        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
-                .attr("content", "IE=11;chrome=1");
-
         Class<? extends UI> uiClass = context.getUIClass();
 
         String viewportContent = null;
