@@ -17,12 +17,13 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.shared.Registration;
@@ -167,13 +168,33 @@ public interface SelectionModel<T> extends Serializable {
          */
         public default void selectItems(T... items) {
             Objects.requireNonNull(items);
-            Stream.of(items).forEach(Objects::requireNonNull);
+            selectItems(Arrays.asList(items));
+        }
 
-            updateSelection(new LinkedHashSet<>(Arrays.asList(items)),
+        /**
+         * Adds the given items to the set of currently selected items.
+         * <p>
+         * By default this does not clear any previous selection. To do that,
+         * use {@link #deselectAll()}.
+         * <p>
+         * If the all the items were already selected, this is a NO-OP.
+         * <p>
+         * This is a short-hand for {@link #updateSelection(Set, Set)} with
+         * nothing to deselect.
+         *
+         * @param items
+         *            to add to selection, not {@code null}
+         */
+        public default void selectItems(Collection<T> items) {
+            Objects.requireNonNull(items);
+            items.stream().forEach(Objects::requireNonNull);
+
+            updateSelection(
+                    new LinkedHashSet<>(
+                            items.stream().collect(Collectors.toList())),
                     Collections.emptySet());
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public default void deselect(T item) {
             deselectItems(item);
@@ -192,10 +213,26 @@ public interface SelectionModel<T> extends Serializable {
          */
         public default void deselectItems(T... items) {
             Objects.requireNonNull(items);
-            Stream.of(items).forEach(Objects::requireNonNull);
+            deselectItems(Arrays.asList(items));
+        }
 
-            updateSelection(Collections.emptySet(),
-                    new LinkedHashSet<>(Arrays.asList(items)));
+        /**
+         * Removes the given items from the set of currently selected items.
+         * <p>
+         * If the none of the items were selected, this is a NO-OP.
+         * <p>
+         * This is a short-hand for {@link #updateSelection(Set, Set)} with
+         * nothing to select.
+         *
+         * @param items
+         *            to remove from selection, not {@code null}
+         */
+        public default void deselectItems(Collection<T> items) {
+            Objects.requireNonNull(items);
+            items.stream().forEach(Objects::requireNonNull);
+
+            updateSelection(Collections.emptySet(), new LinkedHashSet<>(
+                    items.stream().collect(Collectors.toList())));
         }
 
         /**

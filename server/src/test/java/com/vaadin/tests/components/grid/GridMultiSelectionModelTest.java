@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -307,6 +308,18 @@ public class GridMultiSelectionModelTest {
     }
 
     @Test
+    public void selectItemsUsingCollection() {
+        Collection<Person> personCollection = Arrays.asList(PERSON_C, PERSON_B);
+        selectionModel.selectItems(personCollection);
+
+        assertFalse(selectionModel.isSelected(PERSON_A));
+        assertTrue(selectionModel.isSelected(PERSON_B));
+        assertTrue(selectionModel.isSelected(PERSON_C));
+
+        assertEquals("Got more events than expected", 1, events.get());
+    }
+
+    @Test
     public void deselectItems() {
         selectionModel.selectItems(PERSON_C, PERSON_A, PERSON_B);
 
@@ -333,6 +346,23 @@ public class GridMultiSelectionModelTest {
 
         assertEquals(Arrays.asList(), currentSelectionCapture.getValue());
         assertEquals(3, events.get());
+    }
+
+    @Test
+    public void deselectItemsUsingCollection() {
+        selectionModel.selectItems(PERSON_C, PERSON_A, PERSON_B);
+
+        Collection<Person> personCollection = Arrays.asList(PERSON_A, PERSON_B);
+        selectionModel.deselectItems(personCollection);
+
+        assertEquals(PERSON_C,
+                selectionModel.getFirstSelectedItem().orElse(null));
+        assertEquals(Optional.of(PERSON_C),
+                selectionModel.getFirstSelectedItem());
+
+        assertFalse(selectionModel.isSelected(PERSON_A));
+        assertFalse(selectionModel.isSelected(PERSON_B));
+        assertTrue(selectionModel.isSelected(PERSON_C));
     }
 
     @Test
