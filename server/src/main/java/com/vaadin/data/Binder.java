@@ -2223,10 +2223,11 @@ public class Binder<BEAN> implements Serializable {
             return true;
         } else {
             throw new IllegalStateException(String.format(
-                    "Property type '%s' doesn't "
+                    "Binding for the field '%s' failed. Property type '%s' doesn't "
                             + "match the field type '%s'. "
                             + "Binding should be configured manually using converter.",
-                    propertyType.getName(), valueType.getTypeName()));
+                    memberField.getName(), propertyType.getName(),
+                    valueType.getTypeName()));
         }
     }
 
