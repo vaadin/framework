@@ -55,6 +55,7 @@ public class VBrowserDetailsUserAgentParserTest {
     private static final String EDGE_WINDOWS_10 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240";
 
     private static final String PHANTOMJS_211_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1";
+    private static final String CHROME_57_ON_IOS_10_3_1 = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/57.0.2987.137 Mobile/14E304 Safari/602.1";
 
     @Test
     public void testSafari3() {
@@ -205,6 +206,17 @@ public class VBrowserDetailsUserAgentParserTest {
     }
 
     @Test
+    public void testChromeIOS() {
+        VBrowserDetails bd = new VBrowserDetails(CHROME_57_ON_IOS_10_3_1);
+        assertWebKit(bd);
+        assertChrome(bd);
+        assertBrowserMajorVersion(bd, 57);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 602f);
+        assertIOS(bd, 10, 3);
+    }
+
+    @Test
     public void testFirefox3() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX30_WINDOWS);
         assertGecko(bd);
@@ -349,7 +361,8 @@ public class VBrowserDetailsUserAgentParserTest {
 
     @Test
     public void testIE11Windows7CompatibilityViewIE7() {
-        VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_7_COMPATIBILITY_VIEW_IE7);
+        VBrowserDetails bd = new VBrowserDetails(
+                IE11_WINDOWS_7_COMPATIBILITY_VIEW_IE7);
         assertTrident(bd);
         assertEngineVersion(bd, 7);
         assertIE(bd);
@@ -360,7 +373,8 @@ public class VBrowserDetailsUserAgentParserTest {
 
     @Test
     public void testIE11Windows10CompatibilityViewIE7() {
-        VBrowserDetails bd = new VBrowserDetails(IE11_WINDOWS_10_COMPATIBILITY_VIEW_IE7);
+        VBrowserDetails bd = new VBrowserDetails(
+                IE11_WINDOWS_10_COMPATIBILITY_VIEW_IE7);
         assertTrident(bd);
         assertEngineVersion(bd, 7);
         assertIE(bd);
@@ -371,7 +385,8 @@ public class VBrowserDetailsUserAgentParserTest {
 
     @Test
     public void testIE11InitialWindows10CompatibilityViewIE7() {
-        VBrowserDetails bd = new VBrowserDetails(IE11_INITIAL_WINDOWS_10_COMPATIBILITY_VIEW_IE7);
+        VBrowserDetails bd = new VBrowserDetails(
+                IE11_INITIAL_WINDOWS_10_COMPATIBILITY_VIEW_IE7);
         assertTrident(bd);
         assertEngineVersion(bd, 7);
         assertIE(bd);
