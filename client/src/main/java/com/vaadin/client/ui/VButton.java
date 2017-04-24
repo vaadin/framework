@@ -172,9 +172,10 @@ public class VButton extends FocusWidget implements ClickHandler {
             // fix for #14632 - on mobile safari 8, if we press the button long
             // enough, we might get two click events, so we are suppressing
             // second if it is too soon
-            boolean isPhantomClickPossible = BrowserInfo.get().isSafari()
-                    && BrowserInfo.get().isTouchDevice()
-                    && BrowserInfo.get().getBrowserMajorVersion() == 8;
+            BrowserInfo browserInfo = BrowserInfo.get();
+            boolean isPhantomClickPossible = browserInfo.isSafariOrIOS()
+                    && browserInfo.isTouchDevice()
+                    && browserInfo.getBrowserMajorVersion() == 8;
             long clickTime = isPhantomClickPossible ? System.currentTimeMillis()
                     : 0;
             // If clicks are currently disallowed or phantom, keep it from
@@ -328,7 +329,7 @@ public class VButton extends FocusWidget implements ClickHandler {
      */
     @Override
     public void onClick(ClickEvent event) {
-        if (BrowserInfo.get().isSafari()) {
+        if (BrowserInfo.get().isSafariOrIOS()) {
             VButton.this.setFocus(true);
         }
 

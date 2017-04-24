@@ -1341,7 +1341,7 @@ public class VTabsheet extends VTabsheetBase
             scroller.getStyle().setDisplay(Display.NONE);
         }
 
-        if (BrowserInfo.get().isSafari()) {
+        if (BrowserInfo.get().isSafariOrIOS()) {
             /*
              * another hack for webkits. tabscroller sometimes drops without
              * "shaking it" reproducable in

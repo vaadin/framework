@@ -141,7 +141,9 @@ public class WebBrowser implements Serializable {
     }
 
     /**
-     * Tests whether the user is using Safari.
+     * Tests whether the user is using Safari. Note that Chrome on iOS is not
+     * detected as Safari but as Chrome although the underlying browser engine
+     * is the same.
      *
      * @return true if the user is using Safari, false if the user is not using
      *         Safari or if no information on the browser is present
