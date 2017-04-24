@@ -45,6 +45,8 @@ public class ApplicationConstants implements Serializable {
     public static final String PUBLISHED_PROTOCOL_NAME = "published";
     public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";
+    public static final String FRONTEND_PROTOCOL_PREFIX = "frontend://";
+
     /**
      * Prefix used for theme resource URLs
      *
@@ -96,6 +98,16 @@ public class ApplicationConstants implements Serializable {
      * </p>
      */
     public static final String VAADIN_DIR_URL = "vaadinDir";
+
+    /**
+     * Configuration parameter giving the (in some cases relative) URL to the
+     * frontend resource folder from where frontend files are served (this is
+     * what frontend:// should resolve to).
+     * <p>
+     * By default, this is "vaadin://es6" ("vaadin://es5" for browsers which
+     * does not support ES6).
+     */
+    public static final String FRONTEND_URL = "frontendUrl";
 
     /**
      * The name of the javascript containing the bootstrap code. The file is
@@ -183,5 +195,31 @@ public class ApplicationConstants implements Serializable {
      * Content type to use for text/html responses (should always be UTF-8).
      */
     public static final String CONTENT_TYPE_TEXT_HTML_UTF_8 = "text/html; charset=utf-8";
+
+    /**
+     * Configuration name for the {@literal frontend://} URL when using a
+     * browser which is not ES6 compatible (i.e. IE11 or Safari 9).
+     */
+    public static final String FRONTEND_URL_ES5 = "frontend.url.es5";
+
+    /**
+     * Configuration name for the {@literal frontend://} URL when using an ES6
+     * compatible browser.
+     */
+    public static final String FRONTEND_URL_ES6 = "frontend.url.es6";
+
+    /**
+     * Default value of the configuration of the build URL of ES6 web
+     * components.
+     */
+    public static final String FRONTEND_URL_ES6_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
+            + "frontend/es6/";
+
+    /**
+     * Default value of the configuration of the build URL of ES5 web
+     * components.
+     */
+    public static final String FRONTEND_URL_ES5_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
+            + "frontend/es5/";
 
 }
