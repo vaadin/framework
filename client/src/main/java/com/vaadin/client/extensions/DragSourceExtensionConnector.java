@@ -122,9 +122,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     @OnStateChange("resources")
     private void prefetchDragImage() {
-        String dragImageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
+        String dragImageUrl = getResourceUrl(
+                DragSourceState.RESOURCE_DRAG_IMAGE);
         if (dragImageUrl != null && !dragImageUrl.isEmpty()) {
-            Image.prefetch(dragImageUrl);
+            Image.prefetch(getConnection().translateVaadinUri(dragImageUrl));
         }
     }
 
@@ -196,7 +197,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void setDragImage(Event dragStartEvent) {
         String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            Image dragImage = new Image(imageUrl);
+            Image dragImage = new Image(
+                    getConnection().translateVaadinUri(imageUrl));
             ((NativeEvent) dragStartEvent).getDataTransfer()
                     .setDragImage(dragImage.getElement(), 0, 0);
         }
