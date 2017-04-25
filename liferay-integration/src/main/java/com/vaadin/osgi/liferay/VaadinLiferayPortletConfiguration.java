@@ -27,6 +27,8 @@ import javax.portlet.Portlet;
  * This annotation is used to inform the
  * {@link PortletUIServiceTrackerCustomizer} that this UI should be wrapped in a
  * {@link Portlet} and provides the necessary configuration for that.
+ * <p>
+ * This only applies to Liferay Portal 7+ with OSGi support.
  *
  * @author Vaadin Ltd.
  *
@@ -36,11 +38,26 @@ import javax.portlet.Portlet;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface VaadinLiferayPortletConfiguration {
+    /**
+     * Category of the portlet in Liferay menus. By default
+     * <i>category.vaadin</i>.
+     */
     String category() default "category.vaadin";
 
+    /**
+     * Portlet name, must conform to the portlet specification and is used as
+     * the key for the portlet.
+     */
     String name() default "";
 
+    /**
+     * Display name of the portlet.
+     */
     String displayName() default "";
 
+    /**
+     * Array of allowed security roles. By default, <i>power-user</i> and
+     * <i>user</i>.
+     */
     String[] securityRole() default { "power-user", "user" };
 }

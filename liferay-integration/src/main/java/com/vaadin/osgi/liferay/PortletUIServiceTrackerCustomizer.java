@@ -39,6 +39,8 @@ import com.vaadin.ui.UI;
  * If the {@link UI} is annotated with
  * {@link VaadinLiferayPortletConfiguration}, a {@link Portlet} is created for
  * it.
+ * <p>
+ * This only applies to Liferay Portal 7+ with OSGi support.
  *
  * @author Sampsa Sohlman
  *
@@ -185,7 +187,7 @@ class PortletUIServiceTrackerCustomizer
         /*
          * This service has been registered as a portlet at some point,
          * otherwise it wouldn't be tracked.
-         * 
+         *
          * This handles changes for Portlet related properties that are part of
          * the UI service to be passed to the Portlet service registration.
          */

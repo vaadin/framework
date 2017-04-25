@@ -4,7 +4,7 @@
     <artifactId>vaadin-liferay-integration</artifactId>
     <packaging>jar</packaging>
     <url>https://vaadin.com/</url>
-    <description>Liferay integration</description>
+    <description>Liferay 7+ OSGi portlet support</description>
 
     <parent>
         <groupId>com.vaadin</groupId>
