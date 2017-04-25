@@ -137,7 +137,6 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
      *            server
      */
     protected void fireExpandEvent(T item, boolean userOriginated) {
-        System.err.println("Firing expand: " + item);
         fireEvent(new ExpandEvent<>(this, item, userOriginated));
     }
 
@@ -151,7 +150,6 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
      *            the server
      */
     protected void fireCollapseEvent(T item, boolean userOriginated) {
-        System.err.println("Firing collapse: " + item);
         fireEvent(new CollapseEvent<>(this, item, userOriginated));
     }
 
