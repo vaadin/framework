@@ -571,11 +571,23 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         // Parameter appended to JS to bypass caches after version upgrade.
         String versionQueryParam = "?v=" + Version.getFullVersion();
 
+        DeploymentConfiguration deploymentConfiguration = context.getRequest()
+                .getService().getDeploymentConfiguration();
+        WebComponentsPolyfillMode polyfillMode = deploymentConfiguration
+                .getWebComponentsPolyfillMode();
+        if (polyfillMode.shouldLoad(
+                context.getRequest().getService().getClassLoader())) {
+            String webcomponentsJS = "frontend://webcomponentsjs/webcomponents-lite.js";
+            webcomponentsJS = context.getUriResolver()
+                    .resolveVaadinUri(webcomponentsJS);
+            fragmentNodes.add(new Element(Tag.valueOf("script"), "")
+                    .attr("type", "text/javascript")
+                    .attr("src", webcomponentsJS));
+        }
         if (context.getPushMode().isEnabled()) {
             // Load client-side dependencies for push support
             String pushJS = vaadinLocation;
-            if (context.getRequest().getService().getDeploymentConfiguration()
-                    .isProductionMode()) {
+            if (deploymentConfiguration.isProductionMode()) {
                 pushJS += ApplicationConstants.VAADIN_PUSH_JS;
             } else {
                 pushJS += ApplicationConstants.VAADIN_PUSH_DEBUG_JS;

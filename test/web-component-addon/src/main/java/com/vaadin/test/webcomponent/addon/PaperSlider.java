@@ -21,7 +21,6 @@ import org.vaadin.elements.Root;
 import com.vaadin.annotations.HtmlImport;
 import com.vaadin.annotations.JavaScript;
 
-@JavaScript("frontend://webcomponentsjs/webcomponents-lite.js")
 @JavaScript("paperslider.js")
 @HtmlImport("frontend://paper-slider/paper-slider.html")
 public class PaperSlider extends AbstractJavaScriptField<Integer> {

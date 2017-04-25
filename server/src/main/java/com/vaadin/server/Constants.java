@@ -57,6 +57,13 @@ public interface Constants {
             + "and \"automatic\". The default of \"disabled\" will be used.\n"
             + "===========================================================";
 
+    static final String WARNING_LOAD_WEBCOMPONENTS_POLYFILL_NOT_RECOGNIZED = "\n"
+            + "===========================================================\n"
+            + "WARNING: loadWebcomponentsPolyfill has been set to an unrecognized value\n"
+            + "in web.xml. The permitted values are \"yes\", \"no\",\n"
+            + "and \"automatic\". The default of \"automatic\" will be used.\n"
+            + "===========================================================";
+
     static final String WIDGETSET_MISMATCH_INFO = "\n"
             + "=================================================================\n"
             + "The widgetset in use does not seem to be built for the Vaadin\n"
@@ -125,6 +132,8 @@ public interface Constants {
      * @since 7.5.7
      */
     static final String SERVLET_PARAMETER_LEGACY_DESIGN_PREFIX = "legacyDesignPrefix";
+
+    static final String SERVLET_PARAMETER_LOAD_WEBCOMPONENTS_POLYFILL = "loadWebcomponentsPolyfill";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";

@@ -64,6 +64,7 @@ public class DefaultDeploymentConfiguration
     private final Class<?> systemPropertyBaseClass;
     private boolean syncIdCheck;
     private boolean sendUrlsAsParameters;
+    private WebComponentsPolyfillMode webComponentsPolyfillMode;
 
     /**
      * Create a new deployment configuration instance.
@@ -88,6 +89,7 @@ public class DefaultDeploymentConfiguration
         checkPushMode();
         checkSyncIdCheck();
         checkSendUrlsAsParameters();
+        checkWebComponentsPolyfillMode();
     }
 
     @Override
@@ -256,6 +258,11 @@ public class DefaultDeploymentConfiguration
     }
 
     @Override
+    public WebComponentsPolyfillMode getWebComponentsPolyfillMode() {
+        return webComponentsPolyfillMode;
+    }
+
+    @Override
     public Properties getInitParameters() {
         return initParameters;
     }
@@ -326,6 +333,20 @@ public class DefaultDeploymentConfiguration
         } catch (IllegalArgumentException e) {
             getLogger().warning(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
             pushMode = PushMode.DISABLED;
+        }
+    }
+
+    private void checkWebComponentsPolyfillMode() {
+        String mode = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_LOAD_WEBCOMPONENTS_POLYFILL,
+                WebComponentsPolyfillMode.AUTOMATIC.toString());
+        try {
+            webComponentsPolyfillMode = Enum.valueOf(
+                    WebComponentsPolyfillMode.class, mode.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            getLogger().warning(
+                    Constants.WARNING_LOAD_WEBCOMPONENTS_POLYFILL_NOT_RECOGNIZED);
+            webComponentsPolyfillMode = WebComponentsPolyfillMode.AUTOMATIC;
         }
     }
 

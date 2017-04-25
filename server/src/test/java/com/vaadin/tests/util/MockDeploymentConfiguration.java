@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.vaadin.server.AbstractDeploymentConfiguration;
+import com.vaadin.server.WebComponentsPolyfillMode;
 import com.vaadin.shared.communication.PushMode;
 
 public class MockDeploymentConfiguration
@@ -21,6 +22,7 @@ public class MockDeploymentConfiguration
     private final Map<String, String> applicationOrSystemProperty = new HashMap<>();
     private boolean syncIdCheckEnabled = true;
     private final boolean sendUrlsAsParameters = true;
+    private WebComponentsPolyfillMode webComponentsPolyfillMode;
 
     @Override
     public boolean isProductionMode() {
@@ -113,4 +115,13 @@ public class MockDeploymentConfiguration
         return sendUrlsAsParameters;
     }
 
+    @Override
+    public WebComponentsPolyfillMode getWebComponentsPolyfillMode() {
+        return webComponentsPolyfillMode;
+    }
+
+    public void setWebComponentsPolyfillMode(
+            WebComponentsPolyfillMode webComponentsPolyfillMode) {
+        this.webComponentsPolyfillMode = webComponentsPolyfillMode;
+    }
 }
