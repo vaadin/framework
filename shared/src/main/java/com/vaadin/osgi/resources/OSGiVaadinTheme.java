@@ -20,6 +20,11 @@ package com.vaadin.osgi.resources;
  * in the same OSGi bundle as the class implementing this interface, under the
  * path "/VAADIN/themes/{themeName}" where {themeName} is what is returned by
  * {@link OSGiVaadinTheme#getName()}.
+ * <p>
+ * To publish a theme, an implementation of this interface needs to be
+ * registered as an OSGi service, which makes
+ * <code>VaadinResourceTrackerComponent</code> automatically publish the theme
+ * with the given name.
  *
  * @author Vaadin Ltd.
  *
