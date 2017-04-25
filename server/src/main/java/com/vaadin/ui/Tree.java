@@ -18,12 +18,14 @@ package com.vaadin.ui;
 import java.util.Set;
 
 import com.vaadin.data.HasDataProvider;
+import com.vaadin.data.SelectionModel;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.TreeGrid.CollapseEvent;
 import com.vaadin.ui.TreeGrid.CollapseListener;
 import com.vaadin.ui.TreeGrid.ExpandEvent;
@@ -143,44 +145,82 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         treeGrid.collapse(item);
     }
 
-    // TODO: JavaDocs
-
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     *
+     * @see #getSelectionModel()
+     *
+     * @return set of selected items
+     */
     public Set<T> getSelectedItems() {
         return treeGrid.getSelectedItems();
     }
 
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     *
+     * @param item
+     *            item to select
+     *
+     * @see SelectionModel#select(Object)
+     * @see #getSelectionModel()
+     */
     public void select(T item) {
         treeGrid.select(item);
     }
 
+    /**
+     * This method is a shorthand that delegates to the currently set selection
+     * model.
+     *
+     * @param item
+     *            item to deselect
+     *
+     * @see SelectionModel#deselect(Object)
+     * @see #getSelectionModel()
+     */
     public void deselect(T item) {
         treeGrid.deselect(item);
     }
 
-    public void deselectAll() {
-        treeGrid.deselectAll();
-    }
-
+    /**
+     * Adds a selection listener to the current selection model.
+     * <p>
+     * <strong>NOTE:</strong> If selection mode is switched with
+     * {@link setSelectionMode(SelectionMode)}, then this listener is not
+     * triggered anymore when selection changes!
+     *
+     * @param listener
+     *            the listener to add
+     * @return a registration handle to remove the listener
+     *
+     * @throws UnsupportedOperationException
+     *             if selection has been disabled with
+     *             {@link SelectionMode.NONE}
+     */
     public Registration addSelectionListener(SelectionListener<T> listener) {
         return treeGrid.addSelectionListener(listener);
     }
 
+    /**
+     * Use this tree as a single select in {@link Binder}. Throws
+     * {@link IllegalStateException} if the tree is not using
+     * {@link SelectionMode#SINGLE}.
+     *
+     * @return the single select wrapper that can be used in binder
+     */
     public SingleSelect<T> asSingleSelect() {
         return treeGrid.asSingleSelect();
     }
 
-    // TODO: Is multiple item selection needed?
-    // public MultiSelect<T> asMultiSelect() {
-    // return treeGrid.asMultiSelect();
-    // }
-    //
-    // public GridSelectionModel<T> setSelectionMode(SelectionMode
-    // selectionMode) {
-    // return treeGrid.setSelectionMode(selectionMode);
-    // }
-    //
-    // public GridSelectionModel<T> getSelectionModel() {
-    // return treeGrid.getSelectionModel();
-    // }
-
+    /**
+     * Returns the selection model for this Tree.
+     *
+     * @return the selection model, not <code>null</code>
+     */
+    public SelectionModel<T> getSelectionModel() {
+        return treeGrid.getSelectionModel();
+    }
 }
