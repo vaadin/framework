@@ -16,6 +16,7 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -44,7 +45,7 @@ public class TooltipPosition extends AbstractReindeerTestUI {
         addComponent(layout);
         for (int i = 0; i < NUMBER_OF_BUTTONS; i++) {
             Button button = new Button("Button");
-            button.setDescription(generateTooltipText());
+            button.setDescription(generateTooltipText(), ContentMode.HTML);
             layout.addComponent(button);
         }
     }
