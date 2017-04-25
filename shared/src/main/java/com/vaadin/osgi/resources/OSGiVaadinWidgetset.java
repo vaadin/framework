@@ -20,6 +20,11 @@ package com.vaadin.osgi.resources;
  * to be in the same OSGi bundle as the class implementing this interface, under
  * the path "/VAADIN/widgetsets/{widgetsetName}" where {widgetsetName} is what
  * is returned by {@link OSGiVaadinWidgetset#getName()}.
+ * <p>
+ * To publish a widgetset, an implementation of this interface needs to be
+ * registered as an OSGi service, which makes
+ * <code>VaadinResourceTrackerComponent</code> automatically publish the
+ * widgetset with the given name.
  *
  * @author Vaadin Ltd.
  *
