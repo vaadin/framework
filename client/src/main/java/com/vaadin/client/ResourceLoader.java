@@ -329,7 +329,7 @@ public class ResourceLoader {
             linkElement.setType("text/css");
             linkElement.setHref(url);
 
-            if (BrowserInfo.get().isSafari()) {
+            if (BrowserInfo.get().isSafariOrIOS()) {
                 // Safari doesn't fire any events for link elements
                 // See http://www.phpied.com/when-is-a-stylesheet-really-loaded/
                 Scheduler.get().scheduleFixedPeriod(new RepeatingCommand() {

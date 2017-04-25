@@ -253,6 +253,10 @@ public class BrowserInfo {
         return browserDetails.isSafari();
     }
 
+    public boolean isSafariOrIOS() {
+        return browserDetails.isSafariOrIOS();
+    }
+
     @Deprecated
     public boolean isIE8() {
         return isIE() && getBrowserMajorVersion() == 8;

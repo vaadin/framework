@@ -79,7 +79,8 @@ public class VBrowserDetails implements Serializable {
         isWebKit = !isTrident && userAgent.indexOf("applewebkit") != -1;
 
         // browser name
-        isChrome = userAgent.indexOf(" chrome/") != -1;
+        isChrome = userAgent.indexOf(" chrome/") != -1
+                || userAgent.indexOf(" crios/") != -1;
         isOpera = userAgent.indexOf("opera") != -1;
         isIE = userAgent.indexOf("msie") != -1 && !isOpera
                 && (userAgent.indexOf("webtv") == -1);
@@ -163,7 +164,12 @@ public class VBrowserDetails implements Serializable {
                 int i = userAgent.indexOf(" firefox/") + 9;
                 parseVersionString(safeSubstring(userAgent, i, i + 5));
             } else if (isChrome) {
-                int i = userAgent.indexOf(" chrome/") + 8;
+                int i = userAgent.indexOf(" chrome/");
+                if (i != -1) {
+                    i += " chrome/".length();
+                } else {
+                    i = userAgent.indexOf(" crios/") + " crios/".length();
+                }
                 parseVersionString(safeSubstring(userAgent, i, i + 5));
             } else if (isSafari) {
                 int i = userAgent.indexOf(" version/") + 9;
@@ -352,6 +358,16 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isSafari() {
         return isSafari;
+    }
+
+    /**
+     * Tests if the browser is Safari or runs on IOS (covering also Chrome on
+     * iOS).
+     *
+     * @return true if it is Safari or running on IOS, false otherwise
+     */
+    public boolean isSafariOrIOS() {
+        return isSafari() || isIOS();
     }
 
     /**
