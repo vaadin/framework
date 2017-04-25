@@ -124,10 +124,11 @@ public class DropTargetExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Returns the criteria for allowing dragover event on the current drop
-     * target.
+     * Gets the criteria script that executes when dragover event happens. If
+     * the script returns {@code false}, the dragover event will be stopped.
      *
      * @return JavaScript that executes when dragover event happens.
+     * @see #setDragOverCriteria(String)
      */
     public String getDragOverCriteria() {
         return getState(false).dragOverCriteria;
@@ -165,9 +166,11 @@ public class DropTargetExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Returns the criteria for allowing drop event on the current drop target.
+     * Gets the criteria script that executes when drop event happens. If the
+     * script returns {@code false}, the drop event will be stopped.
      *
      * @return JavaScript that executes when drop event happens.
+     * @see #setDropCriteria(String)
      */
     public String getDropCriteria() {
         return getState(false).dropCriteria;
