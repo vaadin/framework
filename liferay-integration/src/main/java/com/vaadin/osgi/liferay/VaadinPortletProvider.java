@@ -30,6 +30,8 @@ import com.vaadin.ui.UI;
 /**
  * Initializes a service tracker with {@link PortletUIServiceTrackerCustomizer}
  * to track {@link UI} service registrations.
+ * <p>
+ * This only applies to Liferay Portal 7+ with OSGi support.
  *
  * @author Sampsa Sohlman
  *

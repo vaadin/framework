@@ -24,6 +24,8 @@ import com.vaadin.ui.UI;
 /**
  * {@link VaadinPortlet} that uses an {@link OSGiUIProvider} to configure its
  * {@link UI}.
+ * <p>
+ * This only applies to Liferay Portal 7+ with OSGi support.
  *
  * @author Sampsa Sohlman
  *

@@ -22,7 +22,9 @@ import com.vaadin.ui.UI;
 /**
  * Constants for Liferay {@link Portlet portlets}. This doesn't have to be used
  * by the application developer.
- * 
+ * <p>
+ * This only applies to Liferay Portal 7+ with OSGi support.
+ *
  * @author Vaadin Ltd.
  * @since 8.1
  */
@@ -58,7 +60,7 @@ public final class PortletProperties {
      * This property is used to mark the UI service as a {@link Portlet}
      * {@link UI}. The value of this property must be non-null and will be
      * ignored but must be present to use the {@link UI} as a {@link Portlet}.
-     * 
+     *
      * <p>
      * The alternative is to simply annotate the {@link UI} with
      * {@link VaadinLiferayPortletConfiguration}.

@@ -24,6 +24,8 @@ import com.vaadin.ui.UI;
 /**
  * Vaadin {@link com.vaadin.server.UIProvider} that provides a single {@link UI}
  * class provided through the registration of a {@link UI} as an OSGi service.
+ * <p>
+ * This only applies to Liferay Portal 7+ with OSGi support.
  *
  * @author Sampsa Sohlman
  *
