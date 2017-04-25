@@ -15,21 +15,23 @@
  */
 package com.vaadin.ui;
 
+import java.util.Collection;
 import java.util.Set;
 
+import com.vaadin.data.Binder;
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.event.CollapseEvent;
+import com.vaadin.event.CollapseEvent.CollapseListener;
+import com.vaadin.event.ExpandEvent;
+import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.TreeGrid.CollapseEvent;
-import com.vaadin.ui.TreeGrid.CollapseListener;
-import com.vaadin.ui.TreeGrid.ExpandEvent;
-import com.vaadin.ui.TreeGrid.ExpandListener;
 import com.vaadin.ui.renderers.ComponentRenderer;
 
 /**
@@ -68,6 +70,11 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         setWidth("100%");
         setHeightUndefined();
         treeGrid.setHeightMode(HeightMode.UNDEFINED);
+
+        treeGrid.addExpandListener(e -> fireExpandEvent(e.getExpandedItem(),
+                e.isUserOriginated()));
+        treeGrid.addCollapseListener(e -> fireCollapseEvent(
+                e.getCollapsedItem(), e.isUserOriginated()));
     }
 
     /**
@@ -102,8 +109,8 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
      * @return a registration for the listener
      */
     public Registration addExpandListener(ExpandListener<T> listener) {
-        // TODO: Rework expand event to work with the Tree as its source
-        return treeGrid.addExpandListener(listener);
+        return addListener(ExpandEvent.class, listener,
+                ExpandListener.EXPAND_METHOD);
     }
 
     /**
@@ -116,8 +123,36 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
      * @return a registration for the listener
      */
     public Registration addCollapseListener(CollapseListener<T> listener) {
-        // TODO: Rework collapse event to work with the Tree as its source
-        return treeGrid.addCollapseListener(listener);
+        return addListener(CollapseEvent.class, listener,
+                CollapseListener.COLLAPSE_METHOD);
+    }
+
+    /**
+     * Fires an expand event with given item.
+     *
+     * @param item
+     *            the expanded item
+     * @param userOriginated
+     *            whether the expand was triggered by a user interaction or the
+     *            server
+     */
+    protected void fireExpandEvent(T item, boolean userOriginated) {
+        System.err.println("Firing expand: " + item);
+        fireEvent(new ExpandEvent<>(this, item, userOriginated));
+    }
+
+    /**
+     * Fires a collapse event with given item.
+     *
+     * @param item
+     *            the collapsed item
+     * @param userOriginated
+     *            whether the collapse was triggered by a user interaction or
+     *            the server
+     */
+    protected void fireCollapseEvent(T item, boolean userOriginated) {
+        System.err.println("Firing collapse: " + item);
+        fireEvent(new CollapseEvent<>(this, item, userOriginated));
     }
 
     /**
@@ -222,5 +257,10 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
      */
     public SelectionModel<T> getSelectionModel() {
         return treeGrid.getSelectionModel();
+    }
+
+    @Override
+    public void setItems(Collection<T> items) {
+        treeGrid.setItems(items);
     }
 }

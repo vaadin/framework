@@ -15,8 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,6 +34,10 @@ import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.event.CollapseEvent;
+import com.vaadin.event.CollapseEvent.CollapseListener;
+import com.vaadin.event.ExpandEvent;
+import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.treegrid.FocusParentRpc;
@@ -48,7 +50,6 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.ui.renderers.Renderer;
-import com.vaadin.util.ReflectTools;
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -60,159 +61,6 @@ import com.vaadin.util.ReflectTools;
  *            the grid bean type
  */
 public class TreeGrid<T> extends Grid<T> {
-
-    /**
-     * Item expand event listener.
-     *
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            the expanded item's type
-     */
-    @FunctionalInterface
-    public interface ExpandListener<T> extends Serializable {
-
-        public static final Method EXPAND_METHOD = ReflectTools.findMethod(
-                ExpandListener.class, "itemExpand", ExpandEvent.class);
-
-        /**
-         * Callback method for when an item has been expanded.
-         *
-         * @param event
-         *            the expand event
-         */
-        public void itemExpand(ExpandEvent<T> event);
-    }
-
-    /**
-     * Item collapse event listener.
-     *
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            the collapsed item's type
-     */
-    @FunctionalInterface
-    public interface CollapseListener<T> extends Serializable {
-
-        public static final Method COLLAPSE_METHOD = ReflectTools.findMethod(
-                CollapseListener.class, "itemCollapse", CollapseEvent.class);
-
-        /**
-         * Callback method for when an item has been collapsed.
-         *
-         * @param event
-         *            the collapse event
-         */
-        public void itemCollapse(CollapseEvent<T> event);
-    }
-
-    /**
-     * An event that is fired when an item is expanded.
-     *
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            the expanded item's type
-     */
-    public static class ExpandEvent<T> extends Component.Event {
-
-        private final T expandedItem;
-
-        private final boolean userOriginated;
-
-        /**
-         * Construct an expand event.
-         *
-         * @param source
-         *            the tree grid this event originated from
-         * @param expandedItem
-         *            the item that was expanded
-         * @param userOriginated
-         *            whether the expand was triggered by a user interaction or
-         *            the server
-         */
-        public ExpandEvent(TreeGrid<T> source, T expandedItem,
-                boolean userOriginated) {
-            super(source);
-            this.expandedItem = expandedItem;
-            this.userOriginated = userOriginated;
-        }
-
-        /**
-         * Get the expanded item that triggered this event.
-         *
-         * @return the expanded item
-         */
-        public T getExpandedItem() {
-            return expandedItem;
-        }
-
-        /**
-         * Returns whether this event was triggered by user interaction, on the
-         * client side, or programmatically, on the server side.
-         *
-         * @return {@code true} if this event originates from the client,
-         *         {@code false} otherwise.
-         */
-        public boolean isUserOriginated() {
-            return userOriginated;
-        }
-    }
-
-    /**
-     * An event that is fired when an item is collapsed. Note that expanded
-     * subtrees of the collapsed item will not trigger collapse events.
-     *
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            collapsed item type
-     */
-    public static class CollapseEvent<T> extends Component.Event {
-
-        private final T collapsedItem;
-
-        private final boolean userOriginated;
-
-        /**
-         * Construct a collapse event.
-         *
-         * @param source
-         *            the tree grid this event originated from
-         * @param collapsedItem
-         *            the item that was collapsed
-         * @param userOriginated
-         *            whether the collapse was triggered by a user interaction
-         *            or the server
-         */
-        public CollapseEvent(TreeGrid<T> source, T collapsedItem,
-                boolean userOriginated) {
-            super(source);
-            this.collapsedItem = collapsedItem;
-            this.userOriginated = userOriginated;
-        }
-
-        /**
-         * Get the collapsed item that triggered this event.
-         *
-         * @return the collapsed item
-         */
-        public T getCollapsedItem() {
-            return collapsedItem;
-        }
-
-        /**
-         * Returns whether this event was triggered by user interaction, on the
-         * client side, or programmatically, on the server side.
-         *
-         * @return {@code true} if this event originates from the client,
-         *         {@code false} otherwise.
-         */
-        public boolean isUserOriginated() {
-            return userOriginated;
-        }
-    }
 
     public TreeGrid() {
         super(new HierarchicalDataCommunicator<>());
@@ -239,9 +87,11 @@ public class TreeGrid<T> extends Grid<T> {
         registerRpc(new FocusParentRpc() {
             @Override
             public void focusParent(int rowIndex, int cellIndex) {
-                Integer parentIndex = getDataCommunicator().getParentIndex(rowIndex);
+                Integer parentIndex = getDataCommunicator()
+                        .getParentIndex(rowIndex);
                 if (parentIndex != null) {
-                    getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
+                    getRpcProxy(FocusRpc.class).focusCell(parentIndex,
+                            cellIndex);
                 }
             }
         });
