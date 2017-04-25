@@ -1425,7 +1425,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *
      * @return the push connection identifier string
      *
-     * @since 8.1
+     * @since
      */
     public String getPushId() {
         assert hasLock();
