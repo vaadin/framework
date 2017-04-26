@@ -22,6 +22,17 @@ To deploy the app as a servlet all we need to do is annotate the [classname]#MyU
 
 The [interfacename]#@WebServlet# annotation settings will be used to configure the urlPatterns and async parameters.
 
+[source, java]
+----
+import org.osgi.service.component.annotations.Component;
+...
+@Component(service = VaadinServlet.class)
+@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+@VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+public static class MyUIServlet extends VaadinServlet {
+}
+----
+
 
 [[advanced.osgi.resources]]
 == Publishing Static Resources With OSGi
