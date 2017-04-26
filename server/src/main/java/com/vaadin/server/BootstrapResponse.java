@@ -102,7 +102,7 @@ public abstract class BootstrapResponse extends EventObject {
 
     /**
      * Gets the UI provider that is used to provide information about the
-     * bootstapped UI.
+     * bootstrapped UI.
      *
      * @return the UI provider
      */

@@ -59,6 +59,7 @@ import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
+ * Handles the initial request to start the application.
  *
  * @author Vaadin Ltd
  * @since 7.0.0
@@ -75,6 +76,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      */
     public static final String IGNORE_RESTART_PARAM = "ignoreRestart";
 
+    /**
+     * Provides context information for the bootstrap process.
+     */
     protected class BootstrapContext implements Serializable {
 
         private final VaadinResponse response;
@@ -87,28 +91,62 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         private BootstrapUriResolver uriResolver;
         private WidgetsetInfo widgetsetInfo;
 
+        /**
+         * Creates a new context instance using the given Vaadin/HTTP response
+         * and bootstrap response.
+         *
+         * @param response
+         *            the response object
+         * @param bootstrapResponse
+         *            the bootstrap response object
+         */
         public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
             this.response = response;
             this.bootstrapResponse = bootstrapResponse;
         }
 
+        /**
+         * Gets the Vaadin/HTTP response.
+         *
+         * @return the Vaadin/HTTP response
+         */
         public VaadinResponse getResponse() {
             return response;
         }
 
+        /**
+         * Gets the Vaadin/HTTP request.
+         *
+         * @return the Vaadin/HTTP request
+         */
         public VaadinRequest getRequest() {
             return bootstrapResponse.getRequest();
         }
 
+        /**
+         * Gets the Vaadin session.
+         *
+         * @return the Vaadin session
+         */
         public VaadinSession getSession() {
             return bootstrapResponse.getSession();
         }
 
+        /**
+         * Gets the UI class which will be used.
+         *
+         * @return the UI class
+         */
         public Class<? extends UI> getUIClass() {
             return bootstrapResponse.getUiClass();
         }
 
+        /**
+         * Gets information about the widgetset to use.
+         *
+         * @return the widgetset which will be loaded
+         */
         public WidgetsetInfo getWidgetsetInfo() {
             if (widgetsetInfo == null) {
                 widgetsetInfo = getWidgetsetForUI(this);
@@ -125,6 +163,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return getWidgetsetInfo().getWidgetsetName();
         }
 
+        /**
+         * Gets the name of the theme to use.
+         *
+         * @return the name of the theme, with special characters escaped or
+         *         removed
+         */
         public String getThemeName() {
             if (themeName == null) {
                 themeName = findAndEscapeThemeName(this);
@@ -132,6 +176,11 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return themeName;
         }
 
+        /**
+         * Gets the push mode to use.
+         *
+         * @return the desired push mode
+         */
         public PushMode getPushMode() {
             if (pushMode == null) {
                 UICreateEvent event = new UICreateEvent(getRequest(),
@@ -156,6 +205,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return pushMode;
         }
 
+        /**
+         * Gets the application id.
+         *
+         * The application id is defined by
+         * {@link VaadinService#getMainDivId(VaadinSession, VaadinRequest, Class)}
+         *
+         * @return the application id
+         */
         public String getAppId() {
             if (appId == null) {
                 appId = getRequest().getService().getMainDivId(getSession(),
@@ -164,10 +221,20 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return appId;
         }
 
+        /**
+         * Gets the bootstrap response object.
+         *
+         * @return the bootstrap response object
+         */
         public BootstrapFragmentResponse getBootstrapResponse() {
             return bootstrapResponse;
         }
 
+        /**
+         * Gets the application parameters specified by the BootstrapHandler.
+         *
+         * @return the application parameters which will be written on the page
+         */
         public JsonObject getApplicationParameters() {
             if (applicationParameters == null) {
                 applicationParameters = BootstrapHandler.this
@@ -177,6 +244,11 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return applicationParameters;
         }
 
+        /**
+         * Gets the URI resolver to use for bootstrap resources.
+         *
+         * @return the URI resolver
+         */
         public BootstrapUriResolver getUriResolver() {
             if (uriResolver == null) {
                 uriResolver = new BootstrapUriResolver(this);
@@ -186,10 +258,20 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
     }
 
+    /**
+     * The URI resolver used in the bootstrap process.
+     */
     protected static class BootstrapUriResolver extends VaadinUriResolver {
         private final BootstrapContext context;
         private String frontendUrl;
 
+        /**
+         * Creates a new bootstrap resolver based on the given bootstrap
+         * context.
+         *
+         * @param bootstrapContext
+         *            the bootstrap context
+         */
         public BootstrapUriResolver(BootstrapContext bootstrapContext) {
             context = bootstrapContext;
         }
@@ -255,24 +337,38 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         @Override
         protected String getFrontendUrl() {
             if (frontendUrl == null) {
-                DeploymentConfiguration configuration = context.getSession()
-                        .getConfiguration();
-                if (context.getSession().getBrowser().isEs6Supported()) {
-                    frontendUrl = configuration.getApplicationOrSystemProperty(
-                            ApplicationConstants.FRONTEND_URL_ES6,
-                            ApplicationConstants.FRONTEND_URL_ES6_DEFAULT_VALUE);
-                } else {
-                    frontendUrl = configuration.getApplicationOrSystemProperty(
-                            ApplicationConstants.FRONTEND_URL_ES5,
-                            ApplicationConstants.FRONTEND_URL_ES5_DEFAULT_VALUE);
-                }
-                if (!frontendUrl.endsWith("/")) {
-                    frontendUrl += "/";
-                }
+                frontendUrl = resolveFrontendUrl(context.getSession());
             }
 
             return frontendUrl;
         }
+    }
+
+    /**
+     * Resolves the URL to use for the {@literal frontend://} protocol.
+     *
+     * @param session
+     *            the session of the user to resolve the protocol for
+     * @return the URL that frontend:// resolves to, possibly using another
+     *         internal protocol
+     */
+    public static String resolveFrontendUrl(VaadinSession session) {
+        DeploymentConfiguration configuration = session.getConfiguration();
+        String frontendUrl;
+        if (session.getBrowser().isEs6Supported()) {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES6,
+                    ApplicationConstants.FRONTEND_URL_ES6_DEFAULT_VALUE);
+        } else {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES5,
+                    ApplicationConstants.FRONTEND_URL_ES5_DEFAULT_VALUE);
+        }
+        if (!frontendUrl.endsWith("/")) {
+            frontendUrl += "/";
+        }
+
+        return frontendUrl;
     }
 
     @Override
