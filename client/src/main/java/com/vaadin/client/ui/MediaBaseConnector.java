@@ -15,6 +15,10 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.gwt.dom.client.MediaElement;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.communication.URLReference;
@@ -22,6 +26,9 @@ import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
 
 public abstract class MediaBaseConnector extends AbstractComponentConnector {
+
+    private static final List<String> PRELOAD_VALUES = Arrays.asList(MediaElement.PRELOAD_NONE,
+            MediaElement.PRELOAD_AUTO, MediaElement.PRELOAD_METADATA);
 
     @Override
     protected void init() {
@@ -53,6 +60,8 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
         final AbstractMediaState state = getState();
 
         setAltText(state.altText); // must do before loading sources
+        setPreload(state.preload);
+        widget.setLoop(state.loop);
         widget.setAutoplay(state.autoplay);
         widget.setMuted(state.muted);
         widget.setControls(state.showControls);
@@ -81,6 +90,12 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
             altText = WidgetUtil.escapeHTML(altText);
         }
         getWidget().setAltText(altText);
+    }
+
+    private void setPreload(final String preload) {
+        if (PRELOAD_VALUES.contains(preload)) {
+            getWidget().setPreload(preload);
+        }
     }
 
     /**

@@ -68,6 +68,14 @@ public abstract class VMediaBase extends Widget {
         media.setMuted(mediaMuted);
     }
 
+    public void setPreload(final String preload) {
+        media.setPreload(preload);
+    }
+
+    public void setLoop(final boolean loop) {
+        media.setLoop(loop);
+    }
+
     public void removeAllSources() {
         NodeList<com.google.gwt.dom.client.Element> l = media
                 .getElementsByTagName(SourceElement.TAG);
