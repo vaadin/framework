@@ -98,12 +98,6 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        // 1 | 1 should not be expanded this time
-        selectMenuPath("Component", "Features", "Server-side expand",
-                "Expand 0 | 0");
-        assertEquals(6, grid.getRowCount());
-        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
-
         assertNoSystemNotifications();
         assertNoErrorNotifications();
     }
