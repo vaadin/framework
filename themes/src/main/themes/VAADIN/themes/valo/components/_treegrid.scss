@@ -1,3 +1,5 @@
+@import "grid";
+
 /** Expander button visual - expanded */
 $tg-expander-char-expanded: '\f0d7' !default;
 
@@ -10,10 +12,9 @@ $tg-expander-width: 10px !default;
 /** Expander button right side padding */
 $tg-expander-padding: 10px !default;
 
-$v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
+@mixin valo-treegrid ($primary-stylename: v-treegrid) {
 
-
-@mixin treegrid {
+  @include valo-grid($primary-stylename);
 
   // Expander with and item indentation constants
   $indent: $tg-expander-width + $tg-expander-padding;
@@ -21,7 +22,7 @@ $v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
   // Classname for depth styling
   $class-depth: depth !default;
 
-  .v-tree-grid-expander {
+  .#{$primary-stylename}-expander {
     display: inline-block;
     width: $tg-expander-width;
     padding-right: $tg-expander-padding;
@@ -53,7 +54,7 @@ $v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
   }
 
   // Hierarchy depth styling
-  .v-tree-grid-node {
+  .#{$primary-stylename}-node {
     @for $i from 0 through 15 {
       &.#{$class-depth}-#{$i} {
         padding-left: $indent * $i;
@@ -62,11 +63,11 @@ $v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
   }
 
   // Expander and cell content in same line
-  .v-tree-grid-cell-content {
+  .#{$primary-stylename}-cell-content {
     display: inline-block;
   }
 
-  .v-grid-rowmode-row-focused {
+  .#{$primary-stylename}-rowmode-row-focused {
 
     &:before {
       content: "";
@@ -80,11 +81,12 @@ $v-tree-grid-row-focused-border: $v-grid-cell-focused-border !default;
       pointer-events: none;
     }
   }
-  .v-grid:focus .v-grid-rowmode-row-focused:before {
+
+  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-row-focused:before {
     display: block;
   }
 
-  .v-grid.v-disabled:focus .v-grid-rowmode-row-focused:before {
+  .#{$primary-stylename}.v-disabled:focus .#{$primary-stylename}-rowmode-row-focused:before {
     // Disabled Grid should not show cell focus outline
     display: none;
   }

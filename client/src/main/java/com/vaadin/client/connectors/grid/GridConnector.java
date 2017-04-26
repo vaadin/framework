@@ -202,6 +202,8 @@ public class GridConnector extends AbstractListingConnector
     protected void init() {
         super.init();
 
+        updateWidgetStyleNames();
+
         // Remove default headers when initializing Grid widget
         while (getWidget().getHeaderRowCount() > 0) {
             getWidget().removeHeaderRow(0);
