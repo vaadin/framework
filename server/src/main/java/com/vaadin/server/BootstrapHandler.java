@@ -44,6 +44,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.annotations.Viewport;
 import com.vaadin.annotations.ViewportGeneratorClass;
+import com.vaadin.server.DependencyFilter.FilterContext;
 import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.VaadinUriResolver;
@@ -572,9 +573,10 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .attr("href", themeUri + "/favicon.ico");
         }
 
-        Collection<? extends Dependency> deps = Dependency.findDependencies(
-                Collections.singletonList(uiClass),
-                context.getSession().getCommunicationManager());
+        Collection<? extends Dependency> deps = Dependency
+                .findAndFilterDependencies(Collections.singletonList(uiClass),
+                        context.getSession().getCommunicationManager(),
+                        new FilterContext(context.getSession()));
         for (Dependency dependency : deps) {
             Type type = dependency.getType();
             String url = context.getUriResolver()
