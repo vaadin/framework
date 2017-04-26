@@ -208,7 +208,7 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
      * Sets the number of items that are visible. If only one item is visible,
      * then the box will be displayed as a drop-down list (the default).
      *
-     * @since
+     * @since 8.1
      * @param visibleItemCount
      *            the visible item count
      * @throws IllegalArgumentException
@@ -226,7 +226,7 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
      * Gets the number of items that are visible. If only one item is visible,
      * then the box will be displayed as a drop-down list.
      *
-     * @since
+     * @since 8.1
      * @return the visible item count
      */
     public int getVisibleItemCount() {

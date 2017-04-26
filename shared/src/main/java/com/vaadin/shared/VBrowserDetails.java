@@ -365,6 +365,7 @@ public class VBrowserDetails implements Serializable {
      * iOS).
      *
      * @return true if it is Safari or running on IOS, false otherwise
+     * @since 8.1
      */
     public boolean isSafariOrIOS() {
         return isSafari() || isIOS();
@@ -602,6 +603,13 @@ public class VBrowserDetails implements Serializable {
         return false;
     }
 
+    /**
+     * Checks whether the browser should support ES6 based on its vendor and
+     * version number.
+     *
+     * @return true if the browser supports ES6
+     * @since 8.1
+     */
     public boolean isEs6Supported() {
         if (isTooOldToFunctionProperly()) {
             return false;

@@ -345,6 +345,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * resolve to.
      *
      * @return the URL of the frontend protocol
+     * @since 8.1
      */
     public String getFrontendUrl() {
         return frontendUrl;
