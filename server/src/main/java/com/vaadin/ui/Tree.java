@@ -16,12 +16,16 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.SelectionModel;
-import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
@@ -32,11 +36,13 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.renderers.ComponentRenderer;
+import com.vaadin.ui.renderers.AbstractRenderer;
+
+import elemental.json.JsonObject;
 
 /**
- * Tree component. A Tree can be used to select an item (or multiple items) from
- * a hierarchical set of items.
+ * Tree component. A Tree can be used to select an item from a hierarchical set
+ * of items.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -46,20 +52,67 @@ import com.vaadin.ui.renderers.ComponentRenderer;
  */
 public class Tree<T> extends Composite implements HasDataProvider<T> {
 
+    /**
+     * String renderer that handles icon resources and stores their identifiers
+     * into data objects.
+     */
+    public final class TreeRenderer extends AbstractRenderer<T, String>
+            implements DataGenerator<T> {
+
+        /**
+         * Constructs a new TreeRenderer.
+         */
+        protected TreeRenderer() {
+            super(String.class);
+        }
+
+        private Map<T, String> resourceKeyMap = new HashMap<>();
+        private int counter = 0;
+
+        @Override
+        public void generateData(T item, JsonObject jsonObject) {
+            Resource resource = iconProvider.apply(item);
+            if (resource == null) {
+                destroyData(item);
+                return;
+            }
+
+            if (!resourceKeyMap.containsKey(item)) {
+                resourceKeyMap.put(item, "icon" + (counter++));
+            }
+            setResource(resourceKeyMap.get(item), resource);
+            jsonObject.put("itemIcon", resourceKeyMap.get(item));
+        }
+
+        @Override
+        public void destroyData(T item) {
+            if (resourceKeyMap.containsKey(item)) {
+                setResource(resourceKeyMap.get(item), null);
+                resourceKeyMap.remove(item);
+            }
+        }
+
+        @Override
+        public void destroyAllData() {
+            Set<T> keys = new HashSet<>(resourceKeyMap.keySet());
+            for (T key : keys) {
+                destroyData(key);
+            }
+        }
+    }
+
     private TreeGrid<T> treeGrid = new TreeGrid<>();
-    private ValueProvider<T, String> captionProvider = Object::toString;
-    private ValueProvider<T, Resource> iconProvider = t -> null;
+    private ItemCaptionGenerator<T> captionGenerator = String::valueOf;
+    private IconGenerator<T> iconProvider = t -> null;
 
     /**
      * Constructs a new Tree Component.
      */
     public Tree() {
         setCompositionRoot(treeGrid);
-        treeGrid.addColumn(t -> {
-            Label label = new Label(captionProvider.apply(t));
-            label.setIcon(iconProvider.apply(t));
-            return label;
-        }, new ComponentRenderer()).setId("column");
+        TreeRenderer renderer = new TreeRenderer();
+        treeGrid.getDataCommunicator().addDataGenerator(renderer);
+        treeGrid.addColumn(captionGenerator::apply, renderer).setId("column");
         treeGrid.setHierarchyColumn("column");
         while (treeGrid.getHeaderRowCount() > 0) {
             treeGrid.removeHeaderRow(0);
@@ -261,4 +314,39 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     public void setItems(Collection<T> items) {
         treeGrid.setItems(items);
     }
+
+    /**
+     * Sets the item caption generator that is used to produce the strings shown
+     * as the text for each item. By default, {@link String#valueOf(Object)} is
+     * used.
+     *
+     * @param captionGenerator
+     *            the item caption provider to use, not <code>null</code>
+     */
+    public void setItemCaptionGenerator(
+            ItemCaptionGenerator<T> captionGenerator) {
+        Objects.requireNonNull(captionGenerator,
+                "Caption generator must not be null");
+        this.captionGenerator = captionGenerator;
+        treeGrid.getDataCommunicator().reset();
+    }
+
+    /**
+     * Sets the item icon generator that is used to produce custom icons for
+     * items. The generator can return <code>null</code> for items with no icon.
+     *
+     * @see IconGenerator
+     *
+     * @param iconGenerator
+     *            the item icon generator to set, not <code>null</code>
+     * @throws NullPointerException
+     *             if {@code itemIconGenerator} is {@code null}
+     */
+    public void setItemIconGenerator(IconGenerator<T> iconGenerator) {
+        Objects.requireNonNull(iconGenerator,
+                "Item icon generator must not be null");
+        this.iconProvider = iconGenerator;
+        treeGrid.getDataCommunicator().reset();
+    }
+
 }
