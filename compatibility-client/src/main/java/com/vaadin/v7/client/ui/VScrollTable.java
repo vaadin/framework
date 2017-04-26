@@ -5598,7 +5598,7 @@ public class VScrollTable extends FlowPanel
                 final Element cell = DOM.getChild(getElement(), cellIx);
                 Style wrapperStyle = cell.getFirstChildElement().getStyle();
                 int wrapperWidth = width;
-                if (BrowserInfo.get().isWebkit()
+                if (BrowserInfo.get().isSafariOrIOS()
                         || BrowserInfo.get().isOpera10()) {
                     /*
                      * Some versions of Webkit and Opera ignore the width
@@ -7381,11 +7381,10 @@ public class VScrollTable extends FlowPanel
 
         rowRequestHandler.cancel();
 
-        if (BrowserInfo.get().isSafari() && event != null && scrollTop == 0) {
+        if (BrowserInfo.get().isSafariOrIOS() && event != null && scrollTop == 0) {
             // due to the webkitoverflowworkaround, top may sometimes report 0
             // for webkit, although it really is not. Expecting to have the
-            // correct
-            // value available soon.
+            // correct value available soon.
             Scheduler.get().scheduleDeferred(new Command() {
 
                 @Override

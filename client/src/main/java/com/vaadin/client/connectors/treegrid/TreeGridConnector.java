@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.BrowserEvents;
@@ -34,9 +33,7 @@ import com.vaadin.client.data.DataSource;
 import com.vaadin.client.renderers.HierarchyRenderer;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.GridEventHandler;
-import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.treegrid.TreeGrid;
-import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
@@ -99,13 +96,19 @@ public class TreeGridConnector extends GridConnector {
             // Id of new hierarchy column. Choose first when nothing explicitly
             // set
             String newHierarchyColumnId = getState().hierarchyColumnId;
-            if (newHierarchyColumnId == null) {
+            if (newHierarchyColumnId == null
+                    && !getState().columnOrder.isEmpty()) {
                 newHierarchyColumnId = getState().columnOrder.get(0);
             }
 
             // Columns
             Grid.Column<?, ?> newColumn = getColumn(newHierarchyColumnId);
             Grid.Column<?, ?> oldColumn = getColumn(oldHierarchyColumnId);
+
+            if (newColumn == null && oldColumn == null) {
+                // No hierarchy column defined
+                return;
+            }
 
             // Unwrap renderer of old column
             if (oldColumn != null
@@ -152,12 +155,6 @@ public class TreeGridConnector extends GridConnector {
 
         getWidget().addBrowserEventHandler(5, new NavigationEventHandler());
 
-        // Swap Grid#clickEvent field
-        // The event is identical to the original one except for the child
-        // widget check
-        replaceClickEvent(getWidget(),
-                new TreeGridClickEvent(getWidget(), getEventCell(getWidget())));
-
         registerRpc(TreeGridClientRpc.class, new TreeGridClientRpc() {
 
             @Override
@@ -171,6 +168,11 @@ public class TreeGridConnector extends GridConnector {
             @Override
             public void setCollapsed(String key) {
                 rowKeysPendingExpand.remove(key);
+            }
+
+            @Override
+            public void clearPendingExpands() {
+                rowKeysPendingExpand.clear();
             }
         });
     }
@@ -202,7 +204,7 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void resetDataAndSize(int estimatedNewDataSize) {
-                rowKeysPendingExpand.clear();
+                // NO-OP
             }
         });
     }
@@ -219,11 +221,6 @@ public class TreeGridConnector extends GridConnector {
 
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
-    }-*/;
-
-    private native void replaceClickEvent(Grid<?> grid, GridClickEvent event)
-    /*-{
-        grid.@com.vaadin.client.widgets.Grid::clickEvent = event;
     }-*/;
 
     private native EventCellReference<?> getEventCell(Grid<?> grid)
@@ -354,14 +351,15 @@ public class TreeGridConnector extends GridConnector {
         if (rowKeysPendingExpand.isEmpty()) {
             return;
         }
-        IntStream.range(firstRowIndex, firstRowIndex + numberOfRows)
-                .forEach(rowIndex -> {
-                    String rowKey = getDataSource().getRow(rowIndex)
-                            .getString(DataCommunicatorConstants.KEY);
-                    if (rowKeysPendingExpand.remove(rowKey)) {
-                        setCollapsedServerInitiated(rowIndex, false);
-                    }
-                });
+        for (int rowIndex = firstRowIndex; rowIndex < firstRowIndex
+                + numberOfRows; rowIndex++) {
+            String rowKey = getDataSource().getRow(rowIndex)
+                    .getString(DataCommunicatorConstants.KEY);
+            if (rowKeysPendingExpand.remove(rowKey)) {
+                setCollapsedServerInitiated(rowIndex, false);
+                return;
+            }
+        }
     }
 
     private static boolean isCollapsed(JsonObject rowData) {

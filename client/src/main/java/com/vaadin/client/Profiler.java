@@ -475,7 +475,13 @@ public class Profiler {
         Set<Node> extendedTimeNodes = new HashSet<>();
         for (int i = 0; i < gwtStatsEvents.length(); i++) {
             GwtStatsEvent gwtStatsEvent = gwtStatsEvents.get(i);
+            if (!evtGroup.equals(gwtStatsEvent.getEvtGroup())) {
+                // Only log our own events to avoid problems with events which
+                // are not of type start+end
+                continue;
+            }
             String eventName = gwtStatsEvent.getEventName();
+
             String type = gwtStatsEvent.getType();
             boolean isExtendedEvent = gwtStatsEvent.isExtendedEvent();
             boolean isBeginEvent = "begin".equals(type);

@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1187,9 +1189,6 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
 
             if (!isAttached()) {
                 return;
@@ -1205,8 +1204,9 @@ public class Escalator extends Widget
          * range of logical indices. This may be fewer than {@code numberOfRows}
          * , even zero, if not all the removed rows are actually visible.
          * <p>
-         * The implementation must call {@link #paintRemoveRow(TableRowElement, int)}
-         * for each row that is removed from the DOM.
+         * The implementation must call
+         * {@link #paintRemoveRow(TableRowElement, int)} for each row that is
+         * removed from the DOM.
          *
          * @param index
          *            the logical index of the first removed row
@@ -1313,10 +1313,6 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
-
             /*
              * only add items in the DOM if the widget itself is attached to the
              * DOM. We can't calculate sizes otherwise.
@@ -2401,6 +2397,12 @@ public class Escalator extends Widget
         @Deprecated
         private int topRowLogicalIndex = 0;
 
+        /**
+         * A callback function to be executed after new rows are added to the
+         * escalator.
+         */
+        private Consumer<List<TableRowElement>> newEscalatorRowCallback;
+
         private void setTopRowLogicalIndex(int topRowLogicalIndex) {
             if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
                 Logger.getLogger("Escalator.BodyRowContainer")
@@ -2666,6 +2668,24 @@ public class Escalator extends Widget
         private int getLogicalRowIndex(final double px) {
             double rowPx = px - spacerContainer.getSpacerHeightsSumUntilPx(px);
             return (int) (rowPx / getDefaultRowHeight());
+        }
+
+        @Override
+        public void insertRows(int index, int numberOfRows) {
+            super.insertRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                setHeightByRows(getRowCount());
+            }
+        }
+
+        @Override
+        public void removeRows(int index, int numberOfRows) {
+            super.removeRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                setHeightByRows(getRowCount());
+            }
         }
 
         @Override
@@ -2992,6 +3012,11 @@ public class Escalator extends Widget
                     y += spacerContainer.getSpacerHeight(i);
                 }
 
+                // Execute the registered callback function for newly created
+                // rows
+                Optional.ofNullable(newEscalatorRowCallback)
+                        .ifPresent(callback -> callback.accept(addedRows));
+
                 return addedRows;
             } else {
                 return Collections.emptyList();
@@ -3119,7 +3144,8 @@ public class Escalator extends Widget
                     }
 
                     // Move rest of the rows to the Escalator's top
-                    Range visualRange = Range.withLength(0, visualRowOrder.size());
+                    Range visualRange = Range.withLength(0,
+                            visualRowOrder.size());
                     moveAndUpdateEscalatorRows(visualRange, 0, 0);
 
                     sortDomElements();
@@ -3981,6 +4007,12 @@ public class Escalator extends Widget
         void scrollToSpacer(int spacerIndex, ScrollDestination destination,
                 int padding) {
             spacerContainer.scrollToSpacer(spacerIndex, destination, padding);
+        }
+
+        @Override
+        public void setNewEscalatorRowCallback(
+                Consumer<List<TableRowElement>> callback) {
+            this.newEscalatorRowCallback = callback;
         }
     }
 

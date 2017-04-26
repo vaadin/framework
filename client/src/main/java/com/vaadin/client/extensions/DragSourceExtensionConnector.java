@@ -18,9 +18,11 @@ package com.vaadin.client.extensions;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
@@ -56,29 +58,75 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dragSourceWidget = ((ComponentConnector) target).getWidget();
 
-        Element dragSourceElement = getDraggableElement();
+        setDraggable(getDraggableElement());
+        addDragListeners(getDraggableElement());
+    }
 
-        dragSourceElement.setDraggable(Element.DRAGGABLE_TRUE);
-        dragSourceElement.addClassName(CLASS_DRAGGABLE);
+    /**
+     * Sets the given element draggable and adds class name.
+     *
+     * @param element
+     *         Element to be set draggable.
+     */
+    protected void setDraggable(Element element) {
+        element.setDraggable(Element.DRAGGABLE_TRUE);
+        element.addClassName(CLASS_DRAGGABLE);
+    }
 
-        EventTarget dragSource = dragSourceElement.cast();
+    /**
+     * Removes draggable and class name from the given element.
+     *
+     * @param element
+     *         Element to remove draggable from.
+     */
+    protected void removeDraggable(Element element) {
+        element.setDraggable(Element.DRAGGABLE_FALSE);
+        element.removeClassName(CLASS_DRAGGABLE);
+    }
 
-        // dragstart
-        dragSource.addEventListener(Event.DRAGSTART, dragStartListener);
+    /**
+     * Adds dragstart and dragend event listeners to the given DOM element.
+     *
+     * @param element
+     *         DOM element to attach event listeners to.
+     */
+    protected void addDragListeners(Element element) {
+        EventTarget target = element.cast();
 
-        // dragend
-        dragSource.addEventListener(Event.DRAGEND, dragEndListener);
+        target.addEventListener(Event.DRAGSTART, dragStartListener);
+        target.addEventListener(Event.DRAGEND, dragEndListener);
+    }
+
+    /**
+     * Removes dragstart and dragend event listeners from the given DOM element.
+     *
+     * @param element
+     *         DOM element to remove event listeners from.
+     */
+    protected void removeDragListeners(Element element) {
+        EventTarget target = element.cast();
+
+        target.removeEventListener(Event.DRAGSTART, dragStartListener);
+        target.removeEventListener(Event.DRAGEND, dragEndListener);
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
 
-        EventTarget dragSource = (EventTarget) getDraggableElement();
+        Element dragSource = getDraggableElement();
 
-        // Remove listeners
-        dragSource.removeEventListener(Event.DRAGSTART, dragStartListener);
-        dragSource.removeEventListener(Event.DRAGEND, dragEndListener);
+        removeDraggable(dragSource);
+        removeDragListeners(dragSource);
+    }
+
+    @OnStateChange("resources")
+    private void prefetchDragImage() {
+        String dragImageUrl = getResourceUrl(
+                DragSourceState.RESOURCE_DRAG_IMAGE);
+        if (dragImageUrl != null && !dragImageUrl.isEmpty()) {
+            Image.prefetch(getConnection().translateVaadinUri(dragImageUrl));
+        }
     }
 
     /**
@@ -98,14 +146,61 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                     getState().effectAllowed.getValue());
         }
 
+        // Set drag image
+        setDragImage(event);
+
         // Set text data parameter
         nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
-                getState().dataTransferText);
+                createDataTransferText(event));
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
-            getRpcProxy(DragSourceRpc.class).dragStart();
+            sendDragStartEventToServer(event);
+        }
+
+        // Stop event bubbling
+        nativeEvent.stopPropagation();
+    }
+
+    /**
+     * Creates data of type {@code "text"} for the {@code DataTransfer} object
+     * of the given event.
+     *
+     * @param dragStartEvent
+     *         Event to set the data for.
+     * @return Textual data to be set for the event or {@literal null}.
+     */
+    protected String createDataTransferText(Event dragStartEvent) {
+        return getState().dataTransferText;
+    }
+
+    /**
+     * Initiates a server RPC for the drag start event.
+     * <p>
+     * This method is called only if there is a server side drag start event
+     * handler attached.
+     *
+     * @param dragStartEvent
+     *         Client side dragstart event.
+     */
+    protected void sendDragStartEventToServer(Event dragStartEvent) {
+        getRpcProxy(DragSourceRpc.class).dragStart();
+    }
+
+    /**
+     * Sets the drag image to be displayed.
+     *
+     * @param dragStartEvent
+     *         The drag start event.
+     */
+    protected void setDragImage(Event dragStartEvent) {
+        String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Image dragImage = new Image(
+                    getConnection().translateVaadinUri(imageUrl));
+            ((NativeEvent) dragStartEvent).getDataTransfer()
+                    .setDragImage(dragImage.getElement(), 0, 0);
         }
     }
 
@@ -124,10 +219,24 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                     ((NativeEvent) event).getDataTransfer());
 
             assert dropEffect != null : "Drop effect should never be null";
-            
-            getRpcProxy(DragSourceRpc.class)
-                    .dragEnd(DropEffect.valueOf(dropEffect.toUpperCase()));
+
+            sendDragEndEventToServer(event,
+                    DropEffect.valueOf(dropEffect.toUpperCase()));
         }
+    }
+
+    /**
+     * Initiates a server RPC for the drag end event.
+     *
+     * @param dragEndEvent
+     *         Client side dragend event.
+     * @param dropEffect
+     *         Drop effect of the dragend event, extracted from {@code
+     *         DataTransfer.dropEffect} parameter.
+     */
+    protected void sendDragEndEventToServer(Event dragEndEvent,
+            DropEffect dropEffect) {
+        getRpcProxy(DragSourceRpc.class).dragEnd(dropEffect);
     }
 
     /**

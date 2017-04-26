@@ -18,6 +18,7 @@ package com.vaadin.event.dnd;
 import java.util.Objects;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
@@ -53,24 +54,18 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      *         Component to be extended.
      */
     public DragSourceExtension(T target) {
-        registerRpc(new DragSourceRpc() {
-            @Override
-            public void dragStart() {
-                DragStartEvent<T> event = new DragStartEvent<>(target,
-                        getState(false).dataTransferText,
-                        getState(false).effectAllowed);
-                fireEvent(event);
-            }
 
-            @Override
-            public void dragEnd(DropEffect dropEffect) {
-                DragEndEvent<T> event = new DragEndEvent<>(target,
-                        getState(false).dataTransferText, dropEffect);
-                fireEvent(event);
-            }
-        });
+        registerDragSourceRpc(target);
 
         super.extend(target);
+
+        initListeners();
+    }
+
+    /**
+     * Initializes the event listeners this drag source is using.
+     */
+    protected void initListeners() {
 
         // Set current extension as active drag source in the UI
         dragStartListenerHandle = addDragStartListener(
@@ -79,6 +74,29 @@ public class DragSourceExtension<T extends AbstractComponent> extends
         // Remove current extension as active drag source from the UI
         dragEndListenerHandle = addDragEndListener(
                 event -> getUI().setActiveDragSource(null));
+    }
+
+    /**
+     * Register server RPC.
+     *
+     * @param target
+     *         Extended component.
+     */
+    protected void registerDragSourceRpc(T target) {
+        registerRpc(new DragSourceRpc() {
+            @Override
+            public void dragStart() {
+                DragStartEvent<T> event = new DragStartEvent<>(target,
+                        getState(false).effectAllowed);
+                fireEvent(event);
+            }
+
+            @Override
+            public void dragEnd(DropEffect dropEffect) {
+                DragEndEvent<T> event = new DragEndEvent<>(target, dropEffect);
+                fireEvent(event);
+            }
+        });
     }
 
     @Override
@@ -201,6 +219,16 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     public Registration addDragEndListener(DragEndListener<T> listener) {
         return addListener(DragSourceState.EVENT_DRAGEND, DragEndEvent.class,
                 listener, DragEndListener.DRAGEND_METHOD);
+    }
+
+    /**
+     * Set a custom drag image for the current drag source.
+     *
+     * @param imageResource
+     *         Resource of the image to be displayed as drag image.
+     */
+    public void setDragImage(Resource imageResource) {
+        setResource(DragSourceState.RESOURCE_DRAG_IMAGE, imageResource);
     }
 
     @Override

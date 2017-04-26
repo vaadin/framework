@@ -1,0 +1,11 @@
+Bundle-SymbolicName: ${project.groupId}.compatibility-server
+Bundle-Name: Vaadin Compatibility Server
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Import-Package: com.vaadin*;version="[${osgi.bundle.version},${osgi.bundle.version}]",\
+    org.osgi*,\
+    javax.validation*;resolution:=optional;version='${javax.validation.version}',\
+    *
+Export-Package: !com.vaadin.v7.shared*,\
+    !com.vaadin.v7.client*,\
+    com.vaadin.v7*;-noimport:=true

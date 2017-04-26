@@ -1264,11 +1264,24 @@ public class GridLayout extends AbstractLayout
         super.readDesign(design, designContext);
 
         setMargin(readMargin(design, getMargin(), designContext));
+        if (design.childNodeSize() > 0) {
+            // Touch content only if there is some content specified. This is
+            // needed to be able to use extended GridLayouts which add
+            // components in the constructor (e.g. Designs based on GridLayout).
+            readChildComponents(design.children(), designContext);
+        }
 
+        // Set cursor position explicitly
+        setCursorY(getRows());
+        setCursorX(0);
+    }
+
+    private void readChildComponents(Elements childElements,
+            DesignContext designContext) {
         List<Element> rowElements = new ArrayList<>();
         List<Map<Integer, Component>> rows = new ArrayList<>();
         // Prepare a 2D map for reading column contents
-        for (Element e : design.children()) {
+        for (Element e : childElements) {
             if (e.tagName().equalsIgnoreCase("row")) {
                 rowElements.add(e);
                 rows.add(new HashMap<>());
@@ -1394,9 +1407,6 @@ public class GridLayout extends AbstractLayout
                 setComponentAlignment(child, alignments.get(child));
             }
         }
-        // Set cursor position explicitly
-        setCursorY(getRows());
-        setCursorX(0);
     }
 
     @Override
@@ -1442,7 +1452,7 @@ public class GridLayout extends AbstractLayout
 
             // Row Expand
             DesignAttributeHandler.writeAttribute("expand", row.attributes(),
-                     getRowExpandRatio(i), 0.0f, float.class, designContext);
+                    getRowExpandRatio(i), 0.0f, float.class, designContext);
 
             int colspan = 1;
             Element col;

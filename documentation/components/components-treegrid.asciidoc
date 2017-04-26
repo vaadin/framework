@@ -95,7 +95,7 @@ treeGrid.expand(rootProject);
 treeGrid.collapse(childProject);
 ----
 
-To use the server-side API with a backend data provider the [methodname]#hashCode# method for the node's type must be implemented so that when the desired node is  retrieved from the backend it has the same hash as the object passed to either [methodname]#expand# or [methodname]#collapse#.
+To use the server-side API with a backend data provider the [methodname]#hashCode# and [methodname]#equals# methods for the node's type must be implemented so that when the desired node is retrieved from the backend it can be correctly matched with the object passed to either [methodname]#expand# or [methodname]#collapse#.
 
 [[components.treegrid.hierarchycolumn]]
 == Changing the Hierarchy Column

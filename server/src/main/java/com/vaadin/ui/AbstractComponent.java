@@ -290,13 +290,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return getState(false).caption;
     }
 
-    /**
-     * Sets the component's caption <code>String</code>. Caption is the visible
-     * name of the component.
-     *
-     * @param caption
-     *            the new caption <code>String</code> for the component.
-     */
     @Override
     public void setCaption(String caption) {
         getState().caption = caption;

@@ -89,6 +89,11 @@ public class GridCustomPropertySetTest {
             }
 
             @Override
+            public Class<?> getPropertyHolderType() {
+                return MyBeanWithoutGetters.class;
+            }
+
+            @Override
             public String getName() {
                 return "string";
             }
@@ -127,6 +132,11 @@ public class GridCustomPropertySetTest {
             @Override
             public Class<Integer> getType() {
                 return Integer.class;
+            }
+
+            @Override
+            public Class<?> getPropertyHolderType() {
+                return MyBeanWithoutGetters.class;
             }
 
             @Override
