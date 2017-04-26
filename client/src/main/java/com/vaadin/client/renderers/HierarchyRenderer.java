@@ -44,9 +44,10 @@ import elemental.json.JsonObject;
  */
 public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
 
-    private static final String CLASS_TREE_GRID_NODE = "v-tree-grid-node";
-    private static final String CLASS_TREE_GRID_EXPANDER = "v-tree-grid-expander";
-    private static final String CLASS_TREE_GRID_CELL_CONTENT = "v-tree-grid-cell-content";
+    private String nodeStyleName;
+    private String expanderStyleName;
+    private String cellContentStyleName;
+
     private static final String CLASS_COLLAPSED = "collapsed";
     private static final String CLASS_COLLAPSE_DISABLED = "collapse-disabled";
     private static final String CLASS_EXPANDED = "expanded";
@@ -61,8 +62,11 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
      *
      * @param collapseCallback
      *            the callback for collapsing nodes with row index
+     * @param styleName
+     *            the style name of the widget this renderer is used in
      */
-    public HierarchyRenderer(BiConsumer<Integer, Boolean> collapseCallback) {
+    public HierarchyRenderer(BiConsumer<Integer, Boolean> collapseCallback,
+            String styleName) {
         addClickHandler(event -> {
             try {
                 JsonObject row = (JsonObject) event.getRow();
@@ -85,11 +89,18 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
                 event.preventDefault();
             }
         });
+        setStyleNames(styleName);
+    }
+
+    public void setStyleNames(String primaryStyleName) {
+        nodeStyleName = primaryStyleName + "-node";
+        expanderStyleName = primaryStyleName + "-expander";
+        cellContentStyleName = primaryStyleName + "-cell-content";
     }
 
     @Override
     public Widget createWidget() {
-        return new HierarchyItem(CLASS_TREE_GRID_NODE);
+        return new HierarchyItem(nodeStyleName);
     }
 
     @Override
@@ -217,7 +228,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             panel.getElement().addClassName(className);
 
             expander = new Expander();
-            expander.getElement().addClassName(CLASS_TREE_GRID_EXPANDER);
+            expander.getElement().addClassName(expanderStyleName);
 
             if (innerRenderer instanceof WidgetRenderer) {
                 content = ((WidgetRenderer) innerRenderer).createWidget();
@@ -226,7 +237,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
                 content = GWT.create(HTML.class);
             }
 
-            content.getElement().addClassName(CLASS_TREE_GRID_CELL_CONTENT);
+            content.getElement().addClassName(cellContentStyleName);
 
             panel.add(expander);
             panel.add(content);

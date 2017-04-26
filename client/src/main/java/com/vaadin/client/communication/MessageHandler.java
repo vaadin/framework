@@ -813,8 +813,8 @@ public class MessageHandler {
 
                 JsArrayString detachedArray = detachedConnectors.dump();
                 for (int i = 0; i < detachedArray.length(); i++) {
-                    ServerConnector connector = getConnectorMap().getConnector(
-                            detachedArray.get(i));
+                    ServerConnector connector = getConnectorMap()
+                            .getConnector(detachedArray.get(i));
 
                     Profiler.enter(
                             "unregisterRemovedConnectors unregisterConnector");
@@ -1701,6 +1701,8 @@ public class MessageHandler {
      * establishing a push connection with the client.
      *
      * @return the push connection identifier string
+     *
+     * @since 8.1
      */
     public String getPushId() {
         return pushId;

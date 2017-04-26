@@ -24,10 +24,10 @@ import com.vaadin.ui.GridDragSource;
  * Drag start listener for HTML5 drag start on a Grid row.
  *
  * @param <T>
- *         The Grid bean type.
+ *            The Grid bean type.
  * @author Vaadin Ltd.
  * @see GridDragSource#addGridDragStartListener(GridDragStartListener)
- * @since
+ * @since 8.1
  */
 @FunctionalInterface
 public interface GridDragStartListener<T> extends ConnectorEventListener {
@@ -39,7 +39,7 @@ public interface GridDragStartListener<T> extends ConnectorEventListener {
      * Invoked when the user has started dragging grid's rows.
      *
      * @param event
-     *         The drag start event.
+     *            The drag start event.
      */
     void dragStart(GridDragStartEvent<T> event);
 }

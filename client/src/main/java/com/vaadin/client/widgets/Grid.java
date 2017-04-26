@@ -3045,8 +3045,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Sets the select all checkbox visible or hidden.
          */
         protected void doSetSelectAllCheckBoxVisible() {
-            assert selectAllCheckBox != null : "Select All Checkbox has not been created for selection column.";
-            assert selectionCell != null : "Default header cell for selection column not been set.";
+            if (selectAllCheckBox == null || selectionCell == null) {
+                // There is no default header row to display select all checkbox
+                return;
+            }
 
             if (selectAllCheckBoxVisible) {
                 selectionCell.setWidget(selectAllCheckBox);

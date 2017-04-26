@@ -143,7 +143,8 @@ public class TreeGridConnector extends GridConnector {
 
     private HierarchyRenderer getHierarchyRenderer() {
         if (hierarchyRenderer == null) {
-            hierarchyRenderer = new HierarchyRenderer(this::setCollapsed);
+            hierarchyRenderer = new HierarchyRenderer(this::setCollapsed,
+                    getState().primaryStyleName);
         }
         return hierarchyRenderer;
     }
@@ -223,6 +224,11 @@ public class TreeGridConnector extends GridConnector {
                 rowAwaitingExpand = false;
             }
         });
+    }
+
+    @OnStateChange("primaryStyleName")
+    private void updateHierarchyRendererStyleName() {
+        getHierarchyRenderer().setStyleNames(getState().primaryStyleName);
     }
 
     private native void replaceCellFocusEventHandler(Grid<?> grid,

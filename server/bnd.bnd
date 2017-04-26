@@ -1,0 +1,18 @@
+Bundle-SymbolicName: ${project.groupId}.server
+Bundle-Name: Vaadin Server
+Bundle-Version: ${osgi.bundle.version}
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Import-Package: com.vaadin.sass.*;resolution:=optional,\
+  com.liferay.portal.kernel.util;resolution:=optional,\
+  javax.portlet*;resolution:=optional,\
+  javax.validation*;resolution:=optional;version='${javax.validation.version}',\
+  org.atmosphere*;resolution:=optional;version='${atmosphere.runtime.version}',\
+  com.vaadin*;version='[${osgi.bundle.version},${osgi.bundle.version}]',\
+  *
+Export-Package: !com.vaadin.sass*,\
+    !com.vaadin.shared*,\
+    !com.vaadin.osgi.resources*,\
+    !com.vaadin.osgi.push*,\
+    !com.vaadin.external*,\
+    com.vaadin*;-noimport:=true

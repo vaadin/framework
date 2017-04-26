@@ -55,6 +55,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
@@ -585,7 +586,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 output += "</a>";
             }
             getService().writeStringResponse(response,
-                    "text/html; charset=UTF-8", output);
+                    ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8, output);
         }
     }
 

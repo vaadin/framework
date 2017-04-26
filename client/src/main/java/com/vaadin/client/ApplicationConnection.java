@@ -334,6 +334,13 @@ public class ApplicationConnection implements HasHandlers {
         protected String getContextRootUrl() {
             return getConfiguration().getContextRootUrl();
         }
+
+        @Override
+        protected String getFrontendUrl() {
+            String url = getConfiguration().getFrontendUrl();
+            assert url.endsWith("/");
+            return url;
+        }
     };
 
     public static class MultiStepDuration extends Duration {

@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * Internal utility class.
  *
- * @since
+ * @since 8.1
  * @author Vaadin Ltd
  */
 public class ComponentRootSetter implements Serializable {
