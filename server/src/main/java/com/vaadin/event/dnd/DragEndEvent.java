@@ -49,9 +49,9 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
     /**
      * Get drop effect of the dragend event. The value will be the desired
      * action, that is the dropEffect value of the last dragenter or dragover
-     * event. The value depends on the drag source's effectAllowed parameter,
-     * the drop target's dropEffect parameter, and it's drag over and drop
-     * criteria.
+     * event. The value depends on the effectAllowed parameter of the drag
+     * source, the dropEffect parameter of the drop target, and its drag over
+     * and drop criteria.
      * <p>
      * If the drop is not successful, the value will be {@code NONE}.
      * <p>
