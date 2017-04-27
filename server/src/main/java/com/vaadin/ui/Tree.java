@@ -118,7 +118,8 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         setCompositionRoot(treeGrid);
         TreeRenderer renderer = new TreeRenderer();
         treeGrid.getDataCommunicator().addDataGenerator(renderer);
-        treeGrid.addColumn(captionGenerator::apply, renderer).setId("column");
+        treeGrid.addColumn(i -> captionGenerator.apply(i), renderer)
+                .setId("column");
         treeGrid.setHierarchyColumn("column");
         while (treeGrid.getHeaderRowCount() > 0) {
             treeGrid.removeHeaderRow(0);

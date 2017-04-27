@@ -12,20 +12,41 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.IconGenerator;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
+    public static class MyCustomTree extends Tree<Object> {
+
+    }
+
     private Tree<HierarchicalTestBean> tree;
     private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
+    private IconGenerator<HierarchicalTestBean> iconGenerator = i -> {
+        switch (i.getDepth()) {
+        case 0:
+            return new ThemeResource("../reindeer/common/icons/bullet.png");
+        case 1:
+            return VaadinIcons.FLIGHT_TAKEOFF;
+        case 2:
+            return new ClassResource("/com/vaadin/tests/m.gif");
+        default:
+            return null;
+        }
+    };
 
     @Override
     protected void setup(VaadinRequest request) {
+        VerticalLayout layout = new VerticalLayout();
         tree = new Tree<>();
         setupDataProvider();
         tree.setDataProvider(inMemoryDataProvider);
-        addComponent(tree);
 
         tree.addSelectionListener(
                 e -> log("SelectionEvent: " + e.getAllSelectedItems()));
@@ -34,18 +55,39 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         tree.addCollapseListener(
                 e -> log("ExpandEvent: " + e.getCollapsedItem()));
 
-        tree.setItemIconGenerator(i -> {
-            switch (i.getDepth()) {
-            case 0:
-                return new ThemeResource("../reindeer/common/icons/bullet.png");
-            case 1:
-                return VaadinIcons.FLIGHT_TAKEOFF;
-            case 2:
-                return new ClassResource("/com/vaadin/tests/m.gif");
-            default:
-                return null;
-            }
-        });
+        MyCustomTree myCustomTree = new MyCustomTree();
+        myCustomTree.setItems("Foo");
+        layout.addComponents(createMenu(), tree, myCustomTree);
+
+        addComponent(layout);
+    }
+
+    private Component createMenu() {
+        MenuBar menu = new MenuBar();
+        menu.setErrorHandler(error -> log("Exception occured, "
+                + error.getThrowable().getClass().getName() + ": "
+                + error.getThrowable().getMessage()));
+        MenuItem componentMenu = menu.addItem("Component", null);
+        createIconMenu(componentMenu.addItem("Icons", null));
+        createCaptionMenu(componentMenu.addItem("Captions", null));
+        return menu;
+    }
+
+    private void createCaptionMenu(MenuItem captionMenu) {
+        captionMenu.addItem("String.valueOf",
+                menu -> tree.setItemCaptionGenerator(String::valueOf));
+        captionMenu
+                .addItem("Custom caption",
+                        menu -> tree.setItemCaptionGenerator(i -> "Id: "
+                                + i.getId() + ", Depth: " + i.getDepth()
+                                + ", Index: " + i.getIndex()));
+    }
+
+    private void createIconMenu(MenuItem iconMenu) {
+        iconMenu.addItem("No icons",
+                menu -> tree.setItemIconGenerator(t -> null));
+        iconMenu.addItem("Depth based",
+                menu -> tree.setItemIconGenerator(iconGenerator));
     }
 
     private void setupDataProvider() {
