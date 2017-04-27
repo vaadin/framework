@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -142,7 +143,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     private List<JsonObject> getDraggedRows(Event dragStartEvent) {
         List<JsonObject> draggedRows = new ArrayList<>();
 
-        if (dragStartEvent.getTarget() instanceof TableRowElement) {
+        if (TableRowElement.is((JavaScriptObject) dragStartEvent.getTarget())) {
             TableRowElement row = (TableRowElement) dragStartEvent.getTarget();
             int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
                     .getLogicalRowIndex(row);
@@ -181,9 +182,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * allowed and a selected row is dragged.
      *
      * @param draggedRow
-     *            Data of dragged row.
+     *         Data of dragged row.
      * @return {@code true} if multiple rows are dragged, {@code false}
-     *         otherwise.
+     * otherwise.
      */
     private boolean dragMultipleRows(JsonObject draggedRow) {
         SelectionModel<JsonObject> selectionModel = getGrid()
@@ -206,7 +207,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Get all selected rows from a subset of rows defined by {@code range}.
      *
      * @param range
-     *            Range of indexes.
+     *         Range of indexes.
      * @return List of data of all selected rows in the given range.
      */
     private List<JsonObject> getSelectedRowsInRange(Range range) {
@@ -226,7 +227,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Converts a list of {@link JsonObject}s to a {@link JsonArray}.
      *
      * @param objects
-     *            List of json objects.
+     *         List of json objects.
      * @return Json array containing all json objects.
      */
     private JsonArray toJsonArray(List<JsonObject> objects) {
@@ -242,7 +243,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * otherwise.
      *
      * @param row
-     *            Row data.
+     *         Row data.
      * @return Drag data if present or row data otherwise.
      */
     private JsonObject getDragData(JsonObject row) {
