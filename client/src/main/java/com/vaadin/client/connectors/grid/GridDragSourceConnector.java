@@ -87,6 +87,11 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                 .map(row -> row.getString(GridState.JSONKEY_ROWKEY))
                 .collect(Collectors.toList());
 
+        // Ignore event if there are no items dragged
+        if (draggedItemKeys.size() == 0) {
+            return;
+        }
+
         // Add badge showing the number of dragged columns
         if (draggedItemKeys.size() > 1) {
             Element draggedRowElement = (Element) event.getTarget();
@@ -162,7 +167,10 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
     @Override
     protected void onDragEnd(Event event) {
-        super.onDragEnd(event);
+        // Ignore event if there are no items dragged
+        if (draggedItemKeys.size() > 0) {
+            super.onDragEnd(event);
+        }
 
         // Clear item key list
         draggedItemKeys = null;
