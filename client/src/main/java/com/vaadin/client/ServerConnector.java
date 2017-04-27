@@ -217,4 +217,19 @@ public interface ServerConnector extends Connector {
      */
     public boolean hasEventListener(String eventIdentifier);
 
+    /**
+     * Sets the connector type tag for this connector.
+     *
+     * @param tag
+     *            the connector type tag
+     */
+    public void setTag(int tag);
+
+    /**
+     * Gets the connector type tag for this connector.
+     *
+     * @return the connector type tag
+     */
+    public int getTag();
+
 }
