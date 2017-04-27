@@ -3,6 +3,7 @@ package com.vaadin.tests.components.tree;
 import java.util.Arrays;
 import java.util.List;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
@@ -19,12 +20,9 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 
+@Theme("tests-valo-disabled-animations")
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
-
-    public static class MyCustomTree extends Tree<Object> {
-
-    }
 
     private Tree<HierarchicalTestBean> tree;
     private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
@@ -55,9 +53,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         tree.addCollapseListener(
                 e -> log("ExpandEvent: " + e.getCollapsedItem()));
 
-        MyCustomTree myCustomTree = new MyCustomTree();
-        myCustomTree.setItems("Foo");
-        layout.addComponents(createMenu(), tree, myCustomTree);
+        layout.addComponents(createMenu(), tree);
 
         addComponent(layout);
     }
@@ -86,7 +82,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     private void createIconMenu(MenuItem iconMenu) {
         iconMenu.addItem("No icons",
                 menu -> tree.setItemIconGenerator(t -> null));
-        iconMenu.addItem("Depth based",
+        iconMenu.addItem("By Depth",
                 menu -> tree.setItemIconGenerator(iconGenerator));
     }
 
