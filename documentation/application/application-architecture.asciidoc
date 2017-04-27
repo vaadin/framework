@@ -117,8 +117,8 @@ While extending layouts is an easy way to make component composition, it is a
 good practice to encapsulate implementation details, such as the exact layout
 component used. Otherwise, the users of such a composite could begin to rely on
 such implementation details, which would make changes harder. For this purpose,
-Vaadin has a special [classname]#CustomComponent# wrapper, which hides the
-content representation.
+Vaadin has the special wrappers [classname]#Composite# and
+[classname]#CustomComponent#, which hide the content representation.
 
 
 [source, java]
@@ -144,9 +144,9 @@ class MyView extends CustomComponent {
 MyView myview = new MyView();
 ----
 
-For a more detailed description of the [classname]#CustomComponent#, see
+For a more detailed description of [classname]#Composite# and [classname]#CustomComponent#, see
 <<dummy/../../../framework/components/components-customcomponent#components.customcomponent,"Composition
-with CustomComponent">>.
+with Composite and CustomComponent">>.
 
 
 [[application.architecture.navigation]]

@@ -107,7 +107,7 @@ Interface Components">>, for layout components, see
 <<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing
 Layout">>, and for compositing components, see
 <<dummy/../../../framework/components/components-customcomponent#components.customcomponent,"Composition
-with CustomComponent">>.
+with Composite and CustomComponent">>.
 
 Events and Listeners:: Vaadin Framework follows an event-driven programming paradigm, in which events, and
 listeners that handle the events, are the basis of handling user interaction in
