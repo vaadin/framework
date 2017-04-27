@@ -162,9 +162,6 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     private void doPushRows(final Range requestedRows) {
         Stream<TreeLevelQuery> levelQueries = mapper.splitRangeToLevelQueries(
                 requestedRows.getStart(), requestedRows.getEnd() - 1);
-        List<TreeLevelQuery> collected = levelQueries
-                .collect(Collectors.toList());
-        levelQueries = collected.stream();
 
         JsonObject[] dataObjects = new JsonObject[requestedRows.length()];
         BiConsumer<JsonObject, Integer> rowDataMapper = (object,
@@ -370,8 +367,10 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
         Objects.requireNonNull(collapsedRowKey, "Row key cannot be null");
         T collapsedItem = getKeyMapper().get(collapsedRowKey);
+        Objects.requireNonNull(collapsedItem,
+                "Cannot find item for given key " + collapsedItem);
 
-        if (collapsedItem == null || mapper.isCollapsed(collapsedRowKey)) {
+        if (mapper.isCollapsed(collapsedRowKey)) {
             return false;
         }
         int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
@@ -392,9 +391,15 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *            the key of the row, not {@code null}
      * @param expandedRowIndex
      *            the index of the row to expand
+     * @param userOriginated
+     *            whether this expand was originated from the server or client
      * @return {@code true} if the row was expanded, {@code false} otherwise
      */
-    public boolean doExpand(String expandedRowKey, final int expandedRowIndex) {
+    public boolean doExpand(String expandedRowKey, final int expandedRowIndex,
+            boolean userOriginated) {
+        if (!userOriginated && !rowKeysPendingExpand.contains(expandedRowKey)) {
+            return false;
+        }
         if (expandedRowIndex < 0 | expandedRowIndex >= mapper.getTreeSize()) {
             throw new IllegalArgumentException("Invalid row index "
                     + expandedRowIndex + " when tree grid size of "
@@ -402,9 +407,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
         Objects.requireNonNull(expandedRowKey, "Row key cannot be null");
         final T expandedItem = getKeyMapper().get(expandedRowKey);
-        if (expandedItem == null) {
-            return false;
-        }
+        Objects.requireNonNull(expandedItem,
+                "Cannot find item for given key " + expandedRowKey);
 
         int expandedNodeSize = doSizeQuery(expandedItem);
         if (expandedNodeSize == 0) {

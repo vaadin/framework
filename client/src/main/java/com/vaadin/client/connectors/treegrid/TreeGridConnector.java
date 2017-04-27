@@ -57,6 +57,10 @@ import elemental.json.JsonObject;
 @Connect(com.vaadin.ui.TreeGrid.class)
 public class TreeGridConnector extends GridConnector {
 
+    private static enum AwaitingRowsState {
+        NONE, COLLAPSE, EXPAND
+    }
+
     public TreeGridConnector() {
         registerRpc(FocusRpc.class, (rowIndex, cellIndex) -> {
             getWidget().focusCell(rowIndex, cellIndex);
@@ -69,9 +73,7 @@ public class TreeGridConnector extends GridConnector {
 
     private Set<String> rowKeysPendingExpand = new HashSet<>();
 
-    private boolean rowAwaitingCollapse = false;
-
-    private boolean rowAwaitingExpand = false;
+    private AwaitingRowsState awaitingRowsState = AwaitingRowsState.NONE;
 
     @Override
     public TreeGrid getWidget() {
@@ -203,13 +205,17 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void dataRemoved(int firstRowIndex, int numberOfRows) {
-                rowAwaitingCollapse = false;
+                if (awaitingRowsState == AwaitingRowsState.COLLAPSE) {
+                    awaitingRowsState = AwaitingRowsState.NONE;
+                }
                 checkExpand();
             }
 
             @Override
             public void dataAdded(int firstRowIndex, int numberOfRows) {
-                rowAwaitingExpand = false;
+                if (awaitingRowsState == AwaitingRowsState.EXPAND) {
+                    awaitingRowsState = AwaitingRowsState.NONE;
+                }
                 checkExpand();
             }
 
@@ -220,8 +226,7 @@ public class TreeGridConnector extends GridConnector {
 
             @Override
             public void resetDataAndSize(int estimatedNewDataSize) {
-                rowAwaitingCollapse = false;
-                rowAwaitingExpand = false;
+                awaitingRowsState = AwaitingRowsState.NONE;
             }
         });
     }
@@ -255,13 +260,13 @@ public class TreeGridConnector extends GridConnector {
 
     private void setCollapsed(int rowIndex, boolean collapsed,
             boolean userOriginated) {
-        if (isAwaitingRows()) {
+        if (isAwaitingRowChange()) {
             return;
         }
         if (collapsed) {
-            rowAwaitingCollapse = true;
+            awaitingRowsState = AwaitingRowsState.COLLAPSE;
         } else {
-            rowAwaitingExpand = true;
+            awaitingRowsState = AwaitingRowsState.EXPAND;
         }
         String rowKey = getRowKey(getDataSource().getRow(rowIndex));
         getRpcProxy(NodeCollapseRpc.class).setNodeCollapsed(rowKey, rowIndex,
@@ -371,6 +376,10 @@ public class TreeGridConnector extends GridConnector {
         }
     }
 
+    private boolean isAwaitingRowChange() {
+        return awaitingRowsState != AwaitingRowsState.NONE;
+    }
+
     private void checkExpand() {
         Range cache = ((AbstractRemoteDataSource) getDataSource())
                 .getCachedRange();
@@ -378,7 +387,7 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private void checkExpand(int firstRowIndex, int numberOfRows) {
-        if (rowKeysPendingExpand.isEmpty() || isAwaitingRows()) {
+        if (rowKeysPendingExpand.isEmpty() || isAwaitingRowChange()) {
             return;
         }
         for (int rowIndex = firstRowIndex; rowIndex < firstRowIndex
@@ -390,10 +399,6 @@ public class TreeGridConnector extends GridConnector {
                 return;
             }
         }
-    }
-
-    private boolean isAwaitingRows() {
-        return rowAwaitingCollapse || rowAwaitingExpand;
     }
 
     private static boolean isCollapsed(JsonObject rowData) {

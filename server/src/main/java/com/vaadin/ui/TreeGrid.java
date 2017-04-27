@@ -227,8 +227,8 @@ public class TreeGrid<T> extends Grid<T> {
                                 .get(rowKey), true);
                     }
                 } else {
-                    if (getDataCommunicator().doExpand(rowKey, rowIndex)
-                            && userOriginated) {
+                    if (getDataCommunicator().doExpand(rowKey, rowIndex,
+                            userOriginated) && userOriginated) {
                         fireExpandEvent(getDataCommunicator().getKeyMapper()
                                 .get(rowKey), true);
                     }
