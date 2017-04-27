@@ -105,6 +105,11 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         protected TreeRendererState getState() {
             return (TreeRendererState) super.getState();
         }
+
+        @Override
+        protected TreeRendererState getState(boolean markAsDirty) {
+            return (TreeRendererState) super.getState(markAsDirty);
+        }
     }
 
     private TreeGrid<T> treeGrid = new TreeGrid<>();
