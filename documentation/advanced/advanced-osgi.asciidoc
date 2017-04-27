@@ -15,7 +15,7 @@ An OSGi application typically consists of multiple bundles that can be deployed 
 
 To deploy Vaadin applications as OSGi bundles, static resources (including themes and widget sets) must be published using the appropriate APIs to enable using multiple Vaadin versions on the same server.
 
-The application is typically packaged as a JAR file, and needs to have a valid OSGi bundle manifest which can be created e.g. by the `nnd-maven-plugin`. All the dependencies of the application should be available as OSGi bundles.
+The application is typically packaged as a JAR file, and needs to have a valid OSGi bundle manifest which can be created e.g. by the `bnd-maven-plugin`. All the dependencies of the application should be available as OSGi bundles.
 
 [[advanced.osgi.servlet]]
 == Publishing a Servlet With OSGi
