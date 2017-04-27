@@ -16,6 +16,7 @@
 package com.vaadin.event.dnd;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
@@ -46,10 +47,23 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Get drop effect of the dragend event.
+     * Get drop effect of the dragend event. The value will be the desired
+     * action, that is the dropEffect value of the last dragenter or dragover
+     * event. The value depends on the effectAllowed parameter of the drag
+     * source, the dropEffect parameter of the drop target, and its drag over
+     * and drop criteria.
+     * <p>
+     * If the drop is not successful, the value will be {@code NONE}.
+     * <p>
+     * In case the desired drop effect is {@code MOVE}, the data being dragged
+     * should be removed from the source.
      *
      * @return The {@code DataTransfer.dropEffect} parameter of the client side
      * dragend event.
+     * @see DragSourceExtension#setEffectAllowed(EffectAllowed)
+     * @see DropTargetExtension#setDropEffect(DropEffect)
+     * @see DropTargetExtension#setDragOverCriteria(String)
+     * @see DropTargetExtension#setDropCriteria(String)
      */
     public DropEffect getDropEffect() {
         return dropEffect;
