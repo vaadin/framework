@@ -7,6 +7,8 @@ layout: page
 [[advanced.osgi]]
 = Vaadin OSGi Support
 
+IMPORTANT: The OSGi support as described here is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.beta1.
+
 Vaadin applications can be deployed on an OSGi compatible servlet container, or on Liferay 7 as OSGi portlets.
 
 An OSGi application typically consists of multiple bundles that can be deployed separately. Multiple versions of each bundle can be present, and the OSGi runtime resolves their dependencies at run-time based on bundle manifests.
