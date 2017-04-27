@@ -253,6 +253,13 @@ public class BrowserInfo {
         return browserDetails.isSafari();
     }
 
+    /**
+     * Returns true if the browser is Safari or is a browser that is running on
+     * iOS and using the Safari rendering engine.
+     *
+     * @return true if the browser is using the Safari rendering engine
+     * @since 8.1
+     */
     public boolean isSafariOrIOS() {
         return browserDetails.isSafariOrIOS();
     }

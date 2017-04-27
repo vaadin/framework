@@ -115,7 +115,7 @@ public class VNativeSelect extends FocusableFlowPanelComposite
      * Sets the number of items that are visible. If only one item is visible,
      * then the box will be displayed as a drop-down list (the default).
      *
-     * @since
+     * @since 8.1
      * @param visibleItemCount
      *            the visible item count
      */
@@ -127,7 +127,7 @@ public class VNativeSelect extends FocusableFlowPanelComposite
      * Gets the number of items that are visible. If only one item is visible,
      * then the box will be displayed as a drop-down list.
      *
-     * @since
+     * @since 8.1
      * @return the visible item count
      */
     public int getVisibleItemCount() {

@@ -44,6 +44,12 @@ public class NativeSelectState extends AbstractSingleSelectState {
      */
     public String emptySelectionCaption = "";
 
+    /**
+     * The number of items that are visible. If only one item is visible, then
+     * the box will be displayed as a drop-down list.
+     *
+     * @since 8.1
+     */
     @DelegateToWidget
     public int visibleItemCount = 1;
 

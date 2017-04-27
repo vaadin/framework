@@ -189,6 +189,7 @@ public abstract class VaadinUriResolver implements Serializable {
      *
      * @return the absolute or relative URL to the frontend files, ending with a
      *         slash '/'
+     * @since 8.1
      */
     protected abstract String getFrontendUrl();
 }

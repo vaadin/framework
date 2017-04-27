@@ -22,9 +22,16 @@ import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
 import com.vaadin.osgi.resources.OSGiVaadinResources;
-import com.vaadin.osgi.resources.VaadinResourceService;
 import com.vaadin.osgi.resources.OSGiVaadinResources.ResourceBundleInactiveException;
+import com.vaadin.osgi.resources.VaadinResourceService;
 
+/**
+ * OSGi service component registering bootstrap JS as published resources in
+ * OSGi environments.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
+ */
 @Component(immediate = true)
 public class BootstrapContribution {
     private static final String[] RESOURCES = { "vaadinBootstrap.js",
@@ -41,10 +48,10 @@ public class BootstrapContribution {
 
     @Reference
     void setHttpService(HttpService service) {
-        this.httpService = service;
+        httpService = service;
     }
 
     void unsetHttpService(HttpService service) {
-        this.httpService = null;
+        httpService = null;
     }
 }

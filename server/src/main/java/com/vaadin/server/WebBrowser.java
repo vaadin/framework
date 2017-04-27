@@ -545,6 +545,7 @@ public class WebBrowser implements Serializable {
      *
      * @return <code>true</code> if the browser supports ES6, <code>false</code>
      *         otherwise.
+     * @since 8.1
      */
     public boolean isEs6Supported() {
         if (browserDetails == null) {

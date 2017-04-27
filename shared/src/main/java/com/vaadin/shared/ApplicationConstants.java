@@ -45,6 +45,13 @@ public class ApplicationConstants implements Serializable {
     public static final String PUBLISHED_PROTOCOL_NAME = "published";
     public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";
+    /**
+     * An internal protocol used for referencing frontend resources.
+     *
+     * @see #FRONTEND_URL
+     *
+     * @since 8.1
+     */
     public static final String FRONTEND_PROTOCOL_PREFIX = "frontend://";
 
     /**
@@ -106,6 +113,8 @@ public class ApplicationConstants implements Serializable {
      * <p>
      * By default, this is "vaadin://es6" ("vaadin://es5" for browsers which
      * does not support ES6).
+     *
+     * @since 8.1
      */
     public static final String FRONTEND_URL = "frontendUrl";
 
@@ -199,18 +208,24 @@ public class ApplicationConstants implements Serializable {
     /**
      * Configuration name for the {@literal frontend://} URL when using a
      * browser which is not ES6 compatible (i.e. IE11 or Safari 9).
+     *
+     * @since 8.1
      */
     public static final String FRONTEND_URL_ES5 = "frontend.url.es5";
 
     /**
      * Configuration name for the {@literal frontend://} URL when using an ES6
      * compatible browser.
+     *
+     * @since 8.1
      */
     public static final String FRONTEND_URL_ES6 = "frontend.url.es6";
 
     /**
      * Default value of the configuration of the build URL of ES6 web
      * components.
+     *
+     * @since 8.1
      */
     public static final String FRONTEND_URL_ES6_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
             + "frontend/es6/";
@@ -218,6 +233,8 @@ public class ApplicationConstants implements Serializable {
     /**
      * Default value of the configuration of the build URL of ES5 web
      * components.
+     *
+     * @since 8.1
      */
     public static final String FRONTEND_URL_ES5_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
             + "frontend/es5/";
