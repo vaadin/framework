@@ -150,8 +150,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         setDragImage(event);
 
         // Set text data parameter
-        nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
-                createDataTransferText(event));
+        String dataTransferText = createDataTransferText(event);
+        if (dataTransferText != null && !dataTransferText.isEmpty()) {
+            nativeEvent.getDataTransfer()
+                    .setData(DragSourceState.DATA_TYPE_TEXT, dataTransferText);
+        }
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
