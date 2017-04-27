@@ -308,9 +308,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 return false;
             }
 
+            BootstrapFragmentResponse bootstrapResponse = new BootstrapFragmentResponse(
+                    this, request, session, uiClass, new ArrayList<>(),
+                    provider);
             BootstrapContext context = new BootstrapContext(response,
-                    new BootstrapFragmentResponse(this, request, session,
-                            uiClass, new ArrayList<>(), provider));
+                    bootstrapResponse);
+            bootstrapResponse.setUriResolver(context.getUriResolver());
 
             setupMainDiv(context);
 
@@ -342,6 +345,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(this,
                     request, context.getSession(), context.getUIClass(),
                     document, headers, fragmentResponse.getUIProvider());
+            pageResponse.setUriResolver(context.getUriResolver());
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
