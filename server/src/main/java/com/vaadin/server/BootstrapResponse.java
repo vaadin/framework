@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.util.EventObject;
 
+import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.ui.UI;
 
 /**
@@ -32,6 +33,7 @@ public abstract class BootstrapResponse extends EventObject {
     private final VaadinSession session;
     private final Class<? extends UI> uiClass;
     private final UIProvider uiProvider;
+    private VaadinUriResolver uriResolver;
 
     /**
      * Creates a new bootstrap event.
@@ -59,7 +61,7 @@ public abstract class BootstrapResponse extends EventObject {
     }
 
     /**
-     * Gets the bootstrap handler that fired this event
+     * Gets the bootstrap handler that fired this event.
      *
      * @return the bootstrap handler that fired this event
      */
@@ -69,11 +71,12 @@ public abstract class BootstrapResponse extends EventObject {
 
     /**
      * Gets the request for which the generated bootstrap HTML will be the
-     * response. This can be used to read request headers and other additional
-     * information. Please note that {@link VaadinSession#getBrowser()}
-     * will not be available because the bootstrap page is generated before the
-     * bootstrap javascript has had a chance to send any information back to the
-     * server.
+     * response.
+     *
+     * This can be used to read request headers and other additional
+     * information. Please note that {@link VaadinSession#getBrowser()} will not
+     * be available because the bootstrap page is generated before the bootstrap
+     * javascript has had a chance to send any information back to the server.
      *
      * @return the Vaadin request that is being handled
      */
@@ -108,6 +111,27 @@ public abstract class BootstrapResponse extends EventObject {
      */
     public UIProvider getUIProvider() {
         return uiProvider;
+    }
+
+    /**
+     * Sets the URI resolver used in the bootstrap process.
+     *
+     * @param uriResolver
+     *            the uri resolver which is used
+     */
+    public void setUriResolver(VaadinUriResolver uriResolver) {
+        assert this.uriResolver == null : "URI resolver should never be changed";
+        assert uriResolver != null : "URI resolver should never be null";
+        this.uriResolver = uriResolver;
+    }
+
+    /**
+     * Gets the URI resolver used in the bootstrap process.
+     *
+     * @return the URI resolver
+     */
+    public VaadinUriResolver getUriResolver() {
+        return uriResolver;
     }
 
 }
