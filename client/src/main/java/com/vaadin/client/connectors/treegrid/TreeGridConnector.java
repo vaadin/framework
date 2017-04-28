@@ -165,20 +165,9 @@ public class TreeGridConnector extends GridConnector {
         registerRpc(TreeGridClientRpc.class, new TreeGridClientRpc() {
 
             @Override
-            public void setExpanded(String key) {
-                rowKeysPendingExpand.add(key);
-                checkExpand();
-            }
-
-            @Override
             public void setExpanded(List<String> keys) {
                 rowKeysPendingExpand.addAll(keys);
                 checkExpand();
-            }
-
-            @Override
-            public void setCollapsed(String key) {
-                rowKeysPendingExpand.remove(key);
             }
 
             @Override

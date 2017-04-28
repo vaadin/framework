@@ -51,6 +51,20 @@ public class TreeGridHugeTreeTest extends SingleBrowserTest {
     }
 
     @Test
+    public void collapsed_rows_invalidated_correctly() {
+        openTestURL();
+        grid = $(TreeGridElement.class).first();
+        grid.expandWithClick(2);
+        grid.expandWithClick(3);
+        grid.expandWithClick(0);
+        grid.collapseWithClick(0);
+        grid.expandWithClick(0);
+        grid.expandWithClick(1);
+        assertCellTexts(0, 0,
+                new String[] { "Granddad 0", "Dad 0/0", "Son 0/0/0" });
+    }
+
+    @Test
     public void collapsed_subtrees_outside_of_cache_stay_expanded() {
         getDriver().get(StringUtils.strip(getBaseURL(), "/")
                 + TreeGridMemory.PATH + "?items=200&initiallyExpanded");

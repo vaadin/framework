@@ -18,6 +18,7 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -451,7 +452,8 @@ public class TreeGrid<T> extends Grid<T> {
      */
     public void expand(T item) {
         getDataCommunicator().setPendingExpand(item).ifPresent(key -> {
-            getRpcProxy(TreeGridClientRpc.class).setExpanded(key);
+            getRpcProxy(TreeGridClientRpc.class)
+                    .setExpanded(Arrays.asList(key));
             fireExpandEvent(item, false);
         });
     }
@@ -487,7 +489,8 @@ public class TreeGrid<T> extends Grid<T> {
      */
     public void collapse(T item) {
         getDataCommunicator().collapseItem(item).ifPresent(key -> {
-            getRpcProxy(TreeGridClientRpc.class).setCollapsed(key);
+            getRpcProxy(TreeGridClientRpc.class)
+                    .setCollapsed(Arrays.asList(key));
             fireCollapseEvent(item, false);
         });
     }

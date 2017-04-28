@@ -28,15 +28,6 @@ import com.vaadin.shared.communication.ClientRpc;
 public interface TreeGridClientRpc extends ClientRpc {
 
     /**
-     * Inform the client that an item with the given key has been expanded by
-     * the server.
-     *
-     * @param key
-     *            the communication key of the expanded item
-     */
-    public void setExpanded(String key);
-
-    /**
      * Inform the client that a list of items with the given keys have been
      * expanded by the server.
      *
@@ -44,15 +35,6 @@ public interface TreeGridClientRpc extends ClientRpc {
      *            the communication keys of the expanded items
      */
     public void setExpanded(List<String> keys);
-
-    /**
-     * Inform the client that an item with the given key has been collapsed by
-     * the server.
-     *
-     * @param key
-     *            the communication key of the collapsed item
-     */
-    public void setCollapsed(String key);
 
     /**
      * Inform the client that a list of items with the given keys have been

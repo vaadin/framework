@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
@@ -345,8 +346,11 @@ class HierarchyMapper implements Serializable {
                     + " is different for the collapsed node " + collapsedNode);
         }
 
-        collapsedNodes.put(collapsedNode.getParentKey(),
-                new TreeSet<>(nodes.tailSet(collapsedNode)));
+        Set<TreeNode> subTreeNodes = nodes
+                .tailSet(collapsedNode).stream().filter(node -> collapsedNode
+                        .getEndIndex() >= node.getEndIndex())
+                .collect(Collectors.toSet());
+        collapsedNodes.put(collapsedNode.getParentKey(), new TreeSet<>(subTreeNodes));
 
         // remove complete subtree
         AtomicInteger removedSubTreeSize = new AtomicInteger(
