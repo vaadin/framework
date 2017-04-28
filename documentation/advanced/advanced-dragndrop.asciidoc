@@ -153,6 +153,11 @@ It is possible to drag and drop the rows of a Grid component. This allows reorde
 A Grid component's rows can be made draggable by applying [classname]#GridDragSource# extension to the component. The extended Grid's rows become draggable, meaning that each row can be grabbed and moved by the mouse individually.
 When the Grid's selection mode is `SelectionMode.MULTI` and multiple rows are selected, it is possible to drag all the visible selected rows by grabbing one of them. However, when the grabbed row is not selected, only that one row will be dragged.
 
+[NOTE]
+====
+It is important to note that when dragging multiple rows, only the visible selected rows will be set as dragged data.
+====
+
 The following example shows how you can define the allowed drag effect and customize the drag data with the drag data generator.
 
 [source,java]
