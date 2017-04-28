@@ -243,10 +243,30 @@ public class TreeGridConnector extends GridConnector {
         return cell.getColumn().getRenderer() instanceof HierarchyRenderer;
     }
 
+    /**
+     * Delegates to {@link #setCollapsed(int, boolean, boolean)}, with
+     * {@code userOriginated} as {@code true}.
+     *
+     * @see #setCollapsed(int, boolean, boolean)
+     */
     private void setCollapsed(int rowIndex, boolean collapsed) {
         setCollapsed(rowIndex, collapsed, true);
     }
 
+    /**
+     * Set the collapse state for the row in the given index.
+     * <p>
+     * Calling this method will have no effect if a response has not yet been
+     * received for a previous call to this method.
+     *
+     * @param rowIndex
+     *            index of the row to set the state for
+     * @param collapsed
+     *            {@code true} to collapse the row, {@code false} to expand the
+     *            row
+     * @param userOriginated
+     *            whether this method was originated from a user interaction
+     */
     private void setCollapsed(int rowIndex, boolean collapsed,
             boolean userOriginated) {
         if (isAwaitingRowChange()) {
@@ -377,6 +397,8 @@ public class TreeGridConnector extends GridConnector {
 
     private void checkExpand(int firstRowIndex, int numberOfRows) {
         if (rowKeysPendingExpand.isEmpty() || isAwaitingRowChange()) {
+            // will not perform the check if an expand or collapse action is
+            // already pending or there are no rows pending expand
             return;
         }
         for (int rowIndex = firstRowIndex; rowIndex < firstRowIndex

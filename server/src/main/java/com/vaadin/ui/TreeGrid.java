@@ -442,20 +442,16 @@ public class TreeGrid<T> extends Grid<T> {
     }
 
     /**
-     * Expands the given item.
+     * Expands the given items.
      * <p>
-     * If the item is currently expanded, does nothing. If the item does not
-     * have any children, does nothing.
+     * If an item is currently expanded, does nothing. If an item does not have
+     * any children, does nothing.
      *
-     * @param item
-     *            the item to expand
+     * @param items
+     *            the items to expand
      */
-    public void expand(T item) {
-        getDataCommunicator().setPendingExpand(item).ifPresent(key -> {
-            getRpcProxy(TreeGridClientRpc.class)
-                    .setExpanded(Arrays.asList(key));
-            fireExpandEvent(item, false);
-        });
+    public void expand(T... items) {
+        expand(Arrays.asList(items));
     }
 
     /**
@@ -480,19 +476,15 @@ public class TreeGrid<T> extends Grid<T> {
     }
 
     /**
-     * Collapses the given item.
+     * Collapse the given items.
      * <p>
-     * If the item is already collapsed, does nothing.
+     * For items that are already collapsed, does nothing.
      *
-     * @param item
-     *            the item to collapse
+     * @param items
+     *            the collection of items to collapse
      */
-    public void collapse(T item) {
-        getDataCommunicator().collapseItem(item).ifPresent(key -> {
-            getRpcProxy(TreeGridClientRpc.class)
-                    .setCollapsed(Arrays.asList(key));
-            fireCollapseEvent(item, false);
-        });
+    public void collapse(T... items) {
+        collapse(Arrays.asList(items));
     }
 
     /**

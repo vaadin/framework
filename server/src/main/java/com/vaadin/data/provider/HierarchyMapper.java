@@ -143,7 +143,11 @@ class HierarchyMapper implements Serializable {
     /** The expanded nodes in the tree. */
     private final TreeSet<TreeNode> nodes = new TreeSet<>();
 
-    /** Nodes that have been previously expanded. */
+    /**
+     * Map of collapsed subtrees. The keys of this map are the collapsed
+     * subtrees parent keys and values are the {@code TreeSet}s of the subtree's
+     * expanded {@code TreeNode}s.
+     */
     private final Map<String, TreeSet<TreeNode>> collapsedNodes = new HashMap<>();
 
     /**
