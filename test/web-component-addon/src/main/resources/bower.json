@@ -1,0 +1,23 @@
+{
+  "name": "web-component-addon",
+  "homepage": "https://github.com/vaadin/framework",
+  "authors": [
+    "Artur Signell <artur@vaadin.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "Apache2",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "paper-slider": "3ae77de06f6f475720440de9da72b7b2b98b74cc",
+    "webcomponentsjs": "v1.0.0-rc.10",
+    "polymer": "v2.0.0-rc.7"
+  }
+}

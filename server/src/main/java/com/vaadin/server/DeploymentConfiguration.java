@@ -174,4 +174,14 @@ public interface DeploymentConfiguration extends Serializable {
      */
     public String getClassLoaderName();
 
+    /**
+     * Gets information whether the webcomponentsjs polyfill should be loaded.
+     * <p>
+     * When the mode is set to {@link WebComponentsPolyfillMode#AUTOMATIC}, the
+     * polyfill will be loaded if a {@literal bower.json} is found on the
+     * classpath in the default package.
+     *
+     * @return the mode deciding whether the polyfill should be loaded or not
+     */
+    public WebComponentsPolyfillMode getWebComponentsPolyfillMode();
 }
