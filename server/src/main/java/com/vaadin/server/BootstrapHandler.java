@@ -378,6 +378,33 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         return !ServletPortletHelper.isAppRequest(request);
     }
 
+    /**
+     * Resolves the URL to use for the {@literal frontend://} protocol.
+     *
+     * @param session
+     *            the session of the user to resolve the protocol for
+     * @return the URL that frontend:// resolves to, possibly using another
+     *         internal protocol
+     */
+    public static String resolveFrontendUrl(VaadinSession session) {
+        DeploymentConfiguration configuration = session.getConfiguration();
+        String frontendUrl;
+        if (session.getBrowser().isEs6Supported()) {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES6,
+                    ApplicationConstants.FRONTEND_URL_ES6_DEFAULT_VALUE);
+        } else {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES5,
+                    ApplicationConstants.FRONTEND_URL_ES5_DEFAULT_VALUE);
+        }
+        if (!frontendUrl.endsWith("/")) {
+            frontendUrl += "/";
+        }
+
+        return frontendUrl;
+    }
+
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
