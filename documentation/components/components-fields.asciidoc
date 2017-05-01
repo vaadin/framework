@@ -113,7 +113,7 @@ binder.bind(nameField, Person::getName, Person::setName);
 // After this, whenever the user changes the value
 // of nameField, p.setName is automatically called.
 Person p = new Person();
-binder.bind(p);
+binder.setBean(p);
 ----
 
 For more information on data binding, see <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
