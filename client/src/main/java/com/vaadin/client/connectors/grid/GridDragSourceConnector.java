@@ -27,6 +27,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
@@ -70,6 +71,11 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
+
+        // Do not make elements draggable on touch devices
+        if (BrowserInfo.get().isTouchDevice()) {
+            return;
+        }
 
         // Set newly added rows draggable
         getGridBody().setNewEscalatorRowCallback(

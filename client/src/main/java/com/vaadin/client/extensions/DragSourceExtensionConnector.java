@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
@@ -57,6 +58,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         dragSourceWidget = ((ComponentConnector) target).getWidget();
+
+        // Do not make elements draggable on touch devices
+        if (BrowserInfo.get().isTouchDevice()) {
+            return;
+        }
 
         setDraggable(getDraggableElement());
         addDragListeners(getDraggableElement());

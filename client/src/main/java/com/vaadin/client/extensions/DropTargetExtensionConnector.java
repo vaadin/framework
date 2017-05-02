@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.event.dnd.DropTargetExtension;
@@ -77,6 +78,11 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         dropTargetWidget = ((ComponentConnector) target).getWidget();
+
+        // Do not make elements drop target on touch devices
+        if (BrowserInfo.get().isTouchDevice()) {
+            return;
+        }
 
         addDropListeners(getDropTargetElement());
     }
