@@ -7,4 +7,4 @@ Import-Package: com.vaadin*;version="[${osgi.bundle.version},${osgi.bundle.versi
   org.osgi*
 Export-Package: com.vaadin.osgi.resources;-noimport:=true,\
   com.vaadin.shared*;-noimport:=true,\
-  elemental*;-noimport:=true
+  elemental.json*;-noimport:=true
