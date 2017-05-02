@@ -25,7 +25,8 @@ import com.vaadin.ui.Component;
  * Interface for all views controlled by the navigator.
  *
  * Each view added to the navigator must implement this interface. Typically, a
- * view is a {@link Component}.
+ * view is a {@link Component}, if it is not then you should override
+ * {@link #getViewComponent()} to define the component to show for the view.
  *
  * @author Vaadin Ltd
  * @since 7.0
@@ -46,4 +47,15 @@ public interface View extends Serializable {
      *
      */
     public void enter(ViewChangeEvent event);
+
+    /**
+     * Gets the component to show when navigating to the view.
+     *
+     * By default casts this View to a {@link Component}.
+     *
+     * @return the component to show, by default the view instance itself
+     */
+    public default Component getViewComponent() {
+        return (Component) this;
+    }
 }
