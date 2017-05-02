@@ -18,26 +18,51 @@ package com.vaadin.testbench.elements;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
-@ServerClass("com.vaadin.ui.Tree")
-@Deprecated
-public class TreeElement extends AbstractSelectElement {
-    /**
-     * Returns selected item of the tree. In multiselect mode returns first
-     * selected item. If there is no selected item returns empty string
-     *
-     * @return selected item of the tree
-     */
-    public String getValue() {
-        List<WebElement> selectedElements = findElements(
-                By.className("v-tree-node-selected"));
-        if (selectedElements.isEmpty()) {
-            return "";
-        } else {
-            return selectedElements.get(0).getText();
-        }
+/**
+ * Testbench Element API for {@code Tree}.
+ * <p>
+ * <strong>Note:</strong> This TreeElement is for the Vaadin 8 version of Tree.
+ * Use {@link com.vaadin.v7.testbench.elements.TreeElement} for the
+ * compatibility version.
+ *
+ * @author Vaadin Ltd.
+ * @since 8.1
+ */
+// TODO: Switch to com.vaadin.ui.Tree once inheritance finding is fixed
+@ServerClass("com.vaadin.ui.Composite")
+public class TreeElement extends AbstractComponentElement {
+
+    public void expand(int index) {
+        asTreeGrid().expandWithClick(index);
+    }
+
+    public void collapse(int index) {
+        asTreeGrid().collapseWithClick(index);
+    }
+
+    public boolean isExpanded(int index) {
+        return asTreeGrid().isRowExpanded(index, 0);
+    }
+
+    public boolean isCollapsed(int index) {
+        return !isExpanded(index);
+    }
+
+    public List<TestBenchElement> getAllItems() {
+        return TestBenchElement.wrapElements(
+                asTreeGrid().getBody().findElements(By.tagName("tr")),
+                getCommandExecutor());
+    }
+
+    public TestBenchElement getItem(int index) {
+        return asTreeGrid().getCell(index, 0);
+    }
+
+    protected TreeGridElement asTreeGrid() {
+        return wrap(TreeGridElement.class);
     }
 }

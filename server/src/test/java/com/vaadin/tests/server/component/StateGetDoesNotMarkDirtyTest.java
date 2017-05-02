@@ -127,7 +127,8 @@ public class StateGetDoesNotMarkDirtyTest {
             if (component instanceof UI) {
                 return component;
             }
-            if (component instanceof Composite) {
+            if (component.getClass().equals(Composite.class)) {
+                // Plain Composite needs a root.
                 ComponentRootSetter.setRoot(component, new Label());
             }
             emulateAttach(component);
