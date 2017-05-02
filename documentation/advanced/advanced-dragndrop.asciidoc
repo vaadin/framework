@@ -45,10 +45,16 @@ The [classname]#DragStartEvent# is fired when the drag has started, and the [cla
 dragSource.addDragStartListener(event ->
     event.getComponent().addStyleName("dragged")
 );
-dragSource.addDragEndListener(event -> 
+dragSource.addDragEndListener(event -> {
     event.getComponent().removeStyleName("dragged")
-);
+
+    if (event.isCanceled()) {
+        Notification.show("Drag event was canceled");
+    }
+});
 ----
+
+You can check whether the drag was canceled using the `isCanceled()` method.
 
 It is possible to transfer any Object as server side data to the drop target if both the drag source and drop target are placed in the same UI. This data is available in the drop event via the `DropEvent.getDragData()` method.
 
