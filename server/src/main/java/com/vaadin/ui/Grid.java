@@ -2080,7 +2080,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
         }, dataCommunicator);
     }
-    
+
     /**
      * Creates a new grid that uses reflection based on the provided bean type
      * to automatically set up an initial set of columns. All columns will be
@@ -2111,9 +2111,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     protected Grid(Class<T> beanType, DataCommunicator<T> dataCommunicator) {
         this(BeanPropertySet.get(beanType), dataCommunicator);
-        this.beanType = beanType;        
+        this.beanType = beanType;
     }
-    
+
     /**
      * Creates a grid using a custom {@link PropertySet} implementation for
      * configuring the initial columns and resolving property names for
@@ -2128,7 +2128,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     protected Grid(PropertySet<T> propertySet) {
         this(propertySet, new DataCommunicator<>());
     }
-  
+
     /**
      * Creates a grid using a custom {@link PropertySet} implementation and
      * custom data communicator.
@@ -2144,7 +2144,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param dataCommunicator
      *            the data communicator to use, not<code>null</code>
      * @since 8.0.6
-     */    
+     */
     protected Grid(PropertySet<T> propertySet, DataCommunicator<T> dataCommunicator) {
         super(dataCommunicator);
         registerRpc(new GridServerRpcImpl());
