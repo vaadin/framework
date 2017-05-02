@@ -22,6 +22,16 @@ import org.openqa.selenium.By;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
+/**
+ * Testbench Element API for {@code Tree}.
+ * <p>
+ * <strong>Note:</strong> This TreeElement is for the Vaadin 8 version of Tree.
+ * Use {@link com.vaadin.v7.testbench.elements.TreeElement} for the
+ * compatibility version.
+ *
+ * @author Vaadin Ltd.
+ * @since 8.1
+ */
 // TODO: Switch to com.vaadin.ui.Tree once inheritance finding is fixed
 @ServerClass("com.vaadin.ui.Composite")
 public class TreeElement extends AbstractComponentElement {
