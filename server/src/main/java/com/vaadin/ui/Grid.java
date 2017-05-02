@@ -2122,9 +2122,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     protected Grid(Class<T> beanType, DataCommunicator<T> dataCommunicator) {
         this(BeanPropertySet.get(beanType));
-        this.beanType = beanType;        
+        this.beanType = beanType;
     }
-    
+
     /**
      * Creates a new grid with the given data communicator and without support
      * for creating columns based on property names.
