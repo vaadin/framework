@@ -1,0 +1,59 @@
+@import "treegrid";
+
+$v-newtree-border-radius: 3px;
+
+@mixin valo-newtree ($primary-stylename: v-newtree) {
+
+  @include valo-treegrid($primary-stylename);
+
+  .#{$primary-stylename}-row > td {
+    background-color: transparent;
+    border: none;
+  }
+  
+  .#{$primary-stylename}-tablewrapper {
+    background-color: transparent;
+    border: none;
+  }
+  
+  .#{$primary-stylename}-row-selected  > .#{$primary-stylename}-cell {
+    background-color: transparent;
+    background-image: none;
+    color: inherit;
+    text-shadow: none;
+    border: none;
+  }
+  
+  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-row-focused:before {
+    display: none;
+  }
+  
+  .#{$primary-stylename}-cell-content {
+    border: $v-grid-cell-focused-border;
+    border-color: transparent;
+    border-radius: $v-newtree-border-radius;
+    padding: $v-grid-cell-padding;
+  }
+  
+  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-cell-focused 
+    > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
+    border: $v-grid-cell-focused-border;
+  }
+  
+  // Selected
+  .#{$primary-stylename}-row-selected {
+    $grid-sel-bg: $v-grid-row-selected-background-color;
+
+    > .#{$primary-stylename}-cell > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
+      @include valo-gradient($grid-sel-bg);
+      color: valo-font-color($grid-sel-bg);
+      text-shadow: valo-text-shadow($font-color: valo-font-color($grid-sel-bg), $background-color: $grid-sel-bg);
+      border-color: adjust-color($grid-sel-bg, $lightness: -8%, $saturation: -8%);
+    }
+
+    > .#{$primary-stylename}-cell-focused > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
+      border-color: adjust-color($grid-sel-bg, $lightness: 20%);
+    }
+  }
+}
+

@@ -130,8 +130,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         while (treeGrid.getHeaderRowCount() > 0) {
             treeGrid.removeHeaderRow(0);
         }
-        // TODO: Primary style name
-        // treeGrid.setPrimaryStyleName("v-tree");
+        treeGrid.setPrimaryStyleName("v-newtree");
 
         setWidth("100%");
         setHeightUndefined();
