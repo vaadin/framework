@@ -40,9 +40,12 @@ import com.vaadin.navigator.ViewProvider;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -462,12 +465,15 @@ public class NavigatorTest {
 
     @Test
     public void testComponentContainerViewDisplay() {
-        abstract class TestView implements Component, View {
+        class TestView extends VerticalLayout implements View {
+            @Override
+            public void enter(ViewChangeEvent event) {
+
+            }
         }
 
-        TestView tv1 = EasyMock.createNiceMock(TestView.class);
-        TestView tv2 = EasyMock.createNiceMock(TestView.class);
-        EasyMock.replay(tv1, tv2);
+        TestView tv1 = new TestView();
+        TestView tv2 = new TestView();
 
         VerticalLayout container = new VerticalLayout();
         ViewDisplay display = new Navigator.ComponentContainerViewDisplay(
@@ -903,5 +909,64 @@ public class NavigatorTest {
         // Second time navigation to the same view
         navigator.navigateTo(viewName);
         Assert.assertEquals(1, count[0]);
+    }
+
+    public static class ViewIsNotAComponent implements View {
+
+        private HorizontalLayout layout = new HorizontalLayout(
+                new Label("Hello"));
+
+        @Override
+        public Component getViewComponent() {
+            return layout;
+        }
+
+        @Override
+        public void enter(ViewChangeEvent event) {
+
+        }
+    }
+
+    @Test
+    public void viewWhichIsNotAComponent() {
+        UI ui = new UI() {
+
+            private Page page;
+            {
+                page = new Page(this, new PageState()) {
+                    private String fragment = "";
+
+                    @Override
+                    public String getUriFragment() {
+                        return fragment;
+                    };
+
+                    @Override
+                    public void setUriFragment(String newUriFragment,
+                            boolean fireEvents) {
+                        fragment = newUriFragment;
+                    };
+                };
+            }
+
+            @Override
+            protected void init(VaadinRequest request) {
+            }
+
+            @Override
+            public Page getPage() {
+                return page;
+            }
+        };
+
+        Navigator navigator = new Navigator(ui, ui);
+        ui.setNavigator(navigator);
+        navigator.addView("foo", ViewIsNotAComponent.class);
+        navigator.navigateTo("foo");
+
+        Assert.assertEquals(HorizontalLayout.class, ui.getContent().getClass());
+        Assert.assertEquals("Hello",
+                ((Label) ((HorizontalLayout) ui.getContent()).getComponent(0))
+                        .getValue());
     }
 }
