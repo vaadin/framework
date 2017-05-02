@@ -7,11 +7,11 @@
 
 include::portal-overview.asciidoc[leveloffset=+2]
 
-include::portal-eclipse.asciidoc[leveloffset=+2]
+include::portal-ui.asciidoc[leveloffset=+2]
+
+include::portal-osgi.asciidoc[leveloffset=+2]
 
 include::portal-liferay.asciidoc[leveloffset=+2]
-
-include::portal-ui.asciidoc[leveloffset=+2]
 
 include::portal-deployment.asciidoc[leveloffset=+2]
 
