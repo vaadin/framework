@@ -70,6 +70,17 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
+     * Returns whether the drag event was cancelled. This is a shorthand for
+     * {@code dropEffect == NONE}.
+     *
+     * @return {@code true} if the drop event was cancelled, {@code false}
+     * otherwise.
+     */
+    public boolean isCanceled() {
+        return getDropEffect() == DropEffect.NONE;
+    }
+
+    /**
      * Returns the drag source component where the dragend event occurred.
      *
      * @return Component which was dragged.
