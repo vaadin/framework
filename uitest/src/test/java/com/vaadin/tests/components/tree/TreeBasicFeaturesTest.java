@@ -103,4 +103,24 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         }
     }
 
+    @Test
+    public void tree_custom_caption() {
+        selectMenuPath("Component", "Captions", "Custom caption");
+        TreeElement tree = $(TreeElement.class).first();
+        Assert.assertEquals("Id: /0/0, Depth: 0, Index: 0",
+                tree.getItem(0).getText());
+        Assert.assertEquals("Id: /0/1, Depth: 0, Index: 1",
+                tree.getItem(1).getText());
+        tree.expand(0);
+        Assert.assertEquals("Id: /0/0/1/0, Depth: 1, Index: 0",
+                tree.getItem(1).getText());
+        Assert.assertEquals("Id: /0/0/1/1, Depth: 1, Index: 1",
+                tree.getItem(2).getText());
+        tree.expand(1);
+        Assert.assertEquals("Id: /0/0/1/0/2/0, Depth: 2, Index: 0",
+                tree.getItem(2).getText());
+        Assert.assertEquals("Id: /0/0/1/0/2/1, Depth: 2, Index: 1",
+                tree.getItem(3).getText());
+    }
+
 }
