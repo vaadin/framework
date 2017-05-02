@@ -19,7 +19,7 @@ folders or dragging a document on a program to open it. Framework version 8.1 ad
 
 [NOTE]
 ====
-Note that the HTML5 drag and drop feature is not supported by touch devices.
+Note that the HTML5 drag and drop feature is not supported on touch devices.
 ====
 
 == Drag Source
