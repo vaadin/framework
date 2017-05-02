@@ -283,10 +283,11 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     @Override
     protected void onDropRows(JsonArray keys) {
         for (int i = 0; i < keys.length(); i++) {
-            // cannot drop expanded rows since the parent item is needed always
-            // when fetching more rows
+            // cannot drop keys of expanded rows, parents of expanded rows or
+            // rows that are pending expand
             String itemKey = keys.getString(i);
-            if (mapper.isCollapsed(itemKey) && !rowKeysPendingExpand.contains(itemKey)) {
+            if (!mapper.isKeyStored(itemKey)
+                    && !rowKeysPendingExpand.contains(itemKey)) {
                 getActiveDataHandler().dropActiveData(itemKey);
             }
         }
@@ -390,9 +391,15 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *            the key of the row, not {@code null}
      * @param expandedRowIndex
      *            the index of the row to expand
+     * @param userOriginated
+     *            whether this expand was originated from the server or client
      * @return {@code true} if the row was expanded, {@code false} otherwise
      */
-    public boolean doExpand(String expandedRowKey, final int expandedRowIndex) {
+    public boolean doExpand(String expandedRowKey, final int expandedRowIndex,
+            boolean userOriginated) {
+        if (!userOriginated && !rowKeysPendingExpand.contains(expandedRowKey)) {
+            return false;
+        }
         if (expandedRowIndex < 0 | expandedRowIndex >= mapper.getTreeSize()) {
             throw new IllegalArgumentException("Invalid row index "
                     + expandedRowIndex + " when tree grid size of "
@@ -403,7 +410,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         Objects.requireNonNull(expandedItem,
                 "Cannot find item for given key " + expandedRowKey);
 
-        final int expandedNodeSize = doSizeQuery(expandedItem);
+        int expandedNodeSize = doSizeQuery(expandedItem);
         if (expandedNodeSize == 0) {
             // TODO handle 0 size -> not expandable
             throw new IllegalStateException("Row with index " + expandedRowIndex
@@ -413,7 +420,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         if (!mapper.isCollapsed(expandedRowKey)) {
             return false;
         }
-        mapper.expand(expandedRowKey, expandedRowIndex, expandedNodeSize);
+        expandedNodeSize = mapper.expand(expandedRowKey, expandedRowIndex,
+                expandedNodeSize);
         rowKeysPendingExpand.remove(expandedRowKey);
 
         getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);

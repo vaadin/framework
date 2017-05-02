@@ -95,12 +95,6 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
-        // 1 | 1 should not be expanded this time
-        selectMenuPath("Component", "Features", "Server-side expand",
-                "Expand 0 | 0");
-        assertEquals(6, grid.getRowCount());
-        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
-
         assertNoSystemNotifications();
         assertNoErrorNotifications();
     }
@@ -278,6 +272,26 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                 "Item expanded (user originated: true): 0 | 1"));
         assertFalse(logContainsText(
                 "Item collapsed (user originated: true): 0 | 1"));
+    }
+
+    @Test
+    public void expanded_nodes_stay_expanded_when_parent_expand_state_is_toggled() {
+        grid.expandWithClick(0);
+        grid.expandWithClick(1);
+        grid.collapseWithClick(0);
+        grid.expandWithClick(0);
+        assertCellTexts(0, 0, new String[] { "0 | 0", "1 | 0", "2 | 0", "2 | 1",
+                "2 | 2", "1 | 1", "1 | 2", "0 | 1", "0 | 2" });
+        assertEquals(9, grid.getRowCount());
+
+        grid.expandWithClick(7);
+        grid.expandWithClick(8);
+        grid.collapseWithClick(7);
+        grid.collapseWithClick(0);
+        grid.expandWithClick(1);
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "1 | 0", "2 | 0",
+                "2 | 1", "2 | 2", "1 | 1", "1 | 2", "0 | 2" });
+        assertEquals(9, grid.getRowCount());
     }
 
     private void assertCellTexts(int startRowIndex, int cellIndex,
