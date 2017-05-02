@@ -71,6 +71,10 @@ user-select: none;
 ----
 ====
 
+=== CSS Style Rules
+
+The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource`.
+
 [[advanced.dragndrop.drophandler]]
 == Drop Target
 
@@ -118,11 +122,15 @@ The __drag over criteria__ allows you determine whether the current drag source 
 
 The __drop criteria__ is similar to __drag over criteria__, but it is executed when the user has dropped the data by releasing the mouse button. The script gets the `drop` event as a parameter named `event`. Returning `false` will prevent the drop and no drop event is fired on the server side.
 
+=== CSS Style Rules
+
+When dragging data over a drop target, a style name is applied to indicate that the element accepts drops. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
+
 ////
 TODO Add an example of drag over criteria and drop criteria
 ////
 
-=== 
+===
 
 ////
 TODO add back when supported with new API ?
@@ -211,6 +219,10 @@ dragSource.addGridDragEndListener(event -> {
 
 The dragged rows can be accessed from both events using the `getDraggedItems()` method.
 
+==== Css Style Rules
+
+A drag source Grid's rows have the `v-grid-row-draggable` style name applied to indicate that the rows are draggable.
+
 === Grid as a Drop Target
 
 To make a Grid component's rows accept a drop event, apply the [classname]#GridDropTarget# extension to the component. When creating the extension, you need to specify where the transferred data can be dropped on.
@@ -252,6 +264,11 @@ dropTarget.addGridDropListener(event -> {
     });
 });
 ----
+
+==== CSS Style Rules
+
+When dragging data over a drop target Grid's row, depending on the drop mode and the mouse position relative to the row, a style name is applied to the row to indicate the drop location.
+`v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations.
 
 (((range="endofrange", startref="term.advanced.dragndrop")))
 
