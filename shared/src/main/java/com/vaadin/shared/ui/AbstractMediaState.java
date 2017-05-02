@@ -37,7 +37,7 @@ public class AbstractMediaState extends AbstractComponentState {
     public boolean muted;
 
     @NoLayout
-    public String preload;
+    public PreloadMode preload;
 
     @NoLayout
     public boolean loop;

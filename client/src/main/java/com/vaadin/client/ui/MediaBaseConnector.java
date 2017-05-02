@@ -24,6 +24,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
+import com.vaadin.shared.ui.PreloadMode;
 
 public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
@@ -92,9 +93,9 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
         getWidget().setAltText(altText);
     }
 
-    private void setPreload(final String preload) {
-        if (PRELOAD_VALUES.contains(preload)) {
-            getWidget().setPreload(preload);
+    private void setPreload(final PreloadMode preload) {
+        if (preload != null) {
+            getWidget().setPreload(preload.name().toLowerCase());
         }
     }
 

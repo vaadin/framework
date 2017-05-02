@@ -39,6 +39,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
+import com.vaadin.shared.ui.PreloadMode;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -206,15 +207,16 @@ public abstract class AbstractMedia extends AbstractComponent {
      * Mozilla Developer Network</a> for details.
      *
      * @param preload
+     *            preload mode
      */
-    public void setPreload(final String preload) {
+    public void setPreload(final PreloadMode preload) {
         getState().preload = preload;
     }
 
     /**
      * @return the configured media preload value
      */
-    public String getPreload() {
+    public PreloadMode getPreload() {
         return getState(false).preload;
     }
 
