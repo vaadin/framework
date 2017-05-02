@@ -27,6 +27,7 @@ import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ExpandEvent;
@@ -155,7 +156,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     }
 
     @Override
-    public DataProvider<T, ?> getDataProvider() {
+    public HierarchicalDataProvider<T, ?> getDataProvider() {
         return treeGrid.getDataProvider();
     }
 
