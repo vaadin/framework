@@ -17,6 +17,11 @@ the other location is a common way to move, copy, or associate objects. For
 example, most operating systems allow dragging and dropping files between
 folders or dragging a document on a program to open it. Framework version 8.1 adds support for https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API[HTML5 drag and drop] features. This makes it possible to set components as drag sources that user can drag and drop, or to set them as drop targets to drop things on.
 
+[NOTE]
+====
+Note that the HTML5 drag and drop feature is not supported by touch devices.
+====
+
 == Drag Source
 
 Any component can be made a drag source that has textual data that is transferred when it is dragged and dropped.
