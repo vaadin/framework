@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.provider.AbstractHierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.tests.components.treegrid.TreeGridBasicFeatures.HierarchicalTestBean;
+import com.vaadin.tests.data.bean.HierarchicalTestBean;
 
 public class LazyHierarchicalDataProvider
         extends AbstractHierarchicalDataProvider<HierarchicalTestBean, Void> {

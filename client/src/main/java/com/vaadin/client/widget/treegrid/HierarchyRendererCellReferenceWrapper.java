@@ -24,7 +24,7 @@ import com.vaadin.client.widget.grid.RowReference;
 /**
  * Wrapper for cell references. Used by HierarchyRenderer to get the correct
  * inner element to render.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
  */
@@ -37,7 +37,6 @@ public class HierarchyRendererCellReferenceWrapper
             Element element) {
         super(getRowReference(cell));
         set(getFlyweightCell(cell), cell.getColumnIndex(), cell.getColumn());
-
         this.element = element;
     }
 
@@ -47,12 +46,14 @@ public class HierarchyRendererCellReferenceWrapper
     }
 
     private native static RowReference<Object> getRowReference(
-            RendererCellReference cell)/*-{
-        return cell.@com.vaadin.client.widget.grid.CellReference::getRowReference();
+            RendererCellReference cell)
+    /*-{
+    return cell.@com.vaadin.client.widget.grid.CellReference::getRowReference()();
     }-*/;
 
     private native static FlyweightCell getFlyweightCell(
-            RendererCellReference cell)/*-{
-        return cell.@com.vaadin.client.widget.grid.RendererCellReference::cell;
+            RendererCellReference cell)
+    /*-{
+    return cell.@com.vaadin.client.widget.grid.RendererCellReference::cell;
     }-*/;
 }

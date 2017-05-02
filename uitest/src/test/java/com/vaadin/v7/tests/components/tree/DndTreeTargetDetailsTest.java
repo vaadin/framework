@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2013 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,25 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.elements;
+package com.vaadin.v7.tests.components.tree;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.testbench.elements.TreeElement;
+import com.vaadin.testbench.By;
+import com.vaadin.tests.components.table.DndTableTargetDetailsTest;
 
-public class TreeElementGetValueTest extends MultiBrowserTest {
-    @Before
-    public void init() {
-        openTestURL();
+/**
+ * Test for mouse details in AbstractSelectTargetDetails class when DnD target
+ * is a tree.
+ *
+ * @author Vaadin Ltd
+ */
+public class DndTreeTargetDetailsTest extends DndTableTargetDetailsTest {
+
+    @Override
+    protected WebElement getTarget() {
+        return findElement(By.className("target"));
     }
 
-    @Test
-    public void testGetValue() {
-        TreeElement tree = $(TreeElement.class).get(0);
-        Assert.assertEquals(tree.getValue(),
-                TreeElementGetValue.TEST_VALUE_LVL2);
-    }
 }
