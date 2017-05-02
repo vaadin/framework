@@ -288,7 +288,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             String itemKey = keys.getString(i);
             if (!mapper.isKeyStored(itemKey)
                     && !rowKeysPendingExpand.contains(itemKey)) {
-                getActiveDataHandler().dropActiveData(itemKey);
+                // FIXME: cache invalidated incorrectly, active keys being
+                // dropped prematurely
+                // getActiveDataHandler().dropActiveData(itemKey);
             }
         }
     }
