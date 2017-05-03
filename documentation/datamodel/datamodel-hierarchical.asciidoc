@@ -9,11 +9,11 @@ layout: page
 
 IMPORTANT: The [interfacename]#HierarchicalDataProvider# is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha1.
 
-The [classname]#TreeGrid# and the [classname]#Tree# components allows you to show data with hierarchical relationships between items.
+The [classname]#Tree# and the [classname]#TreeGrid# components allows you to show data with hierarchical relationships between items.
 That data can be populated by on-demand from a back end by implementing the [interfacename]#HierarchicalDataProvider# interface. If you have the data available in-memory on the server,
 you use the collection style API of [classname]#HierarchyData# and then pass it to a [classname]#InMemoryHierarchicalDataProvider#. This chapter introduces the hierarchical data providers and how they work.
 For using them with the components you should see <<dummy/../../../framework/components/components-tree.asciidoc#components.tree,"Tree">>
-and <<dummy/../../../framework/components/components-treegrid.asciidoc#components.treegrid,"TreeGrid">> documentation respectively.
+and <<dummy/../../../framework/components/components-treegrid.asciidoc#components.treegrid,"TreeGrid">> documentation.
 
 == In-memory Hierarchical Data
 
