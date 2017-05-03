@@ -1,6 +1,6 @@
 ---
 title: Composition with Composite and CustomComponent
-order: 32
+order: 33
 layout: page
 ---
 
