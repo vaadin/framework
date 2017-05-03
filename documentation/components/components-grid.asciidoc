@@ -448,7 +448,7 @@ Grid<Person> grid = new Grid<>(people);
 // Render a button that deletes the data row (item)
 grid.addColumn(person -> "Delete",
       new ButtonRenderer(clickEvent -> {
-          people.remove(clickEvent.getValue());
+          people.remove(clickEvent.getItem());
           grid.setItems(people);
     }));
 ----

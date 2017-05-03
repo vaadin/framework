@@ -28,7 +28,7 @@ HierarchyData<Project> data = new HierarchyData<>();
 data.addItems(null, projects);
 
 // add children for the root level items
-projects.forEach(project -> data.addItems(project, project.getChildren());
+projects.forEach(project -> data.addItems(project, project.getChildren()));
 
 // construct the data provider for the hierarchical data we've built
 InMemoryHierarchicalDataProvider<Project> dataProvider = new InMemoryHierarchicalDataProvider<>(data);
@@ -53,7 +53,7 @@ dataProvider.refreshAll();
 
 === Sorting and Filtering
 
-For [classname]#InMemoryHierarchicalDataProvider#, both the sorting and filtering API is the same as in [classname]ListDataProvider#. Sorting and filtering are applied separately for each hierarchy level, meaning e.g. that for a node that has not passed the filter there are no children shown.
+For [classname]#InMemoryHierarchicalDataProvider#, both the sorting and filtering API is the same as in [classname]#ListDataProvider#. Sorting and filtering are applied separately for each hierarchy level, meaning e.g. that for a node that has not passed the filter there are no children shown.
 
 [source, java]
 ----
