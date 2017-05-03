@@ -74,6 +74,7 @@ user-select: none;
 === CSS Style Rules
 
 The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource` when the drag source extension is applied to it.
+Additionally, the elements also have the `v-draggable` style name that is independent of the component's primary style.
 
 [[advanced.dragndrop.drophandler]]
 == Drop Target
@@ -221,7 +222,7 @@ The dragged rows can be accessed from both events using the `getDraggedItems()` 
 
 ==== CSS Style Rules
 
-A drag source Grid's rows have the `v-grid-row-dragsource` style name applied to indicate that the rows are draggable.
+A drag source Grid's rows have the `v-grid-row-dragsource` and the `v-draggable` style names applied to indicate that the rows are draggable.
 
 === Grid as a Drop Target
 
