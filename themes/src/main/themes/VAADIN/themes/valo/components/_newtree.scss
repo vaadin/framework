@@ -6,16 +6,20 @@ $v-newtree-border-radius: 3px;
 
   @include valo-treegrid($primary-stylename);
 
+  .#{$primary-stylename} {
+    background-color: transparent;
+  }
+
   .#{$primary-stylename}-row > td {
     background-color: transparent;
     border: none;
   }
-  
+
   .#{$primary-stylename}-tablewrapper {
     background-color: transparent;
     border: none;
   }
-  
+
   .#{$primary-stylename}-row-selected  > .#{$primary-stylename}-cell {
     background-color: transparent;
     background-image: none;
@@ -23,23 +27,23 @@ $v-newtree-border-radius: 3px;
     text-shadow: none;
     border: none;
   }
-  
+
   .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-row-focused:before {
     display: none;
   }
-  
+
   .#{$primary-stylename}-cell-content {
     border: $v-grid-cell-focused-border;
     border-color: transparent;
     border-radius: $v-newtree-border-radius;
     padding: $v-grid-cell-padding;
   }
-  
-  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-cell-focused 
+
+  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-cell-focused
     > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
     border: $v-grid-cell-focused-border;
   }
-  
+
   // Selected
   .#{$primary-stylename}-row-selected {
     $grid-sel-bg: $v-grid-row-selected-background-color;
@@ -56,4 +60,3 @@ $v-newtree-border-radius: 3px;
     }
   }
 }
-
