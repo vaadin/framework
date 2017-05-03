@@ -73,7 +73,7 @@ user-select: none;
 
 === CSS Style Rules
 
-The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource`.
+The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource` when the drag source extension is applied to it.
 
 [[advanced.dragndrop.drophandler]]
 == Drop Target
@@ -124,7 +124,7 @@ The __drop criteria__ is similar to __drag over criteria__, but it is executed w
 
 === CSS Style Rules
 
-When dragging data over a drop target, a style name is applied to indicate that the element accepts drops. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
+When dragging data over a drop target and the drag over criteria passes, a style name is applied to indicate that the element accepts drops. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
 
 ////
 TODO Add an example of drag over criteria and drop criteria
@@ -219,9 +219,9 @@ dragSource.addGridDragEndListener(event -> {
 
 The dragged rows can be accessed from both events using the `getDraggedItems()` method.
 
-==== Css Style Rules
+==== CSS Style Rules
 
-A drag source Grid's rows have the `v-grid-row-draggable` style name applied to indicate that the rows are draggable.
+A drag source Grid's rows have the `v-grid-row-dragsource` style name applied to indicate that the rows are draggable.
 
 === Grid as a Drop Target
 
