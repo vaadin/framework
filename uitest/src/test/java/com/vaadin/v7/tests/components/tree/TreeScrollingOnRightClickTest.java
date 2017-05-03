@@ -25,7 +25,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.components.tree.TreeScrollingOnRightClick;
 
 /**
  *

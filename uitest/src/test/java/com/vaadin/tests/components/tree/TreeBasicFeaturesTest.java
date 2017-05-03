@@ -5,7 +5,6 @@ import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -55,8 +54,6 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
-    // TODO: Re-enable once cache issue is fixed.
-    @Ignore("Recent change to cache invalidation broke resource clean up.")
     public void tree_expand_all_with_icons() throws IOException {
         selectMenuPath("Component", "Icons", "By Depth");
         Assert.assertTrue("Icon not present", $(TreeElement.class).first()
