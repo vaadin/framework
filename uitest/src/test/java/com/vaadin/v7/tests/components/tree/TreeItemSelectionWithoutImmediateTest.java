@@ -24,7 +24,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.components.tree.TreeItemSelectionWithoutImmediate;
 
 public class TreeItemSelectionWithoutImmediateTest extends MultiBrowserTest {
 
