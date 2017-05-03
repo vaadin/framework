@@ -135,7 +135,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         treeGrid.setPrimaryStyleName("v-newtree");
 
         setWidth("100%");
-        setHeightUndefined();
+        treeGrid.setHeightUndefined();
         treeGrid.setHeightMode(HeightMode.UNDEFINED);
 
         treeGrid.addExpandListener(e -> fireExpandEvent(e.getExpandedItem(),
@@ -221,28 +221,53 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     }
 
     /**
-     * Expands the given item.
+     * Expands the given items.
      * <p>
-     * If the item is currently expanded, does nothing. If the item does not
-     * have any children, does nothing.
+     * If an item is currently expanded, does nothing. If an item does not have
+     * any children, does nothing.
      *
-     * @param item
-     *            the item to expand
+     * @param items
+     *            the items to expand
      */
-    public void expand(T item) {
-        treeGrid.expand(item);
+    public void expand(T... items) {
+        treeGrid.expand(items);
     }
 
     /**
-     * Collapses the given item.
+     * Expands the given items.
      * <p>
-     * If the item is already collapsed, does nothing.
+     * If an item is currently expanded, does nothing. If an item does not have
+     * any children, does nothing.
      *
-     * @param item
-     *            the item to collapse
+     * @param items
+     *            the items to expand
      */
-    public void collapse(T item) {
-        treeGrid.collapse(item);
+    public void expand(Collection<T> items) {
+        treeGrid.expand(items);
+    }
+
+    /**
+     * Collapse the given items.
+     * <p>
+     * For items that are already collapsed, does nothing.
+     *
+     * @param items
+     *            the collection of items to collapse
+     */
+    public void collapse(T... items) {
+        treeGrid.collapse(items);
+    }
+
+    /**
+     * Collapse the given items.
+     * <p>
+     * For items that are already collapsed, does nothing.
+     *
+     * @param items
+     *            the collection of items to collapse
+     */
+    public void collapse(Collection<T> items) {
+        treeGrid.collapse(items);
     }
 
     /**
@@ -363,4 +388,50 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         treeGrid.getDataCommunicator().reset();
     }
 
+    /**
+     * @deprecated This component's height is always set to be undefined.
+     *             Calling this method will have no effect.
+     */
+    @Override
+    @Deprecated
+    public void setHeight(String height) {
+    }
+
+    /**
+     * @deprecated This component's height is always set to be undefined.
+     *             Calling this method will have no effect.
+     */
+    @Override
+    @Deprecated
+    public void setHeight(float height, Unit unit) {
+    }
+
+    /**
+     * @deprecated This component's height is always set to be undefined.
+     *             Calling this method will have no effect.
+     */
+    @Override
+    @Deprecated
+    public void setHeightUndefined() {
+    }
+
+    @Override
+    public void setCaption(String caption) {
+        treeGrid.setCaption(caption);
+    }
+
+    @Override
+    public String getCaption() {
+        return treeGrid.getCaption();
+    }
+
+    @Override
+    public void setIcon(Resource icon) {
+        treeGrid.setIcon(icon);
+    }
+
+    @Override
+    public Resource getIcon() {
+        return treeGrid.getIcon();
+    }
 }
