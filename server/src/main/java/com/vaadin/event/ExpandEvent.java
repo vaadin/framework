@@ -78,6 +78,7 @@ public class ExpandEvent<T> extends Component.Event {
      *
      * @param <T>
      *            the expanded item's type
+     * @since 8.1
      */
     @FunctionalInterface
     public interface ExpandListener<T> extends Serializable {

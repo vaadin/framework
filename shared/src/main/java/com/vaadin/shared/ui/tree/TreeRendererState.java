@@ -17,6 +17,12 @@ package com.vaadin.shared.ui.tree;
 
 import com.vaadin.shared.ui.grid.renderers.AbstractRendererState;
 
+/**
+ * Shared state for Tree renderer.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
+ */
 public class TreeRendererState extends AbstractRendererState {
 
 }

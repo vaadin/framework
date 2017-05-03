@@ -249,6 +249,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
          * Gets the URI resolver to use for bootstrap resources.
          *
          * @return the URI resolver
+         * @since 8.1
          */
         public BootstrapUriResolver getUriResolver() {
             if (uriResolver == null) {
@@ -261,6 +262,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * The URI resolver used in the bootstrap process.
+     * 
+     * @since 8.1
      */
     protected static class BootstrapUriResolver extends VaadinUriResolver {
         private final BootstrapContext context;
@@ -352,6 +355,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      *            the session of the user to resolve the protocol for
      * @return the URL that frontend:// resolves to, possibly using another
      *         internal protocol
+     * @since 8.1
      */
     public static String resolveFrontendUrl(VaadinSession session) {
         DeploymentConfiguration configuration = session.getConfiguration();

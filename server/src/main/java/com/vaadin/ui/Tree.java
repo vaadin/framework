@@ -57,6 +57,8 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     /**
      * String renderer that handles icon resources and stores their identifiers
      * into data objects.
+     * 
+     * @since 8.1
      */
     public final class TreeRenderer extends AbstractRenderer<T, String>
             implements DataGenerator<T> {

@@ -79,6 +79,7 @@ public class CollapseEvent<T> extends Component.Event {
      *
      * @param <T>
      *            the collapsed item's type
+     * @since 8.1
      */
     @FunctionalInterface
     public interface CollapseListener<T> extends Serializable {

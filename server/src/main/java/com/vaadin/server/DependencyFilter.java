@@ -27,7 +27,7 @@ import com.vaadin.ui.Dependency;
  * Filter for dependencies loaded using {@link StyleSheet @StyleSheet},
  * {@link JavaScript @JavaScript} and {@link HtmlImport @HtmlImport}.
  *
- * @since
+ * @since 8.1
  */
 public interface DependencyFilter extends Serializable {
 
@@ -51,7 +51,7 @@ public interface DependencyFilter extends Serializable {
     /**
      * Provides context information for the dependency filter operation.
      *
-     * @since
+     * @since 8.1
      */
     public static class FilterContext implements Serializable {
 
