@@ -26,6 +26,12 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.Composite;
 
+/**
+ * Connector for the Composite component.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
+ */
 @Connect(value = Composite.class, loadStyle = LoadStyle.EAGER)
 public class CompositeConnector extends AbstractHasComponentsConnector {
 

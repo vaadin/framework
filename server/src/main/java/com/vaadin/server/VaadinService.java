@@ -1446,7 +1446,7 @@ public abstract class VaadinService implements Serializable {
      * filters, which is undefined. If you need a specific order, you can
      * override this method and alter the order.
      *
-     * @since
+     * @since 8.1
      * @return the list of dependency filters to use for filtering resources,
      *         not null
      * @throws ServiceException
@@ -1469,7 +1469,7 @@ public abstract class VaadinService implements Serializable {
      *
      * @see #createDependencyFilters()
      *
-     * @since
+     * @since 8.1
      * @return the dependency filters to pass resources dependencies through
      *         before loading
      */

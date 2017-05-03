@@ -181,7 +181,7 @@ public class Dependency implements Serializable {
      * defined filters and returns the filtered collection of dependencies to
      * load.
      *
-     * @since
+     * @since 8.1
      * @param connectorTypes
      *            the collection of connector classes to scan
      * @param manager

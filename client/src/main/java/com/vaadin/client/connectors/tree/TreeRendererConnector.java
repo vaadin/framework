@@ -28,6 +28,12 @@ import com.vaadin.ui.Tree.TreeRenderer;
 
 import elemental.json.JsonObject;
 
+/**
+ * Connector for TreeRenderer
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
+ */
 @Connect(TreeRenderer.class)
 public class TreeRendererConnector extends AbstractRendererConnector<String> {
 
