@@ -46,6 +46,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      */
     protected static final String STYLE_SUFFIX_DRAGSOURCE = "-dragsource";
 
+    private static final String STYLE_NAME_DRAGGABLE = "v-draggable";
+
     // Create event listeners
     private final EventListener dragStartListener = this::onDragStart;
     private final EventListener dragEndListener = this::onDragEnd;
@@ -73,6 +75,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         element.setDraggable(Element.DRAGGABLE_TRUE);
         element.addClassName(
                 getStylePrimaryName(element) + STYLE_SUFFIX_DRAGSOURCE);
+        element.addClassName(STYLE_NAME_DRAGGABLE);
 
     }
 
@@ -86,6 +89,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         element.setDraggable(Element.DRAGGABLE_FALSE);
         element.removeClassName(
                 getStylePrimaryName(element) + STYLE_SUFFIX_DRAGSOURCE);
+        element.removeClassName(STYLE_NAME_DRAGGABLE);
     }
 
     /**
