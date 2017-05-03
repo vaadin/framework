@@ -35,8 +35,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
  * @author Vaadin Ltd.
  * @since 8.1
  */
-// TODO: Switch to com.vaadin.ui.Tree once inheritance finding is fixed
-@ServerClass("com.vaadin.ui.Composite")
+@ServerClass("com.vaadin.ui.Tree")
 public class TreeElement extends AbstractComponentElement {
 
     /**
