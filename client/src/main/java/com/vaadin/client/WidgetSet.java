@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
-import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.client.metadata.BundleLoadCallback;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
@@ -80,10 +79,7 @@ public class WidgetSet {
                  */
                 ServerConnector connector = (ServerConnector) TypeData
                         .getType(classType).createInstance();
-                if (connector instanceof HasJavaScriptConnectorHelper) {
-                    ((HasJavaScriptConnectorHelper) connector)
-                            .getJavascriptConnectorHelper().setTag(tag);
-                }
+                connector.setTag(tag);
                 return connector;
             }
         } catch (NoDataException e) {

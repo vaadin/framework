@@ -61,6 +61,7 @@ public abstract class AbstractConnector
 
     private ApplicationConnection connection;
     private String id;
+    private int tag;
 
     private HandlerManager handlerManager;
     private FastStringMap<HandlerManager> statePropertyHandlerManagers;
@@ -522,5 +523,15 @@ public abstract class AbstractConnector
             return true;
         }
 
+    }
+
+    @Override
+    public int getTag() {
+        return tag;
+    }
+
+    @Override
+    public void setTag(int tag) {
+        this.tag = tag;
     }
 }

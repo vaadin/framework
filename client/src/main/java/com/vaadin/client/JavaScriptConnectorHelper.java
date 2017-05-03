@@ -50,7 +50,6 @@ public class JavaScriptConnectorHelper {
     private final Map<Element, Map<JavaScriptObject, ElementResizeListener>> resizeListeners = new HashMap<>();
 
     private JavaScriptObject connectorWrapper;
-    private int tag;
 
     private String initFunctionName;
     private String tagName;
@@ -407,10 +406,6 @@ public class JavaScriptConnectorHelper {
         return new Object[] { Util.json2jso(parametersJson) };
     }
 
-    public void setTag(int tag) {
-        this.tag = tag;
-    }
-
     public void invokeJsRpc(MethodInvocation invocation,
             JsonArray parametersJson) {
         String iface = invocation.getInterfaceName();
@@ -496,7 +491,7 @@ public class JavaScriptConnectorHelper {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> initFunctionNames = new ArrayList<String>();
-        Integer tag = Integer.valueOf(this.tag);
+        Integer tag = Integer.valueOf(connector.getTag());
         while (tag != null) {
             String initFunctionName = conf.getServerSideClassNameForTag(tag);
             initFunctionName = initFunctionName.replaceAll("\\.", "_");
