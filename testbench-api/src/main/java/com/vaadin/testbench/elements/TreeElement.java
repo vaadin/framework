@@ -17,6 +17,7 @@ package com.vaadin.testbench.elements;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -109,25 +110,40 @@ public class TreeElement extends AbstractComponentElement {
     }
 
     /**
-     * Gets all items currently shown in this tree.
+     * Gets all items currently shown in this tree. The returned element objects
+     * are the rendered contents for each item.
      *
-     * @return list of all items
+     * @return list of content elements for all items
      */
     public List<TestBenchElement> getAllItems() {
-        return TestBenchElement.wrapElements(
-                asTreeGrid().getBody().findElements(By.tagName("tr")),
-                getCommandExecutor());
+        return asTreeGrid().getBody().findElements(By.tagName("tr")).stream()
+                .map(this::findCellContentFromRow).collect(Collectors.toList());
     }
 
     /**
-     * Gets an item at given index.
+     * Gets an item at given index. The returned element object is the rendered
+     * content in the given index.
      *
      * @param index
      *            0-based row index
-     * @return item at given index
+     * @return content element for item at given index
      */
     public TestBenchElement getItem(int index) {
-        return asTreeGrid().getCell(index, 0);
+        return findCellContentFromRow(asTreeGrid().getRow(index));
+    }
+
+    /**
+     * Finds the rendered cell content from given row element. This expects the
+     * row to contain only a single column rendered with TreeRenderer.
+     *
+     * @param rowElement
+     *            the row element
+     * @return cell content element
+     */
+    protected TestBenchElement findCellContentFromRow(WebElement rowElement) {
+        return TestBenchElement.wrapElement(
+                rowElement.findElement(By.className("gwt-HTML")),
+                getCommandExecutor());
     }
 
     /**
