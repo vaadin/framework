@@ -44,7 +44,12 @@ import elemental.events.EventTarget;
 @Connect(DragSourceExtension.class)
 public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
-    private static final String CLASS_DRAGGABLE = "v-draggable";
+    /**
+     * Style suffix for indicating that the element is a drag source.
+     */
+    protected static final String STYLE_SUFFIX_DRAGSOURCE = "-dragsource";
+
+    private static final String STYLE_NAME_DRAGGABLE = "v-draggable";
 
     // Create event listeners
     private final EventListener dragStartListener = this::onDragStart;
@@ -76,7 +81,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      */
     protected void setDraggable(Element element) {
         element.setDraggable(Element.DRAGGABLE_TRUE);
-        element.addClassName(CLASS_DRAGGABLE);
+        element.addClassName(
+                getStylePrimaryName(element) + STYLE_SUFFIX_DRAGSOURCE);
+        element.addClassName(STYLE_NAME_DRAGGABLE);
+
     }
 
     /**
@@ -87,7 +95,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      */
     protected void removeDraggable(Element element) {
         element.setDraggable(Element.DRAGGABLE_FALSE);
-        element.removeClassName(CLASS_DRAGGABLE);
+        element.removeClassName(
+                getStylePrimaryName(element) + STYLE_SUFFIX_DRAGSOURCE);
+        element.removeClassName(STYLE_NAME_DRAGGABLE);
     }
 
     /**
@@ -271,4 +281,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     public DragSourceState getState() {
         return (DragSourceState) super.getState();
     }
+
+    private native boolean getStylePrimaryName(Element element)/*-{
+        return @com.google.gwt.user.client.ui.UIObject::getStylePrimaryName(Lcom/google/gwt/dom/client/Element;)(element);
+    }-*/;
 }
