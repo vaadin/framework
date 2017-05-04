@@ -1,5 +1,5 @@
 ---
-title: Portlet UI
+title: OSGi Portlets on Liferay 7
 order: 3
 layout: page
 ---
