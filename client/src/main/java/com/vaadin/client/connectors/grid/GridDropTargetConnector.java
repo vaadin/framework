@@ -82,7 +82,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     @Override
     protected void sendDropEventToServer(String dataTransferText,
-            Event dropEvent) {
+            String dropEffect, Event dropEvent) {
 
         String rowKey = null;
         DropLocation dropLocation = null;
@@ -96,8 +96,8 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
                     (NativeEvent) dropEvent);
         }
 
-        getRpcProxy(GridDropTargetRpc.class).drop(dataTransferText, rowKey,
-                dropLocation);
+        getRpcProxy(GridDropTargetRpc.class).drop(dataTransferText, dropEffect,
+                rowKey, dropLocation);
     }
 
     private JsonObject getRowData(TableRowElement row) {
@@ -147,7 +147,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void setTargetIndicator(Event event) {
+    protected void setTargetClassIndicator(Event event) {
         getTargetRow(((Element) event.getTarget())).ifPresent(target -> {
 
             // Get required class name
@@ -184,7 +184,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void removeTargetIndicator(Event event) {
+    protected void removeTargetClassIndicator(Event event) {
 
         // Remove all possible style names
         getTargetRow((Element) event.getTarget()).ifPresent(e -> {

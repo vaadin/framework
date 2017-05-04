@@ -29,18 +29,18 @@ import com.vaadin.ui.AbstractComponent;
  * and drop.
  *
  * @param <T>
- *         Type of the component to be extended.
+ *            Type of the component to be extended.
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class DropTargetExtension<T extends AbstractComponent> extends
-        AbstractExtension {
+public class DropTargetExtension<T extends AbstractComponent>
+        extends AbstractExtension {
 
     /**
      * Extends {@code target} component and makes it a drop target.
      *
      * @param target
-     *         Component to be extended.
+     *            Component to be extended.
      */
     public DropTargetExtension(T target) {
 
@@ -53,11 +53,12 @@ public class DropTargetExtension<T extends AbstractComponent> extends
      * Register server RPC.
      *
      * @param target
-     *         Extended component.
+     *            Extended component.
      */
     protected void registerDropTargetRpc(T target) {
-        registerRpc((DropTargetRpc) dataTransferText -> {
+        registerRpc((DropTargetRpc) (dataTransferText, dropEffect) -> {
             DropEvent<T> event = new DropEvent<>(target, dataTransferText,
+                    DropEffect.valueOf(dropEffect.toUpperCase()),
                     getUI().getActiveDragSource());
 
             fireEvent(event);
@@ -65,19 +66,28 @@ public class DropTargetExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Sets the drop effect for the current drop target. Used for the client
-     * side {@code DataTransfer.dropEffect} parameter.
+     * Sets the drop effect for the current drop target. This is set to the
+     * dropEffect on {@code dragenter} and {@code dragover} events.
+     * <p>
+     * <em>NOTE: If the drop effect that doesn't match the dropEffect /
+     * effectAllowed of the drag source, it DOES NOT prevent drop on IE and
+     * Safari! For FireFox and Chrome the drop is prevented if there they don't
+     * match.</em>
      * <p>
      * Default value is browser dependent and can depend on e.g. modifier keys.
+     * <p>
+     * From Moz Foundation: "You can modify the dropEffect property during the
+     * dragenter or dragover events, if for example, a particular drop target
+     * only supports certain operations. You can modify the dropEffect property
+     * to override the user effect, and enforce a specific drop operation to
+     * occur. Note that this effect must be one listed within the effectAllowed
+     * property. Otherwise, it will be set to an alternate value that is
+     * allowed."
      *
      * @param dropEffect
-     *         The drop effect to be set. Cannot be {@code null}.
+     *            the drop effect to be set or {@code null} to not modify
      */
     public void setDropEffect(DropEffect dropEffect) {
-        if (dropEffect == null) {
-            throw new IllegalArgumentException("Drop effect cannot be null.");
-        }
-
         if (!Objects.equals(getState(false).dropEffect, dropEffect)) {
             getState().dropEffect = dropEffect;
         }
@@ -86,78 +96,37 @@ public class DropTargetExtension<T extends AbstractComponent> extends
     /**
      * Returns the drop effect for the current drop target.
      *
-     * @return The drop effect of this drop target.
+     * @return The drop effect of this drop target or {@code null} if none set
+     * @see #setDropEffect(DropEffect)
      */
     public DropEffect getDropEffect() {
         return getState(false).dropEffect;
     }
 
     /**
-     * Sets criteria to allow dragover event on the current drop target. The
-     * script executes when dragover event happens and stops the event in case
-     * the script returns {@code false}.
+     * Sets criteria to allow drop on this drop target. The script executes when
+     * something is dragged on top of the target, and the drop is not allowed in
+     * case the script returns {@code false}.
      * <p>
      * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
      * include untrusted sources such as user input. Always keep in mind that
      * the script is executed on the client as is.
      * <p>
      * Example:
+     *
      * <pre>
-     *     target.setDropCriteria(
-     *         // If dragged source contains a URL, allow it to be dragged over
-     *         "if (event.dataTransfer.types.includes('text/uri-list')) {" +
-     *         "    return true;" +
-     *         "}" +
-     *
-     *         // Otherwise cancel the event"
-     *         "return false;");
-     * </pre>
-     *
-     * @param criteriaScript
-     *         JavaScript to be executed when dragover event happens or {@code
-     *         null} to clear.
-     */
-    public void setDragOverCriteria(String criteriaScript) {
-        if (!Objects.equals(getState(false).dragOverCriteria, criteriaScript)) {
-            getState().dragOverCriteria = criteriaScript;
-        }
-    }
-
-    /**
-     * Gets the criteria script that executes when dragover event happens. If
-     * the script returns {@code false}, the dragover event will be stopped.
-     *
-     * @return JavaScript that executes when dragover event happens.
-     * @see #setDragOverCriteria(String)
-     */
-    public String getDragOverCriteria() {
-        return getState(false).dragOverCriteria;
-    }
-
-    /**
-     * Sets criteria to allow drop event on the current drop target. The script
-     * executes when drop event happens and stops the event in case the script
-     * returns {@code false}.
-     * <p>
-     * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
-     * include untrusted sources such as user input. Always keep in mind that
-     * the script is executed on the client as is.
-     * <p>
-     * Example:
-     * <pre>
-     *     target.setDropCriteria(
+     * target.setDropCriteria(
      *         // If dragged source contains a URL, allow it to be dropped
-     *         "if (event.dataTransfer.types.includes('text/uri-list')) {" +
-     *         "    return true;" +
-     *         "}" +
+     *         "if (event.dataTransfer.types.includes('text/uri-list')) {"
+     *                 + "    return true;" + "}" +
      *
-     *         // Otherwise cancel the event"
-     *         "return false;");
+     *                 // Otherwise cancel the event"
+     *                 "return false;");
      * </pre>
      *
      * @param criteriaScript
-     *         JavaScript to be executed when drop event happens or {@code null}
-     *         to clear.
+     *            JavaScript to be executed when drop event happens or
+     *            {@code null} to clear.
      */
     public void setDropCriteria(String criteriaScript) {
         if (!Objects.equals(getState(false).dropCriteria, criteriaScript)) {
@@ -166,8 +135,9 @@ public class DropTargetExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Gets the criteria script that executes when drop event happens. If the
-     * script returns {@code false}, the drop event will be stopped.
+     * Gets the criteria script that determines whether a drop is allowed. If
+     * the script returns {@code false}, then it is determined the drop is not
+     * allowed.
      *
      * @return JavaScript that executes when drop event happens.
      * @see #setDropCriteria(String)
@@ -177,12 +147,12 @@ public class DropTargetExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Attaches drop listener for the current drop target. {@link
-     * DropListener#drop(DropEvent)} is called when drop event happens on the
-     * client side.
+     * Attaches drop listener for the current drop target.
+     * {@link DropListener#drop(DropEvent)} is called when drop event happens on
+     * the client side.
      *
      * @param listener
-     *         Listener to handle drop event.
+     *            Listener to handle drop event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDropListener(DropListener<T> listener) {

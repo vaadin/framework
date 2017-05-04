@@ -25,7 +25,7 @@ import com.vaadin.ui.Component;
  * Server side drop event. Fired when an HTML5 drop happens.
  *
  * @param <T>
- *         Type of the drop target component.
+ *            Type of the drop target component.
  * @author Vaadin Ltd
  * @see DropTargetExtension#addDropListener(DropListener)
  * @since 8.1
@@ -34,24 +34,28 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final String dataTransferText;
     private final DragSourceExtension<? extends AbstractComponent> dragSourceExtension;
     private final AbstractComponent dragSource;
+    private final DropEffect dropEffect;
 
     /**
      * Creates a server side drop event.
      *
      * @param target
-     *         Component that received the drop.
+     *            Component that received the drop.
      * @param dataTransferText
-     *         Data of type {@code "text"} from the {@code DataTransfer}
-     *         object.
+     *            Data of type {@code "text"} from the {@code DataTransfer}
+     *            object.
+     * @param dropEffect
+     *            the desired drop effect
      * @param dragSourceExtension
-     *         Drag source extension of the component that initiated the drop
-     *         event.
+     *            Drag source extension of the component that initiated the drop
+     *            event.
      */
-    public DropEvent(T target, String dataTransferText,
+    public DropEvent(T target, String dataTransferText, DropEffect dropEffect,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension) {
         super(target);
 
         this.dataTransferText = dataTransferText;
+        this.dropEffect = dropEffect;
 
         this.dragSourceExtension = dragSourceExtension;
         this.dragSource = Optional.ofNullable(dragSourceExtension)
@@ -70,9 +74,21 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Returns the drag source component if the drag originated from a
-     * component in the same UI as the drop target component, or an empty
-     * optional.
+     * Get the desired dropEffect for the drop event.
+     * <p>
+     * <em>NOTE: Currently you cannot trust this to work on all browsers! For
+     * Chrome it is never set and always returns {@link DropEffect#NONE} even
+     * though the drop succeeded!</em>
+     *
+     * @return the drop effect
+     */
+    public DropEffect getDropEffect() {
+        return dropEffect;
+    }
+
+    /**
+     * Returns the drag source component if the drag originated from a component
+     * in the same UI as the drop target component, or an empty optional.
      *
      * @return Drag source component or an empty optional.
      */
@@ -81,9 +97,9 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Returns the extension of the drag source component if the drag
-     * originated from a component in the same UI as the drop target component,
-     * or an empty optional.
+     * Returns the extension of the drag source component if the drag originated
+     * from a component in the same UI as the drop target component, or an empty
+     * optional.
      *
      * @return Drag source extension or an empty optional
      */
@@ -97,7 +113,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * drag source and drop target when they are in the same UI.
      *
      * @return Optional server side drag data if set and the drag source and the
-     * drop target are in the same UI, otherwise empty {@code Optional}.
+     *         drop target are in the same UI, otherwise empty {@code Optional}.
      * @see DragSourceExtension#setDragData(Object)
      */
     public Optional<Object> getDragData() {
