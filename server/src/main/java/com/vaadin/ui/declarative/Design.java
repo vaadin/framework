@@ -39,9 +39,9 @@ import com.vaadin.annotations.DesignRoot;
 import com.vaadin.server.VaadinServiceClassLoaderUtil;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentRootSetter;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.InternalComponentManipulator;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 
@@ -490,6 +490,8 @@ public class Design implements Serializable {
             ComponentCreationListener creationListener = (
                     ComponentCreatedEvent event) -> {
                 binder.bindField(event.getComponent(), event.getLocalId());
+                InternalComponentManipulator.setLocalId(event.getComponent(),
+                        event.getLocalId());
             };
             designContext.addComponentCreationListener(creationListener);
 
@@ -497,7 +499,8 @@ public class Design implements Serializable {
             if (componentRoot instanceof CustomComponent
                     || componentRoot instanceof Composite) {
                 Component rootComponent = designContext.readDesign(element);
-                ComponentRootSetter.setRoot(componentRoot, rootComponent);
+                InternalComponentManipulator.setRoot(componentRoot,
+                        rootComponent);
             } else {
                 designContext.readDesign(element, componentRoot);
             }

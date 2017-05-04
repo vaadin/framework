@@ -57,6 +57,10 @@ public interface View extends Serializable {
      * @return the component to show, by default the view instance itself
      */
     public default Component getViewComponent() {
+        if (!(this instanceof Component)) {
+            throw new IllegalStateException(
+                    "View is not a Component. Override getViewComponent() to return the root view component");
+        }
         return (Component) this;
     }
 }

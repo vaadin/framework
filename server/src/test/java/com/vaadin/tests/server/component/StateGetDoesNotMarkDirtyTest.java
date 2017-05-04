@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentRootSetter;
+import com.vaadin.ui.InternalComponentManipulator;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Label;
@@ -129,7 +129,7 @@ public class StateGetDoesNotMarkDirtyTest {
             }
             if (component.getClass().equals(Composite.class)) {
                 // Plain Composite needs a root.
-                ComponentRootSetter.setRoot(component, new Label());
+                InternalComponentManipulator.setRoot(component, new Label());
             }
             emulateAttach(component);
             return component;

@@ -23,9 +23,9 @@ import java.io.Serializable;
  * @since 8.1
  * @author Vaadin Ltd
  */
-public class ComponentRootSetter implements Serializable {
+public class InternalComponentManipulator implements Serializable {
 
-    private ComponentRootSetter() {
+    private InternalComponentManipulator() {
         // Util methods only
     }
 
@@ -51,4 +51,7 @@ public class ComponentRootSetter implements Serializable {
         }
     }
 
+    public static void setLocalId(Component component, String localId) {
+        ((AbstractComponent) component).getState()._id = localId;
+    }
 }
