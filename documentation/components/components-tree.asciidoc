@@ -164,21 +164,19 @@ personTree.setItemCollapseAllowedProvider(person ->
 The user can navigate through rows with kbd:[Up] and kbd:[Down], collapse rows with kbd:[Left],
 and expand them with kbd:[Right].
 
-////
-todo styling documentation
 [[components.tree.css]]
 == CSS Style Rules
 
 [source, css]
 ----
-.v-tree {}
-  .v-tree-node {}            /* A node (item)           */
-    .v-tree-node-caption {}  /* Caption of the node     */
-    .v-tree-node-children {} /* Contains child nodes    */
-  .v-tree-node-root {}       /* If node is a root node  */
-  .v-tree-node-leaf {}       /* If node has no children */
+.v-tree8 {}
+  .v-tree8-row {}              /* An item  )           */
+    .v-tree8-cell-expander {}  /* Expander element     */
+    .v-tree8-cell-content {}   /* Content of the item  */
 ----
 
+////
+todo not implemented yet
 [[components.tree.css.itemstyles]]
 === Generating Item Styles
 
