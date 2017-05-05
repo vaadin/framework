@@ -169,10 +169,21 @@ and expand them with kbd:[Right].
 
 [source, css]
 ----
-.v-tree8 {}
-  .v-tree8-row {}              /* An item              */
-    .v-tree8-cell-expander {}  /* Expander element     */
-    .v-tree8-cell-content {}   /* Content of the item  */
+.v-tree8 {
+  .v-tree8-scroller, .v-tree8-scroller-horizontal { }
+  .v-tree8-tablewrapper {
+    .v-tree8-body {
+      .v-tree8-row,
+      .v-tree8-stripe,
+      .v-tree8-rowmode-row-focused,
+      .v-tree8-row-has-data {
+        .v-tree8-expander, expanded {}
+        .v-tree8-cell-content {}
+      }
+    }
+  }
+  .v-grid-horizontal-scrollbar-deco { }
+}
 ----
 
 ////
