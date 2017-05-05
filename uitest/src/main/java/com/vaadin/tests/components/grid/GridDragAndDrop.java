@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -41,6 +43,8 @@ import com.vaadin.ui.RadioButtonGroup;
 import elemental.json.Json;
 import elemental.json.JsonObject;
 
+@Theme("valo")
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridDragAndDrop extends AbstractTestUIWithLog {
 
     private Set<Person> draggedItems;
@@ -61,13 +65,13 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         grids.addComponents(left, right);
 
         // Selection modes
-        List<Grid.SelectionMode> selectionModes = Arrays.asList(
-                Grid.SelectionMode.SINGLE, Grid.SelectionMode.MULTI);
+        List<Grid.SelectionMode> selectionModes = Arrays
+                .asList(Grid.SelectionMode.SINGLE, Grid.SelectionMode.MULTI);
         RadioButtonGroup<Grid.SelectionMode> selectionModeSelect = new RadioButtonGroup<>(
                 "Selection mode", selectionModes);
         selectionModeSelect.setSelectedItem(Grid.SelectionMode.SINGLE);
-        selectionModeSelect.addValueChangeListener(event -> left
-                .setSelectionMode(event.getValue()));
+        selectionModeSelect.addValueChangeListener(
+                event -> left.setSelectionMode(event.getValue()));
 
         // Drop locations
         List<DropMode> dropLocations = Arrays.asList(DropMode.values());
@@ -113,9 +117,8 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         });
 
         // Add drag start listener
-        dragSource.addGridDragStartListener(event ->
-                draggedItems = event.getDraggedItems()
-        );
+        dragSource.addGridDragStartListener(
+                event -> draggedItems = event.getDraggedItems());
 
         // Add drag end listener
         dragSource.addGridDragEndListener(event -> {
@@ -148,18 +151,17 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                     List<Person> items = (List<Person>) dataProvider.getItems();
 
                     // Calculate the target row's index
-                    int index = items.indexOf(event.getDropTargetRow()) + (
-                            event.getDropLocation() == DropLocation.BELOW
-                                    ? 1 : 0);
+                    int index = items.indexOf(event.getDropTargetRow())
+                            + (event.getDropLocation() == DropLocation.BELOW ? 1
+                                    : 0);
 
                     // Add dragged items to the target Grid
                     items.addAll(index, draggedItems);
                     dataProvider.refreshAll();
 
-                    log("dragData=" + event.getDataTransferText()
-                            + ", target="
-                            + event.getDropTargetRow().getFirstName()
-                            + " " + event.getDropTargetRow().getLastName()
+                    log("dragData=" + event.getDataTransferText() + ", target="
+                            + event.getDropTargetRow().getFirstName() + " "
+                            + event.getDropTargetRow().getLastName()
                             + ", location=" + event.getDropLocation());
                 }
             });

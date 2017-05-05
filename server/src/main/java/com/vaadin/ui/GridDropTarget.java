@@ -19,6 +19,7 @@ import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.event.dnd.grid.GridDropEvent;
 import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.shared.ui.grid.GridDropTargetRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetState;
@@ -130,15 +131,16 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
     @Override
     protected void registerDropTargetRpc(Grid<T> target) {
-        registerRpc((GridDropTargetRpc) (dataTransferText, rowKey,
+        registerRpc((GridDropTargetRpc) (dataTransferText, dropEffect, rowKey,
                 dropLocation) -> {
 
             T dropTargetRow = target.getDataCommunicator().getKeyMapper()
                     .get(rowKey);
 
             GridDropEvent<T> event = new GridDropEvent<>(target,
-                    dataTransferText, getUI().getActiveDragSource(),
-                    dropTargetRow, dropLocation);
+                    dataTransferText,
+                    DropEffect.valueOf(dropEffect.toUpperCase()),
+                    getUI().getActiveDragSource(), dropTargetRow, dropLocation);
 
             fireEvent(event);
         });

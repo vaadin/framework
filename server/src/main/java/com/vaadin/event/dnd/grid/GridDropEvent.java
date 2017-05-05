@@ -17,6 +17,7 @@ package com.vaadin.event.dnd.grid;
 
 import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.event.dnd.DropEvent;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Grid;
@@ -44,6 +45,8 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      * @param dataTransferText
      *            Data of type {@code "text"} from the {@code DataTransfer}
      *            object.
+     * @param dropEffect
+     *            the desired drop effect
      * @param dragSourceExtension
      *            Drag source extension of the component that initiated the drop
      *            event.
@@ -53,9 +56,10 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      *            Location of the drop within the target row.
      */
     public GridDropEvent(Grid<T> target, String dataTransferText,
+            DropEffect dropEffect,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension,
             T dropTargetRow, DropLocation dropLocation) {
-        super(target, dataTransferText, dragSourceExtension);
+        super(target, dataTransferText, dropEffect, dragSourceExtension);
 
         this.dropTargetRow = dropTargetRow;
         this.dropLocation = dropLocation;

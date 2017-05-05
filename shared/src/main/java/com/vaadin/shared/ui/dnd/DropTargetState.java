@@ -30,11 +30,6 @@ public class DropTargetState extends SharedState {
     public DropEffect dropEffect;
 
     /**
-     * Criteria script to allow dragOver event on the element
-     */
-    public String dragOverCriteria;
-
-    /**
      * Criteria script to allow drop event on the element
      */
     public String dropCriteria;

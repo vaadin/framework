@@ -32,11 +32,13 @@ public interface GridDropTargetRpc extends ServerRpc {
      * @param dataTransferText
      *            Data of type {@code "text"} from the {@code DataTransfer}
      *            object.
+     * @param dropEffect
+     *            the desired drop effect
      * @param rowKey
      *            Key of the row on which the drop event occured.
      * @param dropLocation
      *            Location of the drop within the row.
      */
-    public void drop(String dataTransferText, String rowKey,
+    public void drop(String dataTransferText, String dropEffect, String rowKey,
             DropLocation dropLocation);
 }

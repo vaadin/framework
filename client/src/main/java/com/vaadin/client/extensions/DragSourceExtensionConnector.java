@@ -77,7 +77,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Sets the given element draggable and adds class name.
      *
      * @param element
-     *         Element to be set draggable.
+     *            Element to be set draggable.
      */
     protected void setDraggable(Element element) {
         element.setDraggable(Element.DRAGGABLE_TRUE);
@@ -91,7 +91,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Removes draggable and class name from the given element.
      *
      * @param element
-     *         Element to remove draggable from.
+     *            Element to remove draggable from.
      */
     protected void removeDraggable(Element element) {
         element.setDraggable(Element.DRAGGABLE_FALSE);
@@ -104,7 +104,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Adds dragstart and dragend event listeners to the given DOM element.
      *
      * @param element
-     *         DOM element to attach event listeners to.
+     *            DOM element to attach event listeners to.
      */
     protected void addDragListeners(Element element) {
         EventTarget target = element.cast();
@@ -117,7 +117,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Removes dragstart and dragend event listeners from the given DOM element.
      *
      * @param element
-     *         DOM element to remove event listeners from.
+     *            DOM element to remove event listeners from.
      */
     protected void removeDragListeners(Element element) {
         EventTarget target = element.cast();
@@ -150,7 +150,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * dragstart} event occurs.
      *
      * @param event
-     *         browser event to be handled
+     *            browser event to be handled
      */
     protected void onDragStart(Event event) {
         // Convert elemental event to have access to dataTransfer
@@ -167,10 +167,12 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         // Set text data parameter
         String dataTransferText = createDataTransferText(event);
-        if (dataTransferText != null && !dataTransferText.isEmpty()) {
-            nativeEvent.getDataTransfer()
-                    .setData(DragSourceState.DATA_TYPE_TEXT, dataTransferText);
+        // Always set something as the text data, or DnD won't work in FF !
+        if (dataTransferText == null) {
+            dataTransferText = "";
         }
+        nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
+                dataTransferText);
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
@@ -187,7 +189,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * of the given event.
      *
      * @param dragStartEvent
-     *         Event to set the data for.
+     *            Event to set the data for.
      * @return Textual data to be set for the event or {@literal null}.
      */
     protected String createDataTransferText(Event dragStartEvent) {
@@ -201,7 +203,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * handler attached.
      *
      * @param dragStartEvent
-     *         Client side dragstart event.
+     *            Client side dragstart event.
      */
     protected void sendDragStartEventToServer(Event dragStartEvent) {
         getRpcProxy(DragSourceRpc.class).dragStart();
@@ -211,7 +213,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Sets the drag image to be displayed.
      *
      * @param dragStartEvent
-     *         The drag start event.
+     *            The drag start event.
      */
     protected void setDragImage(Event dragStartEvent) {
         String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
@@ -228,7 +230,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * event occurs.
      *
      * @param event
-     *         browser event to be handled
+     *            browser event to be handled
      */
     protected void onDragEnd(Event event) {
         // Initiate server start dragend event when there is a DragEndListener
@@ -248,9 +250,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Initiates a server RPC for the drag end event.
      *
      * @param dragEndEvent
-     *         Client side dragend event.
+     *            Client side dragend event.
      * @param dropEffect
-     *         Drop effect of the dragend event, extracted from {@code
+     *            Drop effect of the dragend event, extracted from {@code
      *         DataTransfer.dropEffect} parameter.
      */
     protected void sendDragEndEventToServer(Event dragEndEvent,
@@ -269,11 +271,13 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
-            String effectAllowed)/*-{
+            String effectAllowed)
+    /*-{
         dataTransfer.effectAllowed = effectAllowed;
     }-*/;
 
-    private native String getDropEffect(DataTransfer dataTransfer)/*-{
+    static native String getDropEffect(DataTransfer dataTransfer)
+    /*-{
         return dataTransfer.dropEffect;
     }-*/;
 
@@ -282,7 +286,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         return (DragSourceState) super.getState();
     }
 
-    private native boolean getStylePrimaryName(Element element)/*-{
+    private native boolean getStylePrimaryName(Element element)
+    /*-{
         return @com.google.gwt.user.client.ui.UIObject::getStylePrimaryName(Lcom/google/gwt/dom/client/Element;)(element);
     }-*/;
 }
