@@ -19,6 +19,7 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
 
@@ -69,7 +70,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
      * <p>
      * By default the {@link RequiredFieldConfigurator#DEFAULT} configurator is
      * used.
-     * 
+     *
      * @param configurator
      *            required indicator configurator, may be {@code null}
      */
@@ -80,9 +81,9 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
 
     /**
      * Gets field required indicator configuration logic.
-     * 
+     *
      * @see #setRequiredConfigurator(RequiredFieldConfigurator)
-     * 
+     *
      * @return required indicator configurator, may be {@code null}
      */
     public RequiredFieldConfigurator getRequiredConfigurator() {
@@ -93,12 +94,35 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
     protected BindingBuilder<BEAN, ?> configureBinding(
             BindingBuilder<BEAN, ?> binding,
             PropertyDefinition<BEAN, ?> definition) {
-        BeanValidator validator = new BeanValidator(beanType,
+        Class<?> actualBeanType = findBeanType(beanType, definition);
+        BeanValidator validator = new BeanValidator(actualBeanType,
                 definition.getName());
         if (requiredConfigurator != null) {
             configureRequired(binding, definition, validator);
         }
         return binding.withValidator(validator);
+    }
+
+    /**
+     * Finds the bean type containing the property the given definition refers
+     * to.
+     *
+     * @param beanType
+     *            the root beanType
+     * @param definition
+     *            the definition for the property
+     * @return the bean type containing the given property
+     */
+    @SuppressWarnings({ "rawtypes" })
+    private Class<?> findBeanType(Class<BEAN> beanType,
+            PropertyDefinition<BEAN, ?> definition) {
+        if (definition instanceof NestedBeanPropertyDefinition) {
+            return ((NestedBeanPropertyDefinition) definition).getParent()
+                    .getType();
+        } else {
+            // Non nested properties must be defined in the main type
+            return beanType;
+        }
     }
 
     private void configureRequired(BindingBuilder<BEAN, ?> binding,
