@@ -17,6 +17,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.BeanBinderTest.RequiredConstraints.SubConstraint;
+import com.vaadin.data.BeanBinderTest.RequiredConstraints.SubSubConstraint;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
@@ -33,7 +35,7 @@ public class BeanBinderTest
         private TextField number = new TextField();
     }
 
-    private static class TestBean implements Serializable{
+    private static class TestBean implements Serializable {
         private Set<TestEnum> enums;
         private int number;
 
@@ -54,7 +56,7 @@ public class BeanBinderTest
         }
     }
 
-    public static class RequiredConstraints implements Serializable{
+    public static class RequiredConstraints implements Serializable {
         @NotNull
         @Max(10)
         private String firstname;
@@ -67,7 +69,7 @@ public class BeanBinderTest
         private String lastname;
 
         private SubConstraint subfield;
-        
+
         public String getFirstname() {
             return firstname;
         }
@@ -91,8 +93,7 @@ public class BeanBinderTest
         public void setLastname(String lastname) {
             this.lastname = lastname;
         }
-        
-        
+
         public SubConstraint getSubfield() {
             return subfield;
         }
@@ -101,11 +102,14 @@ public class BeanBinderTest
             this.subfield = subfield;
         }
 
+        public static class SubConstraint implements Serializable {
 
-        public static class SubConstraint implements Serializable{
-            
             @NotNull
+            @NotEmpty
+            @Size(min = 5)
             private String name;
+
+            private SubSubConstraint subsub;
 
             public String getName() {
                 return name;
@@ -114,6 +118,30 @@ public class BeanBinderTest
             public void setName(String name) {
                 this.name = name;
             }
+
+            public SubSubConstraint getSubsub() {
+                return subsub;
+            }
+
+            public void setSubsub(SubSubConstraint subsub) {
+                this.subsub = subsub;
+            }
+
+        }
+
+        public static class SubSubConstraint implements Serializable {
+
+            @Size(min = 10)
+            private String value;
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
+
         }
     }
 
@@ -363,20 +391,53 @@ public class BeanBinderTest
         Assert.assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
     }
-    
+
     @Test
     public void subfield_name_fieldIsRequired() {
         BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
                 RequiredConstraints.class);
         RequiredConstraints bean = new RequiredConstraints();
         bean.setSubfield(new RequiredConstraints.SubConstraint());
-        
+
         TextField field = new TextField();
         binder.bind(field, "subfield.name");
         binder.setBean(bean);
 
         Assert.assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
+    }
+
+    @Test
+    public void subfield_name_valueCanBeValidated() {
+        BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
+                RequiredConstraints.class);
+        TextField field = new TextField();
+
+        binder.bind(field, "subfield.name");
+        RequiredConstraints bean = new RequiredConstraints();
+        bean.setSubfield(new SubConstraint());
+        binder.setBean(bean);
+        Assert.assertFalse(binder.validate().isOk());
+        field.setValue("overfive");
+        Assert.assertTrue(binder.validate().isOk());
+    }
+
+    @Test
+    public void subSubfield_name_valueCanBeValidated() {
+        BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
+                RequiredConstraints.class);
+        TextField field = new TextField();
+
+        binder.bind(field, "subfield.subsub.value");
+        RequiredConstraints bean = new RequiredConstraints();
+        SubConstraint subfield = new SubConstraint();
+        bean.setSubfield(subfield);
+        subfield.setSubsub(new SubSubConstraint());
+        binder.setBean(bean);
+
+        Assert.assertFalse(binder.validate().isOk());
+        field.setValue("overtencharacters");
+        Assert.assertTrue(binder.validate().isOk());
     }
 
     private void assertInvalid(HasValue<?> field, String message) {
