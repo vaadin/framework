@@ -91,7 +91,7 @@ public class TreeElement extends AbstractComponentElement {
      */
     public WebElement getExpandElement(int rowIndex) {
         return asTreeGrid().getCell(rowIndex, 0)
-                .findElement(By.className("v-newtree-expander"));
+                .findElement(By.className("v-tree8-expander"));
 
     }
 

@@ -57,7 +57,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     /**
      * String renderer that handles icon resources and stores their identifiers
      * into data objects.
-     * 
+     *
      * @since 8.1
      */
     public final class TreeRenderer extends AbstractRenderer<T, String>
@@ -132,7 +132,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         while (treeGrid.getHeaderRowCount() > 0) {
             treeGrid.removeHeaderRow(0);
         }
-        treeGrid.setPrimaryStyleName("v-newtree");
+        treeGrid.setPrimaryStyleName("v-tree8");
 
         setWidth("100%");
         treeGrid.setHeightUndefined();

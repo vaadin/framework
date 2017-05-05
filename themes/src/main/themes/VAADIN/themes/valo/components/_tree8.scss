@@ -1,8 +1,8 @@
 @import "treegrid";
 
-$v-newtree-border-radius: 3px;
+$v-tree8-border-radius: 3px;
 
-@mixin valo-newtree ($primary-stylename: v-newtree) {
+@mixin valo-tree8 ($primary-stylename: v-tree8) {
 
   @include valo-treegrid($primary-stylename);
 
@@ -35,7 +35,7 @@ $v-newtree-border-radius: 3px;
   .#{$primary-stylename}-cell-content {
     border: $v-grid-cell-focused-border;
     border-color: transparent;
-    border-radius: $v-newtree-border-radius;
+    border-radius: $v-tree8-border-radius;
     padding: $v-grid-cell-padding;
   }
 
