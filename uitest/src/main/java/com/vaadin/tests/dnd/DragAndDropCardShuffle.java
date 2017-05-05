@@ -52,6 +52,8 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         NativeSelect<EffectAllowed> effectAllowed = new NativeSelect<>(
                 "Effect Allowed (source)");
         effectAllowed.setItems(EffectAllowed.values());
+        effectAllowed.setValue(EffectAllowed.UNINITIALIZED);
+        effectAllowed.setEmptySelectionAllowed(false);
         effectAllowed.addValueChangeListener(event -> sources
                 .forEach(source -> source.setEffectAllowed(event.getValue())));
 

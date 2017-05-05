@@ -154,7 +154,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
             setDropEffect(nativeEvent);
 
-            // To allow dropping need to call this
+            // According to spec, need to call this for allowing dropping, the
+            // default action would be to reject as target
             event.preventDefault();
         } else {
             // Remove drop effect
@@ -180,8 +181,12 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      */
     protected void setDropEffect(NativeEvent event) {
         if (getState().dropEffect != null) {
-            event.getDataTransfer().setDropEffect(DataTransfer.DropEffect
-                    .valueOf(getState().dropEffect.name().toUpperCase()));
+
+            DataTransfer.DropEffect dropEffect = DataTransfer.DropEffect
+                    // the valueOf() needs to have equal string and name()
+                    // doesn't return in all upper case
+                    .valueOf(getState().dropEffect.name().toUpperCase());
+            event.getDataTransfer().setDropEffect(dropEffect);
         }
     }
 
@@ -252,10 +257,10 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                 && getState().dropEffect == DropEffect.NONE) {
             return false;
         }
-        // TODO Should add verification for checking effectAllowed and
-        // dropEffect from event and comparing that to target's dropEffect
-        // currently Safari and IE don't follow the spec by allowing drop if
-        // those don't match
+        // TODO #9246: Should add verification for checking effectAllowed and
+        // dropEffect from event and comparing that to target's dropEffect.
+        // Currently Safari, Edge and IE don't follow the spec by allowing drop
+        // if those don't match
 
         if (getState().dropCriteria != null) {
             return executeScript(event, getState().dropCriteria);

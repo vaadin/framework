@@ -76,9 +76,10 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     /**
      * Get the desired dropEffect for the drop event.
      * <p>
-     * <em>NOTE: Currently you cannot trust this to work on all browsers! For
-     * Chrome it is never set and always returns {@link DropEffect#NONE} even
-     * though the drop succeeded!</em>
+     * <em>NOTE: Currently you cannot trust this to work on all browsers!
+     * https://github.com/vaadin/framework/issues/9247 For Chrome & IE11 it is
+     * never set and always returns {@link DropEffect#NONE} even though the drop
+     * succeeded!</em>
      *
      * @return the drop effect
      */

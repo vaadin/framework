@@ -130,17 +130,16 @@ When data is dragged over a drop target, the __v-drag-over__ class name is appli
 
 The __drop effect__ allows you to specify the desired drop effect, and for a succesful drop it must match the allowed effect that has been set for the drag source. Note that you can allow multiple effects, and that you should not rely on the default effect since it may vary between browsers.
 
-The __drag over criteria__ allows you determine whether the current drag source is allowed as a drop target, when the source is moved on top of the target. It is a script that is executed always when the `dragover` event is fired for the first time for this source, and returning `false` will prevent showing any drop effect. The script gets the `dragover` event as a parameter named `event`.
+The __drop criteria__ allows you to determine whether the current drag data can be dropped on the drop target. It is executed on `dragenter`, `dragover` and `drop` events. The script gets the current event as a parameter named `event`. Returning `false` will prevent the drop and no drop event is fired on the server side.
 
-The __drop criteria__ is similar to __drag over criteria__, but it is executed when the user has dropped the data by releasing the mouse button. The script gets the `drop` event as a parameter named `event`. Returning `false` will prevent the drop and no drop event is fired on the server side.
+////
+TODO Add an example of drop criteria
+////
 
 === CSS Style Rules
 
 When dragging data over a drop target and the drag over criteria passes, a style name is applied to indicate that the element accepts drops. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
 
-////
-TODO Add an example of drag over criteria and drop criteria
-////
 
 ===
 
