@@ -170,7 +170,7 @@ and expand them with kbd:[Right].
 [source, css]
 ----
 .v-tree8 {}
-  .v-tree8-row {}              /* An item  )           */
+  .v-tree8-row {}              /* An item              */
     .v-tree8-cell-expander {}  /* Expander element     */
     .v-tree8-cell-content {}   /* Content of the item  */
 ----
