@@ -18,9 +18,10 @@ package com.vaadin.testbench.elements;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
- * Element class for testing InlineDateField.
+ * @author Vaadin Ltd
+ *
  */
-@ServerClass("com.vaadin.ui.InlineDateField")
-public class InlineDateFieldElement extends AbstractFieldElement {
+@ServerClass("com.vaadin.ui.InlineDateTimeField")
+public class InlineDateTimeFieldElement extends InlineDateFieldElement {
 
 }

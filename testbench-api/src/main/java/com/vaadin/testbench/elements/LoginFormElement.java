@@ -13,16 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.testbench.customelements;
+package com.vaadin.testbench.elements;
 
-import com.vaadin.testbench.elements.InlineDateFieldElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
- * @author Vaadin Ltd
- *
+ * Element class for testing LoginForm.
  */
-@ServerClass("com.vaadin.ui.InlineDateTimeField")
-public class InlineDateTimeFieldElement extends InlineDateFieldElement {
+@ServerClass("com.vaadin.ui.LoginForm")
+public class LoginFormElement extends AbstractSingleComponentContainerElement {
 
 }

@@ -23,19 +23,10 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
- * Element class for testing DateField.
+ * Element class for testing DateTimeField.
  */
-@ServerClass("com.vaadin.ui.DateField")
-public class DateFieldElement extends AbstractDateFieldElement {
-
-    /**
-     * Clear DateField element.
-     */
-    @Override
-    public void clear() {
-        WebElement elem = findElement(By.tagName("input"));
-        elem.clear();
-    }
+@ServerClass("com.vaadin.ui.DateTimeField")
+public class DateTimeFieldElement extends AbstractDateFieldElement {
 
     /**
      * Return value of the date field element.
