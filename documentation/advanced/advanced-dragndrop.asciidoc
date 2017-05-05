@@ -78,7 +78,10 @@ dragSource.addDragEndListener(event ->
 The browsers allow the user to select and drag and drop text, which may cause some issues when trying to drag a component that has text. You can fix this by setting the following style rule to the drag source component to prevent dragging of the text instead of the whole component.
 [source, css]
 ----
-user-select: none;
+-moz-user-select: none !important;
+-ms-user-select: none !important;
+-webkit-user-select: none !important;
+user-select: none !important;
 ----
 ====
 
