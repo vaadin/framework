@@ -107,6 +107,7 @@ public class VFilterSelect extends Composite
         private final String caption;
         private String untranslatedIconUri;
         private String style;
+        private boolean disabled;
 
         /**
          * Constructor
@@ -118,6 +119,7 @@ public class VFilterSelect extends Composite
             key = uidl.getStringAttribute("key");
             caption = uidl.getStringAttribute("caption");
             style = uidl.getStringAttribute("style");
+            disabled = uidl.getBooleanAttribute("disabled");
 
             if (uidl.hasAttribute("icon")) {
                 untranslatedIconUri = uidl.getStringAttribute("icon");
@@ -190,6 +192,10 @@ public class VFilterSelect extends Composite
             return style;
         }
 
+        public boolean isDisabled() {
+            return disabled;
+        }
+
         /**
          * Executes a selection of this item.
          */
@@ -218,6 +224,9 @@ public class VFilterSelect extends Composite
                 return false;
             }
             if (!SharedUtil.equals(style, other.style)) {
+                return false;
+            }
+            if (!SharedUtil.equals(disabled, other.disabled)) {
                 return false;
             }
             return true;
@@ -527,8 +536,9 @@ public class VFilterSelect extends Composite
 
             final int index = menu.getSelectedIndex() + 1;
             if (menu.getItems().size() > index) {
-                selectItem(menu.getItems().get(index));
-
+                if (!selectNextEnabledItem(index)) {
+                    selectNextPage();
+                }
             } else {
                 selectNextPage();
             }
@@ -542,8 +552,9 @@ public class VFilterSelect extends Composite
 
             final int index = menu.getSelectedIndex() - 1;
             if (index > -1) {
-                selectItem(menu.getItems().get(index));
-
+                if (!selectPrevEnabledItem(index)) {
+                    selectPrevPage();
+                }
             } else if (index == -1) {
                 selectPrevPage();
 
@@ -561,7 +572,7 @@ public class VFilterSelect extends Composite
          */
         public void selectFirstItem() {
             debug("VFS.SP: selectFirstItem()");
-            selectItem(menu.getFirstItem());
+            selectNextEnabledItem(0);
         }
 
         /**
@@ -571,13 +582,36 @@ public class VFilterSelect extends Composite
          */
         public void selectLastItem() {
             debug("VFS.SP: selectLastItem()");
-            selectItem(menu.getLastItem());
+            selectPrevEnabledItem(menu.getItems().size() - 1);
+        }
+
+        private boolean selectNextEnabledItem(int startIndex) {
+            for (int i = startIndex; i < menu.getItems().size(); i++) {
+                if (selectItem(menu.getItems().get(i))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private boolean selectPrevEnabledItem(int startIndex) {
+            for (int i = startIndex; i >= 0; i--) {
+                if (selectItem(menu.getItems().get(i))) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /*
          * Sets the selected item in the popup menu.
          */
-        private void selectItem(final MenuItem newSelectedItem) {
+        private boolean selectItem(final MenuItem newSelectedItem) {
+
+            if (newSelectedItem.isDisabled()) {
+                return false;
+            }
+
             menu.selectItem(newSelectedItem);
 
             // Set the icon.
@@ -587,6 +621,8 @@ public class VFilterSelect extends Composite
 
             // Set the text.
             setText(suggestion.getReplacementString());
+
+            return true;
 
         }
 
@@ -1091,7 +1127,7 @@ public class VFilterSelect extends Composite
             boolean isFirstIteration = true;
             while (it.hasNext()) {
                 final FilterSelectSuggestion s = it.next();
-                final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
+                final MenuItem mi = new MenuItem(s.getDisplayString(), true, s, s.isDisabled());
                 String style = s.getStyle();
                 if (style != null) {
                     mi.addStyleName("v-filterselect-item-" + style);

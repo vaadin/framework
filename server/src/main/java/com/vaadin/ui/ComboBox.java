@@ -17,12 +17,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -122,6 +117,8 @@ public class ComboBox extends AbstractSelect
     private boolean scrollToSelectedItem = true;
 
     private String suggestionPopupWidth = null;
+
+    private final Set<Object> disabledIds = new HashSet<Object>();
 
     /**
      * If text input is not allowed, the ComboBox behaves like a pretty
@@ -313,6 +310,8 @@ public class ComboBox extends AbstractSelect
                     // at most one item can be selected at a time
                     selectedKeys[keyIndex++] = key;
                 }
+
+                target.addAttribute("disabled", disabledIds.contains(id));
 
                 paintItemStyle(target, id);
 
@@ -977,6 +976,19 @@ public class ComboBox extends AbstractSelect
      */
     public ItemStyleGenerator getItemStyleGenerator() {
         return itemStyleGenerator;
+    }
+
+    /**
+     * Enables or disables a single item
+     * @param itemId
+     * @param enabled
+     */
+    public void setItemEnabled(Object itemId, boolean enabled) {
+        if (enabled) {
+            disabledIds.remove(itemId);
+        } else {
+            disabledIds.add(itemId);
+        }
     }
 
 }

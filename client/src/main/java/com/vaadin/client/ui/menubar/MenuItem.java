@@ -51,6 +51,8 @@ public class MenuItem extends UIObject implements HasHTML {
 
     private static final String DEPENDENT_STYLENAME_SELECTED_ITEM = "selected";
 
+    private boolean disabled;
+
     private Command command;
     private MenuBar parentMenu, subMenu;
 
@@ -65,6 +67,14 @@ public class MenuItem extends UIObject implements HasHTML {
     public MenuItem(String text, Command cmd) {
         this(text, false);
         setCommand(cmd);
+    }
+
+    public MenuItem(String text, boolean asHTML, Command cmd, boolean disabled) {
+        this(text, asHTML, cmd);
+        this.disabled = disabled;
+        if (disabled) {
+            addStyleName("gwt-MenuItem-disabled");
+        }
     }
 
     /**
@@ -202,4 +212,9 @@ public class MenuItem extends UIObject implements HasHTML {
             removeStyleDependentName(DEPENDENT_STYLENAME_SELECTED_ITEM);
         }
     }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
 }
