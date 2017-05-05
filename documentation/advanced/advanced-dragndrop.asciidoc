@@ -73,19 +73,23 @@ dragSource.addDragEndListener(event ->
 };
 ----
 
-[NOTE]
-====
-The browsers allow the user to select and drag and drop text, which may cause some issues when trying to drag a component that has text. You can fix this by setting the following style rule to the drag source component to prevent dragging of the text instead of the whole component.
-[source, css]
-----
-user-select: none;
-----
-====
-
 === CSS Style Rules
 
 The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource` when the drag source extension is applied to it.
 Additionally, the elements also have the `v-draggable` style name that is independent of the component's primary style.
+
+The browsers allow the user to select and drag and drop text, which could cause issues with components that have text. The Framework tries to prevent this by automatically adding the following style to all `v-draggable` elements. It is included by the sass mixin `valo-drag-element`.
+
+[source, css]
+----
+.v-draggable {
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+----
+
 
 [[advanced.dragndrop.drophandler]]
 == Drop Target

@@ -27,6 +27,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
@@ -37,6 +38,7 @@ import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceState;
@@ -98,33 +100,53 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
             return;
         }
 
-        // Add badge showing the number of dragged columns
-        if (draggedItemKeys.size() > 1) {
-            Element draggedRowElement = (Element) event.getTarget();
-
-            Element badge = DOM.createSpan();
-            badge.setClassName(gridConnector.getWidget().getStylePrimaryName()
-                    + "-row" + STYLE_SUFFIX_DRAG_BADGE);
-            badge.setInnerHTML(draggedItemKeys.size() + "");
-
-            badge.getStyle().setMarginLeft(
-                    getRelativeX(draggedRowElement, (NativeEvent) event) + 10,
-                    Style.Unit.PX);
-            badge.getStyle().setMarginTop(
-                    getRelativeY(draggedRowElement, (NativeEvent) event)
-                            - draggedRowElement.getOffsetHeight() + 10,
-                    Style.Unit.PX);
-
-            draggedRowElement.appendChild(badge);
-
-            // Remove badge on the next animation frame. Drag image will still
-            // contain the badge.
-            AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-                badge.removeFromParent();
-            }, (Element) event.getTarget());
-        }
-
         super.onDragStart(event);
+    }
+
+    @Override
+    protected void setDragImage(NativeEvent dragStartEvent) {
+        // do not call super since need to handle specifically
+        // 1. use resource if set (never needs safari hack)
+        // 2. add number badge if necessary (with safari hack if needed)
+        // 3. just use normal (with safari hack if needed)
+
+        // Add badge showing the number of dragged columns
+        String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Image dragImage = new Image(
+                    getConnection().translateVaadinUri(imageUrl));
+            dragStartEvent.getDataTransfer()
+                    .setDragImage(dragImage.getElement(), 0, 0);
+        } else {
+            Element draggedRowElement = (Element) dragStartEvent
+                    .getEventTarget().cast();
+            if (draggedItemKeys.size() > 1) {
+
+                Element badge = DOM.createSpan();
+                badge.setClassName(
+                        gridConnector.getWidget().getStylePrimaryName() + "-row"
+                                + STYLE_SUFFIX_DRAG_BADGE);
+                badge.setInnerHTML(draggedItemKeys.size() + "");
+
+                badge.getStyle().setMarginLeft(
+                        getRelativeX(draggedRowElement, dragStartEvent) + 10,
+                        Style.Unit.PX);
+                badge.getStyle().setMarginTop(
+                        getRelativeY(draggedRowElement, dragStartEvent)
+                                - draggedRowElement.getOffsetHeight() + 10,
+                        Style.Unit.PX);
+
+                draggedRowElement.appendChild(badge);
+
+                // Remove badge on the next animation frame. Drag image will
+                // still contain the badge.
+                AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+                    badge.removeFromParent();
+                }, (Element) dragStartEvent.getEventTarget().cast());
+                setDraggable(draggedRowElement);
+            }
+            fixDragImageForSafari(draggedRowElement);
+        }
     }
 
     private int getRelativeY(Element element, NativeEvent event) {
@@ -196,9 +218,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * allowed and a selected row is dragged.
      *
      * @param draggedRow
-     *         Data of dragged row.
+     *            Data of dragged row.
      * @return {@code true} if multiple rows are dragged, {@code false}
-     * otherwise.
+     *         otherwise.
      */
     private boolean dragMultipleRows(JsonObject draggedRow) {
         SelectionModel<JsonObject> selectionModel = getGrid()
@@ -221,7 +243,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Get all selected rows from a subset of rows defined by {@code range}.
      *
      * @param range
-     *         Range of indexes.
+     *            Range of indexes.
      * @return List of data of all selected rows in the given range.
      */
     private List<JsonObject> getSelectedRowsInRange(Range range) {
@@ -241,7 +263,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Converts a list of {@link JsonObject}s to a {@link JsonArray}.
      *
      * @param objects
-     *         List of json objects.
+     *            List of json objects.
      * @return Json array containing all json objects.
      */
     private JsonArray toJsonArray(List<JsonObject> objects) {
@@ -257,7 +279,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * otherwise.
      *
      * @param row
-     *         Row data.
+     *            Row data.
      * @return Drag data if present or row data otherwise.
      */
     private JsonObject getDragData(JsonObject row) {
