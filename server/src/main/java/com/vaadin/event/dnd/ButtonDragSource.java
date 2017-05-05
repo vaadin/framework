@@ -15,6 +15,7 @@
  */
 package com.vaadin.event.dnd;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.shared.ui.dnd.ButtonDragSourceState;
 import com.vaadin.ui.Button;
 
@@ -24,6 +25,7 @@ import com.vaadin.ui.Button;
  * @author Vaadin Ltd.
  * @since 8.1
  */
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class ButtonDragSource extends DragSourceExtension<Button> {
 
     public ButtonDragSource(Button target) {

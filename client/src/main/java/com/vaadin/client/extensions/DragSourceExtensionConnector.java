@@ -15,9 +15,12 @@
  */
 package com.vaadin.client.extensions;
 
+import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
@@ -163,7 +166,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         }
 
         // Set drag image
-        setDragImage(event);
+        setDragImage(nativeEvent);
 
         // Set text data parameter
         String dataTransferText = createDataTransferText(event);
@@ -182,6 +185,48 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         // Stop event bubbling
         nativeEvent.stopPropagation();
+    }
+
+    /**
+     * Fixes missing drag image for Safari by making the dragged element
+     * position to relative if needed. Safari won't show drag image unless the
+     * dragged element position is relative or absolute / fixed, but not with
+     * display block for the latter.
+     * <p>
+     * This method is a NOOP for non-safari browser.
+     * <p>
+     * This fix is not needed if a custom drag image is used on Safari.
+     *
+     * @param draggedElement
+     *            the element that forms the drag image
+     */
+    protected void fixDragImageForSadfari(Element draggedElement) {
+        if (!BrowserInfo.get().isSafari()) {
+            return;
+        }
+        final Style style = draggedElement.getStyle();
+        final String position = style.getPosition();
+
+        // relative works always
+        if ("relative".equalsIgnoreCase(position)) {
+            return;
+        }
+
+        // absolute & fixed don't work when there is offset used
+        if ("absolute".equalsIgnoreCase(position)
+                || "fixed".equalsIgnoreCase(position)) {
+            // FIXME #9261 need to figure out how to get absolute and fixed to
+            // position work when there is offset involved, like in Grid.
+            // The following hack with setting position to relative did not
+            // work, nor did clearing top/right/bottom/left.
+        }
+
+        // for all other positions, set the position to relative and revert it
+        // in an animation frame
+        draggedElement.getStyle().setPosition(Position.RELATIVE);
+        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+            draggedElement.getStyle().setProperty("position", position);
+        }, draggedElement);
     }
 
     /**
@@ -215,13 +260,16 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @param dragStartEvent
      *            The drag start event.
      */
-    protected void setDragImage(Event dragStartEvent) {
+    protected void setDragImage(NativeEvent dragStartEvent) {
         String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
         if (imageUrl != null && !imageUrl.isEmpty()) {
             Image dragImage = new Image(
                     getConnection().translateVaadinUri(imageUrl));
-            ((NativeEvent) dragStartEvent).getDataTransfer()
+            dragStartEvent.getDataTransfer()
                     .setDragImage(dragImage.getElement(), 0, 0);
+        } else {
+            fixDragImageForSadfari(
+                    (Element) dragStartEvent.getCurrentEventTarget().cast());
         }
     }
 
