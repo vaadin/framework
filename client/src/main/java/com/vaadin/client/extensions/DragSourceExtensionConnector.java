@@ -64,8 +64,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dragSourceWidget = ((ComponentConnector) target).getWidget();
 
-        // Do not make elements draggable on touch devices
-        if (BrowserInfo.get().isTouchDevice()) {
+        // HTML5 DnD is by default not enabled for mobile devices
+        if (BrowserInfo.get().isTouchDevice() && !getConnection()
+                .getUIConnector().isMobileHTML5DndEnabled()) {
             return;
         }
 
@@ -155,6 +156,15 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void onDragStart(Event event) {
         // Convert elemental event to have access to dataTransfer
         NativeEvent nativeEvent = (NativeEvent) event;
+
+        // Do not allow drag starts from native Android Chrome, since it doesn't
+        // work properly (never fires dragend)
+        BrowserInfo browserInfo = BrowserInfo.get();
+        if (browserInfo.isAndroid() && browserInfo.isChrome()
+                && isAndroidChromeNativeDragStartEvent(nativeEvent)) {
+            event.preventDefault();
+            return;
+        }
 
         // Set effectAllowed parameter
         if (getState().effectAllowed != null) {
@@ -269,6 +279,30 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected Element getDraggableElement() {
         return dragSourceWidget.getElement();
     }
+
+    /**
+     * Returns whether the given event is a native android drag start event, and
+     * not produced by the drag-drop-polyfill.
+     *
+     * @param nativeEvent
+     *            the event to test
+     * @return {@code true} if native event, {@code false} if not (polyfill
+     *         event)
+     */
+    protected boolean isAndroidChromeNativeDragStartEvent(
+            NativeEvent nativeEvent) {
+        return isTrusted(nativeEvent) || isComposed(nativeEvent);
+    }
+
+    private native boolean isTrusted(NativeEvent event)
+    /*-{
+        return event.isTrusted;
+    }-*/;
+
+    private native boolean isComposed(NativeEvent event)
+    /*-{
+        return event.isComposed;
+    }-*/;
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
             String effectAllowed)

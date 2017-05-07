@@ -72,8 +72,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
 
-        // Do not make elements draggable on touch devices
-        if (BrowserInfo.get().isTouchDevice()) {
+        // HTML5 DnD is by default not enabled for mobile devices
+        if (BrowserInfo.get().isTouchDevice() && !getConnection()
+                .getUIConnector().isMobileHTML5DndEnabled()) {
             return;
         }
 
