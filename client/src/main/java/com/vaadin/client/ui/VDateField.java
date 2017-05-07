@@ -21,6 +21,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
@@ -28,7 +30,7 @@ import com.vaadin.client.DateTimeService;
 
 /**
  * A very base widget class for a date field.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @param <R>
@@ -36,6 +38,9 @@ import com.vaadin.client.DateTimeService;
  */
 public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         implements Field, HasEnabled {
+
+    private static final String ISO_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String ISO_DATE_PATTERN = "yyyy-MM-dd";
 
     public static final String CLASSNAME = "v-datefield";
 
@@ -68,6 +73,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         setStyleName(CLASSNAME);
         dts = new DateTimeService();
         currentResolution = resolution;
+        publishJSHelpers(getElement());
     }
 
     public R getCurrentResolution() {
@@ -100,7 +106,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * The map contains integer representation of values per resolution. The
      * method should construct a date based on the map and set it via
      * {@link #setCurrentDate(Date)}
-     * 
+     *
      * @param dateValues
      *            a map with date values to convert into a date
      */
@@ -183,7 +189,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
 
     /**
      * Returns a resolution variable name for the given {@code resolution}.
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return the resolution variable name
@@ -198,9 +204,9 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * <p>
      * The method uses {@link #doGetResolutions()} to make sure that the order
      * is the correct one.
-     * 
+     *
      * @see #doGetResolutions()
-     * 
+     *
      * @return stream of all available resolutions in the ascending order.
      */
     public Stream<R> getResolutions() {
@@ -211,14 +217,14 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * Returns a current resolution as a string.
      * <p>
      * The method is used to generate a style name for the current resolution.
-     * 
+     *
      * @return the current resolution as a string
      */
     public abstract String resolutionAsString();
 
     /**
      * Checks whether the given {@code resolution} represents an year.
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return {@code true} if the {@code resolution} represents an year
@@ -226,10 +232,19 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     public abstract boolean isYear(R resolution);
 
     /**
+     * Checks whether time is supported by this widget.
+     *
+     * @return <code>true</code> if time is supported in addition to date,
+     *         <code>false</code> if only dates are supported
+     * @since
+     */
+    protected abstract boolean supportsTime();
+
+    /**
      * Returns a date based on the provided date values map.
-     * 
+     *
      * @see #setCurrentDate(Map)
-     * 
+     *
      * @param dateValues
      *            a map with date values to convert into a date
      * @return the date based on the dateValues map
@@ -240,11 +255,72 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * Returns all available resolutions as an array.
      * <p>
      * No any order is required (in contrary to {@link #getResolutions()}.
-     * 
+     *
      * @see #getResolutions()
-     * 
+     *
      * @return all available resolutions
      */
     protected abstract R[] doGetResolutions();
+
+    /**
+     * Publish methods/properties on the element to be used from JavaScript.
+     *
+     * @since
+     */
+    private native void publishJSHelpers(Element root)
+    /*-{
+        var self = this;
+        root.setISOValue = $entry(function (value) {
+           self.@VDateField::setISODate(*)(value);
+        });
+        root.getISOValue = $entry(function () {
+           return self.@VDateField::getISODate()();
+        });
+    }-*/;
+
+    /**
+     * Sets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @param isoDate
+     *            the date to set in ISO8601 format, or null to clear the date
+     *            value
+     * @since
+     */
+    public void setISODate(String isoDate) {
+        if (isoDate == null) {
+            setDate(null);
+        } else {
+            Date date = getIsoFormatter().parse(isoDate);
+            setDate(date);
+        }
+    }
+
+    /**
+     * Gets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @return the current date in ISO8601 format, or null if no date is set
+     *
+     * @since
+     */
+    public String getISODate() {
+        Date date = getDate();
+        if (date == null) {
+            return null;
+        } else {
+            return getIsoFormatter().format(date);
+        }
+    }
+
+    private DateTimeFormat getIsoFormatter() {
+        if (supportsTime()) {
+            return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
+        } else {
+            return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
+        }
+    }
 
 }
