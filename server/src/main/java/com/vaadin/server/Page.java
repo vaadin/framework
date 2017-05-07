@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -33,6 +35,7 @@ import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Dependency;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
@@ -559,6 +562,8 @@ public class Page implements Serializable {
 
     private String newPushState;
     private String newReplaceState;
+
+    private List<Dependency> pendingDependencies;
 
     public Page(UI uI, PageState state) {
         this.uI = uI;
@@ -1425,5 +1430,37 @@ public class Page implements Serializable {
 
     private boolean hasEventRouter() {
         return eventRouter != null;
+    }
+
+    /**
+     * Add a dependency that should be added to the current page.
+     *
+     * @param dependency
+     *            the dependency to add
+     * @since 8.1
+     */
+    public void addDependency(Dependency dependency) {
+        if (pendingDependencies == null) {
+            pendingDependencies = new ArrayList<>();
+        }
+        pendingDependencies.add(dependency);
+    }
+
+    /**
+     * Returns all pending dependencies.
+     * <p>
+     * For internal use only, calling this method will clear the pending
+     * dependencies.
+     *
+     * @return the pending dependencies to the current page
+     * @since 8.1
+     */
+    public Collection<Dependency> getPendingDependencies() {
+        ArrayList<Dependency> copy = new ArrayList<>();
+        if (pendingDependencies != null) {
+            copy.addAll(pendingDependencies);
+        }
+        pendingDependencies = null;
+        return copy;
     }
 }
