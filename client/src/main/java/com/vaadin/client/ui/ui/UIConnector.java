@@ -69,6 +69,8 @@ import com.vaadin.client.ValueMap;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -164,6 +166,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             public void reload() {
                 Window.Location.reload();
 
+            }
+
+            @Override
+            public void initializeMobileHtml5DndPolyfill() {
+                initializeMobileDndPolyfill();
             }
         });
         registerRpc(ScrollClientRpc.class, new ScrollClientRpc() {
@@ -1160,6 +1167,20 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         return activeTheme;
     }
 
+    /**
+     * Returns whether HTML5 DnD extensions {@link DragSourceExtensionConnector}
+     * and {@link DropTargetExtensionConnector} and alike should be enabled for
+     * mobile devices.
+     * <p>
+     * By default, it is disabled.
+     *
+     * @return {@code true} if enabled, {@code false} if not
+     * @since 8.1
+     */
+    public boolean isMobileHTML5DndEnabled() {
+        return getState().enableMobileHTML5DnD;
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(UIConnector.class.getName());
     }
@@ -1209,4 +1230,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             return result;
         }
     }
+
+    // TODO add configuration to use custom drag start decider
+    private static native void initializeMobileDndPolyfill()
+    /*-{
+        $wnd.DragDropPolyfill.Initialize();
+    }-*/;
 }

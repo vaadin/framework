@@ -80,8 +80,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dropTargetWidget = ((ComponentConnector) target).getWidget();
 
-        // Do not make elements drop target on touch devices
-        if (BrowserInfo.get().isTouchDevice()) {
+        // HTML5 DnD is by default not enabled for mobile devices
+        if (BrowserInfo.get().isTouchDevice() && !getConnection()
+                .getUIConnector().isMobileHTML5DndEnabled()) {
             return;
         }
 
