@@ -22,4 +22,32 @@ import com.vaadin.testbench.elementsbase.ServerClass;
  */
 @ServerClass("com.vaadin.ui.AbstractDateField")
 public class AbstractDateFieldElement extends AbstractFieldElement {
+
+    /**
+     * Gets the value of the date field as a ISO8601 compatible string
+     * (yyyy-MM-dd or yyyy-MM-dd'T'HH:mm:ss depending on whether the element
+     * supports time).
+     *
+     * @return the date in ISO-8601 format
+     * @since
+     */
+    protected String getISOValue() {
+        return (String) getCommandExecutor()
+                .executeScript("return arguments[0].getISOValue();", this);
+    }
+
+    /**
+     * Sets the value of the date field as a ISO8601 compatible string
+     * (yyyy-MM-dd or yyyy-MM-dd'T'HH:mm:ss depending on whether the element
+     * supports time).
+     *
+     * @param isoDateValue
+     *            the date in ISO-8601 format
+     * @since
+     */
+    protected void setISOValue(String isoDateValue) {
+        getCommandExecutor().executeScript(
+                "arguments[0].setISOValue(arguments[1]);", this, isoDateValue);
+    }
+
 }

@@ -64,7 +64,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     private final String TEXTFIELD_ID = "field";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String formatStr;
+    private String formatStr;
 
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
@@ -97,24 +97,44 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      */
     protected String getFormatString() {
         if (formatStr == null) {
-            if (isYear(getCurrentResolution())) {
-                formatStr = "yyyy"; // force full year
-            } else {
-
-                try {
-                    String frmString = LocaleService
-                            .getDateFormat(currentLocale);
-                    frmString = cleanFormat(frmString);
-
-                    formatStr = frmString;
-                } catch (LocaleNotLoadedException e) {
-                    // TODO should die instead? Can the component survive
-                    // without format string?
-                    VConsole.error(e);
-                }
-            }
+            setFormatString(createFormatString());
         }
         return formatStr;
+    }
+
+    /**
+     * Create a format string suitable for the widget in its current state.
+     *
+     * @return a date format string to use when formatting and parsing the text
+     *         in the input field
+     * @since
+     */
+    protected String createFormatString() {
+        if (isYear(getCurrentResolution())) {
+            return "yyyy"; // force full year
+        } else {
+            try {
+                String frmString = LocaleService.getDateFormat(currentLocale);
+                return cleanFormat(frmString);
+            } catch (LocaleNotLoadedException e) {
+                // TODO should die instead? Can the component survive
+                // without format string?
+                VConsole.error(e);
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Sets the date format string to use for the text field.
+     *
+     * @param formatString
+     *            the format string to use, or null to force re-creating the
+     *            format string from the locale the next time it is needed
+     * @since
+     */
+    public void setFormatString(String formatString) {
+        this.formatStr = formatString;
     }
 
     @Override
@@ -148,9 +168,11 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         // Create the initial text for the textfield
         String dateText;
         Date currentDate = getDate();
+        // Always call this to ensure the format ends up in the element
+        String formatString = getFormatString();
         if (currentDate != null) {
             dateText = getDateTimeService().formatDate(currentDate,
-                    getFormatString());
+                    formatString);
         } else {
             dateText = "";
         }
