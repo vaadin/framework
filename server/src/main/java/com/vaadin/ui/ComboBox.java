@@ -615,6 +615,9 @@ public class ComboBox extends AbstractSelect
      */
     private int getLastItemIndexOnCurrentPage(boolean needNullSelectOption,
             int size, int first) {
+        if (pageLength == 0) {
+            return size - 1;
+        }
         // page length usable for non-null items
         int effectivePageLength = pageLength
                 - (needNullSelectOption && (currentPage == 0) ? 1 : 0);
