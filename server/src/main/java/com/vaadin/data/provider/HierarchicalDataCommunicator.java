@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -153,13 +152,27 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     private void loadRequestedRows() {
         final Range requestedRows = getPushRows();
         if (!requestedRows.isEmpty()) {
-            doPushRows(requestedRows);
+            doPushRows(requestedRows, 0);
         }
 
         setPushRows(Range.withLength(0, 0));
     }
 
-    private void doPushRows(final Range requestedRows) {
+    /**
+     * Attempts to push the requested range of rows to the client. Will trigger
+     * a reset if the data provider is unable to provide the requested number of
+     * items.
+     *
+     * @param requestedRows
+     *            the range of rows to push
+     * @param insertRowsCount
+     *            number of rows to insert, beginning at the start index of
+     *            {@code requestedRows}, 0 to not insert any rows
+     * @return {@code true} if the range was successfully pushed to the client,
+     *         {@code false} if the push was unsuccessful and a reset was
+     *         triggered
+     */
+    private boolean doPushRows(final Range requestedRows, int insertRowsCount) {
         Stream<TreeLevelQuery> levelQueries = mapper.splitRangeToLevelQueries(
                 requestedRows.getStart(), requestedRows.getEnd() - 1);
 
@@ -173,7 +186,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             List<T> results = doFetchQuery(query.startIndex, query.size,
                     getKeyMapper().get(query.node.getParentKey()))
                             .collect(Collectors.toList());
-            // TODO if the size differers from expected, all goes to hell
+
             fetchedItems.addAll(results);
             List<JsonObject> rowData = results.stream()
                     .map(item -> createDataObject(item, query.depth))
@@ -181,33 +194,31 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             mapper.reorderLevelQueryResultsToFlatOrdering(rowDataMapper, query,
                     rowData);
         });
-        verifyNoNullItems(dataObjects, requestedRows);
+
+        if (hasNullItems(dataObjects, requestedRows)) {
+            reset();
+            return false;
+        }
+
+        if (insertRowsCount > 0) {
+            getClientRpc().insertRows(requestedRows.getStart(),
+                    insertRowsCount);
+        }
 
         sendData(requestedRows.getStart(), Arrays.asList(dataObjects));
         getActiveDataHandler().addActiveData(fetchedItems.stream());
         getActiveDataHandler().cleanUp(fetchedItems.stream());
+        return true;
     }
 
-    /*
-     * Verify that there are no null objects in the array, to fail eagerly and
-     * not just on the client side.
-     */
-    private void verifyNoNullItems(JsonObject[] dataObjects,
+    private boolean hasNullItems(JsonObject[] dataObjects,
             Range requestedRange) {
-        List<Integer> nullItems = new ArrayList<>(0);
-        AtomicInteger indexCounter = new AtomicInteger();
-        Stream.of(dataObjects).forEach(object -> {
-            int index = indexCounter.getAndIncrement();
+        for (JsonObject object : dataObjects) {
             if (object == null) {
-                nullItems.add(index);
+                return true;
             }
-        });
-        if (!nullItems.isEmpty()) {
-            throw new IllegalStateException("For requested rows "
-                    + requestedRange + ", there was null items for indexes "
-                    + nullItems.stream().map(Object::toString)
-                            .collect(Collectors.joining(", ")));
         }
+        return false;
     }
 
     private JsonObject createDataObject(T item, int depth) {
@@ -288,9 +299,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             String itemKey = keys.getString(i);
             if (!mapper.isKeyStored(itemKey)
                     && !rowKeysPendingExpand.contains(itemKey)) {
-                // FIXME: cache invalidated incorrectly, active keys being
-                // dropped prematurely
-                // getActiveDataHandler().dropActiveData(itemKey);
+                getActiveDataHandler().dropActiveData(itemKey);
             }
         }
     }
@@ -379,6 +388,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
                 collapsedRowIndex);
         getClientRpc().removeRows(collapsedRowIndex + 1,
                 collapsedSubTreeSize);
+
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status
         refresh(collapsedItem);
@@ -414,9 +424,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
         int expandedNodeSize = doSizeQuery(expandedItem);
         if (expandedNodeSize == 0) {
-            // TODO handle 0 size -> not expandable
-            throw new IllegalStateException("Row with index " + expandedRowIndex
-                    + " returned no child nodes.");
+            reset();
+            return false;
         }
 
         if (!mapper.isCollapsed(expandedRowKey)) {
@@ -426,17 +435,16 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
                 expandedNodeSize);
         rowKeysPendingExpand.remove(expandedRowKey);
 
-        getClientRpc().insertRows(expandedRowIndex + 1, expandedNodeSize);
-        // TODO optimize by sending "just enough" of the expanded items
-        // directly
-        doPushRows(
-                Range.withLength(expandedRowIndex + 1, expandedNodeSize));
+        boolean success = doPushRows(Range.withLength(expandedRowIndex + 1,
+                Math.min(expandedNodeSize, latestCacheSize)), expandedNodeSize);
 
-        // expanded node needs to be updated to be marked as expanded
-        // FIXME seems like a slight overkill to do this just for refreshing
-        // expanded status
-        refresh(expandedItem);
-        return true;
+        if (success) {
+            // FIXME seems like a slight overkill to do this just for refreshing
+            // expanded status
+            refresh(expandedItem);
+            return true;
+        }
+        return false;
     }
 
     /**
