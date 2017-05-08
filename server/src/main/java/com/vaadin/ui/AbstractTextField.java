@@ -22,6 +22,7 @@ import java.util.Objects;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -44,7 +45,7 @@ import elemental.json.Json;
  * @since 8.0
  */
 public abstract class AbstractTextField extends AbstractField<String>
-        implements HasValueChangeMode {
+        implements HasValueChangeMode, FieldEvents.FocusNotifier, FieldEvents.BlurNotifier {
 
     private final class AbstractTextFieldServerRpcImpl
             implements AbstractTextFieldServerRpc {
@@ -201,6 +202,7 @@ public abstract class AbstractTextField extends AbstractField<String>
      *
      * @see Registration
      */
+    @Override 
     public Registration addFocusListener(FocusListener listener) {
         return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
@@ -216,6 +218,7 @@ public abstract class AbstractTextField extends AbstractField<String>
      *
      * @see Registration
      */
+    @Override
     public Registration addBlurListener(BlurListener listener) {
         return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
