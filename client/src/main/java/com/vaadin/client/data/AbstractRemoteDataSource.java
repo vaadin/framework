@@ -904,7 +904,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected void resetDataAndSize(int newSize) {
         size = newSize;
-        dropFromCache(getCachedRange());
+        indexToRowMap.clear();
+        keyToIndexMap.clear();
         cached = Range.withLength(0, 0);
 
         getHandlers().forEach(dch -> dch.resetDataAndSize(newSize));

@@ -119,6 +119,24 @@ public class TreeGridElement extends GridElement {
     }
 
     /**
+     * Check whether the given indices correspond to a cell that contains a
+     * visible hierarchy toggle element.
+     *
+     * @param rowIndex
+     *            0-based row index
+     * @param hierarchyColumnIndex
+     *            0-based index of the hierarchy column
+     * @return {@code true} if this cell has the expand toggle visible
+     */
+    public boolean hasExpandToggle(int rowIndex, int hierarchyColumnIndex) {
+        WebElement expandElement = getExpandElement(rowIndex,
+                hierarchyColumnIndex);
+        List<String> classes = Arrays
+                .asList(expandElement.getAttribute("class").split(" "));
+        return classes.contains("expanded") || classes.contains("collapsed");
+    }
+
+    /**
      * Gets the expand/collapse element for the given row.
      *
      * @param rowIndex
