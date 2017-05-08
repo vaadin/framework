@@ -25,7 +25,8 @@ public class GridLayoutElement extends AbstractLayoutElement {
     /**
      * Gets the total number of rows in the layout.
      *
-     * @return the number of rows in the layout,
+     * @return the number of rows in the layout
+     * @since 8.0.6
      */
     public long getRowCount() {
         Long res = (Long) getCommandExecutor()
@@ -40,7 +41,8 @@ public class GridLayoutElement extends AbstractLayoutElement {
     /**
      * Gets the total number of columns in the layout.
      *
-     * @return the number of columns in the layout,
+     * @return the number of columns in the layout
+     * @since 8.0.6
      */
     public long getColumnCount() {
         Long res = (Long) getCommandExecutor()
@@ -62,6 +64,7 @@ public class GridLayoutElement extends AbstractLayoutElement {
      * @return the cell element at the given position
      * @throws NoSuchElementException
      *             if no cell was found at the given position
+     * @since 8.0.6
      */
     public WebElement getCell(int row, int column) {
         WebElement res = (WebElement) getCommandExecutor().executeScript(

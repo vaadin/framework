@@ -1701,6 +1701,7 @@ public class MessageHandler {
      * establishing a push connection with the client.
      *
      * @return the push connection identifier string
+     * @since 8.0.6
      */
     public String getPushId() {
         return pushId;
