@@ -55,7 +55,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
             el = DOM.getNextSibling(el);
         }
 
-        if (BrowserInfo.get().isWebkit()) {
+        if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isFirefox()) {
             // Webkit does not focus non-text input elements on click
             // (#11854)
             addClickHandler(new ClickHandler() {
