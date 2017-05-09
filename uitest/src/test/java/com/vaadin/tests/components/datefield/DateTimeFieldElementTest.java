@@ -5,8 +5,8 @@ import static org.hamcrest.core.Is.is;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.customelements.DateTimeFieldElement;
-import com.vaadin.testbench.customelements.InlineDateTimeFieldElement;
+import com.vaadin.testbench.elements.DateTimeFieldElement;
+import com.vaadin.testbench.elements.InlineDateTimeFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class DateTimeFieldElementTest extends SingleBrowserTest {

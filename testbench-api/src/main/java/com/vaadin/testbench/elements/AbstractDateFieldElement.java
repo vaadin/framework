@@ -13,15 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.testbench.customelements;
+package com.vaadin.testbench.elements;
 
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
- * @author Vaadin Ltd
- *
+ * Element class for testing AbstractDateField.
  */
-@ServerClass("com.vaadin.ui.DateTimeField")
-public class DateTimeFieldElement extends DateFieldElement {
-
+@ServerClass("com.vaadin.ui.AbstractDateField")
+public class AbstractDateFieldElement extends AbstractFieldElement {
 }

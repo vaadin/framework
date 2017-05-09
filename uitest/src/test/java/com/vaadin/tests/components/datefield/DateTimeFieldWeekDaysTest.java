@@ -21,9 +21,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.DateTimeFieldElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
