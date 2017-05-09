@@ -213,7 +213,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         // widget to which the path is relative. Otherwise, the current
         // implementation simply interprets the path as if baseElement was
         // null.
-        Widget baseWidget = WidgetUtil.findWidget(baseElement, null);
+        Widget baseWidget = WidgetUtil.findWidget(baseElement);
 
         Widget w = getWidgetFromPath(widgetPath, baseWidget);
         if (w == null || !WidgetUtil.isAttachedAndDisplayed(w)) {
@@ -337,8 +337,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
 
-                if (WidgetUtil.findWidget(baseElement,
-                        null) instanceof VAbstractOrderedLayout) {
+                if (WidgetUtil.findWidget(
+                        baseElement) instanceof VAbstractOrderedLayout) {
                     if (element.hasChildNodes()) {
                         Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();

@@ -119,7 +119,8 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             leaf = isLeaf(rowDescription);
             if (!leaf) {
                 collapsed = isCollapsed(rowDescription);
-                collapseAllowed = TreeGridConnector.isCollapseAllowed(rowDescription);
+                collapseAllowed = TreeGridConnector
+                        .isCollapseAllowed(rowDescription);
             }
         }
 
@@ -198,14 +199,14 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
      * @return Wrapped renderer.
      */
     public Renderer getInnerRenderer() {
-        return this.innerRenderer;
+        return innerRenderer;
     }
 
     /**
      * Decides whether the element was rendered by {@link HierarchyRenderer}
      */
     public static boolean isElementInHierarchyWidget(Element element) {
-        Widget w = WidgetUtil.findWidget(element, null);
+        Widget w = WidgetUtil.findWidget(element);
 
         while (w != null) {
             if (w instanceof HierarchyItem) {
