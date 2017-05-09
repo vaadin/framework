@@ -727,13 +727,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @Override
-        public void generateData(T data, JsonObject jsonObject) {
-            if (generator == null || !visibleDetails.contains(data)) {
+        public void generateData(T item, JsonObject jsonObject) {
+            if (generator == null || !visibleDetails.contains(item)) {
                 return;
             }
 
-            if (!components.containsKey(data)) {
-                Component detailsComponent = generator.apply(data);
+            if (!components.containsKey(item)) {
+                Component detailsComponent = generator.apply(item);
                 Objects.requireNonNull(detailsComponent,
                         "Details generator can't create null components");
                 if (detailsComponent.getParent() != null) {
@@ -741,15 +741,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                             "Details component was already attached");
                 }
                 addComponentToGrid(detailsComponent);
-                components.put(data, detailsComponent);
+                components.put(item, detailsComponent);
             }
 
             jsonObject.put(GridState.JSONKEY_DETAILS_VISIBLE,
-                    components.get(data).getConnectorId());
+                    components.get(item).getConnectorId());
         }
 
         @Override
-        public void destroyData(T data) {
+        public void destroyData(T item) {
             // No clean up needed. Components are removed when hiding details
             // and/or changing details generator
         }
@@ -757,39 +757,39 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Sets the visibility of details component for given item.
          *
-         * @param data
+         * @param item
          *            the item to show details for
          * @param visible
          *            {@code true} if details component should be visible;
          *            {@code false} if it should be hidden
          */
-        public void setDetailsVisible(T data, boolean visible) {
+        public void setDetailsVisible(T item, boolean visible) {
             boolean refresh = false;
             if (!visible) {
-                refresh = visibleDetails.remove(data);
-                if (components.containsKey(data)) {
-                    removeComponentFromGrid(components.remove(data));
+                refresh = visibleDetails.remove(item);
+                if (components.containsKey(item)) {
+                    removeComponentFromGrid(components.remove(item));
                 }
             } else {
-                refresh = visibleDetails.add(data);
+                refresh = visibleDetails.add(item);
             }
 
             if (refresh) {
-                refresh(data);
+                refresh(item);
             }
         }
 
         /**
          * Returns the visibility of details component for given item.
          *
-         * @param data
+         * @param item
          *            the item to show details for
          *
          * @return {@code true} if details component should be visible;
          *         {@code false} if it should be hidden
          */
-        public boolean isDetailsVisible(T data) {
-            return visibleDetails.contains(data);
+        public boolean isDetailsVisible(T item) {
+            return visibleDetails.contains(item);
         }
 
         @Override
@@ -950,7 +950,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @Override
-        public void generateData(T data, JsonObject jsonObject) {
+        public void generateData(T item, JsonObject jsonObject) {
             ColumnState state = getState(false);
 
             String communicationId = getConnectorId();
@@ -964,25 +964,25 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             JsonObject obj = getDataObject(jsonObject,
                     DataCommunicatorConstants.DATA);
 
-            V providerValue = valueProvider.apply(data);
+            V providerValue = valueProvider.apply(item);
 
             // Make Grid track components.
             if (renderer instanceof ComponentRenderer
                     && providerValue instanceof Component) {
-                addComponent(data, (Component) providerValue);
+                addComponent(item, (Component) providerValue);
             }
             JsonValue rendererValue = renderer.encode(providerValue);
 
             obj.put(communicationId, rendererValue);
 
-            String style = styleGenerator.apply(data);
+            String style = styleGenerator.apply(item);
             if (style != null && !style.isEmpty()) {
                 JsonObject styleObj = getDataObject(jsonObject,
                         GridState.JSONKEY_CELLSTYLES);
                 styleObj.put(communicationId, style);
             }
             if (descriptionGenerator != null) {
-                String description = descriptionGenerator.apply(data);
+                String description = descriptionGenerator.apply(item);
                 if (description != null && !description.isEmpty()) {
                     JsonObject descriptionObj = getDataObject(jsonObject,
                             GridState.JSONKEY_CELLDESCRIPTION);
@@ -991,15 +991,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
         }
 
-        private void addComponent(T data, Component component) {
-            if (activeComponents.containsKey(data)) {
-                if (activeComponents.get(data).equals(component)) {
+        private void addComponent(T item, Component component) {
+            if (activeComponents.containsKey(item)) {
+                if (activeComponents.get(item).equals(component)) {
                     // Reusing old component
                     return;
                 }
-                removeComponent(data);
+                removeComponent(item);
             }
-            activeComponents.put(data, component);
+            activeComponents.put(item, component);
             addComponentToGrid(component);
         }
 
@@ -2517,27 +2517,27 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Sets the visibility of details component for given item.
      *
-     * @param data
+     * @param item
      *            the item to show details for
      * @param visible
      *            {@code true} if details component should be visible;
      *            {@code false} if it should be hidden
      */
-    public void setDetailsVisible(T data, boolean visible) {
-        detailsManager.setDetailsVisible(data, visible);
+    public void setDetailsVisible(T item, boolean visible) {
+        detailsManager.setDetailsVisible(item, visible);
     }
 
     /**
      * Returns the visibility of details component for given item.
      *
-     * @param data
+     * @param item
      *            the item to show details for
      *
      * @return {@code true} if details component should be visible;
      *         {@code false} if it should be hidden
      */
-    public boolean isDetailsVisible(T data) {
-        return detailsManager.isDetailsVisible(data);
+    public boolean isDetailsVisible(T item) {
+        return detailsManager.isDetailsVisible(item);
     }
 
     /**
