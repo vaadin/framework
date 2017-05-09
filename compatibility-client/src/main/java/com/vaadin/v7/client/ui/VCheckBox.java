@@ -61,8 +61,8 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
         }
 
         if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isFirefox()) {
-            // Webkit does not focus non-text input elements on click
-            // (#11854)
+            // Webkit and Firefox do not focus non-text input elements on click
+            // (#3944)
             addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
