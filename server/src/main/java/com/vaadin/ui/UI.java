@@ -1857,15 +1857,16 @@ public abstract class UI extends AbstractSingleComponentContainer
     /**
      * Enable or disable HTML5 DnD for mobile devices.
      * <p>
-     * By default, it is disabled. This operation is NOOP when the browser is
-     * not a mobile device.
+     * Usually you should enable the support in the {@link #init(VaadinRequest)}
+     * method. By default, it is disabled. This operation is NOOP when the user
+     * is not on a mobile device.
      * <p>
      * Changing this will effect all {@link DragSourceExtension} and
      * {@link DropTargetExtension} (and subclasses) that have not yet been
      * attached to the UI on the client side.
      * <p>
      * <em>NOTE: When disabling this after it has been enabled, it will not
-     * effect {@link DragSourceExtension} and {@link DropTargetExtension} (and
+     * affect {@link DragSourceExtension} and {@link DropTargetExtension} (and
      * subclasses) that have been previously added. Those extensions should be
      * explicitly removed to make sure user cannot perform DnD operations
      * anymore.</em>
@@ -1884,6 +1885,10 @@ public abstract class UI extends AbstractSingleComponentContainer
         }
     }
 
+    /**
+     * Load and initialize the mobile drag-drop-polyfill if needed and not yet
+     * done so.
+     */
     private void loadMobileHtml5DndPolyfill() {
         if (mobileHtml5DndPolyfillLoaded) {
             return;

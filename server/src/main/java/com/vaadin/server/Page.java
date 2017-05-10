@@ -27,6 +27,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.annotations.HtmlImport;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.BorderStyle;
@@ -1434,6 +1436,13 @@ public class Page implements Serializable {
 
     /**
      * Add a dependency that should be added to the current page.
+     * <p>
+     * These dependencies are always added before the dependencies included by
+     * using the annotations {@link HtmlImport}, {@link JavaScript} and
+     * {@link StyleSheet} during the same request.
+     * <p>
+     * Please note that these dependencies are always sent to the client side
+     * and not filtered out by any {@link DependencyFilter}.
      *
      * @param dependency
      *            the dependency to add
