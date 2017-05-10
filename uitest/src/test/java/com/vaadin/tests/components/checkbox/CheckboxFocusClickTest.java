@@ -21,16 +21,8 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
-import java.util.List;
 
 public class CheckboxFocusClickTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
-    }
 
     @Test
     public void contextClickCheckboxAndText() {
@@ -42,5 +34,4 @@ public class CheckboxFocusClickTest extends MultiBrowserTest {
         clickElement(label);
         Assert.assertEquals("checkbox focused", getLogRow(0));
     }
-
 }
