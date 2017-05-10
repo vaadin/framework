@@ -92,10 +92,17 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         setStyleNames(styleName);
     }
 
-    public void setStyleNames(String primaryStyleName) {
-        nodeStyleName = primaryStyleName + "-node";
-        expanderStyleName = primaryStyleName + "-expander";
-        cellContentStyleName = primaryStyleName + "-cell-content";
+    /**
+     * Set the style name prefix for the node, expander and cell-content
+     * elements.
+     *
+     * @param styleName
+     *            the style name to set
+     */
+    public void setStyleNames(String styleName) {
+        nodeStyleName = styleName + "-node";
+        expanderStyleName = styleName + "-expander";
+        cellContentStyleName = styleName + "-cell-content";
     }
 
     @Override
@@ -312,7 +319,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         }
     }
 
-    enum ExpanderState {
+    private enum ExpanderState {
         EXPANDED, COLLAPSED, LEAF;
     }
 }
