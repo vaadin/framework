@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui.dnd;
 
+import java.io.Serializable;
+
 /**
  * Contains parameters of a file. Used for transferring information about
  * dropped files from the client to the server.
@@ -22,7 +24,7 @@ package com.vaadin.shared.ui.dnd;
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class FileParameters {
+public class FileParameters implements Serializable {
     private String name;
     private long size;
     private String mime;

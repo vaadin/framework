@@ -34,8 +34,8 @@ import elemental.html.File;
 import elemental.html.FileList;
 
 /**
- * Extension to add drop target functionality to a widget to accept and upload
- * files. Client side counterpart of {@link FileDropTarget}.
+ * Extension to add file drop target functionality to a widget. It allows
+ * dropping files onto the widget and uploading the dropped files to the server.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -128,6 +128,7 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
         }
 
         event.preventDefault();
+        event.stopPropagation();
     }
 
     @Override
