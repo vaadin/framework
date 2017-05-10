@@ -49,11 +49,11 @@ public class InMemoryHierarchicalDataProvider<T> extends
     private SerializableComparator<T> sortOrder = null;
 
     /**
-     * Constructs a new InMemoryHierarchicalDataProvider.
-     * <p>
-     * All changes made to the given HierarchyData object will also be visible
-     * through this data provider.
-     * 
+     * Constructs a new {@link InMemoryHierarchicalDataProvider} for the given
+     * {@link HierarchyData}.
+     *
+     * @see HierarchyData
+     *
      * @param hierarchyData
      *            the backing HierarchyData for this provider
      */
@@ -63,7 +63,7 @@ public class InMemoryHierarchicalDataProvider<T> extends
 
     /**
      * Return the underlying hierarchical data of this provider.
-     * 
+     *
      * @return the underlying data of this provider
      */
     public HierarchyData<T> getData() {
