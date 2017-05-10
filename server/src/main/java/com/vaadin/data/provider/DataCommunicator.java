@@ -18,6 +18,7 @@ package com.vaadin.data.provider;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -547,11 +548,11 @@ public class DataCommunicator<T> extends AbstractExtension {
     /**
      * Returns the {@link QuerySortOrder} to use with backend sorting.
      *
-     * @return list of sort order information to pass to a query
+     * @return an unmodifiable list of sort order information to pass to a query
      * @since 8.0.6
      */
     public List<QuerySortOrder> getBackEndSorting() {
-        return backEndSorting;
+        return Collections.unmodifiableList(backEndSorting);
     }
 
     /**
