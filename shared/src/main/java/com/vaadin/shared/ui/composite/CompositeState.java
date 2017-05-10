@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.composite;
+package com.vaadin.shared.ui.composite;
 
 import com.vaadin.shared.AbstractComponentState;
 
