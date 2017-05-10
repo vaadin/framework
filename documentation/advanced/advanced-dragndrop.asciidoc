@@ -17,10 +17,6 @@ the other location is a common way to move, copy, or associate objects. For
 example, most operating systems allow dragging and dropping files between
 folders or dragging a document on a program to open it. Framework version 8.1 adds support for https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API[HTML5 drag and drop] features. This makes it possible to set components as drag sources that user can drag and drop, or to set them as drop targets to drop things on.
 
-[NOTE]
-====
-Note that the HTML5 drag and drop feature is not supported on touch devices.
-====
 
 == Drag Source
 
@@ -141,8 +137,6 @@ TODO Add an example of drop criteria
 When dragging data over a drop target and the drag over criteria passes, a style name is applied to indicate that the element accepts drops. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
 
 
-===
-
 ////
 TODO add back when supported with new API ?
 [[advanced.dragndrop.external]]
@@ -161,6 +155,28 @@ Dragging and dropping files to browser is supported in HTML 5 and requires a
 compatible browser, such as Mozilla Firefox 3.6 or newer.
 
 ////
+
+[[advanced.dragndrop.mobile]]
+== Mobile Drag And Drop Support
+
+The HTML 5 Drag and Drop API is not yet supported by mobile browsers. To enable HTML5 DnD support on mobile devices, we have included
+an external Polyfill (https://github.com/timruffles/ios-html5-drag-drop-shim/tree/rewrite). Please note that this Polyfill is under MIT License.
+
+By default, the mobile DnD support is disabled, but you can enable it any time for a [classname]#UI#. Starting from the request where the support was enabled, all the added [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses will also work on mobile devices for that UI. The Polyfill is only loaded when the user is using a touch device.
+
+[source, java]
+----
+public class MyUI extends UI {
+    protected void init(VaadinRequest request) {
+        setMobileHtml5DndEnabled(true);
+    }
+}
+----
+
+[NOTE]
+====
+When disabling the support, you need to also remove all the [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses that were added when the mobile DnD support was enabled.
+====
 
 [[advanced.dragndrop.grid]]
 == Drag and Drop Rows in Grid
