@@ -23,8 +23,8 @@ import java.util.Optional;
 
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
-import com.vaadin.shared.composite.CompositeState;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.composite.CompositeState;
 
 /**
  * Composite allows creating new UI components by composition of existing
