@@ -1347,7 +1347,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Returns whether the given session is active or whether it can be closed.
      * <p>
-     * A session is active if and only if its {@link UI#isClosing} returns false
+     * A session is active if and only if its {@link VaadinSession#getState()} returns {@link State#OPEN}
      * and {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout}
      * is negative or has not yet expired.
      *
