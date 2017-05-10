@@ -32,6 +32,6 @@ public class CheckboxFocusClickTest extends MultiBrowserTest {
         WebElement label = checkbox.findElement(By.xpath("label"));
 
         clickElement(label);
-        Assert.assertEquals("checkbox focused", getLogRow(0));
+        Assert.assertEquals("1. checkbox focused", getLogRow(0));
     }
 }
