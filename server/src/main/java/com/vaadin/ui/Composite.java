@@ -127,15 +127,6 @@ public class Composite extends AbstractComponent implements HasComponents {
         }
     }
 
-    /**
-     * Gets the number of contained components.
-     *
-     * @return the number of contained components (zero or one)
-     */
-    public int getComponentCount() {
-        return (getCompositionRoot() != null ? 1 : 0);
-    }
-
     @Override
     protected CompositeState getState() {
         return (CompositeState) super.getState();
@@ -149,7 +140,7 @@ public class Composite extends AbstractComponent implements HasComponents {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        if (getComponentCount() != 1) {
+        if (getCompositionRoot() == null) {
             throw new IllegalStateException(
                     "A composite must always have a composition root");
         }
