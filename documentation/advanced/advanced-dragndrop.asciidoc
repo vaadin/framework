@@ -285,10 +285,10 @@ When dragging data over a drop target Grid's row, depending on the drop mode and
 
 == Drag and Drop Files
 
-Files can be uploaded to the server by dropping them onto a file drop target. To make a component a file drop target, apply the `FileDropTarget` extension to it by creating a new instance and passing the component as first constructor parameter to it.
+Files can be uploaded to the server by dropping them onto a file drop target. To make a component a file drop target, apply the [classname]#FileDropTarget# extension to it by creating a new instance and passing the component as first constructor parameter to it.
 
-You can handle dropped files with the `FileDropHandler` that you add as the second constructor parameter. The `FileDropEvent`, received by the handler, contains information about the dropped files such as file name, file size and mime type.
-Here you can decide if you would like to upload each of the dropped files.
+You can handle the dropped files with the `FileDropHandler` that you add as the second constructor parameter. The [classname]#FileDropEvent#, received by the handler, contains information about the dropped files such as file name, file size and mime type.
+In the handler you can decide if you would like to upload each of the dropped files.
 
 To start uploading a file, set a `StreamVariable` to it. The stream variable provides an output stream where the file will be written and has callback methods for all the stages of the upload process.
 
@@ -296,6 +296,7 @@ To start uploading a file, set a `StreamVariable` to it. The stream variable pro
 ----
 Label dropArea = new Label("Drop files here");
 FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
+
     List<Html5File> files = event.getFiles();
     files.forEach(file -> {
         // Max 1 MB files are uploaded
