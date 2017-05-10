@@ -24,6 +24,10 @@ import com.vaadin.client.widgets.Grid;
 import elemental.json.JsonObject;
 
 /**
+ * An extension of the Grid widget, which supports displaying of hierarchical
+ * data.
+ *
+ * @see Grid
  *
  * @author Vaadin Ltd
  * @since 8.1
