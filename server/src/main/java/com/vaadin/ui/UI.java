@@ -1904,9 +1904,6 @@ public abstract class UI extends AbstractSingleComponentContainer
         getPage().addDependency(new Dependency(Type.JAVASCRIPT,
                 vaadinLocation + ApplicationConstants.MOBILE_DND_POLYFILL_JS));
 
-        getPage().addDependency(new Dependency(Type.STYLESHEET, vaadinLocation
-                + ApplicationConstants.MOBILE_DND_POLYFILL_STYLESHEET));
-
         getRpcProxy(PageClientRpc.class).initializeMobileHtml5DndPolyfill();
     }
 
