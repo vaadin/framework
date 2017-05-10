@@ -15,7 +15,6 @@
  */
 package com.vaadin.event;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.ui.Component;
@@ -82,7 +81,7 @@ public class CollapseEvent<T> extends Component.Event {
      * @since 8.1
      */
     @FunctionalInterface
-    public interface CollapseListener<T> extends Serializable {
+    public interface CollapseListener<T> extends SerializableEventListener {
 
         public static final Method COLLAPSE_METHOD = ReflectTools.findMethod(
                 CollapseListener.class, "itemCollapse", CollapseEvent.class);

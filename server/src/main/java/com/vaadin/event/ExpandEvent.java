@@ -15,7 +15,6 @@
  */
 package com.vaadin.event;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.ui.Component;
@@ -81,7 +80,7 @@ public class ExpandEvent<T> extends Component.Event {
      * @since 8.1
      */
     @FunctionalInterface
-    public interface ExpandListener<T> extends Serializable {
+    public interface ExpandListener<T> extends SerializableEventListener {
 
         public static final Method EXPAND_METHOD = ReflectTools.findMethod(
                 ExpandListener.class, "itemExpand", ExpandEvent.class);
