@@ -104,8 +104,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         }
 
         // Set newly added rows draggable
-        getGridBody().setNewEscalatorRowCallback(
-                rows -> rows.forEach(this::addDraggable));
+        getGridBody()
+                .setNewRowCallback(rows -> rows.forEach(this::addDraggable));
 
         // Add drag listeners to body element
         addDragListeners(getGridBody().getElement());
@@ -363,7 +363,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         removeDragListeners(getGridBody().getElement());
 
         // Remove callback for newly added rows
-        getGridBody().setNewEscalatorRowCallback(null);
+        getGridBody().setNewRowCallback(null);
 
         if (touchScrollDelayUsed) {
             gridConnector.getWidget().getEscalator()
