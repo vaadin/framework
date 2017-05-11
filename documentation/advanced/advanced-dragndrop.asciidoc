@@ -287,4 +287,68 @@ When dragging data over a drop target Grid's row, depending on the drop mode and
 
 (((range="endofrange", startref="term.advanced.dragndrop")))
 
+== Drag and Drop Files
 
+Files can be uploaded to the server by dropping them onto a file drop target. To make a component a file drop target, apply the [classname]#FileDropTarget# extension to it by creating a new instance and passing the component as first constructor parameter to it.
+
+You can handle the dropped files with the `FileDropHandler` that you add as the second constructor parameter. The [classname]#FileDropEvent#, received by the handler, contains information about the dropped files such as file name, file size and mime type.
+In the handler you can decide if you would like to upload each of the dropped files.
+
+To start uploading a file, set a `StreamVariable` to it. The stream variable provides an output stream where the file will be written and has callback methods for all the stages of the upload process.
+
+[source,java]
+----
+Label dropArea = new Label("Drop files here");
+FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
+
+    List<Html5File> files = event.getFiles();
+    files.forEach(file -> {
+        // Max 1 MB files are uploaded
+        if (file.getFileSize() <= 1024 * 1024) {
+            file.setStreamVariable(new StreamVariable() {
+
+                // Output stream to write the file to
+                @Override
+                public OutputStream getOutputStream() {
+                    return new FileOutputStream("/path/to/files/"
+                        + file.getFileName());
+                }
+
+                // Returns whether onProgress() is called during upload
+                @Override
+                public boolean listenProgress() {
+                    return true;
+                }
+
+                // Called periodically during upload
+                @Override
+                public void onProgress(StreamingProgressEvent event) {
+                    Notification.show("Progress, bytesReceived="
+                        + event.getBytesReceived());
+                }
+
+                // Called when upload started
+                @Override
+                public void streamingStarted(StreamingStartEvent event) {
+                    Notification.show("Stream started, fileName="
+                        + event.getFileName());
+                }
+
+                // Called when upload finished
+                @Override
+                public void streamingFinished(StreamingEndEvent event) {
+                    Notification.show("Stream finished, fileName="
+                        + event.getFileName());
+                }
+
+                // Called when upload failed
+                @Override
+                public void streamingFailed(StreamingErrorEvent event) {
+                    Notification.show("Stream failed, fileName="
+                        + event.getFileName());
+                }
+            });
+        }
+    }
+});
+----
