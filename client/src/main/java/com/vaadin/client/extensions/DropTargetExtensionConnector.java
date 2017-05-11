@@ -145,11 +145,12 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      */
     protected void onDragEnter(Event event) {
         NativeEvent nativeEvent = (NativeEvent) event;
-        if (isDropAllowed(nativeEvent)) {
-            // Generate style name for drop target
-            styleDragCenter = dropTargetWidget.getStylePrimaryName()
-                    + STYLE_SUFFIX_DRAG_CENTER;
 
+        // Generate style name for drop target
+        styleDragCenter = dropTargetWidget.getStylePrimaryName()
+                + STYLE_SUFFIX_DRAG_CENTER;
+
+        if (isDropAllowed(nativeEvent)) {
             setTargetClassIndicator(event);
 
             setDropEffect(nativeEvent);
