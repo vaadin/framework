@@ -55,9 +55,10 @@ public class InMemoryHierarchicalDataProvider<T> extends
      * @see HierarchyData
      *
      * @param hierarchyData
-     *            the backing HierarchyData for this provider
+     *            the backing HierarchyData for this provider, not {@code null}
      */
     public InMemoryHierarchicalDataProvider(HierarchyData<T> hierarchyData) {
+        Objects.requireNonNull(hierarchyData, "hierarchyData cannot be null");
         this.hierarchyData = hierarchyData;
     }
 
