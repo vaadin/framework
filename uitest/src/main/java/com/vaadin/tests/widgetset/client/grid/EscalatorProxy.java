@@ -130,10 +130,10 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
-        public void setNewEscalatorRowCallback(
+        public void setNewRowCallback(
                 Consumer<List<TableRowElement>> consumer) {
             throw new UnsupportedOperationException(
-                    "NewEscalatorRowCallback function is not supported");
+                    "setNewRowCallback is not supported");
         }
     }
 

@@ -4010,7 +4010,7 @@ public class Escalator extends Widget
         }
 
         @Override
-        public void setNewEscalatorRowCallback(
+        public void setNewRowCallback(
                 Consumer<List<TableRowElement>> callback) {
             this.newEscalatorRowCallback = callback;
         }

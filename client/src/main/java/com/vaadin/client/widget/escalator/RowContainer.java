@@ -129,7 +129,7 @@ public interface RowContainer {
          *            row elements.
          * @since 8.1
          */
-        public void setNewEscalatorRowCallback(
+        public void setNewRowCallback(
                 Consumer<List<TableRowElement>> consumer);
     }
 
