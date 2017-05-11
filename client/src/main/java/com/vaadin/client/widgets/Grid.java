@@ -6227,7 +6227,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
     }
 
-    protected String getFocusPrimaryStyleName() {
+    private String getFocusPrimaryStyleName() {
         return getStylePrimaryName();
     }
 
