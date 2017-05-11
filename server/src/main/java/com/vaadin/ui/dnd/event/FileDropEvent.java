@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd.event;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +21,7 @@ import java.util.List;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Html5File;
+import com.vaadin.ui.dnd.FileDropHandler;
 
 /**
  * File drop event that contains the collection of files dropped on a file drop

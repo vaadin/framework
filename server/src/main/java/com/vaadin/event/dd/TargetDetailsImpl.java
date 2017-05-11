@@ -18,8 +18,8 @@ package com.vaadin.event.dd;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.ui.dnd.event.DropEvent;
 
 /**
  * A HashMap backed implementation of {@link TargetDetails} for terminal

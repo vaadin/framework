@@ -33,7 +33,7 @@ import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.shared.ui.grid.GridDropTargetRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.GridDropTarget;
+import com.vaadin.ui.components.grid.GridDropTarget;
 
 import elemental.events.Event;
 import elemental.json.JsonObject;

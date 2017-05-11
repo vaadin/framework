@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.dnd.FileDropTargetClientRpc;
 import com.vaadin.shared.ui.dnd.FileDropTargetRpc;
 import com.vaadin.shared.ui.dnd.FileDropTargetState;
 import com.vaadin.shared.ui.dnd.FileParameters;
-import com.vaadin.ui.FileDropTarget;
+import com.vaadin.ui.dnd.FileDropTarget;
 
 import elemental.events.Event;
 import elemental.html.File;

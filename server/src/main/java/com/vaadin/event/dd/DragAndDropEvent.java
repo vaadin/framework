@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dnd.DropEvent;
+import com.vaadin.ui.dnd.event.DropEvent;
 
 /**
  * DragAndDropEvent wraps information related to drag and drop operation. It is

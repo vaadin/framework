@@ -13,16 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.ui.components.grid;
 
-import com.vaadin.event.dnd.DropTargetExtension;
-import com.vaadin.event.dnd.grid.GridDropEvent;
-import com.vaadin.event.dnd.grid.GridDropListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.shared.ui.grid.GridDropTargetRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetState;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  * Makes the rows of a Grid HTML5 drop targets. This is the server side
@@ -130,14 +129,14 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     }
 
     @Override
-    protected void registerDropTargetRpc(Grid<T> target) {
+    protected void registerDropTargetRpc() {
         registerRpc((GridDropTargetRpc) (dataTransferText, dropEffect, rowKey,
                 dropLocation) -> {
 
-            T dropTargetRow = target.getDataCommunicator().getKeyMapper()
+            T dropTargetRow = getParent().getDataCommunicator().getKeyMapper()
                     .get(rowKey);
 
-            GridDropEvent<T> event = new GridDropEvent<>(target,
+            GridDropEvent<T> event = new GridDropEvent<>(getParent(),
                     dataTransferText,
                     DropEffect.valueOf(dropEffect.toUpperCase()),
                     getUI().getActiveDragSource(), dropTargetRow, dropLocation);

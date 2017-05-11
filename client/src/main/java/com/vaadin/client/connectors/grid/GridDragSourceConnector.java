@@ -42,7 +42,7 @@ import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.GridDragSource;
+import com.vaadin.ui.components.grid.GridDragSource;
 
 import elemental.events.Event;
 import elemental.json.Json;

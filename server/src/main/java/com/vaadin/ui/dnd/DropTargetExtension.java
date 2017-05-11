@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd;
 
 import java.util.Objects;
 
@@ -23,10 +23,12 @@ import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.dnd.event.DropEvent;
+import com.vaadin.ui.dnd.event.DropListener;
 
 /**
- * Extension to add drop target functionality to a widget for using HTML5 drag
- * and drop.
+ * Extension to make a component a drag target for HTML5 drag and drop
+ * functionality.
  *
  * @param <T>
  *            Type of the component to be extended.
@@ -43,26 +45,44 @@ public class DropTargetExtension<T extends AbstractComponent>
      *            Component to be extended.
      */
     public DropTargetExtension(T target) {
-
-        registerDropTargetRpc(target);
-
         super.extend(target);
     }
 
-    /**
-     * Register server RPC.
-     *
-     * @param target
-     *            Extended component.
-     */
-    protected void registerDropTargetRpc(T target) {
-        registerRpc((DropTargetRpc) (dataTransferText, dropEffect) -> {
-            DropEvent<T> event = new DropEvent<>(target, dataTransferText,
-                    DropEffect.valueOf(dropEffect.toUpperCase()),
-                    getUI().getActiveDragSource());
+    @Override
+    public void attach() {
+        super.attach();
 
-            fireEvent(event);
+        registerDropTargetRpc();
+    }
+
+    /**
+     * Registers the server side RPC methods invokated from client side on
+     * <code>drop</code> event.
+     * <p>
+     * Override this method if you need to have a custom RPC interface for
+     * transmitting the drop event with more data.
+     */
+    protected void registerDropTargetRpc() {
+        registerRpc((DropTargetRpc) (dataTransferText, dropEffect) -> {
+            onDrop(dataTransferText,
+                    DropEffect.valueOf(dropEffect.toUpperCase()));
         });
+    }
+
+    /**
+     * Invoked when a <code>drop</code> has been received from client side.
+     * Fires the {@link DropEvent}.
+     *
+     * @param dataTransferText
+     *            the data transfer of type 'text' for the drop
+     * @param dropEffect
+     *            the drop effect
+     */
+    protected void onDrop(String dataTransferText, DropEffect dropEffect) {
+        DropEvent<T> event = new DropEvent<>(getParent(), dataTransferText,
+                dropEffect, getUI().getActiveDragSource());
+
+        fireEvent(event);
     }
 
     /**
@@ -104,9 +124,11 @@ public class DropTargetExtension<T extends AbstractComponent>
     }
 
     /**
-     * Sets criteria to allow drop on this drop target. The script executes when
-     * something is dragged on top of the target, and the drop is not allowed in
-     * case the script returns {@code false}.
+     * Sets a criteria script in JavaScript to allow drop on this drop target.
+     * The script is executed when something is dragged on top of the target,
+     * and the drop is not allowed in case the script returns {@code false}. If
+     * no script is set, then the drop is always accepted, if the set
+     * {@link #setDropEffect(DropEffect) dropEffect} matches the drag source.
      * <p>
      * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
      * include untrusted sources such as user input. Always keep in mind that

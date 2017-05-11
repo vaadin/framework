@@ -18,9 +18,9 @@ package com.vaadin.client.extensions;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.button.ButtonConnector;
-import com.vaadin.event.dnd.ButtonDragSource;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.ButtonDragSourceState;
+import com.vaadin.ui.dnd.event.ButtonDragSource;
 
 /**
  * Extension to make Button a drag source for HTML5 drag and drop functionality.

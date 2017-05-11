@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.dnd;
 
-import com.vaadin.event.dnd.ButtonDragSource;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -24,6 +22,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.event.ButtonDragSource;
 
 public class DraggableButton extends AbstractTestUIWithLog {
 

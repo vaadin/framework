@@ -13,34 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.components.grid;
 
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.ui.AbstractComponent;
 
 /**
- * Interface to be implemented when creating a drop listener on a drop target
- * for HTML5 drag and drop.
+ * Drop listener for HTML5 drop on a Grid row.
  *
  * @param <T>
- *         Type of the drop target component.
- * @author Vaadin Ltd
- * @see DropTargetExtension#addDropListener(DropListener)
+ *            The Grid bean type.
+ * @author Vaadin Ltd.
+ * @see GridDragSource#addGridDragEndListener(GridDragEndListener)
  * @since 8.1
  */
 @FunctionalInterface
-public interface DropListener<T extends AbstractComponent> extends
-        ConnectorEventListener {
-    static final Method DROP_METHOD = DropListener.class
+public interface GridDragEndListener<T> extends ConnectorEventListener {
+
+    static final Method DRAG_END_METHOD = GridDragEndListener.class
             .getDeclaredMethods()[0];
 
     /**
-     * Called when drop event is fired.
+     * Invoked when the user has dropped the dragged grid rows, or canceled the
+     * drag.
      *
      * @param event
-     *         Server side drop event.
+     *            The drag end event.
      */
-    void drop(DropEvent<T> event);
+    void dragEnd(GridDragEndEvent<T> event);
 }

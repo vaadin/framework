@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd.event;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.shared.ui.dnd.ButtonDragSourceState;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 /**
  * Extension to make Button a drag source for HTML5 drag and drop functionality.

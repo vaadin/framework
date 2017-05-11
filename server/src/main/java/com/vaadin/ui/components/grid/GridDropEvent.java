@@ -13,15 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd.grid;
+package com.vaadin.ui.components.grid;
 
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.GridDropTarget;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.event.DropEvent;
 
 /**
  * Drop event on an HTML5 drop target {@link Grid} row.

@@ -27,11 +27,11 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
-import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 import elemental.events.Event;
 import elemental.events.EventListener;

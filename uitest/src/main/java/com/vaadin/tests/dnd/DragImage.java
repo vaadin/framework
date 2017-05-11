@@ -4,7 +4,6 @@ import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.server.ThemeResource;
@@ -14,6 +13,7 @@ import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")

@@ -20,8 +20,6 @@ import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -31,6 +29,8 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
