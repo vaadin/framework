@@ -127,13 +127,13 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
         // Add drag end listener
         dragSource.addGridDragEndListener(event -> {
+            log("END: dropEffect=" + event.getDropEffect());
             if (event.getDropEffect() == DropEffect.MOVE
                     && draggedItems != null) {
                 // If drop is successful, remove dragged item from source Grid
                 ((ListDataProvider<Person>) grid.getDataProvider()).getItems()
                         .removeAll(draggedItems);
                 grid.getDataProvider().refreshAll();
-                log("END: dropEffect=" + event.getDropEffect());
                 // Remove reference to dragged items
                 draggedItems = null;
             }

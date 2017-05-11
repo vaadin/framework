@@ -186,10 +186,14 @@ When disabling the support, you need to also remove all the [classname]#DragSour
 
 The Polyfill allows you to apply custom styling to enhance the user experience on touch devices. It is important to remember that these customizations are only used when the polyfill is loaded, and not possible for desktop DnD operations.
 
-The drag image can be customized using the `dnd-poly-drag-image` class name. The following styling can be used to make the drag image "snap back" when the user has aborted the drag:
+The drag image can be customized using the `dnd-poly-drag-image` class name. You must NOT wrap the class rule with e.g. `.valo`, since that is not applied to the drag image element. The following styling can be used to make the drag image opaque and "snap back" when the user did not drop to a valid dropzone:
 
 [source, css]
 ====
+.dnd-poly-drag-image {
+    opacity: .5 !important;
+}
+
 .dnd-poly-drag-image.dnd-poly-snapback {
     transition-property: transform, -webkit-transform !important;
     transition-duration: 200ms !important;
