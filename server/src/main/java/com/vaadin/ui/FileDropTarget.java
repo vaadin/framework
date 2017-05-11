@@ -16,9 +16,7 @@
 package com.vaadin.ui;
 
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.vaadin.event.dnd.DropTargetExtension;
@@ -72,22 +70,40 @@ public class FileDropTarget<T extends AbstractComponent> extends
         registerRpc(new FileDropTargetRpc() {
             @Override
             public void drop(Map<String, FileParameters> fileParams) {
-                List<Html5File> files = new ArrayList<>();
+                Map<String, Html5File> files = new HashMap<>();
                 Map<String, String> urls = new HashMap<>();
 
+                // Create a collection of html5 files
                 fileParams.forEach((id, fileParameters) -> {
-                    Html5File html5File = new Html5File(fileParameters.getName(),
-                            fileParameters.getSize(), fileParameters.getMime());
-                    String url = createUrl(html5File, id);
+                    Html5File html5File = new Html5File(
+                            fileParameters.getName(), fileParameters.getSize(),
+                            fileParameters.getMime());
+                    files.put(id, html5File);
+                });
 
-                    files.add(html5File);
+                // Call drop handler with the collection of dropped files
+                FileDropEvent<T> event = new FileDropEvent<>(target,
+                        files.values());
+                fileDropHandler.drop(event);
+
+                // Create upload URLs for the files that the drop handler
+                // attached stream variable to
+                files.entrySet().stream()
+                        .filter(entry -> entry.getValue().getStreamVariable()
+                                != null).forEach(entry -> {
+                    String id = entry.getKey();
+                    Html5File file = entry.getValue();
+
+                    String url = createUrl(file, id);
                     urls.put(id, url);
                 });
 
-                getRpcProxy(FileDropTargetClientRpc.class).sendUploadUrl(urls);
-
-                FileDropEvent<T> event = new FileDropEvent<>(target, files);
-                fileDropHandler.drop(event);
+                // Send upload URLs to the client if there are files to be
+                // uploaded
+                if (urls.size() > 0) {
+                    getRpcProxy(FileDropTargetClientRpc.class)
+                            .sendUploadUrl(urls);
+                }
             }
 
             @Override

@@ -15,6 +15,7 @@
  */
 package com.vaadin.event.dnd;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.vaadin.ui.AbstractComponent;
@@ -22,7 +23,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Html5File;
 
 /**
- * File drop event that contains the list of files dropped on a file drop
+ * File drop event that contains the collection of files dropped on a file drop
  * target.
  *
  * @param <T>
@@ -34,7 +35,7 @@ import com.vaadin.ui.Html5File;
 public class FileDropEvent<T extends AbstractComponent> extends
         Component.Event {
 
-    private final List<Html5File> files;
+    private final Collection<Html5File> files;
 
     /**
      * Creates a file drop event.
@@ -42,21 +43,21 @@ public class FileDropEvent<T extends AbstractComponent> extends
      * @param target
      *         The file drop target component.
      * @param files
-     *         List of files.
+     *         Collection of files.
      */
-    public FileDropEvent(T target, List<Html5File> files) {
+    public FileDropEvent(T target, Collection<Html5File> files) {
         super(target);
 
         this.files = files;
     }
 
     /**
-     * Gets the list of files dropped onto the file drop target component.
+     * Gets the collection of files dropped onto the file drop target component.
      *
-     * @return List of files that were dropped onto the file drop target
+     * @return Collection of files that were dropped onto the file drop target
      * component.
      */
-    public List<Html5File> getFiles() {
+    public Collection<Html5File> getFiles() {
         return files;
     }
 }
