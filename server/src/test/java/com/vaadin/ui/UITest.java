@@ -1,6 +1,9 @@
 package com.vaadin.ui;
 
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
@@ -10,7 +13,9 @@ import javax.servlet.ServletConfig;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.DefaultDeploymentConfiguration;
 import com.vaadin.server.MockServletConfig;
 import com.vaadin.server.MockVaadinSession;
@@ -151,5 +156,95 @@ public class UITest {
         }
         Assert.assertNull(ui.getPushConnection());
 
+    }
+
+    @Test
+    public void connectorTrackerMemoryLeak() throws Exception {
+        final UI ui = new UI() {
+
+            @Override
+            protected void init(VaadinRequest request) {
+            }
+
+        };
+        ServletConfig servletConfig = new MockServletConfig();
+        VaadinServlet servlet = new VaadinServlet();
+        servlet.init(servletConfig);
+
+        DefaultDeploymentConfiguration deploymentConfiguration = new DefaultDeploymentConfiguration(
+                UI.class, new Properties());
+
+        VaadinServletService service = new VaadinServletService(servlet,
+                deploymentConfiguration);
+        MockVaadinSession session = new MockVaadinSession(service);
+        session.lock();
+        ui.setSession(session);
+        ui.doInit(Mockito.mock(VaadinRequest.class), 1, "foo");
+        session.addUI(ui);
+        ui.setContent(createContent());
+        session.unlock();
+        Assert.assertEquals(0, getUnregisteredConnectors(ui).size());
+        Assert.assertEquals(5, getDirtyConnectors(ui).size());
+        Assert.assertEquals(5, getUninitializedConnectors(ui).size());
+        Assert.assertEquals(5, getConnectorIdToConnector(ui).size());
+
+        session.lock();
+        ui.setContent(createContent());
+        Assert.assertEquals(4, getUnregisteredConnectors(ui).size());
+        Assert.assertEquals(5, getDirtyConnectors(ui).size());
+        Assert.assertEquals(9, getUninitializedConnectors(ui).size());
+        Assert.assertEquals(9, getConnectorIdToConnector(ui).size());
+
+        session.unlock();
+        Assert.assertEquals(0, getUnregisteredConnectors(ui).size());
+        Assert.assertEquals(5, getDirtyConnectors(ui).size());
+        Assert.assertEquals(5, getUninitializedConnectors(ui).size());
+        Assert.assertEquals(5, getConnectorIdToConnector(ui).size());
+
+    }
+
+    private Set<ClientConnector> getUnregisteredConnectors(UI ui)
+            throws Exception {
+        return getSet(ui, "unregisteredConnectors");
+    }
+
+    private Set<ClientConnector> getDirtyConnectors(UI ui) throws Exception {
+        return getSet(ui, "dirtyConnectors");
+    }
+
+    private Set<ClientConnector> getUninitializedConnectors(UI ui)
+            throws Exception {
+        return getSet(ui, "uninitializedConnectors");
+    }
+
+    private Map<String, ClientConnector> getConnectorIdToConnector(UI ui)
+            throws Exception {
+        return getMap(ui, "connectorIdToConnector");
+    }
+
+    private Set<ClientConnector> getSet(UI ui, String name)
+            throws NoSuchFieldException, IllegalAccessException {
+        return (Set<ClientConnector>) getField(ui, name);
+    }
+
+    private Object getField(UI ui, String name)
+            throws NoSuchFieldException, IllegalAccessException {
+        ConnectorTracker ct = ui.getConnectorTracker();
+        Field field = ConnectorTracker.class.getDeclaredField(name);
+        field.setAccessible(true);
+        return field.get(ct);
+    }
+
+    private Map<String, ClientConnector> getMap(UI ui, String name)
+            throws NoSuchFieldException, IllegalAccessException {
+        return (Map<String, ClientConnector>) getField(ui, name);
+    }
+
+    private Component createContent() {
+        VerticalLayout vl = new VerticalLayout();
+        vl.addComponent(new Button("foo"));
+        vl.addComponent(new Button("bar"));
+        vl.addComponent(new Button("baz"));
+        return vl;
     }
 }
