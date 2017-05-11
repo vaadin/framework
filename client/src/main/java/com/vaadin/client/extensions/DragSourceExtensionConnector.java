@@ -295,7 +295,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // for android chrome we use the polyfill, in case browser fires a
         // native dragend event after the polyfill dragend, we need to ignore
         // that one
-        if (isNativeDragEvent((nativeEvent))) {
+        if (isAndoidChrome() && isNativeDragEvent((nativeEvent))) {
             event.preventDefault();
             event.stopPropagation();
             return;
