@@ -21,12 +21,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.vaadin.data.BeanPropertySet;
 import com.vaadin.data.HasHierarchicalDataProvider;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.PropertyDefinition;
+import com.vaadin.data.PropertySet;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
@@ -63,8 +68,71 @@ import com.vaadin.ui.renderers.Renderer;
 public class TreeGrid<T> extends Grid<T>
         implements HasHierarchicalDataProvider<T> {
 
+    /**
+     * Creates a new {@code TreeGrid} without support for creating columns based
+     * on property names. Use an alternative constructor, such as
+     * {@link TreeGrid#TreeGrid(Class)}, to create a {@code TreeGrid} that
+     * automatically sets up columns based on the type of presented data.
+     */
     public TreeGrid() {
-        super(new HierarchicalDataCommunicator<>());
+        this(new HierarchicalDataCommunicator<>());
+    }
+
+    /**
+     * Creates a new {@code TreeGrid} that uses reflection based on the provided
+     * bean type to automatically set up an initial set of columns. All columns
+     * will be configured using the same {@link Object#toString()} renderer that
+     * is used by {@link #addColumn(ValueProvider)}.
+     *
+     * @param beanType
+     *            the bean type to use, not {@code null}
+     */
+    public TreeGrid(Class<T> beanType) {
+        this(BeanPropertySet.get(beanType),
+                new HierarchicalDataCommunicator<>());
+    }
+
+    /**
+     * Creates a new {@code TreeGrid} using the given
+     * {@code HierarchicalDataProvider}.
+     *
+     * @param dataProvider
+     *            the data provider, not {@code null}
+     */
+    public TreeGrid(HierarchicalDataProvider<T, ?> dataProvider) {
+        this();
+        setDataProvider(dataProvider);
+    }
+
+    /**
+     * Creates a {@code TreeGrid} using the given in-memory data.
+     *
+     * @see TreeData
+     *
+     * @param data
+     *            the data to use, not {@code null}
+     */
+    public TreeGrid(TreeData<T> data) {
+        this();
+        setDataProvider(new TreeDataProvider<>(data));
+    }
+
+    /**
+     * Creates a grid using a custom {@link PropertySet} implementation and
+     * custom data communicator.
+     * <p>
+     * Property set is used for configuring the initial columns and resolving
+     * property names for {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     *
+     * @param propertySet
+     *            the property set implementation to use, not {@code null}
+     * @param dataCommunicator
+     *            the data communicator to use, not {@code null}
+     */
+    protected TreeGrid(PropertySet<T> propertySet,
+            HierarchicalDataCommunicator<T> dataCommunicator) {
+        super(propertySet, dataCommunicator);
 
         registerRpc(new NodeCollapseRpc() {
             @Override
@@ -96,6 +164,54 @@ public class TreeGrid<T> extends Grid<T>
                 }
             }
         });
+    }
+
+    /**
+     * Creates a new TreeGrid with the given data communicator and without
+     * support for creating columns based on property names.
+     *
+     * @param dataCommunicator
+     *            the custom data communicator to set
+     */
+    protected TreeGrid(HierarchicalDataCommunicator<T> dataCommunicator) {
+        this(new PropertySet<T>() {
+            @Override
+            public Stream<PropertyDefinition<T, ?>> getProperties() {
+                // No columns configured by default
+                return Stream.empty();
+            }
+
+            @Override
+            public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
+                throw new IllegalStateException(
+                        "A TreeGrid created without a bean type class literal or a custom property set"
+                                + " doesn't support finding properties by name.");
+            }
+        }, dataCommunicator);
+    }
+
+    /**
+     * Creates a {@code TreeGrid} using a custom {@link PropertySet}
+     * implementation for creating a default set of columns and for resolving
+     * property names with {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     * <p>
+     * This functionality is provided as static method instead of as a public
+     * constructor in order to make it possible to use a custom property set
+     * without creating a subclass while still leaving the public constructors
+     * focused on the common use cases.
+     *
+     * @see TreeGrid#TreeGrid()
+     * @see TreeGrid#TreeGrid(Class)
+     *
+     * @param propertySet
+     *            the property set implementation to use, not {@code null}
+     * @return a new tree grid using the provided property set, not {@code null}
+     */
+    public static <BEAN> TreeGrid<BEAN> withPropertySet(
+            PropertySet<BEAN> propertySet) {
+        return new TreeGrid<BEAN>(propertySet,
+                new HierarchicalDataCommunicator<>());
     }
 
     /**
