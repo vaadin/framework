@@ -15,8 +15,17 @@
  */
 package com.vaadin.tests.application;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.server.VaadinService;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -31,6 +40,8 @@ public class MissingHierarchyDetection extends AbstractTestUI {
 
     private CssLayout normalLayout = new CssLayout(
             new Label("Normal layout child"));
+    private List<LogRecord> pendingErrors = Collections
+            .synchronizedList(new ArrayList<>());
 
     public class BrokenCssLayout extends CssLayout
             implements SelectiveRenderer {
@@ -49,6 +60,29 @@ public class MissingHierarchyDetection extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        // Catch log messages so we can see if there is an error
+        Logger vaadinServiceLogger = Logger
+                .getLogger(VaadinService.class.getName());
+        vaadinServiceLogger.addHandler(new Handler() {
+
+            @Override
+            public void publish(LogRecord record) {
+                if (record.getThrown() instanceof AssertionError) {
+                    pendingErrors.add(record);
+                    vaadinServiceLogger.removeHandler(this);
+                }
+            }
+
+            @Override
+            public void flush() {
+
+            }
+
+            @Override
+            public void close() throws SecurityException {
+
+            }
+        });
         addComponent(brokenLayout);
         addComponent(normalLayout);
         addComponent(new Button("Toggle properly", new Button.ClickListener() {
@@ -64,6 +98,16 @@ public class MissingHierarchyDetection extends AbstractTestUI {
                         toggle(false);
                     }
                 }));
+        addComponent(new Button("Check for errors", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (!pendingErrors.isEmpty()) {
+                    log(pendingErrors.remove(0).getThrown().getMessage());
+                } else {
+                    log("No errors");
+                }
+            }
+        }));
     }
 
     private void toggle(boolean properly) {

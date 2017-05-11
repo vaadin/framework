@@ -1365,6 +1365,17 @@ public abstract class VaadinService implements Serializable {
                 final long duration = (System.nanoTime() - (Long) request
                         .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
                 session.setLastRequestDuration(duration);
+
+                // Check that connector tracker is in a consistent state here to
+                // avoid doing it multiple times for a single request
+                for (UI ui : session.getUIs()) {
+                    try {
+                        ui.getConnectorTracker().ensureCleanedAndConsistent();
+                    } catch (AssertionError | Exception e) {
+                        getLogger().log(Level.SEVERE,
+                                "Error cleaning ConnectionTracker", e);
+                    }
+                }
             } finally {
                 session.unlock();
             }
