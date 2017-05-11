@@ -11,11 +11,13 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.IconGenerator;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
@@ -66,6 +68,28 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         MenuItem componentMenu = menu.addItem("Component", null);
         createIconMenu(componentMenu.addItem("Icons", null));
         createCaptionMenu(componentMenu.addItem("Captions", null));
+        componentMenu.addItem("Item Click Listener", new Command() {
+
+            private Registration registration;
+
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                removeRegistration();
+
+                if (selectedItem.isChecked()) {
+                    registration = tree.addItemClickListener(
+                            e -> log("ItemClick: " + e.getItem()));
+                }
+            }
+
+            private void removeRegistration() {
+                if (registration != null) {
+                    registration.remove();
+                    registration = null;
+                }
+            }
+
+        }).setCheckable(true);
         return menu;
     }
 

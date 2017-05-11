@@ -127,4 +127,11 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
         assertNoErrorNotifications();
     }
+
+    @Test
+    public void tree_item_click() {
+        selectMenuPath("Component", "Item Click Listener");
+        $(TreeElement.class).first().getItem(1).click();
+        Assert.assertTrue(logContainsText("ItemClick: 0 | 1"));
+    }
 }

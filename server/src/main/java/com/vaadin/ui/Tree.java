@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,8 +31,10 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
+import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
@@ -39,6 +42,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.renderers.AbstractRenderer;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -53,6 +57,70 @@ import elemental.json.JsonObject;
  *            the data type
  */
 public class Tree<T> extends Composite implements HasDataProvider<T> {
+
+    @Deprecated
+    private static final Method ITEM_CLICK_METHOD = ReflectTools
+            .findMethod(ItemClickListener.class, "itemClick", ItemClick.class);
+
+    /**
+     * A listener for item click events.
+     *
+     * @param <T>
+     *            the tree bean type
+     *
+     * @see ItemClick
+     * @see Registration
+     */
+    @FunctionalInterface
+    public interface ItemClickListener<T> extends SerializableEventListener {
+        /**
+         * Invoked when this listener receives a item click event from a Tree to
+         * which it has been added.
+         *
+         * @param event
+         *            the received event, not <code>null</code>
+         */
+        public void itemClick(Tree.ItemClick<T> event);
+    }
+
+    /**
+     * Tree item click event.
+     * 
+     * @param <T>
+     *            the data type of tree
+     */
+    public static class ItemClick<T> extends ConnectorEvent {
+
+        private final T item;
+
+        /**
+         * Constructs a new item click.
+         * 
+         * @param source
+         *            the tree component
+         * @param item
+         *            the clicked item
+         */
+        protected ItemClick(Tree<T> source, T item) {
+            super(source);
+            this.item = item;
+        }
+
+        /**
+         * Returns the clicked item.
+         * 
+         * @return the clicked item
+         */
+        public T getItem() {
+            return item;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Tree<T> getSource() {
+            return (Tree<T>) super.getSource();
+        }
+    }
 
     /**
      * String renderer that handles icon resources and stores their identifiers
@@ -142,6 +210,8 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
                 e.isUserOriginated()));
         treeGrid.addCollapseListener(e -> fireCollapseEvent(
                 e.getCollapsedItem(), e.isUserOriginated()));
+        treeGrid.addItemClickListener(
+                e -> fireEvent(new ItemClick<T>(this, e.getItem())));
     }
 
     /**
@@ -433,5 +503,17 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     @Override
     public Resource getIcon() {
         return treeGrid.getIcon();
+    }
+
+    /**
+     * Adds an item click listener. The listener is called when an item of this
+     * {@code Tree} is clicked.
+     *
+     * @param listener
+     *            the item click listener, not null
+     * @return a registration for the listener
+     */
+    public Registration addItemClickListener(ItemClickListener<T> listener) {
+        return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
     }
 }
