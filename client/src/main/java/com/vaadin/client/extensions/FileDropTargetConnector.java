@@ -90,6 +90,8 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
                 FileUploadXHR xhr = (FileUploadXHR) FileUploadXHR.create();
                 xhr.setOnReadyStateChange(xmlHttpRequest -> {
                     if (xmlHttpRequest.getReadyState() == XMLHttpRequest.DONE) {
+                        // Poll server for changes
+                        getRpcProxy(FileDropTargetRpc.class).poll();
                         uploading = false;
                         uploadNextFile();
                         xmlHttpRequest.clearOnReadyStateChange();

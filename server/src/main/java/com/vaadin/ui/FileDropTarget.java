@@ -30,6 +30,7 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.dnd.FileDropTargetClientRpc;
 import com.vaadin.shared.ui.dnd.FileDropTargetRpc;
 import com.vaadin.shared.ui.dnd.FileDropTargetState;
+import com.vaadin.shared.ui.dnd.FileParameters;
 
 /**
  * Extension to add drop target functionality to a widget for accepting and
@@ -68,24 +69,31 @@ public class FileDropTarget<T extends AbstractComponent> extends
     protected void registerDropTargetRpc(T target) {
         super.registerDropTargetRpc(target);
 
-        registerRpc((FileDropTargetRpc) fileParams -> {
+        registerRpc(new FileDropTargetRpc() {
+            @Override
+            public void drop(Map<String, FileParameters> fileParams) {
+                List<Html5File> files = new ArrayList<>();
+                Map<String, String> urls = new HashMap<>();
 
-            List<Html5File> files = new ArrayList<>();
-            Map<String, String> urls = new HashMap<>();
+                fileParams.forEach((id, fileParameters) -> {
+                    Html5File html5File = new Html5File(fileParameters.getName(),
+                            fileParameters.getSize(), fileParameters.getMime());
+                    String url = createUrl(html5File, id);
 
-            fileParams.forEach((id, fileParameters) -> {
-                Html5File html5File = new Html5File(fileParameters.getName(),
-                        fileParameters.getSize(), fileParameters.getMime());
-                String url = createUrl(html5File, id);
+                    files.add(html5File);
+                    urls.put(id, url);
+                });
 
-                files.add(html5File);
-                urls.put(id, url);
-            });
+                getRpcProxy(FileDropTargetClientRpc.class).sendUploadUrl(urls);
 
-            getRpcProxy(FileDropTargetClientRpc.class).sendUploadUrl(urls);
+                FileDropEvent<T> event = new FileDropEvent<>(target, files);
+                fileDropHandler.drop(event);
+            }
 
-            FileDropEvent<T> event = new FileDropEvent<>(target, files);
-            fileDropHandler.drop(event);
+            @Override
+            public void poll() {
+                // Polling server for changes after upload finished
+            }
         });
     }
 
