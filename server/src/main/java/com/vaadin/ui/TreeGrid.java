@@ -256,6 +256,30 @@ public class TreeGrid<T> extends Grid<T> {
      * <strong>Note:</strong> Changing the Renderer of the hierarchy column is
      * not supported.
      *
+     * @param column
+     *            the column to use for displaying hierarchy
+     */
+    public void setHierarchyColumn(Column<T, ?> column) {
+        Objects.requireNonNull(column, "column may not be null");
+        if (!getColumns().contains(column)) {
+            throw new IllegalArgumentException(
+                    "Given column is not a column of this TreeGrid");
+        }
+        column.setHidden(false);
+        column.setHidable(false);
+        getState().hierarchyColumnId = getInternalIdForColumn(column);
+    }
+
+    /**
+     * Set the column that displays the hierarchy of this grid's data. By
+     * default the hierarchy will be displayed in the first column.
+     * <p>
+     * Setting a hierarchy column by calling this method also sets the column to
+     * be visible and not hidable.
+     * <p>
+     * <strong>Note:</strong> Changing the Renderer of the hierarchy column is
+     * not supported.
+     *
      * @see Column#setId(String)
      *
      * @param id
