@@ -51,6 +51,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
+        getUI().setMobileHtml5DndEnabled(true);
 
         // Drag source Grid
         Grid<Person> left = createGridAndFillWithData(50);
@@ -117,18 +118,22 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         });
 
         // Add drag start listener
-        dragSource.addGridDragStartListener(
-                event -> draggedItems = event.getDraggedItems());
+        dragSource.addGridDragStartListener(event -> {
+            draggedItems = event.getDraggedItems();
+            log("START: " + draggedItems.size() + ", :"
+                    + draggedItems.stream().map(person -> person.getLastName())
+                            .collect(Collectors.joining(" ")));
+        });
 
         // Add drag end listener
         dragSource.addGridDragEndListener(event -> {
+            log("END: dropEffect=" + event.getDropEffect());
             if (event.getDropEffect() == DropEffect.MOVE
                     && draggedItems != null) {
                 // If drop is successful, remove dragged item from source Grid
                 ((ListDataProvider<Person>) grid.getDataProvider()).getItems()
                         .removeAll(draggedItems);
                 grid.getDataProvider().refreshAll();
-
                 // Remove reference to dragged items
                 draggedItems = null;
             }
@@ -160,7 +165,8 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                     items.addAll(index, draggedItems);
                     dataProvider.refreshAll();
 
-                    log("dragData=" + event.getDataTransferText() + ", target="
+                    log("DROP: dragData=" + event.getDataTransferText()
+                            + ", target="
                             + event.getDropTargetRow().getFirstName() + " "
                             + event.getDropTargetRow().getLastName()
                             + ", location=" + event.getDropLocation());

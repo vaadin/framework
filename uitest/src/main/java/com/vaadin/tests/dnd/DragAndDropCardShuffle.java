@@ -27,6 +27,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -42,7 +43,7 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
     private final Label king = new Label("K");
 
     // Create desk
-    private final HorizontalLayout desk = new HorizontalLayout();
+    private HorizontalLayout desk = new HorizontalLayout();
 
     private final List<DragSourceExtension<Label>> sources = new ArrayList<>();
     private final List<DropTargetExtension<Label>> targets = new ArrayList<>();
@@ -62,9 +63,27 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         dropEffect.setItems(DropEffect.values());
         dropEffect.addValueChangeListener(event -> targets
                 .forEach(target -> target.setDropEffect(event.getValue())));
+        CheckBox enableMobileSupport = new CheckBox("Mobile Support", false);
+        enableMobileSupport.addValueChangeListener(event -> {
+            setMobileHtml5DndEnabled(event.getValue());
 
-        // Create UI and add extensions
+            removeExtensions();
+            setupExtensions();
+        });
+
+        setupExtensions();
+
         desk.addComponents(ace, jack, queen, king);
+
+        addComponents(new HorizontalLayout(effectAllowed, dropEffect,
+                enableMobileSupport), desk);
+
+        // Add styling
+        setStyle();
+    }
+
+    private void setupExtensions() {
+        // Create UI and add extensions
 
         ace.setStyleName("card");
         addDragSourceExtension(ace);
@@ -81,11 +100,20 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         king.setStyleName("card");
         addDragSourceExtension(king);
         addDropTargetExtension(king);
+    }
 
-        addComponents(new HorizontalLayout(effectAllowed, dropEffect), desk);
+    private void removeExtensions() {
+        ace.removeExtension(ace.getExtensions().iterator().next());
+        ace.removeExtension(ace.getExtensions().iterator().next());
 
-        // Add styling
-        setStyle();
+        jack.removeExtension(jack.getExtensions().iterator().next());
+        jack.removeExtension(jack.getExtensions().iterator().next());
+
+        queen.removeExtension(queen.getExtensions().iterator().next());
+        queen.removeExtension(queen.getExtensions().iterator().next());
+
+        king.removeExtension(king.getExtensions().iterator().next());
+        king.removeExtension(king.getExtensions().iterator().next());
     }
 
     private void addDragSourceExtension(Label source) {

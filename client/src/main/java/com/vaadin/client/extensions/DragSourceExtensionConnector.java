@@ -67,8 +67,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dragSourceWidget = ((ComponentConnector) target).getWidget();
 
-        // Do not make elements draggable on touch devices
-        if (BrowserInfo.get().isTouchDevice()) {
+        // HTML5 DnD is by default not enabled for mobile devices
+        if (BrowserInfo.get().isTouchDevice() && !getConnection()
+                .getUIConnector().isMobileHTML5DndEnabled()) {
             return;
         }
 
@@ -158,6 +159,14 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void onDragStart(Event event) {
         // Convert elemental event to have access to dataTransfer
         NativeEvent nativeEvent = (NativeEvent) event;
+
+        // Do not allow drag starts from native Android Chrome, since it doesn't
+        // work properly (doesn't fire dragend reliably)
+        if (isAndoidChrome() && isNativeDragEvent(nativeEvent)) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
 
         // Set effectAllowed parameter
         if (getState().effectAllowed != null) {
@@ -281,11 +290,20 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            browser event to be handled
      */
     protected void onDragEnd(Event event) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+
+        // for android chrome we use the polyfill, in case browser fires a
+        // native dragend event after the polyfill dragend, we need to ignore
+        // that one
+        if (isNativeDragEvent((nativeEvent))) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
         // Initiate server start dragend event when there is a DragEndListener
         // attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
-            String dropEffect = getDropEffect(
-                    ((NativeEvent) event).getDataTransfer());
+            String dropEffect = getDropEffect(nativeEvent.getDataTransfer());
 
             assert dropEffect != null : "Drop effect should never be null";
 
@@ -317,6 +335,40 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected Element getDraggableElement() {
         return dragSourceWidget.getElement();
     }
+
+    /**
+     * Returns whether the given event is a native (android) drag start/end
+     * event, and not produced by the drag-drop-polyfill.
+     *
+     * @param nativeEvent
+     *            the event to test
+     * @return {@code true} if native event, {@code false} if not (polyfill
+     *         event)
+     */
+    protected boolean isNativeDragEvent(NativeEvent nativeEvent) {
+        return isTrusted(nativeEvent) || isComposed(nativeEvent);
+    }
+
+    /**
+     * Returns whether the current browser is Android Chrome.
+     *
+     * @return {@code true} if Android Chrome, {@code false} if not
+     *
+     */
+    protected boolean isAndoidChrome() {
+        BrowserInfo browserInfo = BrowserInfo.get();
+        return browserInfo.isAndroid() && browserInfo.isChrome();
+    }
+
+    private native boolean isTrusted(NativeEvent event)
+    /*-{
+        return event.isTrusted;
+    }-*/;
+
+    private native boolean isComposed(NativeEvent event)
+    /*-{
+        return event.isComposed;
+    }-*/;
 
     private native void setEffectAllowed(DataTransfer dataTransfer,
             String effectAllowed)

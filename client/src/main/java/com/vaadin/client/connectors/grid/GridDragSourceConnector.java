@@ -74,8 +74,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
 
-        // Do not make elements draggable on touch devices
-        if (BrowserInfo.get().isTouchDevice()) {
+        // HTML5 DnD is by default not enabled for mobile devices
+        if (BrowserInfo.get().isTouchDevice() && !getConnection()
+                .getUIConnector().isMobileHTML5DndEnabled()) {
             return;
         }
 
@@ -89,6 +90,15 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
     @Override
     protected void onDragStart(Event event) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+
+        // Do not allow drag starts from native Android Chrome, since it doesn't
+        // work properly (doesn't fire dragend reliably)
+        if (isAndoidChrome() && isNativeDragEvent(nativeEvent)) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
 
         // Collect the keys of dragged rows
         draggedItemKeys = getDraggedRows(event).stream()
@@ -195,8 +205,17 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
     @Override
     protected void onDragEnd(Event event) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+
+        // for android chrome we use the polyfill, in case browser fires a
+        // native dragend event after the polyfill, we need to ignore that one
+        if (isAndoidChrome() && isNativeDragEvent((nativeEvent))) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
         // Ignore event if there are no items dragged
-        if (draggedItemKeys.size() > 0) {
+        if (draggedItemKeys != null && draggedItemKeys.size() > 0) {
             super.onDragEnd(event);
         }
 
