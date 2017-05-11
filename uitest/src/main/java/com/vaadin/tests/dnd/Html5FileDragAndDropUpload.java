@@ -29,75 +29,17 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
 public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
 
+    private static final int FILE_SIZE_LIMIT = 1024 * 1024 * 5; // 5 MB
+
     @Override
     protected void setup(VaadinRequest request) {
 
-        Label dropArea = new Label("Drop files here");
-
-        FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea,
-                event -> {
-                    List<Html5File> files = event.getFiles();
-                    if (files != null) {
-                        files.forEach(file -> {
-                            file.setStreamVariable(new StreamVariable() {
-                                @Override
-                                public OutputStream getOutputStream() {
-                                    return new OutputStream() {
-                                        @Override
-                                        public void write(int b) throws
-                                                IOException {
-                                            // NOP
-                                        }
-                                    };
-                                }
-
-                                @Override
-                                public boolean listenProgress() {
-                                    return true;
-                                }
-
-                                @Override
-                                public void onProgress(
-                                        StreamingProgressEvent event) {
-                                    log("Progress, bytesReceived=" + event
-                                            .getBytesReceived());
-                                }
-
-                                @Override
-                                public void streamingStarted(
-                                        StreamingStartEvent event) {
-                                    log("Stream started, fileName=" + event
-                                            .getFileName());
-                                }
-
-                                @Override
-                                public void streamingFinished(
-                                        StreamingEndEvent event) {
-                                    log("Stream finished, fileName=" + event
-                                            .getFileName());
-                                }
-
-                                @Override
-                                public void streamingFailed(
-                                        StreamingErrorEvent event) {
-                                    log("Stream failed, fileName=" + event
-                                            .getFileName());
-                                }
-
-                                @Override
-                                public boolean isInterrupted() {
-                                    return false;
-                                }
-                            });
-                        });
-                    }
-                });
-
-        Grid<FileParameters> grid = new Grid<>();
+        Grid<FileParameters> grid = new Grid<>("Drop files on the Grid");
         grid.addColumn(FileParameters::getName).setCaption("File name");
         grid.addColumn(FileParameters::getSize).setCaption("File size");
         grid.addColumn(FileParameters::getMime).setCaption("Mime type");
@@ -106,6 +48,12 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
 
         new FileDropTarget<Grid<FileParameters>>(grid, event -> {
             event.getFiles().forEach(html5File -> {
+                if (html5File.getFileSize() > FILE_SIZE_LIMIT) {
+                    Notification.show(html5File.getFileName()
+                            + " is too large (max 5 MB)");
+                    return;
+                }
+
                 html5File.setStreamVariable(new StreamVariable() {
                     @Override
                     public OutputStream getOutputStream() {
@@ -119,17 +67,18 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
 
                     @Override
                     public boolean listenProgress() {
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public void onProgress(StreamingProgressEvent event) {
-                        // NOP
+                        log("Progress, bytesReceived=" + event
+                                .getBytesReceived());
                     }
 
                     @Override
                     public void streamingStarted(StreamingStartEvent event) {
-                        // NOP
+                        log("Stream started, fileName=" + event.getFileName());
                     }
 
                     @Override
@@ -137,11 +86,13 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
                         gridItems.add(new FileParameters(event.getFileName(),
                                 event.getContentLength(), event.getMimeType()));
                         grid.setItems(gridItems);
+
+                        log("Stream finished, fileName=" + event.getFileName());
                     }
 
                     @Override
                     public void streamingFailed(StreamingErrorEvent event) {
-
+                        log("Stream failed, fileName=" + event.getFileName());
                     }
 
                     @Override
@@ -152,13 +103,13 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
             });
         });
 
-        Layout layout = new VerticalLayout(dropArea, grid);
+        Layout layout = new VerticalLayout(grid);
 
         addComponent(layout);
     }
 
     @Override
     protected String getTestDescription() {
-        return "Drop and upload files onto file drop target";
+        return "Drop files onto the Grid to upload them";
     }
 }
