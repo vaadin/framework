@@ -35,7 +35,7 @@ import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.extension.datacommunicator.HierarchicalDataCommunicatorState;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
+import com.vaadin.shared.ui.treegrid.HierarchicalDataCommunicatorConstants;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -215,24 +215,24 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
         JsonObject hierarchyData = Json.createObject();
         if (depth != -1) {
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_DEPTH, depth);
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_DEPTH, depth);
         }
 
         boolean isLeaf = !getDataProvider().hasChildren(item);
         if (isLeaf) {
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF, true);
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF, true);
         } else {
             String key = getKeyMapper().key(item);
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_COLLAPSED,
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_COLLAPSED,
                     mapper.isCollapsed(key));
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_LEAF, false);
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF, false);
             hierarchyData.put(
-                    TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED,
+                    HierarchicalDataCommunicatorConstants.ROW_COLLAPSE_ALLOWED,
                     itemCollapseAllowedProvider.test(item));
         }
 
         // add hierarchy information to row as metadata
-        dataObject.put(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION,
+        dataObject.put(HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION,
                 hierarchyData);
 
         return dataObject;
