@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.gwt.animation.client.AnimationScheduler;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -82,7 +81,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
         // Set newly added rows draggable
         getGridBody().setNewEscalatorRowCallback(
-                rows -> rows.forEach(this::setDraggable));
+                rows -> rows.forEach(this::addDraggable));
 
         // Add drag listeners to body element
         addDragListeners(getGridBody().getElement());
@@ -101,7 +100,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         }
 
         // Collect the keys of dragged rows
-        draggedItemKeys = getDraggedRows(event).stream()
+        draggedItemKeys = getDraggedRows(nativeEvent).stream()
                 .map(row -> row.getString(GridState.JSONKEY_ROWKEY))
                 .collect(Collectors.toList());
 
@@ -153,7 +152,6 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                 AnimationScheduler.get().requestAnimationFrame(timestamp -> {
                     badge.removeFromParent();
                 }, (Element) dragStartEvent.getEventTarget().cast());
-                setDraggable(draggedRowElement);
             }
             fixDragImageForSafari(draggedRowElement);
         }
@@ -170,24 +168,25 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     }
 
     @Override
-    protected String createDataTransferText(Event dragStartEvent) {
+    protected String createDataTransferText(NativeEvent dragStartEvent) {
         JsonArray dragData = toJsonArray(getDraggedRows(dragStartEvent).stream()
                 .map(this::getDragData).collect(Collectors.toList()));
         return dragData.toJson();
     }
 
     @Override
-    protected void sendDragStartEventToServer(Event dragStartEvent) {
+    protected void sendDragStartEventToServer(NativeEvent dragStartEvent) {
 
         // Start server RPC with dragged item keys
         getRpcProxy(GridDragSourceRpc.class).dragStart(draggedItemKeys);
     }
 
-    private List<JsonObject> getDraggedRows(Event dragStartEvent) {
+    private List<JsonObject> getDraggedRows(NativeEvent dragStartEvent) {
         List<JsonObject> draggedRows = new ArrayList<>();
 
-        if (TableRowElement.is((JavaScriptObject) dragStartEvent.getTarget())) {
-            TableRowElement row = (TableRowElement) dragStartEvent.getTarget();
+        if (TableRowElement.is(dragStartEvent.getEventTarget())) {
+            TableRowElement row = (TableRowElement) dragStartEvent
+                    .getEventTarget().cast();
             int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
                     .getLogicalRowIndex(row);
 
@@ -224,7 +223,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     }
 
     @Override
-    protected void sendDragEndEventToServer(Event dragEndEvent,
+    protected void sendDragEndEventToServer(NativeEvent dragEndEvent,
             DropEffect dropEffect) {
 
         // Send server RPC with dragged item keys

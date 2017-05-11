@@ -73,17 +73,17 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             return;
         }
 
-        setDraggable(getDraggableElement());
+        addDraggable(getDraggableElement());
         addDragListeners(getDraggableElement());
     }
 
     /**
-     * Sets the given element draggable and adds class name.
+     * Makes the given element draggable and adds class name.
      *
      * @param element
      *            Element to be set draggable.
      */
-    protected void setDraggable(Element element) {
+    protected void addDraggable(Element element) {
         element.setDraggable(Element.DRAGGABLE_TRUE);
         element.addClassName(
                 getStylePrimaryName(element) + STYLE_SUFFIX_DRAGSOURCE);
@@ -178,7 +178,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         setDragImage(nativeEvent);
 
         // Set text data parameter
-        String dataTransferText = createDataTransferText(event);
+        String dataTransferText = createDataTransferText(nativeEvent);
         // Always set something as the text data, or DnD won't work in FF !
         if (dataTransferText == null) {
             dataTransferText = "";
@@ -189,7 +189,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
-            sendDragStartEventToServer(event);
+            sendDragStartEventToServer(nativeEvent);
         }
 
         // Stop event bubbling
@@ -246,7 +246,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            Event to set the data for.
      * @return Textual data to be set for the event or {@literal null}.
      */
-    protected String createDataTransferText(Event dragStartEvent) {
+    protected String createDataTransferText(NativeEvent dragStartEvent) {
         return getState().dataTransferText;
     }
 
@@ -259,12 +259,15 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @param dragStartEvent
      *            Client side dragstart event.
      */
-    protected void sendDragStartEventToServer(Event dragStartEvent) {
+    protected void sendDragStartEventToServer(NativeEvent dragStartEvent) {
         getRpcProxy(DragSourceRpc.class).dragStart();
     }
 
     /**
      * Sets the drag image to be displayed.
+     * <p>
+     * Override this method in case you need custom drag image setting. Called
+     * from {@link #onDragStart(Event)}.
      *
      * @param dragStartEvent
      *            The drag start event.
@@ -307,7 +310,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
             assert dropEffect != null : "Drop effect should never be null";
 
-            sendDragEndEventToServer(event,
+            sendDragEndEventToServer(nativeEvent,
                     DropEffect.valueOf(dropEffect.toUpperCase()));
         }
     }
@@ -321,7 +324,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            Drop effect of the dragend event, extracted from {@code
      *         DataTransfer.dropEffect} parameter.
      */
-    protected void sendDragEndEventToServer(Event dragEndEvent,
+    protected void sendDragEndEventToServer(NativeEvent dragEndEvent,
             DropEffect dropEffect) {
         getRpcProxy(DragSourceRpc.class).dragEnd(dropEffect);
     }
@@ -329,6 +332,12 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     /**
      * Finds the draggable element within the widget. By default, returns the
      * topmost element.
+     * <p>
+     * Override this method to make some other than the root element draggable
+     * instead.
+     * <p>
+     * In case you need to make more than whan element draggable, override
+     * {@link #extend(ServerConnector)} instead.
      *
      * @return the draggable element in the parent widget.
      */
@@ -376,7 +385,14 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         dataTransfer.effectAllowed = effectAllowed;
     }-*/;
 
-    static native String getDropEffect(DataTransfer dataTransfer)
+    /**
+     * Returns the dropEffect for the given data transfer.
+     *
+     * @param dataTransfer
+     *            the data transfer with drop effect
+     * @return the currently set drop effect
+     */
+    protected static native String getDropEffect(DataTransfer dataTransfer)
     /*-{
         return dataTransfer.dropEffect;
     }-*/;
