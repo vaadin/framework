@@ -53,7 +53,7 @@ public class InMemoryHierarchicalDataProvider<T> extends
      * <p>
      * All changes made to the given HierarchyData object will also be visible
      * through this data provider.
-     * 
+     *
      * @param hierarchyData
      *            the backing HierarchyData for this provider
      */
@@ -63,7 +63,7 @@ public class InMemoryHierarchicalDataProvider<T> extends
 
     /**
      * Return the underlying hierarchical data of this provider.
-     * 
+     *
      * @return the underlying data of this provider
      */
     public HierarchyData<T> getData() {
@@ -77,6 +77,12 @@ public class InMemoryHierarchicalDataProvider<T> extends
 
     @Override
     public boolean hasChildren(T item) {
+        if (!hierarchyData.contains(item)) {
+            throw new IllegalArgumentException("Item " + item
+                    + " could not be found in the backing HierarchyData. "
+                    + "Did you forget to refresh this data provider after item removal?");
+        }
+
         return !hierarchyData.getChildren(item).isEmpty();
     }
 
@@ -89,6 +95,13 @@ public class InMemoryHierarchicalDataProvider<T> extends
     @Override
     public Stream<T> fetchChildren(
             HierarchicalQuery<T, SerializablePredicate<T>> query) {
+        if (!hierarchyData.contains(query.getParent())) {
+            throw new IllegalArgumentException("The queried item "
+                    + query.getParent()
+                    + " could not be found in the backing HierarchyData. "
+                    + "Did you forget to refresh this data provider after item removal?");
+        }
+
         Stream<T> childStream = getFilteredStream(
                 hierarchyData.getChildren(query.getParent()).stream(),
                 query.getFilter());

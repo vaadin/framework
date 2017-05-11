@@ -73,6 +73,13 @@ public class InMemoryHierarchicalDataProviderTest extends
     }
 
     @Test
+    public void hierarchyData_re_add_removed_item() {
+        StrBean item = rootData.get(0);
+        data.removeItem(item).addItem(null, item);
+        Assert.assertTrue(data.getChildren(null).contains(item));
+    }
+
+    @Test
     public void setFilter() {
         getDataProvider().setFilter(item -> item.getValue().equals("Xyz")
                 || item.getValue().equals("Baz"));
