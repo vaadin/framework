@@ -161,11 +161,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         NativeEvent nativeEvent = (NativeEvent) event;
 
         // Do not allow drag starts from native Android Chrome, since it doesn't
-        // work properly (never fires dragend)
-        BrowserInfo browserInfo = BrowserInfo.get();
-        if (browserInfo.isAndroid() && browserInfo.isChrome()
-                && isAndroidChromeNativeDragStartEvent(nativeEvent)) {
+        // work properly (doesn't fire dragend reliably)
+        if (isAndoidChrome() && isNativeDragEvent(nativeEvent)) {
             event.preventDefault();
+            event.stopPropagation();
             return;
         }
 
@@ -291,11 +290,20 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            browser event to be handled
      */
     protected void onDragEnd(Event event) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+
+        // for android chrome we use the polyfill, in case browser fires a
+        // native dragend event after the polyfill dragend, we need to ignore
+        // that one
+        if (isNativeDragEvent((nativeEvent))) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
         // Initiate server start dragend event when there is a DragEndListener
         // attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
-            String dropEffect = getDropEffect(
-                    ((NativeEvent) event).getDataTransfer());
+            String dropEffect = getDropEffect(nativeEvent.getDataTransfer());
 
             assert dropEffect != null : "Drop effect should never be null";
 
@@ -329,17 +337,27 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Returns whether the given event is a native android drag start event, and
-     * not produced by the drag-drop-polyfill.
+     * Returns whether the given event is a native (android) drag start/end
+     * event, and not produced by the drag-drop-polyfill.
      *
      * @param nativeEvent
      *            the event to test
      * @return {@code true} if native event, {@code false} if not (polyfill
      *         event)
      */
-    protected boolean isAndroidChromeNativeDragStartEvent(
-            NativeEvent nativeEvent) {
+    protected boolean isNativeDragEvent(NativeEvent nativeEvent) {
         return isTrusted(nativeEvent) || isComposed(nativeEvent);
+    }
+
+    /**
+     * Returns whether the current browser is Android Chrome.
+     *
+     * @return {@code true} if Android Chrome, {@code false} if not
+     *
+     */
+    protected boolean isAndoidChrome() {
+        BrowserInfo browserInfo = BrowserInfo.get();
+        return browserInfo.isAndroid() && browserInfo.isChrome();
     }
 
     private native boolean isTrusted(NativeEvent event)
