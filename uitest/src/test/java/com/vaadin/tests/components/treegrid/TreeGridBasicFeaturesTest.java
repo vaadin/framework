@@ -137,20 +137,20 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertEquals(6, grid.getRowCount());
         assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
         assertTrue(
-                grid.getRow(0).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(0).hasClassName("v-treegrid-row-focused"));
         assertFalse(
-                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(1).hasClassName("v-treegrid-row-focused"));
 
         // Should navigate 2 times down to "1 | 1"
         new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN).perform();
         assertEquals(6, grid.getRowCount());
         assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
         assertFalse(
-                grid.getRow(0).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(0).hasClassName("v-treegrid-row-focused"));
         assertFalse(
-                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(1).hasClassName("v-treegrid-row-focused"));
         assertTrue(
-                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(2).hasClassName("v-treegrid-row-focused"));
 
         // Should expand "1 | 1" without moving focus
         new Actions(getDriver()).sendKeys(Keys.RIGHT).perform();
@@ -158,14 +158,14 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertCellTexts(2, 0,
                 new String[] { "1 | 1", "2 | 0", "2 | 1", "2 | 2", "1 | 2" });
         assertTrue(
-                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(2).hasClassName("v-treegrid-row-focused"));
 
         // Should collapse "1 | 1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         assertEquals(6, grid.getRowCount());
         assertCellTexts(2, 0, new String[] { "1 | 1", "1 | 2", "0 | 1" });
         assertTrue(
-                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(2).hasClassName("v-treegrid-row-focused"));
 
         // Should navigate to "0 | 0"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
@@ -173,21 +173,21 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertCellTexts(0, 0,
                 new String[] { "0 | 0", "1 | 0", "1 | 1", "1 | 2", "0 | 1" });
         assertTrue(
-                grid.getRow(0).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(0).hasClassName("v-treegrid-row-focused"));
 
         // Should collapse "0 | 0"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
         assertTrue(
-                grid.getRow(0).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(0).hasClassName("v-treegrid-row-focused"));
 
         // Nothing should happen
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
         assertTrue(
-                grid.getRow(0).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(0).hasClassName("v-treegrid-row-focused"));
 
         assertNoErrorNotifications();
     }

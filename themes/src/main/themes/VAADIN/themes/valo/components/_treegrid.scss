@@ -67,7 +67,7 @@ $tg-expander-padding: 10px !default;
     display: inline-block;
   }
 
-  .#{$primary-stylename}-rowmode-row-focused {
+  .#{$primary-stylename}-row-focused {
 
     &:before {
       content: "";
@@ -82,14 +82,25 @@ $tg-expander-padding: 10px !default;
     }
   }
 
-  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-row-focused:before {
+  .#{$primary-stylename}-cell-focused {
+    position: static;
+
+    &:before {
+      display: none;
+    }
+  }
+
+  .#{$primary-stylename}:focus .#{$primary-stylename}-row-focused:before {
     display: block;
   }
 
-  .#{$primary-stylename}.v-disabled:focus .#{$primary-stylename}-rowmode-row-focused:before {
-    // Disabled Grid should not show cell focus outline
+  .#{$primary-stylename}.v-disabled:focus .#{$primary-stylename}-row-focused:before {
+    // Disabled TreeGrid should not show row focus outline
     display: none;
   }
 
+  .#{$primary-stylename}:focus .#{$primary-stylename}-cell-focused:before {
+    display: none;
+  }
 }
 
