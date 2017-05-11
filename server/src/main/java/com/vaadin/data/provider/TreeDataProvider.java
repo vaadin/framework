@@ -51,9 +51,11 @@ public class TreeDataProvider<T>
      * visible through this data provider.
      *
      * @param treeData
-     *            the backing {@link TreeData} for this provider
+     *            the backing {@link TreeData} for this provider, not
+     *            {@code null}
      */
     public TreeDataProvider(TreeData<T> treeData) {
+        Objects.requireNonNull(treeData, "treeData cannot be null");
         this.treeData = treeData;
     }
 
