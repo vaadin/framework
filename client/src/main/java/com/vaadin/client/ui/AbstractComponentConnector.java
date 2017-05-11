@@ -48,6 +48,8 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
@@ -810,5 +812,67 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public boolean isErrorIndicatorVisible() {
         return getState().errorMessage != null;
+    }
+
+    /**
+     * Invoked when a {@link DragSourceExtensionConnector} has been attached to
+     * this component.
+     * <p>
+     * By default, does nothing. If you need to apply some changes to the
+     * widget, override this method.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDragSourceDetached()
+     */
+    public void onDragSourceAttached() {
+
+    }
+
+    /**
+     * Invoked when a {@link DragSourceExtensionConnector} has been removed from
+     * this component.
+     * <p>
+     * By default, does nothing.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDragSourceAttached()
+     */
+    public void onDragSourceDetached() {
+
+    }
+
+    /**
+     * Invoked when a {@link DropTargetExtensionConnector} has been attached to
+     * this component.
+     * <p>
+     * By default, does nothing. If you need to apply some changes to the
+     * widget, override this method.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDropTargetDetached()
+     */
+    public void onDropTargetAttached() {
+
+    }
+
+    /**
+     * Invoked when a {@link DropTargetExtensionConnector} has been removed from
+     * this component.
+     * <p>
+     * By default, does nothing.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDropTargetAttached()
+     */
+    public void onDropTargetDetached() {
+
     }
 }

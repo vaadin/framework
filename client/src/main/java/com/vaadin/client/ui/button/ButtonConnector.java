@@ -128,4 +128,16 @@ public class ButtonConnector extends AbstractComponentConnector
         getRpcProxy(ButtonServerRpc.class).click(details);
 
     }
+
+    @Override
+    public void onDragSourceAttached() {
+        // Disable mouse event capturing to make the widget draggable
+        getWidget().setCapturingEnabled(false);
+    }
+
+    @Override
+    public void onDragSourceDetached() {
+        // Reset mouse event capturing
+        getWidget().setCapturingEnabled(true);
+    }
 }

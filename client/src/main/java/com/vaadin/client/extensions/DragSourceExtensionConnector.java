@@ -27,6 +27,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
@@ -75,6 +76,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         addDraggable(getDraggableElement());
         addDragListeners(getDraggableElement());
+
+        ((AbstractComponentConnector) target).onDragSourceAttached();
     }
 
     /**
@@ -138,6 +141,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         removeDraggable(dragSource);
         removeDragListeners(dragSource);
+
+        ((AbstractComponentConnector) getParent()).onDragSourceDetached();
     }
 
     @OnStateChange("resources")

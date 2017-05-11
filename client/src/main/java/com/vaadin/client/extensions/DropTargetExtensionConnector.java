@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -87,6 +88,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         }
 
         addDropListeners(getDropTargetElement());
+
+        ((AbstractComponentConnector) target).onDropTargetAttached();
     }
 
     /**
@@ -126,6 +129,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         super.onUnregister();
 
         removeDropListeners(getDropTargetElement());
+        ((AbstractComponentConnector) getParent()).onDropTargetDetached();
     }
 
     /**
