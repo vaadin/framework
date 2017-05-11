@@ -263,12 +263,6 @@ public class ConnectorTracker implements Serializable {
             removeUnregisteredConnectors();
         }
 
-        // Do this expensive check only with assertions enabled
-        assert isHierarchyComplete() : "The connector hierarchy is corrupted. "
-                + "Check for missing calls to super.setParent(), super.attach() and super.detach() "
-                + "and that all custom component containers call child.setParent(this) when a child is added and child.setParent(null) when the child is no longer used. "
-                + "See previous log messages for details.";
-
         // remove detached components from paintableIdMap so they
         // can be GC'ed
         Iterator<ClientConnector> iterator = connectorIdToConnector.values()
@@ -416,7 +410,14 @@ public class ConnectorTracker implements Serializable {
         unregisteredConnectors.clear();
     }
 
-    private boolean isHierarchyComplete() {
+    /**
+     * Checks that the connector hierarchy is consistent.
+     *
+     * @return <code>true</code> if the hierarchy is consistent,
+     *         <code>false</code> otherwise
+     * @since
+     */
+    public boolean isHierarchyComplete() {
         boolean noErrors = true;
 
         Set<ClientConnector> danglingConnectors = new HashSet<>(

@@ -305,7 +305,13 @@ public class UidlWriter implements Serializable {
             writePerformanceData(ui, writer);
         } finally {
             uiConnectorTracker.setWritingResponse(false);
-            uiConnectorTracker.cleanConnectorMap();
+            // Do this expensive check only with assertions enabled
+            assert uiConnectorTracker
+                    .isHierarchyComplete() : "The connector hierarchy is corrupted. "
+                            + "Check for missing calls to super.setParent(), super.attach() and super.detach() "
+                            + "and that all custom component containers call child.setParent(this) when a child is added and child.setParent(null) when the child is no longer used. "
+                            + "See previous log messages for details.";
+
         }
     }
 
