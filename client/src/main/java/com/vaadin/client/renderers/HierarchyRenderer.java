@@ -32,7 +32,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.connectors.treegrid.TreeGridConnector;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.treegrid.HierarchyRendererCellReferenceWrapper;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
+import com.vaadin.shared.ui.treegrid.HierarchicalDataCommunicatorConstants;
 
 import elemental.json.JsonObject;
 
@@ -162,30 +162,30 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
 
     private int getDepth(JsonObject rowDescription) {
         return (int) rowDescription
-                .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
+                .getNumber(HierarchicalDataCommunicatorConstants.ROW_DEPTH);
     }
 
     private JsonObject getHierarchyData(JsonObject row) {
         return row.getObject(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
     }
 
     private boolean hasHierarchyData(JsonObject row) {
         return row.hasKey(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
     }
 
     private boolean isLeaf(JsonObject rowDescription) {
         boolean leaf;
         leaf = rowDescription
-                .getBoolean(TreeGridCommunicationConstants.ROW_LEAF);
+                .getBoolean(HierarchicalDataCommunicatorConstants.ROW_LEAF);
         return leaf;
     }
 
     private boolean isCollapsed(JsonObject rowDescription) {
         boolean collapsed;
         collapsed = rowDescription
-                .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
+                .getBoolean(HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
         return collapsed;
     }
 
