@@ -18,13 +18,14 @@ package com.vaadin.shared.ui.treegrid;
 import java.io.Serializable;
 
 /**
- * Set of contants used by TreeGrid. These are commonly used JsonObject keys
- * which are considered to be reserved for internal use.
+ * Set of contants used in data communication of hierarchical data. These are
+ * commonly used JsonObject keys which are considered to be reserved for
+ * internal use.
  *
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class TreeGridCommunicationConstants implements Serializable {
+public class HierarchicalDataCommunicatorConstants implements Serializable {
     public static final String ROW_HIERARCHY_DESCRIPTION = "rhd";
     public static final String ROW_DEPTH = "d";
     public static final String ROW_COLLAPSED = "c";
