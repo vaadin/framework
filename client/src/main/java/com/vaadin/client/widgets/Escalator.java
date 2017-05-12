@@ -309,6 +309,8 @@ public class Escalator extends Widget
 
             public static final String POINTER_EVENT_TYPE_TOUCH = "touch";
 
+            public static final int SIGNIFICANT_MOVE_THRESHOLD = 3;
+
             /**
              * A <a href=
              * "http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsOverlay.html"
@@ -389,6 +391,9 @@ public class Escalator extends Widget
             private boolean touching = false;
             // Two movement objects for storing status and processing touches
             private Movement yMov, xMov;
+            // true if moved significantly since touch start
+            private boolean movedSignificantly = false;
+            private double touchStartTime;
             final double MIN_VEL = 0.6, MAX_VEL = 4, F_VEL = 1500, F_ACC = 0.7,
                     F_AXIS = 1;
 
@@ -525,7 +530,9 @@ public class Escalator extends Widget
                     }
                     xMov.startTouch(event);
                     yMov.startTouch(event);
+                    touchStartTime = Duration.currentTimeMillis();
                     touching = true;
+                    movedSignificantly = false;
                 } else {
                     touching = false;
                     animation.cancel();
@@ -535,6 +542,26 @@ public class Escalator extends Widget
 
             public void touchMove(final CustomTouchEvent event) {
                 if (touching) {
+                    if (!movedSignificantly) {
+                        double distanceSquared = Math.abs(xMov.delta)
+                                * Math.abs(xMov.delta)
+                                + Math.abs(yMov.delta) * Math.abs(yMov.delta);
+                        movedSignificantly = distanceSquared > SIGNIFICANT_MOVE_THRESHOLD
+                                * SIGNIFICANT_MOVE_THRESHOLD;
+                    }
+                    // allow handling long press differently, without triggering
+                    // scrolling
+                    if (escalator.getDelayToCancelTouchScroll() >= 0
+                            && !movedSignificantly
+                            && Duration.currentTimeMillis()
+                                    - touchStartTime > escalator
+                                            .getDelayToCancelTouchScroll()) {
+                        // cancel touch handling, don't prevent event
+                        touching = false;
+                        animation.cancel();
+                        acceleration = 1;
+                        return;
+                    }
                     xMov.moveTouch(event);
                     yMov.moveTouch(event);
                     xMov.validate(yMov);
@@ -5624,6 +5651,8 @@ public class Escalator extends Widget
 
     private HeightMode heightMode = HeightMode.CSS;
 
+    private double delayToCancelTouchScroll = -1;
+
     private boolean layoutIsScheduled = false;
     private ScheduledCommand layoutCommand = new ScheduledCommand() {
         @Override
@@ -6647,6 +6676,49 @@ public class Escalator extends Widget
      */
     public HandlerRegistration addScrollHandler(ScrollHandler handler) {
         return addHandler(handler, ScrollEvent.TYPE);
+    }
+
+    /**
+     * Returns true if the Escalator is currently scrolling by touch, or has not
+     * made the decision yet whether to accept touch actions as scrolling or
+     * not.
+     *
+     * @see #setDelayToCancelTouchScroll(double)
+     *
+     * @return true when the component is touch scrolling at the moment
+     * @since 8.1
+     */
+    public boolean isTouchScrolling() {
+        return scroller.touchHandlerBundle.touching;
+    }
+
+    /**
+     * Returns the time after which to not consider a touch event a scroll event
+     * if the user has not moved the touch. This can be used to differentiate
+     * between quick touch move (scrolling) and long tap (e.g. context menu or
+     * drag and drop operation).
+     *
+     * @return delay in milliseconds after which to cancel touch scrolling if
+     *         there is no movement, -1 means scrolling is always allowed
+     * @since 8.1
+     */
+    public double getDelayToCancelTouchScroll() {
+        return delayToCancelTouchScroll;
+    }
+
+    /**
+     * Sets the time after which to not consider a touch event a scroll event if
+     * the user has not moved the touch. This can be used to differentiate
+     * between quick touch move (scrolling) and long tap (e.g. context menu or
+     * drag and drop operation).
+     *
+     * @param delayToCancelTouchScroll
+     *            delay in milliseconds after which to cancel touch scrolling if
+     *            there is no movement, -1 to always allow scrolling
+     * @since 8.1
+     */
+    public void setDelayToCancelTouchScroll(double delayToCancelTouchScroll) {
+        this.delayToCancelTouchScroll = delayToCancelTouchScroll;
     }
 
     @Override
