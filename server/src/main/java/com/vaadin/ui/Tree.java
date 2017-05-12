@@ -38,7 +38,6 @@ import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
