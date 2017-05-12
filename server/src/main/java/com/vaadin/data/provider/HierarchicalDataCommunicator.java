@@ -33,8 +33,8 @@ import com.vaadin.data.provider.HierarchyMapper.TreeNode;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.extension.datacommunicator.HierarchicalDataCommunicatorState;
-import com.vaadin.shared.ui.treegrid.HierarchicalDataCommunicatorConstants;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
