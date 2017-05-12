@@ -21,7 +21,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
 
 /**
- * An event that is fired when an item is expanded.
+ * An event that is fired when an item is expanded in a listing component that
+ * displays hierarchical data.
  *
  * @author Vaadin Ltd
  * @since 8.1
