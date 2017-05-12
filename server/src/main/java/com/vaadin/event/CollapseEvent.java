@@ -21,8 +21,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
 
 /**
- * An event that is fired when an item is collapsed. Note that expanded subtrees
- * of the collapsed item will not trigger collapse events.
+ * An event that is fired when an item is collapsed in a listing component that
+ * displays hierarchical data. Note that expanded subtrees of the collapsed item
+ * will not trigger collapse events.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -39,7 +40,7 @@ public class CollapseEvent<T> extends Component.Event {
      * Construct a collapse event.
      *
      * @param source
-     *            the hierarchical this event originated from
+     *            the hierarchical component this event originated from
      * @param collapsedItem
      *            the item that was collapsed
      * @param userOriginated
