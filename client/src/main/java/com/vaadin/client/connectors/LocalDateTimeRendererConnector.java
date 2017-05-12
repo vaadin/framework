@@ -13,26 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.connectors.grid;
+package com.vaadin.client.connectors;
 
+import com.vaadin.client.connectors.grid.TextRendererConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.renderers.LocalDateRendererState;
+import com.vaadin.shared.ui.grid.renderers.LocalDateTimeRendererState;
 
 /**
- * A connector for LocalDateRenderer.
+ * A connector for LocalDateTimeRenderer.
  * <p>
- * The server-side Renderer operates on {@code LocalDate}s, but the data is
+ * The server-side Renderer operates on {@code LocalDateTime}s, but the data is
  * serialized as a string, and displayed as-is on the client side. This is to be
  * able to support the server's locale.
  *
  * @since 8.1
  * @author Vaadin Ltd
  */
-@Connect(com.vaadin.ui.renderers.LocalDateRenderer.class)
-public class LocalDateRendererConnector extends TextRendererConnector {
+@Connect(com.vaadin.ui.renderers.LocalDateTimeRenderer.class)
+public class LocalDateTimeRendererConnector extends TextRendererConnector {
 
     @Override
-    public LocalDateRendererState getState() {
-        return (LocalDateRendererState) super.getState();
+    public LocalDateTimeRendererState getState() {
+        return (LocalDateTimeRendererState) super.getState();
     }
 }
