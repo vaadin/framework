@@ -21,11 +21,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.data.HierarchyData;
-import com.vaadin.data.ValueProvider;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
-import com.vaadin.shared.data.sort.SortDirection;
 
 /**
  * A {@link DataProvider} for in-memory hierarchical data.
@@ -128,8 +126,7 @@ public class InMemoryHierarchicalDataProvider<T> extends
      * Adds a filter to be applied to all queries. The filter will be used in
      * addition to any filter that has been set or added previously.
      *
-     * @see #addFilter(ValueProvider, SerializablePredicate)
-     * @see #addFilterByValue(ValueProvider, Object)
+     * @see #addFilter(SerializablePredicate)
      * @see #setFilter(SerializablePredicate)
      *
      * @param filter
@@ -155,7 +152,6 @@ public class InMemoryHierarchicalDataProvider<T> extends
      * sorting is also used to determine the ordering of items that are
      * considered equal by the sorting defined in the query.
      *
-     * @see #setSortOrder(ValueProvider, SortDirection)
      * @see #addSortComparator(SerializableComparator)
      *
      * @param comparator
@@ -179,7 +175,6 @@ public class InMemoryHierarchicalDataProvider<T> extends
      * considered equal by the sorting defined in the query.
      *
      * @see #setSortComparator(SerializableComparator)
-     * @see #addSortOrder(ValueProvider, SortDirection)
      *
      * @param comparator
      *            a comparator to add, not <code>null</code>
