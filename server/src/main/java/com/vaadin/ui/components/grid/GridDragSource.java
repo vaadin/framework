@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.ui.components.grid;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,17 +21,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.provider.DataGenerator;
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.grid.GridDragEndEvent;
-import com.vaadin.event.dnd.grid.GridDragEndListener;
-import com.vaadin.event.dnd.grid.GridDragStartEvent;
-import com.vaadin.event.dnd.grid.GridDragStartListener;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceState;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 import elemental.json.JsonObject;
 
@@ -71,18 +68,18 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
         dragDataGenerator = this::generateDragData;
 
         // Add drag data generator to Grid
-        target.addDataGenerator(dragDataGenerator);
+        target.getDataCommunicator().addDataGenerator(dragDataGenerator);
     }
 
     @Override
-    protected void registerDragSourceRpc(Grid<T> target) {
+    protected void registerDragSourceRpc() {
         registerRpc(new GridDragSourceRpc() {
             @Override
             public void dragStart(List<String> draggedItemKeys) {
 
-                GridDragStartEvent<T> event = new GridDragStartEvent<>(target,
-                        getState(false).effectAllowed,
-                        getDraggedItems(target, draggedItemKeys));
+                GridDragStartEvent<T> event = new GridDragStartEvent<>(
+                        getParent(), getState(false).effectAllowed,
+                        getDraggedItems(getParent(), draggedItemKeys));
 
                 fireEvent(event);
             }
@@ -91,8 +88,9 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
             public void dragEnd(DropEffect dropEffect,
                     List<String> draggedItemKeys) {
 
-                GridDragEndEvent<T> event = new GridDragEndEvent<>(target,
-                        dropEffect, getDraggedItems(target, draggedItemKeys));
+                GridDragEndEvent<T> event = new GridDragEndEvent<>(getParent(),
+                        dropEffect,
+                        getDraggedItems(getParent(), draggedItemKeys));
 
                 fireEvent(event);
             }
@@ -135,7 +133,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * {@link JsonObject} to be appended to the row data.
      * <p>
      * Example:
-     * 
+     *
      * <pre>
      * dragSourceExtension.setDragDataGenerator(item -> {
      *     JsonObject dragData = Json.createObject();
@@ -211,7 +209,8 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     public void remove() {
         super.remove();
 
-        getParent().removeDataGenerator(dragDataGenerator);
+        getParent().getDataCommunicator()
+                .removeDataGenerator(dragDataGenerator);
     }
 
     @Override

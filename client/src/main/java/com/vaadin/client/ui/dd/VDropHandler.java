@@ -17,8 +17,8 @@ package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.event.dnd.DropListener;
-import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.event.DropListener;
 
 /**
  * Vaadin Widgets that want to receive something via drag and drop implement

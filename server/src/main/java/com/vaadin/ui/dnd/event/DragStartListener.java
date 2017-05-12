@@ -13,33 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd.grid;
+package com.vaadin.ui.dnd.event;
 
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.ui.GridDragSource;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 /**
- * Drag start listener for HTML5 drag start on a Grid row.
+ * Interface to be implemented when creating a dragstart listener on a drag
+ * source for HTML5 drag and drop.
  *
  * @param <T>
- *            The Grid bean type.
- * @author Vaadin Ltd.
- * @see GridDragSource#addGridDragStartListener(GridDragStartListener)
+ *         Type of draggable component.
+ * @author Vaadin Ltd
+ * @see DragSourceExtension#addDragStartListener(DragStartListener)
  * @since 8.1
  */
 @FunctionalInterface
-public interface GridDragStartListener<T> extends ConnectorEventListener {
-
-    static final Method DRAG_START_METHOD = GridDragStartListener.class
+public interface DragStartListener<T extends AbstractComponent> extends
+        ConnectorEventListener {
+    static final Method DRAGSTART_METHOD = DragStartListener.class
             .getDeclaredMethods()[0];
 
     /**
-     * Invoked when the user has started dragging grid's rows.
+     * Called when dragstart event is fired.
      *
      * @param event
-     *            The drag start event.
+     *         Server side dragstart event.
      */
-    void dragStart(GridDragStartEvent<T> event);
+    void dragStart(DragStartEvent<T> event);
 }

@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd;
 
 import java.io.Serializable;
 
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.dnd.event.FileDropEvent;
 
 /**
  * Handles the drop event on a file drop target.
@@ -26,7 +27,7 @@ import com.vaadin.ui.AbstractComponent;
  *         Type of the file drop target component.
  * @author Vaadin Ltd
  * @see FileDropEvent
- * @see com.vaadin.ui.FileDropTarget
+ * @see com.vaadin.ui.dnd.FileDropTarget
  * @since 8.1
  */
 public interface FileDropHandler<T extends AbstractComponent> extends

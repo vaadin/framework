@@ -18,8 +18,8 @@ package com.vaadin.client.ui.dd;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  *

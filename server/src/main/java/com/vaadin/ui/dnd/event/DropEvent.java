@@ -13,13 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd.event;
 
 import java.util.Optional;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  * Server side drop event. Fired when an HTML5 drop happens.

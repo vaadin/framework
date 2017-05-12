@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd;
 
 import java.util.Objects;
 
@@ -25,18 +25,22 @@ import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.dnd.event.DragEndEvent;
+import com.vaadin.ui.dnd.event.DragEndListener;
+import com.vaadin.ui.dnd.event.DragStartEvent;
+import com.vaadin.ui.dnd.event.DragStartListener;
 
 /**
  * Extension to make a component drag source for HTML5 drag and drop
  * functionality.
  *
  * @param <T>
- *         Type of the component to be extended.
+ *            Type of the component to be extended.
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class DragSourceExtension<T extends AbstractComponent> extends
-        AbstractExtension {
+public class DragSourceExtension<T extends AbstractComponent>
+        extends AbstractExtension {
 
     private Registration dragStartListenerHandle;
     private Registration dragEndListenerHandle;
@@ -51,22 +55,19 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      * Extends {@code target} component and makes it a drag source.
      *
      * @param target
-     *         Component to be extended.
+     *            Component to be extended.
      */
     public DragSourceExtension(T target) {
-
-        registerDragSourceRpc(target);
-
         super.extend(target);
 
         initListeners();
     }
 
     /**
-     * Initializes the event listeners this drag source is using.
+     * Initializes dragstart and -end event listeners for this drag source to
+     * capture the active drag source for the UI.
      */
-    protected void initListeners() {
-
+    private void initListeners() {
         // Set current extension as active drag source in the UI
         dragStartListenerHandle = addDragStartListener(
                 event -> getUI().setActiveDragSource(this));
@@ -76,27 +77,56 @@ public class DragSourceExtension<T extends AbstractComponent> extends
                 event -> getUI().setActiveDragSource(null));
     }
 
+    @Override
+    public void attach() {
+        super.attach();
+
+        registerDragSourceRpc();
+    }
+
     /**
-     * Register server RPC.
-     *
-     * @param target
-     *         Extended component.
+     * Registers the server side RPC methods invoked from client side on
+     * <code>dragstart</code> and <code>dragend</code> events.
+     * <p>
+     * Override this method if you have custom RPC interface for transmitting
+     * those events with more data. If just need to do additional things before
+     * firing the events, then you should override {@link #onDragStart()} and
+     * {@link #onDragEnd(DropEffect)} instead.
      */
-    protected void registerDragSourceRpc(T target) {
+    protected void registerDragSourceRpc() {
         registerRpc(new DragSourceRpc() {
             @Override
             public void dragStart() {
-                DragStartEvent<T> event = new DragStartEvent<>(target,
-                        getState(false).effectAllowed);
-                fireEvent(event);
+                onDragStart();
             }
 
             @Override
             public void dragEnd(DropEffect dropEffect) {
-                DragEndEvent<T> event = new DragEndEvent<>(target, dropEffect);
-                fireEvent(event);
+                onDragEnd(dropEffect);
             }
         });
+    }
+
+    /**
+     * Method invoked when a <code>dragstart</code> has been sent from client
+     * side. Fires the {@link DragStartEvent}.
+     */
+    protected void onDragStart() {
+        DragStartEvent<T> event = new DragStartEvent<>(getParent(),
+                getState(false).effectAllowed);
+        fireEvent(event);
+    }
+
+    /**
+     * Method invoked when a <code>dragend</code> has been sent from client
+     * side. Fires the {@link DragEndEvent}.
+     *
+     * @param dropEffect
+     *            the drop effect on the dragend
+     */
+    protected void onDragEnd(DropEffect dropEffect) {
+        DragEndEvent<T> event = new DragEndEvent<>(getParent(), dropEffect);
+        fireEvent(event);
     }
 
     @Override
@@ -117,7 +147,7 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      * equivalent to {@link EffectAllowed#ALL}.
      *
      * @param effect
-     *         Effects to allow for this draggable element. Cannot be {@code
+     *            Effects to allow for this draggable element. Cannot be {@code
      *         null}.
      */
     public void setEffectAllowed(EffectAllowed effect) {
@@ -146,7 +176,7 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      * data)} method.
      *
      * @param data
-     *         Data to be set for the client side draggable element.
+     *            Data to be set for the client side draggable element.
      */
     public void setDataTransferText(String data) {
         getState().dataTransferText = data;
@@ -163,19 +193,12 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Clears data of type {@code "text"} in this drag source element.
-     */
-    public void clearDataTransferText() {
-        getState().dataTransferText = null;
-    }
-
-    /**
      * Set server side drag data. This data is available in the drop event and
      * can be used to transfer data between drag source and drop target if they
      * are in the same UI.
      *
      * @param data
-     *         Data to transfer to drop event.
+     *            Data to transfer to drop event.
      */
     public void setDragData(Object data) {
         dragData = data;
@@ -193,12 +216,12 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Attaches dragstart listener for the current drag source. {@link
-     * DragStartListener#dragStart(DragStartEvent)} is called when dragstart
-     * event happens on the client side.
+     * Attaches dragstart listener for the current drag source.
+     * {@link DragStartListener#dragStart(DragStartEvent)} is called when
+     * dragstart event happens on the client side.
      *
      * @param listener
-     *         Listener to handle dragstart event.
+     *            Listener to handle dragstart event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragStartListener(DragStartListener<T> listener) {
@@ -208,12 +231,12 @@ public class DragSourceExtension<T extends AbstractComponent> extends
     }
 
     /**
-     * Attaches dragend listener for the current drag source. {@link
-     * DragEndListener#dragEnd(DragEndEvent)} is called when dragend
+     * Attaches dragend listener for the current drag source.
+     * {@link DragEndListener#dragEnd(DragEndEvent)} is called when dragend
      * event happens on the client side.
      *
      * @param listener
-     *         Listener to handle dragend event.
+     *            Listener to handle dragend event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragEndListener(DragEndListener<T> listener) {
@@ -225,7 +248,7 @@ public class DragSourceExtension<T extends AbstractComponent> extends
      * Set a custom drag image for the current drag source.
      *
      * @param imageResource
-     *         Resource of the image to be displayed as drag image.
+     *            Resource of the image to be displayed as drag image.
      */
     public void setDragImage(Resource imageResource) {
         setResource(DragSourceState.RESOURCE_DRAG_IMAGE, imageResource);

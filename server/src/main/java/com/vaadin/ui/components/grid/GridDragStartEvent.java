@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd.grid;
+package com.vaadin.ui.components.grid;
 
+import java.util.Collections;
 import java.util.Set;
 
-import com.vaadin.event.dnd.DragStartEvent;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.GridDragSource;
+import com.vaadin.ui.dnd.event.DragStartEvent;
 
 /**
  * Drag start event on an HTML5 drag source {@link Grid} row.
@@ -55,9 +55,9 @@ public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
     /**
      * Get the dragged row items.
      *
-     * @return Set of row items that are being dragged.
+     * @return an unmodifiable set of items that are being dragged.
      */
     public Set<T> getDraggedItems() {
-        return draggedItems;
+        return Collections.unmodifiableSet(draggedItems);
     }
 }

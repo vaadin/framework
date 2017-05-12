@@ -24,13 +24,13 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dnd.FileParameters;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.FileDropTarget;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.dnd.FileDropTarget;
 
 public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
 

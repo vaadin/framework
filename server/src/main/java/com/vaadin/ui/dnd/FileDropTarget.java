@@ -13,15 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui;
+package com.vaadin.ui.dnd;
 
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.event.dnd.DropTargetExtension;
-import com.vaadin.event.dnd.FileDropEvent;
-import com.vaadin.event.dnd.FileDropHandler;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.shared.ApplicationConstants;
@@ -29,18 +26,28 @@ import com.vaadin.shared.ui.dnd.FileDropTargetClientRpc;
 import com.vaadin.shared.ui.dnd.FileDropTargetRpc;
 import com.vaadin.shared.ui.dnd.FileDropTargetState;
 import com.vaadin.shared.ui.dnd.FileParameters;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.ConnectorTracker;
+import com.vaadin.ui.Html5File;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.dnd.event.FileDropEvent;
 
 /**
  * Extension to add drop target functionality to a widget for accepting and
  * uploading files.
+ * <p>
+ * Dropped files are handled in the {@link FileDropHandler} given in the
+ * constructor. The file details are first sent to the handler, which can then
+ * decide which files to upload to server by setting a {@link StreamVariable}
+ * with {@link Html5File#setStreamVariable(StreamVariable)}.
  *
  * @param <T>
- *         Type of the component to be extended.
+ *            Type of the component to be extended.
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class FileDropTarget<T extends AbstractComponent> extends
-        DropTargetExtension<T> {
+public class FileDropTarget<T extends AbstractComponent>
+        extends DropTargetExtension<T> {
 
     /**
      * Handles the file drop event.
@@ -52,58 +59,20 @@ public class FileDropTarget<T extends AbstractComponent> extends
      * drop handler needs to be added to handle the file drop event.
      *
      * @param target
-     *         Component to be extended.
+     *            Component to be extended.
      * @param fileDropHandler
-     *         File drop handler that handles the file drop event.
+     *            File drop handler that handles the file drop event.
      * @see FileDropEvent
      */
     public FileDropTarget(T target, FileDropHandler<T> fileDropHandler) {
         super(target);
 
         this.fileDropHandler = fileDropHandler;
-    }
-
-    @Override
-    protected void registerDropTargetRpc(T target) {
-        super.registerDropTargetRpc(target);
 
         registerRpc(new FileDropTargetRpc() {
             @Override
             public void drop(Map<String, FileParameters> fileParams) {
-                Map<String, Html5File> files = new HashMap<>();
-                Map<String, String> urls = new HashMap<>();
-
-                // Create a collection of html5 files
-                fileParams.forEach((id, fileParameters) -> {
-                    Html5File html5File = new Html5File(
-                            fileParameters.getName(), fileParameters.getSize(),
-                            fileParameters.getMime());
-                    files.put(id, html5File);
-                });
-
-                // Call drop handler with the collection of dropped files
-                FileDropEvent<T> event = new FileDropEvent<>(target,
-                        files.values());
-                fileDropHandler.drop(event);
-
-                // Create upload URLs for the files that the drop handler
-                // attached stream variable to
-                files.entrySet().stream()
-                        .filter(entry -> entry.getValue().getStreamVariable()
-                                != null).forEach(entry -> {
-                    String id = entry.getKey();
-                    Html5File file = entry.getValue();
-
-                    String url = createUrl(file, id);
-                    urls.put(id, url);
-                });
-
-                // Send upload URLs to the client if there are files to be
-                // uploaded
-                if (urls.size() > 0) {
-                    getRpcProxy(FileDropTargetClientRpc.class)
-                            .sendUploadUrl(urls);
-                }
+                onDrop(fileParams);
             }
 
             @Override
@@ -114,12 +83,54 @@ public class FileDropTarget<T extends AbstractComponent> extends
     }
 
     /**
+     * Invoked when a file or files have been dropped on client side. Fires the
+     * {@link FileDropEvent}.
+     *
+     * @param fileParams
+     *            map from file ids to actual file details
+     */
+    protected void onDrop(Map<String, FileParameters> fileParams) {
+        Map<String, Html5File> files = new HashMap<>();
+        Map<String, String> urls = new HashMap<>();
+
+        // Create a collection of html5 files
+        fileParams.forEach((id, fileParameters) -> {
+            Html5File html5File = new Html5File(fileParameters.getName(),
+                    fileParameters.getSize(), fileParameters.getMime());
+            files.put(id, html5File);
+        });
+
+        // Call drop handler with the collection of dropped files
+        FileDropEvent<T> event = new FileDropEvent<>(getParent(),
+                files.values());
+        fileDropHandler.drop(event);
+
+        // Create upload URLs for the files that the drop handler
+        // attached stream variable to
+        files.entrySet().stream()
+                .filter(entry -> entry.getValue().getStreamVariable() != null)
+                .forEach(entry -> {
+                    String id = entry.getKey();
+                    Html5File file = entry.getValue();
+
+                    String url = createUrl(file, id);
+                    urls.put(id, url);
+                });
+
+        // Send upload URLs to the client if there are files to be
+        // uploaded
+        if (urls.size() > 0) {
+            getRpcProxy(FileDropTargetClientRpc.class).sendUploadUrl(urls);
+        }
+    }
+
+    /**
      * Creates an upload URL for the given file and file ID.
      *
      * @param file
-     *         File to be uploaded.
+     *            File to be uploaded.
      * @param id
-     *         Generated ID for the file.
+     *            Generated ID for the file.
      * @return Upload URL for uploading the file to the server.
      */
     private String createUrl(Html5File file, String id) {
@@ -147,7 +158,6 @@ public class FileDropTarget<T extends AbstractComponent> extends
         return (FileDropTargetState) super.getState();
     }
 
-
     @Override
     protected FileDropTargetState getState(boolean markAsDirty) {
         return (FileDropTargetState) super.getState(markAsDirty);
@@ -161,7 +171,7 @@ public class FileDropTarget<T extends AbstractComponent> extends
     @Override
     @SuppressWarnings("unchecked")
     public T getParent() {
-        return (T) super.getParent();
+        return super.getParent();
     }
 
     private class FileReceiver implements StreamVariable {

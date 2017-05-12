@@ -13,34 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd.event;
 
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
- * Interface to be implemented when creating a dragstart listener on a drag
- * source for HTML5 drag and drop.
+ * Interface to be implemented when creating a drop listener on a drop target
+ * for HTML5 drag and drop.
  *
  * @param <T>
- *         Type of draggable component.
+ *         Type of the drop target component.
  * @author Vaadin Ltd
- * @see DragSourceExtension#addDragStartListener(DragStartListener)
+ * @see DropTargetExtension#addDropListener(DropListener)
  * @since 8.1
  */
 @FunctionalInterface
-public interface DragStartListener<T extends AbstractComponent> extends
+public interface DropListener<T extends AbstractComponent> extends
         ConnectorEventListener {
-    static final Method DRAGSTART_METHOD = DragStartListener.class
+    static final Method DROP_METHOD = DropListener.class
             .getDeclaredMethods()[0];
 
     /**
-     * Called when dragstart event is fired.
+     * Called when drop event is fired.
      *
      * @param event
-     *         Server side dragstart event.
+     *         Server side drop event.
      */
-    void dragStart(DragStartEvent<T> event);
+    void drop(DropEvent<T> event);
 }

@@ -34,11 +34,11 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.GridDragSource;
-import com.vaadin.ui.GridDropTarget;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.RadioButtonGroup;
+import com.vaadin.ui.components.grid.GridDragSource;
+import com.vaadin.ui.components.grid.GridDropTarget;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;

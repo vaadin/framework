@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.event.dnd;
+package com.vaadin.ui.dnd.event;
 
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 /**
  * Interface to be implemented when creating a dragend listener on a drag
