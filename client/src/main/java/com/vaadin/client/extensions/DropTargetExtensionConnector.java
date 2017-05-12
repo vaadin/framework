@@ -309,7 +309,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * <p>
      * This is triggered on {@link #onDragEnter(Event) dragenter} and
      * {@link #onDragOver(Event) dragover} events pending if the drop is
-     * possible.
+     * possible. The drop is possible if the drop effect for the target and
+     * source do match and the drop criteria script evaluates to true or is not
+     * set.
      *
      * @param event
      *            the dragenter or dragover event that triggered the indication.
@@ -324,7 +326,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * This is triggered on {@link #onDrop(Event) drop},
      * {@link #onDragLeave(Event) dragleave} and {@link #onDragOver(Event)
      * dragover} events pending on whether the drop has happened or if it is not
-     * possible.
+     * possible. The drop is not possible if the drop effect for the source and
+     * target don't match or if the is a drop criteria script that evaluates to
+     * false.
      *
      * @param event
      *            the event that triggered the removal of the indicator
