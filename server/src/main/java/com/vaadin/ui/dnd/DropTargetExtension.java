@@ -27,7 +27,7 @@ import com.vaadin.ui.dnd.event.DropEvent;
 import com.vaadin.ui.dnd.event.DropListener;
 
 /**
- * Extension to make a component a drag target for HTML5 drag and drop
+ * Extension to make a component a drop target for HTML5 drag and drop
  * functionality.
  *
  * @param <T>
@@ -56,11 +56,13 @@ public class DropTargetExtension<T extends AbstractComponent>
     }
 
     /**
-     * Registers the server side RPC methods invokated from client side on
+     * Registers the server side RPC methods invoked from client side on
      * <code>drop</code> event.
      * <p>
      * Override this method if you need to have a custom RPC interface for
-     * transmitting the drop event with more data.
+     * transmitting the drop event with more data. If just need to do additional
+     * things before firing the drop event, then you should override
+     * {@link #onDrop(String, DropEffect)} instead.
      */
     protected void registerDropTargetRpc() {
         registerRpc((DropTargetRpc) (dataTransferText, dropEffect) -> {

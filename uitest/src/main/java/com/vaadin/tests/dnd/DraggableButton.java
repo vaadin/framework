@@ -22,8 +22,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.dnd.DragSourceExtension;
 import com.vaadin.ui.dnd.DropTargetExtension;
-import com.vaadin.ui.dnd.event.ButtonDragSource;
 
 public class DraggableButton extends AbstractTestUIWithLog {
 
@@ -31,7 +31,7 @@ public class DraggableButton extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
 
         Button draggableButton = new Button("Draggable Button");
-        ButtonDragSource dragSourceExtension = new ButtonDragSource(
+        DragSourceExtension<Button> dragSourceExtension = new DragSourceExtension<>(
                 draggableButton);
         dragSourceExtension.setDataTransferText(
                 "If you see this, the drop was successful");
@@ -54,16 +54,10 @@ public class DraggableButton extends AbstractTestUIWithLog {
     private void setStyle() {
         Page.Styles styles = Page.getCurrent().getStyles();
 
-        styles.add(".drop-target {"
-                + "width: 150px;"
-                + "height: 100px;"
-                + "border: 1px solid black;"
-                + "border-radius: 4px;"
-                + "text-align: center;"
-                + "}");
-        styles.add(".v-drag-over {"
-                + "border-style: dashed;"
-                + "}");
+        styles.add(".drop-target {" + "width: 150px;" + "height: 100px;"
+                + "border: 1px solid black;" + "border-radius: 4px;"
+                + "text-align: center;" + "}");
+        styles.add(".v-label-drag-center {" + "border-style: dashed;" + "}");
     }
 
     @Override

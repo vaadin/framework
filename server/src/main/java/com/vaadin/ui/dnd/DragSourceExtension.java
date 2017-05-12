@@ -85,11 +85,13 @@ public class DragSourceExtension<T extends AbstractComponent>
     }
 
     /**
-     * Registers the server side RPC methods invokated from client side on
+     * Registers the server side RPC methods invoked from client side on
      * <code>dragstart</code> and <code>dragend</code> events.
      * <p>
      * Override this method if you have custom RPC interface for transmitting
-     * those events with more data.
+     * those events with more data. If just need to do additional things before
+     * firing the events, then you should override {@link #onDragStart()} and
+     * {@link #onDragEnd(DropEffect)} instead.
      */
     protected void registerDragSourceRpc() {
         registerRpc(new DragSourceRpc() {
