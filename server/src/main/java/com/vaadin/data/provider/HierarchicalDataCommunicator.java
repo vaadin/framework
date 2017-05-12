@@ -75,12 +75,11 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     /**
      * Construct a new hierarchical data communicator backed by a
-     * {@link InMemoryHierarchicalDataProvider}.
+     * {@link SimpleHierarchicalDataProvider}.
      */
     public HierarchicalDataCommunicator() {
         super();
-        dataProvider = new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<>());
+        dataProvider = new SimpleHierarchicalDataProvider<>();
     }
 
     @Override

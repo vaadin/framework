@@ -32,7 +32,7 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
     @Parameters
     public static Collection<String> getDataProviders() {
         return Arrays.asList("LazyHierarchicalDataProvider",
-                "InMemoryHierarchicalDataProvider");
+                "SimpleHierarchicalDataProvider");
     }
 
     @Before

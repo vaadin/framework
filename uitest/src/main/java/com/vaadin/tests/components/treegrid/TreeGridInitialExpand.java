@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.treegrid;
 
 import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.SimpleHierarchicalDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TreeGrid;
@@ -13,13 +13,13 @@ public class TreeGridInitialExpand extends AbstractTestUI {
         TreeGrid<String> treeGrid = new TreeGrid<>();
         treeGrid.setCaption("Test");
         treeGrid.addColumn(String::toString).setCaption("String");
-        HierarchyData<String> data = new HierarchyData<>();
+        SimpleHierarchicalDataProvider<String> data = new SimpleHierarchicalDataProvider<>();
         data.addItem(null, "parent1");
         data.addItem("parent1", "parent1-child1");
         data.addItem("parent1", "parent1-child2");
         data.addItem(null, "parent2");
         data.addItem("parent2", "parent2-child2");
-        treeGrid.setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+        treeGrid.setDataProvider(data);
         treeGrid.setHeightByRows(5);
         treeGrid.expand("parent1");
         treeGrid.expand("parent2");

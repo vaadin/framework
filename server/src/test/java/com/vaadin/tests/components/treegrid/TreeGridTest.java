@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.SimpleHierarchicalDataProvider;
 import com.vaadin.ui.TreeGrid;
 import com.vaadin.ui.renderers.TextRenderer;
 
@@ -24,12 +24,11 @@ public class TreeGridTest {
 
     @Test
     public void testExpandAndCollapseEvents() {
-        HierarchyData<String> hierarchyData = new HierarchyData<>();
+        SimpleHierarchicalDataProvider<String> hierarchyData = new SimpleHierarchicalDataProvider<>();
         hierarchyData.addItem(null, "Foo");
         hierarchyData.addItem("Foo", "Bar");
         hierarchyData.addItem("Foo", "Baz");
-        treeGrid.setDataProvider(
-                new InMemoryHierarchicalDataProvider<>(hierarchyData));
+        treeGrid.setDataProvider(hierarchyData);
 
         treeGrid.addExpandListener(e -> expandEventFired = true);
         treeGrid.addCollapseListener(e -> collapseEventFired = true);
