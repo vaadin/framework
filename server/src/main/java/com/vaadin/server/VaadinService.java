@@ -1935,7 +1935,7 @@ public abstract class VaadinService implements Serializable {
      */
     @Deprecated
     public void removeServiceDestroyListener(ServiceDestroyListener listener) {
-        serviceDestroyListeners.remove(serviceDestroyListeners);
+        serviceDestroyListeners.remove(listener);
     }
 
     /**
