@@ -38,12 +38,12 @@ import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.treegrid.FocusParentRpc;
 import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridClientRpc;
-import com.vaadin.shared.ui.treegrid.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 
 import elemental.json.JsonObject;

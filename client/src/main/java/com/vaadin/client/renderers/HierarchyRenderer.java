@@ -34,7 +34,7 @@ import com.vaadin.client.connectors.treegrid.TreeGridConnector;
 import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
-import com.vaadin.shared.ui.treegrid.HierarchicalDataCommunicatorConstants;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 
 import elemental.json.JsonObject;
 

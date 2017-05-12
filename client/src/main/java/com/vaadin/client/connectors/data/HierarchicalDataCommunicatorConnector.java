@@ -16,8 +16,8 @@
 package com.vaadin.client.connectors.data;
 
 import com.vaadin.data.provider.HierarchicalDataCommunicator;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.treegrid.HierarchicalDataCommunicatorConstants;
 
 import elemental.json.JsonObject;
 
