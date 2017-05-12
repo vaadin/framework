@@ -146,7 +146,7 @@ public class HierarchyData<T> implements Serializable {
      */
     public HierarchyData<T> addItems(T parent,
             @SuppressWarnings("unchecked") T... items) {
-        Arrays.asList(items).stream().forEach(item -> addItem(parent, item));
+        Arrays.asList(items).forEach(item -> addItem(parent, item));
         return this;
     }
 
@@ -171,7 +171,7 @@ public class HierarchyData<T> implements Serializable {
      *             if any of the items are null
      */
     public HierarchyData<T> addItems(T parent, Collection<T> items) {
-        items.stream().forEach(item -> addItem(parent, item));
+        items.forEach(item -> addItem(parent, item));
         return this;
     }
 
@@ -216,7 +216,7 @@ public class HierarchyData<T> implements Serializable {
             throw new IllegalArgumentException(
                     "Item '" + item + "' not in the hierarchy");
         }
-        new ArrayList<>(getChildren(item)).forEach(child -> removeItem(child));
+        new ArrayList<>(getChildren(item)).forEach(this::removeItem);
         itemToWrapperMap.get(itemToWrapperMap.get(item).getParent())
                 .removeChild(item);
         if (item != null) {
