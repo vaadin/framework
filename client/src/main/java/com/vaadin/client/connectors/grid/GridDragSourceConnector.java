@@ -60,6 +60,18 @@ import elemental.json.JsonObject;
 @Connect(GridDragSource.class)
 public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
+    /**
+     * Delay used to distinct between scroll and drag start in grid: if the user
+     * doens't move the finger before this "timeout", it should be considered as
+     * a drag start.
+     * <p>
+     * This default value originates from VScrollTable which uses it to distinct
+     * between scroll and context click (long tap).
+     *
+     * @see Escalator#setDelayToCancelTouchScroll(double)
+     */
+    private static final int TOUCH_SCROLL_TIMEOUT_DELAY = 500;
+
     private static final String STYLE_SUFFIX_DRAG_BADGE = "-drag-badge";
 
     private GridConnector gridConnector;
@@ -69,14 +81,23 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      */
     private List<String> draggedItemKeys;
 
+    private boolean touchScrollDelayUsed;
+
     @Override
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
 
         // HTML5 DnD is by default not enabled for mobile devices
-        if (BrowserInfo.get().isTouchDevice() && !getConnection()
-                .getUIConnector().isMobileHTML5DndEnabled()) {
-            return;
+        if (BrowserInfo.get().isTouchDevice()) {
+            if (getConnection().getUIConnector().isMobileHTML5DndEnabled()) {
+                // distinct between scroll and drag start
+                gridConnector.getWidget().getEscalator()
+                        .setDelayToCancelTouchScroll(
+                                TOUCH_SCROLL_TIMEOUT_DELAY);
+                touchScrollDelayUsed = true;
+            } else {
+                return;
+            }
         }
 
         // Set newly added rows draggable
@@ -85,11 +106,21 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
         // Add drag listeners to body element
         addDragListeners(getGridBody().getElement());
+
+        gridConnector.onDragSourceAttached();
     }
 
     @Override
     protected void onDragStart(Event event) {
         NativeEvent nativeEvent = (NativeEvent) event;
+
+        // Make sure user is not actually scrolling
+        if (touchScrollDelayUsed && gridConnector.getWidget().getEscalator()
+                .isTouchScrolling()) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
 
         // Do not allow drag starts from native Android Chrome, since it doesn't
         // work properly (doesn't fire dragend reliably)
@@ -320,6 +351,12 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
         // Remove callback for newly added rows
         getGridBody().setNewEscalatorRowCallback(null);
+
+        if (touchScrollDelayUsed) {
+            gridConnector.getWidget().getEscalator()
+                    .setDelayToCancelTouchScroll(-1);
+            touchScrollDelayUsed = false; //
+        }
     }
 
     private Grid<JsonObject> getGrid() {
