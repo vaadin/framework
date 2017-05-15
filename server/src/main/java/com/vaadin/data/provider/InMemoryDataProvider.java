@@ -44,8 +44,9 @@ public interface InMemoryDataProvider<T> extends
     }
 
     /**
+     * Gets the current filter of this data provider.
      *
-     * @return
+     * @return the filter of this data provider
      */
     public SerializablePredicate<T> getFilter();
 
@@ -183,8 +184,9 @@ public interface InMemoryDataProvider<T> extends
     }
 
     /**
+     * Gets the current sort comparator of this data provider.
      *
-     * @return
+     * @return the sort comparator of this data provider
      */
     public SerializableComparator<T> getSortComparator();
 

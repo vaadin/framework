@@ -30,7 +30,7 @@ image::img/tree-grid-basic.png[width=70%, scaledwidth=100%]
 [[components.treegrid.data]]
 == Binding to Data
 
-[classname]#TreeGrid# is used by binding it to a hierarchical data provider. The data provider can be based on in-memory or back end data. For in-memory data, the [classname]#InMemoryHierarchicalDataProvider# can be used, and for loading data from a back end, you need to implement three methods from the [interfacename]#HierarchicalDataProvider# interface. Usage of both data providers is described in
+[classname]#TreeGrid# is used by binding it to a hierarchical data provider. The data provider can be based on in-memory or back end data. For in-memory data, the [classname]#TreeDataProvider# can be used, and for loading data from a back end, you need to implement three methods from the [interfacename]#HierarchicalDataProvider# interface. Usage of both data providers is described in
 <<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
 
 Populating a [classname]#TreeGrid# with in-memory data can be done as follows
@@ -39,7 +39,7 @@ Populating a [classname]#TreeGrid# with in-memory data can be done as follows
 ----
 Project rootProject = getRootRroject();
 
-HierarchyData<Project> data = new HierarchyData<>();
+TreeData<Project> data = new TreeData<>();
 // add a root level item with null parent
 data.addItem(null, rootProject);
 
@@ -48,7 +48,7 @@ rootProject.flattened().forEach(
        project -> data.addItems(project, project.getSubProjects()));
 
 TreeGrid<Project> treeGrid = new TreeGrid<>();
-treeGrid.setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+treeGrid.setDataProvider(new TreeDataProvider<>(data));
 
 // the first column gets the hierarchy indicator by default
 treeGrid.addColumn(Project::getName).setCaption("Project Name");
@@ -56,18 +56,18 @@ treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
 treeGrid.addColumn(Project::getLastModified).setCaption("Last Modified");
 ----
 
-The [classname]#HierarchyData# class can be used to build the hierarchical data structure,
-and it can then be passed on to [classname]#InMemoryHierarchicalDataProvider#. It is simply a hierarchical
+The [classname]#TreeData# class can be used to build the hierarchical data structure,
+and it can then be passed on to [classname]#TreeDataProvider#. It is simply a hierarchical
 collection, that the data provider uses to populate the [classname]#TreeGrid#.
 
 The [methodname]#setItems# method in [classname]#TreeGrid# can be used to set the root level items. Internally
-an [classname]#InMemoryHierarchicalDataProvider# with [classname]#HierarchyData# is used. If at any time you want to modify the in-memory data in the grid, you may do it as follows
+an [classname]#TreeDataProvider# with [classname]#TreeData# is used. If at any time you want to modify the in-memory data in the grid, you may do it as follows
 
 [source, java]
 ----
-InMemoryHierarchicalDataProvider<Project> dataProvider = (InMemoryHierarchicalDataProvider<Project>) treeGrid.getDataProvider();
+TreeDataProvider<Project> dataProvider = (TreeDataProvider<Project>) treeGrid.getDataProvider();
 
-HierarchyData<Project> data = dataProvider.getData();
+TreeData<Project> data = dataProvider.getData();
 // add new items
 data.addItem(null, newProject);
 data.addItems(newProject, newProject.getChildren());

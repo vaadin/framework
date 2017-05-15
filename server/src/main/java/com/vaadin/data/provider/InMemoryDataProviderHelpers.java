@@ -28,13 +28,15 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.UI;
 
 /**
- * A package-private class containing a number of static helper methods for
- * implementing {@link InMemoryDataProvider}s.
+ * A class containing a number of static helper methods for implementing
+ * {@link InMemoryDataProvider}s.
+ * <p>
+ * This class is intended primarily for internal use.
  *
  * @author Vaadin Ltd
  * @since 8.1
  */
-class InMemoryDataProviderHelpers {
+public class InMemoryDataProviderHelpers {
 
     /**
      * Supplier that attempts to resolve a locale from the current UI. Returns

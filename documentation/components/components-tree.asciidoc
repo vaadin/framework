@@ -31,32 +31,32 @@ image::img/tree-basic.png[width=70%, scaledwidth=100%]
 [[components.tree.data]]
 == Binding to Data
 
-[classname]#Tree# is used by binding it to a hierarchical data provider. The data provider can be based on in-memory or back end data. For in-memory data, the [classname]#InMemoryHierarchicalDataProvider# can be used, and for loading data from a back end, you need to implement three methods from the [interfacename]#HierarchicalDataProvider# interface. Usage of both data providers is described in
+[classname]#Tree# is used by binding it to a hierarchical data provider. The data provider can be based on in-memory or back end data. For in-memory data, the [classname]#TreeDataProvider# can be used, and for loading data from a back end, you need to implement three methods from the [interfacename]#HierarchicalDataProvider# interface. Usage of both data providers is described in
 <<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
 
 
-The [classname]#HierarchyData# class can be used to build the hierarchical data structure,
-and it can then be passed on to [classname]#InMemoryHierarchicalDataProvider#. It is simply a hierarchical
+The [classname]#TreeData# class can be used to build the hierarchical data structure,
+and it can then be passed on to [classname]#TreeDataProvider#. It is simply a hierarchical
 collection, that the data provider uses to populate the [classname]#Tree#.
 
 The [methodname]#setItems# method in [classname]#Tree# can be used to set the root level items. Internally
-an [classname]#InMemoryHierarchicalDataProvider# with [classname]#HierarchyData# is used.
+an [classname]#TreeDataProvider# with [classname]#TreeData# is used.
 
 [source, java]
 ----
 // An initial planet tree
 Tree<String> tree = new Tree<>();
-HierarchyData<String> hierarchyData = new HierarchyData<>();
+TreeData<String> treeData = new TreeData<>();
 
 // Couple of childless root items
-hierarchyData.addItem(null,"Mercury");
-hierarchyData.addItem(null,"Venus");
+treeData.addItem(null,"Mercury");
+treeData.addItem(null,"Venus");
 
 // Items with hierarchy
-hierarchyData.addItem(null,"Earth");
-hierarchyData.addItem("Earth","The Moon");
+treeData.addItem(null,"Earth");
+treeData.addItem("Earth","The Moon");
 
-inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(hierarchyData);
+inMemoryDataProvider = new TreeDataProvider<>(treeData);
 tree.setDataProvider(inMemoryDataProvider);
 tree.expand("Earth"); // Expand programmatically
 ----
@@ -67,9 +67,9 @@ the in-memory data in the tree, you may do it as follows:
 [source, java]
 ----
 // Add Mars with satellites
-hierarchyData.addItem(null, "Mars");
-hierarchyData.addItem("Mars", "Phobos");
-hierarchyData.addItem("Mars", "Deimos");
+treeData.addItem(null, "Mars");
+treeData.addItem("Mars", "Phobos");
+treeData.addItem("Mars", "Deimos");
 inMemoryDataProvider.refreshAll();
 
 ----
