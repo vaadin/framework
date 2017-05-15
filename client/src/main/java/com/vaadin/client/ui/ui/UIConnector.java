@@ -69,8 +69,10 @@ import com.vaadin.client.ValueMap;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.client.extensions.DragImageTranslateOverrideCallback;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
+import com.vaadin.client.extensions.TranslateDragImageCallback;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -107,6 +109,9 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
 
 import elemental.client.Browser;
+import elemental.events.TouchEvent;
+import elemental.html.HtmlElement;
+import elemental.html.Point;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
@@ -117,6 +122,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     private String activeTheme = null;
 
     private HandlerRegistration windowOrderRegistration;
+
+    private Element draggedElement;
 
     /*
      * Used to workaround IE bug related to popstate events and certain fragment
@@ -170,7 +177,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             @Override
             public void initializeMobileHtml5DndPolyfill() {
-                initializeMobileDndPolyfill();
+                // this method is called from the server side only once
+                DragImageTranslateOverrideCallback callback = UIConnector.this::applyMobileDragImageOffset;
+                initializeMobileDndPolyfill(callback);
             }
         });
         registerRpc(ScrollClientRpc.class, new ScrollClientRpc() {
@@ -1231,9 +1240,66 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
-    // TODO add configuration to use custom drag start decider
-    private static native void initializeMobileDndPolyfill()
+    private void applyMobileDragImageOffset(TouchEvent event,
+            Point hoverCoordinates, HtmlElement hoveredElement,
+            TranslateDragImageCallback callback) {
+        Element target = (Element) event.getTarget();
+
+        while (target != null && !target.getPropertyBoolean("draggable")) {
+            target = target.getParentElement();
+        }
+        if (target == null) {
+            getLogger().info(
+                    "Could not detect draggable element for fixing drag image offset");
+            return;
+        }
+
+        // using style instead of computed style since that would produce matrix
+        // values "matrix(1, 0, 0, 1, 0, 190)" that are a bit hard to read from
+        String transform = target.getStyle().getProperty("transform");
+        if (transform == null || transform.isEmpty()) {
+            transform = target.getStyle().getProperty("webkitTransform");
+        }
+
+        if (transform == null || transform.isEmpty()
+                || !transform.startsWith("translate")) {
+            return;
+        }
+        // transform should be either "translate(Npx, Npx)" or "translate3d(Npx,
+        // Npx, 0px)", and we are interested only in X and Y coordinate
+        // transforms. Cannot effect any else using the callback.
+
+        final int indexOfFirstPx = transform.indexOf("px");
+        final int indexOfSecondPx = transform.indexOf("px", indexOfFirstPx + 1);
+        if (indexOfFirstPx == -1 || indexOfSecondPx == -1) {
+            getLogger()
+                    .info("Could not parse transform css property X and Y coordinates from string: "
+                            + transform);
+            return;
+        }
+        String transformX = transform
+                .substring(transform.indexOf("(") + 1, indexOfFirstPx).trim();
+        String transformY = transform.substring(indexOfFirstPx + 3, // px, Npx
+                indexOfSecondPx).trim();
+
+        getLogger().warning(
+                "PARSED X:<" + transformX + ">, Y: <" + transformY + ">");
+
+        int offsetX = Math.negateExact(Integer.parseInt(transformX));
+        int offsetY = Math.negateExact(Integer.parseInt(transformY));
+
+        getLogger().warning(
+                "Applying drag image offset X:" + offsetX + ", Y:" + offsetY);
+        callback.execute(offsetX, offsetY);
+
+    }
+
+    private static native void initializeMobileDndPolyfill(
+            DragImageTranslateOverrideCallback callback)
     /*-{
-        $wnd.DragDropPolyfill.Initialize();
+        var conf = new Object();
+        conf['dragImageTranslateOverride'] = callback;
+
+        $wnd.DragDropPolyfill.Initialize(conf);
     }-*/;
 }
