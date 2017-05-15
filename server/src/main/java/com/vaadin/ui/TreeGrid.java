@@ -362,6 +362,16 @@ public class TreeGrid<T> extends Grid<T> {
     }
 
     /**
+     * Get the currently set hierarchy column.
+     *
+     * @return the currently set hierarchy column, or {@code null} if no column
+     *         has been explicitly set
+     */
+    public Column<T, ?> getHierarchyColumn() {
+        return getColumn(getState(false).hierarchyColumnId);
+    }
+
+    /**
      * Set the column that displays the hierarchy of this grid's data. By
      * default the hierarchy will be displayed in the first column.
      * <p>
