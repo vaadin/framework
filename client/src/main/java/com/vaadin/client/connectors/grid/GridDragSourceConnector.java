@@ -16,7 +16,11 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -35,6 +39,7 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceState;
@@ -45,8 +50,6 @@ import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.ui.components.grid.GridDragSource;
 
 import elemental.events.Event;
-import elemental.json.Json;
-import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 /**
@@ -198,11 +201,35 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         return WidgetUtil.getTouchOrMouseClientX(event) - relativeLeft;
     }
 
+    /**
+     * Adds drag data provided by the generator functions set for this drag
+     * source.
+     * <p>
+     * {@inheritDoc}
+     *
+     * @param dataMap
+     *         Map of type/data pairs to be set for the {@code DataTransfer}
+     *         object.
+     * @param dragStartEvent
+     *         Event to set the data for.
+     * @see GridDragSource#setDragDataGenerator(String, SerializableFunction)
+     */
     @Override
-    protected String createDataTransferText(NativeEvent dragStartEvent) {
-        JsonArray dragData = toJsonArray(getDraggedRows(dragStartEvent).stream()
-                .map(this::getDragData).collect(Collectors.toList()));
-        return dragData.toJson();
+    protected void modifyDataTransferData(Map<String, String> dataMap,
+            NativeEvent dragStartEvent) {
+        // Add data provided by the generator functions
+        getDraggedRows(dragStartEvent).forEach(row -> {
+            Map<String, String> dragData = getDragData(row);
+            dragData.forEach((type, data) -> {
+                if (dataMap.get(type) == null) {
+                    dataMap.put(type, data);
+                } else {
+                    // Separate data with new line character when multiple rows
+                    // are dragged
+                    dataMap.put(type, dataMap.get(type) + "\n" + data);
+                }
+            });
+        });
     }
 
     @Override
@@ -309,31 +336,25 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     }
 
     /**
-     * Converts a list of {@link JsonObject}s to a {@link JsonArray}.
-     *
-     * @param objects
-     *            List of json objects.
-     * @return Json array containing all json objects.
-     */
-    private JsonArray toJsonArray(List<JsonObject> objects) {
-        JsonArray array = Json.createArray();
-        for (int i = 0; i < objects.size(); i++) {
-            array.set(i, objects.get(i));
-        }
-        return array;
-    }
-
-    /**
-     * Gets drag data from the row data if exists or returns complete row data
-     * otherwise.
+     * Gets drag data provided by the generator functions.
      *
      * @param row
-     *            Row data.
-     * @return Drag data if present or row data otherwise.
+     *         The row data.
+     * @return The generated drag data type mapped to the corresponding drag
+     * data. If there are no generator functions, returns an empty map.
      */
-    private JsonObject getDragData(JsonObject row) {
-        return row.hasKey(GridDragSourceState.JSONKEY_DRAG_DATA)
-                ? row.getObject(GridDragSourceState.JSONKEY_DRAG_DATA) : row;
+    private Map<String, String> getDragData(JsonObject row) {
+        // Collect a map of data types and data that is provided by the
+        // generator functions set for this drag source
+        if (row.hasKey(GridDragSourceState.JSONKEY_DRAG_DATA)) {
+            JsonObject dragData = row
+                    .getObject(GridDragSourceState.JSONKEY_DRAG_DATA);
+            return Arrays.stream(dragData.keys()).collect(
+                    Collectors.toMap(Function.identity(), dragData::get));
+        }
+
+        // Otherwise return empty map
+        return Collections.emptyMap();
     }
 
     @Override
