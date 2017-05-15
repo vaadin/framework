@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.HierarchyMapper.TreeLevelQuery;
 import com.vaadin.data.provider.HierarchyMapper.TreeNode;
 import com.vaadin.server.SerializableConsumer;
@@ -75,12 +75,12 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     /**
      * Construct a new hierarchical data communicator backed by a
-     * {@link InMemoryHierarchicalDataProvider}.
+     * {@link TreeDataProvider}.
      */
     public HierarchicalDataCommunicator() {
         super();
-        dataProvider = new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<>());
+        dataProvider = new TreeDataProvider<>(
+                new TreeData<>());
     }
 
     @Override

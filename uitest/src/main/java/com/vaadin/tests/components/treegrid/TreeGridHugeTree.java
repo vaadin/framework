@@ -2,8 +2,8 @@ package com.vaadin.tests.components.treegrid;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -15,10 +15,10 @@ public class TreeGridHugeTree
         extends AbstractTestUI {
 
     private TreeGrid<String> treeGrid;
-    private InMemoryHierarchicalDataProvider<String> inMemoryDataProvider;
+    private TreeDataProvider<String> inMemoryDataProvider;
 
     private void initializeDataProvider() {
-        HierarchyData<String> data = new HierarchyData<>();
+        TreeData<String> data = new TreeData<>();
         for (int i = 0; i < 3; i++) {
             String granddad = "Granddad " + i;
             data.addItem(null, granddad);
@@ -31,7 +31,7 @@ public class TreeGridHugeTree
                 }
             }
         }
-        inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
+        inMemoryDataProvider = new TreeDataProvider<>(data);
     }
 
     @Override
