@@ -28,6 +28,7 @@ import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
@@ -37,6 +38,7 @@ import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.Resource;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.tree.TreeRendererState;
@@ -78,7 +80,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
          * which it has been added.
          *
          * @param event
-         *            the received event, not <code>null</code>
+         *            the received event, not {@code null}
          */
         public void itemClick(Tree.ItemClick<T> event);
     }
@@ -125,8 +127,6 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     /**
      * String renderer that handles icon resources and stores their identifiers
      * into data objects.
-     *
-     * @since 8.1
      */
     public final class TreeRenderer extends AbstractRenderer<T, String>
             implements DataGenerator<T> {
@@ -459,6 +459,49 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     }
 
     /**
+     * Sets the item collapse allowed provider for this Tree. The provider
+     * should return {@code true} for any item that the user can collapse.
+     * <p>
+     * <strong>Note:</strong> This callback will be accessed often when sending
+     * data to the client. The callback should not do any costly operations.
+     *
+     * @param provider
+     *            the item collapse allowed provider, not {@code null}
+     */
+    public void setItemCollapseAllowedProvider(
+            SerializablePredicate<T> provider) {
+        treeGrid.setItemCollapseAllowedProvider(provider);
+    }
+
+    /**
+     * Sets the style generator that is used for generating class names for
+     * items in this tree. Returning null from the generator results in no
+     * custom style name being set.
+     *
+     * @see StyleGenerator
+     *
+     * @param styleGenerator
+     *            the item style generator to set, not {@code null}
+     * @throws NullPointerException
+     *             if {@code styleGenerator} is {@code null}
+     */
+    public void setStyleGenerator(StyleGenerator<T> styleGenerator) {
+        treeGrid.setStyleGenerator(styleGenerator);
+    }
+
+    /**
+     * Adds an item click listener. The listener is called when an item of this
+     * {@code Tree} is clicked.
+     *
+     * @param listener
+     *            the item click listener, not null
+     * @return a registration for the listener
+     */
+    public Registration addItemClickListener(ItemClickListener<T> listener) {
+        return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
+    }
+
+    /**
      * @deprecated This component's height is always set to be undefined.
      *             Calling this method will have no effect.
      */
@@ -503,17 +546,5 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     @Override
     public Resource getIcon() {
         return treeGrid.getIcon();
-    }
-
-    /**
-     * Adds an item click listener. The listener is called when an item of this
-     * {@code Tree} is clicked.
-     *
-     * @param listener
-     *            the item click listener, not null
-     * @return a registration for the listener
-     */
-    public Registration addItemClickListener(ItemClickListener<T> listener) {
-        return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
     }
 }

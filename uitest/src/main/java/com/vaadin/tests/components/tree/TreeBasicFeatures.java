@@ -90,6 +90,21 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
             }
 
         }).setCheckable(true);
+        MenuItem collapseAllowed = componentMenu.addItem("Collapse Allowed",
+                menuItem -> tree.setItemCollapseAllowedProvider(
+                        t -> menuItem.isChecked()));
+        collapseAllowed.setCheckable(true);
+
+        // Simulate the first click
+        collapseAllowed.setChecked(true);
+        collapseAllowed.getCommand().menuSelected(collapseAllowed);
+
+        componentMenu
+                .addItem("Style Generator",
+                        menuItem -> tree.setStyleGenerator(menuItem.isChecked()
+                                ? t -> "level" + t.getDepth() : t -> null))
+                .setCheckable(true);
+
         return menu;
     }
 
