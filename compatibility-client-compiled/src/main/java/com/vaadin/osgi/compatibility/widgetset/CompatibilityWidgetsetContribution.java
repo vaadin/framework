@@ -21,7 +21,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.HttpService;
 
-import com.vaadin.osgi.resources.OSGiVaadinResources;
+import com.vaadin.osgi.resources.OsgiVaadinResources;
 import com.vaadin.osgi.resources.VaadinResourceService;
 
 @Component(immediate = true)
@@ -32,7 +32,7 @@ public class CompatibilityWidgetsetContribution {
 
     @Activate
     void startup(ComponentContext context) throws Exception {
-        VaadinResourceService service = OSGiVaadinResources.getService();
+        VaadinResourceService service = OsgiVaadinResources.getService();
         service.publishWidgetset(WIDGETSET_NAME, httpService);
     }
 

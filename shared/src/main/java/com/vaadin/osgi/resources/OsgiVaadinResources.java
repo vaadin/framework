@@ -30,7 +30,7 @@ import com.vaadin.osgi.resources.impl.VaadinResourceServiceImpl;
  * 
  * @since 8.1
  */
-public class OSGiVaadinResources implements BundleActivator {
+public class OsgiVaadinResources implements BundleActivator {
 
     /**
      * Thrown if a method is called when the Resource bundle is not active.
@@ -46,7 +46,7 @@ public class OSGiVaadinResources implements BundleActivator {
         }
     }
 
-    private static OSGiVaadinResources instance;
+    private static OsgiVaadinResources instance;
 
     private VaadinResourceServiceImpl service;
     private Version version;

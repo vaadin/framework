@@ -32,11 +32,11 @@ import com.vaadin.ui.UI;
  * @since 8.1
  */
 @SuppressWarnings("serial")
-public class OSGiUIProvider extends UIProvider {
+public class OsgiUIProvider extends UIProvider {
     private Class<UI> uiClass;
 
     @SuppressWarnings("unchecked")
-    public OSGiUIProvider(ServiceObjects<UI> serviceObjects) {
+    public OsgiUIProvider(ServiceObjects<UI> serviceObjects) {
         super();
         UI ui = serviceObjects.getService();
         uiClass = (Class<UI>) ui.getClass();
