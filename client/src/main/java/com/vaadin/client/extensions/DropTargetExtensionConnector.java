@@ -15,6 +15,12 @@
  */
 package com.vaadin.client.extensions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -24,7 +30,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
@@ -257,13 +262,18 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             nativeEvent.preventDefault();
             nativeEvent.stopPropagation();
 
-            String dataTransferText = nativeEvent.getDataTransfer()
-                    .getData(DragSourceState.DATA_TYPE_TEXT);
+            JsArrayString typesJsArray = getTypes(
+                    nativeEvent.getDataTransfer());
+            List<String> types = new ArrayList<>();
+            Map<String, String> data = new HashMap<>();
+            for (int i = 0; i < typesJsArray.length(); i++) {
+                String type = typesJsArray.get(i);
+                types.add(type);
+                data.put(type, nativeEvent.getDataTransfer().getData(type));
+            }
 
-            String dropEffect = DragSourceExtensionConnector
-                    .getDropEffect(nativeEvent.getDataTransfer());
-
-            sendDropEventToServer(dataTransferText, dropEffect, nativeEvent);
+            sendDropEventToServer(types, data, DragSourceExtensionConnector
+                    .getDropEffect(nativeEvent.getDataTransfer()));
         }
 
         removeTargetClassIndicator(nativeEvent);
@@ -291,17 +301,17 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     /**
      * Initiates a server RPC for the drop event.
      *
-     * @param dataTransferText
-     *            Client side textual data that can be set for the drag source
-     *            and is transferred to the drop target.
+     * @param types
+     *         List of data types from {@code DataTransfer.types} object.
+     * @param data
+     *         Map containing all types and corresponding data from the {@code
+     *         DataTransfer} object.
      * @param dropEffect
-     *            the desired drop effect
-     * @param dropEvent
-     *            Client side drop event.
+     *         The desired drop effect.
      */
-    protected void sendDropEventToServer(String dataTransferText,
-            String dropEffect, NativeEvent dropEvent) {
-        getRpcProxy(DropTargetRpc.class).drop(dataTransferText, dropEffect);
+    protected void sendDropEventToServer(List<String> types,
+            Map<String, String> data, String dropEffect) {
+        getRpcProxy(DropTargetRpc.class).drop(types, data, dropEffect);
     }
 
     /**
@@ -336,6 +346,11 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     protected void removeTargetClassIndicator(NativeEvent event) {
         getDropTargetElement().removeClassName(styleDragCenter);
     }
+
+    private native JsArrayString getTypes(DataTransfer dataTransfer)
+    /*-{
+        return dataTransfer.types;
+    }-*/;
 
     private native boolean executeScript(NativeEvent event, String script)
     /*-{

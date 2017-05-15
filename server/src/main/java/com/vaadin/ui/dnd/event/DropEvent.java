@@ -15,8 +15,10 @@
  */
 package com.vaadin.ui.dnd.event;
 
+import java.util.Map;
 import java.util.Optional;
 
+import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -33,7 +35,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  * @since 8.1
  */
 public class DropEvent<T extends AbstractComponent> extends Component.Event {
-    private final String dataTransferText;
+    private final Map<String, String> data;
     private final DragSourceExtension<? extends AbstractComponent> dragSourceExtension;
     private final AbstractComponent dragSource;
     private final DropEffect dropEffect;
@@ -42,26 +44,37 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * Creates a server side drop event.
      *
      * @param target
-     *            Component that received the drop.
-     * @param dataTransferText
-     *            Data of type {@code "text"} from the {@code DataTransfer}
-     *            object.
+     *         Component that received the drop.
+     * @param data
+     *         Map containing all types and corresponding data from the {@code
+     *         DataTransfer} object.
      * @param dropEffect
-     *            the desired drop effect
+     *         the desired drop effect
      * @param dragSourceExtension
-     *            Drag source extension of the component that initiated the drop
-     *            event.
+     *         Drag source extension of the component that initiated the drop
+     *         event.
      */
-    public DropEvent(T target, String dataTransferText, DropEffect dropEffect,
+    public DropEvent(T target, Map<String, String> data, DropEffect dropEffect,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension) {
         super(target);
 
-        this.dataTransferText = dataTransferText;
+        this.data = data;
         this.dropEffect = dropEffect;
-
         this.dragSourceExtension = dragSourceExtension;
         this.dragSource = Optional.ofNullable(dragSourceExtension)
                 .map(DragSourceExtension::getParent).orElse(null);
+    }
+
+    /**
+     * Get data from the client side {@code DataTransfer} object.
+     *
+     * @param type
+     *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
+     * @return Optional data for the given format if exists in the client side
+     * {@code DataTransfer}, otherwise {@code Optional.empty()}.
+     */
+    public Optional<String> getDataTransferData(String type) {
+        return Optional.ofNullable(data.get(type));
     }
 
     /**
@@ -72,7 +85,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * DataTransfer} object, otherwise {@literal null}.
      */
     public String getDataTransferText() {
-        return dataTransferText;
+        return data.get(DragSourceState.DATA_TYPE_TEXT);
     }
 
     /**
