@@ -19,7 +19,7 @@ public class TreeGridClientSortTest extends SingleBrowserTest {
         openTestURL();
         TreeGridElement grid = $(TreeGridElement.class).first();
         selectMenuPath("Component", "Features", "Set data provider",
-                "InMemoryHierarchicalDataProvider");
+                "TreeDataProvider");
         grid.getHeaderCell(0, 0).doubleClick();
         grid.expandWithClick(0);
         grid.expandWithClick(1);

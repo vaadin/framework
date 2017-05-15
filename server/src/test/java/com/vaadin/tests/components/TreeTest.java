@@ -3,8 +3,8 @@ package com.vaadin.tests.components;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ExpandEvent;
@@ -52,12 +52,12 @@ public class TreeTest {
     @Test
     public void event_source_is_tree() {
         Tree<String> tree = new Tree<>();
-        HierarchyData<String> hierarchyData = new HierarchyData<>();
+        TreeData<String> hierarchyData = new TreeData<>();
         hierarchyData.addItem(null, "Foo");
         hierarchyData.addItem("Foo", "Bar");
         hierarchyData.addItem("Foo", "Baz");
         tree.setDataProvider(
-                new InMemoryHierarchicalDataProvider<>(hierarchyData));
+                new TreeDataProvider<>(hierarchyData));
 
         TreeCollapseExpandListener listener = new TreeCollapseExpandListener(
                 tree);
