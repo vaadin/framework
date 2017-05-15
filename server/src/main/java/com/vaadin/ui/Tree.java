@@ -470,7 +470,7 @@ public class Tree<T> extends Composite
      *            the item collapse allowed provider, not {@code null}
      */
     public void setItemCollapseAllowedProvider(
-            SerializablePredicate<T> provider) {
+            ItemCollapseAllowedProvider<T> provider) {
         treeGrid.setItemCollapseAllowedProvider(provider);
     }
 
