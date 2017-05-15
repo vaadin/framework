@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class HierarchyData<T> implements Serializable {
+public class TreeData<T> implements Serializable {
 
     private static class HierarchyWrapper<T> implements Serializable {
         private T item;
@@ -86,7 +86,7 @@ public class HierarchyData<T> implements Serializable {
      * Creates an initially empty hierarchical data representation to which
      * items can be added or removed.
      */
-    public HierarchyData() {
+    public TreeData() {
         itemToWrapperMap = new LinkedHashMap<>();
         itemToWrapperMap.put(null, new HierarchyWrapper<>(null, null));
     }
@@ -109,7 +109,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws NullPointerException
      *             if item is null
      */
-    public HierarchyData<T> addItem(T parent, T item) {
+    public TreeData<T> addItem(T parent, T item) {
         Objects.requireNonNull(item, "Item cannot be null");
         if (parent != null && !contains(parent)) {
             throw new IllegalArgumentException(
@@ -144,7 +144,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws NullPointerException
      *             if any of the items are null
      */
-    public HierarchyData<T> addItems(T parent,
+    public TreeData<T> addItems(T parent,
             @SuppressWarnings("unchecked") T... items) {
         Arrays.asList(items).stream().forEach(item -> addItem(parent, item));
         return this;
@@ -170,7 +170,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws NullPointerException
      *             if any of the items are null
      */
-    public HierarchyData<T> addItems(T parent, Collection<T> items) {
+    public TreeData<T> addItems(T parent, Collection<T> items) {
         items.stream().forEach(item -> addItem(parent, item));
         return this;
     }
@@ -195,8 +195,30 @@ public class HierarchyData<T> implements Serializable {
      * @throws NullPointerException
      *             if any of the items are null
      */
-    public HierarchyData<T> addItems(T parent, Stream<T> items) {
+    public TreeData<T> addItems(T parent, Stream<T> items) {
         items.forEach(item -> addItem(parent, item));
+        return this;
+    }
+
+    /**
+     * Adds the given items as root items and uses the given value provider to
+     * recursively populate children of the root items.
+     *
+     * @param childItemProvider
+     *            the value provider used to recursively populate this TreeData
+     *            from the given root items
+     * @param items
+     *            the root items to add
+     * @return this
+     */
+    public TreeData<T> addItems(Collection<T> rootItems,
+            ValueProvider<T, Collection<T>> childItemProvider) {
+        rootItems.forEach(item -> {
+            addItem(null, item);
+            Collection<T> childItems = childItemProvider.apply(item);
+            addItems(item, childItems);
+            addItemsRecursively(childItems, childItemProvider);
+        });
         return this;
     }
 
@@ -211,7 +233,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws IllegalArgumentException
      *             if the item does not exist in this structure
      */
-    public HierarchyData<T> removeItem(T item) {
+    public TreeData<T> removeItem(T item) {
         if (!contains(item)) {
             throw new IllegalArgumentException(
                     "Item '" + item + "' not in the hierarchy");
@@ -232,7 +254,7 @@ public class HierarchyData<T> implements Serializable {
      *
      * @return this
      */
-    public HierarchyData<T> clear() {
+    public TreeData<T> clear() {
         removeItem(null);
         return this;
     }
@@ -274,5 +296,14 @@ public class HierarchyData<T> implements Serializable {
             itemToWrapperMap.get(parent).addChild(item);
         }
         itemToWrapperMap.put(item, wrappedItem);
+    }
+
+    private void addItemsRecursively(Collection<T> items,
+            ValueProvider<T, Collection<T>> childItemProvider) {
+        items.forEach(item -> {
+            Collection<T> childItems = childItemProvider.apply(item);
+            addItems(item, childItems);
+            addItemsRecursively(childItems, childItemProvider);
+        });
     }
 }

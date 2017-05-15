@@ -1,6 +1,7 @@
 package com.vaadin.data.provider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,13 +9,13 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.TreeData;
 import com.vaadin.server.SerializablePredicate;
 
-public class InMemoryHierarchicalDataProviderTest extends
-        DataProviderTestBase<InMemoryHierarchicalDataProvider<StrBean>> {
+public class TreeDataProviderTest extends
+        DataProviderTestBase<TreeDataProvider<StrBean>> {
 
-    private HierarchyData<StrBean> data;
+    private TreeData<StrBean> data;
     private List<StrBean> flattenedData;
     private List<StrBean> rootData;
 
@@ -24,7 +25,7 @@ public class InMemoryHierarchicalDataProviderTest extends
         flattenedData = new ArrayList<>();
         rootData = new ArrayList<>();
 
-        data = new HierarchyData<>();
+        data = new TreeData<>();
         data.addItems(null, randomBeans.subList(0, 5));
         data.addItems(randomBeans.get(0), randomBeans.subList(5, 10));
         data.addItems(randomBeans.get(5), randomBeans.subList(10, 15));
@@ -44,39 +45,57 @@ public class InMemoryHierarchicalDataProviderTest extends
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void hierarchyData_add_item_parent_not_in_hierarchy_throws() {
-        new HierarchyData<>().addItem(new StrBean("", 0, 0),
+    public void treeData_add_item_parent_not_in_hierarchy_throws() {
+        new TreeData<>().addItem(new StrBean("", 0, 0),
                 new StrBean("", 0, 0));
     }
 
     @Test(expected = NullPointerException.class)
-    public void hierarchyData_add_null_item_throws() {
-        new HierarchyData<>().addItem(null, null);
+    public void treeData_add_null_item_throws() {
+        new TreeData<>().addItem(null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void hierarchyData_add_item_already_in_hierarchy_throws() {
+    public void treeData_add_item_already_in_hierarchy_throws() {
         StrBean bean = new StrBean("", 0, 0);
-        new HierarchyData<>().addItem(null, bean).addItem(null, bean);
+        new TreeData<>().addItem(null, bean).addItem(null, bean);
     }
 
     @Test
-    public void hierarchyData_remove_root_item() {
+    public void treeData_remove_root_item() {
         data.removeItem(null);
         Assert.assertTrue(data.getChildren(null).isEmpty());
     }
 
     @Test
-    public void hierarchyData_clear() {
+    public void treeData_clear() {
         data.clear();
         Assert.assertTrue(data.getChildren(null).isEmpty());
     }
 
     @Test
-    public void hierarchyData_re_add_removed_item() {
+    public void treeData_re_add_removed_item() {
         StrBean item = rootData.get(0);
         data.removeItem(item).addItem(null, item);
         Assert.assertTrue(data.getChildren(null).contains(item));
+    }
+
+    @Test
+    public void populate_treeData_with_child_item_provider() {
+        TreeData<String> stringData = new TreeData<>();
+        List<String> rootItems = Arrays.asList("a", "b", "c");
+        stringData.addItems(rootItems, item -> {
+            if (item.length() >= 3 || item.startsWith("c")) {
+                return Arrays.asList();
+            }
+            return Arrays.asList(item + "/a", item + "/b", item + "/c");
+        });
+        Assert.assertEquals(stringData.getChildren("a"),
+                Arrays.asList("a/a", "a/b", "a/c"));
+        Assert.assertEquals(stringData.getChildren("b"),
+                Arrays.asList("b/a", "b/b", "b/c"));
+        Assert.assertEquals(stringData.getChildren("c"), Arrays.asList());
+        Assert.assertEquals(stringData.getChildren("a/b"), Arrays.asList());
     }
 
     @Test
@@ -226,8 +245,8 @@ public class InMemoryHierarchicalDataProviderTest extends
     }
 
     @Override
-    protected InMemoryHierarchicalDataProvider<StrBean> createDataProvider() {
-        return new InMemoryHierarchicalDataProvider<>(data);
+    protected TreeDataProvider<StrBean> createDataProvider() {
+        return new TreeDataProvider<>(data);
     }
 
     @Override

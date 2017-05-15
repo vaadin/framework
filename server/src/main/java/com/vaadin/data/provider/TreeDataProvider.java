@@ -20,13 +20,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.TreeData;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
 
 /**
- * {@link HierarchicalDataProvider} wrapper for {@link HierarchyData}.
+ * {@link HierarchicalDataProvider} wrapper for {@link TreeData}.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -34,18 +34,18 @@ import com.vaadin.server.SerializablePredicate;
  * @param <T>
  *            data type
  */
-public class InMemoryHierarchicalDataProvider<T>
+public class TreeDataProvider<T>
         extends AbstractHierarchicalDataProvider<T, SerializablePredicate<T>>
         implements InMemoryDataProvider<T> {
 
-    private final HierarchyData<T> hierarchyData;
+    private final TreeData<T> treeData;
 
     private SerializablePredicate<T> filter = null;
 
     private SerializableComparator<T> sortOrder = null;
 
     /**
-     * Constructs a new InMemoryHierarchicalDataProvider.
+     * Constructs a new TreeDataProvider.
      * <p>
      * All changes made to the given HierarchyData object will also be visible
      * through this data provider.
@@ -53,8 +53,8 @@ public class InMemoryHierarchicalDataProvider<T>
      * @param hierarchyData
      *            the backing HierarchyData for this provider
      */
-    public InMemoryHierarchicalDataProvider(HierarchyData<T> hierarchyData) {
-        this.hierarchyData = hierarchyData;
+    public TreeDataProvider(TreeData<T> hierarchyData) {
+        this.treeData = hierarchyData;
     }
 
     /**
@@ -62,19 +62,19 @@ public class InMemoryHierarchicalDataProvider<T>
      *
      * @return the underlying data of this provider
      */
-    public HierarchyData<T> getData() {
-        return hierarchyData;
+    public TreeData<T> getTreeData() {
+        return treeData;
     }
 
     @Override
     public boolean hasChildren(T item) {
-        if (!hierarchyData.contains(item)) {
+        if (!treeData.contains(item)) {
             throw new IllegalArgumentException("Item " + item
                     + " could not be found in the backing HierarchyData. "
                     + "Did you forget to refresh this data provider after item removal?");
         }
 
-        return !hierarchyData.getChildren(item).isEmpty();
+        return !treeData.getChildren(item).isEmpty();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class InMemoryHierarchicalDataProvider<T>
     @Override
     public Stream<T> fetchChildren(
             HierarchicalQuery<T, SerializablePredicate<T>> query) {
-        if (!hierarchyData.contains(query.getParent())) {
+        if (!treeData.contains(query.getParent())) {
             throw new IllegalArgumentException("The queried item "
                     + query.getParent()
                     + " could not be found in the backing HierarchyData. "
@@ -94,7 +94,7 @@ public class InMemoryHierarchicalDataProvider<T>
         }
 
         Stream<T> childStream = getFilteredStream(
-                hierarchyData.getChildren(query.getParent()).stream(),
+                treeData.getChildren(query.getParent()).stream(),
                 query.getFilter());
 
         Optional<Comparator<T>> comparing = Stream

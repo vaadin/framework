@@ -2,10 +2,10 @@ package com.vaadin.tests.components.treegrid;
 
 import java.util.stream.Stream;
 
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -15,11 +15,11 @@ import com.vaadin.ui.TreeGrid;
 public class TreeGridChangingHierarchy extends AbstractTestUI {
 
     private static class TestDataProvider
-            extends InMemoryHierarchicalDataProvider<String> {
+            extends TreeDataProvider<String> {
 
-        private HierarchyData<String> hierarchyData;
+        private TreeData<String> hierarchyData;
 
-        public TestDataProvider(HierarchyData<String> hierarchyData) {
+        public TestDataProvider(TreeData<String> hierarchyData) {
             super(hierarchyData);
             this.hierarchyData = hierarchyData;
         }
@@ -44,7 +44,7 @@ public class TreeGridChangingHierarchy extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        HierarchyData<String> data = new HierarchyData<>();
+        TreeData<String> data = new TreeData<>();
         data.addItems(null, "a", "b", "c").addItem("b", "b/a");
 
         TreeGrid<String> grid = new TreeGrid<>();
