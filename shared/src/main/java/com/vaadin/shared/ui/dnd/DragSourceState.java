@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.dnd;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class DragSourceState extends SharedState {
      * {@code DataTransfer.types} parameter. Used to keep track of data formats
      * set for the drag event.
      */
-    public List<String> types;
+    public List<String> types = new ArrayList<>();
 
     /**
      * Used to store data in the {@code DataTransfer} object for the drag event.

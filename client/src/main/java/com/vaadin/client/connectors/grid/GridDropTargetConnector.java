@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.connectors.grid;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -81,8 +83,9 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void sendDropEventToServer(String dataTransferText,
-            String dropEffect, NativeEvent dropEvent) {
+    protected void sendDropEventToServer(List<String> types,
+            Map<String, String> data, String dropEffect,
+            NativeEvent dropEvent) {
 
         String rowKey = null;
         DropLocation dropLocation = null;
@@ -95,7 +98,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
             dropLocation = getDropLocation(targetRow.get(), dropEvent);
         }
 
-        getRpcProxy(GridDropTargetRpc.class).drop(dataTransferText, dropEffect,
+        getRpcProxy(GridDropTargetRpc.class).drop(types, data, dropEffect,
                 rowKey, dropLocation);
     }
 

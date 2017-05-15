@@ -273,7 +273,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             }
 
             sendDropEventToServer(types, data, DragSourceExtensionConnector
-                    .getDropEffect(nativeEvent.getDataTransfer()));
+                    .getDropEffect(nativeEvent.getDataTransfer()), nativeEvent);
         }
 
         removeTargetClassIndicator(nativeEvent);
@@ -310,7 +310,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *         The desired drop effect.
      */
     protected void sendDropEventToServer(List<String> types,
-            Map<String, String> data, String dropEffect) {
+            Map<String, String> data, String dropEffect,
+            NativeEvent dropEvent) {
         getRpcProxy(DropTargetRpc.class).drop(types, data, dropEffect);
     }
 

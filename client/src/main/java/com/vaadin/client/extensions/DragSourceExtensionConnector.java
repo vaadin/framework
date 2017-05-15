@@ -405,7 +405,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Returns the dropEffect for the given data transfer.
      *
      * @param dataTransfer
-     *         the data transfer with drop effect
+     *            the data transfer with drop effect
      * @return the currently set drop effect
      */
     protected static native String getDropEffect(DataTransfer dataTransfer)
