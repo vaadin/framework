@@ -43,7 +43,6 @@ import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.treegrid.FocusParentRpc;
 import com.vaadin.shared.ui.treegrid.FocusRpc;
@@ -324,10 +323,10 @@ public class TreeGrid<T> extends Grid<T>
      * @param provider
      *            the item collapse allowed provider, not {@code null}
      *
-     * @see HierarchicalDataCommunicator#setItemCollapseAllowedProvider(SerializablePredicate)
+     * @see HierarchicalDataCommunicator#setItemCollapseAllowedProvider(ItemCollapseAllowedProvider)
      */
     public void setItemCollapseAllowedProvider(
-            SerializablePredicate<T> provider) {
+            ItemCollapseAllowedProvider<T> provider) {
         getDataCommunicator().setItemCollapseAllowedProvider(provider);
     }
 
