@@ -17,6 +17,7 @@ import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
+import com.vaadin.ui.ItemCollapseAllowedProvider;
 import com.vaadin.ui.TreeGrid;
 
 @Theme("valo")
@@ -137,7 +138,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     }
 
     private void createCollapseAllowedSelect() {
-        LinkedHashMap<String, SerializablePredicate<HierarchicalTestBean>> options = new LinkedHashMap<>();
+        LinkedHashMap<String, ItemCollapseAllowedProvider<HierarchicalTestBean>> options = new LinkedHashMap<>();
         options.put("all allowed", t -> true);
         options.put("all disabled", t -> false);
         options.put("depth 0 disabled", t -> t.getDepth() != 0);
