@@ -32,10 +32,10 @@ import com.vaadin.data.HierarchyData;
 import com.vaadin.data.provider.HierarchyMapper.TreeLevelQuery;
 import com.vaadin.data.provider.HierarchyMapper.TreeNode;
 import com.vaadin.server.SerializableConsumer;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.extension.datacommunicator.HierarchicalDataCommunicatorState;
+import com.vaadin.ui.ItemCollapseAllowedProvider;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -67,7 +67,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     /**
      * Collapse allowed provider used to allow/disallow collapsing nodes.
      */
-    private SerializablePredicate<T> itemCollapseAllowedProvider = t -> true;
+    private ItemCollapseAllowedProvider<T> itemCollapseAllowedProvider = t -> true;
 
     /**
      * The captured client side cache size.
@@ -513,7 +513,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *            the item collapse allowed provider, not {@code null}
      */
     public void setItemCollapseAllowedProvider(
-            SerializablePredicate<T> provider) {
+            ItemCollapseAllowedProvider<T> provider) {
         Objects.requireNonNull(provider, "Provider can't be null");
         itemCollapseAllowedProvider = provider;
 
