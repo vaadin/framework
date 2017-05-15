@@ -19,7 +19,7 @@ package com.vaadin.osgi.resources;
  * Used to declare a Vaadin Widgetset for use in OSGi. The widgetset is expected
  * to be in the same OSGi bundle as the class implementing this interface, under
  * the path "/VAADIN/widgetsets/{widgetsetName}" where {widgetsetName} is what
- * is returned by {@link OSGiVaadinWidgetset#getName()}.
+ * is returned by {@link OsgiVaadinWidgetset#getName()}.
  * <p>
  * To publish a widgetset, an implementation of this interface needs to be
  * registered as an OSGi service, which makes
@@ -30,6 +30,11 @@ package com.vaadin.osgi.resources;
  *
  * @since 8.1
  */
-public interface OSGiVaadinWidgetset {
+public interface OsgiVaadinWidgetset {
+    /**
+     * Return the widgetset name to publish for OSGi.
+     *
+     * @return widgetset name, not null
+     */
     public String getName();
 }

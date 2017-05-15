@@ -19,7 +19,7 @@ package com.vaadin.osgi.resources;
  * Used to declare a Vaadin Theme for use in OSGi. The theme is expected to be
  * in the same OSGi bundle as the class implementing this interface, under the
  * path "/VAADIN/themes/{themeName}" where {themeName} is what is returned by
- * {@link OSGiVaadinTheme#getName()}.
+ * {@link OsgiVaadinTheme#getName()}.
  * <p>
  * To publish a theme, an implementation of this interface needs to be
  * registered as an OSGi service, which makes
@@ -30,6 +30,11 @@ package com.vaadin.osgi.resources;
  *
  * @since 8.1
  */
-public interface OSGiVaadinTheme {
+public interface OsgiVaadinTheme {
+    /**
+     * Return the theme name to publish for OSGi.
+     *
+     * @return theme name, not null
+     */
     public String getName();
 }

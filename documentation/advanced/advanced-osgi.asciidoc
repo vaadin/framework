@@ -41,12 +41,12 @@ public static class MyUIServlet extends VaadinServlet {
 
 Vaadin Framework 8.1 and later versions provide two supported ways of publishing static resources for OSGi: by making OSGi services implementing an interface or by explicit calls to a service.
 
-The easiest way to publish a theme or a widgetset is to create a class implementing the interface [interfacename]#OSGiVaadinTheme# or [interfacename]#OSGiVaadinWidgetset# and annotating it with [interfacename]#@Component# to make it an OSGi service. This automatically publishes the theme or the widget set from the bundle at a path that contains the Vaadin Framework version used by the application.
+The easiest way to publish a theme or a widgetset is to create a class implementing the interface [interfacename]#OsgiVaadinTheme# or [interfacename]#OsgiVaadinWidgetset# and annotating it with [interfacename]#@Component# to make it an OSGi service. This automatically publishes the theme or the widget set from the bundle at a path that contains the Vaadin Framework version used by the application.
 
 [source, java]
 ----
 @Component
-public class MyTheme extends ValoTheme implements OSGiVaadinTheme {
+public class MyTheme extends ValoTheme implements OsgiVaadinTheme {
     public static final String THEME_NAME = "mytheme";
 
     @Override
@@ -57,11 +57,11 @@ public class MyTheme extends ValoTheme implements OSGiVaadinTheme {
 }
 ----
 
-Alternatively, an OSGi bundle activator or an SCR Component [interfacename]#@Activate# method can obtain an instance of [classname]#VaadinResourceService# from [classname]#OSGiVaadinResources# and explicitly call its methods to publish a theme, a widget set or an individual file in the bundle as a static resource at the correct path.
+Alternatively, an OSGi bundle activator or an SCR Component [interfacename]#@Activate# method can obtain an instance of [classname]#VaadinResourceService# from [classname]#OsgiVaadinResources# and explicitly call its methods to publish a theme, a widget set or an individual file in the bundle as a static resource at the correct path.
 
 [source, java]
 ----
-  VaadinResourceService service = OSGiVaadinResources.getService();
+  VaadinResourceService service = OsgiVaadinResources.getService();
   service.publishTheme("mytheme", httpService);
 ----
 

@@ -20,7 +20,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.HttpService;
 
-import com.vaadin.osgi.resources.OSGiVaadinResources;
+import com.vaadin.osgi.resources.OsgiVaadinResources;
 import com.vaadin.osgi.resources.VaadinResourceService;
 
 @Component(immediate = true)
@@ -32,7 +32,7 @@ public class LegacyThemeContributions {
 
     @Activate
     void startup() throws Exception {
-        VaadinResourceService service = OSGiVaadinResources.getService();
+        VaadinResourceService service = OsgiVaadinResources.getService();
         for (String themeName : LEGACY_THEMES) {
             service.publishTheme(themeName, httpService);
         }

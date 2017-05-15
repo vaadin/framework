@@ -19,11 +19,14 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.VaadinPortlet;
 import com.vaadin.server.VaadinPortletService;
+import com.vaadin.server.VaadinPortletSession;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
 /**
- * {@link VaadinPortlet} that uses an {@link OSGiUIProvider} to configure its
- * {@link UI}.
+ * {@link VaadinPortletService} class that uses the {@link OsgiUIProvider} to
+ * configure the {@link UI} class for a {@link VaadinPortlet}.
  * <p>
  * This only applies to Liferay Portal 7+ with OSGi support.
  *
@@ -32,19 +35,25 @@ import com.vaadin.ui.UI;
  * @since 8.1
  */
 @SuppressWarnings("serial")
-public class VaadinOSGiPortlet extends VaadinPortlet {
-    private OSGiUIProvider uiProvider;
+public class OsgiVaadinPortletService extends VaadinPortletService {
+    private OsgiUIProvider osgiUIProvider;
 
-    public VaadinOSGiPortlet(OSGiUIProvider uiProvider) {
-        this.uiProvider = uiProvider;
+    public OsgiVaadinPortletService(VaadinPortlet portlet,
+            DeploymentConfiguration deploymentConfiguration,
+            OsgiUIProvider osgiUIProvider) throws ServiceException {
+
+        super(portlet, deploymentConfiguration);
+        this.osgiUIProvider = osgiUIProvider;
     }
 
     @Override
-    protected VaadinPortletService createPortletService(
-            DeploymentConfiguration configuration) throws ServiceException {
-        OSGiVaadinPortletService osgiVaadinPortletService = new OSGiVaadinPortletService(
-                this, configuration, uiProvider);
-        osgiVaadinPortletService.init();
-        return osgiVaadinPortletService;
+    protected VaadinSession createVaadinSession(VaadinRequest request)
+            throws ServiceException {
+
+        VaadinSession vaadinSession = new VaadinPortletSession(this);
+        vaadinSession.addUIProvider(osgiUIProvider);
+
+        return vaadinSession;
     }
+
 }
