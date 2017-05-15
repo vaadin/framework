@@ -40,9 +40,6 @@ import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.components.grid.GridDragSource;
 import com.vaadin.ui.components.grid.GridDropTarget;
 
-import elemental.json.Json;
-import elemental.json.JsonObject;
-
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridDragAndDrop extends AbstractTestUIWithLog {
@@ -109,12 +106,16 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dragSource.setEffectAllowed(EffectAllowed.MOVE);
 
         // Set data generator
-        dragSource.setDragDataGenerator(person -> {
-            JsonObject data = Json.createObject();
-            data.put("name",
-                    person.getFirstName() + " " + person.getLastName());
-            data.put("city", person.getAddress().getCity());
-            return data;
+        dragSource.setDragDataGenerator("application/json", person -> {
+            StringBuilder builder = new StringBuilder();
+            builder.append("{");
+            builder.append("\"First Name\":");
+            builder.append("\"" + person.getFirstName() + "\"");
+            builder.append(",");
+            builder.append("\"Last Name\":");
+            builder.append("\"" + person.getLastName() + "\"");
+            builder.append("}");
+            return builder.toString();
         });
 
         // Add drag start listener

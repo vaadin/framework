@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.extensions;
 
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -185,22 +185,21 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Set drag image
         setDragImage(nativeEvent);
 
-        // Set data parameters
-        List<String> types = getState().types;
-        Map<String, String> data = getState().data;
-        for (String type : types) {
-            nativeEvent.getDataTransfer().setData(type, data.get(type));
+        // Create drag data
+        Map<String, String> orderedData = new LinkedHashMap<>();
+        for (String type : getState().types) {
+            orderedData.put(type, getState().data.get(type));
         }
+
+        // Let the subclass modify the created map
+        modifyDataTransferData(orderedData, nativeEvent);
 
         // Always set something as the text data, or DnD won't work in FF !
-        String dataTransferText = createDataTransferText(nativeEvent);
-        if (dataTransferText == null) {
-            dataTransferText = "";
-        }
+        orderedData.putIfAbsent(DragSourceState.DATA_TYPE_TEXT, "");
 
-        // Override data type "text" when storing special data is needed
-        nativeEvent.getDataTransfer()
-                .setData(DragSourceState.DATA_TYPE_TEXT, dataTransferText);
+        // Set data to the event's data transfer
+        orderedData.forEach((type, data) -> nativeEvent.getDataTransfer()
+                .setData(type, data));
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
@@ -255,15 +254,19 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Creates data of type {@code "text"} for the {@code DataTransfer} object
-     * of the given event.
+     * Modifies the data map to be set for the {@code DataTransfer} object's
+     * data of the given event. It can be used by subclasses to add or modify
+     * transferable data.
      *
+     * @param dataMap
+     *         Map of type/data pairs to be set for the {@code DataTransfer}
+     *         object.
      * @param dragStartEvent
-     *            Event to set the data for.
-     * @return Textual data to be set for the event or {@literal null}.
+     *         Event to set the data for.
      */
-    protected String createDataTransferText(NativeEvent dragStartEvent) {
-        return getState().data.get(DragSourceState.DATA_TYPE_TEXT);
+    protected void modifyDataTransferData(final Map<String, String> dataMap,
+            NativeEvent dragStartEvent) {
+        // NOP, subclass can modify map entries by overriding this class
     }
 
     /**

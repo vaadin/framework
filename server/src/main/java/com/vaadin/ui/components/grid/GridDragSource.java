@@ -15,8 +15,9 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ import com.vaadin.shared.ui.grid.GridDragSourceState;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.dnd.DragSourceExtension;
 
+import elemental.json.Json;
 import elemental.json.JsonObject;
 
 /**
@@ -51,9 +53,27 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     private DataGenerator<T> dragDataGenerator;
 
     /**
-     * Drag data generator function that is executed for each row.
+     * Collection of drag data generator functions. Functions are executed for
+     * each row and results are stored under their corresponding key.
      */
-    private SerializableFunction<T, JsonObject> generatorFunction;
+    private final Map<String, SerializableFunction<T, String>> generatorFunctions;
+
+    /**
+     * Default drag data generator for Grid. It creates a list of row values
+     * separated by a tabulator character ({@code \t}).
+     * <pre>
+     *      "column1_value\tcolumn2_value\t ... columnN_value"
+     * </pre>
+     */
+    private final SerializableFunction<T, String> defaultGridGenerator = item -> {
+        StringBuilder generatedValue = new StringBuilder();
+        getParent().getColumns().forEach(column -> {
+            generatedValue.append("\t");    // Tab separated values
+            generatedValue.append(column.getValueProvider().apply(item));
+        });
+//        generatedValue.
+        return generatedValue.substring(1);
+    };
 
     /**
      * Extends a Grid and makes it's rows draggable.
@@ -69,6 +89,12 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
         // Add drag data generator to Grid
         target.getDataCommunicator().addDataGenerator(dragDataGenerator);
+
+        generatorFunctions = new HashMap<>();
+
+        // Set default generator function for "text" parameter
+        generatorFunctions
+                .put(DragSourceState.DATA_TYPE_TEXT, defaultGridGenerator);
     }
 
     @Override
@@ -113,7 +139,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
     /**
      * Drag data generator. Appends drag data to row data json if generator
-     * function is set by the user of this extension.
+     * function(s) are set by the user of this extension.
      *
      * @param item
      *            Row item for data generation.
@@ -121,49 +147,69 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      *            Row data in json format.
      */
     private void generateDragData(T item, JsonObject jsonObject) {
-        Optional.ofNullable(generatorFunction)
-                .ifPresent(generator -> jsonObject.put(
-                        GridDragSourceState.JSONKEY_DRAG_DATA,
-                        generator.apply(item)));
+        JsonObject generatedValues = Json.createObject();
+
+        generatorFunctions.forEach((type, generator) -> {
+            generatedValues.put(type, generator.apply(item));
+        });
+
+        jsonObject.put(GridDragSourceState.JSONKEY_DRAG_DATA, generatedValues);
     }
 
     /**
-     * Sets a generator function for customizing drag data. The function is
-     * executed for each item in the Grid during data generation. Return a
-     * {@link JsonObject} to be appended to the row data.
+     * Sets a generator function for customizing drag data. The generated value
+     * will be accessible using the same {@code type} as the generator is set
+     * here. The function is executed for each item in the Grid during data
+     * generation. Return a {@link String} to be appended to the row as {@code
+     * type} data.
      * <p>
-     * Example:
-     *
+     * Example, building a JSON object that contains the item's values:
      * <pre>
-     * dragSourceExtension.setDragDataGenerator(item -> {
-     *     JsonObject dragData = Json.createObject();
-     *     dragData.put("someKey", item.getValue());
-     *     return dragData;
-     * });
+     *     dragSourceExtension.setDragDataGenerator("application/json", item ->
+     * {
+     *         StringBuilder builder = new StringBuilder();
+     *         builder.append("{");
+     *         getParent().getColumns().forEach(column -> {
+     *             builder.append("\"" + column.getCaption() + "\"");
+     *             builder.append(":");
+     *             builder.append("\"" + column.getValueProvider().apply(item) + "\"");
+     *             builder.append(",");
+     *         });
+     *         builder.setLength(builder.length() - 1); // Remove last comma
+     *         builder.append("}");
+     *         return builder.toString();
+     *     }
      * </pre>
      *
+     * @param type
+     *         Type of the generated data. The generated value will be
+     *         accessible during drop using this type.
      * @param generator
-     *            Function to be executed on row data generation.
+     *         Function to be executed on row data generation.
      */
-    public void setDragDataGenerator(
-            SerializableFunction<T, JsonObject> generator) {
-        generatorFunction = generator;
+    public void setDragDataGenerator(String type, SerializableFunction<T, String> generator) {
+        generatorFunctions.put(type, generator);
     }
 
     /**
-     * Setting the data transfer text for this drag source is not supported.
+     * Remove the generator function set for the given type.
      *
-     * @throws UnsupportedOperationException
-     *             Setting dataTransferText is not supported, since the drag
-     *             data is set for each row based on the data provided by the
-     *             generator.
-     * @see #setDragDataGenerator(SerializableFunction)
+     * @param type
+     *         Type of the generator to be removed.
      */
-    @Override
-    public void setDataTransferText(String data)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-                "Setting dataTransferText is not supported");
+    public void clearDragDataGenerator(String type) {
+        generatorFunctions.remove(type);
+    }
+
+    /**
+     * Returns the drag data generator function for the given type.
+     *
+     * @param type
+     *         Type of the generated data.
+     * @return Drag data generator function for the given type.
+     */
+    public SerializableFunction<T, String> getDragDataGenerator(String type) {
+        return generatorFunctions.get(type);
     }
 
     /**
@@ -194,15 +240,6 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
         return addListener(DragSourceState.EVENT_DRAGEND,
                 GridDragEndEvent.class, listener,
                 GridDragEndListener.DRAG_END_METHOD);
-    }
-
-    /**
-     * Returns the generator function for customizing drag data.
-     *
-     * @return Drag data generator function.
-     */
-    public SerializableFunction<T, JsonObject> getDragDataGenerator() {
-        return generatorFunction;
     }
 
     @Override
