@@ -26,8 +26,8 @@ public class AbstractComponentElement extends AbstractElement {
     /**
      * Returns the caption of the Component element
      *
-     * @since
-     * @return
+     * @since 8.0
+     * @return component caption
      */
     public String getCaption() {
         final String GWT_ID_ATTRIBUTE = "aria-labelledby";
