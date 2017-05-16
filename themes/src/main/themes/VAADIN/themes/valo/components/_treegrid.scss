@@ -82,6 +82,7 @@ $tg-expander-padding: 10px !default;
     }
   }
 
+  // Needed for hiding the included style
   .#{$primary-stylename}-cell-focused {
     position: static;
 
