@@ -234,6 +234,11 @@ When the Grid's selection mode is `SelectionMode.MULTI` and multiple rows are se
 It is important to note that when dragging multiple rows, only the visible selected rows will be set as dragged data.
 ====
 
+By default, the drag data of type `"text"` will contain the content of each column separated by a tabulator character (`"\t"`).
+When multiple rows are dragged, the generated data is combined into one String separated by new line characters (`"\n"`).
+You can override the default behaviour and provide a custom drag data for each item by setting a custom _drag data generator_ for the `"text"` type.
+The generator is executed for each item and returns a `String` containing the data to be transferred for that item.
+
 The following example shows how you can define the allowed drag effect and customize the drag data by setting a drag data generator.
 
 [source,java]
@@ -253,11 +258,8 @@ dragSource.setDragDataGenerator("text", person -> {
 });
 ----
 
-The _drag data generator_ defines what data should be transferred with the given type when a row is dragged and dropped.
-Each generator is executed for every inserted item and returns a `String` containing the data to be transferred for that item.
-When multiple rows are dragged, the generated data is combined into one String separated by new line characters (`"\n"`).
-The data is then transferred using the HTML5 DataTransfer's data parameter of the given type.
-By default, the data of type `"text"` will contain the content of each column separated by a tabulator character (`"\t"`). You can override this behaviour by setting a custom generator for the `"text"` type.
+It is possible to set multiple generators with the `setDragDataGenerator(type, generator)` method.
+The generated data will be set as data transfer data with the given type and can then be accessed during drop from the drop event's `getDataTransferData(type)` method.
 
 The [classname]#GridDragStartEvent# is fired when dragging a row has started, and the [classname]#GridDragEndEvent# when the drag has ended, either in a drop or a cancel.
 

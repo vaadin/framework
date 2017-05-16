@@ -202,8 +202,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     }
 
     /**
-     * Adds drag data provided by the generator functions set for this drag
-     * source.
+     * Adds drag data provided by the generator functions to the data map.
      * <p>
      * {@inheritDoc}
      *
@@ -219,8 +218,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
             NativeEvent dragStartEvent) {
         // Add data provided by the generator functions
         getDraggedRows(dragStartEvent).forEach(row -> {
-            Map<String, String> dragData = getDragData(row);
-            dragData.forEach((type, data) -> {
+            Map<String, String> rowDragData = getRowDragData(row);
+            rowDragData.forEach((type, data) -> {
                 if (dataMap.get(type) == null) {
                     dataMap.put(type, data);
                 } else {
@@ -343,7 +342,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * @return The generated drag data type mapped to the corresponding drag
      * data. If there are no generator functions, returns an empty map.
      */
-    private Map<String, String> getDragData(JsonObject row) {
+    private Map<String, String> getRowDragData(JsonObject row) {
         // Collect a map of data types and data that is provided by the
         // generator functions set for this drag source
         if (row.hasKey(GridDragSourceState.JSONKEY_DRAG_DATA)) {

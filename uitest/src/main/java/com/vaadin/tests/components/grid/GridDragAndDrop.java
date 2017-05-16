@@ -167,6 +167,8 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                     dataProvider.refreshAll();
 
                     log("DROP: dragData=" + event.getDataTransferText()
+                            + ", dragDataJson="
+                            + event.getDataTransferData("application/json")
                             + ", target="
                             + event.getDropTargetRow().getFirstName() + " "
                             + event.getDropTargetRow().getLastName()

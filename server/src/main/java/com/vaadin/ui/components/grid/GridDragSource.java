@@ -71,7 +71,6 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
             generatedValue.append("\t");    // Tab separated values
             generatedValue.append(column.getValueProvider().apply(item));
         });
-//        generatedValue.
         return generatedValue.substring(1);
     };
 
