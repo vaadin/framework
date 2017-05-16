@@ -33,11 +33,20 @@ DragSourceExtension<Label> dragSource = new DragSourceExtension<>(draggableLabel
 dragSource.setEffectAllowed(EffectAllowed.MOVE);
 // set the text to transfer
 dragSource.setDataTransferText("hello receiver");
+// set other data to transfer (in this case HTML)
+dragSource.setDataTransferData("text/html", "<label>hello receiver</label>");
 ----
 
 The __effect allowed__ specifies the allowed effects that must match the __drop effect__ of the drop target. If these don't match, the drop event is never fired on the target. If multiple effects are allowed, the user can use the modifier keys to switch between the desired effects. The default effect and the modifier keys are system and browser dependent.
 
 The __data transfer text__ is textual data, that the drop target will receive in the __drop event__.
+
+The __data transfer data__ is any data of the given type, that the drop target will also receive in the __drop event__. The order, in which the data is set for the drag source, is preserved, which helps the drop target finding the most preferred and supported data.
+
+[NOTE]
+====
+Note that `"text"` is the only cross browser supported data type. If your application supports IE11, pleas only use the `setDataTransferText()` method.
+====
 
 The [classname]#DragStartEvent# is fired when the drag has started, and the [classname]#DragEndEvent# event when the drag has ended, either in a drop or a cancel.
 
@@ -113,10 +122,16 @@ dropTarget.addDropListener(event -> {
     if (dragSource.isPresent() && dragSource.get() instanceof Label) {
         // move the label to the layout
         dropTargetLayout.addComponent(dragSource.get());
-        
+
         // get possible transfer data
-        String message = event.getDataTransferText();
-        Notification.show("DropEvent with data transfer: "+ message);
+        String message = event.getDataTransferData("text/html");
+        if (message != null) {
+            Notification.show("DropEvent with data transfer html: " + message);
+        } else {
+            // get transfer text
+            message = event.getDataTransferText();
+            Notification.show("DropEvent with data transfer text: " + message);
+        }
 
         // handle possible server side drag data, if the drag source was in the same UI
         event.getDragData().ifPresent(data -> handleMyDragData((MyObject) data));

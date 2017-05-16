@@ -15,6 +15,9 @@
  */
 package com.vaadin.ui.dnd;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import com.vaadin.server.AbstractExtension;
@@ -163,6 +166,14 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Returns the allowed effects for the current drag source element. Used to
      * set client side {@code DataTransfer.effectAllowed} parameter for the drag
      * event.
+     * <p>
+     * You can use different types of data to support dragging to different
+     * targets. Accepted types depend on the drop target and those can be
+     * platform specific. See https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types
+     * for examples on different types.
+     * <p>
+     * <em>NOTE: IE11 only supports type ' text', which can be set using {@link
+     * #setDataTransferText(String data)}</em>
      *
      * @return Effects that are allowed for this draggable element.
      */
@@ -171,15 +182,81 @@ public class DragSourceExtension<T extends AbstractComponent>
     }
 
     /**
-     * Sets data for this drag source element. The data is set for the client
-     * side draggable element using the {@code DataTransfer.setData("text",
-     * data)} method.
+     * Sets data for this drag source element with the given type. The data is
+     * set for the client side draggable element using {@code
+     * DataTransfer.setData(type, data)} method.
+     * <p>
+     * Note that {@code "text"} is the only cross browser supported data type.
+     * Use {@link #setDataTransferText(String)} method instead if your
+     * application supports IE11.
+     *
+     * @param type
+     *         Type of the data to be set for the client side draggable element,
+     *         e.g. {@code text/plain}. Cannot be {@code null}.
+     * @param data
+     *         Data to be set for the client side draggable element. Cannot be
+     *         {@code null}.
+     */
+    public void setDataTransferData(String type, String data) {
+        if (type == null) {
+            throw new IllegalArgumentException("Data type cannot be null");
+        }
+
+        if (data == null) {
+            throw new IllegalArgumentException("Data cannot be null");
+        }
+
+        if (!getState(false).types.contains(type)) {
+            getState().types.add(type);
+        }
+        getState().data.put(type, data);
+    }
+
+    /**
+     * Returns the data stored with type {@code type} in this drag source
+     * element.
+     *
+     * @param type
+     *         Type of the requested data, e.g. {@code text/plain}.
+     * @return Data of type {@code type} stored in this drag source element.
+     */
+    public String getDataTransferData(String type) {
+        return getState(false).data.get(type);
+    }
+
+    /**
+     * Returns the map of data stored in this drag source element. The returned
+     * map preserves the order of storage and is unmodifiable.
+     *
+     * @return Unmodifiable copy of the map of data in the order the data was
+     * stored.
+     */
+    public Map<String, String> getDataTransferData() {
+        Map<String, String> data = getState(false).data;
+
+        // Create a map of data that preserves the order of types
+        LinkedHashMap<String, String> orderedData = new LinkedHashMap<>(
+                data.size());
+        getState(false).types
+                .forEach(type -> orderedData.put(type, data.get(type)));
+
+        return Collections.unmodifiableMap(orderedData);
+    }
+
+    /**
+     * Sets data of type {@code "text"} for this drag source element. The data
+     * is set for the client side draggable element using the {@code
+     * DataTransfer.setData("text", data)} method.
+     * <p>
+     * Note that {@code "text"} is the only cross browser supported data type.
+     * Use this method if your application supports IE11.
      *
      * @param data
-     *            Data to be set for the client side draggable element.
+     *         Data to be set for the client side draggable element.
+     * @see #setDataTransferData(String, String)
      */
     public void setDataTransferText(String data) {
-        getState().dataTransferText = data;
+        setDataTransferData(DragSourceState.DATA_TYPE_TEXT, data);
     }
 
     /**
@@ -189,7 +266,31 @@ public class DragSourceExtension<T extends AbstractComponent>
      * @return Data of type {@code "text"} stored in this drag source element.
      */
     public String getDataTransferText() {
-        return getState(false).dataTransferText;
+        return getDataTransferData(DragSourceState.DATA_TYPE_TEXT);
+    }
+
+    /**
+     * Clears data with the given type for this drag source element when
+     * present.
+     *
+     * @param type
+     *         Type of data to be cleared. Cannot be {@code null}.
+     */
+    public void clearDataTransferData(String type) {
+        if (type == null) {
+            throw new IllegalArgumentException("Data type cannot be null");
+        }
+
+        getState().types.remove(type);
+        getState().data.remove(type);
+    }
+
+    /**
+     * Clears all data for this drag source element.
+     */
+    public void clearDataTransferData() {
+        getState().types.clear();
+        getState().data.clear();
     }
 
     /**

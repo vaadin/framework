@@ -15,6 +15,9 @@
  */
 package com.vaadin.client.extensions;
 
+import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
@@ -182,14 +185,22 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Set drag image
         setDragImage(nativeEvent);
 
-        // Set text data parameter
-        String dataTransferText = createDataTransferText(nativeEvent);
+        // Set data parameters
+        List<String> types = getState().types;
+        Map<String, String> data = getState().data;
+        for (String type : types) {
+            nativeEvent.getDataTransfer().setData(type, data.get(type));
+        }
+
         // Always set something as the text data, or DnD won't work in FF !
+        String dataTransferText = createDataTransferText(nativeEvent);
         if (dataTransferText == null) {
             dataTransferText = "";
         }
-        nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
-                dataTransferText);
+
+        // Override data type "text" when storing special data is needed
+        nativeEvent.getDataTransfer()
+                .setData(DragSourceState.DATA_TYPE_TEXT, dataTransferText);
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
@@ -252,7 +263,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @return Textual data to be set for the event or {@literal null}.
      */
     protected String createDataTransferText(NativeEvent dragStartEvent) {
-        return getState().dataTransferText;
+        return getState().data.get(DragSourceState.DATA_TYPE_TEXT);
     }
 
     /**

@@ -15,6 +15,9 @@
  */
 package com.vaadin.ui.dnd;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.vaadin.server.AbstractExtension;
@@ -62,12 +65,11 @@ public class DropTargetExtension<T extends AbstractComponent>
      * Override this method if you need to have a custom RPC interface for
      * transmitting the drop event with more data. If just need to do additional
      * things before firing the drop event, then you should override
-     * {@link #onDrop(String, DropEffect)} instead.
+     * {@link #onDrop(List, Map, DropEffect)} instead.
      */
     protected void registerDropTargetRpc() {
-        registerRpc((DropTargetRpc) (dataTransferText, dropEffect) -> {
-            onDrop(dataTransferText,
-                    DropEffect.valueOf(dropEffect.toUpperCase()));
+        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
+            onDrop(types, data, DropEffect.valueOf(dropEffect.toUpperCase()));
         });
     }
 
@@ -75,13 +77,22 @@ public class DropTargetExtension<T extends AbstractComponent>
      * Invoked when a <code>drop</code> has been received from client side.
      * Fires the {@link DropEvent}.
      *
-     * @param dataTransferText
-     *            the data transfer of type 'text' for the drop
+     * @param types
+     *         List of data types from {@code DataTransfer.types} object.
+     * @param data
+     *         Map containing all types and corresponding data from the {@code
+     *         DataTransfer} object.
      * @param dropEffect
-     *            the drop effect
+     *         the drop effect
      */
-    protected void onDrop(String dataTransferText, DropEffect dropEffect) {
-        DropEvent<T> event = new DropEvent<>(getParent(), dataTransferText,
+    protected void onDrop(List<String> types, Map<String, String> data,
+            DropEffect dropEffect) {
+
+        // Create a linked map that preserves the order of types
+        Map<String, String> dataPreserveOrder = new LinkedHashMap<>();
+        types.forEach(type -> dataPreserveOrder.put(type, data.get(type)));
+
+        DropEvent<T> event = new DropEvent<>(getParent(), dataPreserveOrder,
                 dropEffect, getUI().getActiveDragSource());
 
         fireEvent(event);

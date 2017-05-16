@@ -15,6 +15,9 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropMode;
@@ -130,14 +133,18 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
     @Override
     protected void registerDropTargetRpc() {
-        registerRpc((GridDropTargetRpc) (dataTransferText, dropEffect, rowKey,
+        registerRpc((GridDropTargetRpc) (types, data, dropEffect, rowKey,
                 dropLocation) -> {
+
+            // Create a linked map that preserves the order of types
+            Map<String, String> dataPreserveOrder = new LinkedHashMap<>();
+            types.forEach(type -> dataPreserveOrder.put(type, data.get(type)));
 
             T dropTargetRow = getParent().getDataCommunicator().getKeyMapper()
                     .get(rowKey);
 
             GridDropEvent<T> event = new GridDropEvent<>(getParent(),
-                    dataTransferText,
+                    dataPreserveOrder,
                     DropEffect.valueOf(dropEffect.toUpperCase()),
                     getUI().getActiveDragSource(), dropTargetRow, dropLocation);
 
