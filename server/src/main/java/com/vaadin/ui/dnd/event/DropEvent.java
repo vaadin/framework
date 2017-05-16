@@ -66,23 +66,22 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Get data from the client side {@code DataTransfer} object.
+     * Get data from the {@code DataTransfer} object.
      *
      * @param type
      *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
-     * @return Optional data for the given format if exists in the client side
-     * {@code DataTransfer}, otherwise {@code Optional.empty()}.
+     * @return Optional data for the given format if exists in the {@code
+     * DataTransfer}, otherwise {@code Optional.empty()}.
      */
     public Optional<String> getDataTransferData(String type) {
         return Optional.ofNullable(data.get(type));
     }
 
     /**
-     * Get data of type {@code "text"} from the client side {@code DataTransfer}
-     * object.
+     * Get data of type {@code "text"} from the {@code DataTransfer} object.
      *
-     * @return Data of type {@code "text"} if exists in the client side {@code
-     * DataTransfer} object, otherwise {@literal null}.
+     * @return Data of type {@code "text"} if exists in the {@code DataTransfer}
+     * object, otherwise {@literal null}.
      */
     public String getDataTransferText() {
         return data.get(DragSourceState.DATA_TYPE_TEXT);

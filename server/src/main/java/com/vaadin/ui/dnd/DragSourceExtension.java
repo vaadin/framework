@@ -166,6 +166,14 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Returns the allowed effects for the current drag source element. Used to
      * set client side {@code DataTransfer.effectAllowed} parameter for the drag
      * event.
+     * <p>
+     * You can use different types of data to support dragging to different
+     * targets. Accepted types depend on the drop target and those can be
+     * platform specific. See https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types
+     * for examples on different types.
+     * <p>
+     * <em>NOTE: IE11 only supports type ' text', which can be set using {@link
+     * #setDataTransferText(String data)}</em>
      *
      * @return Effects that are allowed for this draggable element.
      */
@@ -177,6 +185,10 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Sets data for this drag source element with the given type. The data is
      * set for the client side draggable element using {@code
      * DataTransfer.setData(type, data)} method.
+     * <p>
+     * Note that {@code "text"} is the only cross browser supported data type.
+     * Use {@link #setDataTransferText(String)} method instead if your
+     * application supports IE11.
      *
      * @param type
      *         Type of the data to be set for the client side draggable element,
@@ -232,12 +244,16 @@ public class DragSourceExtension<T extends AbstractComponent>
     }
 
     /**
-     * Sets data for this drag source element. The data is set for the client
-     * side draggable element using the {@code DataTransfer.setData("text",
-     * data)} method.
+     * Sets data of type {@code "text"} for this drag source element. The data
+     * is set for the client side draggable element using the {@code
+     * DataTransfer.setData("text", data)} method.
+     * <p>
+     * Note that {@code "text"} is the only cross browser supported data type.
+     * Use this method if your application supports IE11.
      *
      * @param data
-     *            Data to be set for the client side draggable element.
+     *         Data to be set for the client side draggable element.
+     * @see #setDataTransferData(String, String)
      */
     public void setDataTransferText(String data) {
         setDataTransferData(DragSourceState.DATA_TYPE_TEXT, data);
