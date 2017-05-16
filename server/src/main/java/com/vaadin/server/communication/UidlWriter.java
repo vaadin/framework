@@ -306,7 +306,6 @@ public class UidlWriter implements Serializable {
             writePerformanceData(ui, writer);
         } finally {
             uiConnectorTracker.setWritingResponse(false);
-            uiConnectorTracker.cleanConnectorMap();
         }
     }
 
