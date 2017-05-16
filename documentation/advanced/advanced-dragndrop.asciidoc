@@ -34,7 +34,7 @@ dragSource.setEffectAllowed(EffectAllowed.MOVE);
 // set the text to transfer
 dragSource.setDataTransferText("hello receiver");
 // set other data to transfer (in this case JSON data)
-dragSource.setDataTransferData("application/json", "{\"message\":\"hello\"}");
+dragSource.setDataTransferData("text/html", "<label>hello receiver</label>");
 ----
 
 The __effect allowed__ specifies the allowed effects that must match the __drop effect__ of the drop target. If these don't match, the drop event is never fired on the target. If multiple effects are allowed, the user can use the modifier keys to switch between the desired effects. The default effect and the modifier keys are system and browser dependent.
@@ -122,15 +122,15 @@ dropTarget.addDropListener(event -> {
     if (dragSource.isPresent() && dragSource.get() instanceof Label) {
         // move the label to the layout
         dropTargetLayout.addComponent(dragSource.get());
-        
-        // get transfer text
-        String message = event.getDataTransferText();
-        Notification.show("DropEvent with data transfer text: " + message);
 
-        // get possible transfer data of other type
-        String jsonData = event.getDataTransferData("application/json");
-        if (jsonData != null) {
-            Notification.show("Also has JSON: " + jsonData);
+        // get possible transfer data
+        String message = event.getDataTransferData("text/html");
+        if (message != null) {
+            Notification.show("DropEvent with data transfer html: " + message);
+        } else {
+            // get transfer text
+            message = event.getDataTransferText();
+            Notification.show("DropEvent with data transfer text: " + message);
         }
 
         // handle possible server side drag data, if the drag source was in the same UI
