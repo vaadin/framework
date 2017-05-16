@@ -406,10 +406,12 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     }
 
     @Test
-    public void spacersAreInCorrectDomPositionAfterScroll() {
+    public void spacersAreInCorrectDomPositionAfterScroll()
+            throws InterruptedException {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
 
         scrollVerticallyTo(32); // roughly one row's worth
+        sleep(100);
 
         WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
         WebElement spacer = getChild(tbody, 1);
