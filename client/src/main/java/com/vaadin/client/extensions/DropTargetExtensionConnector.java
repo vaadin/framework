@@ -15,6 +15,12 @@
  */
 package com.vaadin.client.extensions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -22,12 +28,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -80,12 +86,15 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dropTargetWidget = ((ComponentConnector) target).getWidget();
 
-        // Do not make elements drop target on touch devices
-        if (BrowserInfo.get().isTouchDevice()) {
+        // HTML5 DnD is by default not enabled for mobile devices
+        if (BrowserInfo.get().isTouchDevice() && !getConnection()
+                .getUIConnector().isMobileHTML5DndEnabled()) {
             return;
         }
 
         addDropListeners(getDropTargetElement());
+
+        ((AbstractComponentConnector) target).onDropTargetAttached();
     }
 
     /**
@@ -95,7 +104,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @param element
      *            DOM element to attach event listeners to.
      */
-    protected void addDropListeners(Element element) {
+    private void addDropListeners(Element element) {
         EventTarget target = element.cast();
 
         target.addEventListener(Event.DRAGENTER, dragEnterListener);
@@ -111,7 +120,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @param element
      *            DOM element to remove event listeners from.
      */
-    protected void removeDropListeners(Element element) {
+    private void removeDropListeners(Element element) {
         EventTarget target = element.cast();
 
         target.removeEventListener(Event.DRAGENTER, dragEnterListener);
@@ -125,6 +134,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         super.onUnregister();
 
         removeDropListeners(getDropTargetElement());
+        ((AbstractComponentConnector) getParent()).onDropTargetDetached();
     }
 
     /**
@@ -139,18 +149,22 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     /**
      * Event handler for the {@code dragenter} event.
+     * <p>
+     * Override this method in case custom handling for the dragstart event is
+     * required. If the drop is allowed, the event should prevent default.
      *
      * @param event
      *            browser event to be handled
      */
     protected void onDragEnter(Event event) {
         NativeEvent nativeEvent = (NativeEvent) event;
-        if (isDropAllowed(nativeEvent)) {
-            // Generate style name for drop target
-            styleDragCenter = dropTargetWidget.getStylePrimaryName()
-                    + STYLE_SUFFIX_DRAG_CENTER;
 
-            setTargetClassIndicator(event);
+        // Generate style name for drop target
+        styleDragCenter = dropTargetWidget.getStylePrimaryName()
+                + STYLE_SUFFIX_DRAG_CENTER;
+
+        if (isDropAllowed(nativeEvent)) {
+            addTargetClassIndicator(nativeEvent);
 
             setDropEffect(nativeEvent);
 
@@ -179,7 +193,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @param event
      *            the dragenter or dragover event.
      */
-    protected void setDropEffect(NativeEvent event) {
+    private void setDropEffect(NativeEvent event) {
         if (getState().dropEffect != null) {
 
             DataTransfer.DropEffect dropEffect = DataTransfer.DropEffect
@@ -192,6 +206,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     /**
      * Event handler for the {@code dragover} event.
+     * <p>
+     * Override this method in case custom handling for the dragover event is
+     * required. If the drop is allowed, the event should prevent default.
      *
      * @param event
      *            browser event to be handled
@@ -202,7 +219,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             setDropEffect(nativeEvent);
 
             // Add drop target indicator in case the element doesn't have one
-            setTargetClassIndicator(event);
+            addTargetClassIndicator(nativeEvent);
 
             // Prevent default to allow drop
             nativeEvent.preventDefault();
@@ -213,22 +230,28 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                     .setDropEffect(DataTransfer.DropEffect.NONE);
 
             // Remove drop target indicator
-            removeTargetClassIndicator(event);
+            removeTargetClassIndicator(nativeEvent);
         }
     }
 
     /**
      * Event handler for the {@code dragleave} event.
+     * <p>
+     * Override this method in case custom handling for the dragleave event is
+     * required.
      *
      * @param event
      *            browser event to be handled
      */
     protected void onDragLeave(Event event) {
-        removeTargetClassIndicator(event);
+        removeTargetClassIndicator((NativeEvent) event);
     }
 
     /**
      * Event handler for the {@code drop} event.
+     * <p>
+     * Override this method in case custom handling for the drop event is
+     * required. If the drop is allowed, the event should prevent default.
      *
      * @param event
      *            browser event to be handled
@@ -239,16 +262,21 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             nativeEvent.preventDefault();
             nativeEvent.stopPropagation();
 
-            String dataTransferText = nativeEvent.getDataTransfer()
-                    .getData(DragSourceState.DATA_TYPE_TEXT);
+            JsArrayString typesJsArray = getTypes(
+                    nativeEvent.getDataTransfer());
+            List<String> types = new ArrayList<>();
+            Map<String, String> data = new HashMap<>();
+            for (int i = 0; i < typesJsArray.length(); i++) {
+                String type = typesJsArray.get(i);
+                types.add(type);
+                data.put(type, nativeEvent.getDataTransfer().getData(type));
+            }
 
-            String dropEffect = DragSourceExtensionConnector
-                    .getDropEffect(nativeEvent.getDataTransfer());
-
-            sendDropEventToServer(dataTransferText, dropEffect, event);
+            sendDropEventToServer(types, data, DragSourceExtensionConnector
+                    .getDropEffect(nativeEvent.getDataTransfer()), nativeEvent);
         }
 
-        removeTargetClassIndicator(event);
+        removeTargetClassIndicator(nativeEvent);
     }
 
     private boolean isDropAllowed(NativeEvent event) {
@@ -273,41 +301,57 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     /**
      * Initiates a server RPC for the drop event.
      *
-     * @param dataTransferText
-     *            Client side textual data that can be set for the drag source
-     *            and is transferred to the drop target.
+     * @param types
+     *         List of data types from {@code DataTransfer.types} object.
+     * @param data
+     *         Map containing all types and corresponding data from the {@code
+     *         DataTransfer} object.
      * @param dropEffect
-     *            the desired drop effect
-     * @param dropEvent
-     *            Client side drop event.
+     *         The desired drop effect.
      */
-    protected void sendDropEventToServer(String dataTransferText,
-            String dropEffect, Event dropEvent) {
-        getRpcProxy(DropTargetRpc.class).drop(dataTransferText, dropEffect);
+    protected void sendDropEventToServer(List<String> types,
+            Map<String, String> data, String dropEffect,
+            NativeEvent dropEvent) {
+        getRpcProxy(DropTargetRpc.class).drop(types, data, dropEffect);
     }
 
     /**
      * Add class that indicates that the component is a target.
+     * <p>
+     * This is triggered on {@link #onDragEnter(Event) dragenter} and
+     * {@link #onDragOver(Event) dragover} events pending if the drop is
+     * possible. The drop is possible if the drop effect for the target and
+     * source do match and the drop criteria script evaluates to true or is not
+     * set.
      *
      * @param event
-     *            The drag enter or dragover event that triggered the
-     *            indication.
+     *            the dragenter or dragover event that triggered the indication.
      */
-    protected void setTargetClassIndicator(Event event) {
+    protected void addTargetClassIndicator(NativeEvent event) {
         getDropTargetElement().addClassName(styleDragCenter);
     }
 
     /**
      * Remove the drag target indicator class name from the target element.
      * <p>
-     * This is triggered on dragleave, drop and dragover events.
+     * This is triggered on {@link #onDrop(Event) drop},
+     * {@link #onDragLeave(Event) dragleave} and {@link #onDragOver(Event)
+     * dragover} events pending on whether the drop has happened or if it is not
+     * possible. The drop is not possible if the drop effect for the source and
+     * target don't match or if there is a drop criteria script that evaluates
+     * to false.
      *
      * @param event
      *            the event that triggered the removal of the indicator
      */
-    protected void removeTargetClassIndicator(Event event) {
+    protected void removeTargetClassIndicator(NativeEvent event) {
         getDropTargetElement().removeClassName(styleDragCenter);
     }
+
+    private native JsArrayString getTypes(DataTransfer dataTransfer)
+    /*-{
+        return dataTransfer.types;
+    }-*/;
 
     private native boolean executeScript(NativeEvent event, String script)
     /*-{

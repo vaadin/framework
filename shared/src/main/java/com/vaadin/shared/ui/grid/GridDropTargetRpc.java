@@ -15,6 +15,9 @@
  */
 package com.vaadin.shared.ui.grid;
 
+import java.util.List;
+import java.util.Map;
+
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -29,16 +32,19 @@ public interface GridDropTargetRpc extends ServerRpc {
     /**
      * Called when drop event happens on client side.
      *
-     * @param dataTransferText
-     *            Data of type {@code "text"} from the {@code DataTransfer}
-     *            object.
+     * @param types
+     *         List of data types from {@code DataTransfer.types} object.
+     * @param data
+     *         Map containing all types and corresponding data from the {@code
+     *         DataTransfer} object.
      * @param dropEffect
-     *            the desired drop effect
+     *         the desired drop effect
      * @param rowKey
-     *            Key of the row on which the drop event occured.
+     *         Key of the row on which the drop event occured.
      * @param dropLocation
-     *            Location of the drop within the row.
+     *         Location of the drop within the row.
      */
-    public void drop(String dataTransferText, String dropEffect, String rowKey,
+    public void drop(List<String> types, Map<String, String> data,
+            String dropEffect, String rowKey,
             DropLocation dropLocation);
 }

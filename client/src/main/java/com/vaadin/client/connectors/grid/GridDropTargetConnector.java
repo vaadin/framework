@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.connectors.grid;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.shared.ui.grid.GridDropTargetRpc;
 import com.vaadin.shared.ui.grid.GridDropTargetState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.GridDropTarget;
+import com.vaadin.ui.components.grid.GridDropTarget;
 
 import elemental.events.Event;
 import elemental.json.JsonObject;
@@ -81,22 +83,22 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void sendDropEventToServer(String dataTransferText,
-            String dropEffect, Event dropEvent) {
+    protected void sendDropEventToServer(List<String> types,
+            Map<String, String> data, String dropEffect,
+            NativeEvent dropEvent) {
 
         String rowKey = null;
         DropLocation dropLocation = null;
 
         Optional<TableRowElement> targetRow = getTargetRow(
-                (Element) dropEvent.getTarget());
+                (Element) dropEvent.getEventTarget().cast());
         if (targetRow.isPresent()) {
             rowKey = getRowData(targetRow.get())
                     .getString(GridState.JSONKEY_ROWKEY);
-            dropLocation = getDropLocation(targetRow.get(),
-                    (NativeEvent) dropEvent);
+            dropLocation = getDropLocation(targetRow.get(), dropEvent);
         }
 
-        getRpcProxy(GridDropTargetRpc.class).drop(dataTransferText, dropEffect,
+        getRpcProxy(GridDropTargetRpc.class).drop(types, data, dropEffect,
                 rowKey, dropLocation);
     }
 
@@ -147,21 +149,22 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void setTargetClassIndicator(Event event) {
-        getTargetRow(((Element) event.getTarget())).ifPresent(target -> {
+    protected void addTargetClassIndicator(NativeEvent event) {
+        getTargetRow(((Element) event.getEventTarget().cast()))
+                .ifPresent(target -> {
 
-            // Get required class name
-            String className = getTargetClassName(target, (NativeEvent) event);
+                    // Get required class name
+                    String className = getTargetClassName(target, event);
 
-            // Add or replace class name if changed
-            if (!target.hasClassName(className)) {
-                if (currentStyleName != null) {
-                    target.removeClassName(currentStyleName);
-                }
-                target.addClassName(className);
-                currentStyleName = className;
-            }
-        });
+                    // Add or replace class name if changed
+                    if (!target.hasClassName(className)) {
+                        if (currentStyleName != null) {
+                            target.removeClassName(currentStyleName);
+                        }
+                        target.addClassName(className);
+                        currentStyleName = className;
+                    }
+                });
     }
 
     private String getTargetClassName(Element target, NativeEvent event) {
@@ -184,10 +187,10 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void removeTargetClassIndicator(Event event) {
+    protected void removeTargetClassIndicator(NativeEvent event) {
 
         // Remove all possible style names
-        getTargetRow((Element) event.getTarget()).ifPresent(e -> {
+        getTargetRow((Element) event.getEventTarget().cast()).ifPresent(e -> {
             e.removeClassName(styleDragCenter);
             e.removeClassName(styleDragTop);
             e.removeClassName(styleDragBottom);

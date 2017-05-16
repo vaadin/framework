@@ -102,7 +102,7 @@ class PortletUIServiceTrackerCustomizer
         ServiceObjects<UI> serviceObjects = bundleContext
                 .getServiceObjects(reference);
 
-        OSGiUIProvider uiProvider = new OSGiUIProvider(serviceObjects);
+        OsgiUIProvider uiProvider = new OsgiUIProvider(serviceObjects);
 
         Dictionary<String, Object> properties = null;
         if (configuration != null) {
@@ -112,7 +112,7 @@ class PortletUIServiceTrackerCustomizer
             properties = createPortletProperties(reference);
         }
 
-        VaadinOSGiPortlet portlet = new VaadinOSGiPortlet(uiProvider);
+        OsgiVaadinPortlet portlet = new OsgiVaadinPortlet(uiProvider);
 
         ServiceRegistration<Portlet> serviceRegistration = bundleContext
                 .registerService(Portlet.class, portlet, properties);
@@ -123,7 +123,7 @@ class PortletUIServiceTrackerCustomizer
     }
 
     private Dictionary<String, Object> createPortletProperties(
-            OSGiUIProvider uiProvider, ServiceReference<UI> reference,
+            OsgiUIProvider uiProvider, ServiceReference<UI> reference,
             VaadinLiferayPortletConfiguration configuration) {
 
         Hashtable<String, Object> properties = new Hashtable<String, Object>();

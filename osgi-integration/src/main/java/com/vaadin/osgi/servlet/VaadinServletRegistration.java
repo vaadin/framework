@@ -33,8 +33,8 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogService;
 
-import com.vaadin.osgi.resources.OSGiVaadinResources;
-import com.vaadin.osgi.resources.OSGiVaadinResources.ResourceBundleInactiveException;
+import com.vaadin.osgi.resources.OsgiVaadinResources;
+import com.vaadin.osgi.resources.OsgiVaadinResources.ResourceBundleInactiveException;
 import com.vaadin.osgi.resources.VaadinResourceService;
 import com.vaadin.server.Constants;
 import com.vaadin.server.VaadinServlet;
@@ -118,7 +118,7 @@ public class VaadinServletRegistration {
     }
 
     private String getResourcePath() throws ResourceBundleInactiveException {
-        VaadinResourceService service = OSGiVaadinResources.getService();
+        VaadinResourceService service = OsgiVaadinResources.getService();
         return String.format("/%s", service.getResourcePathPrefix());
     }
 

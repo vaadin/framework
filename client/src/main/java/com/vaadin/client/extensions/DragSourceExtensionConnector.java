@@ -15,20 +15,27 @@
  */
 package com.vaadin.client.extensions;
 
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
-import com.vaadin.event.dnd.DragSourceExtension;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -64,22 +71,25 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         dragSourceWidget = ((ComponentConnector) target).getWidget();
 
-        // Do not make elements draggable on touch devices
-        if (BrowserInfo.get().isTouchDevice()) {
+        // HTML5 DnD is by default not enabled for mobile devices
+        if (BrowserInfo.get().isTouchDevice() && !getConnection()
+                .getUIConnector().isMobileHTML5DndEnabled()) {
             return;
         }
 
-        setDraggable(getDraggableElement());
+        addDraggable(getDraggableElement());
         addDragListeners(getDraggableElement());
+
+        ((AbstractComponentConnector) target).onDragSourceAttached();
     }
 
     /**
-     * Sets the given element draggable and adds class name.
+     * Makes the given element draggable and adds class name.
      *
      * @param element
      *            Element to be set draggable.
      */
-    protected void setDraggable(Element element) {
+    protected void addDraggable(Element element) {
         element.setDraggable(Element.DRAGGABLE_TRUE);
         element.addClassName(
                 getStylePrimaryName(element) + STYLE_SUFFIX_DRAGSOURCE);
@@ -134,6 +144,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         removeDraggable(dragSource);
         removeDragListeners(dragSource);
+
+        ((AbstractComponentConnector) getParent()).onDragSourceDetached();
     }
 
     @OnStateChange("resources")
@@ -156,6 +168,14 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Convert elemental event to have access to dataTransfer
         NativeEvent nativeEvent = (NativeEvent) event;
 
+        // Do not allow drag starts from native Android Chrome, since it doesn't
+        // work properly (doesn't fire dragend reliably)
+        if (isAndoidChrome() && isNativeDragEvent(nativeEvent)) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
         // Set effectAllowed parameter
         if (getState().effectAllowed != null) {
             setEffectAllowed(nativeEvent.getDataTransfer(),
@@ -163,25 +183,75 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         }
 
         // Set drag image
-        setDragImage(event);
+        setDragImage(nativeEvent);
 
-        // Set text data parameter
-        String dataTransferText = createDataTransferText(event);
+        // Set data parameters
+        List<String> types = getState().types;
+        Map<String, String> data = getState().data;
+        for (String type : types) {
+            nativeEvent.getDataTransfer().setData(type, data.get(type));
+        }
+
         // Always set something as the text data, or DnD won't work in FF !
+        String dataTransferText = createDataTransferText(nativeEvent);
         if (dataTransferText == null) {
             dataTransferText = "";
         }
-        nativeEvent.getDataTransfer().setData(DragSourceState.DATA_TYPE_TEXT,
-                dataTransferText);
+
+        // Override data type "text" when storing special data is needed
+        nativeEvent.getDataTransfer()
+                .setData(DragSourceState.DATA_TYPE_TEXT, dataTransferText);
 
         // Initiate firing server side dragstart event when there is a
         // DragStartListener attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
-            sendDragStartEventToServer(event);
+            sendDragStartEventToServer(nativeEvent);
         }
 
         // Stop event bubbling
         nativeEvent.stopPropagation();
+    }
+
+    /**
+     * Fixes missing drag image for Safari by making the dragged element
+     * position to relative if needed. Safari won't show drag image unless the
+     * dragged element position is relative or absolute / fixed, but not with
+     * display block for the latter.
+     * <p>
+     * This method is a NOOP for non-safari browser.
+     * <p>
+     * This fix is not needed if a custom drag image is used on Safari.
+     *
+     * @param draggedElement
+     *            the element that forms the drag image
+     */
+    protected void fixDragImageForSafari(Element draggedElement) {
+        if (!BrowserInfo.get().isSafari()) {
+            return;
+        }
+        final Style style = draggedElement.getStyle();
+        final String position = style.getPosition();
+
+        // relative works always
+        if ("relative".equalsIgnoreCase(position)) {
+            return;
+        }
+
+        // absolute & fixed don't work when there is offset used
+        if ("absolute".equalsIgnoreCase(position)
+                || "fixed".equalsIgnoreCase(position)) {
+            // FIXME #9261 need to figure out how to get absolute and fixed to
+            // position work when there is offset involved, like in Grid.
+            // The following hack with setting position to relative did not
+            // work, nor did clearing top/right/bottom/left.
+        }
+
+        // for all other positions, set the position to relative and revert it
+        // in an animation frame
+        draggedElement.getStyle().setPosition(Position.RELATIVE);
+        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+            draggedElement.getStyle().setProperty("position", position);
+        }, draggedElement);
     }
 
     /**
@@ -192,8 +262,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            Event to set the data for.
      * @return Textual data to be set for the event or {@literal null}.
      */
-    protected String createDataTransferText(Event dragStartEvent) {
-        return getState().dataTransferText;
+    protected String createDataTransferText(NativeEvent dragStartEvent) {
+        return getState().data.get(DragSourceState.DATA_TYPE_TEXT);
     }
 
     /**
@@ -205,23 +275,29 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @param dragStartEvent
      *            Client side dragstart event.
      */
-    protected void sendDragStartEventToServer(Event dragStartEvent) {
+    protected void sendDragStartEventToServer(NativeEvent dragStartEvent) {
         getRpcProxy(DragSourceRpc.class).dragStart();
     }
 
     /**
      * Sets the drag image to be displayed.
+     * <p>
+     * Override this method in case you need custom drag image setting. Called
+     * from {@link #onDragStart(Event)}.
      *
      * @param dragStartEvent
      *            The drag start event.
      */
-    protected void setDragImage(Event dragStartEvent) {
+    protected void setDragImage(NativeEvent dragStartEvent) {
         String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
         if (imageUrl != null && !imageUrl.isEmpty()) {
             Image dragImage = new Image(
                     getConnection().translateVaadinUri(imageUrl));
-            ((NativeEvent) dragStartEvent).getDataTransfer()
+            dragStartEvent.getDataTransfer()
                     .setDragImage(dragImage.getElement(), 0, 0);
+        } else {
+            fixDragImageForSafari(
+                    (Element) dragStartEvent.getCurrentEventTarget().cast());
         }
     }
 
@@ -233,15 +309,24 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            browser event to be handled
      */
     protected void onDragEnd(Event event) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+
+        // for android chrome we use the polyfill, in case browser fires a
+        // native dragend event after the polyfill dragend, we need to ignore
+        // that one
+        if (isAndoidChrome() && isNativeDragEvent((nativeEvent))) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
         // Initiate server start dragend event when there is a DragEndListener
         // attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
-            String dropEffect = getDropEffect(
-                    ((NativeEvent) event).getDataTransfer());
+            String dropEffect = getDropEffect(nativeEvent.getDataTransfer());
 
             assert dropEffect != null : "Drop effect should never be null";
 
-            sendDragEndEventToServer(event,
+            sendDragEndEventToServer(nativeEvent,
                     DropEffect.valueOf(dropEffect.toUpperCase()));
         }
     }
@@ -255,7 +340,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            Drop effect of the dragend event, extracted from {@code
      *         DataTransfer.dropEffect} parameter.
      */
-    protected void sendDragEndEventToServer(Event dragEndEvent,
+    protected void sendDragEndEventToServer(NativeEvent dragEndEvent,
             DropEffect dropEffect) {
         getRpcProxy(DragSourceRpc.class).dragEnd(dropEffect);
     }
@@ -263,6 +348,12 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     /**
      * Finds the draggable element within the widget. By default, returns the
      * topmost element.
+     * <p>
+     * Override this method to make some other than the root element draggable
+     * instead.
+     * <p>
+     * In case you need to make more than whan element draggable, override
+     * {@link #extend(ServerConnector)} instead.
      *
      * @return the draggable element in the parent widget.
      */
@@ -270,13 +361,54 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         return dragSourceWidget.getElement();
     }
 
+    /**
+     * Returns whether the given event is a native (android) drag start/end
+     * event, and not produced by the drag-drop-polyfill.
+     *
+     * @param nativeEvent
+     *            the event to test
+     * @return {@code true} if native event, {@code false} if not (polyfill
+     *         event)
+     */
+    protected boolean isNativeDragEvent(NativeEvent nativeEvent) {
+        return isTrusted(nativeEvent) || isComposed(nativeEvent);
+    }
+
+    /**
+     * Returns whether the current browser is Android Chrome.
+     *
+     * @return {@code true} if Android Chrome, {@code false} if not
+     *
+     */
+    protected boolean isAndoidChrome() {
+        BrowserInfo browserInfo = BrowserInfo.get();
+        return browserInfo.isAndroid() && browserInfo.isChrome();
+    }
+
+    private native boolean isTrusted(NativeEvent event)
+    /*-{
+        return event.isTrusted;
+    }-*/;
+
+    private native boolean isComposed(NativeEvent event)
+    /*-{
+        return event.isComposed;
+    }-*/;
+
     private native void setEffectAllowed(DataTransfer dataTransfer,
             String effectAllowed)
     /*-{
         dataTransfer.effectAllowed = effectAllowed;
     }-*/;
 
-    static native String getDropEffect(DataTransfer dataTransfer)
+    /**
+     * Returns the dropEffect for the given data transfer.
+     *
+     * @param dataTransfer
+     *            the data transfer with drop effect
+     * @return the currently set drop effect
+     */
+    protected static native String getDropEffect(DataTransfer dataTransfer)
     /*-{
         return dataTransfer.dropEffect;
     }-*/;

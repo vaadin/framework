@@ -23,7 +23,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.vaadin.osgi.resources.OSGiVaadinResources;
+import com.vaadin.osgi.resources.OsgiVaadinResources;
 import com.vaadin.osgi.resources.VaadinResourceService;
 import com.vaadin.ui.UI;
 
@@ -46,7 +46,7 @@ public class VaadinPortletProvider {
     @Activate
     void activate(ComponentContext componentContext) throws Exception {
         BundleContext bundleContext = componentContext.getBundleContext();
-        VaadinResourceService service = OSGiVaadinResources.getService();
+        VaadinResourceService service = OsgiVaadinResources.getService();
 
         portletUIServiceTrackerCustomizer = new PortletUIServiceTrackerCustomizer(
                 service);

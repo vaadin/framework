@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.TreeElement;
+import com.vaadin.testbench.elements.TreeGridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TreeBasicFeaturesTest extends MultiBrowserTest {
@@ -126,5 +127,41 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
                 tree.getItem(3).getText());
 
         assertNoErrorNotifications();
+    }
+
+    @Test
+    public void tree_item_click() {
+        selectMenuPath("Component", "Item Click Listener");
+        $(TreeElement.class).first().getItem(1).click();
+        Assert.assertTrue(logContainsText("ItemClick: 0 | 1"));
+    }
+
+    @Test
+    public void tree_style_generator() {
+        selectMenuPath("Component", "Style Generator");
+        TreeElement tree = $(TreeElement.class).first();
+        Assert.assertTrue("Style name not present",
+                tree.wrap(TreeGridElement.class).getRow(0).getAttribute("class")
+                        .contains("level0"));
+        tree.expand(0);
+        Assert.assertTrue("Style name not present",
+                tree.wrap(TreeGridElement.class).getRow(1).getAttribute("class")
+                        .contains("level1"));
+        tree.expand(1);
+        Assert.assertTrue("Style name not present",
+                tree.wrap(TreeGridElement.class).getRow(2).getAttribute("class")
+                        .contains("level2"));
+    }
+
+    @Test
+    public void tree_disable_collapse() {
+        selectMenuPath("Component", "Collapse Allowed");
+        TreeElement tree = $(TreeElement.class).first();
+        tree.expand(0);
+        tree.expand(1);
+        Assert.assertEquals("2 | 0", tree.getItem(2).getText());
+        tree.collapse(1);
+        Assert.assertEquals("Tree should prevent collapsing all nodes.",
+                "2 | 0", tree.getItem(2).getText());
     }
 }

@@ -5,17 +5,19 @@ import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.Registration;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.IconGenerator;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
@@ -25,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
     private Tree<HierarchicalTestBean> tree;
-    private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
+    private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
     private IconGenerator<HierarchicalTestBean> iconGenerator = i -> {
         switch (i.getDepth()) {
         case 0:
@@ -66,6 +68,43 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         MenuItem componentMenu = menu.addItem("Component", null);
         createIconMenu(componentMenu.addItem("Icons", null));
         createCaptionMenu(componentMenu.addItem("Captions", null));
+        componentMenu.addItem("Item Click Listener", new Command() {
+
+            private Registration registration;
+
+            @Override
+            public void menuSelected(MenuItem selectedItem) {
+                removeRegistration();
+
+                if (selectedItem.isChecked()) {
+                    registration = tree.addItemClickListener(
+                            e -> log("ItemClick: " + e.getItem()));
+                }
+            }
+
+            private void removeRegistration() {
+                if (registration != null) {
+                    registration.remove();
+                    registration = null;
+                }
+            }
+
+        }).setCheckable(true);
+        MenuItem collapseAllowed = componentMenu.addItem("Collapse Allowed",
+                menuItem -> tree.setItemCollapseAllowedProvider(
+                        t -> menuItem.isChecked()));
+        collapseAllowed.setCheckable(true);
+
+        // Simulate the first click
+        collapseAllowed.setChecked(true);
+        collapseAllowed.getCommand().menuSelected(collapseAllowed);
+
+        componentMenu
+                .addItem("Style Generator",
+                        menuItem -> tree.setStyleGenerator(menuItem.isChecked()
+                                ? t -> "level" + t.getDepth() : t -> null))
+                .setCheckable(true);
+
         return menu;
     }
 
@@ -87,7 +126,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void setupDataProvider() {
-        HierarchyData<HierarchicalTestBean> data = new HierarchyData<>();
+        TreeData<HierarchicalTestBean> data = new TreeData<>();
 
         List<Integer> ints = Arrays.asList(0, 1, 2);
 
@@ -106,7 +145,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
             });
         });
 
-        inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
+        inMemoryDataProvider = new TreeDataProvider<>(data);
     }
 
 }

@@ -283,9 +283,10 @@ public class UidlWriter implements Serializable {
                 }
             });
 
-            List<Dependency> dependencies = Dependency
-                    .findAndFilterDependencies(newConnectorTypes, manager,
-                            new FilterContext(session));
+            List<Dependency> dependencies = new ArrayList<>();
+            dependencies.addAll(ui.getPage().getPendingDependencies());
+            dependencies.addAll(Dependency.findAndFilterDependencies(
+                    newConnectorTypes, manager, new FilterContext(session)));
 
             // Include dependencies in output if there are any
             if (!dependencies.isEmpty()) {

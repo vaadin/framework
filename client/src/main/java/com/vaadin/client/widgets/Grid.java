@@ -2318,7 +2318,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (!Element.is(target)) {
                 return null;
             }
-            return WidgetUtil.findWidget(Element.as(target), Grid.class);
+            return WidgetUtil.findWidget(Element.as(target), Grid.class, false);
         }
 
         /**
@@ -2385,7 +2385,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (!Element.is(target)) {
                 return null;
             }
-            return WidgetUtil.findWidget(Element.as(target), Grid.class);
+            return WidgetUtil.findWidget(Element.as(target), Grid.class, false);
         }
 
         /**
@@ -5623,7 +5623,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 if (renderer instanceof WidgetRenderer) {
                     try {
                         Widget w = WidgetUtil.findWidget(
-                                cell.getElement().getFirstChildElement(), null);
+                                cell.getElement().getFirstChildElement());
                         if (w != null) {
 
                             // Logical detach
@@ -7459,7 +7459,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     private boolean isElementInChildWidget(Element e) {
-        Widget w = WidgetUtil.findWidget(e, null);
+        Widget w = WidgetUtil.findWidget(e);
 
         if (w == this) {
             return false;

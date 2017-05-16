@@ -150,7 +150,7 @@ public class ApplicationConstants implements Serializable {
 
     /**
      * Name of the parameter used to transmit the push connection identifier.
-     * 
+     *
      * @since 8.0.6
      */
     public static final String PUSH_ID_PARAMETER = "v-pushId";
@@ -243,5 +243,12 @@ public class ApplicationConstants implements Serializable {
      */
     public static final String FRONTEND_URL_ES5_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
             + "frontend/es5/";
+
+    /**
+     * Name of the HTML5 DnD Polyfill JavaScript file.
+     *
+     * @since 8.1
+     */
+    public static final String MOBILE_DND_POLYFILL_JS = "drag-drop-polyfill.min.js";
 
 }

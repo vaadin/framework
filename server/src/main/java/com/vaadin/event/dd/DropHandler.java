@@ -21,7 +21,7 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
-import com.vaadin.event.dnd.DropListener;
+import com.vaadin.ui.dnd.event.DropListener;
 
 /**
  * DropHandlers contain the actual business logic for drag and drop operations.

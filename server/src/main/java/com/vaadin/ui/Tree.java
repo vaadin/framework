@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,15 +24,17 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.HasDataProvider;
+import com.vaadin.data.HasHierarchicalDataProvider;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
+import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
@@ -39,6 +42,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.renderers.AbstractRenderer;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -52,7 +56,74 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the data type
  */
-public class Tree<T> extends Composite implements HasDataProvider<T> {
+public class Tree<T> extends Composite
+        implements HasHierarchicalDataProvider<T> {
+
+    @Deprecated
+    private static final Method ITEM_CLICK_METHOD = ReflectTools
+            .findMethod(ItemClickListener.class, "itemClick", ItemClick.class);
+
+    /**
+     * A listener for item click events.
+     *
+     * @param <T>
+     *            the tree item type
+     *
+     * @see ItemClick
+     * @see Registration
+     * @since 8.1
+     */
+    @FunctionalInterface
+    public interface ItemClickListener<T> extends SerializableEventListener {
+        /**
+         * Invoked when this listener receives a item click event from a Tree to
+         * which it has been added.
+         *
+         * @param event
+         *            the received event, not {@code null}
+         */
+        public void itemClick(Tree.ItemClick<T> event);
+    }
+
+    /**
+     * Tree item click event.
+     *
+     * @param <T>
+     *            the data type of tree
+     * @since 8.1
+     */
+    public static class ItemClick<T> extends ConnectorEvent {
+
+        private final T item;
+
+        /**
+         * Constructs a new item click.
+         *
+         * @param source
+         *            the tree component
+         * @param item
+         *            the clicked item
+         */
+        protected ItemClick(Tree<T> source, T item) {
+            super(source);
+            this.item = item;
+        }
+
+        /**
+         * Returns the clicked item.
+         *
+         * @return the clicked item
+         */
+        public T getItem() {
+            return item;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Tree<T> getSource() {
+            return (Tree<T>) super.getSource();
+        }
+    }
 
     /**
      * String renderer that handles icon resources and stores their identifiers
@@ -142,6 +213,8 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
                 e.isUserOriginated()));
         treeGrid.addCollapseListener(e -> fireCollapseEvent(
                 e.getCollapsedItem(), e.isUserOriginated()));
+        treeGrid.addItemClickListener(
+                e -> fireEvent(new ItemClick<>(this, e.getItem())));
     }
 
     /**
@@ -349,11 +422,6 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         return treeGrid.getSelectionModel();
     }
 
-    @Override
-    public void setItems(Collection<T> items) {
-        treeGrid.setItems(items);
-    }
-
     /**
      * Sets the item caption generator that is used to produce the strings shown
      * as the text for each item. By default, {@link String#valueOf(Object)} is
@@ -386,6 +454,49 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
                 "Item icon generator must not be null");
         this.iconProvider = iconGenerator;
         treeGrid.getDataCommunicator().reset();
+    }
+
+    /**
+     * Sets the item collapse allowed provider for this Tree. The provider
+     * should return {@code true} for any item that the user can collapse.
+     * <p>
+     * <strong>Note:</strong> This callback will be accessed often when sending
+     * data to the client. The callback should not do any costly operations.
+     *
+     * @param provider
+     *            the item collapse allowed provider, not {@code null}
+     */
+    public void setItemCollapseAllowedProvider(
+            ItemCollapseAllowedProvider<T> provider) {
+        treeGrid.setItemCollapseAllowedProvider(provider);
+    }
+
+    /**
+     * Sets the style generator that is used for generating class names for
+     * items in this tree. Returning null from the generator results in no
+     * custom style name being set.
+     *
+     * @see StyleGenerator
+     *
+     * @param styleGenerator
+     *            the item style generator to set, not {@code null}
+     * @throws NullPointerException
+     *             if {@code styleGenerator} is {@code null}
+     */
+    public void setStyleGenerator(StyleGenerator<T> styleGenerator) {
+        treeGrid.setStyleGenerator(styleGenerator);
+    }
+
+    /**
+     * Adds an item click listener. The listener is called when an item of this
+     * {@code Tree} is clicked.
+     *
+     * @param listener
+     *            the item click listener, not null
+     * @return a registration for the listener
+     */
+    public Registration addItemClickListener(ItemClickListener<T> listener) {
+        return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
     }
 
     /**

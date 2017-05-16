@@ -16,7 +16,7 @@
 package com.vaadin.client.ui.dd;
 
 import com.google.gwt.core.client.GWT;
-import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  * A class via all AcceptCriteria instances are fetched by an identifier.

@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.gwt.animation.client.AnimationScheduler;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
@@ -37,11 +37,12 @@ import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceState;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.ui.GridDragSource;
+import com.vaadin.ui.components.grid.GridDragSource;
 
 import elemental.events.Event;
 import elemental.json.Json;
@@ -59,6 +60,18 @@ import elemental.json.JsonObject;
 @Connect(GridDragSource.class)
 public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
+    /**
+     * Delay used to distinct between scroll and drag start in grid: if the user
+     * doens't move the finger before this "timeout", it should be considered as
+     * a drag start.
+     * <p>
+     * This default value originates from VScrollTable which uses it to
+     * distinguish between scroll and context click (long tap).
+     *
+     * @see Escalator#setDelayToCancelTouchScroll(double)
+     */
+    private static final int TOUCH_SCROLL_TIMEOUT_DELAY = 500;
+
     private static final String STYLE_SUFFIX_DRAG_BADGE = "-drag-badge";
 
     private GridConnector gridConnector;
@@ -68,28 +81,57 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      */
     private List<String> draggedItemKeys;
 
+    private boolean touchScrollDelayUsed;
+
     @Override
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
 
-        // Do not make elements draggable on touch devices
+        // HTML5 DnD is by default not enabled for mobile devices
         if (BrowserInfo.get().isTouchDevice()) {
-            return;
+            if (getConnection().getUIConnector().isMobileHTML5DndEnabled()) {
+                // distinct between scroll and drag start
+                gridConnector.getWidget().getEscalator()
+                        .setDelayToCancelTouchScroll(
+                                TOUCH_SCROLL_TIMEOUT_DELAY);
+                touchScrollDelayUsed = true;
+            } else {
+                return;
+            }
         }
 
         // Set newly added rows draggable
         getGridBody().setNewRowCallback(
-                rows -> rows.forEach(this::setDraggable));
+                rows -> rows.forEach(this::addDraggable));
 
         // Add drag listeners to body element
         addDragListeners(getGridBody().getElement());
+
+        gridConnector.onDragSourceAttached();
     }
 
     @Override
     protected void onDragStart(Event event) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+
+        // Make sure user is not actually scrolling
+        if (touchScrollDelayUsed && gridConnector.getWidget().getEscalator()
+                .isTouchScrolling()) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
+        // Do not allow drag starts from native Android Chrome, since it doesn't
+        // work properly (doesn't fire dragend reliably)
+        if (isAndoidChrome() && isNativeDragEvent(nativeEvent)) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
 
         // Collect the keys of dragged rows
-        draggedItemKeys = getDraggedRows(event).stream()
+        draggedItemKeys = getDraggedRows(nativeEvent).stream()
                 .map(row -> row.getString(GridState.JSONKEY_ROWKEY))
                 .collect(Collectors.toList());
 
@@ -98,33 +140,52 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
             return;
         }
 
-        // Add badge showing the number of dragged columns
-        if (draggedItemKeys.size() > 1) {
-            Element draggedRowElement = (Element) event.getTarget();
-
-            Element badge = DOM.createSpan();
-            badge.setClassName(gridConnector.getWidget().getStylePrimaryName()
-                    + "-row" + STYLE_SUFFIX_DRAG_BADGE);
-            badge.setInnerHTML(draggedItemKeys.size() + "");
-
-            badge.getStyle().setMarginLeft(
-                    getRelativeX(draggedRowElement, (NativeEvent) event) + 10,
-                    Style.Unit.PX);
-            badge.getStyle().setMarginTop(
-                    getRelativeY(draggedRowElement, (NativeEvent) event)
-                            - draggedRowElement.getOffsetHeight() + 10,
-                    Style.Unit.PX);
-
-            draggedRowElement.appendChild(badge);
-
-            // Remove badge on the next animation frame. Drag image will still
-            // contain the badge.
-            AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-                badge.removeFromParent();
-            }, (Element) event.getTarget());
-        }
-
         super.onDragStart(event);
+    }
+
+    @Override
+    protected void setDragImage(NativeEvent dragStartEvent) {
+        // do not call super since need to handle specifically
+        // 1. use resource if set (never needs safari hack)
+        // 2. add number badge if necessary (with safari hack if needed)
+        // 3. just use normal (with safari hack if needed)
+
+        // Add badge showing the number of dragged columns
+        String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Image dragImage = new Image(
+                    getConnection().translateVaadinUri(imageUrl));
+            dragStartEvent.getDataTransfer()
+                    .setDragImage(dragImage.getElement(), 0, 0);
+        } else {
+            Element draggedRowElement = (Element) dragStartEvent
+                    .getEventTarget().cast();
+            if (draggedItemKeys.size() > 1) {
+
+                Element badge = DOM.createSpan();
+                badge.setClassName(
+                        gridConnector.getWidget().getStylePrimaryName() + "-row"
+                                + STYLE_SUFFIX_DRAG_BADGE);
+                badge.setInnerHTML(draggedItemKeys.size() + "");
+
+                badge.getStyle().setMarginLeft(
+                        getRelativeX(draggedRowElement, dragStartEvent) + 10,
+                        Style.Unit.PX);
+                badge.getStyle().setMarginTop(
+                        getRelativeY(draggedRowElement, dragStartEvent)
+                                - draggedRowElement.getOffsetHeight() + 10,
+                        Style.Unit.PX);
+
+                draggedRowElement.appendChild(badge);
+
+                // Remove badge on the next animation frame. Drag image will
+                // still contain the badge.
+                AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+                    badge.removeFromParent();
+                }, (Element) dragStartEvent.getEventTarget().cast());
+            }
+            fixDragImageForSafari(draggedRowElement);
+        }
     }
 
     private int getRelativeY(Element element, NativeEvent event) {
@@ -138,24 +199,25 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     }
 
     @Override
-    protected String createDataTransferText(Event dragStartEvent) {
+    protected String createDataTransferText(NativeEvent dragStartEvent) {
         JsonArray dragData = toJsonArray(getDraggedRows(dragStartEvent).stream()
                 .map(this::getDragData).collect(Collectors.toList()));
         return dragData.toJson();
     }
 
     @Override
-    protected void sendDragStartEventToServer(Event dragStartEvent) {
+    protected void sendDragStartEventToServer(NativeEvent dragStartEvent) {
 
         // Start server RPC with dragged item keys
         getRpcProxy(GridDragSourceRpc.class).dragStart(draggedItemKeys);
     }
 
-    private List<JsonObject> getDraggedRows(Event dragStartEvent) {
+    private List<JsonObject> getDraggedRows(NativeEvent dragStartEvent) {
         List<JsonObject> draggedRows = new ArrayList<>();
 
-        if (TableRowElement.is((JavaScriptObject) dragStartEvent.getTarget())) {
-            TableRowElement row = (TableRowElement) dragStartEvent.getTarget();
+        if (TableRowElement.is(dragStartEvent.getEventTarget())) {
+            TableRowElement row = (TableRowElement) dragStartEvent
+                    .getEventTarget().cast();
             int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
                     .getLogicalRowIndex(row);
 
@@ -173,8 +235,17 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
     @Override
     protected void onDragEnd(Event event) {
+        NativeEvent nativeEvent = (NativeEvent) event;
+
+        // for android chrome we use the polyfill, in case browser fires a
+        // native dragend event after the polyfill, we need to ignore that one
+        if (isAndoidChrome() && isNativeDragEvent((nativeEvent))) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
         // Ignore event if there are no items dragged
-        if (draggedItemKeys.size() > 0) {
+        if (draggedItemKeys != null && draggedItemKeys.size() > 0) {
             super.onDragEnd(event);
         }
 
@@ -183,7 +254,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     }
 
     @Override
-    protected void sendDragEndEventToServer(Event dragEndEvent,
+    protected void sendDragEndEventToServer(NativeEvent dragEndEvent,
             DropEffect dropEffect) {
 
         // Send server RPC with dragged item keys
@@ -196,9 +267,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * allowed and a selected row is dragged.
      *
      * @param draggedRow
-     *         Data of dragged row.
+     *            Data of dragged row.
      * @return {@code true} if multiple rows are dragged, {@code false}
-     * otherwise.
+     *         otherwise.
      */
     private boolean dragMultipleRows(JsonObject draggedRow) {
         SelectionModel<JsonObject> selectionModel = getGrid()
@@ -221,7 +292,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Get all selected rows from a subset of rows defined by {@code range}.
      *
      * @param range
-     *         Range of indexes.
+     *            Range of indexes.
      * @return List of data of all selected rows in the given range.
      */
     private List<JsonObject> getSelectedRowsInRange(Range range) {
@@ -241,7 +312,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Converts a list of {@link JsonObject}s to a {@link JsonArray}.
      *
      * @param objects
-     *         List of json objects.
+     *            List of json objects.
      * @return Json array containing all json objects.
      */
     private JsonArray toJsonArray(List<JsonObject> objects) {
@@ -257,7 +328,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * otherwise.
      *
      * @param row
-     *         Row data.
+     *            Row data.
      * @return Drag data if present or row data otherwise.
      */
     private JsonObject getDragData(JsonObject row) {
@@ -280,6 +351,12 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
         // Remove callback for newly added rows
         getGridBody().setNewRowCallback(null);
+
+        if (touchScrollDelayUsed) {
+            gridConnector.getWidget().getEscalator()
+                    .setDelayToCancelTouchScroll(-1);
+            touchScrollDelayUsed = false;
+        }
     }
 
     private Grid<JsonObject> getGrid() {

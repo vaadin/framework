@@ -204,7 +204,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * Contains properties for a bean type which is nested in another
      * definition.
      *
-     * @since
+     * @since 8.1
      * @param <T>
      *            the bean type
      * @param <V>

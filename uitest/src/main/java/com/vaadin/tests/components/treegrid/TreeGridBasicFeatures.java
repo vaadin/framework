@@ -8,11 +8,11 @@ import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.tests.components.AbstractComponentTest;
@@ -25,7 +25,7 @@ import com.vaadin.ui.TreeGrid;
 public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
     private TreeGrid<HierarchicalTestBean> grid;
-    private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
+    private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
     private LazyHierarchicalDataProvider lazyDataProvider;
     private HierarchicalDataProvider<HierarchicalTestBean, ?> loggingDataProvider;
 
@@ -71,7 +71,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     }
 
     private void initializeDataProviders() {
-        HierarchyData<HierarchicalTestBean> data = new HierarchyData<>();
+        TreeData<HierarchicalTestBean> data = new TreeData<>();
 
         List<Integer> ints = Arrays.asList(0, 1, 2);
 
@@ -90,9 +90,9 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
             });
         });
 
-        inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
+        inMemoryDataProvider = new TreeDataProvider<>(data);
         lazyDataProvider = new LazyHierarchicalDataProvider(3, 2);
-        loggingDataProvider = new InMemoryHierarchicalDataProvider<HierarchicalTestBean>(
+        loggingDataProvider = new TreeDataProvider<HierarchicalTestBean>(
                 data) {
 
             @Override
@@ -119,7 +119,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         @SuppressWarnings("rawtypes")
         LinkedHashMap<String, DataProvider> options = new LinkedHashMap<>();
         options.put("LazyHierarchicalDataProvider", lazyDataProvider);
-        options.put("InMemoryHierarchicalDataProvider", inMemoryDataProvider);
+        options.put("TreeDataProvider", inMemoryDataProvider);
         options.put("LoggingDataProvider", loggingDataProvider);
 
         createSelectAction("Set data provider", CATEGORY_FEATURES, options,

@@ -32,7 +32,7 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
     @Parameters
     public static Collection<String> getDataProviders() {
         return Arrays.asList("LazyHierarchicalDataProvider",
-                "InMemoryHierarchicalDataProvider");
+                "TreeDataProvider");
     }
 
     @Before
@@ -188,6 +188,51 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
         assertTrue(
                 grid.getRow(0).hasClassName("v-treegrid-row-focused"));
+
+        assertNoErrorNotifications();
+    }
+
+    @Test
+    public void keyboard_selection() {
+        grid.getRow(0).getCell(0).click();
+
+        // Should expand "0 | 0" without moving focus
+        new Actions(getDriver()).sendKeys(Keys.RIGHT).perform();
+        assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+
+        // Should navigate 2 times down to "1 | 1"
+        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN).perform();
+        assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+        assertFalse(
+                grid.getRow(0).hasClassName("v-treegrid-rowmode-row-focused"));
+        assertFalse(
+                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+        assertTrue(
+                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+
+        // Should select "1 | 1" without moving focus
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+        assertTrue(grid.getRow(2).hasClassName("v-treegrid-row-selected"));
+
+        // Should move focus but not selection
+        new Actions(getDriver()).sendKeys(Keys.UP).perform();
+        assertTrue(
+                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+        assertFalse(
+                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+        assertFalse(grid.getRow(1).hasClassName("v-treegrid-row-selected"));
+        assertTrue(grid.getRow(2).hasClassName("v-treegrid-row-selected"));
+
+        // Should select "1 | 0" without moving focus
+        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
+        assertTrue(
+                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+        assertFalse(
+                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+        assertTrue(grid.getRow(1).hasClassName("v-treegrid-row-selected"));
+        assertFalse(grid.getRow(2).hasClassName("v-treegrid-row-selected"));
 
         assertNoErrorNotifications();
     }

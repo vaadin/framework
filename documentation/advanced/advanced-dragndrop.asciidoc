@@ -17,10 +17,6 @@ the other location is a common way to move, copy, or associate objects. For
 example, most operating systems allow dragging and dropping files between
 folders or dragging a document on a program to open it. Framework version 8.1 adds support for https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API[HTML5 drag and drop] features. This makes it possible to set components as drag sources that user can drag and drop, or to set them as drop targets to drop things on.
 
-[NOTE]
-====
-Note that the HTML5 drag and drop feature is not supported on touch devices.
-====
 
 == Drag Source
 
@@ -37,11 +33,20 @@ DragSourceExtension<Label> dragSource = new DragSourceExtension<>(draggableLabel
 dragSource.setEffectAllowed(EffectAllowed.MOVE);
 // set the text to transfer
 dragSource.setDataTransferText("hello receiver");
+// set other data to transfer (in this case HTML)
+dragSource.setDataTransferData("text/html", "<label>hello receiver</label>");
 ----
 
 The __effect allowed__ specifies the allowed effects that must match the __drop effect__ of the drop target. If these don't match, the drop event is never fired on the target. If multiple effects are allowed, the user can use the modifier keys to switch between the desired effects. The default effect and the modifier keys are system and browser dependent.
 
 The __data transfer text__ is textual data, that the drop target will receive in the __drop event__.
+
+The __data transfer data__ is any data of the given type, that the drop target will also receive in the __drop event__. The order, in which the data is set for the drag source, is preserved, which helps the drop target finding the most preferred and supported data.
+
+[NOTE]
+====
+Note that `"text"` is the only cross browser supported data type. If your application supports IE11, pleas only use the `setDataTransferText()` method.
+====
 
 The [classname]#DragStartEvent# is fired when the drag has started, and the [classname]#DragEndEvent# event when the drag has ended, either in a drop or a cancel.
 
@@ -73,19 +78,23 @@ dragSource.addDragEndListener(event ->
 };
 ----
 
-[NOTE]
-====
-The browsers allow the user to select and drag and drop text, which may cause some issues when trying to drag a component that has text. You can fix this by setting the following style rule to the drag source component to prevent dragging of the text instead of the whole component.
-[source, css]
-----
-user-select: none;
-----
-====
-
 === CSS Style Rules
 
 The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource` when the drag source extension is applied to it.
 Additionally, the elements also have the `v-draggable` style name that is independent of the component's primary style.
+
+The browsers allow the user to select and drag and drop text, which could cause issues with components that have text. The Framework tries to prevent this by automatically adding the following style to all `v-draggable` elements. It is included by the sass mixin `valo-drag-element`.
+
+[source, css]
+----
+.v-draggable {
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+----
+
 
 [[advanced.dragndrop.drophandler]]
 == Drop Target
@@ -113,10 +122,16 @@ dropTarget.addDropListener(event -> {
     if (dragSource.isPresent() && dragSource.get() instanceof Label) {
         // move the label to the layout
         dropTargetLayout.addComponent(dragSource.get());
-        
+
         // get possible transfer data
-        String message = event.getDataTransferText();
-        Notification.show("DropEvent with data transfer: "+ message);
+        String message = event.getDataTransferData("text/html");
+        if (message != null) {
+            Notification.show("DropEvent with data transfer html: " + message);
+        } else {
+            // get transfer text
+            message = event.getDataTransferText();
+            Notification.show("DropEvent with data transfer text: " + message);
+        }
 
         // handle possible server side drag data, if the drag source was in the same UI
         event.getDragData().ifPresent(data -> handleMyDragData((MyObject) data));
@@ -141,8 +156,6 @@ TODO Add an example of drop criteria
 When dragging data over a drop target and the drag over criteria passes, a style name is applied to indicate that the element accepts drops. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
 
 
-===
-
 ////
 TODO add back when supported with new API ?
 [[advanced.dragndrop.external]]
@@ -161,6 +174,50 @@ Dragging and dropping files to browser is supported in HTML 5 and requires a
 compatible browser, such as Mozilla Firefox 3.6 or newer.
 
 ////
+
+[[advanced.dragndrop.mobile]]
+== Mobile Drag And Drop Support
+
+The HTML 5 Drag and Drop API is not yet supported by mobile browsers. To enable HTML5 DnD support on mobile devices, we have included
+an link:https://github.com/timruffles/ios-html5-drag-drop-shim/tree/rewrite:[external Polyfill]. Please note that this Polyfill is under the BSD 2 License.
+
+By default, the mobile DnD support is disabled, but you can enable it any time for a [classname]#UI#. Starting from the request where the support was enabled, all the added [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses will also work on mobile devices for that UI. The Polyfill is only loaded when the user is using a touch device.
+
+[source, java]
+----
+public class MyUI extends UI {
+    protected void init(VaadinRequest request) {
+        setMobileHtml5DndEnabled(true);
+    }
+}
+----
+
+[NOTE]
+====
+When disabling the support, you need to also remove all the [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses that were added when the mobile DnD support was enabled.
+====
+
+=== CSS Style Rules
+
+The Polyfill allows you to apply custom styling to enhance the user experience on touch devices. It is important to remember that these customizations are only used when the polyfill is loaded, and not possible for desktop DnD operations.
+
+The drag image can be customized using the `dnd-poly-drag-image` class name. You must NOT wrap the class rule with e.g. `.valo`, since that is not applied to the drag image element. The following styling can be used to make the drag image opaque and "snap back" when the user did not drop to a valid dropzone:
+
+[source, css]
+====
+.dnd-poly-drag-image {
+    opacity: .5 !important;
+}
+
+.dnd-poly-drag-image.dnd-poly-snapback {
+    transition-property: transform, -webkit-transform !important;
+    transition-duration: 200ms !important;
+    transition-timing-function: ease-out !important;
+}
+====
+
+More details can be found from the link:https://github.com/timruffles/ios-html5-drag-drop-shim/tree/rewrite:[Polyfill] website.
+
 
 [[advanced.dragndrop.grid]]
 == Drag and Drop Rows in Grid
@@ -283,4 +340,68 @@ When dragging data over a drop target Grid's row, depending on the drop mode and
 
 (((range="endofrange", startref="term.advanced.dragndrop")))
 
+== Drag and Drop Files
 
+Files can be uploaded to the server by dropping them onto a file drop target. To make a component a file drop target, apply the [classname]#FileDropTarget# extension to it by creating a new instance and passing the component as first constructor parameter to it.
+
+You can handle the dropped files with the `FileDropHandler` that you add as the second constructor parameter. The [classname]#FileDropEvent#, received by the handler, contains information about the dropped files such as file name, file size and mime type.
+In the handler you can decide if you would like to upload each of the dropped files.
+
+To start uploading a file, set a `StreamVariable` to it. The stream variable provides an output stream where the file will be written and has callback methods for all the stages of the upload process.
+
+[source,java]
+----
+Label dropArea = new Label("Drop files here");
+FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
+
+    List<Html5File> files = event.getFiles();
+    files.forEach(file -> {
+        // Max 1 MB files are uploaded
+        if (file.getFileSize() <= 1024 * 1024) {
+            file.setStreamVariable(new StreamVariable() {
+
+                // Output stream to write the file to
+                @Override
+                public OutputStream getOutputStream() {
+                    return new FileOutputStream("/path/to/files/"
+                        + file.getFileName());
+                }
+
+                // Returns whether onProgress() is called during upload
+                @Override
+                public boolean listenProgress() {
+                    return true;
+                }
+
+                // Called periodically during upload
+                @Override
+                public void onProgress(StreamingProgressEvent event) {
+                    Notification.show("Progress, bytesReceived="
+                        + event.getBytesReceived());
+                }
+
+                // Called when upload started
+                @Override
+                public void streamingStarted(StreamingStartEvent event) {
+                    Notification.show("Stream started, fileName="
+                        + event.getFileName());
+                }
+
+                // Called when upload finished
+                @Override
+                public void streamingFinished(StreamingEndEvent event) {
+                    Notification.show("Stream finished, fileName="
+                        + event.getFileName());
+                }
+
+                // Called when upload failed
+                @Override
+                public void streamingFailed(StreamingErrorEvent event) {
+                    Notification.show("Stream failed, fileName="
+                        + event.getFileName());
+                }
+            });
+        }
+    }
+});
+----
