@@ -431,7 +431,7 @@ public class GridElement extends AbstractComponentElement {
     /**
      * Gets the element that contains the details of a row.
      *
-     * @since
+     * @since 8.0
      * @param rowIndex
      *            the index of the row for the details
      * @return the element that contains the details of a row. <code>null</code>
@@ -447,7 +447,7 @@ public class GridElement extends AbstractComponentElement {
     /**
      * Toggles the column visibility. Column is identified by its hiding toggle
      * caption.
-     * 
+     *
      * @param toggleCaption
      * @since 8.0.6
      */
