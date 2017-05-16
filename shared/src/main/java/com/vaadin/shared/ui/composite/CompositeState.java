@@ -13,21 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.treegrid;
+package com.vaadin.shared.ui.composite;
 
-import java.io.Serializable;
+import com.vaadin.shared.AbstractComponentState;
 
 /**
- * Set of contants used by TreeGrid. These are commonly used JsonObject keys
- * which are considered to be reserved for internal use.
+ * Shared state for Composite.
  *
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class TreeGridCommunicationConstants implements Serializable {
-    public static final String ROW_HIERARCHY_DESCRIPTION = "rhd";
-    public static final String ROW_DEPTH = "d";
-    public static final String ROW_COLLAPSED = "c";
-    public static final String ROW_LEAF = "l";
-    public static final String ROW_COLLAPSE_ALLOWED = "ca";
+public class CompositeState extends AbstractComponentState {
 }

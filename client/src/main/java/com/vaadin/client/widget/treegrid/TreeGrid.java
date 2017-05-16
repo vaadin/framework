@@ -24,6 +24,10 @@ import com.vaadin.client.widgets.Grid;
 import elemental.json.JsonObject;
 
 /**
+ * An extension of the Grid widget, which supports displaying of hierarchical
+ * data.
+ *
+ * @see Grid
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -49,10 +53,5 @@ public class TreeGrid extends Grid<JsonObject> {
     @Override
     public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {
         return addHandler(handler, TreeGridClickEvent.TYPE);
-    }
-
-    @Override
-    protected String getFocusPrimaryStyleName() {
-        return getStylePrimaryName() + "-rowmode";
     }
 }

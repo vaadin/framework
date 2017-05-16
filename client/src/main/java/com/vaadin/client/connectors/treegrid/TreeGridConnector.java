@@ -38,12 +38,12 @@ import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.treegrid.FocusParentRpc;
 import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridClientRpc;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 
 import elemental.json.JsonObject;
@@ -356,11 +356,11 @@ public class TreeGridConnector extends GridConnector {
                     // let's scroll the row into the view
                     getWidget().scrollToRow(cell.getRowIndex());
                 } else if (rowData.hasKey(
-                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)) {
+                        HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)) {
                     JsonObject rowDescription = rowData.getObject(
-                            TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                            HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
                     boolean leaf = rowDescription.getBoolean(
-                            TreeGridCommunicationConstants.ROW_LEAF);
+                            HierarchicalDataCommunicatorConstants.ROW_LEAF);
                     boolean collapsed = isCollapsed(rowData);
                     switch (domEvent.getKeyCode()) {
                         case KeyCodes.KEY_RIGHT:
@@ -414,12 +414,12 @@ public class TreeGridConnector extends GridConnector {
 
     private static boolean isCollapsed(JsonObject rowData) {
         assert rowData
-                .hasKey(TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
+                .hasKey(HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
                         + rowData.asString();
         return rowData
                 .getObject(
-                        TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)
-                .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
+                        HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
+                .getBoolean(HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
     }
 
     /**
@@ -430,6 +430,6 @@ public class TreeGridConnector extends GridConnector {
      */
     public static boolean isCollapseAllowed(JsonObject row) {
         return row.getBoolean(
-                TreeGridCommunicationConstants.ROW_COLLAPSE_ALLOWED);
+                HierarchicalDataCommunicatorConstants.ROW_COLLAPSE_ALLOWED);
     }
 }

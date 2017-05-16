@@ -16,8 +16,8 @@
 package com.vaadin.client.connectors.data;
 
 import com.vaadin.data.provider.HierarchicalDataCommunicator;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
 
 import elemental.json.JsonObject;
 
@@ -35,9 +35,9 @@ public class HierarchicalDataCommunicatorConnector
     protected void onRowDataUpdate(JsonObject newRowData,
             JsonObject oldRowData) {
         assert newRowData.hasKey(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
         assert oldRowData.hasKey(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
 
         /*
          * Since server side can't know the index of a random item, any
@@ -45,14 +45,14 @@ public class HierarchicalDataCommunicatorConnector
          * previous item.
          */
         JsonObject hierarchyData = newRowData.getObject(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
-        if (!hierarchyData.hasKey(TreeGridCommunicationConstants.ROW_DEPTH)) {
-            hierarchyData.put(TreeGridCommunicationConstants.ROW_DEPTH,
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
+        if (!hierarchyData.hasKey(HierarchicalDataCommunicatorConstants.ROW_DEPTH)) {
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_DEPTH,
                     oldRowData
                             .getObject(
-                                    TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION)
+                                    HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
                             .getNumber(
-                                    TreeGridCommunicationConstants.ROW_DEPTH));
+                                    HierarchicalDataCommunicatorConstants.ROW_DEPTH));
         }
     }
 

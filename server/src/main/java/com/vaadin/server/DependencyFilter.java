@@ -29,6 +29,7 @@ import com.vaadin.ui.Dependency;
  *
  * @since 8.1
  */
+@FunctionalInterface
 public interface DependencyFilter extends Serializable {
 
     /**

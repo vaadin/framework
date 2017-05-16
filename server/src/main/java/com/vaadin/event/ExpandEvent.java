@@ -15,14 +15,14 @@
  */
 package com.vaadin.event;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
 
 /**
- * An event that is fired when an item is expanded.
+ * An event that is fired when an item is expanded in a listing component that
+ * displays hierarchical data.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -81,7 +81,7 @@ public class ExpandEvent<T> extends Component.Event {
      * @since 8.1
      */
     @FunctionalInterface
-    public interface ExpandListener<T> extends Serializable {
+    public interface ExpandListener<T> extends SerializableEventListener {
 
         public static final Method EXPAND_METHOD = ReflectTools.findMethod(
                 ExpandListener.class, "itemExpand", ExpandEvent.class);

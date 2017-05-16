@@ -3929,6 +3929,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
+    /**
+     * Reads the declarative representation of a grid's data from the given
+     * element and stores it in the given {@link DeclarativeValueProvider}s.
+     * Each member in the list of value providers corresponds to a column in the
+     * grid.
+     *
+     * @since 8.1
+     *
+     * @param body
+     *            the element to read data from
+     * @param providers
+     *            list of {@link DeclarativeValueProvider}s to store the data of
+     *            each column to
+     */
     protected void readData(Element body,
             List<DeclarativeValueProvider<T>> providers) {
         getSelectionModel().deselectAll();
@@ -3977,6 +3991,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
+    /**
+     * Writes the data contained in this grid. Used when serializing a grid to
+     * its declarative representation, if
+     * {@link DesignContext#shouldWriteData(Component)} returns {@code true} for
+     * the grid that is being written.
+     *
+     * @since 8.1
+     *
+     * @param body
+     *            the body element to write the declarative representation of
+     *            data to
+     * @param designContext
+     *            the design context
+     */
     protected void writeData(Element body, DesignContext designContext) {
         getDataProvider().fetch(new Query<>())
                 .forEach(item -> writeRow(body, item, designContext));

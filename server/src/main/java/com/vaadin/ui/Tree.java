@@ -38,7 +38,6 @@ import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -470,7 +469,7 @@ public class Tree<T> extends Composite
      *            the item collapse allowed provider, not {@code null}
      */
     public void setItemCollapseAllowedProvider(
-            SerializablePredicate<T> provider) {
+            ItemCollapseAllowedProvider<T> provider) {
         treeGrid.setItemCollapseAllowedProvider(provider);
     }
 

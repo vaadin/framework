@@ -13,15 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.composite;
+package com.vaadin.shared.data;
 
-import com.vaadin.shared.AbstractComponentState;
+import java.io.Serializable;
 
 /**
- * Shared state for Composite.
+ * Set of contants used in data communication of hierarchical data. These are
+ * commonly used JsonObject keys which are considered to be reserved for
+ * internal use.
  *
  * @author Vaadin Ltd
  * @since 8.1
  */
-public class CompositeState extends AbstractComponentState {
+public class HierarchicalDataCommunicatorConstants implements Serializable {
+    public static final String ROW_HIERARCHY_DESCRIPTION = "rhd";
+    public static final String ROW_DEPTH = "d";
+    public static final String ROW_COLLAPSED = "c";
+    public static final String ROW_LEAF = "l";
+    public static final String ROW_COLLAPSE_ALLOWED = "ca";
 }
