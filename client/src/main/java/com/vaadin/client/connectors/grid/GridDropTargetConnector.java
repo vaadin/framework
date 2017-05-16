@@ -149,7 +149,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void addTargetClassIndicator(NativeEvent event) {
+    protected void addDragOverStyle(NativeEvent event) {
         getTargetRow(((Element) event.getEventTarget().cast()))
                 .ifPresent(target -> {
 
@@ -187,7 +187,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
-    protected void removeTargetClassIndicator(NativeEvent event) {
+    protected void removeDragOverStyle(NativeEvent event) {
 
         // Remove all possible style names
         getTargetRow((Element) event.getEventTarget().cast()).ifPresent(e -> {

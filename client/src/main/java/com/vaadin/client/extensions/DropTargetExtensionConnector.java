@@ -65,6 +65,11 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      */
     protected static final String STYLE_SUFFIX_DRAG_BOTTOM = "-drag-bottom";
 
+    /**
+     * Style name suffix for indicating that the element is drop target.
+     */
+    protected static final String STYLE_SUFFIX_DROPTARGET = "-droptarget";
+
     // Create event listeners
     private final EventListener dragEnterListener = this::onDragEnter;
     private final EventListener dragOverListener = this::onDragOver;
@@ -95,6 +100,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         addDropListeners(getDropTargetElement());
 
         ((AbstractComponentConnector) target).onDropTargetAttached();
+
+        // Add drop target indicator to the drop target element
+        addDropTargetStyle();
     }
 
     /**
@@ -135,6 +143,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
         removeDropListeners(getDropTargetElement());
         ((AbstractComponentConnector) getParent()).onDropTargetDetached();
+
+        // Remove drop target indicator
+        removeDropTargetStyle();
     }
 
     /**
@@ -164,7 +175,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                 + STYLE_SUFFIX_DRAG_CENTER;
 
         if (isDropAllowed(nativeEvent)) {
-            addTargetClassIndicator(nativeEvent);
+            addDragOverStyle(nativeEvent);
 
             setDropEffect(nativeEvent);
 
@@ -218,8 +229,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         if (isDropAllowed(nativeEvent)) {
             setDropEffect(nativeEvent);
 
-            // Add drop target indicator in case the element doesn't have one
-            addTargetClassIndicator(nativeEvent);
+            // Add drag over indicator in case the element doesn't have one
+            addDragOverStyle(nativeEvent);
 
             // Prevent default to allow drop
             nativeEvent.preventDefault();
@@ -229,8 +240,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             nativeEvent.getDataTransfer()
                     .setDropEffect(DataTransfer.DropEffect.NONE);
 
-            // Remove drop target indicator
-            removeTargetClassIndicator(nativeEvent);
+            // Remove drag over indicator
+            removeDragOverStyle(nativeEvent);
         }
     }
 
@@ -244,7 +255,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      *            browser event to be handled
      */
     protected void onDragLeave(Event event) {
-        removeTargetClassIndicator((NativeEvent) event);
+        removeDragOverStyle((NativeEvent) event);
     }
 
     /**
@@ -276,7 +287,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                     .getDropEffect(nativeEvent.getDataTransfer()), nativeEvent);
         }
 
-        removeTargetClassIndicator(nativeEvent);
+        removeDragOverStyle(nativeEvent);
     }
 
     private boolean isDropAllowed(NativeEvent event) {
@@ -316,7 +327,33 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Add class that indicates that the component is a target.
+     * Add class name for the drop target element indicating that data can be
+     * dropped onto it. The class name has the following format:
+     * <pre>
+     *     [primaryStyleName]-droptarget
+     * </pre>
+     * The added class name is update
+     * automatically by the framework when the primary style name changes.
+     */
+    protected void addDropTargetStyle() {
+        getDropTargetElement().addClassName(
+                getStylePrimaryName(getDropTargetElement())
+                        + STYLE_SUFFIX_DROPTARGET);
+    }
+
+    /**
+     * Remove class name from the drop target element indication that data can
+     * be dropped onto it.
+     */
+    protected void removeDropTargetStyle() {
+        getDropTargetElement().removeClassName(
+                getStylePrimaryName(getDropTargetElement())
+                        + STYLE_SUFFIX_DROPTARGET);
+    }
+
+    /**
+     * Add class that indicates that the component is a target while data is
+     * being dragged over it.
      * <p>
      * This is triggered on {@link #onDragEnter(Event) dragenter} and
      * {@link #onDragOver(Event) dragover} events pending if the drop is
@@ -327,12 +364,12 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @param event
      *            the dragenter or dragover event that triggered the indication.
      */
-    protected void addTargetClassIndicator(NativeEvent event) {
+    protected void addDragOverStyle(NativeEvent event) {
         getDropTargetElement().addClassName(styleDragCenter);
     }
 
     /**
-     * Remove the drag target indicator class name from the target element.
+     * Remove the drag over indicator class name from the target element.
      * <p>
      * This is triggered on {@link #onDrop(Event) drop},
      * {@link #onDragLeave(Event) dragleave} and {@link #onDragOver(Event)
@@ -344,7 +381,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @param event
      *            the event that triggered the removal of the indicator
      */
-    protected void removeTargetClassIndicator(NativeEvent event) {
+    protected void removeDragOverStyle(NativeEvent event) {
         getDropTargetElement().removeClassName(styleDragCenter);
     }
 
@@ -356,6 +393,11 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     private native boolean executeScript(NativeEvent event, String script)
     /*-{
         return new Function('event', script)(event);
+    }-*/;
+
+    private native boolean getStylePrimaryName(Element element)
+    /*-{
+        return @com.google.gwt.user.client.ui.UIObject::getStylePrimaryName(Lcom/google/gwt/dom/client/Element;)(element);
     }-*/;
 
     @Override
