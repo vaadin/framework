@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.extensions;
 
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -185,27 +185,25 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // Set drag image
         setDragImage(nativeEvent);
 
-        // Set data parameters
-        List<String> types = getState().types;
-        Map<String, String> data = getState().data;
-        for (String type : types) {
-            nativeEvent.getDataTransfer().setData(type, data.get(type));
-        }
+        // Create drag data
+        Map<String, String> dataMap = createDataTransferData(nativeEvent);
 
-        // Always set something as the text data, or DnD won't work in FF !
-        String dataTransferText = createDataTransferText(nativeEvent);
-        if (dataTransferText == null) {
-            dataTransferText = "";
-        }
+        if (dataMap != null) {
+            // Always set something as the text data, or DnD won't work in FF !
+            dataMap.putIfAbsent(DragSourceState.DATA_TYPE_TEXT, "");
 
-        // Override data type "text" when storing special data is needed
-        nativeEvent.getDataTransfer()
-                .setData(DragSourceState.DATA_TYPE_TEXT, dataTransferText);
+            // Set data to the event's data transfer
+            dataMap.forEach((type, data) -> nativeEvent.getDataTransfer()
+                    .setData(type, data));
 
-        // Initiate firing server side dragstart event when there is a
-        // DragStartListener attached on the server side
-        if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
-            sendDragStartEventToServer(nativeEvent);
+            // Initiate firing server side dragstart event when there is a
+            // DragStartListener attached on the server side
+            if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
+                sendDragStartEventToServer(nativeEvent);
+            }
+        } else {
+            // If returned data map is null, cancel drag event
+            nativeEvent.preventDefault();
         }
 
         // Stop event bubbling
@@ -255,15 +253,20 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Creates data of type {@code "text"} for the {@code DataTransfer} object
-     * of the given event.
+     * Creates the data map to be set as the {@code DataTransfer} object's data.
      *
      * @param dragStartEvent
-     *            Event to set the data for.
-     * @return Textual data to be set for the event or {@literal null}.
+     *         The drag start event
+     * @return The map from type to data, or {@code null} for not setting any
+     * data. Returning {@code null} will cancel the drag start.
      */
-    protected String createDataTransferText(NativeEvent dragStartEvent) {
-        return getState().data.get(DragSourceState.DATA_TYPE_TEXT);
+    protected Map<String, String> createDataTransferData(
+            NativeEvent dragStartEvent) {
+        Map<String, String> orderedData = new LinkedHashMap<>();
+        for (String type : getState().types) {
+            orderedData.put(type, getState().data.get(type));
+        }
+        return orderedData;
     }
 
     /**
