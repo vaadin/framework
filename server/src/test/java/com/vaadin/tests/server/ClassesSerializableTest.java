@@ -76,6 +76,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.buildhelpers.*", //
             "com\\.vaadin\\.util\\.EncodeUtil.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
+            "com\\.vaadin\\.data\\.provider\\.InMemoryDataProviderHelpers",
             "com\\.vaadin\\.data\\.provider\\.HierarchyMapper\\$TreeLevelQuery",
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //

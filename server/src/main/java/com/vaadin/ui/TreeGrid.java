@@ -21,19 +21,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.HasHierarchicalDataProvider;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ExpandEvent;
@@ -60,7 +60,8 @@ import com.vaadin.ui.renderers.Renderer;
  * @param <T>
  *            the grid bean type
  */
-public class TreeGrid<T> extends Grid<T> {
+public class TreeGrid<T> extends Grid<T>
+        implements HasHierarchicalDataProvider<T> {
 
     public TreeGrid() {
         super(new HierarchicalDataCommunicator<>());
@@ -123,117 +124,6 @@ public class TreeGrid<T> extends Grid<T> {
     public Registration addCollapseListener(CollapseListener<T> listener) {
         return addListener(CollapseEvent.class, listener,
                 CollapseListener.COLLAPSE_METHOD);
-    }
-
-    /**
-     * Sets the data items of this component provided as a collection.
-     * <p>
-     * The provided items are wrapped into a
-     * {@link InMemoryHierarchicalDataProvider} backed by a flat
-     * {@link HierarchyData} structure. The data provider instance is used as a
-     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
-     * that the items collection can be accessed later on via
-     * {@link InMemoryHierarchicalDataProvider#getData()}:
-     *
-     * <pre>
-     * <code>
-     * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems(Arrays.asList("a","b"));
-     * ...
-     *
-     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
-     * </code>
-     * </pre>
-     * <p>
-     * The returned HierarchyData instance may be used as-is to add, remove or
-     * modify items in the hierarchy. These modifications to the object are not
-     * automatically reflected back to the TreeGrid. Items modified should be
-     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
-     * when adding or removing items
-     * {@link HierarchicalDataProvider#refreshAll()} should be called.
-     *
-     * @param items
-     *            the data items to display, not null
-     */
-    @Override
-    public void setItems(Collection<T> items) {
-        Objects.requireNonNull(items, "Given collection may not be null");
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<T>().addItems(null, items)));
-    }
-
-    /**
-     * Sets the data items of this component provided as a stream.
-     * <p>
-     * The provided items are wrapped into a
-     * {@link InMemoryHierarchicalDataProvider} backed by a flat
-     * {@link HierarchyData} structure. The data provider instance is used as a
-     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
-     * that the items collection can be accessed later on via
-     * {@link InMemoryHierarchicalDataProvider#getData()}:
-     *
-     * <pre>
-     * <code>
-     * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems(Stream.of("a","b"));
-     * ...
-     *
-     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
-     * </code>
-     * </pre>
-     * <p>
-     * The returned HierarchyData instance may be used as-is to add, remove or
-     * modify items in the hierarchy. These modifications to the object are not
-     * automatically reflected back to the TreeGrid. Items modified should be
-     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
-     * when adding or removing items
-     * {@link HierarchicalDataProvider#refreshAll()} should be called.
-     *
-     * @param items
-     *            the data items to display, not null
-     */
-    @Override
-    public void setItems(Stream<T> items) {
-        Objects.requireNonNull(items, "Given stream may not be null");
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<T>().addItems(null, items)));
-    }
-
-    /**
-     * Sets the data items of this listing.
-     * <p>
-     * The provided items are wrapped into a
-     * {@link InMemoryHierarchicalDataProvider} backed by a flat
-     * {@link HierarchyData} structure. The data provider instance is used as a
-     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
-     * that the items collection can be accessed later on via
-     * {@link InMemoryHierarchicalDataProvider#getData()}:
-     *
-     * <pre>
-     * <code>
-     * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems("a","b");
-     * ...
-     *
-     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
-     * </code>
-     * </pre>
-     * <p>
-     * The returned HierarchyData instance may be used as-is to add, remove or
-     * modify items in the hierarchy. These modifications to the object are not
-     * automatically reflected back to the TreeGrid. Items modified should be
-     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
-     * when adding or removing items
-     * {@link HierarchicalDataProvider#refreshAll()} should be called.
-     *
-     * @param items
-     *            the data items to display, not null
-     */
-    @Override
-    public void setItems(@SuppressWarnings("unchecked") T... items) {
-        Objects.requireNonNull(items, "Given items may not be null");
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<T>().addItems(null, items)));
     }
 
     @Override
@@ -395,7 +285,7 @@ public class TreeGrid<T> extends Grid<T> {
             List<DeclarativeValueProvider<T>> providers) {
         getSelectionModel().deselectAll();
         List<T> selectedItems = new ArrayList<>();
-        HierarchyData<T> data = new HierarchyData<T>();
+        TreeData<T> data = new TreeData<T>();
 
         for (Element row : body.children()) {
             T item = deserializeDeclarativeRepresentation(row.attr("item"));
@@ -416,7 +306,7 @@ public class TreeGrid<T> extends Grid<T> {
             }
         }
 
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+        setDataProvider(new TreeDataProvider<>(data));
         selectedItems.forEach(getSelectionModel()::select);
     }
 

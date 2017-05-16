@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ThemeResource;
@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
     private Tree<HierarchicalTestBean> tree;
-    private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
+    private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
     private IconGenerator<HierarchicalTestBean> iconGenerator = i -> {
         switch (i.getDepth()) {
         case 0:
@@ -126,7 +126,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void setupDataProvider() {
-        HierarchyData<HierarchicalTestBean> data = new HierarchyData<>();
+        TreeData<HierarchicalTestBean> data = new TreeData<>();
 
         List<Integer> ints = Arrays.asList(0, 1, 2);
 
@@ -145,7 +145,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
             });
         });
 
-        inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
+        inMemoryDataProvider = new TreeDataProvider<>(data);
     }
 
 }

@@ -20,17 +20,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.vaadin.data.HierarchyData;
-import com.vaadin.data.ValueProvider;
+import com.vaadin.data.TreeData;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
-import com.vaadin.shared.data.sort.SortDirection;
 
 /**
- * A {@link DataProvider} for in-memory hierarchical data.
- *
- * @see HierarchyData
+ * {@link HierarchicalDataProvider} wrapper for {@link TreeData}.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -38,27 +34,27 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @param <T>
  *            data type
  */
-public class InMemoryHierarchicalDataProvider<T> extends
-        AbstractHierarchicalDataProvider<T, SerializablePredicate<T>> implements
-        ConfigurableFilterDataProvider<T, SerializablePredicate<T>, SerializablePredicate<T>> {
+public class TreeDataProvider<T>
+        extends AbstractHierarchicalDataProvider<T, SerializablePredicate<T>>
+        implements InMemoryDataProvider<T> {
 
-    private final HierarchyData<T> hierarchyData;
+    private final TreeData<T> treeData;
 
     private SerializablePredicate<T> filter = null;
 
     private SerializableComparator<T> sortOrder = null;
 
     /**
-     * Constructs a new InMemoryHierarchicalDataProvider.
+     * Constructs a new TreeDataProvider.
      * <p>
-     * All changes made to the given HierarchyData object will also be visible
-     * through this data provider.
+     * All changes made to the given {@link TreeData} object will also be
+     * visible through this data provider.
      *
-     * @param hierarchyData
-     *            the backing HierarchyData for this provider
+     * @param treeData
+     *            the backing {@link TreeData} for this provider
      */
-    public InMemoryHierarchicalDataProvider(HierarchyData<T> hierarchyData) {
-        this.hierarchyData = hierarchyData;
+    public TreeDataProvider(TreeData<T> treeData) {
+        this.treeData = treeData;
     }
 
     /**
@@ -66,24 +62,19 @@ public class InMemoryHierarchicalDataProvider<T> extends
      *
      * @return the underlying data of this provider
      */
-    public HierarchyData<T> getData() {
-        return hierarchyData;
-    }
-
-    @Override
-    public boolean isInMemory() {
-        return true;
+    public TreeData<T> getTreeData() {
+        return treeData;
     }
 
     @Override
     public boolean hasChildren(T item) {
-        if (!hierarchyData.contains(item)) {
+        if (!treeData.contains(item)) {
             throw new IllegalArgumentException("Item " + item
-                    + " could not be found in the backing HierarchyData. "
+                    + " could not be found in the backing TreeData. "
                     + "Did you forget to refresh this data provider after item removal?");
         }
 
-        return !hierarchyData.getChildren(item).isEmpty();
+        return !treeData.getChildren(item).isEmpty();
     }
 
     @Override
@@ -95,15 +86,15 @@ public class InMemoryHierarchicalDataProvider<T> extends
     @Override
     public Stream<T> fetchChildren(
             HierarchicalQuery<T, SerializablePredicate<T>> query) {
-        if (!hierarchyData.contains(query.getParent())) {
+        if (!treeData.contains(query.getParent())) {
             throw new IllegalArgumentException("The queried item "
                     + query.getParent()
-                    + " could not be found in the backing HierarchyData. "
+                    + " could not be found in the backing TreeData. "
                     + "Did you forget to refresh this data provider after item removal?");
         }
 
         Stream<T> childStream = getFilteredStream(
-                hierarchyData.getChildren(query.getParent()).stream(),
+                treeData.getChildren(query.getParent()).stream(),
                 query.getFilter());
 
         Optional<Comparator<T>> comparing = Stream
@@ -119,85 +110,25 @@ public class InMemoryHierarchicalDataProvider<T> extends
     }
 
     @Override
+    public SerializablePredicate<T> getFilter() {
+        return filter;
+    }
+
+    @Override
     public void setFilter(SerializablePredicate<T> filter) {
         this.filter = filter;
         refreshAll();
     }
 
-    /**
-     * Adds a filter to be applied to all queries. The filter will be used in
-     * addition to any filter that has been set or added previously.
-     *
-     * @see #addFilter(ValueProvider, SerializablePredicate)
-     * @see #addFilterByValue(ValueProvider, Object)
-     * @see #setFilter(SerializablePredicate)
-     *
-     * @param filter
-     *            the filter to add, not <code>null</code>
-     */
-    public void addFilter(SerializablePredicate<T> filter) {
-        Objects.requireNonNull(filter, "Filter cannot be null");
-
-        if (this.filter == null) {
-            setFilter(filter);
-        } else {
-            SerializablePredicate<T> oldFilter = this.filter;
-            setFilter(item -> oldFilter.test(item) && filter.test(item));
-        }
+    @Override
+    public SerializableComparator<T> getSortComparator() {
+        return sortOrder;
     }
 
-    /**
-     * Sets the comparator to use as the default sorting for this data provider.
-     * This overrides the sorting set by any other method that manipulates the
-     * default sorting of this data provider.
-     * <p>
-     * The default sorting is used if the query defines no sorting. The default
-     * sorting is also used to determine the ordering of items that are
-     * considered equal by the sorting defined in the query.
-     *
-     * @see #setSortOrder(ValueProvider, SortDirection)
-     * @see #addSortComparator(SerializableComparator)
-     *
-     * @param comparator
-     *            a comparator to use, or <code>null</code> to clear any
-     *            previously set sort order
-     */
+    @Override
     public void setSortComparator(SerializableComparator<T> comparator) {
         sortOrder = comparator;
         refreshAll();
-    }
-
-    /**
-     * Adds a comparator to the default sorting for this data provider. If no
-     * default sorting has been defined, then the provided comparator will be
-     * used as the default sorting. If a default sorting has been defined, then
-     * the provided comparator will be used to determine the ordering of items
-     * that are considered equal by the previously defined default sorting.
-     * <p>
-     * The default sorting is used if the query defines no sorting. The default
-     * sorting is also used to determine the ordering of items that are
-     * considered equal by the sorting defined in the query.
-     *
-     * @see #setSortComparator(SerializableComparator)
-     * @see #addSortOrder(ValueProvider, SortDirection)
-     *
-     * @param comparator
-     *            a comparator to add, not <code>null</code>
-     */
-    public void addSortComparator(SerializableComparator<T> comparator) {
-        Objects.requireNonNull(comparator, "Sort order to add cannot be null");
-        SerializableComparator<T> originalComparator = sortOrder;
-        if (originalComparator == null) {
-            setSortComparator(comparator);
-        } else {
-            setSortComparator((a, b) -> {
-                int result = originalComparator.compare(a, b);
-                if (result == 0) {
-                    result = comparator.compare(a, b);
-                }
-                return result;
-            });
-        }
     }
 
     @Override

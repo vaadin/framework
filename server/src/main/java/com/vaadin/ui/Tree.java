@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.vaadin.data.Binder;
-import com.vaadin.data.HasDataProvider;
+import com.vaadin.data.HasHierarchicalDataProvider;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
@@ -57,7 +57,8 @@ import elemental.json.JsonObject;
  * @param <T>
  *            the data type
  */
-public class Tree<T> extends Composite implements HasDataProvider<T> {
+public class Tree<T> extends Composite
+        implements HasHierarchicalDataProvider<T> {
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
@@ -420,11 +421,6 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
      */
     public SelectionModel<T> getSelectionModel() {
         return treeGrid.getSelectionModel();
-    }
-
-    @Override
-    public void setItems(Collection<T> items) {
-        treeGrid.setItems(items);
     }
 
     /**
