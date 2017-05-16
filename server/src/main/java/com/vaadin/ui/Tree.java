@@ -28,7 +28,6 @@ import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
@@ -68,10 +67,11 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
      * A listener for item click events.
      *
      * @param <T>
-     *            the tree bean type
+     *            the tree item type
      *
      * @see ItemClick
      * @see Registration
+     * @since 8.1
      */
     @FunctionalInterface
     public interface ItemClickListener<T> extends SerializableEventListener {
@@ -87,9 +87,10 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
 
     /**
      * Tree item click event.
-     * 
+     *
      * @param <T>
      *            the data type of tree
+     * @since 8.1
      */
     public static class ItemClick<T> extends ConnectorEvent {
 
@@ -97,7 +98,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
 
         /**
          * Constructs a new item click.
-         * 
+         *
          * @param source
          *            the tree component
          * @param item
@@ -110,7 +111,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
 
         /**
          * Returns the clicked item.
-         * 
+         *
          * @return the clicked item
          */
         public T getItem() {
@@ -127,6 +128,8 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
     /**
      * String renderer that handles icon resources and stores their identifiers
      * into data objects.
+     *
+     * @since 8.1
      */
     public final class TreeRenderer extends AbstractRenderer<T, String>
             implements DataGenerator<T> {
@@ -211,7 +214,7 @@ public class Tree<T> extends Composite implements HasDataProvider<T> {
         treeGrid.addCollapseListener(e -> fireCollapseEvent(
                 e.getCollapsedItem(), e.isUserOriginated()));
         treeGrid.addItemClickListener(
-                e -> fireEvent(new ItemClick<T>(this, e.getItem())));
+                e -> fireEvent(new ItemClick<>(this, e.getItem())));
     }
 
     /**
