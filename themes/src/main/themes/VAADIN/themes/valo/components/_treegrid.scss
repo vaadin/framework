@@ -1,49 +1,43 @@
 @import "grid";
 
 /** Expander button visual - expanded */
-$tg-expander-char-expanded: '\f0d7' !default;
+$v-treegrid-expander-char-expanded: '\f0d7' !default;
 
 /** Expander button visual - collapsed */
-$tg-expander-char-collapsed: '\f0da' !default;
-
-/** Expander button width */
-$tg-expander-width: 10px !default;
-
-/** Expander button right side padding */
-$tg-expander-padding: 10px !default;
+$v-treegrid-expander-char-collapsed: '\f0da' !default;
 
 @mixin valo-treegrid ($primary-stylename: v-treegrid) {
 
   @include valo-grid($primary-stylename);
 
   // Expander with and item indentation constants
-  $indent: $tg-expander-width + $tg-expander-padding;
+  $indent:2ex !default;
 
   // Classname for depth styling
   $class-depth: depth !default;
 
   .#{$primary-stylename}-expander {
     display: inline-block;
-    width: $tg-expander-width;
-    padding-right: $tg-expander-padding;
+    width: 1ex;
+    padding-right: 1ex;
 
     &::before {
       display: inline-block;
-      padding-right: 4px;
+      padding-right: 0.25em;
       font-family: FontAwesome;
     }
 
     // Expander for expanded item
     &.expanded {
       &::before {
-        content: $tg-expander-char-expanded;
+        content: $v-treegrid-expander-char-expanded;
       }
     }
 
     // Expander for collapsed item
     &.collapsed {
       &::before {
-        content: $tg-expander-char-collapsed;
+        content: $v-treegrid-expander-char-collapsed;
       }
     }
 
