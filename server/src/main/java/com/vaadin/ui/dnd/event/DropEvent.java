@@ -88,6 +88,18 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
+     * Get all of the transfer data from the {@code DataTransfer} object. The
+     * data can be iterated to find the most relevant data as it reserves the
+     * order in which the data was set to the drag source element.
+     *
+     * @return Map of type/data pairs, containing all the data from the {@code
+     * DataTransfer} object.
+     */
+    public Map<String, String> getDataTransferData() {
+        return data;
+    }
+
+    /**
      * Get the desired dropEffect for the drop event.
      * <p>
      * <em>NOTE: Currently you cannot trust this to work on all browsers!
