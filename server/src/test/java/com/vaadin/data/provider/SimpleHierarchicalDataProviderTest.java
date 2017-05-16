@@ -11,8 +11,8 @@ import org.junit.Test;
 import com.vaadin.data.HierarchyData;
 import com.vaadin.server.SerializablePredicate;
 
-public class InMemoryHierarchicalDataProviderTest extends
-        DataProviderTestBase<InMemoryHierarchicalDataProvider<StrBean>> {
+public class SimpleHierarchicalDataProviderTest extends
+        DataProviderTestBase<SimpleHierarchicalDataProvider<StrBean>> {
 
     private HierarchyData<StrBean> data;
     private List<StrBean> flattenedData;
@@ -24,7 +24,7 @@ public class InMemoryHierarchicalDataProviderTest extends
         flattenedData = new ArrayList<>();
         rootData = new ArrayList<>();
 
-        data = new HierarchyData<>();
+        data = new SimpleHierarchicalDataProvider<>();
         data.addItems(null, randomBeans.subList(0, 5));
         data.addItems(randomBeans.get(0), randomBeans.subList(5, 10));
         data.addItems(randomBeans.get(5), randomBeans.subList(10, 15));
@@ -45,19 +45,19 @@ public class InMemoryHierarchicalDataProviderTest extends
 
     @Test(expected = IllegalArgumentException.class)
     public void hierarchyData_add_item_parent_not_in_hierarchy_throws() {
-        new HierarchyData<>().addItem(new StrBean("", 0, 0),
+        new SimpleHierarchicalDataProvider<>().addItem(new StrBean("", 0, 0),
                 new StrBean("", 0, 0));
     }
 
     @Test(expected = NullPointerException.class)
     public void hierarchyData_add_null_item_throws() {
-        new HierarchyData<>().addItem(null, null);
+        new SimpleHierarchicalDataProvider<>().addItem(null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void hierarchyData_add_item_already_in_hierarchy_throws() {
         StrBean bean = new StrBean("", 0, 0);
-        new HierarchyData<>().addItem(null, bean).addItem(null, bean);
+        new SimpleHierarchicalDataProvider<>().addItem(null, bean).addItem(null, bean);
     }
 
     @Test
@@ -226,8 +226,8 @@ public class InMemoryHierarchicalDataProviderTest extends
     }
 
     @Override
-    protected InMemoryHierarchicalDataProvider<StrBean> createDataProvider() {
-        return new InMemoryHierarchicalDataProvider<>(data);
+    protected SimpleHierarchicalDataProvider<StrBean> createDataProvider() {
+        return new SimpleHierarchicalDataProvider<>(data);
     }
 
     @Override

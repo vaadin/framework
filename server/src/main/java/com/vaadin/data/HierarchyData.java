@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * Class for representing hierarchical data.
+ * Interface for representing hierarchical data.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -34,62 +34,7 @@ import java.util.stream.Stream;
  * @param <T>
  *            data type
  */
-public class HierarchyData<T> implements Serializable {
-
-    private static class HierarchyWrapper<T> implements Serializable {
-        private T item;
-        private T parent;
-        private List<T> children;
-
-        public HierarchyWrapper(T item, T parent) {
-            this.item = item;
-            this.parent = parent;
-            children = new ArrayList<>();
-        }
-
-        public T getItem() {
-            return item;
-        }
-
-        public void setItem(T item) {
-            this.item = item;
-        }
-
-        public T getParent() {
-            return parent;
-        }
-
-        public void setParent(T parent) {
-            this.parent = parent;
-        }
-
-        public List<T> getChildren() {
-            return children;
-        }
-
-        public void setChildren(List<T> children) {
-            this.children = children;
-        }
-
-        public void addChild(T child) {
-            children.add(child);
-        }
-
-        public void removeChild(T child) {
-            children.remove(child);
-        }
-    }
-
-    private final Map<T, HierarchyWrapper<T>> itemToWrapperMap;
-
-    /**
-     * Creates an initially empty hierarchical data representation to which
-     * items can be added or removed.
-     */
-    public HierarchyData() {
-        itemToWrapperMap = new LinkedHashMap<>();
-        itemToWrapperMap.put(null, new HierarchyWrapper<>(null, null));
-    }
+public interface HierarchyData<T> extends Serializable {
 
     /**
      * Adds a data item as a child of {@code parent}. Call with {@code null} as
@@ -109,21 +54,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws NullPointerException
      *             if item is null
      */
-    public HierarchyData<T> addItem(T parent, T item) {
-        Objects.requireNonNull(item, "Item cannot be null");
-        if (parent != null && !contains(parent)) {
-            throw new IllegalArgumentException(
-                    "Parent needs to be added before children. "
-                            + "To add root items, call with parent as null");
-        }
-        if (contains(item)) {
-            throw new IllegalArgumentException(
-                    "Cannot add the same item multiple times: " + item);
-        }
-        putItem(item, parent);
-        return this;
-    }
-
+    public HierarchyData<T> addItem(T parent, T item);
     /**
      * Adds a list of data items as children of {@code parent}. Call with
      * {@code null} as parent to add root level items. The given parent item
@@ -145,10 +76,7 @@ public class HierarchyData<T> implements Serializable {
      *             if any of the items are null
      */
     public HierarchyData<T> addItems(T parent,
-            @SuppressWarnings("unchecked") T... items) {
-        Arrays.asList(items).stream().forEach(item -> addItem(parent, item));
-        return this;
-    }
+            @SuppressWarnings("unchecked") T... items);
 
     /**
      * Adds a list of data items as children of {@code parent}. Call with
@@ -170,10 +98,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws NullPointerException
      *             if any of the items are null
      */
-    public HierarchyData<T> addItems(T parent, Collection<T> items) {
-        items.stream().forEach(item -> addItem(parent, item));
-        return this;
-    }
+    public HierarchyData<T> addItems(T parent, Collection<T> items);
 
     /**
      * Adds data items contained in a stream as children of {@code parent}. Call
@@ -195,10 +120,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws NullPointerException
      *             if any of the items are null
      */
-    public HierarchyData<T> addItems(T parent, Stream<T> items) {
-        items.forEach(item -> addItem(parent, item));
-        return this;
-    }
+    public HierarchyData<T> addItems(T parent, Stream<T> items);
 
     /**
      * Remove a given item from this structure. Additionally, this will
@@ -211,20 +133,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws IllegalArgumentException
      *             if the item does not exist in this structure
      */
-    public HierarchyData<T> removeItem(T item) {
-        if (!contains(item)) {
-            throw new IllegalArgumentException(
-                    "Item '" + item + "' not in the hierarchy");
-        }
-        new ArrayList<>(getChildren(item)).forEach(child -> removeItem(child));
-        itemToWrapperMap.get(itemToWrapperMap.get(item).getParent())
-                .removeChild(item);
-        if (item != null) {
-            // remove non root item from backing map
-            itemToWrapperMap.remove(item);
-        }
-        return this;
-    }
+    public HierarchyData<T> removeItem(T item);
 
     /**
      * Clear all items from this structure. Shorthand for calling
@@ -232,10 +141,7 @@ public class HierarchyData<T> implements Serializable {
      *
      * @return this
      */
-    public HierarchyData<T> clear() {
-        removeItem(null);
-        return this;
-    }
+    public HierarchyData<T> clear();
 
     /**
      * Get the immediate child items for the given item.
@@ -248,13 +154,7 @@ public class HierarchyData<T> implements Serializable {
      * @throws IllegalArgumentException
      *             if the item does not exist in this structure
      */
-    public List<T> getChildren(T item) {
-        if (!contains(item)) {
-            throw new IllegalArgumentException(
-                    "Item '" + item + "' not in the hierarchy");
-        }
-        return itemToWrapperMap.get(item).getChildren();
-    }
+    public List<T> getChildren(T item);
 
     /**
      * Check whether the given item is in this hierarchy.
@@ -264,15 +164,5 @@ public class HierarchyData<T> implements Serializable {
      * @return {@code true} if the item is in this hierarchy, {@code false} if
      *         not
      */
-    public boolean contains(T item) {
-        return itemToWrapperMap.containsKey(item);
-    }
-
-    private void putItem(T item, T parent) {
-        HierarchyWrapper<T> wrappedItem = new HierarchyWrapper<>(item, parent);
-        if (itemToWrapperMap.containsKey(parent)) {
-            itemToWrapperMap.get(parent).addChild(item);
-        }
-        itemToWrapperMap.put(item, wrappedItem);
-    }
+    public boolean contains(T item);
 }

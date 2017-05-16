@@ -7,8 +7,7 @@ import java.util.Optional;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.SimpleHierarchicalDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.data.bean.Address;
@@ -54,9 +53,8 @@ public class TreeGridMemory extends AbstractBeansMemoryTest<TreeGrid<Person>> {
     @Override
     protected void setInMemoryContainer(TreeGrid<Person> treeGrid,
             List<Person> data) {
-        HierarchyData<Person> hierarchyData = new HierarchyData<>();
-        treeGrid.setDataProvider(
-                new InMemoryHierarchicalDataProvider<>(hierarchyData));
+        SimpleHierarchicalDataProvider<Person> hierarchyData = new SimpleHierarchicalDataProvider<>();
+        treeGrid.setDataProvider(hierarchyData);
         List<Person> toExpand = new ArrayList<>();
         if (data.size() != 0 && data.size() % 2 == 0) {
             // treat list as if it were a balanced binary tree

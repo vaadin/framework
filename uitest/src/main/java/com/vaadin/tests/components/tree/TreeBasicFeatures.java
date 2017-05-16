@@ -6,7 +6,7 @@ import java.util.List;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.SimpleHierarchicalDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.ThemeResource;
@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
     private Tree<HierarchicalTestBean> tree;
-    private InMemoryHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
+    private SimpleHierarchicalDataProvider<HierarchicalTestBean> inMemoryDataProvider;
     private IconGenerator<HierarchicalTestBean> iconGenerator = i -> {
         switch (i.getDepth()) {
         case 0:
@@ -126,26 +126,26 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void setupDataProvider() {
-        HierarchyData<HierarchicalTestBean> data = new HierarchyData<>();
+        inMemoryDataProvider= new SimpleHierarchicalDataProvider<>();
 
         List<Integer> ints = Arrays.asList(0, 1, 2);
 
         ints.stream().forEach(index -> {
             HierarchicalTestBean bean = new HierarchicalTestBean(null, 0,
                     index);
-            data.addItem(null, bean);
+            inMemoryDataProvider.addItem(null, bean);
             ints.stream().forEach(childIndex -> {
                 HierarchicalTestBean childBean = new HierarchicalTestBean(
                         bean.getId(), 1, childIndex);
-                data.addItem(bean, childBean);
+                inMemoryDataProvider.addItem(bean, childBean);
                 ints.stream()
-                        .forEach(grandChildIndex -> data.addItem(childBean,
+                        .forEach(grandChildIndex -> inMemoryDataProvider.addItem(childBean,
                                 new HierarchicalTestBean(childBean.getId(), 2,
                                         grandChildIndex)));
             });
         });
 
-        inMemoryDataProvider = new InMemoryHierarchicalDataProvider<>(data);
+        inMemoryDataProvider = inMemoryDataProvider;
     }
 
 }
