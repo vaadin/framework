@@ -1231,9 +1231,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
-    // TODO add configuration to use custom drag start decider
     private static native void initializeMobileDndPolyfill()
     /*-{
-        $wnd.DragDropPolyfill.Initialize();
+         var conf = new Object();
+         // this is needed or the drag image will offset to weird place in for grid rows
+         conf['dragImageCenterOnTouch'] = true;
+         $wnd.DragDropPolyfill.Initialize(conf);
     }-*/;
 }

@@ -24,6 +24,8 @@ public class DragImage extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
+        setMobileHtml5DndEnabled(true);
+
         HorizontalLayout layout1 = new HorizontalLayout();
         layout1.setCaption("No custom drag image");
         Styles styles = Page.getCurrent().getStyles();
