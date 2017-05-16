@@ -153,7 +153,9 @@ TODO Add an example of drop criteria
 
 === CSS Style Rules
 
-When dragging data over a drop target and the drag over criteria passes, a style name is applied to indicate that the element accepts drops. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
+Each drop target element have an applied style name, the primary style name with `-droptarget` suffix, e.g. `v-label-droptarget`, to indicate that it is a potential target for data to be dropped onto it.
+
+When dragging data over a drop target and the drag over criteria passes, a style name is applied to indicate that the element accepts the drop. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
 
 
 ////
@@ -337,6 +339,8 @@ dropTarget.addGridDropListener(event -> {
 ----
 
 ==== CSS Style Rules
+
+A drop target Grid's body has the style name `v-grid-body-droptarget` to indicate that it is a potential target for data to be dropped.
 
 When dragging data over a drop target Grid's row, depending on the drop mode and the mouse position relative to the row, a style name is applied to the row to indicate the drop location.
 `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations.
