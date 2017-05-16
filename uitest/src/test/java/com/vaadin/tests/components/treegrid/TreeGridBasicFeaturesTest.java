@@ -206,11 +206,11 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertEquals(6, grid.getRowCount());
         assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
         assertFalse(
-                grid.getRow(0).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(0).hasClassName("v-treegrid-row-focused"));
         assertFalse(
-                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(1).hasClassName("v-treegrid-row-focused"));
         assertTrue(
-                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(2).hasClassName("v-treegrid-row-focused"));
 
         // Should select "1 | 1" without moving focus
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
@@ -219,18 +219,18 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         // Should move focus but not selection
         new Actions(getDriver()).sendKeys(Keys.UP).perform();
         assertTrue(
-                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(1).hasClassName("v-treegrid-row-focused"));
         assertFalse(
-                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(2).hasClassName("v-treegrid-row-focused"));
         assertFalse(grid.getRow(1).hasClassName("v-treegrid-row-selected"));
         assertTrue(grid.getRow(2).hasClassName("v-treegrid-row-selected"));
 
         // Should select "1 | 0" without moving focus
         new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
         assertTrue(
-                grid.getRow(1).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(1).hasClassName("v-treegrid-row-focused"));
         assertFalse(
-                grid.getRow(2).hasClassName("v-treegrid-rowmode-row-focused"));
+                grid.getRow(2).hasClassName("v-treegrid-row-focused"));
         assertTrue(grid.getRow(1).hasClassName("v-treegrid-row-selected"));
         assertFalse(grid.getRow(2).hasClassName("v-treegrid-row-selected"));
 
