@@ -93,7 +93,10 @@ public class TreeGrid<T> extends Grid<T>
 
     /**
      * Creates a new {@code TreeGrid} using the given
-     * {@code HierarchicalDataProvider}.
+     * {@code HierarchicalDataProvider}, without support for creating columns
+     * based on property names. Use an alternative constructor, such as
+     * {@link TreeGrid#TreeGrid(Class)}, to create a {@code TreeGrid} that
+     * automatically sets up columns based on the type of presented data.
      *
      * @param dataProvider
      *            the data provider, not {@code null}
@@ -104,7 +107,11 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * Creates a {@code TreeGrid} using the given in-memory data.
+     * Creates a {@code TreeGrid} using the given in-memory data, without
+     * support for creating columns based on property names. Use an alternative
+     * constructor, such as {@link TreeGrid#TreeGrid(Class)}, to create a
+     * {@code TreeGrid} that automatically sets up columns based on the type of
+     * presented data.
      *
      * @see TreeData
      *
@@ -117,8 +124,8 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * Creates a grid using a custom {@link PropertySet} implementation and
-     * custom data communicator.
+     * Creates a {@code TreeGrid} using a custom {@link PropertySet}
+     * implementation and custom data communicator.
      * <p>
      * Property set is used for configuring the initial columns and resolving
      * property names for {@link #addColumn(String)} and
@@ -305,9 +312,7 @@ public class TreeGrid<T> extends Grid<T>
         if (getColumn(id) == null) {
             throw new IllegalArgumentException("No column found for given id");
         }
-        getColumn(id).setHidden(false);
-        getColumn(id).setHidable(false);
-        getState().hierarchyColumnId = getInternalIdForColumn(getColumn(id));
+        setHierarchyColumn(getColumn(id));
     }
 
     /**

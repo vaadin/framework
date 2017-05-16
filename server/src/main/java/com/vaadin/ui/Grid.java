@@ -3935,6 +3935,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Each member in the list of value providers corresponds to a column in the
      * grid.
      *
+     * @since 8.1
+     *
      * @param body
      *            the element to read data from
      * @param providers
@@ -3996,6 +3998,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * its declarative representation, if
      * {@link DesignContext#shouldWriteData(Component)} returns {@code true} for
      * the grid that is being written.
+     *
+     * @since 8.1
      *
      * @param body
      *            the body element to write the declarative representation of
