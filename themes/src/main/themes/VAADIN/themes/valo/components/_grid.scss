@@ -878,6 +878,11 @@ $v-grid-drag-indicator-color: $v-focus-color;
   }
 }
 
+  // Drag and drop
+  .#{$primary-stylename}-body-droptarget {
+    width: 100%;
+    height: 100%;
+  }
 
 @include keyframes(valo-grid-editor-footer-animate-in) {
   0% {
