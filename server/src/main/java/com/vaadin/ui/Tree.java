@@ -36,9 +36,11 @@ import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -545,5 +547,85 @@ public class Tree<T> extends Composite
     @Override
     public Resource getIcon() {
         return treeGrid.getIcon();
+    }
+
+    @Override
+    public String getStyleName() {
+        return treeGrid.getStyleName();
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        treeGrid.setStyleName(style);
+    }
+
+    @Override
+    public void setStyleName(String style, boolean add) {
+        treeGrid.setStyleName(style, add);
+    }
+
+    @Override
+    public void addStyleName(String style) {
+        treeGrid.addStyleName(style);
+    }
+
+    @Override
+    public void removeStyleName(String style) {
+        treeGrid.removeStyleName(style);
+    }
+
+    @Override
+    public String getPrimaryStyleName() {
+        return treeGrid.getPrimaryStyleName();
+    }
+
+    @Override
+    public void setPrimaryStyleName(String style) {
+        treeGrid.setPrimaryStyleName(style);
+    }
+
+    @Override
+    public void setId(String id) {
+        treeGrid.setId(id);
+    }
+
+    @Override
+    public String getId() {
+        return treeGrid.getId();
+    }
+
+    @Override
+    public void setCaptionAsHtml(boolean captionAsHtml) {
+        treeGrid.setCaptionAsHtml(captionAsHtml);
+    }
+
+    @Override
+    public boolean isCaptionAsHtml() {
+        return treeGrid.isCaptionAsHtml();
+    }
+
+    @Override
+    public void setDescription(String description) {
+        treeGrid.setDescription(description);
+    }
+
+    @Override
+    public void setDescription(String description, ContentMode mode) {
+        treeGrid.setDescription(description, mode);
+    }
+
+    @Override
+    public ErrorMessage getErrorMessage() {
+        return treeGrid.getErrorMessage();
+    }
+
+    @Override
+    public ErrorMessage getComponentError() {
+        return treeGrid.getComponentError();
+    }
+
+    @Override
+    public void setComponentError(ErrorMessage componentError) {
+        treeGrid.setComponentError(componentError);
     }
 }
