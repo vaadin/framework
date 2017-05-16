@@ -201,15 +201,6 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         return WidgetUtil.getTouchOrMouseClientX(event) - relativeLeft;
     }
 
-    /**
-     * Adds drag data provided by the generator functions to the data map.
-     * <p>
-     * {@inheritDoc}
-     *
-     * @param dragStartEvent
-     *         The drag start event.
-     * @see GridDragSource#setDragDataGenerator(String, SerializableFunction)
-     */
     @Override
     protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {

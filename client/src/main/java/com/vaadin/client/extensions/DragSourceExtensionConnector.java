@@ -257,6 +257,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *
      * @param dragStartEvent
      *         The drag start event
+     * @return The map from type to data, or {@code null} for not setting any
+     * data. Returning {@code null} will cancel the drag start.
      */
     protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {
