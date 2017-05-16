@@ -158,23 +158,22 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
                     // Calculate the target row's index
                     int index = items.size();
-                    if (items.contains(event.getDropTargetRow())) {
-                        index = items.indexOf(event.getDropTargetRow()) + (
-                                event.getDropLocation() == DropLocation.BELOW
-                                        ? 1 : 0);
+                    if (event.getDropTargetRow().isPresent()) {
+                        index = items.indexOf(event.getDropTargetRow().get())
+                                + (event.getDropLocation() == DropLocation.BELOW
+                                ? 1 : 0);
                     }
 
                     // Add dragged items to the target Grid
                     items.addAll(index, draggedItems);
                     dataProvider.refreshAll();
 
-                    boolean droppedOntoRow = event.getDropTargetRow() != null;
                     log("DROP: dragData=" + event.getDataTransferText()
                             + ", target="
-                            + (droppedOntoRow ?
-                            event.getDropTargetRow().getFirstName() + " "
-                                    + event.getDropTargetRow().getLastName()
-                            : "[BODY]")
+                            + (event.getDropTargetRow().isPresent() ?
+                            event.getDropTargetRow().get().getFirstName() + " "
+                                    + event.getDropTargetRow().get()
+                                    .getLastName() : "[BODY]")
                             + ", location=" + event.getDropLocation());
                 }
             });

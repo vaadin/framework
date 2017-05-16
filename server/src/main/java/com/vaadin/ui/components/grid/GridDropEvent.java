@@ -16,6 +16,7 @@
 package com.vaadin.ui.components.grid;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
@@ -69,10 +70,11 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
     /**
      * Get the row item source of this event.
      *
-     * @return The row item this event was originated from.
+     * @return The optional row item if the event was originated from a row,
+     * otherwise an empty optional.
      */
-    public T getDropTargetRow() {
-        return dropTargetRow;
+    public Optional<T> getDropTargetRow() {
+        return Optional.ofNullable(dropTargetRow);
     }
 
     /**

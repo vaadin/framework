@@ -319,8 +319,11 @@ dropTarget.addGridDropListener(event -> {
             List<Person> items = (List<Person>) dataProvider.getItems();
 
             // Calculate the target row's index
-            int index = items.indexOf(event.getDropTargetRow()) + (
+            int index = items.size();
+            if (event.getDropTargetRow().isPresent()) {
+                index = items.indexOf(event.getDropTargetRow().get()) + (
                     event.getDropLocation() == DropLocation.BELOW ? 1 : 0);
+            }
 
             // Add dragged items to the target Grid
             items.addAll(index, draggedItems);
