@@ -175,7 +175,7 @@ and expand them with kbd:[Right].
     .v-tree8-body {
       .v-tree8-row,
       .v-tree8-stripe,
-      .v-tree8-rowmode-row-focused,
+      .v-tree8-row-focused,
       .v-tree8-row-has-data {
         .v-tree8-expander, expanded {}
         .v-tree8-cell-content {}
