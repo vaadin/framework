@@ -33,7 +33,7 @@ DragSourceExtension<Label> dragSource = new DragSourceExtension<>(draggableLabel
 dragSource.setEffectAllowed(EffectAllowed.MOVE);
 // set the text to transfer
 dragSource.setDataTransferText("hello receiver");
-// set other data to transfer (in this case JSON data)
+// set other data to transfer (in this case HTML)
 dragSource.setDataTransferData("text/html", "<label>hello receiver</label>");
 ----
 
