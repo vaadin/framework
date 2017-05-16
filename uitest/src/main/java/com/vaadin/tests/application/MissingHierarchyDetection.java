@@ -23,9 +23,8 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.server.VaadinService;
-import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -33,7 +32,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SelectiveRenderer;
 
-public class MissingHierarchyDetection extends AbstractTestUI {
+public class MissingHierarchyDetection extends AbstractTestUIWithLog {
 
     private boolean isChildRendered = true;
     private BrokenCssLayout brokenLayout = new BrokenCssLayout();
@@ -41,7 +40,7 @@ public class MissingHierarchyDetection extends AbstractTestUI {
     private CssLayout normalLayout = new CssLayout(
             new Label("Normal layout child"));
     private List<LogRecord> pendingErrors = Collections
-            .synchronizedList(new ArrayList<>());
+            .synchronizedList(new ArrayList<LogRecord>());
 
     public class BrokenCssLayout extends CssLayout
             implements SelectiveRenderer {
@@ -61,7 +60,7 @@ public class MissingHierarchyDetection extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         // Catch log messages so we can see if there is an error
-        Logger vaadinServiceLogger = Logger
+        final Logger vaadinServiceLogger = Logger
                 .getLogger(VaadinService.class.getName());
         vaadinServiceLogger.addHandler(new Handler() {
 
