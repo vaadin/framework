@@ -186,25 +186,24 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         setDragImage(nativeEvent);
 
         // Create drag data
-        Map<String, String> orderedData = new LinkedHashMap<>();
-        for (String type : getState().types) {
-            orderedData.put(type, getState().data.get(type));
-        }
+        Map<String, String> dataMap = createDataTransferData(nativeEvent);
 
-        // Let the subclass modify the created map
-        modifyDataTransferData(orderedData, nativeEvent);
+        if (dataMap != null) {
+            // Always set something as the text data, or DnD won't work in FF !
+            dataMap.putIfAbsent(DragSourceState.DATA_TYPE_TEXT, "");
 
-        // Always set something as the text data, or DnD won't work in FF !
-        orderedData.putIfAbsent(DragSourceState.DATA_TYPE_TEXT, "");
+            // Set data to the event's data transfer
+            dataMap.forEach((type, data) -> nativeEvent.getDataTransfer()
+                    .setData(type, data));
 
-        // Set data to the event's data transfer
-        orderedData.forEach((type, data) -> nativeEvent.getDataTransfer()
-                .setData(type, data));
-
-        // Initiate firing server side dragstart event when there is a
-        // DragStartListener attached on the server side
-        if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
-            sendDragStartEventToServer(nativeEvent);
+            // Initiate firing server side dragstart event when there is a
+            // DragStartListener attached on the server side
+            if (hasEventListener(DragSourceState.EVENT_DRAGSTART)) {
+                sendDragStartEventToServer(nativeEvent);
+            }
+        } else {
+            // If returned data map is null, cancel drag event
+            nativeEvent.preventDefault();
         }
 
         // Stop event bubbling
@@ -254,19 +253,18 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Modifies the data map to be set for the {@code DataTransfer} object's
-     * data of the given event. It can be used by subclasses to add or modify
-     * transferable data.
+     * Creates the data map to be set as the {@code DataTransfer} object's data.
      *
-     * @param dataMap
-     *         Map of type/data pairs to be set for the {@code DataTransfer}
-     *         object.
      * @param dragStartEvent
-     *         Event to set the data for.
+     *         The drag start event
      */
-    protected void modifyDataTransferData(final Map<String, String> dataMap,
+    protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {
-        // NOP, subclass can modify map entries by overriding this class
+        Map<String, String> orderedData = new LinkedHashMap<>();
+        for (String type : getState().types) {
+            orderedData.put(type, getState().data.get(type));
+        }
+        return orderedData;
     }
 
     /**

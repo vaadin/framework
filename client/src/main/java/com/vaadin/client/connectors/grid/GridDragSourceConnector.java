@@ -206,21 +206,21 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * <p>
      * {@inheritDoc}
      *
-     * @param dataMap
-     *         Map of type/data pairs to be set for the {@code DataTransfer}
-     *         object.
      * @param dragStartEvent
-     *         Event to set the data for.
+     *         The drag start event.
      * @see GridDragSource#setDragDataGenerator(String, SerializableFunction)
      */
     @Override
-    protected void modifyDataTransferData(Map<String, String> dataMap,
+    protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {
+        Map<String, String> dataMap = super
+                .createDataTransferData(dragStartEvent);
+
         // Add data provided by the generator functions
         getDraggedRows(dragStartEvent).forEach(row -> {
             Map<String, String> rowDragData = getRowDragData(row);
             rowDragData.forEach((type, data) -> {
-                if (dataMap.get(type) == null) {
+                if (dataMap.containsKey(type)) {
                     dataMap.put(type, data);
                 } else {
                     // Separate data with new line character when multiple rows
@@ -229,6 +229,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                 }
             });
         });
+
+        return dataMap;
     }
 
     @Override
