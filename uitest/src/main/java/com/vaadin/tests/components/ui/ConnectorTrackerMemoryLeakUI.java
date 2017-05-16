@@ -16,7 +16,7 @@ public class ConnectorTrackerMemoryLeakUI extends UI {
     public static final String BUTTON_CAPTION = "Kill!";
     public static final String LABEL_STOPPED = "Still alive!";
     private CssLayout panel = new CssLayout();
-    private List<String> items = new ArrayList<>(200);
+    private List<String> items = new ArrayList<String>(200);
     private VerticalLayout layout = new VerticalLayout();
 
     @Override

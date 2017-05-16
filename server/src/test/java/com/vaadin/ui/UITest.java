@@ -180,7 +180,7 @@ public class UITest {
         ui.doInit(Mockito.mock(VaadinRequest.class), 1, "foo");
         session.addUI(ui);
         ui.setContent(createContent());
-        WeakReference<Component> contentSentToClient = new WeakReference<>(
+        WeakReference<Component> contentSentToClient = new WeakReference<Component>(
                 ui.getContent());
         ui.getConnectorTracker()
                 .markClientSideInitialized(contentSentToClient.get());
@@ -188,7 +188,7 @@ public class UITest {
 
         session.lock();
         ui.setContent(createContent());
-        WeakReference<Component> contentOnlyOnServer = new WeakReference<>(
+        WeakReference<Component> contentOnlyOnServer = new WeakReference<Component>(
                 ui.getContent());
         ui.setContent(createContent());
 

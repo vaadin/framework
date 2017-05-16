@@ -1371,7 +1371,10 @@ public abstract class VaadinService implements Serializable {
                 for (UI ui : session.getUIs()) {
                     try {
                         ui.getConnectorTracker().ensureCleanedAndConsistent();
-                    } catch (AssertionError | Exception e) {
+                    } catch (AssertionError e) {
+                        getLogger().log(Level.SEVERE,
+                                "Error cleaning ConnectionTracker", e);
+                    } catch (Exception e) {
                         getLogger().log(Level.SEVERE,
                                 "Error cleaning ConnectionTracker", e);
                     }

@@ -41,7 +41,7 @@ public class MissingHierarchyDetection extends AbstractTestUI {
     private CssLayout normalLayout = new CssLayout(
             new Label("Normal layout child"));
     private List<LogRecord> pendingErrors = Collections
-            .synchronizedList(new ArrayList<>());
+            .synchronizedList(new ArrayList<LogRecord>());
 
     public class BrokenCssLayout extends CssLayout
             implements SelectiveRenderer {
