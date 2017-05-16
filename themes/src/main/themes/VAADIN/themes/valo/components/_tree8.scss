@@ -28,10 +28,6 @@ $v-tree8-border-radius: 3px;
     border: none;
   }
 
-  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-row-focused:before {
-    display: none;
-  }
-
   .#{$primary-stylename}-cell-content {
     border: $v-grid-cell-focused-border;
     border-color: transparent;
@@ -39,7 +35,11 @@ $v-tree8-border-radius: 3px;
     padding: $v-grid-cell-padding;
   }
 
-  .#{$primary-stylename}:focus .#{$primary-stylename}-rowmode-cell-focused
+  .#{$primary-stylename}:focus .#{$primary-stylename}-row-focused:before {
+    display: none;
+  }
+
+  .#{$primary-stylename}:focus .#{$primary-stylename}-cell-focused
     > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
     border: $v-grid-cell-focused-border;
   }

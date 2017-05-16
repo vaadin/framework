@@ -54,9 +54,4 @@ public class TreeGrid extends Grid<JsonObject> {
     public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {
         return addHandler(handler, TreeGridClickEvent.TYPE);
     }
-
-    @Override
-    protected String getFocusPrimaryStyleName() {
-        return getStylePrimaryName() + "-rowmode";
-    }
 }
