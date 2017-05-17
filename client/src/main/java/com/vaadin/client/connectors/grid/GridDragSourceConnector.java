@@ -26,7 +26,8 @@ import java.util.stream.Collectors;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Float;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
@@ -39,7 +40,6 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceState;
@@ -150,8 +150,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     protected void setDragImage(NativeEvent dragStartEvent) {
         // do not call super since need to handle specifically
         // 1. use resource if set (never needs safari hack)
-        // 2. add number badge if necessary (with safari hack if needed)
-        // 3. just use normal (with safari hack if needed)
+        // 2. add row count badge if necessary
+        // 3. apply hacks for safari/mobile drag image if needed
 
         // Add badge showing the number of dragged columns
         String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
@@ -171,13 +171,18 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                                 + STYLE_SUFFIX_DRAG_BADGE);
                 badge.setInnerHTML(draggedItemKeys.size() + "");
 
-                badge.getStyle().setMarginLeft(
-                        getRelativeX(draggedRowElement, dragStartEvent) + 10,
-                        Style.Unit.PX);
-                badge.getStyle().setMarginTop(
-                        getRelativeY(draggedRowElement, dragStartEvent)
-                                - draggedRowElement.getOffsetHeight() + 10,
-                        Style.Unit.PX);
+                if (BrowserInfo.get().isTouchDevice()) {
+                    // the drag image is centered on the touch coordinates
+                    // -> show the badge on the right edge of the row
+                    badge.getStyle().setFloat(Float.RIGHT);
+                    badge.getStyle().setMarginRight(20, Unit.PX);
+                } else {
+                    badge.getStyle().setMarginLeft(
+                            getRelativeX(draggedRowElement, dragStartEvent)
+                                    + 10,
+                            Unit.PX);
+                }
+                badge.getStyle().setMarginTop(-20, Unit.PX);
 
                 draggedRowElement.appendChild(badge);
 
@@ -187,13 +192,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                     badge.removeFromParent();
                 }, (Element) dragStartEvent.getEventTarget().cast());
             }
-            fixDragImageForSafari(draggedRowElement);
+            fixDragImageForDesktopSafari(draggedRowElement);
+            fixDragImageTransformForMobile(draggedRowElement);
         }
-    }
-
-    private int getRelativeY(Element element, NativeEvent event) {
-        int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
-        return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
     }
 
     private int getRelativeX(Element element, NativeEvent event) {
@@ -204,8 +205,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     @Override
     protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {
-        Map<String, String> dataMap = super
-                .createDataTransferData(dragStartEvent);
+        Map<String, String> dataMap = super.createDataTransferData(
+                dragStartEvent);
 
         // Add data provided by the generator functions
         getDraggedRows(dragStartEvent).forEach(row -> {
@@ -331,9 +332,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Gets drag data provided by the generator functions.
      *
      * @param row
-     *         The row data.
+     *            The row data.
      * @return The generated drag data type mapped to the corresponding drag
-     * data. If there are no generator functions, returns an empty map.
+     *         data. If there are no generator functions, returns an empty map.
      */
     private Map<String, String> getRowDragData(JsonObject row) {
         // Collect a map of data types and data that is provided by the

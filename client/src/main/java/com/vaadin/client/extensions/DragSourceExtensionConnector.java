@@ -211,20 +211,22 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Fixes missing drag image for Safari by making the dragged element
+     * Fixes missing drag image for desktop Safari by making the dragged element
      * position to relative if needed. Safari won't show drag image unless the
      * dragged element position is relative or absolute / fixed, but not with
      * display block for the latter.
      * <p>
-     * This method is a NOOP for non-safari browser.
+     * This method is a NOOP for non-safari browser, or mobile safari which is
+     * using the DnD Polyfill.
      * <p>
      * This fix is not needed if a custom drag image is used on Safari.
      *
      * @param draggedElement
      *            the element that forms the drag image
      */
-    protected void fixDragImageForSafari(Element draggedElement) {
-        if (!BrowserInfo.get().isSafari()) {
+    protected void fixDragImageForDesktopSafari(Element draggedElement) {
+        if (!BrowserInfo.get().isSafari()
+                || BrowserInfo.get().isTouchDevice()) {
             return;
         }
         final Style style = draggedElement.getStyle();
@@ -253,12 +255,40 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
+     * Fix drag image offset for touch devices when the dragged image has been
+     * offset with css transform: translate/translate3d.
+     * <p>
+     * This necessary for e.g grid rows.
+     * <p>
+     * This method is NOOP for non-touch browsers.
+     *
+     * @param draggedElement
+     *            the element that forms the drag image
+     */
+    protected void fixDragImageTransformForMobile(Element draggedElement) {
+        if (!BrowserInfo.get().isTouchDevice()) {
+            return;
+        }
+
+        Style style = draggedElement.getStyle();
+        String transition = style.getProperty("transform");
+        if (transition == null || transition.isEmpty()
+                || !transition.startsWith("translate")) {
+            return;
+        }
+        style.clearProperty("transform");
+        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+            draggedElement.getStyle().setProperty("transform", transition);
+        }, draggedElement);
+    }
+
+    /**
      * Creates the data map to be set as the {@code DataTransfer} object's data.
      *
      * @param dragStartEvent
-     *         The drag start event
+     *            The drag start event
      * @return The map from type to data, or {@code null} for not setting any
-     * data. Returning {@code null} will cancel the drag start.
+     *         data. Returning {@code null} will cancel the drag start.
      */
     protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {
@@ -299,8 +329,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             dragStartEvent.getDataTransfer()
                     .setDragImage(dragImage.getElement(), 0, 0);
         } else {
-            fixDragImageForSafari(
-                    (Element) dragStartEvent.getCurrentEventTarget().cast());
+            Element draggedElement = (Element) dragStartEvent
+                    .getCurrentEventTarget().cast();
+            fixDragImageForDesktopSafari(draggedElement);
+            fixDragImageTransformForMobile(draggedElement);
         }
     }
 
