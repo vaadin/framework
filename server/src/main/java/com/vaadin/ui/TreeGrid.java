@@ -548,4 +548,13 @@ public class TreeGrid<T> extends Grid<T>
     private void fireCollapseEvent(T item, boolean userOriginated) {
         fireEvent(new CollapseEvent<>(this, item, userOriginated));
     }
+
+    /**
+     * Gets the item collapse allowed provider.
+     * 
+     * @return the item collapse allowed provider
+     */
+    public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
+        return getDataCommunicator().getItemCollapseAllowedProvider();
+    }
 }

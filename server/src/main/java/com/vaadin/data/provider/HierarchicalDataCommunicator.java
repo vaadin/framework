@@ -79,8 +79,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      */
     public HierarchicalDataCommunicator() {
         super();
-        dataProvider = new TreeDataProvider<>(
-                new TreeData<>());
+        dataProvider = new TreeDataProvider<>(new TreeData<>());
     }
 
     @Override
@@ -226,24 +225,29 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
         JsonObject hierarchyData = Json.createObject();
         if (depth != -1) {
-            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_DEPTH, depth);
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_DEPTH,
+                    depth);
         }
 
         boolean isLeaf = !getDataProvider().hasChildren(item);
         if (isLeaf) {
-            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF, true);
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF,
+                    true);
         } else {
             String key = getKeyMapper().key(item);
-            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_COLLAPSED,
+            hierarchyData.put(
+                    HierarchicalDataCommunicatorConstants.ROW_COLLAPSED,
                     mapper.isCollapsed(key));
-            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF, false);
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF,
+                    false);
             hierarchyData.put(
                     HierarchicalDataCommunicatorConstants.ROW_COLLAPSE_ALLOWED,
                     itemCollapseAllowedProvider.test(item));
         }
 
         // add hierarchy information to row as metadata
-        dataObject.put(HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION,
+        dataObject.put(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION,
                 hierarchyData);
 
         return dataObject;
@@ -386,8 +390,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         }
         int collapsedSubTreeSize = mapper.collapse(collapsedRowKey,
                 collapsedRowIndex);
-        getClientRpc().removeRows(collapsedRowIndex + 1,
-                collapsedSubTreeSize);
+        getClientRpc().removeRows(collapsedRowIndex + 1, collapsedSubTreeSize);
 
         // FIXME seems like a slight overkill to do this just for refreshing
         // expanded status
@@ -435,8 +438,10 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
                 expandedNodeSize);
         rowKeysPendingExpand.remove(expandedRowKey);
 
-        boolean success = doPushRows(Range.withLength(expandedRowIndex + 1,
-                Math.min(expandedNodeSize, latestCacheSize)), expandedNodeSize);
+        boolean success = doPushRows(
+                Range.withLength(expandedRowIndex + 1,
+                        Math.min(expandedNodeSize, latestCacheSize)),
+                expandedNodeSize);
 
         if (success) {
             // FIXME seems like a slight overkill to do this just for refreshing
@@ -531,10 +536,20 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     /**
      * Returns parent index for the row or {@code null}
      *
-     * @param rowIndex the row index
+     * @param rowIndex
+     *            the row index
      * @return the parent index or {@code null} for top-level items
      */
     public Integer getParentIndex(int rowIndex) {
         return mapper.getParentIndex(rowIndex);
+    }
+
+    /**
+     * Gets the item collapse allowed provider.
+     * 
+     * @return the item collapse allowed provider
+     */
+    public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
+        return itemCollapseAllowedProvider;
     }
 }

@@ -540,6 +540,46 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Gets the item caption generator.
+     *
+     * @return the item caption generator
+     */
+    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+        return captionGenerator;
+    }
+
+    /**
+     * Gets the item icon generator.
+     *
+     * @see IconGenerator
+     *
+     * @return the item icon generator
+     */
+    public IconGenerator<T> getItemIconGenerator() {
+        return iconProvider;
+    }
+
+    /**
+     * Gets the item collapse allowed provider.
+     * 
+     * @return the item collapse allowed provider
+     */
+    public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
+        return treeGrid.getItemCollapseAllowedProvider();
+    }
+
+    /**
+     * Gets the style generator.
+     * 
+     * @see StyleGenerator
+     *
+     * @return the item style generator
+     */
+    public StyleGenerator<T> getStyleGenerator() {
+        return treeGrid.getStyleGenerator();
+    }
+
+    /**
      * Adds an item click listener. The listener is called when an item of this
      * {@code Tree} is clicked.
      *
