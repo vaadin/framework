@@ -137,6 +137,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // if parent is null, the whole component has been removed,
         // no need to do clean up then
         if (parent != null) {
+            parent.onDragSourceDetached();
+
             Element dragSource = getDraggableElement();
 
             removeDraggable(dragSource);
