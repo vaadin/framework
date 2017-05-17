@@ -2016,7 +2016,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * 
          * @return data generator
          */
-        protected DataGenerator<T> getDataGenerator() {
+        private DataGenerator<T> getDataGenerator() {
             return dataGenerator;
         }
     }
@@ -2483,6 +2483,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             columnKeys.remove(columnId);
             columnIds.remove(column.getId());
             column.remove();
+            removeDataGenerator(column.getDataGenerator());
             getHeader().removeColumn(columnId);
             getFooter().removeColumn(columnId);
             getState(true).columnOrder.remove(columnId);
