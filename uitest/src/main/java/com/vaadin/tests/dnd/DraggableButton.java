@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.dnd;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -25,12 +26,14 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.dnd.DragSourceExtension;
 import com.vaadin.ui.dnd.DropTargetExtension;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class DraggableButton extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
 
-        Button draggableButton = new Button("Draggable Button");
+        Button draggableButton = new Button("Draggable Button",
+                event -> log("clicked draggable button"));
         DragSourceExtension<Button> dragSourceExtension = new DragSourceExtension<>(
                 draggableButton);
         dragSourceExtension.setDataTransferText(
@@ -44,7 +47,8 @@ public class DraggableButton extends AbstractTestUIWithLog {
                 .addDropListener(event -> log(event.getDataTransferText()));
 
         Layout layout = new HorizontalLayout();
-        layout.addComponents(draggableButton, dropTarget);
+        layout.addComponents(draggableButton, dropTarget, new Button(
+                "another button", event -> log("click on another button")));
         addComponent(layout);
 
         // Add styling
@@ -62,6 +66,6 @@ public class DraggableButton extends AbstractTestUIWithLog {
 
     @Override
     protected String getTestDescription() {
-        return "Test if Button is draggable";
+        return "Test if Button is draggable, and it won't steal all other clicks";
     }
 }
