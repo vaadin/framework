@@ -234,7 +234,7 @@ public class CurrentInstanceTest {
         Assert.assertNull(VaadinSession.getCurrent());
     }
 
-    private static void waitUntilGarbageCollected(WeakReference<?> ref)
+    public static void waitUntilGarbageCollected(WeakReference<?> ref)
             throws InterruptedException {
         for (int i = 0; i < 50; i++) {
             System.gc();

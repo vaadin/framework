@@ -884,9 +884,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *
      * @param createOnDemand
      *            <code>true</code> if a resource handler should be initialized
-     *            if there is no handler associated with this application.
-     *            </code>false</code> if </code>null</code> should be returned
-     *            if there is no registered handler.
+     *            if there is no handler associated with this application,
+     *            <code>false</code> if <code>null</code> should be returned if
+     *            there is no registered handler.
      * @return this session's global resource handler, or <code>null</code> if
      *         there is no handler and the createOnDemand parameter is
      *         <code>false</code>.
@@ -1001,6 +1001,14 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                         } finally {
                             CurrentInstance.restoreInstances(oldCurrent);
                         }
+                    }
+                    try {
+                        ui.getConnectorTracker().cleanConnectorMap();
+                    } catch (Exception e) {
+                        getLogger().log(Level.SEVERE,
+                                "Exception while cleaning connector map for ui "
+                                        + ui.getUIId(),
+                                e);
                     }
                 }
             }
