@@ -226,7 +226,14 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
     public void postLayout() {
         VPanel panel = getWidget();
         if (uidlScrollTop != null) {
+            // IE / Safari fix for when scroll top is set to greater than panel
+            // height
+            int maxScroll = panel.getWidget().getOffsetHeight();
+            if (uidlScrollTop > maxScroll) {
+                uidlScrollTop = maxScroll;
+            }
             panel.contentNode.setScrollTop(uidlScrollTop.intValue());
+
             // Read actual value back to ensure update logic is correct
             // TODO Does this trigger reflows?
             panel.scrollTop = panel.contentNode.getScrollTop();
