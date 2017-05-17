@@ -27,7 +27,7 @@ Collection<Project> projects = service.getProjects();
 
 TreeData<Project> data = new TreeData<>();
 // add root level items
-data.addItems(null, projects);
+data.addItems(null, Project::getSubProjects);
 
 // add children for the root level items
 projects.forEach(project -> data.addItems(project, project.getChildren()));
@@ -42,7 +42,7 @@ When adding or removing items from the [classname]#TreeData#, you need to always
 
 [source, java]
 ----
-TreeData<Project> data = dataProvider.getData();
+TreeData<Project> data = dataProvider.getTreeData();
 data.addItem(null, newProject);
 data.addItems(newProject, newProject.getChildren());
 
@@ -93,8 +93,9 @@ The following code snippet shows a simple example on how to building a lazy hier
 
 [source, java]
 ----
-class FileSystemDataProvider
-      extends AbstractHierarchicalDataProvider<File, FilenameFilter> {
+class FileSystemDataProvider extends
+      AbstractBackEndHierarchicalDataProvider<File, FilenameFilter> {
+
   private final File root;
 
   public FileSystemDataProvider(File root) {
@@ -108,7 +109,7 @@ class FileSystemDataProvider
   }
 
   @Override
-  public Stream<File> fetchChildren(
+  public Stream<File> fetchChildrenFromBackEnd(
       HierarchicalQuery<File, FilenameFilter> query) {
     final File parent = query.getParentOptional().orElse(root);
     return query.getFilter()
@@ -120,11 +121,6 @@ class FileSystemDataProvider
   @Override
   public boolean hasChildren(File item) {
     return item.list() != null && item.list().length > 0;
-  }
-
-  @Override
-  public boolean isInMemory() {
-    return false;
   }
 }
 ----
