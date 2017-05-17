@@ -170,7 +170,6 @@ and expand them with kbd:[Right].
       }
     }
   }
-  .v-grid-horizontal-scrollbar-deco { }
 }
 ----
 
@@ -189,4 +188,11 @@ tree.setStyleGenerator(item -> {
         return null;
     }
 );
+----
+
+[source, css]
+----
+.leaf .v-tree8-cell-content {
+    background-color:green
+}
 ----
