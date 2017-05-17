@@ -211,12 +211,14 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         getDraggedRows(dragStartEvent).forEach(row -> {
             Map<String, String> rowDragData = getRowDragData(row);
             rowDragData.forEach((type, data) -> {
-                if (!dataMap.containsKey(type)) {
-                    dataMap.put(type, data);
-                } else {
-                    // Separate data with new line character when multiple rows
-                    // are dragged
-                    dataMap.put(type, dataMap.get(type) + "\n" + data);
+                if (!(data == null || data.isEmpty())) {
+                    if (!dataMap.containsKey(type)) {
+                        dataMap.put(type, data);
+                    } else {
+                        // Separate data with new line character when multiple rows
+                        // are dragged
+                        dataMap.put(type, dataMap.get(type) + "\n" + data);
+                    }
                 }
             });
         });
