@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
+import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.dnd.DragSourceExtension;
@@ -43,19 +44,21 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      * Creates a Grid row drop event.
      *
      * @param target
-     *         Grid that received the drop.
+     *            Grid that received the drop.
      * @param data
-     *         Map containing all types and corresponding data from the {@code
+     *            Map containing all types and corresponding data from the
+     *            {@code
      *         DataTransfer} object.
      * @param dropEffect
-     *         the desired drop effect
+     *            the desired drop effect
      * @param dragSourceExtension
-     *         Drag source extension of the component that initiated the drop
-     *         event.
+     *            Drag source extension of the component that initiated the drop
+     *            event.
      * @param dropTargetRow
-     *         Target row that received the drop.
+     *            Target row that received the drop, or {@code null} if dropped
+     *            on empty grid
      * @param dropLocation
-     *         Location of the drop within the target row.
+     *            Location of the drop within the target row.
      */
     public GridDropEvent(Grid<T> target, Map<String, String> data,
             DropEffect dropEffect,
@@ -68,10 +71,13 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
     }
 
     /**
-     * Get the row item source of this event.
+     * Get the row the drop happened on.
+     * <p>
+     * If the drop was not on top of a row (see {@link #getDropLocation()}),
+     * then returns an empty optional.
      *
-     * @return The optional row item if the event was originated from a row,
-     * otherwise an empty optional.
+     * @return The row the drop happened on, or an empty optional if dropped on
+     *         the in grid but not on top of any row, like to an empty grid
      */
     public Optional<T> getDropTargetRow() {
         return Optional.ofNullable(dropTargetRow);
@@ -79,8 +85,13 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
 
     /**
      * Get the location of the drop within the row.
+     * <p>
+     * <em>NOTE: when dropped on an empty grid, or when {@link DropMode#ON_TOP}
+     * is used and the drop happened on empty space after last row, the location
+     * will be {@link DropLocation#EMPTY}.</em>
      *
      * @return Location of the drop within the row.
+     * @see GridDropTarget#setDropMode(DropMode)
      */
     public DropLocation getDropLocation() {
         return dropLocation;

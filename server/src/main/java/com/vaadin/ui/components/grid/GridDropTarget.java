@@ -55,6 +55,17 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
     /**
      * Sets the drop mode of this drop target.
+     * <p>
+     * Note that when using {@link DropMode#ON_TOP}, and the grid is either
+     * empty or has empty space after the last row, the drop can still happen on
+     * the empty space, and the {@link GridDropEvent#getDropTargetRow()} will
+     * return an empty optional.
+     * <p>
+     * When using {@link DropMode#BETWEEN} or
+     * {@link DropMode#ON_TOP_OR_BETWEEN}, and there is at least one row in the
+     * grid, any drop after the last row in the grid will get the last row as
+     * the {@link GridDropEvent#getDropTargetRow()}. If there are no rows in the
+     * grid, then it will return an empty optional.
      *
      * @param dropMode
      *            Drop mode that describes the allowed drop locations within the
