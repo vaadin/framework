@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import org.junit.Test;
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.data.provider.bov.Person;
@@ -45,6 +48,7 @@ import com.vaadin.ui.renderers.NumberRenderer;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
+import junit.framework.AssertionFailedError;
 
 public class GridTest {
 
@@ -624,11 +628,36 @@ public class GridTest {
         // generateData only works if Grid is attached
         new MockUI().setContent(grid);
 
-        grid.getColumns().forEach(column -> column.generateData(row, json));
+        Method getter = findDataGeneratorGetterMethod();
+        grid.getColumns().forEach(column -> {
+            DataGenerator<T> dataGenerator;
+            try {
+                dataGenerator = (DataGenerator<T>) getter.invoke(column,
+                        new Object[] {});
+                dataGenerator.generateData(row, json);
+            } catch (IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException e) {
+                throw new AssertionFailedError(
+                        "Cannot get DataGenerator from Column");
+            }
+        });
 
         // Detach again
         grid.getUI().setContent(null);
 
         return json.getObject("d");
+    }
+
+    private static Method findDataGeneratorGetterMethod() {
+        Method getter;
+        try {
+            getter = Column.class.getDeclaredMethod("getDataGenerator",
+                    new Class<?>[] {});
+            getter.setAccessible(true);
+            return getter;
+        } catch (NoSuchMethodException | SecurityException e) {
+            throw new AssertionFailedError(
+                    "Cannot get DataGenerator from Column");
+        }
     }
 }
