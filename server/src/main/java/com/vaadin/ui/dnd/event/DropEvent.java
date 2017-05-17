@@ -80,6 +80,9 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     /**
      * Get data of any of the types {@code "text"}, {@code "Text"} or {@code
      * "text/plain"}.
+     * <p>
+     * IE 11 transfers data dropped from the desktop as {@code "Text"} while
+     * most other browsers transfer textual data as {@code "text/plain"}.
      *
      * @return First existing data of types in order {@code "text"}, {@code
      * "Text"} or {@code "text/plain"}, or {@code null} if none of them exist.
