@@ -61,7 +61,7 @@ public abstract class AbstractConnector
 
     private ApplicationConnection connection;
     private String id;
-    private int tag;
+    private Integer tag;
 
     private HandlerManager handlerManager;
     private FastStringMap<HandlerManager> statePropertyHandlerManagers;
@@ -532,6 +532,10 @@ public abstract class AbstractConnector
 
     @Override
     public void setTag(int tag) {
+        if (this.tag != null) {
+            throw new IllegalStateException(
+                    "Tag already set for this " + getClass().getSimpleName());
+        }
         this.tag = tag;
     }
 }
