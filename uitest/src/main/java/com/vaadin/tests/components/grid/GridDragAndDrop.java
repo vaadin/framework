@@ -55,7 +55,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         GridDragSource<Person> dragSource = applyDragSource(left);
 
         // Drop target Grid
-        Grid<Person> right = createGridAndFillWithData(5);
+        Grid<Person> right = createGridAndFillWithData(0);
         GridDropTarget<Person> dropTarget = applyDropTarget(right);
 
         // Layout the two grids
@@ -158,9 +158,12 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                     List<Person> items = (List<Person>) dataProvider.getItems();
 
                     // Calculate the target row's index
-                    int index = items.indexOf(event.getDropTargetRow())
-                            + (event.getDropLocation() == DropLocation.BELOW ? 1
-                                    : 0);
+                    int index = items.size();
+                    if (event.getDropTargetRow().isPresent()) {
+                        index = items.indexOf(event.getDropTargetRow().get())
+                                + (event.getDropLocation() == DropLocation.BELOW
+                                ? 1 : 0);
+                    }
 
                     // Add dragged items to the target Grid
                     items.addAll(index, draggedItems);
@@ -170,8 +173,10 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                             + ", dragDataJson="
                             + event.getDataTransferData("application/json")
                             + ", target="
-                            + event.getDropTargetRow().getFirstName() + " "
-                            + event.getDropTargetRow().getLastName()
+                            + (event.getDropTargetRow().isPresent() ?
+                            event.getDropTargetRow().get().getFirstName() + " "
+                                    + event.getDropTargetRow().get()
+                                    .getLastName() : "[BODY]")
                             + ", location=" + event.getDropLocation());
                 }
             });

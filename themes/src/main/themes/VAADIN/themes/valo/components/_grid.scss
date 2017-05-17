@@ -876,6 +876,12 @@ $v-grid-drag-indicator-color: $v-focus-color;
       background: darken($v-grid-drag-indicator-color, 10%);
     }
   }
+
+  // Expand Grid's body to cover the whole Grid
+  .#{$primary-stylename}-body-droptarget {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 
