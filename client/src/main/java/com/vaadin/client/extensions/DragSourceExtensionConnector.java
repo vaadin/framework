@@ -194,9 +194,16 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             // Always set something as the text data, or DnD won't work in FF !
             dataMap.putIfAbsent(DragSourceState.DATA_TYPE_TEXT, "");
 
-            // Set data to the event's data transfer
-            dataMap.forEach((type, data) -> nativeEvent.getDataTransfer()
-                    .setData(type, data));
+            if (!BrowserInfo.get().isIE11()) {
+                // Set data to the event's data transfer
+                dataMap.forEach((type, data) -> nativeEvent.getDataTransfer()
+                        .setData(type, data));
+            } else {
+                // IE11 accepts only data with type "text"
+                nativeEvent.getDataTransfer()
+                        .setData(DragSourceState.DATA_TYPE_TEXT,
+                                dataMap.get(DragSourceState.DATA_TYPE_TEXT));
+            }
 
             // Initiate firing server side dragstart event when there is a
             // DragStartListener attached on the server side
