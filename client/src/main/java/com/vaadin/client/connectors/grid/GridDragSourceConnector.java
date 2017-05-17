@@ -39,7 +39,6 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
-import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceState;
@@ -204,8 +203,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     @Override
     protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {
-        Map<String, String> dataMap = super
-                .createDataTransferData(dragStartEvent);
+        Map<String, String> dataMap = super.createDataTransferData(
+                dragStartEvent);
 
         // Add data provided by the generator functions
         getDraggedRows(dragStartEvent).forEach(row -> {
@@ -331,9 +330,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Gets drag data provided by the generator functions.
      *
      * @param row
-     *         The row data.
+     *            The row data.
      * @return The generated drag data type mapped to the corresponding drag
-     * data. If there are no generator functions, returns an empty map.
+     *         data. If there are no generator functions, returns an empty map.
      */
     private Map<String, String> getRowDragData(JsonObject row) {
         // Collect a map of data types and data that is provided by the
@@ -351,8 +350,6 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
     @Override
     public void onUnregister() {
-        super.onUnregister();
-
         // Remove draggable from all row elements in the escalator
         Range visibleRange = getEscalator().getVisibleRowRange();
         for (int i = visibleRange.getStart(); i < visibleRange.getEnd(); i++) {
@@ -370,6 +367,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                     .setDelayToCancelTouchScroll(-1);
             touchScrollDelayUsed = false;
         }
+
+        super.onUnregister();
     }
 
     private Grid<JsonObject> getGrid() {
