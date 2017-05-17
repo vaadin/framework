@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.connectors.treegrid.TreeGridConnector;
+import com.vaadin.client.ui.treegrid.TreeGridConnector;
 import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
