@@ -129,6 +129,7 @@ public abstract class ThemeTest extends MultiBrowserTest {
     private void testNotification(int id, String identifier)
             throws IOException {
         $(ButtonElement.class).id("notifButt" + id).click();
+        waitForElementPresent(By.className("v-Notification"));
         compareScreen(identifier);
         $(NotificationElement.class).first().close();
     }
