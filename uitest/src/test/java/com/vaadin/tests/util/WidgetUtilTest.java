@@ -74,8 +74,7 @@ public class WidgetUtilTest extends MultiBrowserTest {
             DesiredCapabilities capabilities) {
         // Note that this is how the Windows browsers in the test cluster work.
         // On Mac, Firefox works slightly differently (rounds border to 1.5px).
-        return (BrowserUtil.isChrome(capabilities)
-                || BrowserUtil.isPhantomJS(capabilities)
+        return (BrowserUtil.isPhantomJS(capabilities)
                 || BrowserUtil.isFirefox(capabilities));
     }
 
