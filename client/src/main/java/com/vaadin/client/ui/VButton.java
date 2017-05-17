@@ -207,7 +207,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                 clickPending = true;
                 setFocus(true);
                 DOM.setCapture(getElement());
-                isCapturing = isCapturingEnabled();
+                isCapturing = true;
                 addStyleName(CLASSNAME_PRESSED);
             }
             break;
@@ -225,7 +225,7 @@ public class VButton extends FocusWidget implements ClickHandler {
             break;
         case Event.ONMOUSEMOVE:
             clickPending = false;
-            if (isCapturing) {
+            if (isCapturing && !isDraggable()) {
                 // Prevent dragging (on other browsers);
                 DOM.eventPreventDefault(event);
             }
@@ -421,29 +421,13 @@ public class VButton extends FocusWidget implements ClickHandler {
     }
 
     /**
-     * Enables or disables the widget's capturing of mouse events with the mouse
-     * held down.
+     * Returns if this button has been made <code>draggable</code> or not.
      *
-     * @param enabled
-     *            {@literal true} if capturing enabled, {@literal false}
-     *            otherwise
-     *
-     * @since 8.1
-     */
-    public void setCapturingEnabled(boolean enabled) {
-        capturingEnabled = enabled;
-    }
-
-    /**
-     * Returns if the widget's capturing of mouse events are enabled.
-     *
-     * @return {@literal true} if mouse capturing is enabled, {@literal false}
+     * @return {@literal true} if draggable is enabled, {@literal false}
      *         otherwise
-     *
-     * @since 8.1
      */
-    public boolean isCapturingEnabled() {
-        return capturingEnabled;
+    private boolean isDraggable() {
+        return getElement().getPropertyBoolean("draggable");
     }
 
     private static native int getHorizontalBorderAndPaddingWidth(Element elem)
