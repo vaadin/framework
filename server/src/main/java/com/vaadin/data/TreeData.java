@@ -25,8 +25,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.TreeDataProvider;
+
 /**
  * Class for representing hierarchical data.
+ * <p>
+ * Typically used as a backing data source for {@link TreeDataProvider}.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -203,7 +207,7 @@ public class TreeData<T> implements Serializable {
     /**
      * Adds the given items as root items and uses the given value provider to
      * recursively populate children of the root items.
-     * 
+     *
      * @param rootItems
      *            the root items to add
      * @param childItemProvider

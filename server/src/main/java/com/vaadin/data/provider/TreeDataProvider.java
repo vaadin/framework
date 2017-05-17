@@ -26,7 +26,8 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
 
 /**
- * {@link HierarchicalDataProvider} wrapper for {@link TreeData}.
+ * An in-memory data provider for listing components that display hierarchical
+ * data. Uses an instance of {@link TreeData} as its source of data.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -47,8 +48,8 @@ public class TreeDataProvider<T>
     /**
      * Constructs a new TreeDataProvider.
      * <p>
-     * All changes made to the given {@link TreeData} object will also be
-     * visible through this data provider.
+     * This data provider should be refreshed after making changes to the
+     * underlying {@link TreeData} instance.
      *
      * @param treeData
      *            the backing {@link TreeData} for this provider, not

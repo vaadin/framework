@@ -37,20 +37,11 @@ Populating a [classname]#TreeGrid# with in-memory data can be done as follows
 
 [source, java]
 ----
-Project rootProject = getRootRroject();
-
-TreeData<Project> data = new TreeData<>();
-// add a root level item with null parent
-data.addItem(null, rootProject);
-
-// Add all children for root item
-rootProject.flattened().forEach(
-       project -> data.addItems(project, project.getSubProjects()));
-
+// Initialize a TreeGrid and set in-memory data
 TreeGrid<Project> treeGrid = new TreeGrid<>();
-treeGrid.setDataProvider(new TreeDataProvider<>(data));
+treeGrid.setItems(getRootProjects(), Project::getSubProjects);
 
-// the first column gets the hierarchy indicator by default
+// The first column gets the hierarchy indicator by default
 treeGrid.addColumn(Project::getName).setCaption("Project Name");
 treeGrid.addColumn(Project::getHoursDone).setCaption("Hours Done");
 treeGrid.addColumn(Project::getLastModified).setCaption("Last Modified");
