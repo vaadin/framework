@@ -25,9 +25,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -62,15 +60,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     private final EventListener dragStartListener = this::onDragStart;
     private final EventListener dragEndListener = this::onDragEnd;
 
-    /**
-     * Widget of the drag source component.
-     */
-    private Widget dragSourceWidget;
+    private AbstractComponentConnector dragSourceComponentConnector;
 
     @Override
     protected void extend(ServerConnector target) {
-        dragSourceWidget = ((ComponentConnector) target).getWidget();
-
+        dragSourceComponentConnector = (AbstractComponentConnector) target;
         // HTML5 DnD is by default not enabled for mobile devices
         if (BrowserInfo.get().isTouchDevice() && !getConnection()
                 .getUIConnector().isMobileHTML5DndEnabled()) {
@@ -145,7 +139,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         removeDraggable(dragSource);
         removeDragListeners(dragSource);
 
-        ((AbstractComponentConnector) getParent()).onDragSourceDetached();
+        dragSourceComponentConnector.onDragSourceDetached();
+        dragSourceComponentConnector = null;
     }
 
     @OnStateChange("resources")
@@ -256,9 +251,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * Creates the data map to be set as the {@code DataTransfer} object's data.
      *
      * @param dragStartEvent
-     *         The drag start event
+     *            The drag start event
      * @return The map from type to data, or {@code null} for not setting any
-     * data. Returning {@code null} will cancel the drag start.
+     *         data. Returning {@code null} will cancel the drag start.
      */
     protected Map<String, String> createDataTransferData(
             NativeEvent dragStartEvent) {
@@ -361,7 +356,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * @return the draggable element in the parent widget.
      */
     protected Element getDraggableElement() {
-        return dragSourceWidget.getElement();
+        return dragSourceComponentConnector.getWidget().getElement();
     }
 
     /**

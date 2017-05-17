@@ -24,9 +24,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
@@ -76,10 +74,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     private final EventListener dragLeaveListener = this::onDragLeave;
     private final EventListener dropListener = this::onDrop;
 
-    /**
-     * Widget of the drop target component.
-     */
-    private Widget dropTargetWidget;
+    private AbstractComponentConnector dropTargetComponentConnector;
 
     /**
      * Class name to apply when an element is dragged over the center of the
@@ -89,7 +84,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     @Override
     protected void extend(ServerConnector target) {
-        dropTargetWidget = ((ComponentConnector) target).getWidget();
+        dropTargetComponentConnector = (AbstractComponentConnector) target;
 
         // HTML5 DnD is by default not enabled for mobile devices
         if (BrowserInfo.get().isTouchDevice() && !getConnection()
@@ -142,10 +137,12 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         super.onUnregister();
 
         removeDropListeners(getDropTargetElement());
-        ((AbstractComponentConnector) getParent()).onDropTargetDetached();
 
         // Remove drop target indicator
         removeDropTargetStyle();
+
+        dropTargetComponentConnector.onDropTargetDetached();
+        dropTargetComponentConnector = null;
     }
 
     /**
@@ -155,7 +152,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * @return the drop target element in the parent widget.
      */
     protected Element getDropTargetElement() {
-        return dropTargetWidget.getElement();
+        return dropTargetComponentConnector.getWidget().getElement();
     }
 
     /**
@@ -171,8 +168,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         NativeEvent nativeEvent = (NativeEvent) event;
 
         // Generate style name for drop target
-        styleDragCenter = dropTargetWidget.getStylePrimaryName()
-                + STYLE_SUFFIX_DRAG_CENTER;
+        styleDragCenter = dropTargetComponentConnector.getWidget()
+                .getStylePrimaryName() + STYLE_SUFFIX_DRAG_CENTER;
 
         if (isDropAllowed(nativeEvent)) {
             addDragOverStyle(nativeEvent);
@@ -313,12 +310,13 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * Initiates a server RPC for the drop event.
      *
      * @param types
-     *         List of data types from {@code DataTransfer.types} object.
+     *            List of data types from {@code DataTransfer.types} object.
      * @param data
-     *         Map containing all types and corresponding data from the {@code
+     *            Map containing all types and corresponding data from the
+     *            {@code
      *         DataTransfer} object.
      * @param dropEffect
-     *         The desired drop effect.
+     *            The desired drop effect.
      */
     protected void sendDropEventToServer(List<String> types,
             Map<String, String> data, String dropEffect,
@@ -329,15 +327,17 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     /**
      * Add class name for the drop target element indicating that data can be
      * dropped onto it. The class name has the following format:
+     *
      * <pre>
      *     [primaryStyleName]-droptarget
      * </pre>
-     * The added class name is update
-     * automatically by the framework when the primary style name changes.
+     *
+     * The added class name is update automatically by the framework when the
+     * primary style name changes.
      */
     protected void addDropTargetStyle() {
-        getDropTargetElement().addClassName(
-                getStylePrimaryName(getDropTargetElement())
+        getDropTargetElement()
+                .addClassName(getStylePrimaryName(getDropTargetElement())
                         + STYLE_SUFFIX_DROPTARGET);
     }
 
@@ -346,8 +346,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * be dropped onto it.
      */
     protected void removeDropTargetStyle() {
-        getDropTargetElement().removeClassName(
-                getStylePrimaryName(getDropTargetElement())
+        getDropTargetElement()
+                .removeClassName(getStylePrimaryName(getDropTargetElement())
                         + STYLE_SUFFIX_DROPTARGET);
     }
 
