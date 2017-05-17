@@ -33,6 +33,8 @@ public interface PageClientRpc extends ClientRpc {
 
     /**
      * Initialize Mobile HTML5 Drag and Drop Polyfill.
+     *
+     * @since 8.1
      */
     public void initializeMobileHtml5DndPolyfill();
 }

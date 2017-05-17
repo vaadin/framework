@@ -88,6 +88,8 @@ public class UIState extends AbstractSingleComponentContainerState {
 
     /**
      * Enable Mobile HTML5 DnD support.
+     *
+     * @since 8.1
      */
     public boolean enableMobileHTML5DnD = false;
 

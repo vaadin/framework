@@ -280,7 +280,7 @@ public class ConnectorTracker implements Serializable {
      * <p>
      * This should only be called by the framework.
      *
-     * @since
+     * @since 8.1
      */
     public void ensureCleanedAndConsistent() {
         // Do this expensive check only with assertions enabled
@@ -449,7 +449,7 @@ public class ConnectorTracker implements Serializable {
      *
      * @return <code>true</code> if the hierarchy is consistent,
      *         <code>false</code> otherwise
-     * @since
+     * @since 8.1
      */
     private boolean isHierarchyComplete() {
         boolean noErrors = true;
