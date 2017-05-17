@@ -18,16 +18,17 @@ package com.vaadin.client.connectors.grid;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.widget.escalator.RowContainer;
+import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
@@ -75,6 +76,19 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
      */
     private String styleDragBottom;
 
+    /**
+     * Class name to apply when dragged over an empty grid.
+     */
+    private String styleDragEmpty;
+
+    /**
+     * The latest row that was dragged on top of, or the grid body if drop is
+     * not applicable for any rows. Need to store this so that can remove drop
+     * hint styling when the target has changed since all browsers don't seem to
+     * always fire the drag-enter drag-exit events in a consistent order.
+     */
+    private Element latestTargetElement;
+
     @Override
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
@@ -90,12 +104,15 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         String rowKey = null;
         DropLocation dropLocation = null;
 
-        Optional<TableRowElement> targetRow = getTargetRow(
+        Element targetElement = getTargetElement(
                 (Element) dropEvent.getEventTarget().cast());
-        if (targetRow.isPresent()) {
-            rowKey = getRowData(targetRow.get())
+        // the target element is either the body or one of the rows
+        if (TableRowElement.is(targetElement)) {
+            rowKey = getRowData(targetElement.cast())
                     .getString(GridState.JSONKEY_ROWKEY);
-            dropLocation = getDropLocation(targetRow.get(), dropEvent);
+            dropLocation = getDropLocation(targetElement, dropEvent);
+        } else {
+            dropLocation = DropLocation.EMPTY;
         }
 
         getRpcProxy(GridDropTargetRpc.class).drop(types, data, dropEffect,
@@ -112,23 +129,28 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
      * Returns the location of the event within the row.
      */
     private DropLocation getDropLocation(Element target, NativeEvent event) {
-        if (getState().dropMode == DropMode.BETWEEN) {
-            if (getRelativeY(target, event) < (target.getOffsetHeight() / 2)) {
-                return DropLocation.ABOVE;
-            } else {
-                return DropLocation.BELOW;
-            }
-        } else if (getState().dropMode == DropMode.ON_TOP_OR_BETWEEN) {
-            if (getRelativeY(target, event) < getState().dropThreshold) {
-                return DropLocation.ABOVE;
-            } else if (target.getOffsetHeight()
-                    - getRelativeY(target, event) < getState().dropThreshold) {
-                return DropLocation.BELOW;
+        if (TableRowElement.is(target)) {
+            if (getState().dropMode == DropMode.BETWEEN) {
+                if (getRelativeY(target,
+                        event) < (target.getOffsetHeight() / 2)) {
+                    return DropLocation.ABOVE;
+                } else {
+                    return DropLocation.BELOW;
+                }
+            } else if (getState().dropMode == DropMode.ON_TOP_OR_BETWEEN) {
+                if (getRelativeY(target, event) < getState().dropThreshold) {
+                    return DropLocation.ABOVE;
+                } else if (target.getOffsetHeight() - getRelativeY(target,
+                        event) < getState().dropThreshold) {
+                    return DropLocation.BELOW;
+                } else {
+                    return DropLocation.ON_TOP;
+                }
             } else {
                 return DropLocation.ON_TOP;
             }
         }
-        return DropLocation.ON_TOP;
+        return DropLocation.EMPTY;
     }
 
     private int getRelativeY(Element element, NativeEvent event) {
@@ -144,27 +166,37 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         styleDragCenter = styleRow + STYLE_SUFFIX_DRAG_CENTER;
         styleDragTop = styleRow + STYLE_SUFFIX_DRAG_TOP;
         styleDragBottom = styleRow + STYLE_SUFFIX_DRAG_BOTTOM;
+        styleDragEmpty = gridConnector.getWidget().getStylePrimaryName()
+                + "-body" + STYLE_SUFFIX_DRAG_TOP;
 
         super.onDragEnter(event);
     }
 
     @Override
     protected void addDragOverStyle(NativeEvent event) {
-        getTargetRow(((Element) event.getEventTarget().cast()))
-                .ifPresent(target -> {
+        Element targetElement = getTargetElement(
+                ((Element) event.getEventTarget().cast()));
+        // Get required class name
+        String className = getTargetClassName(targetElement, event);
 
-                    // Get required class name
-                    String className = getTargetClassName(target, event);
+        // it seems that sometimes the events are not fired in a consistent
+        // order, and this could cause that the correct styles are not removed
+        // from the previous target element in removeDragOverStyle(event)
+        if (latestTargetElement != null
+                && targetElement != latestTargetElement) {
+            removeStyles(latestTargetElement);
+        }
 
-                    // Add or replace class name if changed
-                    if (!target.hasClassName(className)) {
-                        if (currentStyleName != null) {
-                            target.removeClassName(currentStyleName);
-                        }
-                        target.addClassName(className);
-                        currentStyleName = className;
-                    }
-                });
+        latestTargetElement = targetElement;
+
+        // Add or replace class name if changed
+        if (!targetElement.hasClassName(className)) {
+            if (currentStyleName != null) {
+                targetElement.removeClassName(currentStyleName);
+            }
+            targetElement.addClassName(className);
+            currentStyleName = className;
+        }
     }
 
     private String getTargetClassName(Element target, NativeEvent event) {
@@ -177,6 +209,9 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         case BELOW:
             className = styleDragBottom;
             break;
+        case EMPTY:
+            className = styleDragEmpty;
+            break;
         case ON_TOP:
         default:
             className = styleDragCenter;
@@ -188,23 +223,38 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     @Override
     protected void removeDragOverStyle(NativeEvent event) {
-
         // Remove all possible style names
-        getTargetRow((Element) event.getEventTarget().cast()).ifPresent(e -> {
-            e.removeClassName(styleDragCenter);
-            e.removeClassName(styleDragTop);
-            e.removeClassName(styleDragBottom);
-        });
+        Element targetElement = getTargetElement(
+                (Element) event.getEventTarget().cast());
+        removeStyles(targetElement);
     }
 
-    private Optional<TableRowElement> getTargetRow(Element source) {
-        while (!Objects.equals(source, getGridBody().getElement())) {
+    private void removeStyles(Element element) {
+        element.removeClassName(styleDragCenter);
+        element.removeClassName(styleDragTop);
+        element.removeClassName(styleDragBottom);
+        element.removeClassName(styleDragEmpty);
+    }
+
+    private Element getTargetElement(Element source) {
+        final BodyRowContainer gridBody = getGridBody();
+        final TableSectionElement bodyElement = gridBody.getElement();
+        while (!Objects.equals(source, bodyElement)) {
             if (TableRowElement.is(source)) {
-                return Optional.of(source.cast());
+                return source;
             }
             source = source.getParentElement();
         }
-        return Optional.empty();
+        // the drag is on top of the body
+        final int rowCount = gridBody.getRowCount();
+        // if no rows in grid, or if the drop mode is on top, then there is no
+        // target row for the drop
+        if (rowCount == 0 || getState().dropMode == DropMode.ON_TOP) {
+            return bodyElement;
+        } else { // if dragged under the last row to empty space, drop target
+                 // needs to be below the last row
+            return gridBody.getRowElement(rowCount - 1);
+        }
     }
 
     @Override
