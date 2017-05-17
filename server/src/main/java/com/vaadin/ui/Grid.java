@@ -52,6 +52,7 @@ import com.vaadin.data.PropertySet;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.GridSortOrderBuilder;
@@ -65,6 +66,7 @@ import com.vaadin.event.SortEvent.SortNotifier;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.event.selection.SingleSelectionListener;
+import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.EncodeResult;
 import com.vaadin.server.Extension;
 import com.vaadin.server.JsonCodec;
@@ -817,7 +819,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param <V>
      *            the column value type
      */
-    public static class Column<T, V> extends AbstractGridExtension<T> {
+    public static class Column<T, V> extends AbstractExtension {
 
         private final ValueProvider<T, V> valueProvider;
 
@@ -833,6 +835,63 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
+        private DataGenerator<T> dataGenerator = new DataGenerator<T>() {
+
+            @Override
+            public void generateData(T item, JsonObject jsonObject) {
+                ColumnState state = getState(false);
+
+                String communicationId = getConnectorId();
+
+                assert communicationId != null : "No communication ID set for column "
+                        + state.caption;
+
+                @SuppressWarnings("unchecked")
+                Renderer<V> renderer = (Renderer<V>) state.renderer;
+
+                JsonObject obj = getDataObject(jsonObject,
+                        DataCommunicatorConstants.DATA);
+
+                V providerValue = valueProvider.apply(item);
+
+                // Make Grid track components.
+                if (renderer instanceof ComponentRenderer
+                        && providerValue instanceof Component) {
+                    addComponent(item, (Component) providerValue);
+                }
+                JsonValue rendererValue = renderer.encode(providerValue);
+
+                obj.put(communicationId, rendererValue);
+
+                String style = styleGenerator.apply(item);
+                if (style != null && !style.isEmpty()) {
+                    JsonObject styleObj = getDataObject(jsonObject,
+                            GridState.JSONKEY_CELLSTYLES);
+                    styleObj.put(communicationId, style);
+                }
+                if (descriptionGenerator != null) {
+                    String description = descriptionGenerator.apply(item);
+                    if (description != null && !description.isEmpty()) {
+                        JsonObject descriptionObj = getDataObject(jsonObject,
+                                GridState.JSONKEY_CELLDESCRIPTION);
+                        descriptionObj.put(communicationId, description);
+                    }
+                }
+            }
+
+            @Override
+            public void destroyData(T item) {
+                removeComponent(item);
+            }
+
+            @Override
+            public void destroyAllData() {
+                // Make a defensive copy of keys, as the map gets cleared when
+                // removing components.
+                new HashSet<>(activeComponents.keySet())
+                        .forEach(component -> removeComponent(component));
+            }
+        };
 
         private Binding<T, ?> editorBinding;
         private Map<T, Component> activeComponents = new HashMap<>();
@@ -949,48 +1008,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
         }
 
-        @Override
-        public void generateData(T item, JsonObject jsonObject) {
-            ColumnState state = getState(false);
-
-            String communicationId = getConnectorId();
-
-            assert communicationId != null : "No communication ID set for column "
-                    + state.caption;
-
-            @SuppressWarnings("unchecked")
-            Renderer<V> renderer = (Renderer<V>) state.renderer;
-
-            JsonObject obj = getDataObject(jsonObject,
-                    DataCommunicatorConstants.DATA);
-
-            V providerValue = valueProvider.apply(item);
-
-            // Make Grid track components.
-            if (renderer instanceof ComponentRenderer
-                    && providerValue instanceof Component) {
-                addComponent(item, (Component) providerValue);
-            }
-            JsonValue rendererValue = renderer.encode(providerValue);
-
-            obj.put(communicationId, rendererValue);
-
-            String style = styleGenerator.apply(item);
-            if (style != null && !style.isEmpty()) {
-                JsonObject styleObj = getDataObject(jsonObject,
-                        GridState.JSONKEY_CELLSTYLES);
-                styleObj.put(communicationId, style);
-            }
-            if (descriptionGenerator != null) {
-                String description = descriptionGenerator.apply(item);
-                if (description != null && !description.isEmpty()) {
-                    JsonObject descriptionObj = getDataObject(jsonObject,
-                            GridState.JSONKEY_CELLDESCRIPTION);
-                    descriptionObj.put(communicationId, description);
-                }
-            }
-        }
-
         private void addComponent(T item, Component component) {
             if (activeComponents.containsKey(item)) {
                 if (activeComponents.get(item).equals(component)) {
@@ -1000,27 +1017,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 removeComponent(item);
             }
             activeComponents.put(item, component);
-            addComponentToGrid(component);
-        }
-
-        @Override
-        public void destroyData(T item) {
-            removeComponent(item);
+            getGrid().addExtensionComponent(component);
         }
 
         private void removeComponent(T item) {
             Component component = activeComponents.remove(item);
             if (component != null) {
-                removeComponentFromGrid(component);
+                getGrid().removeExtensionComponent(component);
             }
-        }
-
-        @Override
-        public void destroyAllData() {
-            // Make a defensive copy of keys, as the map gets cleared when
-            // removing components.
-            new HashSet<>(activeComponents.keySet())
-                    .forEach(this::removeComponent);
         }
 
         /**
@@ -1842,7 +1846,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             addExtension(renderer);
 
             // Trigger redraw
-            getParent().getDataCommunicator().reset();
+            getGrid().getDataCommunicator().reset();
 
             return this;
         }
@@ -1854,7 +1858,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *         this column has not yet been associated with any grid
          */
         protected Grid<T> getGrid() {
-            return getParent();
+            return (Grid<T>) getParent();
         }
 
         /**
@@ -2005,6 +2009,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                             "expand", attributes, Integer.class));
                 }
             }
+        }
+
+        /**
+         * Gets the DataGenerator for this Column.
+         * 
+         * @return data generator
+         */
+        protected DataGenerator<T> getDataGenerator() {
+            return dataGenerator;
         }
     }
 
@@ -2445,7 +2458,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         columnSet.add(column);
         columnKeys.put(identifier, column);
         column.setInternalId(identifier);
-        addDataGenerator(column);
+        addDataGenerator(column.getDataGenerator());
 
         getState().columnOrder.add(identifier);
         getHeader().addColumn(identifier);
