@@ -352,8 +352,6 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
     @Override
     public void onUnregister() {
-        super.onUnregister();
-
         // Remove draggable from all row elements in the escalator
         Range visibleRange = getEscalator().getVisibleRowRange();
         for (int i = visibleRange.getStart(); i < visibleRange.getEnd(); i++) {
@@ -371,6 +369,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                     .setDelayToCancelTouchScroll(-1);
             touchScrollDelayUsed = false;
         }
+
+        super.onUnregister();
     }
 
     private Grid<JsonObject> getGrid() {

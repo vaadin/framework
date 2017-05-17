@@ -27,7 +27,6 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -62,15 +61,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     private final EventListener dragStartListener = this::onDragStart;
     private final EventListener dragEndListener = this::onDragEnd;
 
-    /**
-     * Widget of the drag source component.
-     */
     private Widget dragSourceWidget;
 
     @Override
     protected void extend(ServerConnector target) {
-        dragSourceWidget = ((ComponentConnector) target).getWidget();
-
+        dragSourceWidget = ((AbstractComponentConnector) target).getWidget();
         // HTML5 DnD is by default not enabled for mobile devices
         if (BrowserInfo.get().isTouchDevice() && !getConnection()
                 .getUIConnector().isMobileHTML5DndEnabled()) {
@@ -138,14 +133,21 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
     @Override
     public void onUnregister() {
+        AbstractComponentConnector parent = (AbstractComponentConnector) getParent();
+        // if parent is null, the whole component has been removed,
+        // no need to do clean up then
+        if (parent != null) {
+            parent.onDragSourceDetached();
+
+            Element dragSource = getDraggableElement();
+
+            removeDraggable(dragSource);
+            removeDragListeners(dragSource);
+
+            dragSourceWidget = null;
+        }
+
         super.onUnregister();
-
-        Element dragSource = getDraggableElement();
-
-        removeDraggable(dragSource);
-        removeDragListeners(dragSource);
-
-        ((AbstractComponentConnector) getParent()).onDragSourceDetached();
     }
 
     @OnStateChange("resources")
