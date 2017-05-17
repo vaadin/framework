@@ -221,19 +221,20 @@ public interface ServerConnector extends Connector {
      * Sets the connector type tag for this connector. This should only be
      * called from
      * {@link WidgetSet#createConnector(int, ApplicationConfiguration)}
+     * <p>
+     * <strong>Note:</strong> This method is intended for internal use only.
      *
      * @see #getTag()
      *
      * @param tag
      *            the connector type tag
      *
-     * @deprecated This is an internal method and should not be called by an
-     *             application developer.
+     * @throws IllegalStateException
+     *             if {@code tag} has already been set
      *
      * @since 8.1
      */
-    @Deprecated
-    public void setTag(int tag);
+    public void setTag(int tag) throws IllegalStateException;
 
     /**
      * Gets the connector type tag for this connector. This type tag is an
