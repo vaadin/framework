@@ -29,7 +29,8 @@ public class FrontendInitialResourceUITest extends MultiBrowserTest {
         openTestURL();
         String es;
         if (BrowserUtil.isIE(getDesiredCapabilities())
-                || BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+                || BrowserUtil.isPhantomJS(getDesiredCapabilities())
+                || BrowserUtil.isFirefox(getDesiredCapabilities())) {
             es = "es5";
         } else {
             es = "es6";
