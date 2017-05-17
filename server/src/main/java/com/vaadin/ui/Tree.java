@@ -26,9 +26,11 @@ import java.util.Set;
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasHierarchicalDataProvider;
 import com.vaadin.data.SelectionModel;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ConnectorEvent;
@@ -220,7 +222,7 @@ public class Tree<T> extends Composite
     }
 
     /**
-     * Constructs a new Tree Component.
+     * Constructs a new Tree Component with given caption.
      *
      * @param caption
      *            the caption for component
@@ -229,6 +231,54 @@ public class Tree<T> extends Composite
         this();
 
         setCaption(caption);
+    }
+
+    /**
+     * Constructs a new Tree Component with given caption and {@code TreeData}.
+     *
+     * @param caption
+     *            the caption for component
+     * @param treeData
+     *            the tree data for component
+     */
+    public Tree(String caption, TreeData<T> treeData) {
+        this(caption, new TreeDataProvider<>(treeData));
+    }
+
+    /**
+     * Constructs a new Tree Component with given caption and
+     * {@code HierarchicalDataProvider}.
+     *
+     * @param caption
+     *            the caption for component
+     * @param dataProvider
+     *            the hierarchical data provider for component
+     */
+    public Tree(String caption, HierarchicalDataProvider<T, ?> dataProvider) {
+        this(caption);
+
+        treeGrid.setDataProvider(dataProvider);
+    }
+
+    /**
+     * Constructs a new Tree Component with given {@code TreeData}.
+     *
+     * @param treeData
+     *            the tree data for component
+     */
+    public Tree(TreeData<T> treeData) {
+        this(null, new TreeDataProvider<>(treeData));
+    }
+
+    /**
+     * Constructs a new Tree Component with given
+     * {@code HierarchicalDataProvider}.
+     *
+     * @param dataProvider
+     *            the hierarchical data provider for component
+     */
+    public Tree(HierarchicalDataProvider<T, ?> dataProvider) {
+        this(null, dataProvider);
     }
 
     @Override
