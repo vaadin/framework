@@ -78,13 +78,27 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     }
 
     /**
-     * Get data of type {@code "text"} from the {@code DataTransfer} object.
+     * Get data of any of the types {@code "text"}, {@code "Text"} or {@code
+     * "text/plain"}.
      *
-     * @return Data of type {@code "text"} if exists in the {@code DataTransfer}
-     * object, otherwise {@literal null}.
+     * @return First existing data of types in order {@code "text"}, {@code
+     * "Text"} or {@code "text/plain"}, or {@code null} if none of them exist.
      */
     public String getDataTransferText() {
-        return data.get(DragSourceState.DATA_TYPE_TEXT);
+        // Read data type "text"
+        String text = data.get(DragSourceState.DATA_TYPE_TEXT);
+
+        // IE stores data dragged from the desktop as "Text"
+        if (text == null) {
+            text = data.get(DragSourceState.DATA_TYPE_TEXT_IE);
+        }
+
+        // Browsers may store the key as "text/plain"
+        if (text == null) {
+            text = data.get(DragSourceState.DATA_TYPE_TEXT_PLAIN);
+        }
+
+        return text;
     }
 
     /**
