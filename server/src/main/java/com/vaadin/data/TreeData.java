@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.data.provider.TreeDataProvider;
@@ -224,6 +225,25 @@ public class TreeData<T> implements Serializable {
             addItemsRecursively(childItems, childItemProvider);
         });
         return this;
+    }
+
+    /**
+     * Adds the given items as root items and uses the given value provider to
+     * recursively populate children of the root items.
+     *
+     * @param rootItems
+     *            the root items to add
+     * @param childItemProvider
+     *            the value provider used to recursively populate this TreeData
+     *            from the given root items
+     * @return this
+     */
+    public TreeData<T> addItems(Stream<T> rootItems,
+            ValueProvider<T, Stream<T>> childItemProvider) {
+        // Must collect to lists since the algorithm iterates multiple times
+        return addItems(rootItems.collect(Collectors.toList()),
+                item -> childItemProvider.apply(item)
+                        .collect(Collectors.toList()));
     }
 
     /**
