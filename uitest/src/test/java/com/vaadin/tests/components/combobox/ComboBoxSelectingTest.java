@@ -3,9 +3,14 @@ package com.vaadin.tests.components.combobox;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
@@ -25,6 +30,54 @@ public class ComboBoxSelectingTest extends MultiBrowserTest {
         openTestURL();
         waitForElementPresent(By.className("v-filterselect"));
         comboBoxElement = $(ComboBoxElement.class).first();
+    }
+
+    @Test
+    public void ensureOldFilterIsCleared() {
+        showOptions();
+        int initialVisibleOptions = countVisibleOptions();
+        clearInputAndType("b11");
+        int visibleOptionsAfterFiltering = countVisibleOptions();
+        Assert.assertEquals(1, visibleOptionsAfterFiltering);
+        clickOnLabel();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // no selection was made, clicking on arrow should show all options
+        // again
+        showOptions();
+
+        int visibleOptions = countVisibleOptions();
+        Assert.assertEquals(initialVisibleOptions, visibleOptions);
+    }
+
+    private int countVisibleOptions() {
+        List<String> suggestionsOnScreen = getSuggestionsOnScreen();
+        return suggestionsOnScreen.size();
+    }
+
+    private void showOptions() {
+        getDriver().findElement(By.cssSelector(".v-filterselect-button"))
+                .click();
+    }
+
+    private void clickOnLabel() {
+        getDriver().findElement(By.cssSelector(".v-label")).click();
+    }
+
+    private List<String> getSuggestionsOnScreen() {
+        List<WebElement> suggestionElements = getDriver()
+                .findElements(By.cssSelector(
+                        ".v-filterselect-suggestpopup .gwt-MenuItem span"));
+
+        List<String> suggestions = new ArrayList<>();
+        for (WebElement suggestion : suggestionElements) {
+            suggestions.add(suggestion.getText());
+        }
+        return suggestions;
     }
 
     @Test
