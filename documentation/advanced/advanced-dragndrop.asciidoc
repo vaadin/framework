@@ -308,8 +308,8 @@ dropTarget.setDropEffect(DropEffect.MOVE);
 
 The _drop mode_ specifies the behaviour of the row when an element is dragged over or dropped onto it. Use `DropMode.ON_TOP` when you want to drop elements on top of a row and `DropMode.BETWEEN` when you want to drop elements between rows. `DropMode_ON_TOP_OR_BETWEEN` allows to drop on between or top rows.
 
-The [classname]#GridDropEvent# is fired when data is dropped onto one of the Grid's rows. The following example shows how you can insert items into the Grid at the drop position. If the drag source is another Grid, you can access the generated drag data with the event's `getDataTransferText()` method.
-If the drag source Grid uses a custom generator for a different type than `"text"`, you can access it's generated data using the `getDataTransferData(type)` method.
+The [classname]#GridDropEvent# is fired when data is dropped onto one of the Grid's rows. The following example shows how you can insert items into the Grid at the drop position. If the drag source is another Grid, you can access the generated drag data with the event's [methodname]#getDataTransferText()# method.
+If the drag source Grid uses a custom generator for a different type than `"text"`, you can access it's generated data using the [methodname]#getDataTransferData(type)# method. You can also check all the received data transfer data by fetching the type-to-data map with the [methodname]#getDataTransferData()# method.
 
 [source,java]
 ----
@@ -340,8 +340,11 @@ dropTarget.addGridDropListener(event -> {
 });
 ----
 
-The _drop location_ property in the [classname]#GridDropEvent# specifies the dropped location in relative to grid row the drop happened on. Possible options are `ON_TOP`, `ABOVE` and `BELOW`, when the drop happened on top of a row. If the grid is empty, or if there was empty space after the last row in grid and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. Then the [methodname]#getDropTargetRow# will also return an empty optional.
+The _drop location_ property in the [classname]#GridDropEvent# specifies the dropped location in relative to grid row the drop happened on and depends on the used [classname]#DropMode#. When the drop happened on top of a row, the possible options for the location are `ON_TOP`, `ABOVE` and `BELOW`.
 
+If the grid is empty, or if there was empty space after the last row in grid and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened ´BELOW´ the last row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional.
+
+If the 
 
 ==== CSS Style Rules
 
