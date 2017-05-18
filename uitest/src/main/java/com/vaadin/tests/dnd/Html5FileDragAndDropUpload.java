@@ -23,13 +23,13 @@ import java.util.List;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dnd.FileParameters;
+import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Html5File;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.grid.GridDropTarget;
 import com.vaadin.ui.dnd.FileDropTarget;
 
 public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
@@ -39,7 +39,7 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
 
-        Grid<FileParameters> grid = new Grid<>("Drop files on the Grid");
+        Grid<FileParameters> grid = new Grid<>("Drop files or text on the Grid");
         grid.addColumn(FileParameters::getName).setCaption("File name");
         grid.addColumn(FileParameters::getSize).setCaption("File size");
         grid.addColumn(FileParameters::getMime).setCaption("Mime type");
@@ -103,6 +103,13 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
             });
         });
 
+        GridDropTarget<FileParameters> dropTarget = new GridDropTarget<>(grid,
+                DropMode.ON_TOP);
+        dropTarget.addGridDropListener(event -> {
+            log("dataTransferText=" + event.getDataTransferText());
+            Notification.show(event.getDataTransferText());
+        });
+
         Layout layout = new VerticalLayout(grid);
 
         addComponent(layout);
@@ -110,6 +117,6 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
 
     @Override
     protected String getTestDescription() {
-        return "Drop files onto the Grid to upload them";
+        return "Drop files onto the Grid to upload them or text";
     }
 }

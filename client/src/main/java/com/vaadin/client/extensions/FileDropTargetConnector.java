@@ -127,10 +127,10 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
             if (fileParams.size() > 0) {
                 getRpcProxy(FileDropTargetRpc.class).drop(fileParams);
             }
-        }
 
-        event.preventDefault();
-        event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 
     @Override
