@@ -107,23 +107,6 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * Creates a {@code TreeGrid} using the given in-memory data, without
-     * support for creating columns based on property names. Use an alternative
-     * constructor, such as {@link TreeGrid#TreeGrid(Class)}, to create a
-     * {@code TreeGrid} that automatically sets up columns based on the type of
-     * presented data.
-     *
-     * @see TreeData
-     *
-     * @param data
-     *            the data to use, not {@code null}
-     */
-    public TreeGrid(TreeData<T> data) {
-        this();
-        setDataProvider(new TreeDataProvider<>(data));
-    }
-
-    /**
      * Creates a {@code TreeGrid} using a custom {@link PropertySet}
      * implementation and custom data communicator.
      * <p>
@@ -551,7 +534,7 @@ public class TreeGrid<T> extends Grid<T>
 
     /**
      * Gets the item collapse allowed provider.
-     * 
+     *
      * @return the item collapse allowed provider
      */
     public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {

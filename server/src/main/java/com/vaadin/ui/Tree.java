@@ -261,16 +261,6 @@ public class Tree<T> extends Composite
     }
 
     /**
-     * Constructs a new Tree Component with given {@code TreeData}.
-     *
-     * @param treeData
-     *            the tree data for component
-     */
-    public Tree(TreeData<T> treeData) {
-        this(null, new TreeDataProvider<>(treeData));
-    }
-
-    /**
      * Constructs a new Tree Component with given
      * {@code HierarchicalDataProvider}.
      *

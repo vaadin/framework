@@ -38,6 +38,16 @@ import com.vaadin.data.provider.TreeDataProvider;
 public interface HasHierarchicalDataProvider<T> extends HasDataProvider<T> {
 
     /**
+     * Sets a new {@link TreeDataProvider} wrapping the given {@link TreeData}.
+     *
+     * @param treeData
+     *            the tree data to set
+     */
+    public default void setTreeData(TreeData<T> treeData) {
+        setDataProvider(new TreeDataProvider<>(treeData));
+    }
+
+    /**
      * Gets the backing {@link TreeData} instance of the data provider, if the
      * data provider is a {@link TreeDataProvider}.
      *
@@ -51,7 +61,8 @@ public interface HasHierarchicalDataProvider<T> extends HasDataProvider<T> {
         if (getDataProvider() instanceof TreeDataProvider) {
             return ((TreeDataProvider<T>) getDataProvider()).getTreeData();
         } else {
-            throw new IllegalStateException("");
+            throw new IllegalStateException(
+                    "Data provider is not an instance of TreeDataProvider");
         }
     }
 
