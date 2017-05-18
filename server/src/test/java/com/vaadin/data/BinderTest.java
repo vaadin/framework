@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withConverter(new StringToIntegerConverter(""))
                 .bind(Person::getAge, Person::setAge);
         binder.setBean(item);
-        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No name field value", "Johannes", nameField.getValue());
         assertEquals("No age field value", "32", ageField.getValue());
 
         binder.setBean(null);
@@ -67,7 +68,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind(Person::getAge, Person::setAge);
         binder.readBean(item);
 
-        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No name field value", "Johannes", nameField.getValue());
         assertEquals("No age field value", "32", ageField.getValue());
 
         binder.readBean(null);
@@ -88,7 +89,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setBean(null);
 
-        assertEquals("ReadOnly field not empty","", nameField.getValue());
+        assertEquals("ReadOnly field not empty", "", nameField.getValue());
     }
 
     @Test
@@ -586,15 +587,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void isValidTest_bound_binder() {
         binder.forField(nameField)
-                .withValidator(
-                        Validator.from(
-                                name -> !name.equals("fail field validation"),
-                                ""))
+                .withValidator(Validator.from(
+                        name -> !name.equals("fail field validation"), ""))
                 .bind(Person::getFirstName, Person::setFirstName);
 
-        binder.withValidator(
-                Validator.from(person -> !person.getFirstName()
-                        .equals("fail bean validation"), ""));
+        binder.withValidator(Validator.from(
+                person -> !person.getFirstName().equals("fail bean validation"),
+                ""));
 
         binder.setBean(item);
 
@@ -634,5 +633,21 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 person -> !person.getFirstName().equals("fail bean validation"),
                 ""));
         binder.isValid();
+    }
+
+    @Test
+    public void getFields_returnsFields() {
+        Assert.assertEquals(0, binder.getFields().count());
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        assertStreamEquals(Stream.of(nameField), binder.getFields());
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+        assertStreamEquals(Stream.of(nameField, ageField), binder.getFields());
+    }
+
+    private void assertStreamEquals(Stream<?> s1, Stream<?> s2) {
+        Assert.assertArrayEquals(s1.toArray(), s2.toArray());
     }
 }
