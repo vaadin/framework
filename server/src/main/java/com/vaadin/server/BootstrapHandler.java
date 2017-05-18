@@ -577,10 +577,10 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                     .attr("href", themeUri + "/favicon.ico");
         }
 
-        Collection<? extends Dependency> deps = Dependency
-                .findAndFilterDependencies(Collections.singletonList(uiClass),
-                        context.getSession().getCommunicationManager(),
-                        new FilterContext(context.getSession()));
+        Collection<? extends Dependency> deps = Dependency.findDependencies(
+                Collections.singletonList(uiClass),
+                context.getSession().getCommunicationManager(),
+                new FilterContext(context.getSession()));
         for (Dependency dependency : deps) {
             Type type = dependency.getType();
             String url = context.getUriResolver()
