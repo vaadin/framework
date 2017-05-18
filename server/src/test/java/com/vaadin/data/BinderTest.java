@@ -50,7 +50,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withConverter(new StringToIntegerConverter(""))
                 .bind(Person::getAge, Person::setAge);
         binder.setBean(item);
-        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No name field value", "Johannes", nameField.getValue());
         assertEquals("No age field value", "32", ageField.getValue());
 
         binder.setBean(null);
@@ -67,7 +67,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind(Person::getAge, Person::setAge);
         binder.readBean(item);
 
-        assertEquals("No name field value","Johannes", nameField.getValue());
+        assertEquals("No name field value", "Johannes", nameField.getValue());
         assertEquals("No age field value", "32", ageField.getValue());
 
         binder.readBean(null);
@@ -88,7 +88,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setBean(null);
 
-        assertEquals("ReadOnly field not empty","", nameField.getValue());
+        assertEquals("ReadOnly field not empty", "", nameField.getValue());
     }
 
     @Test
@@ -441,6 +441,26 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
+    public void readNullBeanRemovesError() {
+        TextField textField = new TextField();
+        binder.forField(textField).asRequired("foobar")
+                .bind(Person::getFirstName, Person::setFirstName);
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        Assert.assertNull(textField.getErrorMessage());
+
+        binder.readBean(item);
+        Assert.assertNull(textField.getErrorMessage());
+
+        textField.setValue(textField.getEmptyValue());
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        Assert.assertNotNull(textField.getErrorMessage());
+
+        binder.readBean(null);
+        assertTrue(textField.isRequiredIndicatorVisible());
+        Assert.assertNull(textField.getErrorMessage());
+    }
+
+    @Test
     public void setRequired_withErrorMessageProvider_fieldGetsRequiredIndicatorAndValidator() {
         TextField textField = new TextField();
         textField.setLocale(Locale.CANADA);
@@ -586,15 +606,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void isValidTest_bound_binder() {
         binder.forField(nameField)
-                .withValidator(
-                        Validator.from(
-                                name -> !name.equals("fail field validation"),
-                                ""))
+                .withValidator(Validator.from(
+                        name -> !name.equals("fail field validation"), ""))
                 .bind(Person::getFirstName, Person::setFirstName);
 
-        binder.withValidator(
-                Validator.from(person -> !person.getFirstName()
-                        .equals("fail bean validation"), ""));
+        binder.withValidator(Validator.from(
+                person -> !person.getFirstName().equals("fail bean validation"),
+                ""));
 
         binder.setBean(item);
 
