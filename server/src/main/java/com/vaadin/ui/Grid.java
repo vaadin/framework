@@ -2421,6 +2421,25 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Adds a column that shows components.
+     * <p>
+     * This is a shorthand for {@link #addColum()} with a
+     * {@link ComponentRenderer}.
+     *
+     * @param componentProvider
+     *            a value provider that will return a component for the given
+     *            item
+     * @return the new column
+     * @param <V>
+     *            the column value type, extends component
+     * @since 8.1
+     */
+    public <V extends Component> Column<T, V> addComponentColumn(
+            ValueProvider<T, V> componentProvider) {
+        return addColumn(componentProvider, new ComponentRenderer());
+    }
+
+    /**
      * Creates a column instance from a value provider and a renderer.
      *
      * @param valueProvider
@@ -2428,6 +2447,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param renderer
      *            the renderer
      * @return a new column instance
+     * @param <V>
+     *            the column value type
      *
      * @since 8.0.3
      */

@@ -576,12 +576,12 @@ the height of all rows in the Grid.
 Use [classname]#Button# in [classname]#Grid#:
 +
 ----
-grid.addColumn(person -> {
+grid.addComponentColumn(person -> {
       Button button = new Button("Click me!");
       button.addClickListener(click ->
             Notification.show("Clicked: " + person.toString()));
       return button;
-}, new ComponentRenderer());
+});
 // make sure the buttons fit in the cells of the Grid
 grid.setRowHeight(40);
 ----
