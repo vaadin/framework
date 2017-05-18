@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 import com.vaadin.event.Action.Container;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VariableOwner;
-import com.vaadin.server.communication.ServerRpcHandler;
 import com.vaadin.ui.Component;
 
 /**
@@ -72,8 +71,6 @@ public class ConnectorActionManager extends ActionManager {
     @Override
     public void handleAction(Action action, Object sender, Object target) {
         if (!connector.isConnectorEnabled()) {
-            getLogger().warning(ServerRpcHandler
-                    .getIgnoredDisabledError("action", connector));
             return;
         }
 
