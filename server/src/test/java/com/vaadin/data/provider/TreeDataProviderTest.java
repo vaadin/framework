@@ -81,6 +81,23 @@ public class TreeDataProviderTest extends
     }
 
     @Test
+    public void treeData_root_items() {
+        TreeData<String> data = new TreeData<>();
+        TreeData<String> dataVarargs = new TreeData<>();
+        TreeData<String> dataCollection = new TreeData<>();
+        TreeData<String> dataStream = new TreeData<>();
+
+        data.addItems(null, "a", "b", "c");
+        dataVarargs.addRootItems("a", "b", "c");
+        dataCollection.addRootItems(Arrays.asList("a", "b", "c"));
+        dataStream.addRootItems(Arrays.asList("a", "b", "c").stream());
+
+        Assert.assertEquals(data.getRootItems(), dataVarargs.getRootItems());
+        Assert.assertEquals(data.getRootItems(), dataCollection.getRootItems());
+        Assert.assertEquals(data.getRootItems(), dataStream.getRootItems());
+    }
+
+    @Test
     public void populate_treeData_with_child_item_provider() {
         TreeData<String> stringData = new TreeData<>();
         List<String> rootItems = Arrays.asList("a", "b", "c");
