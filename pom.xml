@@ -34,7 +34,7 @@
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.5.vaadin2</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.11.vaadin1</atmosphere.runtime.version>
 
         <!-- OSGi -->
         <osgi.javax.servlet.version>3.0.0</osgi.javax.servlet.version>
