@@ -158,7 +158,7 @@ public class Dependency implements Serializable {
      * @return the list of found dependencies
      */
     @SuppressWarnings("deprecation")
-    public static List<Dependency> findDependencies(
+    private static List<Dependency> findDependencies(
             List<Class<? extends ClientConnector>> connectorTypes,
             LegacyCommunicationManager manager) {
         List<Dependency> dependencies = new ArrayList<>();
@@ -191,7 +191,7 @@ public class Dependency implements Serializable {
      *            the context information for the filtering operation
      * @return the list of found and filtered dependencies
      */
-    public static List<Dependency> findAndFilterDependencies(
+    public static List<Dependency> findDependencies(
             List<Class<? extends ClientConnector>> connectorTypes,
             LegacyCommunicationManager manager, FilterContext context) {
         List<Dependency> dependencies = findDependencies(connectorTypes,
