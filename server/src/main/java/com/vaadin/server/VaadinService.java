@@ -207,8 +207,8 @@ public abstract class VaadinService implements Serializable {
 
         requestHandlers = Collections.unmodifiableCollection(handlers);
 
-        dependencyFilters = Collections
-                .unmodifiableCollection(createDependencyFilters());
+        dependencyFilters = Collections.unmodifiableCollection(
+                initDependencyFilters(event.getAddedDependencyFilters()));
         initialized = true;
     }
 
@@ -1444,34 +1444,34 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Constructs the list of resource dependency filters to use for the
+     * Determines the list of resource dependency filters to use for the
      * application.
      * <p>
      * The filters can freely update the dependencies in any way they see fit
      * (bundle, rewrite, merge).
      * <p>
-     * By default all filters found using the service loader are added to the
-     * list.
+     * By default all filters collected from the {@link SessionInitEvent} are
+     * used.
      * <p>
-     * The filters are called in the order the service loader returns the
-     * filters, which is undefined. If you need a specific order, you can
+     * The filters are called in the order the session init listeners are
+     * called, which is undefined. If you need a specific order, you can
      * override this method and alter the order.
      *
      * @since 8.1
+     * @param sessionInitFilters
+     *            a list of dependency filters collected from the session init
+     *            event
      * @return the list of dependency filters to use for filtering resources,
      *         not null
      * @throws ServiceException
      *             if something went wrong while determining the filters
      *
      */
-    protected List<DependencyFilter> createDependencyFilters()
-            throws ServiceException {
-        ArrayList<DependencyFilter> filters = new ArrayList<>();
-        ServiceLoader<DependencyFilter> loader = ServiceLoader
-                .load(DependencyFilter.class, getClassLoader());
-        loader.iterator().forEachRemaining(filters::add);
+    protected List<DependencyFilter> initDependencyFilters(
+            List<DependencyFilter> sessionInitFilters) throws ServiceException {
+        assert sessionInitFilters != null;
 
-        return filters;
+        return sessionInitFilters;
     }
 
     /**

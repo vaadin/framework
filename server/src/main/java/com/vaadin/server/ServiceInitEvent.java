@@ -34,6 +34,7 @@ import java.util.Objects;
 public class ServiceInitEvent extends EventObject {
 
     private List<RequestHandler> addedRequestHandlers = new ArrayList<>();
+    private List<DependencyFilter> addedDependencyFilters = new ArrayList<>();
 
     /**
      * Creates a new service init event for a given {@link VaadinService} and
@@ -69,6 +70,33 @@ public class ServiceInitEvent extends EventObject {
      */
     public List<RequestHandler> getAddedRequestHandlers() {
         return Collections.unmodifiableList(addedRequestHandlers);
+    }
+
+    /**
+     * Adds a new dependency filter that will be used by this service.
+     *
+     * @param dependencyFilter
+     *            the dependency filter to add, not <code>null</code>
+     *
+     * @since 8.1
+     */
+    public void addDependencyFilter(DependencyFilter dependencyFilter) {
+        Objects.requireNonNull(dependencyFilter,
+                "Dependency filter cannot be null");
+
+        addedDependencyFilters.add(dependencyFilter);
+    }
+
+    /**
+     * Gets an unmodifiable list of all dependency filters that have been added
+     * for the service.
+     *
+     * @return the current list of added dependency filters.
+     *
+     * @since 8.1
+     */
+    public List<DependencyFilter> getAddedDependencyFilters() {
+        return Collections.unmodifiableList(addedDependencyFilters);
     }
 
     @Override
