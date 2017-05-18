@@ -1,9 +1,9 @@
 @import "grid";
 
 /** Expander width and item indentation constants*/
-$v-treegrid-expander-width:1ex !default;
+$v-treegrid-expander-width: 1.5em !default;
 
-$v-treegrid-indent:2ex !default;
+$v-treegrid-indent: 1em !default;
 
 
 /** Expander button visual - collapsed */
@@ -30,6 +30,7 @@ $v-treegrid-indent:2ex !default;
     &::before {
       display: inline-block;
       width: $v-treegrid-expander-width;
+      text-align: center;
       content: "";
 
       // Expander for expanded item
