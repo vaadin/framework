@@ -134,7 +134,9 @@ public class MultiSelectionModelConnector
     /**
      * Creates an instance of MultiSelectionModel. Method provided overriding
      * features of the selection model without copying all logic.
-     * 
+     *
+     * @since 8.1
+     *
      * @return selection model instance, not {@code null}
      */
     protected MultiSelectionModel createSelectionModel() {

@@ -43,11 +43,9 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.shared.ui.grid.MultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
@@ -588,7 +586,7 @@ public class Tree<T> extends Composite
 
     /**
      * Gets the item collapse allowed provider.
-     * 
+     *
      * @return the item collapse allowed provider
      */
     public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
@@ -597,7 +595,7 @@ public class Tree<T> extends Composite
 
     /**
      * Gets the style generator.
-     * 
+     *
      * @see StyleGenerator
      *
      * @return the item style generator

@@ -17,13 +17,27 @@ package com.vaadin.client.connectors.tree;
 
 import com.vaadin.client.connectors.grid.MultiSelectionModelConnector;
 import com.vaadin.client.renderers.Renderer;
+import com.vaadin.client.widget.grid.selection.ClickSelectHandler;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.ui.Tree.TreeMultiSelectionModel;
 
+import elemental.json.JsonObject;
+
+/**
+ * Connector for the server side multiselection model of the tree component.
+ * <p>
+ * Implementation detail: The selection is updated immediately on client side,
+ * without waiting for the server response.
+ *
+ * @author Vaadin Ltd
+ * @since 8.1
+ */
 @Connect(TreeMultiSelectionModel.class)
 public class TreeMultiSelectionModelConnector
         extends MultiSelectionModelConnector {
+
+    private ClickSelectHandler<JsonObject> clickSelectHandler;
 
     @Override
     protected MultiSelectionModel createSelectionModel() {
@@ -41,4 +55,17 @@ public class TreeMultiSelectionModelConnector
         return (TreeMultiSelectionModelState) super.getState();
     }
 
+    @Override
+    protected void initSelectionModel() {
+        super.initSelectionModel();
+        clickSelectHandler = new ClickSelectHandler<>(getParent().getWidget());
+    }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        if (clickSelectHandler != null) {
+            clickSelectHandler.removeHandler();
+        }
+    }
 }

@@ -176,10 +176,7 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         Assert.assertFalse(
                 "Tree MultiSelection shouldn't have selection column",
                 wrap.getCell(0, 0).isElementPresent(By.tagName("input")));
-        Assert.assertFalse("First row should not be selected",
-                wrap.getRow(0).isSelected());
-        new Actions(getDriver()).sendKeys(Keys.SPACE).perform();
-        Assert.assertTrue("First row was not selected with space",
+        Assert.assertTrue("First row was not selected",
                 wrap.getRow(0).isSelected());
         new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN, Keys.SPACE)
                 .perform();
@@ -187,5 +184,23 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
                 wrap.getRow(0).isSelected());
         Assert.assertTrue("Second row was not selected",
                 wrap.getRow(1).isSelected());
+    }
+
+    @Test
+    public void tree_multiselect_click() {
+        selectMenuPath("Component", "Selection Mode", "MULTI");
+        TreeElement tree = $(TreeElement.class).first();
+        TreeGridElement wrap = tree.wrap(TreeGridElement.class);
+        tree.getItem(0).click();
+        Assert.assertTrue("First row was not selected",
+                wrap.getRow(0).isSelected());
+        tree.getItem(1).click();
+        Assert.assertTrue("First row was deselected",
+                wrap.getRow(0).isSelected());
+        Assert.assertTrue("Second row was not selected",
+                wrap.getRow(1).isSelected());
+        tree.getItem(0).click();
+        Assert.assertFalse("First row was not deselected",
+                wrap.getRow(0).isSelected());
     }
 }
