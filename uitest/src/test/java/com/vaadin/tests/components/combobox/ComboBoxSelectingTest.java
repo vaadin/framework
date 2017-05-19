@@ -49,11 +49,6 @@ public class ComboBoxSelectingTest extends MultiBrowserTest {
         return comboBoxElement.getPopupSuggestions().size();
     }
 
-    private void showOptions() {
-        getDriver().findElement(By.cssSelector(".v-filterselect-button"))
-                .click();
-    }
-
     private void clickOnLabel() {
         getDriver().findElement(By.cssSelector(".v-label")).click();
     }
