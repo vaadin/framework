@@ -5,6 +5,8 @@ $v-treegrid-expander-width: 1.5em !default;
 
 $v-treegrid-indent: 1em !default;
 
+// Classname for depth styling
+$v-treegrid-class-depth: depth !default;
 
 /** Expander button visual - collapsed */
 @mixin valo-treegrid-collapsed-icon-style {
@@ -23,8 +25,6 @@ $v-treegrid-indent: 1em !default;
 
   @include valo-grid($primary-stylename);
 
-  // Classname for depth styling
-  $class-depth: depth !default;
 
   .#{$primary-stylename}-expander {
     &::before {
@@ -53,7 +53,7 @@ $v-treegrid-indent: 1em !default;
   // Hierarchy depth styling
   .#{$primary-stylename}-node {
     @for $i from 0 through 15 {
-      &.#{$class-depth}-#{$i} {
+      &.#{$v-treegrid-class-depth}-#{$i} {
         padding-left: $v-treegrid-indent * $i;
       }
     }
