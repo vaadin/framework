@@ -441,6 +441,26 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
+    public void readNullBeanRemovesError() {
+        TextField textField = new TextField();
+        binder.forField(textField).asRequired("foobar")
+                .bind(Person::getFirstName, Person::setFirstName);
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        Assert.assertNull(textField.getErrorMessage());
+
+        binder.readBean(item);
+        Assert.assertNull(textField.getErrorMessage());
+
+        textField.setValue(textField.getEmptyValue());
+        Assert.assertTrue(textField.isRequiredIndicatorVisible());
+        Assert.assertNotNull(textField.getErrorMessage());
+
+        binder.readBean(null);
+        assertTrue(textField.isRequiredIndicatorVisible());
+        Assert.assertNull(textField.getErrorMessage());
+    }
+
+    @Test
     public void setRequired_withErrorMessageProvider_fieldGetsRequiredIndicatorAndValidator() {
         TextField textField = new TextField();
         textField.setLocale(Locale.CANADA);
