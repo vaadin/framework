@@ -2361,4 +2361,14 @@ public class Binder<BEAN> implements Serializable {
     private <V> void fireValueChangeEvent(ValueChangeEvent<V> event) {
         getEventRouter().fireEvent(event);
     }
+
+    /**
+     * Returns the fields this binder has been bound to.
+     *
+     * @return the fields with bindings
+     * @since
+     */
+    public Stream<HasValue<?>> getFields() {
+        return bindings.stream().map(Binding::getField);
+    }
 }
