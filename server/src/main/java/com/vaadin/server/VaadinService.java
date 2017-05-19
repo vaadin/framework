@@ -1444,14 +1444,16 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Determines the list of resource dependency filters to use for the
+     * Updates the list of resource dependency filters to use for the
      * application.
      * <p>
      * The filters can freely update the dependencies in any way they see fit
      * (bundle, rewrite, merge).
      * <p>
-     * By default all filters collected from the {@link SessionInitEvent} are
-     * used.
+     * The framework collects filters from the {@link SessionInitEvent} where
+     * session init listeners can add them. This method is called with the
+     * combined list to optionally modify it, and the result is then stored
+     * by the caller as the final list to use.
      * <p>
      * The filters are called in the order the session init listeners are
      * called, which is undefined. If you need a specific order, you can
@@ -1478,7 +1480,7 @@ public abstract class VaadinService implements Serializable {
      * Gets the filters which all resource dependencies are passed through
      * before being sent to the client for loading.
      *
-     * @see #createDependencyFilters()
+     * @see #initDependencyFilters()
      *
      * @since 8.1
      * @return the dependency filters to pass resources dependencies through
