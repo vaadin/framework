@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,8 +13,8 @@ import org.junit.Test;
 import com.vaadin.data.TreeData;
 import com.vaadin.server.SerializablePredicate;
 
-public class TreeDataProviderTest extends
-        DataProviderTestBase<TreeDataProvider<StrBean>> {
+public class TreeDataProviderTest
+        extends DataProviderTestBase<TreeDataProvider<StrBean>> {
 
     private TreeData<StrBean> data;
     private List<StrBean> flattenedData;
@@ -46,8 +47,7 @@ public class TreeDataProviderTest extends
 
     @Test(expected = IllegalArgumentException.class)
     public void treeData_add_item_parent_not_in_hierarchy_throws() {
-        new TreeData<>().addItem(new StrBean("", 0, 0),
-                new StrBean("", 0, 0));
+        new TreeData<>().addItem(new StrBean("", 0, 0), new StrBean("", 0, 0));
     }
 
     @Test(expected = NullPointerException.class)
@@ -81,6 +81,23 @@ public class TreeDataProviderTest extends
     }
 
     @Test
+    public void treeData_root_items() {
+        TreeData<String> data = new TreeData<>();
+        TreeData<String> dataVarargs = new TreeData<>();
+        TreeData<String> dataCollection = new TreeData<>();
+        TreeData<String> dataStream = new TreeData<>();
+
+        data.addItems(null, "a", "b", "c");
+        dataVarargs.addRootItems("a", "b", "c");
+        dataCollection.addRootItems(Arrays.asList("a", "b", "c"));
+        dataStream.addRootItems(Arrays.asList("a", "b", "c").stream());
+
+        Assert.assertEquals(data.getRootItems(), dataVarargs.getRootItems());
+        Assert.assertEquals(data.getRootItems(), dataCollection.getRootItems());
+        Assert.assertEquals(data.getRootItems(), dataStream.getRootItems());
+    }
+
+    @Test
     public void populate_treeData_with_child_item_provider() {
         TreeData<String> stringData = new TreeData<>();
         List<String> rootItems = Arrays.asList("a", "b", "c");
@@ -89,6 +106,24 @@ public class TreeDataProviderTest extends
                 return Arrays.asList();
             }
             return Arrays.asList(item + "/a", item + "/b", item + "/c");
+        });
+        Assert.assertEquals(stringData.getChildren("a"),
+                Arrays.asList("a/a", "a/b", "a/c"));
+        Assert.assertEquals(stringData.getChildren("b"),
+                Arrays.asList("b/a", "b/b", "b/c"));
+        Assert.assertEquals(stringData.getChildren("c"), Arrays.asList());
+        Assert.assertEquals(stringData.getChildren("a/b"), Arrays.asList());
+    }
+
+    @Test
+    public void populate_treeData_with_stream_child_item_provider() {
+        TreeData<String> stringData = new TreeData<>();
+        Stream<String> rootItems = Stream.of("a", "b", "c");
+        stringData.addItems(rootItems, item -> {
+            if (item.length() >= 3 || item.startsWith("c")) {
+                return Stream.empty();
+            }
+            return Stream.of(item + "/a", item + "/b", item + "/c");
         });
         Assert.assertEquals(stringData.getChildren("a"),
                 Arrays.asList("a/a", "a/b", "a/c"));

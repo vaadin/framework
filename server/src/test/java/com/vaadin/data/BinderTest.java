@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -652,5 +653,21 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 person -> !person.getFirstName().equals("fail bean validation"),
                 ""));
         binder.isValid();
+    }
+
+    @Test
+    public void getFields_returnsFields() {
+        Assert.assertEquals(0, binder.getFields().count());
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        assertStreamEquals(Stream.of(nameField), binder.getFields());
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+        assertStreamEquals(Stream.of(nameField, ageField), binder.getFields());
+    }
+
+    private void assertStreamEquals(Stream<?> s1, Stream<?> s2) {
+        Assert.assertArrayEquals(s1.toArray(), s2.toArray());
     }
 }

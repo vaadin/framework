@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.data.provider.TreeDataProvider;
@@ -93,6 +94,60 @@ public class TreeData<T> implements Serializable {
     public TreeData() {
         itemToWrapperMap = new LinkedHashMap<>();
         itemToWrapperMap.put(null, new HierarchyWrapper<>(null, null));
+    }
+
+    /**
+     * Adds the items as root items to this structure.
+     *
+     * @param items
+     *            the items to add
+     * @return this
+     *
+     * @throws IllegalArgumentException
+     *             if any of the given items have already been added to this
+     *             structure
+     * @throws NullPointerException
+     *             if any of the items are {code null}
+     */
+    public TreeData<T> addRootItems(T... items) {
+        addItems(null, items);
+        return this;
+    }
+
+    /**
+     * Adds the items of the given collection as root items to this structure.
+     *
+     * @param items
+     *            the collection of items to add
+     * @return this
+     *
+     * @throws IllegalArgumentException
+     *             if any of the given items have already been added to this
+     *             structure
+     * @throws NullPointerException
+     *             if any of the items are {code null}
+     */
+    public TreeData<T> addRootItems(Collection<T> items) {
+        addItems(null, items);
+        return this;
+    }
+
+    /**
+     * Adds the items of the given stream as root items to this structure.
+     *
+     * @param items
+     *            the stream of root items to add
+     * @return this
+     *
+     * @throws IllegalArgumentException
+     *             if any of the given items have already been added to this
+     *             structure
+     * @throws NullPointerException
+     *             if any of the items are {code null}
+     */
+    public TreeData<T> addRootItems(Stream<T> items) {
+        addItems(null, items);
+        return this;
     }
 
     /**
@@ -227,6 +282,25 @@ public class TreeData<T> implements Serializable {
     }
 
     /**
+     * Adds the given items as root items and uses the given value provider to
+     * recursively populate children of the root items.
+     *
+     * @param rootItems
+     *            the root items to add
+     * @param childItemProvider
+     *            the value provider used to recursively populate this TreeData
+     *            from the given root items
+     * @return this
+     */
+    public TreeData<T> addItems(Stream<T> rootItems,
+            ValueProvider<T, Stream<T>> childItemProvider) {
+        // Must collect to lists since the algorithm iterates multiple times
+        return addItems(rootItems.collect(Collectors.toList()),
+                item -> childItemProvider.apply(item)
+                        .collect(Collectors.toList()));
+    }
+
+    /**
      * Remove a given item from this structure. Additionally, this will
      * recursively remove any descendants of the item.
      *
@@ -261,6 +335,15 @@ public class TreeData<T> implements Serializable {
     public TreeData<T> clear() {
         removeItem(null);
         return this;
+    }
+
+    /**
+     * Gets the root items of this structure.
+     *
+     * @return the root items of this structure
+     */
+    public List<T> getRootItems() {
+        return getChildren(null);
     }
 
     /**

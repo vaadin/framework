@@ -24,9 +24,9 @@ public class GridComponents extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid<String> grid = new Grid<String>();
+        Grid<String> grid = new Grid<>();
         grid.addColumn(string -> new Label(string), new ComponentRenderer());
-        grid.addColumn(string -> {
+        grid.addComponentColumn(string -> {
             if (textFields.containsKey(string)) {
                 log("Reusing old text field for: " + string);
                 return textFields.get(string);
@@ -41,7 +41,7 @@ public class GridComponents extends AbstractTestUIWithLog {
                 textFields.put(string, textField);
             });
             return textField;
-        }, new ComponentRenderer());
+        });
         grid.addColumn(string -> {
             Button button = new Button("Click Me!",
                     e -> Notification.show(
