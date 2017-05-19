@@ -1,7 +1,5 @@
 @import "treegrid";
 
-$v-tree8-border-radius: 3px;
-
 @mixin valo-tree8 ($primary-stylename: v-tree8) {
 
   @include valo-treegrid($primary-stylename);
@@ -13,6 +11,7 @@ $v-tree8-border-radius: 3px;
   .#{$primary-stylename}-row > td {
     background-color: transparent;
     border: none;
+    line-height: inherit;
   }
 
   .#{$primary-stylename}-tablewrapper {
@@ -31,8 +30,7 @@ $v-tree8-border-radius: 3px;
   .#{$primary-stylename}-cell-content {
     border: $v-grid-cell-focused-border;
     border-color: transparent;
-    border-radius: $v-tree8-border-radius;
-    padding: $v-grid-cell-padding;
+    border-radius: $v-border-radius;
   }
 
   .#{$primary-stylename}:focus .#{$primary-stylename}-row-focused:before {
