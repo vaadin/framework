@@ -1080,8 +1080,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected WebElement getMenuElement(String menuCaption)
             throws NoSuchElementException {
+        // Need the parent span to obtain the correct size
         return getDriver().findElement(
-                By.xpath("//span[text() = '" + menuCaption + "']"));
+                By.xpath("//span[text() = '" + menuCaption + "']/.."));
     }
 
     /**
