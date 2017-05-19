@@ -24,7 +24,7 @@ $v-treegrid-indent: 1em !default;
   @include valo-grid($primary-stylename);
 
   // Classname for depth styling
-  $class-depth: depth;
+  $class-depth: depth !default;
 
   .#{$primary-stylename}-expander {
     &::before {
