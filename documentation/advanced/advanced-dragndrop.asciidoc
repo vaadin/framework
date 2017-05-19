@@ -53,13 +53,13 @@ The [classname]#DragStartEvent# is fired when the drag has started, and the [cla
 [source, java]
 ----
 dragSource.addDragStartListener(event ->
-    event.getComponent().addStyleName("dragged")
+    Notification.show("Drag event started");
 );
 dragSource.addDragEndListener(event -> {
-    event.getComponent().removeStyleName("dragged")
-
     if (event.isCanceled()) {
         Notification.show("Drag event was canceled");
+    } else {
+        Notification.show("Drag event finished");
     }
 });
 ----
@@ -82,6 +82,10 @@ dragSource.addDragEndListener(event ->
 
 The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource` when the drag source extension is applied to it.
 Additionally, the elements also have the `v-draggable` style name that is independent of the component's primary style.
+
+While being dragged, the element also gets the style name with suffix `-dragged`.
+An example for this is `v-label-dragged` in case of a Label component.
+This style name is added during the drag start and removed during the drag end event.
 
 The browsers allow the user to select and drag and drop text, which could cause issues with components that have text. The Framework tries to prevent this by automatically adding the following style to all `v-draggable` elements. It is included by the sass mixin `valo-drag-element`.
 

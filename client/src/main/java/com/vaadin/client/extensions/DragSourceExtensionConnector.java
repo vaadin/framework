@@ -55,6 +55,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      */
     protected static final String STYLE_SUFFIX_DRAGSOURCE = "-dragsource";
 
+    /**
+     * Style suffix for indicating that the element is being dragged.
+     */
+    protected static final String STYLE_SUFFIX_DRAGGED= "-dragged";
+
     private static final String STYLE_NAME_DRAGGABLE = "v-draggable";
 
     // Create event listeners
@@ -204,6 +209,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                         .setData(DragSourceState.DATA_TYPE_TEXT,
                                 dataMap.get(DragSourceState.DATA_TYPE_TEXT));
             }
+
+            // Set style to indicate the element being dragged
+            Element dragSource = getDraggableElement();
+            dragSource.addClassName(
+                    getStylePrimaryName(dragSource) + STYLE_SUFFIX_DRAGGED);
 
             // Initiate firing server side dragstart event when there is a
             // DragStartListener attached on the server side
@@ -363,6 +373,12 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             event.stopPropagation();
             return;
         }
+
+        // Remove dragged element indicator style
+        Element dragSource = getDraggableElement();
+        dragSource.removeClassName(
+                getStylePrimaryName(dragSource) + STYLE_SUFFIX_DRAGGED);
+
         // Initiate server start dragend event when there is a DragEndListener
         // attached on the server side
         if (hasEventListener(DragSourceState.EVENT_DRAGEND)) {
