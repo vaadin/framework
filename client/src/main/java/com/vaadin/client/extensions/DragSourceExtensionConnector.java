@@ -211,9 +211,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             }
 
             // Set style to indicate the element being dragged
-            Element dragSource = getDraggableElement();
-            dragSource.addClassName(
-                    getStylePrimaryName(dragSource) + STYLE_SUFFIX_DRAGGED);
+            addDraggedStyle(nativeEvent);
 
             // Initiate firing server side dragstart event when there is a
             // DragStartListener attached on the server side
@@ -375,9 +373,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         }
 
         // Remove dragged element indicator style
-        Element dragSource = getDraggableElement();
-        dragSource.removeClassName(
-                getStylePrimaryName(dragSource) + STYLE_SUFFIX_DRAGGED);
+        removeDraggedStyle(nativeEvent);
 
         // Initiate server start dragend event when there is a DragEndListener
         // attached on the server side
@@ -403,6 +399,32 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected void sendDragEndEventToServer(NativeEvent dragEndEvent,
             DropEffect dropEffect) {
         getRpcProxy(DragSourceRpc.class).dragEnd(dropEffect);
+    }
+
+    /**
+     * Add class name to indicate that the drag source element is being dragged.
+     * This method is called during the dragstart event.
+     *
+     * @param event
+     *         The drag start event.
+     */
+    protected void addDraggedStyle(NativeEvent event) {
+        Element dragSource = getDraggableElement();
+        dragSource.addClassName(
+                getStylePrimaryName(dragSource) + STYLE_SUFFIX_DRAGGED);
+    }
+
+    /**
+     * Remove class name that indicated that the drag source element was being
+     * dragged. This method is called during the dragend event.
+     *
+     * @param event
+     *         The drag end element.
+     */
+    protected void removeDraggedStyle(NativeEvent event) {
+        Element dragSource = getDraggableElement();
+        dragSource.removeClassName(
+                getStylePrimaryName(dragSource) + STYLE_SUFFIX_DRAGGED);
     }
 
     /**
