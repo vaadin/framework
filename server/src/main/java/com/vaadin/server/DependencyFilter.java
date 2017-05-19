@@ -27,6 +27,8 @@ import com.vaadin.ui.Dependency;
  * Filter for dependencies loaded using {@link StyleSheet @StyleSheet},
  * {@link JavaScript @JavaScript} and {@link HtmlImport @HtmlImport}.
  *
+ * @see ServiceInitEvent#addDependencyFilter(DependencyFilter)
+ *
  * @since 8.1
  */
 @FunctionalInterface
