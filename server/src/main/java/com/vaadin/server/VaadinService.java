@@ -1326,14 +1326,14 @@ public abstract class VaadinService implements Serializable {
      * returns false and {@link #getHeartbeatTimeout() getHeartbeatTimeout} is
      * negative or has not yet expired.
      *
-     * @since 7.0.0
+     * @since 8.1
      *
      * @param ui
      *            The UI whose status to check
      *
      * @return true if the UI is active, false if it could be removed.
      */
-    private boolean isUIActive(UI ui) {
+    public boolean isUIActive(UI ui) {
         if (ui.isClosing()) {
             return false;
         } else {
@@ -1347,7 +1347,7 @@ public abstract class VaadinService implements Serializable {
     /**
      * Returns whether the given session is active or whether it can be closed.
      * <p>
-     * A session is active if and only if its {@link #isClosing} returns false
+     * A session is active if and only if its {@link VaadinSession#getState()} returns {@link State#OPEN}
      * and {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout}
      * is negative or has not yet expired.
      *
