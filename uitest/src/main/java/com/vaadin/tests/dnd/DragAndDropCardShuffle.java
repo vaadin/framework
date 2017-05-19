@@ -123,13 +123,11 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
 
         // Add listeners
         dragSource.addDragStartListener(event -> {
-            event.getComponent().addStyleName("dragged");
             log(event.getComponent().getValue() + " dragstart, effectsAllowed="
                     + event.getEffectAllowed());
         });
 
         dragSource.addDragEndListener(event -> {
-            event.getComponent().removeStyleName("dragged");
             log(event.getComponent().getValue() + " dragend, dropEffect="
                     + event.getDropEffect());
         });
@@ -172,7 +170,7 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
                 + "padding-left: 10px;" + "color: red;" + "font-weight: bolder;"
                 + "font-size: 25px;" + "background-color: gainsboro;" + "}");
         styles.add(".v-label-drag-center {border-style: dashed;}");
-        styles.add(".dragged {opacity: .4;}");
+        styles.add(".v-label-dragged {opacity: .4;}");
     }
 
     @Override
