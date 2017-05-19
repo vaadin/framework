@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.connectors;
+package com.vaadin.client.connectors.grid;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -35,7 +35,7 @@ import com.vaadin.ui.renderers.ComponentRenderer;
  */
 @Connect(ComponentRenderer.class)
 public class ComponentRendererConnector
-        extends AbstractRendererConnector<String> {
+        extends AbstractGridRendererConnector<String> {
 
     @Override
     protected Renderer<String> createRenderer() {
