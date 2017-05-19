@@ -1326,7 +1326,7 @@ public abstract class VaadinService implements Serializable {
      * returns false and {@link #getHeartbeatTimeout() getHeartbeatTimeout} is
      * negative or has not yet expired.
      *
-     * @since 7.0.0
+     * @since 8.1
      *
      * @param ui
      *            The UI whose status to check
