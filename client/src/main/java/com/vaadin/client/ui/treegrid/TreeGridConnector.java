@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.connectors.treegrid;
+package com.vaadin.client.ui.treegrid;
 
 import java.util.Collection;
 import java.util.HashSet;

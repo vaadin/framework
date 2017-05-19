@@ -13,12 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.connectors.tree;
+package com.vaadin.client.connectors.grid;
 
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Element;
-import com.vaadin.client.connectors.AbstractRendererConnector;
-import com.vaadin.client.connectors.grid.ColumnConnector;
 import com.vaadin.client.renderers.HtmlRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
@@ -35,7 +33,8 @@ import elemental.json.JsonObject;
  * @since 8.1
  */
 @Connect(TreeRenderer.class)
-public class TreeRendererConnector extends AbstractRendererConnector<String> {
+public class TreeRendererConnector
+        extends AbstractGridRendererConnector<String> {
 
     @Override
     public Renderer<String> createRenderer() {
