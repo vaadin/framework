@@ -2319,7 +2319,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     .findAny().orElse(null);
         }
 
-        lastFilter = "";
         suggestionPopup.hide();
     }
 
