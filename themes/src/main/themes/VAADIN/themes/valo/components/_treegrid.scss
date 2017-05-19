@@ -1,63 +1,60 @@
 @import "grid";
 
-/** Expander button visual - expanded */
-$tg-expander-char-expanded: '\f0d7' !default;
+/** Expander width and item indentation constants*/
+$v-treegrid-expander-width: 1.5em !default;
+
+$v-treegrid-indent: 1em !default;
+
+// Classname for depth styling
+$v-treegrid-class-depth: depth !default;
 
 /** Expander button visual - collapsed */
-$tg-expander-char-collapsed: '\f0da' !default;
+@mixin valo-treegrid-collapsed-icon-style {
+    content: "\f0da";
+    font-family: ThemeIcons;
+}
 
-/** Expander button width */
-$tg-expander-width: 10px !default;
+/** Expander button visual - expanded */
+@mixin valo-treegrid-expanded-icon-style {
+    content: "\f0d7";
+    font-family: ThemeIcons;
+}
 
-/** Expander button right side padding */
-$tg-expander-padding: 10px !default;
 
 @mixin valo-treegrid ($primary-stylename: v-treegrid) {
 
   @include valo-grid($primary-stylename);
 
-  // Expander with and item indentation constants
-  $indent: $tg-expander-width + $tg-expander-padding;
-
-  // Classname for depth styling
-  $class-depth: depth !default;
 
   .#{$primary-stylename}-expander {
-    display: inline-block;
-    width: $tg-expander-width;
-    padding-right: $tg-expander-padding;
-
     &::before {
       display: inline-block;
-      padding-right: 4px;
-      font-family: FontAwesome;
-    }
+      width: $v-treegrid-expander-width;
+      text-align: center;
+      content: "";
 
-    // Expander for expanded item
-    &.expanded {
-      &::before {
-        content: $tg-expander-char-expanded;
+      // Expander for expanded item
+      &.expanded {
+        @include valo-treegrid-expanded-icon-style;
       }
-    }
 
-    // Expander for collapsed item
-    &.collapsed {
-      &::before {
-        content: $tg-expander-char-collapsed;
+      // Expander for collapsed item
+      &.collapsed {
+        @include valo-treegrid-collapsed-icon-style;
       }
-    }
 
-    &.collapse-disabled {
-      @include opacity($v-disabled-opacity);
-      cursor: default;
+      &.collapse-disabled {
+        @include opacity($v-disabled-opacity);
+        cursor: default;
+      }
     }
   }
 
   // Hierarchy depth styling
   .#{$primary-stylename}-node {
     @for $i from 0 through 15 {
-      &.#{$class-depth}-#{$i} {
-        padding-left: $indent * $i;
+      &.#{$v-treegrid-class-depth}-#{$i} {
+        padding-left: $v-treegrid-indent * $i;
       }
     }
   }
@@ -69,7 +66,7 @@ $tg-expander-padding: 10px !default;
 
   .#{$primary-stylename}-row-focused {
 
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       top: 0;
@@ -86,21 +83,21 @@ $tg-expander-padding: 10px !default;
   .#{$primary-stylename}-cell-focused {
     position: static;
 
-    &:before {
+    &::before {
       display: none;
     }
   }
 
-  .#{$primary-stylename}:focus .#{$primary-stylename}-row-focused:before {
+  .#{$primary-stylename}:focus .#{$primary-stylename}-row-focused::before {
     display: block;
   }
 
-  .#{$primary-stylename}.v-disabled:focus .#{$primary-stylename}-row-focused:before {
+  .#{$primary-stylename}.v-disabled:focus .#{$primary-stylename}-row-focused::before {
     // Disabled TreeGrid should not show row focus outline
     display: none;
   }
 
-  .#{$primary-stylename}:focus .#{$primary-stylename}-cell-focused:before {
+  .#{$primary-stylename}:focus .#{$primary-stylename}-cell-focused::before {
     display: none;
   }
 }
