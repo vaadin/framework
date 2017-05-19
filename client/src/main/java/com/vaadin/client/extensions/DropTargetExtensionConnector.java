@@ -278,7 +278,14 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             JsArrayString typesJsArray = getTypes(
                     nativeEvent.getDataTransfer());
 
-            // Handle event if transfer doesn't contain files
+            /* Handle event if transfer doesn't contain files.
+             *
+             * Spec: "Dragging files can currently only happen from outside a
+             * browsing context, for example from a file system manager
+             * application."
+             * Thus there cannot be at the same time both files and other data
+             * dragged
+             */
             if (!containsFiles(typesJsArray)) {
                 nativeEvent.preventDefault();
                 nativeEvent.stopPropagation();
@@ -321,6 +328,10 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     /**
      * Tells if the given array of types contains files.
+     * <p>
+     * According to HTML specification, if any files are being dragged, {@code
+     * dataTransfer.types} will contain the string "Files". See
+     * https://html.spec.whatwg.org/multipage/interaction.html#the-datatransfer-interface:dom-datatransfer-types-2
      *
      * @param types
      *         Array of data types.
