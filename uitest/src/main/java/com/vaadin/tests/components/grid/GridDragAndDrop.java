@@ -33,6 +33,7 @@ import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.TestDataGenerator;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
@@ -60,6 +61,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
         // Layout the two grids
         Layout grids = new HorizontalLayout();
+
         grids.addComponents(left, right);
         grids.setWidth("100%");
 
@@ -80,10 +82,22 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         dropLocationSelect.addValueChangeListener(
                 event -> dropTarget.setDropMode(event.getValue()));
 
+        CheckBox transitionCheckBox = new CheckBox("Transition layout", false);
+        transitionCheckBox.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                grids.addStyleName("transitioned");
+            } else {
+                grids.removeStyleName("transitioned");
+            }
+        });
+
         Layout controls = new HorizontalLayout(selectionModeSelect,
-                dropLocationSelect);
+                dropLocationSelect, transitionCheckBox);
 
         addComponents(controls, grids);
+
+        getPage().getStyles()
+                .add(".transitioned { transform: translate(-30px, 30px);}");
     }
 
     private Grid<Person> createGridAndFillWithData(int numberOfItems) {
