@@ -298,6 +298,8 @@ The dragged rows can be accessed from both events using the `getDraggedItems()` 
 
 A drag source Grid's rows have the `v-grid-row-dragsource` and the `v-draggable` style names applied to indicate that the rows are draggable.
 
+Additionally, the style name `v-grid-row-dragged` is applied to all the dragged rows during the drag start event and removed during the drag end event.
+
 === Grid as a Drop Target
 
 To make a Grid component's rows accept a drop event, apply the [classname]#GridDropTarget# extension to the component. When creating the extension, you need to specify where the transferred data can be dropped on.

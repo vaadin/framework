@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.Element;
@@ -35,18 +36,19 @@ import com.google.gwt.user.client.ui.Image;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.selection.SelectionModel;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Range;
+import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.GridDragSourceRpc;
 import com.vaadin.shared.ui.grid.GridDragSourceState;
-import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.ui.components.grid.GridDragSource;
 
 import elemental.events.Event;
@@ -80,11 +82,13 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     private GridConnector gridConnector;
 
     /**
-     * List of dragged item keys.
+     * List of dragged items.
      */
-    private List<String> draggedItemKeys;
+    private List<JsonObject> draggedItems;
 
     private boolean touchScrollDelayUsed;
+
+    private String draggedStyleName;
 
     @Override
     protected void extend(ServerConnector target) {
@@ -134,14 +138,17 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         }
 
         // Collect the keys of dragged rows
-        draggedItemKeys = getDraggedRows(nativeEvent).stream()
-                .map(row -> row.getString(GridState.JSONKEY_ROWKEY))
-                .collect(Collectors.toList());
+        draggedItems = getDraggedRows(nativeEvent);
 
         // Ignore event if there are no items dragged
-        if (draggedItemKeys.size() == 0) {
+        if (draggedItems.size() == 0) {
             return;
         }
+
+        // Construct style name to be added to dragged rows
+        draggedStyleName =
+                gridConnector.getWidget().getStylePrimaryName() + "-row"
+                        + STYLE_SUFFIX_DRAGGED;
 
         super.onDragStart(event);
     }
@@ -163,13 +170,13 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         } else {
             Element draggedRowElement = (Element) dragStartEvent
                     .getEventTarget().cast();
-            if (draggedItemKeys.size() > 1) {
+            if (draggedItems.size() > 1) {
 
                 Element badge = DOM.createSpan();
                 badge.setClassName(
                         gridConnector.getWidget().getStylePrimaryName() + "-row"
                                 + STYLE_SUFFIX_DRAG_BADGE);
-                badge.setInnerHTML(draggedItemKeys.size() + "");
+                badge.setInnerHTML(draggedItems.size() + "");
 
                 if (BrowserInfo.get().isTouchDevice()) {
                     // the drag image is centered on the touch coordinates
@@ -231,7 +238,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     protected void sendDragStartEventToServer(NativeEvent dragStartEvent) {
 
         // Start server RPC with dragged item keys
-        getRpcProxy(GridDragSourceRpc.class).dragStart(draggedItemKeys);
+        getRpcProxy(GridDragSourceRpc.class).dragStart(draggedItems.stream()
+                .map(row -> row.getString(DataCommunicatorConstants.KEY))
+                .collect(Collectors.toList()));
     }
 
     private List<JsonObject> getDraggedRows(NativeEvent dragStartEvent) {
@@ -267,12 +276,12 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
             return;
         }
         // Ignore event if there are no items dragged
-        if (draggedItemKeys != null && draggedItemKeys.size() > 0) {
+        if (draggedItems != null && draggedItems.size() > 0) {
             super.onDragEnd(event);
         }
 
-        // Clear item key list
-        draggedItemKeys = null;
+        // Clear item list
+        draggedItems = null;
     }
 
     @Override
@@ -281,7 +290,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
         // Send server RPC with dragged item keys
         getRpcProxy(GridDragSourceRpc.class).dragEnd(dropEffect,
-                draggedItemKeys);
+                draggedItems.stream().map(row -> row
+                        .getString(DataCommunicatorConstants.KEY))
+                        .collect(Collectors.toList()));
     }
 
     /**
@@ -350,6 +361,42 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
         // Otherwise return empty map
         return Collections.emptyMap();
+    }
+
+    /**
+     * Add {@code v-grid-row-dragged} class name to each row being dragged.
+     *
+     * @param event
+     *         The dragstart event.
+     */
+    @Override
+    protected void addDraggedStyle(NativeEvent event) {
+        getDraggedRowElementStream().forEach(
+                rowElement -> rowElement.addClassName(draggedStyleName));
+    }
+
+    /**
+     * Remove {@code v-grid-row-dragged} class name from dragged rows.
+     *
+     * @param event
+     *         The dragend event.
+     */
+    @Override
+    protected void removeDraggedStyle(NativeEvent event) {
+        getDraggedRowElementStream().forEach(
+                rowElement -> rowElement.removeClassName(draggedStyleName));
+    }
+
+    /**
+     * Get the dragged table row elements as a stream.
+     *
+     * @return Stream of dragged table row elements.
+     */
+    private Stream<TableRowElement> getDraggedRowElementStream() {
+        return draggedItems.stream()
+                .map(row -> ((AbstractRemoteDataSource<JsonObject>) gridConnector
+                        .getDataSource()).indexOf(row))
+                .map(getGridBody()::getRowElement);
     }
 
     @Override
