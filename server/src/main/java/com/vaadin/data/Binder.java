@@ -2369,7 +2369,7 @@ public class Binder<BEAN> implements Serializable {
      * Returns the fields this binder has been bound to.
      *
      * @return the fields with bindings
-     * @since
+     * @since 8.1
      */
     public Stream<HasValue<?>> getFields() {
         return bindings.stream().map(Binding::getField);
