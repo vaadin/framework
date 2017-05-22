@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -165,6 +166,9 @@ public class DataCommunicator<T> extends AbstractExtension {
 
         @Override
         public void generateData(T data, JsonObject jsonObject) {
+            // Make sure KeyMapper is up to date
+            getKeyMapper().refresh(data, dataProvider::getId);
+
             // Write the key string for given data object
             jsonObject.put(DataCommunicatorConstants.KEY,
                     getKeyMapper().key(data));
@@ -493,16 +497,34 @@ public class DataCommunicator<T> extends AbstractExtension {
      *            updated data object
      */
     public void refresh(T data) {
-        if (!handler.getActiveData().contains(data)) {
-            // Item is not currently available at the client-side
-            return;
-        }
+        // ActiveDataHandler has always the latest data through KeyMapper.
+        Optional<T> activeData = getActiveDataHandler().getActiveData().stream()
+                .filter(item -> itemEquals(item, data)).findFirst();
 
-        if (updatedData.isEmpty()) {
-            markAsDirty();
-        }
+        activeData.ifPresent(i -> {
+            // Item is currently available at the client-side
+            if (updatedData.isEmpty()) {
+                markAsDirty();
+            }
 
-        updatedData.add(data);
+            updatedData.add(i);
+        });
+    }
+
+    /**
+     * Compares the equality of two data objects based on their id from
+     * DataProvider.
+     *
+     * @param item1
+     *            the first item to compare
+     * @param item2
+     *            the second item to compare
+     * @return {@code true} if the ids of the two items match; {@code false} if
+     *         not
+     */
+    protected boolean itemEquals(T item1, T item2) {
+        return Objects.equals(getDataProvider().getId(item1),
+                getDataProvider().getId(item2));
     }
 
     /**
@@ -699,8 +721,8 @@ public class DataCommunicator<T> extends AbstractExtension {
                     getUI().access(() -> {
                         if (event instanceof DataRefreshEvent) {
                             T item = ((DataRefreshEvent<T>) event).getItem();
-                            generators.forEach(g -> g.refreshData(item));
                             keyMapper.refresh(item, dataProvider::getId);
+                            generators.forEach(g -> g.refreshData(item));
                             refresh(item);
                         } else {
                             reset();

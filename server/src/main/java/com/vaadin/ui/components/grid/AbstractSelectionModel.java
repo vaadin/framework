@@ -38,6 +38,9 @@ public abstract class AbstractSelectionModel<T> extends AbstractGridExtension<T>
 
     @Override
     public void generateData(T item, JsonObject jsonObject) {
+        // Pre-emptive update in case used a stale element in selection.
+        refreshData(item);
+
         if (isSelected(item)) {
             jsonObject.put(DataCommunicatorConstants.SELECTED, true);
         }
