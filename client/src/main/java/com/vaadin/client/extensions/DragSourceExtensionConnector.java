@@ -17,6 +17,7 @@ package com.vaadin.client.extensions;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.DataTransfer;
@@ -61,6 +62,12 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     protected static final String STYLE_SUFFIX_DRAGGED= "-dragged";
 
     private static final String STYLE_NAME_DRAGGABLE = "v-draggable";
+
+    /**
+     * Types allowed to be set using {@code dataTransfer.setData()} by IE 11.
+     */
+    private static final String[] TYPES_ALLOWED_BY_IE =
+            {DragSourceState.DATA_TYPE_TEXT, DragSourceState.DATA_TYPE_URL};
 
     // Create event listeners
     private final EventListener dragStartListener = this::onDragStart;
@@ -204,10 +211,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                 dataMap.forEach((type, data) -> nativeEvent.getDataTransfer()
                         .setData(type, data));
             } else {
-                // IE11 accepts only data with type "text"
-                nativeEvent.getDataTransfer()
-                        .setData(DragSourceState.DATA_TYPE_TEXT,
-                                dataMap.get(DragSourceState.DATA_TYPE_TEXT));
+                // IE11 accepts only data with type "text" and "url"
+                Stream.of(TYPES_ALLOWED_BY_IE).filter(dataMap::containsKey)
+                        .forEach(type -> nativeEvent.getDataTransfer()
+                                .setData(type, dataMap.get(type)));
             }
 
             // Set style to indicate the element being dragged

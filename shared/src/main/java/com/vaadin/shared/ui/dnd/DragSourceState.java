@@ -58,6 +58,11 @@ public class DragSourceState extends SharedState {
      */
     public static final String DATA_TYPE_TEXT_PLAIN = "text/plain";
 
+    /**
+     * Data type {@code "url"} for storing data in {@code DataTransfer} object.
+     */
+    public static final String DATA_TYPE_URL = "url";
+
     public static final String RESOURCE_DRAG_IMAGE = "drag-image";
 
     /**
