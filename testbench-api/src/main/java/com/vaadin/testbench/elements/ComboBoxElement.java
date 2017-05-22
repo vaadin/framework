@@ -121,6 +121,11 @@ public class ComboBoxElement extends AbstractSelectElement {
      * Open the suggestion popup
      */
     public void openPopup() {
+        if (isFirefox()) {
+            ((TestBenchElement) findElement(By.vaadin("#button")))
+                    .clickHiddenElement();
+            return;
+        }
         findElement(By.vaadin("#button")).click();
     }
 

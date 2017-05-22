@@ -18,9 +18,7 @@ package com.vaadin.tests.components.combobox;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -35,12 +33,12 @@ public class ComboBoxClosePopupRetainTextTest extends MultiBrowserTest {
         openTestURL();
 
         ComboBoxElement cb = $(ComboBoxElement.class).first();
-        WebElement textbox = cb.findElement(By.vaadin("#textbox"));
-        textbox.sendKeys("I");
+        cb.sendKeys("I");
+        // Toggle the popup
         cb.openPopup();
-        cb.openPopup(); // openPopup() actually toggles
+        cb.openPopup();
         // The entered value should remain
-        assertEquals("I", textbox.getAttribute("value"));
+        assertEquals("I", cb.getValue());
     }
 
     @Test
@@ -48,13 +46,13 @@ public class ComboBoxClosePopupRetainTextTest extends MultiBrowserTest {
         openTestURL();
         ComboBoxElement cb = $(ComboBoxElement.class).first();
         cb.selectByText("Item 3");
-        WebElement textbox = cb.findElement(By.vaadin("#textbox"));
-        textbox.clear();
-        textbox.sendKeys("I");
+        cb.clear();
+        cb.sendKeys("I");
+        // Close the open suggestions popup
         cb.openPopup();
         // Entered value should remain in the text field even though the popup
         // is opened
-        assertEquals("I", textbox.getAttribute("value"));
+        assertEquals("I", cb.getValue());
 
     }
 }
