@@ -1,5 +1,6 @@
 package com.vaadin.test.dependencyrewrite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.DependencyFilter;
@@ -17,9 +18,10 @@ public class MyService extends VaadinServletService {
     }
 
     @Override
-    protected List<DependencyFilter> createDependencyFilters()
-            throws ServiceException {
-        List<DependencyFilter> list = super.createDependencyFilters();
+    protected List<DependencyFilter> initDependencyFilters(
+            List<DependencyFilter> sessionInitFilters) throws ServiceException {
+        List<DependencyFilter> list = new ArrayList<>(
+                super.initDependencyFilters(sessionInitFilters));
         list.add(new ApplicationDependencyFilter());
         return list;
     }
