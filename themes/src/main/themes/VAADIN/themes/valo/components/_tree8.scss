@@ -4,57 +4,75 @@
 
   @include valo-treegrid($primary-stylename);
 
+  $tree-sel-bg: $v-grid-row-selected-background-color;
+
   .#{$primary-stylename} {
     background-color: transparent;
   }
 
   .#{$primary-stylename}-row > td {
     background-color: transparent;
-    border: none;
+    border: 2px solid transparent;
+    border-radius: $v-border-radius;
     line-height: inherit;
+    height: 1em;
+    > * {
+      vertical-align: top;
+    }
   }
 
   .#{$primary-stylename}-tablewrapper {
     background-color: transparent;
     border: none;
   }
-
-  .#{$primary-stylename}-row-selected  > .#{$primary-stylename}-cell {
-    background-color: transparent;
-    background-image: none;
-    color: inherit;
-    text-shadow: none;
+  .#{$primary-stylename}-row-focused::before {
     border: none;
-  }
-
-  .#{$primary-stylename}-cell-content {
-    border: $v-grid-cell-focused-border;
-    border-color: transparent;
-    border-radius: $v-border-radius;
-  }
-
-  .#{$primary-stylename}:focus .#{$primary-stylename}-row-focused:before {
     display: none;
   }
 
-  .#{$primary-stylename}:focus .#{$primary-stylename}-cell-focused
-    > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
-    border: $v-grid-cell-focused-border;
+  .#{$primary-stylename}-cell {
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border-radius: $v-border-radius;
+    }
+  }
+
+  .#{$primary-stylename}-row > .#{$primary-stylename}-cell-focused::after {
+    box-shadow: inset 0 0 0 1px $tree-sel-bg;
   }
 
   // Selected
   .#{$primary-stylename}-row-selected {
-    $grid-sel-bg: $v-grid-row-selected-background-color;
 
-    > .#{$primary-stylename}-cell > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
-      @include valo-gradient($grid-sel-bg);
-      color: valo-font-color($grid-sel-bg);
-      text-shadow: valo-text-shadow($font-color: valo-font-color($grid-sel-bg), $background-color: $grid-sel-bg);
-      border-color: adjust-color($grid-sel-bg, $lightness: -8%, $saturation: -8%);
-    }
+    $tree-sel-focus-border-color: adjust-color($tree-sel-bg, $lightness: -8%, $saturation: -8%);
+    $tree-sel-focus-box-shadow: inset 0 0 0 1px lighten($v-app-background-color, 8%);
 
-    > .#{$primary-stylename}-cell-focused > .#{$primary-stylename}-node > .#{$primary-stylename}-cell-content {
-      border-color: adjust-color($grid-sel-bg, $lightness: 20%);
+    .#{$primary-stylename}-cell {
+
+      @include valo-gradient($tree-sel-bg);
+      color: valo-font-color($tree-sel-bg);
+      text-shadow: valo-text-shadow($font-color: valo-font-color($tree-sel-bg), $background-color: $tree-sel-bg);
+      border: 2px solid transparent;
+
+      &::after {
+        border: 2px solid $tree-sel-bg;
+      }
+
+      &.#{$primary-stylename}-cell-focused {
+        border-color: $tree-sel-focus-border-color;
+        box-shadow: $tree-sel-focus-box-shadow;
+
+        &::after {
+          border-color: $tree-sel-focus-border-color;
+          box-shadow: $tree-sel-focus-box-shadow;
+        }
+      }
     }
   }
 }
