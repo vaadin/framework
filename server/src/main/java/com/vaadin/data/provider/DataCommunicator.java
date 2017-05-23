@@ -23,8 +23,11 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -151,20 +154,22 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         /**
-         * Returns the collection of all currently active data.
+         * Returns all currently active data mapped by their id from
+         * DataProvider.
          *
-         * @return collection of active data objects
+         * @return map of ids to active data objects
          */
-        public Collection<T> getActiveData() {
-            HashSet<T> hashSet = new HashSet<>();
-            for (String key : activeData) {
-                hashSet.add(getKeyMapper().get(key));
-            }
-            return hashSet;
+        public Map<Object, T> getActiveData() {
+            Function<T, Object> getId = getDataProvider()::getId;
+            return activeData.stream().map(getKeyMapper()::get)
+                    .collect(Collectors.toMap(getId, i -> i));
         }
 
         @Override
         public void generateData(T data, JsonObject jsonObject) {
+            // Make sure KeyMapper is up to date
+            getKeyMapper().refresh(data, dataProvider::getId);
+
             // Write the key string for given data object
             jsonObject.put(DataCommunicatorConstants.KEY,
                     getKeyMapper().key(data));
@@ -490,19 +495,24 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Informs the DataProvider that a data object has been updated.
      *
      * @param data
-     *            updated data object
+     *            updated data object; not {@code null}
      */
     public void refresh(T data) {
-        if (!handler.getActiveData().contains(data)) {
-            // Item is not currently available at the client-side
-            return;
-        }
+        Objects.requireNonNull(data,
+                "DataCommunicator can not refresh null object");
+        Object id = getDataProvider().getId(data);
 
-        if (updatedData.isEmpty()) {
-            markAsDirty();
-        }
+        // ActiveDataHandler has always the latest data through KeyMapper.
+        Map<Object, T> activeData = getActiveDataHandler().getActiveData();
 
-        updatedData.add(data);
+        if (activeData.containsKey(id)) {
+            // Item is currently available at the client-side
+            if (updatedData.isEmpty()) {
+                markAsDirty();
+            }
+
+            updatedData.add(activeData.get(id));
+        }
     }
 
     /**
@@ -699,8 +709,8 @@ public class DataCommunicator<T> extends AbstractExtension {
                     getUI().access(() -> {
                         if (event instanceof DataRefreshEvent) {
                             T item = ((DataRefreshEvent<T>) event).getItem();
-                            generators.forEach(g -> g.refreshData(item));
                             keyMapper.refresh(item, dataProvider::getId);
+                            generators.forEach(g -> g.refreshData(item));
                             refresh(item);
                         } else {
                             reset();
