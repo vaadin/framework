@@ -69,8 +69,7 @@ public class DataProviderRefresh extends AbstractTestUI {
                     if (backend.get(i).equals(item)) {
                         return false;
                     }
-                    backend.remove(i);
-                    backend.add(i, item);
+                    backend.set(i, item);
                     return true;
                 }
             }
