@@ -48,6 +48,8 @@ import com.vaadin.ui.Upload.FailedEvent;
  */
 public class FileUploadHandler implements RequestHandler {
 
+    public static final int MULTIPART_BOUNDARY_LINE_LIMIT = 20000;
+
     /**
      * Stream that extracts content from another stream until the boundary
      * string is encountered.
@@ -306,6 +308,10 @@ public class FileUploadHandler implements RequestHandler {
                         "The multipart stream ended unexpectedly");
             }
             bout.write(readByte);
+            if(bout.size() > MULTIPART_BOUNDARY_LINE_LIMIT) {
+                throw new IOException(
+                        "The multipart stream does not contain boundary");
+            }
             readByte = stream.read();
         }
         byte[] bytes = bout.toByteArray();
