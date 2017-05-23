@@ -10,6 +10,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.components.uitest.TestSampler;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -63,7 +64,22 @@ public class DragImage extends AbstractTestUIWithLog {
         new DragSourceExtension(gridRowLikeLabel);
         styles.add(css);
 
-        addComponent(new VerticalLayout(layout1, layout2, gridRowLikeLabel));
+        VerticalLayout layout = new VerticalLayout();
+        CheckBox transitionCheckBox = new CheckBox("Transition layout", false);
+        transitionCheckBox.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                layout.addStyleName("transitioned");
+            } else {
+                layout.removeStyleName("transitioned");
+            }
+        });
+
+        layout.addComponents(transitionCheckBox, layout1, layout2,
+                gridRowLikeLabel);
+        addComponent(layout);
+        layout.addStyleName("transitioned");
+        getPage().getStyles()
+                .add(".transitioned {transform: translateX(50px);}");
     }
 
 }

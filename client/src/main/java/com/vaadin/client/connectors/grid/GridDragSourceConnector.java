@@ -27,11 +27,11 @@ import java.util.stream.Stream;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ServerConnector;
@@ -146,9 +146,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         }
 
         // Construct style name to be added to dragged rows
-        draggedStyleName =
-                gridConnector.getWidget().getStylePrimaryName() + "-row"
-                        + STYLE_SUFFIX_DRAGGED;
+        draggedStyleName = gridConnector.getWidget().getStylePrimaryName()
+                + "-row" + STYLE_SUFFIX_DRAGGED;
 
         super.onDragStart(event);
     }
@@ -170,43 +169,99 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         } else {
             Element draggedRowElement = (Element) dragStartEvent
                     .getEventTarget().cast();
+            Element badge;
             if (draggedItems.size() > 1) {
-
-                Element badge = DOM.createSpan();
+                badge = DOM.createSpan();
                 badge.setClassName(
                         gridConnector.getWidget().getStylePrimaryName() + "-row"
                                 + STYLE_SUFFIX_DRAG_BADGE);
                 badge.setInnerHTML(draggedItems.size() + "");
 
-                if (BrowserInfo.get().isTouchDevice()) {
+                BrowserInfo browserInfo = BrowserInfo.get();
+                if (browserInfo.isTouchDevice()) {
                     // the drag image is centered on the touch coordinates
                     // -> show the badge on the right edge of the row
                     badge.getStyle().setFloat(Float.RIGHT);
                     badge.getStyle().setMarginRight(20, Unit.PX);
+                    badge.getStyle().setMarginTop(-20, Unit.PX);
+                } else if (browserInfo.isSafari()) {
+                    // On Safari, only the part of the row visible inside grid
+                    // is shown, and also the badge needs to be totally on top
+                    // of the row.
+                    Element tableWrapperDiv = getGridBody().getElement()
+                            .getParentElement().getParentElement();
+                    int mouseXRelativeToGrid = WidgetUtil
+                            .getRelativeX(tableWrapperDiv, dragStartEvent);
+                    if (mouseXRelativeToGrid < (tableWrapperDiv.getClientWidth()
+                            - 60)) {
+                        badge.getStyle().setMarginLeft(
+                                mouseXRelativeToGrid + 10, Unit.PX);
+                    } else {
+                        badge.getStyle().setMarginLeft(
+                                mouseXRelativeToGrid - 60, Unit.PX);
+                    }
+                    badge.getStyle().setMarginTop(-32, Unit.PX);
                 } else {
-                    badge.getStyle().setMarginLeft(
-                            getRelativeX(draggedRowElement, dragStartEvent)
-                                    + 10,
-                            Unit.PX);
+                    badge.getStyle().setMarginLeft(WidgetUtil.getRelativeX(
+                            draggedRowElement, dragStartEvent) + 10, Unit.PX);
+                    badge.getStyle().setMarginTop(-20, Unit.PX);
                 }
-                badge.getStyle().setMarginTop(-20, Unit.PX);
-
-                draggedRowElement.appendChild(badge);
-
-                // Remove badge on the next animation frame. Drag image will
-                // still contain the badge.
-                AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-                    badge.removeFromParent();
-                }, (Element) dragStartEvent.getEventTarget().cast());
+            } else {
+                badge = null;
             }
-            fixDragImageForDesktopSafari(draggedRowElement);
+
+            final int frozenColumnCount = getGrid().getFrozenColumnCount();
+            final Element selectionColumnCell = getGrid().getSelectionColumn()
+                    .isPresent()
+                    // -1 is used when even selection column is not frozen
+                    && frozenColumnCount != -1 ? draggedRowElement
+                            .removeChild(draggedRowElement.getFirstChild())
+                            .cast() : null;
+
+            final List<String> frozenCellsTransforms = new ArrayList<>();
+            for (int i = 0; i < getGrid().getColumnCount(); i++) {
+                if (i >= frozenColumnCount) {
+                    break;
+                }
+                if (getGrid().getColumn(i).isHidden()) {
+                    frozenCellsTransforms.add(null);
+                    continue;
+                }
+                Style style = ((Element) draggedRowElement.getChild(i).cast())
+                        .getStyle();
+                frozenCellsTransforms.add(style.getProperty("transform"));
+                style.clearProperty("transform");
+            }
+
+            if (badge != null) {
+                draggedRowElement.appendChild(badge);
+            }
+
+            // The following hack is used since IE11 doesn't support custom drag
+            // image.
+            // 1. Remove multiple rows drag badge, if used
+            // 2. add selection column cell back, if was removed
+            // 3. reset frozen column transitions, if were cleared
+            AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+                if (badge != null) {
+                    badge.removeFromParent();
+                }
+                for (int i = 0; i < frozenCellsTransforms.size(); i++) {
+                    String transform = frozenCellsTransforms.get(i);
+                    if (transform != null) {
+                        ((Element) draggedRowElement.getChild(i).cast())
+                                .getStyle().setProperty("transform", transform);
+                    }
+                }
+                if (selectionColumnCell != null) {
+                    draggedRowElement.insertFirst(selectionColumnCell);
+                }
+            }, (Element) dragStartEvent.getEventTarget().cast());
+
+            fixDragImageOffsetsForDesktop(dragStartEvent, draggedRowElement);
             fixDragImageTransformForMobile(draggedRowElement);
         }
-    }
 
-    private int getRelativeX(Element element, NativeEvent event) {
-        int relativeLeft = element.getAbsoluteLeft() - Window.getScrollLeft();
-        return WidgetUtil.getTouchOrMouseClientX(event) - relativeLeft;
     }
 
     @Override
@@ -223,8 +278,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                     if (!dataMap.containsKey(type)) {
                         dataMap.put(type, data);
                     } else {
-                        // Separate data with new line character when multiple rows
-                        // are dragged
+                        // Separate data with new line character when multiple
+                        // rows are dragged
                         dataMap.put(type, dataMap.get(type) + "\n" + data);
                     }
                 }
@@ -290,8 +345,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
 
         // Send server RPC with dragged item keys
         getRpcProxy(GridDragSourceRpc.class).dragEnd(dropEffect,
-                draggedItems.stream().map(row -> row
-                        .getString(DataCommunicatorConstants.KEY))
+                draggedItems.stream().map(
+                        row -> row.getString(DataCommunicatorConstants.KEY))
                         .collect(Collectors.toList()));
     }
 
@@ -367,7 +422,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Add {@code v-grid-row-dragged} class name to each row being dragged.
      *
      * @param event
-     *         The dragstart event.
+     *            The dragstart event.
      */
     @Override
     protected void addDraggedStyle(NativeEvent event) {
@@ -379,7 +434,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * Remove {@code v-grid-row-dragged} class name from dragged rows.
      *
      * @param event
-     *         The dragend event.
+     *            The dragend event.
      */
     @Override
     protected void removeDraggedStyle(NativeEvent event) {
@@ -438,4 +493,5 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
     public GridDragSourceState getState() {
         return (GridDragSourceState) super.getState();
     }
+
 }

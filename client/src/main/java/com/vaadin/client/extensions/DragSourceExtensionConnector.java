@@ -17,6 +17,7 @@ package com.vaadin.client.extensions;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.DataTransfer;
@@ -27,7 +28,9 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
@@ -58,7 +61,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     /**
      * Style suffix for indicating that the element is being dragged.
      */
-    protected static final String STYLE_SUFFIX_DRAGGED= "-dragged";
+    protected static final String STYLE_SUFFIX_DRAGGED = "-dragged";
 
     private static final String STYLE_NAME_DRAGGABLE = "v-draggable";
 
@@ -205,9 +208,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                         .setData(type, data));
             } else {
                 // IE11 accepts only data with type "text"
-                nativeEvent.getDataTransfer()
-                        .setData(DragSourceState.DATA_TYPE_TEXT,
-                                dataMap.get(DragSourceState.DATA_TYPE_TEXT));
+                nativeEvent.getDataTransfer().setData(
+                        DragSourceState.DATA_TYPE_TEXT,
+                        dataMap.get(DragSourceState.DATA_TYPE_TEXT));
             }
 
             // Set style to indicate the element being dragged
@@ -228,47 +231,143 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     }
 
     /**
-     * Fixes missing drag image for desktop Safari by making the dragged element
-     * position to relative if needed. Safari won't show drag image unless the
-     * dragged element position is relative or absolute / fixed, but not with
-     * display block for the latter.
+     * Fixes missing or offset drag image caused by using css transform:
+     * translate (or such) by using a cloned drag image element, for which the
+     * property has been cleared.
      * <p>
-     * This method is a NOOP for non-safari browser, or mobile safari which is
-     * using the DnD Polyfill.
+     * This bug only occurs on Desktop with Safari (gets offset and clips the
+     * element for the parts that are not inside the element start & end
+     * coordinates) and Firefox (gets offset), and calling this method is NOOP
+     * for any other browser.
      * <p>
-     * This fix is not needed if a custom drag image is used on Safari.
+     * This fix is not needed if custom drag image has been used.
+     *
+     * @param dragStartEvent
+     *            the drag start event
+     * @param draggedElement
+     *            the element being dragged
+     */
+    protected void fixDragImageOffsetsForDesktop(NativeEvent dragStartEvent,
+            Element draggedElement) {
+        BrowserInfo browserInfo = BrowserInfo.get();
+        final boolean isSafari = browserInfo.isSafari();
+        if (browserInfo.isTouchDevice()
+                || !(isSafari || browserInfo.isFirefox())) {
+            return;
+        }
+
+        Element clonedElement = (Element) draggedElement.cloneNode(true);
+        Style clonedStyle = clonedElement.getStyle();
+        clonedStyle.clearProperty("transform");
+        // only relative, absolute and fixed positions work for safari or no
+        // drag image is set
+        clonedStyle.setPosition(Position.RELATIVE);
+
+        int transformXOffset = 0;
+        if (isSafari) {
+            transformXOffset = fixDragImageTransformForSafari(draggedElement,
+                    clonedStyle);
+        }
+
+        // need to use z-index -1 or otherwise the cloned node will flash
+        clonedStyle.setZIndex(-1);
+        draggedElement.getParentElement().appendChild(clonedElement);
+
+        dragStartEvent.getDataTransfer().setDragImage(clonedElement,
+                WidgetUtil.getRelativeX(draggedElement, dragStartEvent)
+                        - transformXOffset,
+                WidgetUtil.getRelativeY(draggedElement, dragStartEvent));
+        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+            clonedElement.removeFromParent();
+        }, clonedElement);
+    }
+
+    /**
+     * Fixes missing drag image on Safari when there is
+     * {@code transform: translate(x,y)} CSS used on the parent DOM for the
+     * dragged element. Safari apparently doesn't take those into account, and
+     * creates the drag image of the element's location without all the
+     * transforms.
+     * <p>
+     * This is required for e.g. Grid where transforms are used to position the
+     * rows and scroll the body.
      *
      * @param draggedElement
-     *            the element that forms the drag image
+     *            the dragged element
+     * @param clonedStyle
+     *            the style for the cloned element
+     * @return the amount of X offset that was applied to the dragged element
+     *         due to transform X, needed for calculation the relative position
+     *         of the drag image according to mouse position
      */
-    protected void fixDragImageForDesktopSafari(Element draggedElement) {
-        if (!BrowserInfo.get().isSafari()
-                || BrowserInfo.get().isTouchDevice()) {
-            return;
+    private int fixDragImageTransformForSafari(Element draggedElement,
+            Style clonedStyle) {
+        int xTransformOffsetForSafari = 0;
+        int yTransformOffsetForSafari = 0;
+        Element parent = draggedElement.getParentElement();
+        /*
+         * Unfortunately, the following solution does not work when there are
+         * many nested layers of transforms. It seems that the outer transforms
+         * do not effect the cloned element the same way. #9408
+         */
+        while (parent != null) {
+            ComputedStyle computedStyle = new ComputedStyle(parent);
+            String transform = computedStyle.getProperty("transform");
+            computedStyle = new ComputedStyle(parent);
+            transform = computedStyle.getProperty("transform");
+            if (transform == null || transform.isEmpty()) {
+                transform = computedStyle.getProperty("-webkitTransform");
+            }
+            if (transform != null && !transform.isEmpty()
+                    && !transform.equalsIgnoreCase("none")) {
+                // matrix format is "matrix(a,b,c,d,x,y)"
+                xTransformOffsetForSafari -= getMatrixValue(transform, 4);
+                yTransformOffsetForSafari -= getMatrixValue(transform, 5);
+            }
+            parent = parent.getParentElement();
         }
-        final Style style = draggedElement.getStyle();
-        final String position = style.getPosition();
-
-        // relative works always
-        if ("relative".equalsIgnoreCase(position)) {
-            return;
+        if (xTransformOffsetForSafari != 0 || yTransformOffsetForSafari != 0) {
+            StringBuilder sb = new StringBuilder("translate(")
+                    .append(xTransformOffsetForSafari).append("px,")
+                    .append(yTransformOffsetForSafari).append("px)");
+            clonedStyle.setProperty("transform", sb.toString());
         }
+        // the x-offset should be taken into account when the drag image is
+        // adjusted according to the mouse position. The Y-offset doesn't matter
+        // for some reason (TM), at least for grid DnD, and is probably related
+        // to #9408
+        return xTransformOffsetForSafari;
+    }
 
-        // absolute & fixed don't work when there is offset used
-        if ("absolute".equalsIgnoreCase(position)
-                || "fixed".equalsIgnoreCase(position)) {
-            // FIXME #9261 need to figure out how to get absolute and fixed to
-            // position work when there is offset involved, like in Grid.
-            // The following hack with setting position to relative did not
-            // work, nor did clearing top/right/bottom/left.
+    /**
+     * Parses 1-dimensional matrix (six values) values.
+     *
+     * @param matrix
+     *            the matrix string of format {@code matrix(a,b,c,d,x,y)}
+     * @param n
+     *            the Nth value to parse
+     * @return the value, which is in pixels, or 0 if not able to determine
+     *         value from given matrix string
+     */
+    private static int getMatrixValue(String matrix, int n) {
+        if (matrix == null || matrix.isEmpty()
+                || matrix.equalsIgnoreCase("none")
+                || !matrix.startsWith("matrix(")) {
+            return 0;
         }
-
-        // for all other positions, set the position to relative and revert it
-        // in an animation frame
-        draggedElement.getStyle().setPosition(Position.RELATIVE);
-        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-            draggedElement.getStyle().setProperty("position", position);
-        }, draggedElement);
+        try {
+            // the matrix is e.g. "matrix(x?, y?, 0, 0, tx, ty)" (note no unit
+            // postfix, e.g. 10 instead of 10px)
+            String x = matrix.substring(7, matrix.length() - 1).split(",")[n]
+                    .trim();
+            return Integer.parseInt(x);
+        } catch (NumberFormatException nfe) {
+            Logger.getLogger(DragSourceExtensionConnector.class.getName())
+                    .info("Unable to parse \"transform: translate(...)\" matrix "
+                            + n + ". value from computed style, matrix \""
+                            + matrix + "\", drag image might not be visible");
+        }
+        return 0;
     }
 
     /**
@@ -340,15 +439,17 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      */
     protected void setDragImage(NativeEvent dragStartEvent) {
         String imageUrl = getResourceUrl(DragSourceState.RESOURCE_DRAG_IMAGE);
+        Element draggedElement = (Element) dragStartEvent
+                .getCurrentEventTarget().cast();
         if (imageUrl != null && !imageUrl.isEmpty()) {
             Image dragImage = new Image(
                     getConnection().translateVaadinUri(imageUrl));
-            dragStartEvent.getDataTransfer()
-                    .setDragImage(dragImage.getElement(), 0, 0);
+            dragStartEvent.getDataTransfer().setDragImage(
+                    dragImage.getElement(),
+                    WidgetUtil.getRelativeX(draggedElement, dragStartEvent),
+                    WidgetUtil.getRelativeY(draggedElement, dragStartEvent));
         } else {
-            Element draggedElement = (Element) dragStartEvent
-                    .getCurrentEventTarget().cast();
-            fixDragImageForDesktopSafari(draggedElement);
+            fixDragImageOffsetsForDesktop(dragStartEvent, draggedElement);
             fixDragImageTransformForMobile(draggedElement);
         }
     }
@@ -406,7 +507,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * This method is called during the dragstart event.
      *
      * @param event
-     *         The drag start event.
+     *            The drag start event.
      */
     protected void addDraggedStyle(NativeEvent event) {
         Element dragSource = getDraggableElement();
@@ -419,7 +520,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      * dragged. This method is called during the dragend event.
      *
      * @param event
-     *         The drag end element.
+     *            The drag end element.
      */
     protected void removeDraggedStyle(NativeEvent event) {
         Element dragSource = getDraggableElement();
