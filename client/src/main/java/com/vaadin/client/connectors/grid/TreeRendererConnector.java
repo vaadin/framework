@@ -42,7 +42,9 @@ public class TreeRendererConnector
 
             @Override
             public void render(RendererCellReference cell, String htmlString) {
-                String content = SafeHtmlUtils.htmlEscape(htmlString);
+                String content = "<span class=\"v-captiontext\">" +
+                        SafeHtmlUtils.htmlEscape(htmlString)
+                        + "</span>";
 
                 JsonObject row = getParent().getParent().getDataSource()
                         .getRow(cell.getRowIndex());
@@ -50,7 +52,7 @@ public class TreeRendererConnector
                     String resourceId = row.getString("itemIcon");
                     Element element = getConnection()
                             .getIcon(getResourceUrl(resourceId)).getElement();
-                    content = element.getString() + " " + content;
+                    content = element.getString() + content;
                 }
                 super.render(cell, content);
             }
