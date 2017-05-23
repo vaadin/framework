@@ -29,6 +29,8 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.Query;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
@@ -312,12 +314,67 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             getState().allSelected = true;
         }
 
-        DataProvider<T, ?> dataSource = getGrid().getDataProvider();
+        Stream<T> allItemsStream;
+        DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
         // this will fetch everything from backend
-        Stream<T> stream = dataSource.fetch(new Query<>());
+        if (dataProvider instanceof HierarchicalDataProvider) {
+            allItemsStream = fetchAllHierarchical(
+                    (HierarchicalDataProvider<T, ?>) dataProvider);
+        } else {
+            allItemsStream = fetchAll(dataProvider);
+        }
         LinkedHashSet<T> allItems = new LinkedHashSet<>();
-        stream.forEach(allItems::add);
+        allItemsStream.forEach(allItems::add);
         updateSelection(allItems, Collections.emptySet(), userOriginated);
+    }
+
+    /**
+     * Fetch all items from the given hierarchical data provider.
+     *
+     * @since 8.1
+     * @param dataProvider
+     *            the data provider to fetch from
+     * @return all items in the data provider
+     */
+    private Stream<T> fetchAllHierarchical(
+            HierarchicalDataProvider<T, ?> dataProvider) {
+        return fetchAllDescendants(null, dataProvider);
+    }
+
+    /**
+     * Fetch all the descendants of the given parent item from the given data
+     * provider.
+     *
+     * @since 8.1
+     * @param parent
+     *            the parent item to fetch descendants for
+     * @param dataProvider
+     *            the data provider to fetch from
+     * @return the stream of all descendant items
+     */
+    private Stream<T> fetchAllDescendants(T parent,
+            HierarchicalDataProvider<T, ?> dataProvider) {
+        List<T> children = dataProvider
+                .fetchChildren(new HierarchicalQuery<>(null, parent))
+                .collect(Collectors.toList());
+        if (children.isEmpty()) {
+            return Stream.empty();
+        }
+        return children.stream()
+                .flatMap(child -> Stream.concat(Stream.of(child),
+                        fetchAllDescendants(child, dataProvider)));
+    }
+
+    /**
+     * Fetch all items from the given data provider.
+     *
+     * @since 8.1
+     * @param dataProvider
+     *            the data provider to fetch from
+     * @return all items in this data provider
+     */
+    private Stream<T> fetchAll(DataProvider<T, ?> dataProvider) {
+        return dataProvider.fetch(new Query<>());
     }
 
     /**
