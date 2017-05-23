@@ -87,8 +87,9 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      * Get the location of the drop within the row.
      * <p>
      * <em>NOTE: when dropped on an empty grid, or when {@link DropMode#ON_TOP}
-     * is used and the drop happened on empty space after last row, the location
-     * will be {@link DropLocation#EMPTY}.</em>
+     * is used and the drop happened on empty space after last row or on top of
+     * the header / footer, the location will be
+     * {@link DropLocation#EMPTY}.</em>
      *
      * @return Location of the drop within the row.
      * @see GridDropTarget#setDropMode(DropMode)
